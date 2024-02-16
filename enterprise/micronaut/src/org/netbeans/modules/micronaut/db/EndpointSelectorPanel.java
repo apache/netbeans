@@ -18,8 +18,13 @@
  */
 package org.netbeans.modules.micronaut.db;
 
+import java.awt.Component;
 import java.util.List;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import org.openide.NotifyDescriptor;
 
 /**
  *
@@ -30,17 +35,28 @@ public class EndpointSelectorPanel extends javax.swing.JPanel {
     /**
      * Creates new form EndpointSelectorPanel
      */
-    public EndpointSelectorPanel(List<String> endpoints) {
+    public EndpointSelectorPanel(List<NotifyDescriptor.QuickPick.Item> endpoints) {
         initComponents();
         selectorList.addListSelectionListener(evt -> {
             firePropertyChange("selection", null, null);
         });
-        DefaultListModel<String> model = new DefaultListModel<>();
+        selectorList.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof NotifyDescriptor.QuickPick.Item) {
+                    NotifyDescriptor.QuickPick.Item item = (NotifyDescriptor.QuickPick.Item) value;
+                    renderer.setText(item.getLabel() + "  " + item.getDescription());
+                }
+                return renderer;
+            }
+        });
+        DefaultListModel<NotifyDescriptor.QuickPick.Item> model = new DefaultListModel<>();
         model.addAll(endpoints);
         selectorList.setModel(model);
     }
 
-    public List<String> getSelectedEndpoints() {
+    public List<NotifyDescriptor.QuickPick.Item> getSelectedEndpoints() {
         return selectorList.getSelectedValuesList();
     }
 
@@ -89,7 +105,7 @@ public class EndpointSelectorPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel selectorLabel;
-    private javax.swing.JList<String> selectorList;
+    private javax.swing.JList<NotifyDescriptor.QuickPick.Item> selectorList;
     private javax.swing.JScrollPane selectorScrollPane;
     // End of variables declaration//GEN-END:variables
 }

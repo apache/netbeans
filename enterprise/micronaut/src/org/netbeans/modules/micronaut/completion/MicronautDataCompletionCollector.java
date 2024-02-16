@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -36,7 +35,6 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -67,8 +65,9 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
     public boolean collectCompletions(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) {
         new MicronautDataCompletionTask().query(doc, offset, new MicronautDataCompletionTask.ItemFactory<Completion>() {
             @Override
-            public Completion createControllerMethodItem(CompilationInfo info, VariableElement delegateRepository, ExecutableElement delegateMethod, String id, int offset) {
-                String methodName = Utils.getEndpointMethodName(delegateMethod.getSimpleName().toString(), id);
+            public Completion createControllerMethodItem(CompilationInfo info, VariableElement delegateRepository, ExecutableElement delegateMethod, String controllerId, String id, int offset) {
+                String delegateMethodName = delegateMethod.getSimpleName().toString();
+                String methodName = Utils.getControllerDataEndpointMethodName(delegateMethodName, id);
                 TypeMirror delegateRepositoryType = delegateRepository.asType();
                 if (delegateRepositoryType.getKind() == TypeKind.DECLARED) {
                     ExecutableType type = (ExecutableType) info.getTypes().asMemberOf((DeclaredType) delegateRepositoryType, delegateMethod);
@@ -85,7 +84,7 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                             break;
                         }
                         cnt++;
-                        String paramTypeName = MicronautDataCompletionTask.getTypeName(info, tm, false, delegateMethod.isVarArgs() && !tIt.hasNext()).toString();
+                        String paramTypeName = Utils.getTypeName(info, tm, false, delegateMethod.isVarArgs() && !tIt.hasNext()).toString();
                         String paramName = it.next().getSimpleName().toString();
                         labelDetail.append(paramTypeName).append(' ').append(paramName);
                         sortParams.append(paramTypeName);
@@ -96,21 +95,14 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                     }
                     sortParams.append(')');
                     labelDetail.append(')');
-                    TypeMirror returnType = type.getReturnType();
-                    if ("findAll".contentEquals(delegateMethod.getSimpleName()) && !delegateMethod.getParameters().isEmpty() && returnType.getKind() == TypeKind.DECLARED) {
-                        TypeElement te = (TypeElement) ((DeclaredType) returnType).asElement();
-                        Optional<ExecutableElement> getContentMethod = ElementFilter.methodsIn(te.getEnclosedElements()).stream().filter(m -> "getContent".contentEquals(m.getSimpleName()) && m.getParameters().isEmpty()).findAny();
-                        if (getContentMethod.isPresent()) {
-                            returnType = (ExecutableType) info.getTypes().asMemberOf((DeclaredType) returnType, getContentMethod.get());
-                        }
-                    }
+                    TypeMirror returnType = Utils.getControllerDataEndpointReturnType(info, delegateMethodName, type);
                     FileObject fo = info.getFileObject();
                     ElementHandle<VariableElement> repositoryHandle = ElementHandle.create(delegateRepository);
                     ElementHandle<ExecutableElement> methodHandle = ElementHandle.create(delegateMethod);
                     return CompletionCollector.newBuilder(methodName)
                             .kind(Completion.Kind.Method)
                             .labelDetail(String.format("%s - generate", labelDetail.toString()))
-                            .labelDescription(MicronautDataCompletionTask.getTypeName(info, returnType, false, false).toString())
+                            .labelDescription(Utils.getTypeName(info, returnType, false, false).toString())
                             .sortText(String.format("%04d%s#%02d%s", 1500, methodName, cnt, sortParams.toString()))
                             .insertTextFormat(Completion.TextFormat.PlainText)
                             .textEdit(new TextEdit(offset, offset, ""))
@@ -125,7 +117,7 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                                     if (repository != null && method != null) {
                                         TypeMirror repositoryType = repository.asType();
                                         if (repositoryType.getKind() == TypeKind.DECLARED) {
-                                            MethodTree mt = Utils.createControllerDataEndpointMethod(wc, (DeclaredType) repositoryType, repository.getSimpleName().toString(), method, id);
+                                            MethodTree mt = Utils.createControllerDataEndpointMethod(wc, (DeclaredType) repositoryType, repository.getSimpleName().toString(), method, controllerId, id);
                                             wc.rewrite(clazz, GeneratorUtilities.get(wc).insertClassMember(clazz, mt, offset));
                                         }
                                     }
@@ -218,7 +210,7 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                             break;
                         }
                         cnt++;
-                        String paramTypeName = MicronautDataCompletionTask.getTypeName(info, tm, false, ((ExecutableElement)element).isVarArgs() && !tIt.hasNext()).toString();
+                        String paramTypeName = Utils.getTypeName(info, tm, false, ((ExecutableElement)element).isVarArgs() && !tIt.hasNext()).toString();
                         String paramName = it.next().getSimpleName().toString();
                         labelDetail.append(paramTypeName).append(' ').append(paramName);
                         sortParams.append(paramTypeName);
@@ -236,7 +228,7 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                     return CompletionCollector.newBuilder(simpleName)
                             .kind(Completion.Kind.Method)
                             .labelDetail(labelDetail.toString())
-                            .labelDescription(MicronautDataCompletionTask.getTypeName(info, ((ExecutableElement)element).getReturnType(), false, false).toString())
+                            .labelDescription(Utils.getTypeName(info, ((ExecutableElement)element).getReturnType(), false, false).toString())
                             .sortText(String.format("%04d%s#%02d%s", 100, simpleName, cnt, sortParams.toString()))
                             .insertText(insertText.toString())
                             .insertTextFormat(asTemplate ? Completion.TextFormat.Snippet : Completion.TextFormat.PlainText)

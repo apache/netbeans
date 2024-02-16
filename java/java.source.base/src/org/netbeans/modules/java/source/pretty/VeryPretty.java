@@ -2827,37 +2827,41 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     private void printAnnotations(List<JCAnnotation> annotations) {
         if (annotations.isEmpty()) return ;
 
-        if (printAnnotationsFormatted(annotations)) {
-            if (!printingMethodParams)
-                toColExactly(out.leftMargin);
-            else
-                out.needSpace();
+        if (!printingMethodParams && printAnnotationsFormatted(annotations)) {
+            toColExactly(out.leftMargin);
             return ;
         }
         
         while (annotations.nonEmpty()) {
 	    printNoParenExpr(annotations.head);
             if (annotations.tail != null && annotations.tail.nonEmpty()) {
-                switch(cs.wrapAnnotations()) {
-                case WRAP_IF_LONG:
-                    int rm = cs.getRightMargin();
-                    if (widthEstimator.estimateWidth(annotations.tail.head, rm - out.col) + out.col + 1 <= rm) {
+                if (printingMethodParams) {
+                    print(' ');
+                } else {
+                    switch(cs.wrapAnnotations()) {
+                    case WRAP_IF_LONG:
+                        int rm = cs.getRightMargin();
+                        if (widthEstimator.estimateWidth(annotations.tail.head, rm - out.col) + out.col + 1 <= rm) {
+                            print(' ');
+                            break;
+                        }
+                    case WRAP_ALWAYS:
+                        newline();
+                        toColExactly(out.leftMargin);
+                        break;
+                    case WRAP_NEVER:
                         print(' ');
                         break;
                     }
-                case WRAP_ALWAYS:
-                    newline();
-                    toColExactly(out.leftMargin);
-                    break;
-                case WRAP_NEVER:
-                    print(' ');
-                    break;
                 }
             } else {
                 if (!printingMethodParams)
                     toColExactly(out.leftMargin);
             }
             annotations = annotations.tail;
+        }
+        if (printingMethodParams) {
+            out.needSpace();
         }
     }
 

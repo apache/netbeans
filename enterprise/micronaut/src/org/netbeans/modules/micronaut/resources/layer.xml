@@ -138,18 +138,8 @@
             <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
             <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/Micronaut.html"/>
             <attr name="position" intvalue="1280"/>
-            <file name="Controller">
-                <attr name="position" intvalue="120"/>
-                <attr name="template" boolvalue="true"/>
-                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautController.create"/>
-                <attr name="template.createTemplateHandler" methodvalue="org.netbeans.modules.micronaut.db.MicronautController.handler"/>
-                <attr name="templateCategory" stringvalue="persistence"/>
-                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/Controller.html"/>
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.png"/>
-            </file>
             <file name="Entity">
-                <attr name="position" intvalue="220"/>
+                <attr name="position" intvalue="120"/>
                 <attr name="template" boolvalue="true"/>
                 <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautEntity.create"/>
                 <attr name="template.createTemplateHandler" methodvalue="org.netbeans.modules.micronaut.db.MicronautEntity.handler"/>
@@ -159,7 +149,7 @@
                 <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.png"/>
             </file>
             <file name="Repository">
-                <attr name="position" intvalue="320"/>
+                <attr name="position" intvalue="220"/>
                 <attr name="template" boolvalue="true"/>
                 <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautRepository.create"/>
                 <attr name="template.createTemplateHandler" methodvalue="org.netbeans.modules.micronaut.db.MicronautRepository.handler"/>
@@ -167,6 +157,26 @@
                 <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/Repository.html"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
                 <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/interface_file.png"/>
+            </file>
+            <file name="Controller">
+                <attr name="position" intvalue="320"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautController.create"/>
+                <attr name="template.createTemplateHandler" methodvalue="org.netbeans.modules.micronaut.db.MicronautController.handler"/>
+                <attr name="templateCategory" stringvalue="persistence"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/Controller.html"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.png"/>
+            </file>
+            <file name="ControllerFromRepository">
+                <attr name="position" intvalue="330"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.micronaut.db.MicronautController.createFromReposiory"/>
+                <attr name="template.createTemplateHandler" methodvalue="org.netbeans.modules.micronaut.db.MicronautController.fromReposioryHandler"/>
+                <attr name="templateCategory" stringvalue="persistence"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/micronaut/resources/ControllerFromRepository.html"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.micronaut.db.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.png"/>
             </file>
         </folder>
     </folder>

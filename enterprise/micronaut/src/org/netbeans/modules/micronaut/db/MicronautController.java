@@ -78,107 +78,47 @@ import org.openide.util.NbBundle;
 public class MicronautController implements TemplateWizard.Iterator {
 
     public static TemplateWizard.Iterator create() {
-        return new MicronautController();
+        return new MicronautController(false);
     }
 
-    @NbBundle.Messages({
-        "MSG_SelectRepository=Select Data Repository Interfaces",
-        "MSG_SelectRepository_Prompt=Repositories to be called from Controllers",
-        "MSG_SelectControllerName=Controller Name"
-    })
+    public static TemplateWizard.Iterator createFromReposiory() {
+        return new MicronautController(true);
+    }
+
     public static CreateFromTemplateHandler handler() {
-        return new CreateFromTemplateHandler() {
-            @Override
-            protected boolean accept(CreateDescriptor desc) {
-                return true;
-            }
-
-            @Override
-            protected List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
-                try {
-                    final FileObject folder = desc.getTarget();
-                    final Project project = FileOwnerQuery.getOwner(folder);
-                    if (project == null) {
-                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoProject(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
-                        return Collections.emptyList();
-                    }
-                    final SourceGroup sourceGroup = SourceGroups.getFolderSourceGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), folder);
-                    if (sourceGroup != null) {
-                        Set<ElementHandle<TypeElement>> repositoryClasses = getRepositoryClasses(sourceGroup);
-                        if (!repositoryClasses.isEmpty()) {
-                            List<NotifyDescriptor.QuickPick.Item> items = repositoryClasses.stream().map(handle -> {
-                                String fqn = handle.getQualifiedName();
-                                int idx = fqn.lastIndexOf('.');
-                                return idx < 0 ? new NotifyDescriptor.QuickPick.Item(fqn, null) : new NotifyDescriptor.QuickPick.Item(fqn.substring(idx + 1), fqn.substring(0, idx));
-                            }).collect(Collectors.toList());
-                            NotifyDescriptor.QuickPick qpt = new NotifyDescriptor.QuickPick(Bundle.MSG_SelectRepository(), Bundle.MSG_SelectRepository_Prompt(), items, true);
-                            if (DialogDescriptor.OK_OPTION != DialogDisplayer.getDefault().notify(qpt)) {
-                                return Collections.emptyList();
-                            }
-                            List<FileObject> generated = new ArrayList<>();
-                            boolean hasSelectedItem = false;
-                            for (NotifyDescriptor.QuickPick.Item item : qpt.getItems()) {
-                                if (item.isSelected()) {
-                                    hasSelectedItem = true;
-                                    String label = item.getLabel();
-                                    if (label.toLowerCase().endsWith(("repository"))) { //NOI18N
-                                        label = label.substring(0, label.length() - 10);
-                                    }
-                                    FileObject fo = generate(folder, label, item.getDescription() != null ? item.getDescription() + '.' + item.getLabel() : item.getLabel());
-                                    if (fo != null) {
-                                        generated.add(fo);
-                                    }
-                                }
-                            }
-                            if (hasSelectedItem) {
-                                return generated;
-                            }
-                        }
-                    }
-                    NotifyDescriptor.InputLine inputLine = new NotifyDescriptor.InputLine(Bundle.MSG_SelectControllerName(), Bundle.MSG_SelectControllerName());
-                    if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(inputLine)) {
-                        List<FileObject> generated = new ArrayList<>();
-                        String name = inputLine.getInputText();
-                        if (!name.isEmpty()) {
-                            if (name.toLowerCase().endsWith(("controller"))) { //NOI18N
-                                name = name.substring(0, name.length() - 10);
-                            }
-                            FileObject fo = generate(desc.getTarget(), name, null);
-                            if (fo != null) {
-                                generated.add(fo);
-                            }
-                        }
-                        return generated;
-                    }
-                } catch (Exception ex) {
-                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(ex.getMessage(), NotifyDescriptor.ERROR_MESSAGE));
-                }
-                return Collections.emptyList();
-            }
-        };
+        return handler(false);
     }
 
-    private WizardDescriptor.Panel[] panels;
-    private int index;
+    public static CreateFromTemplateHandler fromReposioryHandler() {
+        return handler(true);
+    }
+
+    private WizardDescriptor.Panel panel;
     private WizardDescriptor wizardDescriptor;
     private FileObject targetFolder;
+    private final boolean fromRepository;
+
+    private MicronautController(boolean fromRepository) {
+        this.fromRepository = fromRepository;
+    }
 
     @Override
     public Set<DataObject> instantiate(TemplateWizard wiz) throws IOException {
         Set<DataObject> generated = new HashSet<>();
-        Map<String, ElementHandle<TypeElement>> selectedRepositories = (Map<String, ElementHandle<TypeElement>>) wiz.getProperty(ClassesSelectorPanel.PROP_SELECTED_CLASSES);
-        for (String fqn : selectedRepositories.keySet()) {
-            int idx = fqn.lastIndexOf('.');
-            String label = idx < 0 ? fqn : fqn.substring(idx + 1);
-            if (label.toLowerCase().endsWith(("repository"))) { //NOI18N
-                label = label.substring(0, label.length() - 10);
+        if (fromRepository) {
+            Map<String, ElementHandle<TypeElement>> selectedRepositories = (Map<String, ElementHandle<TypeElement>>) wiz.getProperty(ClassesSelectorPanel.PROP_SELECTED_CLASSES);
+            for (String fqn : selectedRepositories.keySet()) {
+                int idx = fqn.lastIndexOf('.');
+                String label = idx < 0 ? fqn : fqn.substring(idx + 1);
+                if (label.toLowerCase().endsWith(("repository"))) { //NOI18N
+                    label = label.substring(0, label.length() - 10);
+                }
+                FileObject fo = generate(targetFolder, label, fqn);
+                if (fo != null) {
+                    generated.add(DataObject.find(fo));
+                }
             }
-            FileObject fo = generate(targetFolder, label, fqn);
-            if (fo != null) {
-                generated.add(DataObject.find(fo));
-            }
-        }
-        if (generated.isEmpty()) {
+        } else {
             String targetName = Templates.getTargetName(wiz);
             if (targetName != null && !targetName.isEmpty()) {
                 FileObject fo = generate(targetFolder, targetName, null);
@@ -199,13 +139,10 @@ public class MicronautController implements TemplateWizard.Iterator {
         Sources sources = ProjectUtils.getSources(project);
         SourceGroup[] sourceGroups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
 
-        if(sourceGroups.length == 0) {
-            sourceGroups = sources.getSourceGroups(Sources.TYPE_GENERIC);
-            panels = new WizardDescriptor.Panel[] {
-                Templates.buildSimpleTargetChooser(project, sourceGroups).create()
-            };
-        } else {
-            List<WizardDescriptor.Panel> p = new ArrayList<>();
+        if (fromRepository) {
+            panel = new ClassesSelectorPanel.WizardPanel(NbBundle.getMessage(MicronautController.class, "Templates/Micronaut/Controller"), "Repositories", selectedRepositories -> { //NOI18N
+                return selectedRepositories.isEmpty() ? NbBundle.getMessage(MicronautController.class, "ERR_SelectRepositories") : null;
+            });
             SourceGroup sourceGroup = SourceGroups.getFolderSourceGroup(sourceGroups, targetFolder);
             if (sourceGroup != null) {
                 Set<ElementHandle<TypeElement>> repositoryClasses = getRepositoryClasses(sourceGroup);
@@ -215,14 +152,16 @@ public class MicronautController implements TemplateWizard.Iterator {
                         repositories.put(handle.getQualifiedName(), handle);
                     }
                     wiz.putProperty(ClassesSelectorPanel.PROP_CLASSES, repositories);
-                    p.add(new ClassesSelectorPanel.WizardPanel(NbBundle.getMessage(MicronautController.class, "Templates/Micronaut/Controller"), "Repositories", s -> null)); //NOI18N
                 }
             }
-            p.add(JavaTemplates.createPackageChooser(project, sourceGroups));
-            panels = p.toArray(new WizardDescriptor.Panel[0]);
+        } else if (sourceGroups.length == 0) {
+            sourceGroups = sources.getSourceGroups(Sources.TYPE_GENERIC);
+            panel = Templates.buildSimpleTargetChooser(project, sourceGroups).create();
+        } else {
+            panel = JavaTemplates.createPackageChooser(project, sourceGroups);
         }
 
-        Wizards.mergeSteps(wiz, panels, null);
+        Wizards.mergeSteps(wiz, new WizardDescriptor.Panel[] {panel}, null);
     }
 
     @Override
@@ -231,7 +170,7 @@ public class MicronautController implements TemplateWizard.Iterator {
 
     @Override
     public WizardDescriptor.Panel<WizardDescriptor> current() {
-        return panels[index];
+        return panel;
     }
 
     @Override
@@ -241,28 +180,22 @@ public class MicronautController implements TemplateWizard.Iterator {
 
     @Override
     public boolean hasNext() {
-        return index < (panels.length - 1) && !(current() instanceof WizardDescriptor.FinishablePanel && ((WizardDescriptor.FinishablePanel) current()).isFinishPanel());
+        return false;
     }
 
     @Override
     public boolean hasPrevious() {
-        return index > 0;
+        return false;
     }
 
     @Override
     public void nextPanel() {
-        if ((index + 1) == panels.length) {
-            throw new NoSuchElementException();
-        }
-        index++;
+        throw new NoSuchElementException();
     }
 
     @Override
     public void previousPanel() {
-        if (index == 0) {
-            throw new NoSuchElementException();
-        }
-        index--;
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -271,6 +204,86 @@ public class MicronautController implements TemplateWizard.Iterator {
 
     @Override
     public void removeChangeListener(ChangeListener l) {
+    }
+
+    @NbBundle.Messages({
+        "MSG_NoRepositories=No repository interface found in {0}",
+        "MSG_SelectRepository=Select Data Repository Interfaces",
+        "MSG_SelectRepository_Prompt=Repositories to be called from Controllers",
+        "MSG_SelectControllerName=Controller Name"
+    })
+    private static CreateFromTemplateHandler handler(boolean fromRepository) {
+        return new CreateFromTemplateHandler() {
+            @Override
+            protected boolean accept(CreateDescriptor desc) {
+                return true;
+            }
+
+            @Override
+            protected List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
+                try {
+                    final FileObject folder = desc.getTarget();
+                    final Project project = FileOwnerQuery.getOwner(folder);
+                    if (project == null) {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoProject(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                        return Collections.emptyList();
+                    }
+                    if (fromRepository) {
+                        final SourceGroup sourceGroup = SourceGroups.getFolderSourceGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), folder);
+                        if (sourceGroup == null) {
+                            DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoSourceGroup(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                            return Collections.emptyList();
+                        }
+                        Set<ElementHandle<TypeElement>> repositoryClasses = getRepositoryClasses(sourceGroup);
+                        if (repositoryClasses.isEmpty()) {
+                            DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoRepositories(sourceGroup.getRootFolder().getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                            return Collections.emptyList();
+                        }
+                        List<NotifyDescriptor.QuickPick.Item> items = repositoryClasses.stream().map(handle -> {
+                            String fqn = handle.getQualifiedName();
+                            int idx = fqn.lastIndexOf('.');
+                            return idx < 0 ? new NotifyDescriptor.QuickPick.Item(fqn, null) : new NotifyDescriptor.QuickPick.Item(fqn.substring(idx + 1), fqn.substring(0, idx));
+                        }).collect(Collectors.toList());
+                        NotifyDescriptor.QuickPick qpt = new NotifyDescriptor.QuickPick(Bundle.MSG_SelectRepository(), Bundle.MSG_SelectRepository_Prompt(), items, true);
+                        if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(qpt)) {
+                            List<FileObject> generated = new ArrayList<>();
+                            for (NotifyDescriptor.QuickPick.Item item : qpt.getItems()) {
+                                if (item.isSelected()) {
+                                    String label = item.getLabel();
+                                    if (label.toLowerCase().endsWith(("repository"))) { //NOI18N
+                                        label = label.substring(0, label.length() - 10);
+                                    }
+                                    FileObject fo = generate(folder, label, item.getDescription() != null ? item.getDescription() + '.' + item.getLabel() : item.getLabel());
+                                    if (fo != null) {
+                                        generated.add(fo);
+                                    }
+                                }
+                            }
+                            return generated;
+                        }
+                    } else {
+                        NotifyDescriptor.InputLine inputLine = new NotifyDescriptor.InputLine(Bundle.MSG_SelectControllerName(), Bundle.MSG_SelectControllerName());
+                        if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(inputLine)) {
+                            List<FileObject> generated = new ArrayList<>();
+                            String name = inputLine.getInputText();
+                            if (!name.isEmpty()) {
+                                if (name.toLowerCase().endsWith(("controller"))) { //NOI18N
+                                    name = name.substring(0, name.length() - 10);
+                                }
+                                FileObject fo = generate(desc.getTarget(), name, null);
+                                if (fo != null) {
+                                    generated.add(fo);
+                                }
+                            }
+                            return generated;
+                        }
+                    }
+                } catch (Exception ex) {
+                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(ex.getMessage(), NotifyDescriptor.ERROR_MESSAGE));
+                }
+                return Collections.emptyList();
+            }
+        };
     }
 
     private static Set<ElementHandle<TypeElement>> getRepositoryClasses(final SourceGroup sourceGroup) throws IllegalArgumentException {

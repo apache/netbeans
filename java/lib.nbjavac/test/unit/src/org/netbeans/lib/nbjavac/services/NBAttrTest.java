@@ -99,6 +99,11 @@ public class NBAttrTest extends NbTestCase {
         }.scan(parsed.second(), null);
     }
 
+    public void testCrashNoProcessor() throws Exception {
+        String code = "public class Test { void t() { Object o = \"\\{}\"; } }";
+        Pair<JavacTask, CompilationUnitTree> parsed = compile(code);
+    }
+
     //<editor-fold defaultstate="collapsed" desc=" Test Infrastructure ">
     private static class MyFileObject extends SimpleJavaFileObject {
         private String text;
@@ -132,6 +137,7 @@ public class NBAttrTest extends NbTestCase {
         Context context = new Context();
         NBLog.preRegister(context, DEV_NULL);
         NBAttr.preRegister(context);
+        NBResolve.preRegister(context);
         final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-source", "1.8", "-target", "1.8"), null, Arrays.asList(new MyFileObject(code)), context);
 
         CompilationUnitTree cut = ct.parse().iterator().next();

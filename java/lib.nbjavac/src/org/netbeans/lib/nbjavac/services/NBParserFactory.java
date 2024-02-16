@@ -90,7 +90,7 @@ public class NBParserFactory extends ParserFactory {
             if (!unit.getTypeDecls().isEmpty() && unit.getTypeDecls().get(0).getKind() == Kind.CLASS) {
                 //workaround for JDK-8310326:
                 JCClassDecl firstClass = (JCClassDecl) unit.getTypeDecls().get(0);
-                if ((firstClass.mods.flags & Flags.UNNAMED_CLASS) != 0) {
+                if ((firstClass.mods.flags & Flags.IMPLICIT_CLASS) != 0) {
                     firstClass.pos = getStartPos(firstClass.defs.head);
                     firstClass.mods.pos = Position.NOPOS;
                 }

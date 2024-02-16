@@ -61,7 +61,7 @@ public class WidthEstimator extends JCTree.Visitor {
 	if (ownPrec < contextPrec)
 	    width += 2;
     }
-    private void width(Name n) { width += n.getByteLength(); }
+    private void width(Name n) { width += n.length(); }
     private void width(String n) { width += n.length(); }
     private void width(JCTree n) { if(width<maxwidth) n.accept(this); }
     private void width(List<? extends JCTree> n, int pad) {

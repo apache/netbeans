@@ -34,7 +34,7 @@ import org.openide.modules.OnStart;
  */
 public class NoJavacHelper {
 
-    public static final int REQUIRED_JAVAC_VERSION = 21; // <- TODO: increment on every release
+    public static final int REQUIRED_JAVAC_VERSION = 22; // <- TODO: increment on every release
     private static final boolean HAS_WORKING_JAVAC;
 
     static {

@@ -19,7 +19,6 @@
 package org.netbeans.modules.profiler.api;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
@@ -133,16 +132,11 @@ public final class ProjectUtilities {
      * @return arrays of projects sorted by display name
      */
     public static Provider[] getSortedProjects(Provider[] projects) {
-        List<Provider> projectsArray = Arrays.asList(projects);
-
-        projectsArray.sort((Object o1, Object o2) -> 
-            getDisplayName((Provider) o1).toLowerCase().compareTo(getDisplayName((Provider) o2).toLowerCase())
-        );
-        projectsArray.toArray(projects);
-
-        return projects;
+        Provider[] sorted = Arrays.copyOf(projects, projects.length);
+        Arrays.sort(sorted, (p1, p2) -> getDisplayName(p1).compareToIgnoreCase(getDisplayName(p2)));
+        return sorted;
     }
-    
+
     private static ProjectUtilitiesProvider provider() {
         return Lookup.getDefault().lookup(ProjectUtilitiesProvider.class);
     }

@@ -30,7 +30,9 @@ package org.netbeans.modules.j2ee.dd.impl.webservices;
  */
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.netbeans.modules.j2ee.dd.api.webservices.Webservices;
 
 public class WebServicesProxy implements Webservices {
@@ -180,8 +182,8 @@ public class WebServicesProxy implements Webservices {
         }    
     }
    
-    public java.util.Map getAllDescriptions() {
-        return webSvc==null?new java.util.HashMap():webSvc.getAllDescriptions();
+    public Map getAllDescriptions() {
+        return webSvc == null ? new HashMap<>() : webSvc.getAllDescriptions();
     }
     
     public String getDescription(String locale) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
@@ -192,8 +194,8 @@ public class WebServicesProxy implements Webservices {
         return webSvc==null?null:webSvc.getDefaultDescription();
     }
     
-    public java.util.Map getAllDisplayNames() {
-        return webSvc==null?new java.util.HashMap():webSvc.getAllDisplayNames();
+    public Map getAllDisplayNames() {
+        return webSvc==null?new HashMap<>():webSvc.getAllDisplayNames();
     }
     
     public String getDefaultDisplayName() {
@@ -208,8 +210,8 @@ public class WebServicesProxy implements Webservices {
         return webSvc==null?null:webSvc.getDefaultIcon();
     }
     
-    public java.util.Map getAllIcons() {
-        return webSvc==null?new java.util.HashMap():webSvc.getAllIcons();
+    public Map getAllIcons() {
+        return webSvc == null ? new HashMap<>() : webSvc.getAllIcons();
     }
     
     public String getLargeIcon() {
@@ -280,7 +282,7 @@ public class WebServicesProxy implements Webservices {
         if (webSvc!=null) webSvc.removeSmallIcon(locale);
     }
     
-    public void setAllDescriptions(java.util.Map descriptions) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+    public void setAllDescriptions(Map descriptions) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
         if (webSvc!=null) webSvc.setAllDescriptions(descriptions);
     }
     
@@ -292,7 +294,7 @@ public class WebServicesProxy implements Webservices {
         if (webSvc!=null) webSvc.setDescription(locale, description);
     }
     
-    public void setAllDisplayNames(java.util.Map displayNames) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+    public void setAllDisplayNames(Map displayNames) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
         if (webSvc!=null) webSvc.setAllDisplayNames(displayNames);
     }
     

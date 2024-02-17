@@ -459,12 +459,12 @@ public class DomainEditor {
     static final String[] sysDatasources = {"jdbc/__TimerPool", "jdbc/__CallFlowPool"}; //NOI18N
     
 
-    public HashMap<String,Map> getSunDatasourcesFromXml(){
-        HashMap<String,Map> dSources = new HashMap<>();
+    public Map<String, Map<String, String>> getSunDatasourcesFromXml(){
+        Map<String,Map<String, String>> dSources = new HashMap<>();
         Document domainDoc = getDomainDocument();
         if (domainDoc != null) {
-            HashMap<String,NamedNodeMap> dsMap = getDataSourcesAttrMap(domainDoc);
-            HashMap<String,Node> cpMap = getConnPoolsNodeMap(domainDoc);
+            Map<String,NamedNodeMap> dsMap = getDataSourcesAttrMap(domainDoc);
+            Map<String,Node>         cpMap = getConnPoolsNodeMap(domainDoc);
             dsMap.keySet().removeAll(Arrays.asList(sysDatasources));
             String[] ds = dsMap.keySet().toArray(new String[dsMap.size()]);
 
@@ -479,8 +479,8 @@ public class DomainEditor {
         return dSources;
     }
 
-    private Map<String,String> getPoolValues(Map<String, Node> cpMap, String poolName) {
-        Map<String,String> pValues = new HashMap<>();
+    private Map<String, String> getPoolValues(Map<String, Node> cpMap, String poolName) {
+        Map<String, String> pValues = new HashMap<>();
         Node cpNode = (Node) cpMap.get(poolName);
         NamedNodeMap cpAttrMap = cpNode.getAttributes();
         Node dsClassName = cpAttrMap.getNamedItem(CONST_DS_CLASS);
@@ -525,8 +525,8 @@ public class DomainEditor {
         return pValues;
     }
 
-    public HashMap<String,Map> getConnPoolsFromXml(){
-        HashMap<String,Map> pools = new HashMap<>();
+    public HashMap<String, Map<String, String>> getConnPoolsFromXml(){
+        HashMap<String, Map<String, String>> pools = new HashMap<>();
         Document domainDoc = getDomainDocument();
         if (domainDoc != null) {
             HashMap<String,Node> cpMap = getConnPoolsNodeMap(domainDoc);

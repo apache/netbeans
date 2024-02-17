@@ -71,13 +71,8 @@ public class Unbalanced {
             info.putCachedValue(SEEN_KEY, cache = new HashMap<>(), CompilationInfo.CacheClearPolicy.ON_CHANGE);
         }
 
-        Set<State> state = cache.get(el);
-
-        if (state == null) {
-            cache.put(el, state = EnumSet.noneOf(State.class));
-        }
-        
-        state.addAll(Arrays.asList(states));
+        cache.computeIfAbsent(el, k -> EnumSet.noneOf(State.class))
+             .addAll(Arrays.asList(states));
     }
 
     private static ErrorDescription produceWarning(HintContext ctx, String keyBase) {
@@ -101,7 +96,9 @@ public class Unbalanced {
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), warning);
     }
 
-    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Unbalanced.Array", description = "#DESC_org.netbeans.modules.java.hints.bugs.Unbalanced.Array", category="bugs", options=Options.QUERY, suppressWarnings="MismatchedReadAndWriteOfArray")
+    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Unbalanced.Array",
+          description = "#DESC_org.netbeans.modules.java.hints.bugs.Unbalanced.Array",
+          category="bugs", options=Options.QUERY, suppressWarnings="MismatchedReadAndWriteOfArray")
     public static final class Array {
 
         private static VariableElement testElement(HintContext ctx) {
@@ -194,7 +191,9 @@ public class Unbalanced {
         }
     }
 
-    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Unbalanced.Collection", description = "#DESC_org.netbeans.modules.java.hints.bugs.Unbalanced.Collection", category="bugs", options=Options.QUERY, suppressWarnings="MismatchedQueryAndUpdateOfCollection")
+    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Unbalanced.Collection",
+          description = "#DESC_org.netbeans.modules.java.hints.bugs.Unbalanced.Collection",
+          category="bugs", options=Options.QUERY, suppressWarnings="MismatchedQueryAndUpdateOfCollection")
     public static final class Collection {
         private static final Set<String> READ_METHODS = new HashSet<>(Arrays.asList(
                 "get", "getOrDefault", "contains", "remove", "containsAll", "removeAll", "removeIf", "retain", "retainAll", "containsKey",

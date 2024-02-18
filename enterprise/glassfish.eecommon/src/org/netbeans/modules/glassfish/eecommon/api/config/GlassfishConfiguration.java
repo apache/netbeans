@@ -124,7 +124,7 @@ public abstract class GlassfishConfiguration implements
      * server version.
      * <br/>
      * <i>Internal {@link #getExistingResourceFile(J2eeModule, GlassFishVersion)
-     * helper method.</i>
+     * } helper method.</i>
      * <p/>
      * @param version GlassFish server version.
      * @return An array of {@code RESOURCE_FILES} array indexes pointing
@@ -136,19 +136,7 @@ public abstract class GlassfishConfiguration implements
         if (version == null) {
             return new int[]{0,1};
         }
-        // glassfish-resources.xml for v7
-        if (GlassFishVersion.ge(version, GlassFishVersion.GF_7_0_0)) {
-            return new int[]{0};
-        }
-        // glassfish-resources.xml for v6
-        if (GlassFishVersion.ge(version, GlassFishVersion.GF_6) || GlassFishVersion.ge(version, GlassFishVersion.GF_6_1_0)) {
-            return new int[]{0};
-        }
-        // glassfish-resources.xml for v5
-        if (GlassFishVersion.ge(version, GlassFishVersion.GF_5) || GlassFishVersion.ge(version, GlassFishVersion.GF_5_1_0)) {
-            return new int[]{0};
-        }
-        // glassfish-resources.xml for v4
+        // glassfish-resources.xml for v4 or greater
         if (GlassFishVersion.ge(version, GlassFishVersion.GF_4)) {
             return new int[]{0};
         }
@@ -195,7 +183,7 @@ public abstract class GlassfishConfiguration implements
      * <li><i>GlassFish v2:</i> Only {@code sun-resources.xml} is checked.</li>
      * <li><i>GlassFish v3:</i> {@code glassfish-resources.xml} is checked first,
      *                          {@code sun-resources.xml} as fallback.</li>
-     * <li><i>GlassFish v4:</i> Only {@code glassfish-resources.xml} is checked.</li>
+     * <li><i>GlassFish v4 or greater:</i> Only {@code glassfish-resources.xml} is checked.</li>
      * <li><i>Configuration directory</i> is checked first, <i>resources directory</i>
      *        as fallback.</li>
      * </ul>

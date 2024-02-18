@@ -22,10 +22,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.cargo.api.nodes.CargoNodes;
 import org.netbeans.modules.rust.project.RustProject;
 import org.netbeans.modules.rust.project.api.RustProjectAPI;
@@ -33,7 +31,6 @@ import org.netbeans.modules.rust.project.ui.important.RustProjectImportantFilesN
 import org.netbeans.modules.rust.project.ui.src.RustProjectSrcNode;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeList;
-import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.Node;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
@@ -64,20 +61,6 @@ public final class RustProjectDefaultChildrenNodes implements NodeFactory {
          * project layout</a>
          */
         SRC,
-        /**
-         * Workspace elements. These are folders under the projects main
-         * directory (called workspace members). We use a special folder for
-         * workspace members. This folder exists only if a `[workspace]` is
-         * found in Cargo.toml.
-         *
-         * @see
-         * <a href="https://doc.rust-lang.org/cargo/reference/workspaces.html#the-workspace-section">The
-         * workspace section.</a>
-         * @see
-         * <a href="https://doc.rust-lang.org/cargo/reference/workspaces.html#virtual-workspace">Virtual
-         * workspace.</a>
-         */
-        WORKSPACE,
         /**
          * Important files for a rust project, that may include "Cargo.toml",
          * ".gitignore" and others (README.md?)
@@ -120,24 +103,16 @@ public final class RustProjectDefaultChildrenNodes implements NodeFactory {
         public Node node(ROOT_CHILDREN key) {
             RustProject rp = project.getLookup().lookup(RustProject.class);
             switch (key) {
-                case SRC: 
-                    try {
+                case SRC:
                     return new RustProjectSrcNode(rp);
-                } catch (DataObjectNotFoundException ex) {
-                    Exceptions.printStackTrace(ex);
-                    return null;
-                }
-                case WORKSPACE:
-                    boolean hasNoWorkspaceMembers = rp.getCargoTOML().getWorkspace().isEmpty();
-                    return hasNoWorkspaceMembers ? null : CargoNodes.newWorkspaceNode(rp.getCargoTOML());
                 case DEPENDENCIES:
                     return CargoNodes.newCargoDependenciesNode(rp.getCargoTOML());
                 case IMPORTANT_FILES:
                     try {
-                    return new RustProjectImportantFilesNode(rp);
-                } catch (Throwable e) {
-                    Exceptions.printStackTrace(e);
-                }
+                        return new RustProjectImportantFilesNode(rp);
+                    } catch (Throwable e) {
+                        Exceptions.printStackTrace(e);
+                    }
             }
             return null;
         }
@@ -156,11 +131,12 @@ public final class RustProjectDefaultChildrenNodes implements NodeFactory {
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if (CargoTOML.PROP_WORKSPACE.equals(evt.getPropertyName())) {
-                SwingUtilities.invokeLater(() -> {
-                    support.fireChange();
-                });
-            }
+            // TODO:
+//            if (CargoTOML.PROP_WORKSPACE.equals(evt.getPropertyName())) {
+//                SwingUtilities.invokeLater(() -> {
+//                    support.fireChange();
+//                });
+//            }
         }
 
     }

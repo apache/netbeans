@@ -51,7 +51,7 @@ import org.openide.util.NbBundle;
     "CARGO_TEST=test", // FMT
     "CARGO_TEST_DESC=Execute all unit and integration tests and build examples of a local package", // FMT
 })
-public enum CargoCommand {
+public enum CargoCLICommand {
     CARGO_ADD(new String[]{"add"}), // NOI18N
     CARGO_BENCH(new String[]{"bench"}), // NOI18N
     CARGO_BUILD(new String[]{"build"}), // NOI18N
@@ -68,16 +68,16 @@ public enum CargoCommand {
     ;
     public final String[] arguments;
 
-    CargoCommand(String[] arguments) {
+    CargoCLICommand(String[] arguments) {
         this.arguments = arguments;
     }
 
     public String getDisplayName() {
-        return NbBundle.getMessage(CargoCommand.class, name());
+        return NbBundle.getMessage(CargoCLICommand.class, name());
     }
 
     public String getDescription() {
-        return NbBundle.getMessage(CargoCommand.class, name() + "_DESC"); // NOI18N
+        return NbBundle.getMessage(CargoCLICommand.class, name() + "_DESC"); // NOI18N
     }
 
 }

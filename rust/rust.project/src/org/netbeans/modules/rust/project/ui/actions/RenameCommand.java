@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.rust.project.ui.actions;
 
+import java.util.Optional;
+import org.netbeans.modules.rust.cargo.api.RustPackage;
 import org.netbeans.modules.rust.project.RustProject;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
@@ -36,7 +38,11 @@ public class RenameCommand extends GlobalCommand {
 
     @Override
     protected void invokeAction() {
-        DefaultProjectOperations.performDefaultRenameOperation(getProject(), getProject().getCargoTOML().getPackageName());
+        Optional<RustPackage> p = getProject().getCargoTOML().getPackage();
+        if (p.isPresent()) {
+            String name = p.get().getName();
+            DefaultProjectOperations.performDefaultRenameOperation(getProject(), name);
+        }
     }
 
     @Override

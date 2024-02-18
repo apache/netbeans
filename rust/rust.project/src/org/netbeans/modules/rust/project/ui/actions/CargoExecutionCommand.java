@@ -20,17 +20,17 @@ package org.netbeans.modules.rust.project.ui.actions;
 
 import java.io.IOException;
 import java.util.Objects;
-import org.netbeans.modules.rust.cargo.api.Cargo;
-import org.netbeans.modules.rust.cargo.api.CargoCommand;
+import org.netbeans.modules.rust.cargo.api.CargoCLI;
+import org.netbeans.modules.rust.cargo.api.CargoCLICommand;
 import org.netbeans.modules.rust.project.RustProject;
 import org.openide.util.Lookup;
 
 public class CargoExecutionCommand extends Command {
 
     private String commandId;
-    private CargoCommand[] commands;
+    private CargoCLICommand[] commands;
 
-    public CargoExecutionCommand(RustProject project, String commandId, CargoCommand[] commands) {
+    public CargoExecutionCommand(RustProject project, String commandId, CargoCLICommand[] commands) {
         super(project);
         Objects.nonNull(commandId);
         Objects.nonNull(commands);
@@ -53,12 +53,12 @@ public class CargoExecutionCommand extends Command {
 
     @Override
     public boolean isActionEnabledInternal(Lookup context) {
-        return Lookup.getDefault().lookup(Cargo.class) != null;
+        return Lookup.getDefault().lookup(CargoCLI.class) != null;
     }
 
     @Override
     public void invokeActionInternal(Lookup context) {
-        Cargo build = Lookup.getDefault().lookup(Cargo.class);
+        CargoCLI build = Lookup.getDefault().lookup(CargoCLI.class);
         try {
             build.cargo(getProject().getCargoTOML(), commands);
         } catch (IOException ioe) {

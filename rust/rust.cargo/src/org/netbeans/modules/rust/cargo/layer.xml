@@ -21,6 +21,70 @@
 -->
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    <!-- This layer file used for debugging purposes only -->
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-cargotoml">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.rust.cargo.Bundle#Editors/text/x-cargotoml"/>
+                <folder name="FontsColors">
+                    <folder name="BlueTheme">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-rust-cargo-language-token-colorings.xml" url="language/resources/bluetheme.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.rust.cargo.language.resources.Bundle" />
+                            </file>
+                        </folder>
+                    </folder>
+                    <folder name="NetBeans55">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-rust-cargo-language-token-colorings.xml" url="language/resources/nb55.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.rust.cargo.language.resources.Bundle" />
+                            </file>
+                        </folder>
+                    </folder>                    
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-rust-cargo-language-token-colorings.xml" url="language/resources/flatlaf_dark_coloring.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.rust.cargo.language.resources.Bundle" />
+                            </file>
+                        </folder>
+                    </folder>
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-rust-cargo-language-token-colorings_2.xml" url="language/resources/netbeans_default_coloring.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.rust.cargo.language.resources.Bundle" />
+                            </file>
+                        </folder>
+                    </folder>
+                    <folder name="CityLights">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-rust-cargo-language-token-colorings_2.xml" url="language/resources/citylights.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.rust.cargo.language.resources.Bundle" />
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="OptionsDialog">
+        <folder name="PreviewExamples">
+            <folder name="text">
+                <file name="x-cargotoml" url="language/resources/CargoExample.toml"/>
+            </folder>
+        </folder>
+        <folder name="Editor">
+            <folder name="Formatting">
+                <folder name="text">
+                    <folder name="x-cargotoml">
+                        <file name="TabsAndIndents.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.options.editor.spi.CustomizerFactories.createDefaultTabsAndIndentsCustomizerFactory"/>
+                            <attr name="previewTextFile" stringvalue="org/netbeans/modules/rust/cargo/language/resources/CargoExample.toml" />
+                            <attr name="position" intvalue="100"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
 </filesystem>
 

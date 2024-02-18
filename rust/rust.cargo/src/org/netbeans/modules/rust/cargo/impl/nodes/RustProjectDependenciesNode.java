@@ -19,6 +19,8 @@
 package org.netbeans.modules.rust.cargo.impl.nodes;
 
 import java.awt.Image;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.Action;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.cargo.impl.nodes.actions.dependencies.RustAddDependencyAction;
@@ -61,10 +63,15 @@ public final class RustProjectDependenciesNode extends AbstractNode {
          * Build time dependencies.
          */
         BUILD_DEPENDENCY,
+        /**
+         * Workspace dependencies.
+         */
+        WORKSPACE_DEPENDENCY
     }
 
     private static final class RustProjectDependenciesChildren
-            extends Children.Keys<DependencyType> {
+            extends Children.Keys<DependencyType>
+            implements PropertyChangeListener {
 
         private final CargoTOML cargotoml;
 
@@ -75,7 +82,42 @@ public final class RustProjectDependenciesNode extends AbstractNode {
         @Override
         protected void addNotify() {
             super.addNotify();
-            setKeys(DependencyType.values());
+            this.cargotoml.addPropertyChangeListener(this);
+            refreshNodes();
+        }
+
+        @Override
+        protected void removeNotify() {
+            super.removeNotify();
+            this.cargotoml.removePropertyChangeListener(this);
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            String name = evt.getPropertyName();
+            switch (name) {
+                case CargoTOML.PROP_BUILDDEPENDENCIES:
+                case CargoTOML.PROP_DEPENDENCIES:
+                case CargoTOML.PROP_DEVDEPENDENCIES:
+                case CargoTOML.PROP_WORKSPACEDEPENDENCIES:
+                case CargoTOML.PROP_KIND:
+                    refreshNodes();
+                    break;
+            }
+        }
+
+        private void refreshNodes() {
+            if (cargotoml.getKind() == CargoTOML.CargoTOMLKind.VIRTUAL_WORKSPACE) {
+                setKeys(new DependencyType[]{
+                    DependencyType.WORKSPACE_DEPENDENCY
+                });
+            } else {
+                setKeys(new DependencyType[]{
+                    DependencyType.DEPENDENCY,
+                    DependencyType.BUILD_DEPENDENCY,
+                    DependencyType.DEV_DEPENDENCY
+                });
+            }
         }
 
         @Override
@@ -87,6 +129,8 @@ public final class RustProjectDependenciesNode extends AbstractNode {
                     return new Node[]{new RustProjectDependenciesByTypeNode(cargotoml, DependencyType.BUILD_DEPENDENCY)};
                 case DEV_DEPENDENCY:
                     return new Node[]{new RustProjectDependenciesByTypeNode(cargotoml, DependencyType.DEV_DEPENDENCY)};
+                case WORKSPACE_DEPENDENCY:
+                    return new Node[]{new RustProjectDependenciesByTypeNode(cargotoml, DependencyType.WORKSPACE_DEPENDENCY)};
                 default:
                     return new Node[0];
             }
@@ -128,17 +172,24 @@ public final class RustProjectDependenciesNode extends AbstractNode {
     }
 
     /**
-     * Let users add dependencies, development dependencies and build dependencies
-     * from the main "Dependencies node".
+     * Let users add dependencies, development dependencies and build
+     * dependencies from the main "Dependencies node".
+     *
      * @param context
-     * @return 
+     * @return
      */
     @Override
     public Action[] getActions(boolean context) {
+        // Cargo add cannot currently add workspace dependencies
+        // https://github.com/rust-lang/cargo/issues/10608
+        if (cargotoml.getKind() == CargoTOML.CargoTOMLKind.VIRTUAL_WORKSPACE) {
+            return new Action[0];
+        }
         return new Action[]{
             new RustAddDependencyAction(cargotoml, DependencyType.DEPENDENCY),
             new RustAddDependencyAction(cargotoml, DependencyType.DEV_DEPENDENCY),
-            new RustAddDependencyAction(cargotoml, DependencyType.BUILD_DEPENDENCY),};
+            new RustAddDependencyAction(cargotoml, DependencyType.BUILD_DEPENDENCY),
+        };
     }
 
 }

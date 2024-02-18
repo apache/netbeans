@@ -55,7 +55,7 @@ public class CargoBuildImplTest {
             "... and 930 crates more (use --limit N to see more)"
         };
         // ... when we filter them...
-        List<RustPackage> packages = CargoBuildImpl.filterLines(null, Arrays.asList(lines));
+        List<RustPackage> packages = CargoCLIImpl.filterLines(null, Arrays.asList(lines));
         // .. then 15 packages should have been detected
         Assert.assertEquals(15, packages.size());
     }

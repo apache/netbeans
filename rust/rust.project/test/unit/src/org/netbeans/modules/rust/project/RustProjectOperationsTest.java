@@ -23,12 +23,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
-
-import static junit.framework.Assert.assertEquals;
 
 
 public class RustProjectOperationsTest {

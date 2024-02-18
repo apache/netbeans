@@ -156,7 +156,7 @@ public class AuxiliaryConfigBasedPreferencesProvider {
     private static final String ATTR_NAME = "name";
     private static final String ATTR_VALUE = "value";
     
-    private static final String INVALID_KEY_CHARACTERS = "_.";
+    private static final String INVALID_KEY_CHARACTERS = "_.$";
     
     private static final RequestProcessor WORKER = new RequestProcessor("AuxiliaryConfigBasedPreferencesProvider worker", 1);
     private static final int AUTOFLUSH_TIMEOUT = 5000;

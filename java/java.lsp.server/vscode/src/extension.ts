@@ -162,6 +162,7 @@ export function awaitClient() : Promise<NbLanguageClient> {
 function findJDK(onChange: (path : string | null) => void): void {
     let nowDark : boolean = isDarkColorTheme();
     let nowJavaEnabled : boolean = isJavaSupportEnabled();
+    let nowNbJavacDisabled : boolean = isNbJavacDisabled();
     function find(): string | null {
         let nbJdk = workspace.getConfiguration('netbeans').get('jdkhome');
         if (nbJdk) {
@@ -206,7 +207,8 @@ function findJDK(onChange: (path : string | null) => void): void {
             let newJdk = find();
             let newD = isDarkColorTheme();
             let newJavaEnabled = isJavaSupportEnabled();
-            if (newJdk !== currentJdk || newD != nowDark || newJavaEnabled != nowJavaEnabled) {
+            let newNbJavacDisabled = isNbJavacDisabled();
+            if (newJdk !== currentJdk || newD != nowDark || newJavaEnabled != nowJavaEnabled || newNbJavacDisabled != nowNbJavacDisabled) {
                 nowDark = newD;
                 nowJavaEnabled = newJavaEnabled;
                 currentJdk = newJdk;
@@ -845,6 +847,10 @@ function isJavaSupportEnabled() : boolean {
     return workspace.getConfiguration('netbeans')?.get('javaSupport.enabled') as boolean;
 }
 
+function isNbJavacDisabled() : boolean {
+    return workspace.getConfiguration('netbeans')?.get('java.expert.disable.nbjavac') as boolean;
+}
+
 function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean,
     setClient : [(c : NbLanguageClient) => void, (err : any) => void]
 ): void {
@@ -873,12 +879,27 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             // assume storage is path on disk
     }
 
+    let disableModules : string[] = [];
+    let enableModules : string[] = [];
+    if (isJavaSupportEnabled()) {
+        disableModules.push('org.netbeans.modules.nbcode.integration.java');
+    } else {
+        enableModules.push('org.netbeans.modules.nbcode.integration.java');
+    }
+    if (isNbJavacDisabled()) {
+        disableModules.push('org.netbeans.libs.nbjavacapi');
+    } else {
+        enableModules.push('org.netbeans.libs.nbjavacapi');
+    }
+
     let info = {
         clusters : findClusters(context.extensionPath),
         extensionPath: context.extensionPath,
         storagePath : userdir,
         jdkHome : specifiedJDK,
-        verbose: beVerbose
+        verbose: beVerbose,
+        disableModules : disableModules,
+        enableModules : enableModules,
     };
     let launchMsg = `Launching Apache NetBeans Language Server with ${specifiedJDK ? specifiedJDK : 'default system JDK'} and userdir ${userdir}`;
     handleLog(log, launchMsg);
@@ -905,11 +926,6 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         let extras : string[] = ["--modules", "--list", "-J-XX:PerfMaxStringConstLength=10240"];
         if (isDarkColorTheme()) {
             extras.push('--laf', 'com.formdev.flatlaf.FlatDarkLaf');
-        }
-        if (isJavaSupportEnabled()) {
-            extras.push('--direct-disable', 'org.netbeans.modules.nbcode.integration.java');
-        } else {
-            extras.push('--enable', 'org.netbeans.modules.nbcode.integration.java');
         }
         let p = launcher.launch(info, ...extras);
         handleLog(log, "LSP server launching: " + p.pid);

@@ -111,7 +111,7 @@
 					],
 					"default": null,
 					"description": "Specifies JDK for the Apache NetBeans Language Server",
-					"scope": "machine"
+					"scope": "machine-overridable"
 				},
 				"netbeans.verbose": {
 					"type": "boolean",
@@ -210,6 +210,11 @@
 					"description": "Members count to use a static star-import",
 					"default": 999,
 					"minimum": 1
+				},
+				"netbeans.java.expert.disable.nbjavac": {
+					"type": "boolean",
+					"default": false,
+					"description": "Expert option: disable nb-javac library, javac from the selected JDK will be used. The selected JDK must be at least JDK 19."
 				},
 				"java+.runConfig.arguments": {
 					"type": "string",

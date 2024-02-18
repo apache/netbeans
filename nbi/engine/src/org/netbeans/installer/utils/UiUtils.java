@@ -503,15 +503,8 @@ public final class UiUtils {
                 if (laf != null) {
                     String id = laf.getID();
                     for (LookAndFeelType type : LookAndFeelType.values()) {
-                        if (id.equals(LookAndFeelType.WINDOWS_XP.getId()) ||
-                                id.equals(LookAndFeelType.WINDOWS_CLASSIC.getId())) {
-                            final Object object = Toolkit.getDefaultToolkit().
-                                    getDesktopProperty(WINDOWS_XP_THEME_MARKER_PROPERTY);
-                            boolean xpThemeActive = false;
-                            if (object != null) {
-                                xpThemeActive = (Boolean) object;
-                            }
-                            lookAndFeelType = (xpThemeActive) ? LookAndFeelType.WINDOWS_XP : LookAndFeelType.WINDOWS_CLASSIC;
+                        if (id.equals(LookAndFeelType.WINDOWS_CLASSIC.getId())) {
+                            lookAndFeelType = LookAndFeelType.WINDOWS_CLASSIC;
                             break;
                         } else if (id.equals(type.getId())) {
                             lookAndFeelType = type;
@@ -548,7 +541,6 @@ public final class UiUtils {
     }
     
     public enum LookAndFeelType {
-        WINDOWS_XP("win.xp", "Windows", "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"),
         WINDOWS_CLASSIC("win.classic", "Windows", "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"),
         MOTIF("motif", "Motif", "com.sun.java.swing.plaf.motif.MotifLookAndFeel"),
         GTK("gtk", "GTK", "com.sun.java.swing.plaf.gtk.GTKLookAndFeel"),
@@ -619,8 +611,6 @@ public final class UiUtils {
     public static final String LAF_DECORATED_WINDOWS_PROPERTY =
             "nbi.look.and.feel.decorate.windows"; // NOI18N
     
-    public static final String WINDOWS_XP_THEME_MARKER_PROPERTY =
-            "win.xpstyle.themeActive"; // NOI18N
      /**
      * Name of a resource bundle entry.
      */

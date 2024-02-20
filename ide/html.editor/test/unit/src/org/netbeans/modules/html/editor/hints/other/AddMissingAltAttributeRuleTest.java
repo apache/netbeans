@@ -46,7 +46,7 @@ public class AddMissingAltAttributeRuleTest extends TestBase {
             createRule(),
             "testfiles/hints/addMissingAltAttribute1.html",
             "<img^",
-            "Find img/applet/area elements where no alt attribute is provided."
+            "Provide Text Alternatives"
         );
     }
 }

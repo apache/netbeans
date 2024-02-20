@@ -4621,7 +4621,7 @@ public abstract class CslTestBase extends NbTestCase {
                 List<HintFix> list = desc.getFixes();
                 assertNotNull(list);
                 for (HintFix fix : list) {
-                    if (text != null ||
+                    if (text == null ||
                             (substringMatch && fix.getDescription().indexOf(text) != -1) ||
                             (!substringMatch && fix.getDescription().equals(text))) {
                         return fix;

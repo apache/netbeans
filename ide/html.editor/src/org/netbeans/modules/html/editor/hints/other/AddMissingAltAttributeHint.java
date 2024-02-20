@@ -26,6 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -67,11 +68,10 @@ public class AddMissingAltAttributeHint extends Hint {
 
         @Override
         public void implement() throws Exception {
-            EventQueue.invokeLater(() -> {
+            BaseDocument document = (BaseDocument) context.getSnapshot().getSource().getDocument(true);
+            document.runAtomic(() -> {
                 try {
-                    Source source = Source.create(context.getFile());
-                    OffsetRange adjustedRange = HtmlTagContextUtils.adjustContextRange(source.getDocument(false), range.getStart(), range.getEnd(), true);
-                    Document document = source.getDocument(false);
+                    OffsetRange adjustedRange = HtmlTagContextUtils.adjustContextRange(document, range.getStart(), range.getEnd(), true);
                     String tagContent = document.getText(adjustedRange.getStart(), adjustedRange.getLength());
 
                     // Find last self-closing or non self-closing tag

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.145
+#Version 1.146
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -2137,6 +2137,14 @@ supr javax.swing.JPanel
 hfds LOG,TESTS_RE,addButton,fcMessage,jLabel1,jScrollPane1,lastUsedFolder,projectFolder,relatedFolderFilter,relatedFolderList,removeButton,roots
 hcls ContextFileFilter,DNDHandle,FileListTransferable,Renderer
 
+CLSS public org.netbeans.modules.java.api.common.queries.GenericModuleInfoAccessibilityQuery
+cons public init()
+intf org.netbeans.spi.java.queries.AccessibilityQueryImplementation2
+meth public org.netbeans.spi.java.queries.AccessibilityQueryImplementation2$Result isPubliclyAccessible(org.openide.filesystems.FileObject)
+supr java.lang.Object
+hfds LOG,path2Result,sourcePath2Listener
+hcls ClassPathListener,CleanPath2Result,ResultImpl,TextJFO
+
 CLSS public abstract interface org.netbeans.modules.java.api.common.queries.MultiModuleGroupQuery
 innr public final static Result
 meth public abstract org.netbeans.api.project.SourceGroup[] filterModuleGroups(java.lang.String,org.netbeans.api.project.SourceGroup[])
@@ -2402,6 +2410,12 @@ meth protected final java.lang.String performSharabilityHeuristics(java.net.URI,
 meth protected static java.net.URI[] convertURLsToURIs(java.net.URL[])
 supr java.lang.Object
 hcls Accessor
+
+CLSS public abstract interface org.netbeans.spi.java.queries.AccessibilityQueryImplementation2
+innr public abstract interface static Result
+meth public abstract org.netbeans.spi.java.queries.AccessibilityQueryImplementation2$Result isPubliclyAccessible(org.openide.filesystems.FileObject)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract interface org.netbeans.spi.project.ActionProvider
 fld public final static java.lang.String COMMAND_BUILD = "build"

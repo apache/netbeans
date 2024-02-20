@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.20
+#Version 1.24
 
 CLSS public abstract interface java.io.Serializable
 
@@ -83,14 +83,16 @@ supr java.lang.Object
 hfds item,ranges
 
 CLSS public org.netbeans.api.lsp.CodeAction
+cons public init(java.lang.String,java.lang.String,org.netbeans.api.lsp.Command,org.netbeans.api.lsp.WorkspaceEdit)
 cons public init(java.lang.String,org.netbeans.api.lsp.Command)
 cons public init(java.lang.String,org.netbeans.api.lsp.Command,org.netbeans.api.lsp.WorkspaceEdit)
 cons public init(java.lang.String,org.netbeans.api.lsp.WorkspaceEdit)
+meth public java.lang.String getKind()
 meth public java.lang.String getTitle()
 meth public org.netbeans.api.lsp.Command getCommand()
 meth public org.netbeans.api.lsp.WorkspaceEdit getEdit()
 supr java.lang.Object
-hfds command,edit,title
+hfds command,edit,kind,title
 
 CLSS public org.netbeans.api.lsp.CodeLens
 cons public init(org.netbeans.api.lsp.Range,org.netbeans.api.lsp.Command,java.lang.Object)
@@ -122,6 +124,10 @@ meth public java.lang.String getInsertText()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public java.lang.String getLabel()
  anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public java.lang.String getLabelDescription()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public java.lang.String getLabelDetail()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public java.lang.String getSortText()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public java.util.List<java.lang.Character> getCommitCharacters()
@@ -147,7 +153,7 @@ meth public static boolean collect(javax.swing.text.Document,int,org.netbeans.ap
  anno 3 org.netbeans.api.annotations.common.NullAllowed()
  anno 4 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds additionalTextEdits,command,commitCharacters,detail,documentation,filterText,insertText,insertTextFormat,kind,label,preselect,sortText,tags,textEdit
+hfds additionalTextEdits,command,commitCharacters,detail,documentation,filterText,insertText,insertTextFormat,kind,label,labelDescription,labelDetail,preselect,sortText,tags,textEdit
 
 CLSS public final static org.netbeans.api.lsp.Completion$Context
  outer org.netbeans.api.lsp.Completion
@@ -288,6 +294,7 @@ supr java.lang.Object
 hfds endOffset,fileObject,startOffset
 
 CLSS public final org.netbeans.api.lsp.LazyCodeAction
+cons public init(java.lang.String,java.lang.String,org.netbeans.api.lsp.Command,java.util.function.Supplier<org.netbeans.api.lsp.WorkspaceEdit>)
 cons public init(java.lang.String,java.util.function.Supplier<org.netbeans.api.lsp.WorkspaceEdit>)
 cons public init(java.lang.String,org.netbeans.api.lsp.Command,java.util.function.Supplier<org.netbeans.api.lsp.WorkspaceEdit>)
 meth public java.util.function.Supplier<org.netbeans.api.lsp.WorkspaceEdit> getLazyEdit()
@@ -467,10 +474,20 @@ meth public abstract java.util.concurrent.CompletableFuture<java.util.List<org.n
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 
+CLSS public abstract interface org.netbeans.spi.lsp.CodeActionProvider
+meth public abstract java.util.List<org.netbeans.api.lsp.CodeAction> getCodeActions(javax.swing.text.Document,org.netbeans.api.lsp.Range,org.openide.util.Lookup)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NonNull()
+
 CLSS public abstract interface org.netbeans.spi.lsp.CodeLensProvider
  anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="CodeLensProvider")
 meth public abstract java.util.concurrent.CompletableFuture<java.util.List<? extends org.netbeans.api.lsp.CodeLens>> codeLens(javax.swing.text.Document)
  anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract interface org.netbeans.spi.lsp.CommandProvider
+meth public abstract java.util.Set<java.lang.String> getCommands()
+meth public abstract java.util.concurrent.CompletableFuture<java.lang.Object> runCommand(java.lang.String,java.util.List<java.lang.Object>)
 
 CLSS public abstract interface org.netbeans.spi.lsp.CompletionCollector
  anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="CompletionCollectors")
@@ -527,6 +544,12 @@ meth public org.netbeans.spi.lsp.CompletionCollector$Builder kind(org.netbeans.a
 meth public org.netbeans.spi.lsp.CompletionCollector$Builder label(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.CompletionCollector$Builder labelDescription(java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.CompletionCollector$Builder labelDetail(java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public org.netbeans.spi.lsp.CompletionCollector$Builder preselect(boolean)
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.netbeans.spi.lsp.CompletionCollector$Builder sortText(java.lang.String)
@@ -536,7 +559,7 @@ meth public org.netbeans.spi.lsp.CompletionCollector$Builder textEdit(org.netbea
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds additionalTextEdits,command,commitCharacters,detail,documentation,filterText,insertText,insertTextFormat,kind,label,preselect,sortText,tags,textEdit
+hfds additionalTextEdits,command,commitCharacters,detail,documentation,filterText,insertText,insertTextFormat,kind,label,labelDescription,labelDetail,preselect,sortText,tags,textEdit
 hcls LazyCompletableFuture
 
 CLSS public abstract interface org.netbeans.spi.lsp.DiagnosticReporter

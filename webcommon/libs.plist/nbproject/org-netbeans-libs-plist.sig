@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.29
+#Version 1.30
 
 CLSS public final com.dd.plist.ASCIIPropertyListParser
 fld public final static char ARRAY_BEGIN_TOKEN = '('

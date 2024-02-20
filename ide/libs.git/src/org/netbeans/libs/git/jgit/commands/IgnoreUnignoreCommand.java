@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -64,7 +65,7 @@ public abstract class IgnoreUnignoreCommand extends GitCommand {
         super(repository, gitFactory, monitor);
         this.files = files;
         this.monitor = monitor;
-        this.ignoreFiles = new LinkedHashSet<File>();
+        this.ignoreFiles = new LinkedHashSet<>();
         this.listener = listener;
     }
 
@@ -133,7 +134,7 @@ public abstract class IgnoreUnignoreCommand extends GitCommand {
         BufferedWriter bw = null;
         File tmpFile = Files.createTempFile(gitIgnore.getParentFile().toPath(), Constants.DOT_GIT_IGNORE, "tmp").toFile(); //NOI18N
         try {
-            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tmpFile), Constants.CHARSET));
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tmpFile), StandardCharsets.UTF_8));
             for (ListIterator<IgnoreRule> it = ignoreRules.listIterator(); it.hasNext(); ) {
                 String s = it.next().getPattern(false);
                 bw.write(s, 0, s.length());
@@ -169,11 +170,11 @@ public abstract class IgnoreUnignoreCommand extends GitCommand {
     }
 
     private List<IgnoreRule> parse (File gitIgnore) throws IOException {
-        List<IgnoreRule> rules = new LinkedList<IgnoreRule>();
+        List<IgnoreRule> rules = new LinkedList<>();
         if (gitIgnore.exists()) {
             BufferedReader br = null;
             try {
-                br = new BufferedReader(new InputStreamReader(new FileInputStream(gitIgnore), Constants.CHARSET));
+                br = new BufferedReader(new InputStreamReader(new FileInputStream(gitIgnore), StandardCharsets.UTF_8));
                 String txt;
                 while ((txt = br.readLine()) != null) {
                     rules.add(new IgnoreRule(txt));

@@ -22,7 +22,6 @@ package org.netbeans.libs.git.jgit.commands;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -764,6 +763,11 @@ public class LogTest extends AbstractGitTestCase {
         
         client.checkoutRevision("newbranch", true, NULL_PROGRESS_MONITOR);
         write(f, "modification on branch");
+        // git commit timestamp resolution is one second.
+        // commits with the same time stamp don't seem to influence log order unless branches
+        // change between commits. In that case the branch name is also affecting the order.
+        // (renaming "newbranch" to "aaa" would fix this too but obfuscate the problem)
+        Thread.sleep(1100);
         add(files);
         commit(files);
         

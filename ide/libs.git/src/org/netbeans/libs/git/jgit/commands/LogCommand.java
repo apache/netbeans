@@ -165,7 +165,7 @@ public class LogCommand extends GitCommand {
                         fullWalk.parseCommit(commit), branches, repository)
                     );
                     if (commit.getParentCount() == 0) {
-                        Ref replace = repository.getAllRefs().get("refs/replace/" + commit.getId().getName());
+                        Ref replace = repository.exactRef("refs/replace/" + commit.getId().getName());
                         if (replace != null) {
                             final RevCommit newCommit = Utils.findCommit(repository, replace.getTarget().getName());
                             if (newCommit != null) {

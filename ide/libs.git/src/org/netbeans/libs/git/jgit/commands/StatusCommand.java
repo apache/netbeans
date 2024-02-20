@@ -246,7 +246,7 @@ public class StatusCommand extends GitCommand {
                     }
 
                     int stage = indexEntry == null ? 0 : indexEntry.getStage();
-                    long indexTimestamp = indexEntry == null ? -1 : indexEntry.getLastModified();
+                    long indexTimestamp = indexEntry == null ? -1 : indexEntry.getLastModifiedInstant().toEpochMilli();
 
                     GitStatus status = getClassFactory().createStatus(tracked, path, workTreePath, file,
                             statusHeadIndex, statusIndexWC, statusHeadWC,

@@ -442,7 +442,7 @@ public final class Utils {
         }
     }
 
-    public static Map getAllBranches (Repository repository, GitClassFactory fac, ProgressMonitor monitor) throws GitException {
+    public static Map<String, GitBranch> getAllBranches(Repository repository, GitClassFactory fac, ProgressMonitor monitor) throws GitException {
         ListBranchCommand cmd = new ListBranchCommand(repository, fac, true, monitor);
         cmd.execute();
         return cmd.getBranches();

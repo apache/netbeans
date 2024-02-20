@@ -45,8 +45,10 @@
     <codetemplate abbreviation="im"><code><![CDATA[${no-indent}implements ]]></code></codetemplate> 
     <codetemplate abbreviation="iof"><code><![CDATA[${no-indent}instanceof ]]></code></codetemplate> 
     <codetemplate abbreviation="ir"><code><![CDATA[${no-indent}import ]]></code></codetemplate> 
-    <codetemplate abbreviation="le"><code><![CDATA[${no-indent}length]]></code></codetemplate> 
+    <codetemplate abbreviation="le"><code><![CDATA[${no-indent}length]]></code></codetemplate>
+    <codetemplate abbreviation="nse"><code><![CDATA[${no-indent}non-sealed ]]></code></codetemplate>
     <codetemplate abbreviation="pe"><code><![CDATA[${no-indent}protected ]]></code></codetemplate> 
+    <codetemplate abbreviation="pt"><code><![CDATA[${no-indent}permits ]]></code></codetemplate>
     <codetemplate abbreviation="pr"><code><![CDATA[${no-indent}private ]]></code></codetemplate> 
     <codetemplate abbreviation="psf"><code><![CDATA[${no-format}private static final ]]></code></codetemplate> 
     <codetemplate abbreviation="psfi"><code><![CDATA[${no-format}private static final int ]]></code></codetemplate> 
@@ -54,7 +56,9 @@
     <codetemplate abbreviation="psfb"><code><![CDATA[${no-format}private static final boolean ]]></code></codetemplate> 
     <codetemplate abbreviation="pst" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION"><code><![CDATA[printStackTrace();]]></code></codetemplate> 
     <codetemplate abbreviation="pu"><code><![CDATA[${no-indent}public ]]></code></codetemplate> 
+    <codetemplate abbreviation="rc"><code><![CDATA[${no-indent}record ]]></code></codetemplate>
     <codetemplate abbreviation="re"><code><![CDATA[${no-indent}return ]]></code></codetemplate>
+    <codetemplate abbreviation="se"><code><![CDATA[${no-indent}sealed ]]></code></codetemplate>
     <codetemplate abbreviation="serr" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION"><code><![CDATA[System.err.println("${cursor}");]]></code></codetemplate> 
     <codetemplate abbreviation="sout" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION"><code><![CDATA[System.out.println("${cursor}");]]></code></codetemplate> 
     <codetemplate abbreviation="st"><code><![CDATA[${no-indent}static ]]></code></codetemplate> 
@@ -489,6 +493,27 @@ ${cursor}]]></code></codetemplate>
         }
      }
      ]]></code></codetemplate>
+
+    <!-- Record generation -->
+
+    <codetemplate abbreviation="Prec"><code><![CDATA[${no-format}public record ${Type}(${cursor}) {}]]></code></codetemplate>
+    <codetemplate abbreviation="Preci"><code><![CDATA[${no-format}public record ${Type}(${cursor}) implements ${classVar editable="false" currClassName default="getClass()"} {}]]></code></codetemplate>
+    <codetemplate abbreviation="prec"><code><![CDATA[${no-format}private record ${Type}(${cursor}) {}]]></code></codetemplate>
+    <codetemplate abbreviation="preci"><code><![CDATA[${no-format}private record ${Type}(${cursor}) implements ${classVar editable="false" currClassName default="getClass()"} {}]]></code></codetemplate>
+    <codetemplate abbreviation="rec"><code><![CDATA[${no-format}record ${Type}(${cursor}) {}]]></code></codetemplate>
+    <codetemplate abbreviation="reci"><code><![CDATA[${no-format}record ${Type}(${cursor}) implements ${classVar editable="false" currClassName default="getClass()"} {}]]></code></codetemplate>
+
+    <!-- Sealed Interfaces generation -->
+
+    <codetemplate abbreviation="psin"><code><![CDATA[public sealed interface ${Type} {
+    ${cursor}
+}]]></code>
+    </codetemplate>
+
+    <codetemplate abbreviation="psinp"><code><![CDATA[public sealed interface ${Type} permits ${cursor} {
+}]]></code>
+    </codetemplate>
+
     <codetemplate abbreviation="if" descriptionId="CT_iff">
         <code>
 <![CDATA[if (${EXP instanceof="boolean" default="true"}) {
@@ -514,7 +539,7 @@ ${cursor}]]></code></codetemplate>
 ]]>
         </code>
     </codetemplate>
-     <codetemplate abbreviation="ap"><code><![CDATA[${sb instanceof="java.lang.StringBuilder" default="sb"}.append(${EXP instanceof="<any>" default=""exp""});
+    <codetemplate abbreviation="ap"><code><![CDATA[${sb instanceof="java.lang.StringBuilder" default="sb"}.append(${EXP instanceof="<any>" default=""exp""});
 ${cursor}]]></code></codetemplate>
 
      <codetemplate abbreviation="apo"><code><![CDATA[if (${sb instanceof="java.lang.StringBuilder" default="sb"}.length() > 0) {

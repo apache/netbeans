@@ -48,7 +48,7 @@ public class MicronautStructureProvider implements StructureProvider {
                     List<StructureElement> elements = new ArrayList<>();
                     js.runUserActionTask(cc -> {
                         cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        for (MicronautSymbolFinder.SymbolLocation symbolLocation : MicronautSymbolFinder.scan(cc)) {
+                        for (MicronautSymbolFinder.SymbolLocation symbolLocation : MicronautSymbolFinder.scan(cc, false)) {
                             elements.add(StructureProvider.newBuilder(symbolLocation.getName(), StructureElement.Kind.Interface)
                                     .file(cc.getFileObject())
                                     .expandedStartOffset(symbolLocation.getStart())

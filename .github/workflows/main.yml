@@ -671,12 +671,6 @@ jobs:
       - name: ide/libs.freemarker
         run: ant $OPTS -f ide/libs.freemarker test
 
-      - name: ide/git
-        run: .github/retry.sh ant $OPTS -f ide/git test-unit
-
-      - name: ide/libs.git
-        run: .github/retry.sh ant $OPTS -f ide/libs.git test
-
       - name: ide/libs.graalsdk
         run: ant $OPTS -f ide/libs.graalsdk test
 
@@ -754,15 +748,6 @@ jobs:
 
       - name: ide/utilities
         run: ant $OPTS -f ide/utilities test
-
-      - name: ide/versioning.masterfs
-        run: ant $OPTS -f ide/versioning.masterfs test
-
-      - name: ide/versioning.ui
-        run: ant $OPTS -f ide/versioning.ui test
-
-      - name: ide/versioning.util
-        run: ant $OPTS -f ide/versioning.util test
 
       - name: ide/web.common
         run: ant $OPTS -f ide/web.common test
@@ -2316,6 +2301,21 @@ jobs:
         
       - name: Setup Env
         run: echo "GIT_TEST_REPO=$HOME/git_test_repo" >> $GITHUB_ENV
+
+      - name: ide/git
+        run: .github/retry.sh ant $OPTS -f ide/git test-unit
+
+      - name: ide/libs.git
+        run: .github/retry.sh ant $OPTS -f ide/libs.git test
+
+      - name: ide/versioning.masterfs
+        run: ant $OPTS -f ide/versioning.masterfs test
+
+      - name: ide/versioning.ui
+        run: ant $OPTS -f ide/versioning.ui test
+
+      - name: ide/versioning.util
+        run: ant $OPTS -f ide/versioning.util test
 
       - name: ide/versioning.core
         run: ant $OPTS -f ide/versioning.core test-unit

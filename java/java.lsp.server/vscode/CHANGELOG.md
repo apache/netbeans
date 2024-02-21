@@ -20,6 +20,11 @@
     under the License.
 
 -->
+## Version 21.0.0
+* Improved vulnerability audit results and display 
+* Number of fixes in Maven projects processing 
+* Java TextMate grammar used
+
 ## Version 20.0.301
 * Micronaut: 
   * Micronaut Expression Language added - Syntax highlighting, Code Completion, Go to Declaration

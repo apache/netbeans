@@ -31,7 +31,6 @@ import java.util.Set;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import org.netbeans.api.queries.VersioningQuery;
 import org.netbeans.junit.MockServices;
 import org.netbeans.libs.git.jgit.Utils;
 import org.netbeans.modules.git.FileInformation.Status;
@@ -171,7 +170,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
     private class LogHandler extends Handler {
         private File fileToInitialize;
         private boolean filesInitialized;
-        private final HashSet<File> initializedFiles = new HashSet<File>();
+        private final HashSet<File> initializedFiles = new HashSet<>();
 
         @Override
         public void publish(LogRecord record) {
@@ -226,16 +225,16 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         assertNull(str);
     }
 
-    public void testGetRemoteLocationAttribute () throws Exception {
-        File file = new File(repositoryLocation, "attrfile");
-        file.createNewFile();
-        FileObject fo = FileUtil.toFileObject(file);
-
-        String str = (String) fo.getAttribute(PROVIDED_EXTENSIONS_REMOTE_LOCATION);
-        // TODO implement getRemoteRepositoryURL
+    // TODO implement getRemoteRepositoryURL
+//    public void testGetRemoteLocationAttribute () throws Exception {
+//        File file = new File(repositoryLocation, "attrfile");
+//        file.createNewFile();
+//        FileObject fo = FileUtil.toFileObject(file);
+//
+//        String str = (String) fo.getAttribute(PROVIDED_EXTENSIONS_REMOTE_LOCATION);
 //        assertNotNull(str);
 //        assertEquals(repositoryLocation.getAbsolutePath().toString(), str);
-    }
+//    }
 
     public void testModifyVersionedFile () throws Exception {
         // init
@@ -249,9 +248,9 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         assertTrue(h.waitForFilesToRefresh());
 
         h.setFilesToRefresh(Collections.singleton(file));
-        PrintWriter pw = new PrintWriter(fo.getOutputStream());
-        pw.println("hello new file");
-        pw.close();
+        try (PrintWriter pw = new PrintWriter(fo.getOutputStream())) {
+            pw.println("hello new file");
+        }
         assertTrue(h.waitForFilesToRefresh());
 
         // test
@@ -545,12 +544,9 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         assertTrue(h.waitForFilesToRefresh());
 
         final FileObject fo = FileUtil.toFileObject(fileA);
-        AtomicAction a = new AtomicAction() {
-            @Override
-            public void run() throws IOException {
-                fo.delete();
-                fo.getParent().createData(fo.getName());
-            }
+        AtomicAction a = () -> {
+            fo.delete();
+            fo.getParent().createData(fo.getName());
         };
         h.setFilesToRefresh(Collections.singleton(fileA));
         fo.getFileSystem().runAtomicAction(a);
@@ -1048,6 +1044,39 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         assertFalse(info.isCopied());
     }
 
+    public void testCopyVersionedFile_DO_IgnoreNewFiles() throws Exception {
+        try {
+            GitModuleConfig.getDefault().setExcludeNewFiles(true);
+
+            // init
+            File fromFile = new File(repositoryLocation, "file");
+            fromFile.createNewFile();
+            File toFolder = new File(repositoryLocation, "toFolder");
+            toFolder.mkdirs();
+            add();
+            commit();
+            File toFile = new File(toFolder, fromFile.getName());
+
+            // copy
+            h.setFilesToRefresh(Collections.singleton(toFile));
+            copyDO(fromFile, toFile);
+            assertTrue(h.waitForFilesToRefresh());
+            getCache().refreshAllRoots(Collections.singleton(fromFile));
+
+            // test
+            assertTrue(fromFile.exists());
+            assertTrue(toFile.exists());
+
+            assertEquals(EnumSet.of(Status.UPTODATE), getCache().getStatus(fromFile).getStatus());
+            FileInformation info = getCache().getStatus(toFile);
+            assertEquals(EnumSet.of(Status.NEW_INDEX_WORKING_TREE, Status.NEW_HEAD_WORKING_TREE), info.getStatus());
+            // sadly does not work in jgit
+            assertFalse(info.isCopied());
+        } finally {
+            GitModuleConfig.getDefault().setExcludeNewFiles(false);
+        }
+    }
+
     public void testCopyUnversionedFile_DO() throws Exception {
         // init
         File fromFile = new File(repositoryLocation, "file");
@@ -1165,7 +1194,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
 
         // copy
         copyDO(fromFolder, toFolder);
-        getCache().refreshAllRoots(new HashSet<File>(Arrays.asList(fromFile, toFile)));
+        getCache().refreshAllRoots(new HashSet<>(Arrays.asList(fromFile, toFile)));
 
         // test
         assertTrue(fromFolder.exists());
@@ -1215,7 +1244,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileC = new File(folderC, fileA.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileB, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileB, fileC)));
         copyDO(fileA, fileB);
         copyDO(fileB, fileC);
         assertTrue(h.waitForFilesToRefresh());
@@ -1568,7 +1597,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileC = new File(folderC, fileA.getName());
 
         // copy
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileB, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileB, fileC)));
         copyFO(fileA, fileB);
         copyFO(fileB, fileC);
         assertTrue(h.waitForFilesToRefresh());
@@ -1599,7 +1628,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
 
         // copy
         copyFO(fromFile, toFile);
-        getCache().refreshAllRoots(new HashSet<File>(Arrays.asList(fromFile, toFile)));
+        getCache().refreshAllRoots(new HashSet<>(Arrays.asList(fromFile, toFile)));
 
         // test
         assertTrue(fromFile.exists());
@@ -1625,7 +1654,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
 
         // copy
         copyFO(fromFolder, toFolder);
-        getCache().refreshAllRoots(new HashSet<File>(Arrays.asList(fromFile, toFile)));
+        getCache().refreshAllRoots(new HashSet<>(Arrays.asList(fromFile, toFile)));
 
         // test
         assertTrue(fromFile.exists());
@@ -1847,7 +1876,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileC = new File(folderC, fileA.getName());
 
         // copy
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileC, fileA)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileC, fileA)));
         copyFO(fileA, fileC);
         copyFO(fileB, fileA);
         assertTrue(h.waitForFilesToRefresh());
@@ -1873,7 +1902,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         add(fromFile);
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFile, toFile)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFile, toFile)));
         renameDO(fromFile, toFile);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -1898,7 +1927,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         add(fromFile);
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFile, toFile)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFile, toFile)));
         moveDO(fromFile, toFile);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -1923,7 +1952,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         add(fromFile);
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFile)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFile)));
         moveDO(fromFile, toFile);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -1945,7 +1974,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileB = new File(repositoryLocation, "to");
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB)));
         renameDO(fileA, fileB);
         renameDO(fileB, fileA);
         assertTrue(h.waitForFilesToRefresh());
@@ -1970,7 +1999,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileB = new File(folder, fileA.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB)));
         moveDO(fileA, fileB);
         moveDO(fileB, fileA);
         assertTrue(h.waitForFilesToRefresh());
@@ -1994,7 +2023,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileC = new File(repositoryLocation, "C");
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB, fileC)));
         renameDO(fileA, fileB);
         renameDO(fileB, fileC);
         assertTrue(h.waitForFilesToRefresh());
@@ -2023,7 +2052,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileC = new File(repositoryLocation, "C");
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB, fileC)));
         renameDO(fileA, fileB);
         renameDO(fileB, fileC);
         renameDO(fileC, fileA);
@@ -2055,7 +2084,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileC = new File(folderC, fileA.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB, fileC)));
         moveDO(fileA, fileC);
         moveDO(fileB, fileA);
         assertTrue(h.waitForFilesToRefresh());
@@ -2086,7 +2115,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileC = new File(folderC, fileA.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB, fileC)));
         moveFO(fileA, fileC);
         moveFO(fileB, fileA);
         assertTrue(h.waitForFilesToRefresh());
@@ -2113,7 +2142,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileC = new File(repositoryLocation, "C");
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB, fileC)));
         renameDO(fileA, fileC);
         renameDO(fileB, fileA);
         assertTrue(h.waitForFilesToRefresh());
@@ -2140,7 +2169,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileC = new File(repositoryLocation, "C");
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB, fileC)));
         renameFO(fileA, fileC);
         renameFO(fileB, fileA);
         assertTrue(h.waitForFilesToRefresh());
@@ -2170,7 +2199,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileC = new File(folderC, fileA.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB, fileC)));
         moveDO(fileA, fileB);
         moveDO(fileB, fileC);
         moveDO(fileC, fileA);
@@ -2185,13 +2214,13 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         assertEquals(EnumSet.of(Status.UPTODATE), getCache().getStatus(fileB).getStatus());
         assertEquals(EnumSet.of(Status.UPTODATE), getCache().getStatus(fileC).getStatus());
 
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB)));
         moveDO(fileA, fileB);
         assertTrue(h.waitForFilesToRefresh());
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileB, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileB, fileC)));
         moveDO(fileB, fileC);
         assertTrue(h.waitForFilesToRefresh());
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileC)));
         moveDO(fileC, fileA);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2214,7 +2243,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
 
         // rename
         File fileB = new File(repositoryLocation, "B");
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB)));
         renameDO(fileA, fileB);
         // create from file
         FileUtil.toFileObject(fileA.getParentFile()).createData(fileA.getName());
@@ -2241,7 +2270,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileB = new File(folderB, fileA.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB)));
         moveDO(fileA, fileB);
 
         // create from file
@@ -2267,7 +2296,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         commit();
 
         // delete A
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB)));
         delete(fileA);
         // rename B to A
         renameDO(fileB, fileA);
@@ -2293,7 +2322,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File toFile = new File(toFolder, file.getName());
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFolder, toFolder)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFolder, toFolder)));
         renameDO(fromFolder, toFolder);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2322,7 +2351,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File toFile = new File(toFolder, file.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFolder, toFolder)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFolder, toFolder)));
         moveDO(fromFolder, toFolder);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2357,7 +2386,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
 
         // rename
         File toFolder = new File(repositoryLocation, "to");
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFolder, toFolder)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFolder, toFolder)));
         renameDO(fromFolder, toFolder);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2425,7 +2454,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File toFolder = new File(toFolderParent, fromFolder.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFolder, toFolder)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFolder, toFolder)));
         moveDO(fromFolder, toFolder);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2476,7 +2505,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File toFile = new File(repositoryLocation, "toFile");
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFile, toFile)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFile, toFile)));
         renameFO(fromFile, toFile);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2502,7 +2531,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File toFile = new File(toFolder, fromFile.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFile, toFile)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFile, toFile)));
         moveFO(fromFile, toFile);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2524,7 +2553,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File toFile = new File(repositoryLocation, "toFile");
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFile, toFile)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFile, toFile)));
         renameFO(fromFile, toFile);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2546,7 +2575,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File toFile = new File(toFolder, fromFile.getName());
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFile, toFile)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFile, toFile)));
         moveFO(fromFile, toFile);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2568,7 +2597,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File toFile = new File(toFolder, fromFile.getName());
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFolder, toFolder)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFolder, toFolder)));
         renameFO(fromFolder, toFolder);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2592,7 +2621,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File toFile = new File(toFolder, fromFile.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFolder, toFolder)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFolder, toFolder)));
         moveFO(fromFolder, toFolder);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2614,7 +2643,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         add(fromFile);
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFile, toFile)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFile, toFile)));
         renameFO(fromFile, toFile);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2639,7 +2668,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         add(fromFile);
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFile)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFile)));
         moveFO(fromFile, toFile);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2665,7 +2694,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         add(fromFile);
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFile, toFile)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFile, toFile)));
         moveFO(fromFile, toFile);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2686,7 +2715,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileB = new File(repositoryLocation, "to");
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB)));
         renameFO(fileA, fileB);
         renameFO(fileB, fileA);
         assertTrue(h.waitForFilesToRefresh());
@@ -2714,7 +2743,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         assertFalse(fileB.exists());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB)));
         moveFO(fileA, fileB);
         moveFO(fileB, fileA);
         assertTrue(h.waitForFilesToRefresh());
@@ -2738,7 +2767,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileC = new File(repositoryLocation, "C");
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB, fileC)));
         renameFO(fileA, fileB);
         renameFO(fileB, fileC);
         assertTrue(h.waitForFilesToRefresh());
@@ -2771,7 +2800,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileC = new File(folderC, fileA.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB, fileC)));
         moveFO(fileA, fileB);
         moveFO(fileB, fileC);
         assertTrue(h.waitForFilesToRefresh());
@@ -2800,7 +2829,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileC = new File(repositoryLocation, "C");
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB, fileC)));
         renameFO(fileA, fileB);
         renameFO(fileB, fileC);
         renameFO(fileC, fileA);
@@ -2831,7 +2860,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileC = new File(folderC, fileA.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB, fileC)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB, fileC)));
         moveFO(fileA, fileB);
         moveFO(fileB, fileC);
         moveFO(fileC, fileA);
@@ -2856,12 +2885,12 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
 
         // rename
         File fileB = new File(repositoryLocation, "B");
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB)));
         renameFO(fileA, fileB);
         assertTrue(h.waitForFilesToRefresh());
 
         // create from file
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA)));
         FileUtil.toFileObject(fileA.getParentFile()).createData(fileA.getName());
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2889,12 +2918,12 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File fileB = new File(folderB, fileA.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA, fileB)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA, fileB)));
         moveFO(fileA, fileB);
         assertTrue(h.waitForFilesToRefresh());
 
         // create from file
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fileA)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fileA)));
         FileUtil.toFileObject(fileA.getParentFile()).createData(fileA.getName());
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2923,7 +2952,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File toFile = new File(toFolder, fromFile.getName());
 
         // rename
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFolder, toFolder)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFolder, toFolder)));
         renameFO(fromFolder, toFolder);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2952,7 +2981,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File toFile = new File(toFolder, fromFile.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFolder, toFolder)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFolder, toFolder)));
         moveFO(fromFolder, toFolder);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -2987,7 +3016,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
 
         // rename
         File toFolder = new File(repositoryLocation, "to");
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFolder, toFolder)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFolder, toFolder)));
         renameFO(fromFolder, toFolder);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -3055,7 +3084,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         File toFolder = new File(toFolderParent, fromFolder.getName());
 
         // move
-        h.setFilesToRefresh(new HashSet<File>(Arrays.asList(fromFolder, toFolder)));
+        h.setFilesToRefresh(new HashSet<>(Arrays.asList(fromFolder, toFolder)));
         moveFO(fromFolder, toFolder);
         assertTrue(h.waitForFilesToRefresh());
 
@@ -3187,7 +3216,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
     
     public void testIsModifiedAttributeFile () throws Exception {
         // file is outside of versioned space, attribute should be unknown
-        File file = new File(getWorkDir(), "file");
+        File file = new File(testBase, "file");
         file.createNewFile();
         FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(file));
         String attributeModified = "ProvidedExtensions.VCSIsModified";
@@ -3232,7 +3261,7 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
     private void renameFO(File from, File to) throws DataObjectNotFoundException, IOException {
         // ensure parent is known by filesystems
         // otherwise no event will be thrown
-        FileObject parent = FileUtil.toFileObject(from.getParentFile());
+        FileUtil.toFileObject(from.getParentFile());
         FileObject foFrom = FileUtil.toFileObject(from);
         FileLock lock = foFrom.lock();
         try {

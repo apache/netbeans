@@ -671,6 +671,9 @@ jobs:
       - name: ide/libs.freemarker
         run: ant $OPTS -f ide/libs.freemarker test
 
+      - name: ide/git
+        run: .github/retry.sh ant $OPTS -f ide/git test-unit
+
       - name: ide/libs.git
         run: .github/retry.sh ant $OPTS -f ide/libs.git test
 

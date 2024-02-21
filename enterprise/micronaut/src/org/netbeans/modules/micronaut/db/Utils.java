@@ -25,6 +25,7 @@ import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -111,7 +112,7 @@ public final class Utils {
     public static List<VariableElement> collectMissingDataEndpoints(CompilationInfo info, TypeElement te, String prefix, DataEndpointConsumer consumer) {
         AnnotationMirror controllerAnn = getAnnotation(te.getAnnotationMirrors(), CONTROLLER_ANNOTATION_NAME);
         if (controllerAnn == null) {
-            return List.of();
+            return Collections.emptyList();
         }
         List<VariableElement> repositories = getRepositoriesFor(info, te);
         if (!repositories.isEmpty()) {

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.micronaut.completion;
 
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -142,8 +143,16 @@ public class MicronautDataCompletionTask {
                         switch (path.getLeaf().getKind()) {
                             case CLASS:
                             case INTERFACE:
-                                resolveFinderMethods(cc, path, prefix, true, consumer);
-                                items.addAll(resolveControllerMethods(cc, path, prefix, factory));
+                                int startPos = (int) sp.getEndPosition(cc.getCompilationUnit(), ((ClassTree) path.getLeaf()).getModifiers());
+                                if (startPos <= 0) {
+                                    startPos = (int) sp.getStartPosition(cc.getCompilationUnit(), path.getLeaf());
+                                }
+                                String headerText = cc.getText().substring(startPos, anchorOffset);
+                                int idx = headerText.indexOf('{'); //NOI18N
+                                if (idx >= 0) {
+                                    resolveFinderMethods(cc, path, prefix, true, consumer);
+                                    items.addAll(resolveControllerMethods(cc, path, prefix, factory));
+                                }
                                 break;
                             case METHOD:
                                 Tree returnType = ((MethodTree) path.getLeaf()).getReturnType();

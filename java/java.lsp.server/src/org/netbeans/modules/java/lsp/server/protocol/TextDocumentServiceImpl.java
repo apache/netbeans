@@ -926,8 +926,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             Document rawDoc = server.getOpenedDocuments().getDocument(uri);
             if (file != null && rawDoc instanceof StyledDocument) {
                 StyledDocument doc = (StyledDocument)rawDoc;
-                StructureProvider structureProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookup(StructureProvider.class);
-                if (structureProvider != null) {
+                Collection<? extends StructureProvider> structureProviders = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookupAll(StructureProvider.class);
+                for (StructureProvider structureProvider : structureProviders) {
                     List<StructureElement> structureElements = structureProvider.getStructure(doc);
                     if (!structureElements.isEmpty()) {
                         for (StructureElement structureElement : structureElements) {
@@ -936,7 +936,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                 result.add(Either.forRight(ds));
                             }
                         }
-                    };
+                    }
                 }
             }
             resultFuture.complete(result);
@@ -1998,10 +1998,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             Document doc = ec.openDocument();
             long originalVersion = orgV != -1 ? orgV : documentVersion(doc);
             Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
-            ErrorProvider errorProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc))
-                                                    .lookup(ErrorProvider.class);
+            Collection<? extends ErrorProvider> errorProviders = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc))
+                                                    .lookupAll(ErrorProvider.class);
             List<? extends org.netbeans.api.lsp.Diagnostic> errors;
-            if (errorProvider != null) {
+            if (!errorProviders.isEmpty()) {
                 ErrorProvider.Context context = new ErrorProvider.Context(file, offset, errorKind, hintsPrefsFile);
                 class CancelListener implements DocumentListener {
                     @Override
@@ -2024,7 +2024,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 try {
                     doc.addDocumentListener(l);
                     l.checkCancel();
-                    errors = errorProvider.computeErrors(context);
+                    errors = errorProviders.stream().flatMap(errorPorvider -> errorPorvider.computeErrors(context).stream()).collect(Collectors.toList());
                 } finally {
                     doc.removeDocumentListener(l);
                 }

@@ -1025,7 +1025,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             completionResult.add(new PHPCompletionItem.NamespaceItem(namespace, request, QualifiedNameKind.FULLYQUALIFIED));
         }
         final NameKind nameQuery = NameKind.caseInsensitivePrefix(request.prefix);
-        for (TraitElement trait : request.index.getTraits(nameQuery)) {
+        Model model = request.result.getModel();
+        Set<TraitElement> traits = request.index.getTraits(nameQuery, ModelUtils.getAliasedNames(model, request.anchor), Trait.ALIAS);
+        for (TraitElement trait : traits) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.codegen;
 
 import java.util.ArrayList;
@@ -32,6 +31,8 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.lib.editor.codetemplates.spi.CodeTemplateInsertRequest;
 import org.netbeans.lib.editor.codetemplates.spi.CodeTemplateParameter;
 import org.netbeans.lib.editor.codetemplates.spi.CodeTemplateProcessor;
@@ -44,6 +45,7 @@ import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.model.Model;
 import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.TypeScope;
@@ -87,6 +89,71 @@ public class PHPCodeTemplateProcessor implements CodeTemplateProcessor {
                 param.setValue(value);
             }
         }
+        updateImport();
+    }
+
+    private void updateImport() {
+        final AutoImport.Hints autoImportHints = getAutoImportHints();
+        if (autoImportHints != null) {
+            JTextComponent component = request.getComponent();
+            if (component == null) {
+                return;
+            }
+            final Document doc = component.getDocument();
+            if (doc == null) {
+                return;
+            }
+            RP.schedule(() -> {
+                try {
+                    PHPParseResult[] result = new PHPParseResult[1];
+                    ParserManager.parse(Collections.singleton(Source.create(doc)), new UserTask() {
+
+                        @Override
+                        public void run(ResultIterator resultIterator) throws Exception {
+                            Parser.Result parserResult = resultIterator.getParserResult();
+                            if (parserResult instanceof PHPParseResult) {
+                                result[0] = (PHPParseResult) parserResult;
+                            }
+                        }
+                    });
+                    AutoImport.get(result[0]).insert(autoImportHints, component.getCaretPosition());
+                } catch (ParseException ex) {
+                    LOGGER.log(Level.WARNING, null, ex);
+                }
+            }, 300, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    @CheckForNull
+    private AutoImport.Hints getAutoImportHints() {
+        String fqName = CodeUtils.EMPTY_STRING;
+        String aliasName = CodeUtils.EMPTY_STRING;
+        String useType = CodeUtils.EMPTY_STRING;
+        for (CodeTemplateParameter param : request.getMasterParameters()) {
+            if (param.getName().equals(AutoImport.PARAM_NAME)) {
+                for (Entry<String, String> entry : param.getHints().entrySet()) {
+                    String key = entry.getKey();
+                    switch (key) {
+                        case AutoImport.PARAM_KEY_FQ_NAME:
+                            fqName = entry.getValue();
+                            break;
+                        case AutoImport.PARAM_KEY_ALIAS_NAME:
+                            aliasName = entry.getValue();
+                            break;
+                        case AutoImport.PARAM_KEY_USE_TYPE:
+                            useType = entry.getValue();
+                            break;
+                        default:
+                            // noop
+                            break;
+                    }
+                }
+                if (!fqName.isEmpty() && !useType.isEmpty()) {
+                    return new AutoImport.Hints(fqName, useType, aliasName);
+                }
+            }
+        }
+        return null;
     }
 
     @Override

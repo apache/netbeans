@@ -327,7 +327,7 @@ public final class AttributesUtilities {
         private final AttributeSet[] delegates;
         
         public BigComposite(List<AttributeSet> delegates) {
-            this.delegates = delegates.toArray(new AttributeSet[delegates.size()]);
+            this.delegates = delegates.toArray(new AttributeSet[0]);
         }
 
         public Collection<? extends AttributeSet> getDelegates() {

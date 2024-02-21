@@ -368,7 +368,7 @@ public class CommitTableModel extends AbstractTableModel {
 
         private Integer[] getChildren (int nodeIndex) {
             Value value = fileToIndex.get(nodes[nodeIndex].getFile());
-            return value == null || value.childrenIndexes == null ? null : value.childrenIndexes.toArray(new Integer[value.childrenIndexes.size()]);
+            return value == null || value.childrenIndexes == null ? null : value.childrenIndexes.toArray(new Integer[0]);
         }
 
         private class Value {

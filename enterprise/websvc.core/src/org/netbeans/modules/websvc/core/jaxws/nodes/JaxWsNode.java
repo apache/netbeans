@@ -380,7 +380,7 @@ public class JaxWsNode extends AbstractNode implements
                 null,
                 SystemAction.get(PropertiesAction.class)));
         addFromLayers(actions, "WebServices/Services/Actions");
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     private void addFromLayers(List<Action> actions, String path) {

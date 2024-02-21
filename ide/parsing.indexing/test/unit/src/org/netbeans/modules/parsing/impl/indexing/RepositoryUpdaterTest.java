@@ -1378,19 +1378,19 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
         peersMap = IndexingController.getDefault().getRootPeers();
         assertEquals(3, peersMap.size());
         List<URL> returnedPeers = new ArrayList<> (peersMap.get(srcRoot1.toURL()));
-        Collections.sort(returnedPeers, new URLComparator());
+        returnedPeers.sort(new URLComparator());
         List<URL> expectedPeers = new ArrayList<URL> () {{add(srcRootWithFiles1.toURL()); add(srcRoot2.toURL());}};
-        Collections.sort(expectedPeers, new URLComparator());
+        expectedPeers.sort(new URLComparator());
         assertEquals(expectedPeers, returnedPeers);
         returnedPeers = new ArrayList<> (peersMap.get(srcRoot2.toURL()));
-        Collections.sort(returnedPeers, new URLComparator());
+        returnedPeers.sort(new URLComparator());
         expectedPeers = new ArrayList<URL> () {{add(srcRootWithFiles1.toURL()); add(srcRoot1.toURL());}};
-        Collections.sort(expectedPeers, new URLComparator());
+        expectedPeers.sort(new URLComparator());
         assertEquals(expectedPeers, returnedPeers);
         returnedPeers = new ArrayList<> (peersMap.get(srcRootWithFiles1.toURL()));
-        Collections.sort(returnedPeers, new URLComparator());
+        returnedPeers.sort(new URLComparator());
         expectedPeers = new ArrayList<URL> () {{add(srcRoot1.toURL()); add(srcRoot2.toURL());}};
-        Collections.sort(expectedPeers, new URLComparator());
+        expectedPeers.sort(new URLComparator());
         assertEquals(expectedPeers, returnedPeers);
 
         //Remove srcRoot2 from src path
@@ -2982,7 +2982,7 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
             private void fireChange () {
                 ChangeListener[] _listeners;
                 synchronized (this) {
-                    _listeners = this.listeners.toArray(new ChangeListener[this.listeners.size()]);
+                    _listeners = this.listeners.toArray(new ChangeListener[0]);
                 }
                 ChangeEvent event = new ChangeEvent (this);
                 for (ChangeListener l : _listeners) {

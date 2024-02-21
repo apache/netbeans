@@ -490,7 +490,7 @@ public class JavaCustomIndexer extends CustomIndexer {
         final List<URL> bin = new ArrayList<>(artefacts.length+1);
         Collections.addAll(bin, artefacts);
         bin.add(BaseUtilities.toURI(JavaIndex.getClassFolder(sourceRoot, false, false)).toURL());
-        return bin.toArray(new URL[bin.size()]);
+        return bin.toArray(new URL[0]);
     }
 
     private static List<? extends Indexable> splitSources(final Iterable<? extends Indexable> indexables, final List<? super Indexable> javaSources) {

@@ -20,13 +20,10 @@
 package org.netbeans.modules.refactoring.java.ui;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.Position;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.lib.editor.util.swing.MutablePositionRegion;
@@ -64,7 +61,7 @@ public final class SyncDocumentRegion {
             sortedRegions = regions;
         } else {
             sortedRegions = new ArrayList<>(regions);
-            Collections.sort(sortedRegions, PositionRegion.getComparator());
+            sortedRegions.sort(PositionRegion.getComparator());
         }
         this.oldVal = getFirstRegionText();
     }
@@ -78,7 +75,7 @@ public final class SyncDocumentRegion {
             sortedRegions = regions;
         } else {
             sortedRegions = new ArrayList<>(regions);
-            Collections.sort(sortedRegions, PositionRegion.getComparator());
+            sortedRegions.sort(PositionRegion.getComparator());
         }
         int j = 0;
         for (int i = 0; i < this.regions.size();) {

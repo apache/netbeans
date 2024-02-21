@@ -315,7 +315,7 @@ public class MavenDependenciesImplementationTest extends NbTestCase {
         sb.append("\n");
         int index = 0;
         List<Dependency> sorted = new ArrayList<>(from.getChildren());
-        Collections.sort(sorted, (d1, d2) -> {
+        sorted.sort((d1, d2) -> {
             return d1.getArtifact().toString().compareToIgnoreCase(d2.getArtifact().toString());
         });
         for (Dependency c : sorted) {

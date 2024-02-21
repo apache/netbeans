@@ -324,7 +324,7 @@ public class Hk2ItemNode extends AbstractNode {
         if (decorator.canEditDetails()) {
             actions.add(SystemAction.get(EditDetailsAction.class));
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     ////////////////////////////////////////////////////////////////////////////

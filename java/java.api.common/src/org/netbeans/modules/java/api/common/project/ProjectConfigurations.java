@@ -132,7 +132,7 @@ public class ProjectConfigurations {
         Collections.addAll(providers, additionalPropertyProviders);
         return PropertyUtils.sequentialPropertyEvaluator(
             helper.getStockPropertyPreprovider(),
-            providers.toArray(new PropertyProvider[providers.size()]));
+            providers.toArray(new PropertyProvider[0]));
     }
 
     /**
@@ -396,7 +396,7 @@ public class ProjectConfigurations {
             final Map<String,Configuration> cfgs = getConfigs();
             final List<Configuration> l = new ArrayList<>();
             l.addAll(cfgs.values());
-            Collections.sort(l, new Comparator<Configuration>() {
+            l.sort(new Comparator<Configuration>() {
                 Collator c = Collator.getInstance();
                 @Override
                 public int compare(Configuration c1, Configuration c2) {

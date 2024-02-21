@@ -126,7 +126,7 @@ public class ActionProviderImpl implements ActionProvider {
         actions.add(ActionProvider.COMMAND_PRIME);
         actions.add(COMMAND_DL_SOURCES);
         actions.add(COMMAND_DL_JAVADOC);
-        return actions.toArray(new String[actions.size()]);
+        return actions.toArray(new String[0]);
     }
     
     @Override
@@ -584,8 +584,8 @@ public class ActionProviderImpl implements ActionProvider {
 
         if (!keys.isEmpty()) {
             KeyValueTableModel kvModel = new KeyValueTableModel("input:",
-                    keys.toArray(new String[keys.size()]),
-                    defaults.toArray(new String[defaults.size()])
+                    keys.toArray(new String[0]),
+                    defaults.toArray(new String[0])
             );
             JPanel panel = new JPanel(new BorderLayout());
             JTable table = new JTable(kvModel);

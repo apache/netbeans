@@ -167,7 +167,7 @@ public class DataObjectRegistrationHinter implements Hinter {
 
                     }
                     if (!fixes.isEmpty()) {
-                        ctx.addHint(Severity.WARNING, ctx.standardAnnotationDescription(), fixes.toArray(new Fix[fixes.size()]));
+                        ctx.addHint(Severity.WARNING, ctx.standardAnnotationDescription(), fixes.toArray(new Fix[0]));
                     }
                 }
 

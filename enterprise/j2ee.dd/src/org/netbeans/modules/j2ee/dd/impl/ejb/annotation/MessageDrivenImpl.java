@@ -155,8 +155,8 @@ public class MessageDrivenImpl extends PersistentObject implements MessageDriven
 
         EjbRefHelper.setEjbRefsForClass(getHelper(), getTypeElement(), resultEjbRefs, resultEjbLocalRefs);
 
-        ejbRefs = resultEjbRefs.toArray(new EjbRef[resultEjbRefs.size()]);
-        ejbLocalRefs = resultEjbLocalRefs.toArray(new EjbLocalRef[resultEjbLocalRefs.size()]);
+        ejbRefs = resultEjbRefs.toArray(new EjbRef[0]);
+        ejbLocalRefs = resultEjbLocalRefs.toArray(new EjbLocalRef[0]);
     }
 
     // <editor-fold desc="Model implementation">

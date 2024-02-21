@@ -280,7 +280,7 @@ public class ComponentInspector extends JPanel
                 }
             }
             if (list.size() < selected.length) {
-                selected = list.toArray(new Node[list.size()]);
+                selected = list.toArray(new Node[0]);
             }
         }
         return selected;

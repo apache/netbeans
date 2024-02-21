@@ -94,7 +94,7 @@ public class PrimitiveTypeArrayEditor extends PropertyEditorSupport
                 prevPrevChar = prevChar;
                 prevChar = actChar;
             }
-            return list.toArray(new String[list.size()]);
+            return list.toArray(new String[0]);
     }
     
     /**
@@ -192,7 +192,7 @@ public class PrimitiveTypeArrayEditor extends PropertyEditorSupport
             while (st.hasMoreTokens()) {
                 tokens.add(st.nextToken());
             }
-            parts = tokens.toArray(new String[tokens.size()]);
+            parts = tokens.toArray(new String[0]);
         } else {
             parts = splitCharArray(body);
         }

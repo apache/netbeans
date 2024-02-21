@@ -161,7 +161,7 @@ public class WebProjectLibrariesModifierImpl implements WebProjectLibrariesModif
         for (URL url : entry) {
             content.add(URI.create(url.toExternalForm()));
         }
-        return content.toArray(new URI[content.size()]);
+        return content.toArray(new URI[0]);
     }
     
     private static ClassPathUiSupport.Callback createClassPathUiSupportCallback(final String path) {

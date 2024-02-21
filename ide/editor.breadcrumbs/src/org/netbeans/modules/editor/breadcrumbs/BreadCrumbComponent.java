@@ -153,7 +153,7 @@ public class BreadCrumbComponent<T extends JLabel&Renderer> extends JComponent i
 
         int i = 0;
         
-        nodes = path.toArray(new Node[path.size()]);
+        nodes = path.toArray(new Node[0]);
         sizes = new double[path.size()];
         
         int xTotal = 0;

@@ -35,6 +35,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.*;
+import java.nio.file.Files;
 import java.util.*;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -171,7 +172,7 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
 
     private File createTempCopy(File src) {
         try {
-            java.io.File tempFile = java.io.File.createTempFile("proxyjar", "jar");
+            java.io.File tempFile = Files.createTempFile("proxyjar", "jar").toFile();
             java.nio.channels.FileChannel inChannel = new java.io.FileInputStream(src).getChannel();
             java.nio.channels.FileChannel outChannel = new java.io.FileOutputStream(tempFile).getChannel();
             inChannel.transferTo(0, inChannel.size(), outChannel);

@@ -552,7 +552,7 @@ public class PlatformsCustomizer extends javax.swing.JPanel implements PropertyC
             if (changed) {
                 //SortedSet can't be used, there can be platforms with the same
                 //display name
-                Collections.sort(platforms, new PlatformNodeComparator());
+                platforms.sort(new PlatformNodeComparator());
                 changed = false;
             }
             return Collections.unmodifiableList (this.platforms);

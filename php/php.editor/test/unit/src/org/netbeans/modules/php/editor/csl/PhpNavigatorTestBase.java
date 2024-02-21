@@ -93,10 +93,10 @@ public abstract class PhpNavigatorTestBase extends ParserTestBase {
             }
         }
 
-        Collections.sort(result, STRUCTURE_ITEM_COMPARATOR);
+        result.sort(STRUCTURE_ITEM_COMPARATOR);
 
         for (StructureItem structureItem : result) {
-            Collections.sort(structureItem.getNestedItems(), STRUCTURE_ITEM_COMPARATOR);
+            structureItem.getNestedItems().sort(STRUCTURE_ITEM_COMPARATOR);
             sb.append(printStructureItem(structureItem, 0));
             sb.append("\n");
         }
@@ -120,7 +120,7 @@ public abstract class PhpNavigatorTestBase extends ParserTestBase {
         HtmlFormatter formatter = new TestHtmlFormatter();
         sb.append(structureItem.getHtml(formatter));
         List<? extends StructureItem> nestedItems = structureItem.getNestedItems();
-        Collections.sort(nestedItems, STRUCTURE_ITEM_COMPARATOR);
+        nestedItems.sort(STRUCTURE_ITEM_COMPARATOR);
         for (StructureItem item : nestedItems) {
             sb.append("\n");
             sb.append(printStructureItem(item, indent + 1));

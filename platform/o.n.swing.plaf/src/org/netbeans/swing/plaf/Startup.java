@@ -158,8 +158,8 @@ public final class Startup {
           LookAndFeel lf = UIManager.getLookAndFeel();
           if (uiClass != lf.getClass()) {
               try {
-                lf = (LookAndFeel) uiClass.newInstance();
-              } catch (IllegalAccessException | InstantiationException ex) {
+                lf = (LookAndFeel) uiClass.getDeclaredConstructor().newInstance();
+              } catch (ReflectiveOperationException ex) {
                   return new LFInstanceOrName(uiClass.getName());
               }
           }
@@ -385,7 +385,7 @@ public final class Startup {
         }
         try {
             Class klazz = UIUtils.classForName( uiClassName );
-            Object inst = klazz.newInstance();
+            Object inst = klazz.getDeclaredConstructor().newInstance();
             if( inst instanceof LFCustoms )
                 return ( LFCustoms ) inst;
         } catch( ClassNotFoundException e ) {
@@ -417,7 +417,7 @@ public final class Startup {
                 return new GtkLFCustoms();
             } else {
                 try {
-                    return (LFCustoms) UIUtils.classForName(FORCED_CUSTOMS).newInstance();
+                    return (LFCustoms) UIUtils.classForName(FORCED_CUSTOMS).getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
                     System.err.println("UI customizations class not found: " //NOI18N
                         + FORCED_CUSTOMS); //NOI18N

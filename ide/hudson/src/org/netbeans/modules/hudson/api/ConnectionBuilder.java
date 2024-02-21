@@ -332,7 +332,7 @@ public final class ConnectionBuilder {
                 List<String> cookies = getHeaderFields(conn).get("Set-Cookie"); // NOI18N
                 if (cookies != null) {
                     LOG.log(Level.FINE, "Cookies set for domain {0}: {1}", new Object[] {home, cookies});
-                    COOKIES.put(home.toString(), cookies.toArray(new String[cookies.size()]));
+                    COOKIES.put(home.toString(), cookies.toArray(new String[0]));
                 }
             }
             int responseCode = ((HttpURLConnection) conn).getResponseCode();

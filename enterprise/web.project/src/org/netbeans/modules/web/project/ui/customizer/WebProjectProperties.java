@@ -1010,7 +1010,7 @@ public final class WebProjectProperties {
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }
-        v.setRoots(roots.toArray(new File[roots.size()]));
+        v.setRoots(roots.toArray(new File[0]));
         v.setIncludePattern(includes);
         v.setExcludePattern(excludes);
     }

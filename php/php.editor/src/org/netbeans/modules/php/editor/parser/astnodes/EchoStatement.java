@@ -40,7 +40,7 @@ public class EchoStatement extends Statement {
     }
 
     public EchoStatement(int start, int end, List<Exception> expressions) {
-        this(start, end, expressions.toArray(new Expression[expressions.size()]));
+        this(start, end, expressions.toArray(new Expression[0]));
     }
 
     /**

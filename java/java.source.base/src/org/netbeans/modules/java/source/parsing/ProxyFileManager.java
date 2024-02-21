@@ -760,7 +760,7 @@ public final class ProxyFileManager implements JavaFileManager {
                         res.add(jfm);
                     }
                 }
-                return res.toArray(new JavaFileManager[res.size()]);
+                return res.toArray(new JavaFileManager[0]);
             } else {
                 final Entry result = fileManagers.get(location);
                 return result == null ?

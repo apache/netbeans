@@ -25,7 +25,7 @@ class EnsureJavaFXPresent {
     static {
         Throwable t;
         try {
-            Object p = Class.forName("javafx.embed.swing.JFXPanel").newInstance();
+            Object p = Class.forName("javafx.embed.swing.JFXPanel").getDeclaredConstructor().newInstance();
             assertNotNull("Allocated", p);
             t = null;
         } catch (Throwable err) {

@@ -642,7 +642,7 @@ bigloop:
             }
 
             try {
-                em.setSelectedNodes(added.toArray(new Node[added.size()]));
+                em.setSelectedNodes(added.toArray(new Node[0]));
             } catch (PropertyVetoException ex) {
                 Logger.getLogger(PasteAction.class.getName()).log(Level.WARNING, null, ex);
             } catch (IllegalStateException ex) {

@@ -98,7 +98,7 @@ public class ServiceView extends SectionView {
                 addSection(bindingCont, false);
 
                 ArrayList<Node> nodes = initOperationView(bindingCont, binding, serviceOnly);
-                bindingChildren.add(nodes.toArray(new Node[nodes.size()]));
+                bindingChildren.add(nodes.toArray(new Node[0]));
 
                 bindingNodes[i++] = bindingNodeContainer;
             }
@@ -111,7 +111,7 @@ public class ServiceView extends SectionView {
             }
             
             ArrayList<Node> nodes = initOperationView(null, b, serviceOnly);
-            rootChildren.add(nodes.toArray(new Node[nodes.size()]));
+            rootChildren.add(nodes.toArray(new Node[0]));
         }
         
     }
@@ -168,7 +168,7 @@ public class ServiceView extends SectionView {
                     SectionPanel bfPanel = new SectionPanel(this, bfNode, bf, false);
                     opCont.addSection(bfPanel, false);
                 }
-                opChildren.add(subNodes.toArray(new Node[subNodes.size()]));
+                opChildren.add(subNodes.toArray(new Node[0]));
                 nodes.add(opNodeContainer);
             }
         }

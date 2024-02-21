@@ -61,7 +61,7 @@ public class IssuePrioritySupport {
     }    
 
     public static Image[] getIcons() {
-        return icons.toArray(new Image[icons.size()]);
+        return icons.toArray(new Image[0]);
     }
     
     private IssuePriorityInfo getInfo(String id) {

@@ -110,7 +110,7 @@ public final class OpenProjectFolderAction extends AbstractAction implements Con
                             Logger.getLogger(OpenProjectFolderAction.class.getName()).log(Level.INFO, null, x);
                         }
                     }
-                    OpenProjectList.getDefault().open(projects.toArray(new Project[projects.size()]), false, true);
+                    OpenProjectList.getDefault().open(projects.toArray(new Project[0]), false, true);
                 }
             });
         }

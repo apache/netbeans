@@ -137,7 +137,7 @@ public class GitVersioningTopComponent extends TopComponent implements Externali
                     OpenProjects.getDefault().openProjects().get();
                 } catch (InterruptedException | ExecutionException ex) {
                 }
-                final VCSContext ctx = VCSContext.forNodes(nodes.toArray(new Node[nodes.size()]));
+                final VCSContext ctx = VCSContext.forNodes(nodes.toArray(new Node[0]));
                 EventQueue.invokeLater(new Runnable() {
 
                     @Override

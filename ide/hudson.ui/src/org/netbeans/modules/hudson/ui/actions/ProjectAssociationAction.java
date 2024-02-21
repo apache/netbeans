@@ -71,7 +71,7 @@ public class ProjectAssociationAction extends AbstractAction {
                 DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(Bundle.ProjectAssociationAction_open_some_projects(), NotifyDescriptor.INFORMATION_MESSAGE));
                 return;
             }
-            JComboBox box = new JComboBox(new DefaultComboBoxModel(projects.toArray(new Project[projects.size()])));
+            JComboBox box = new JComboBox(new DefaultComboBoxModel(projects.toArray(new Project[0])));
             box.setRenderer(new ProjectRenderer());
             if (DialogDisplayer.getDefault().notify(new NotifyDescriptor(box, Bundle.ProjectAssociationAction_title_select_project(), NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null)) != NotifyDescriptor.OK_OPTION) {
                 return;

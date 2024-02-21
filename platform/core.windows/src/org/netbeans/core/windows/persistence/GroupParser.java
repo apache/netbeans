@@ -201,7 +201,7 @@ class GroupParser {
         sc.tcGroupConfigs = (TCGroupConfig []) 
             // safer array initialization, making sure the size of array matches size of list
             // see #45497
-            tcGroupCfgList.toArray(new TCGroupConfig[tcGroupCfgList.size()]);
+            tcGroupCfgList.toArray(new TCGroupConfig[0]);
         
         PersistenceManager pm = PersistenceManager.getDefault();
         for (int i = 0; i < sc.tcGroupConfigs.length; i++) {

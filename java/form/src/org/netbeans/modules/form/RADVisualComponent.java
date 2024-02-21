@@ -326,7 +326,7 @@ public class RADVisualComponent extends RADComponent {
             l.add(layerProperty);
             nameToProperty.put(layerProperty.getName(), layerProperty);
 
-            constraintsProperties = l.toArray(new Node.Property[l.size()]);
+            constraintsProperties = l.toArray(new Node.Property[0]);
         }
 
         if (constraintsProperties == null) {

@@ -661,7 +661,7 @@ public final class RepositoryComboSupport implements ItemListener, Runnable {
                 repos.add(impl.getRepository());
             }
         }
-        repositories = repos.toArray(new Repository[repos.size()]);
+        repositories = repos.toArray(new Repository[0]);
 
         long endTimeMillis = System.currentTimeMillis();
         if (LOG.isLoggable(FINEST)) {

@@ -205,7 +205,7 @@ public class WildflyClient {
                 return modelNodeAsString(cl, readResult(cl, response));
             }
             return "";
-        } catch (InvocationTargetException | ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -272,7 +272,7 @@ public class WildflyClient {
                 throw new IOException(ex);
             }
             close();
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -304,7 +304,7 @@ public class WildflyClient {
             LOGGER.log(Level.FINE, null, ex.getTargetException());
             close();
             return false;
-        } catch (IllegalAccessException | ClassNotFoundException | InstantiationException | NoSuchMethodException | IOException | InterruptedException | ExecutionException ex) {
+        } catch (ReflectiveOperationException | IOException | InterruptedException | ExecutionException ex) {
             LOGGER.log(Level.FINE, null, ex);
             close();
             return false;
@@ -375,7 +375,7 @@ public class WildflyClient {
                 }
             }
             return modules;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -410,7 +410,7 @@ public class WildflyClient {
                 }
             }
             return modules;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -452,7 +452,7 @@ public class WildflyClient {
                 }
             }
             return "";
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -487,7 +487,7 @@ public class WildflyClient {
                 }
             }
             return modules;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -505,7 +505,7 @@ public class WildflyClient {
                 return true;
             }
             return false;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -519,7 +519,7 @@ public class WildflyClient {
             Object enableDeployment = createOperation(cl, DEPLOYMENT_REDEPLOY_OPERATION, deploymentAddressModelNode);
             Object result = executeOnModelNode(cl, enableDeployment);
             return isSuccessfulOutcome(cl, result);
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -532,7 +532,7 @@ public class WildflyClient {
             // ModelNode
             Object enableDeployment = createOperation(cl, DEPLOYMENT_UNDEPLOY_OPERATION, deploymentAddressModelNode);
             return isSuccessfulOutcome(cl, executeOnModelNode(cl, enableDeployment));
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -552,7 +552,7 @@ public class WildflyClient {
             addModelNodeChild(cl, steps, createOperation(cl, DEPLOYMENT_UNDEPLOY_OPERATION, deploymentAddressModelNode));
             addModelNodeChild(cl, steps, createRemoveOperation(cl, deploymentAddressModelNode));
             return isSuccessfulOutcome(cl, executeOnModelNode(cl, undeploy));
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -586,7 +586,7 @@ public class WildflyClient {
             // ModelNode
             Object result = executeOnModelNode(cl, deploy);
             return isSuccessfulOutcome(cl, result);
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -626,7 +626,7 @@ public class WildflyClient {
                 }
             }
             return listedDatasources;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -655,7 +655,7 @@ public class WildflyClient {
                         modelNodeAsString(cl, getModelNodeChild(cl, datasource, "driver-class")));
             }
             return null;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -672,7 +672,7 @@ public class WildflyClient {
             // ModelNode
             Object response = executeOnModelNode(cl, operation);
             return (isSuccessfulOutcome(cl, response));
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -703,7 +703,7 @@ public class WildflyClient {
                 }
             }
             return null;
-        } catch (IOException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (IOException | ReflectiveOperationException ex) {
             return null;
         }
     }
@@ -755,7 +755,7 @@ public class WildflyClient {
                 }
             }
             return destinations;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -788,7 +788,7 @@ public class WildflyClient {
                 }
             }
             return destinations;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -834,7 +834,7 @@ public class WildflyClient {
                 }
             }
             return listedDestinations;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -878,7 +878,7 @@ public class WildflyClient {
                 }
             }
             return listedDestinations;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -915,7 +915,7 @@ public class WildflyClient {
             }
             Object response = executeOnModelNode(cl, operation);
             return (isSuccessfulOutcome(cl, response));
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
+        } catch (ReflectiveOperationException ex) {
             return false;
         }
     }
@@ -935,7 +935,7 @@ public class WildflyClient {
             Object operation = createRemoveOperation(cl, address);
             Object response = executeOnModelNode(cl, operation);
             return (isSuccessfulOutcome(cl, response));
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
+        } catch (ReflectiveOperationException ex) {
             return false;
         }
     }
@@ -984,7 +984,7 @@ public class WildflyClient {
                 }
             }
             return jaxrsResources.values();
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -1014,7 +1014,7 @@ public class WildflyClient {
                 }
             }
             return modules;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -1037,7 +1037,7 @@ public class WildflyClient {
                 }
             }
             return modules;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -1080,7 +1080,7 @@ public class WildflyClient {
                 }
             }
             return modules;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -1107,14 +1107,13 @@ public class WildflyClient {
             }
 
             return modules;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
 
     private List<WildflyEjbComponentNode> listEJBs(WildflyClassLoader cl,
-            Object deployment, WildflyEjbComponentNode.Type type) throws IllegalAccessException, NoSuchMethodException,
-            InvocationTargetException {
+            Object deployment, WildflyEjbComponentNode.Type type) throws ReflectiveOperationException {
         List<WildflyEjbComponentNode> modules = new ArrayList<>();
         if (modelNodeHasDefinedChild(cl, deployment, type.getPropertyName())) {
             List ejbs = modelNodeAsList(cl, getModelNodeChild(cl, deployment, type.getPropertyName()));
@@ -1125,9 +1124,7 @@ public class WildflyClient {
         return modules;
     }
 
-    private WildflySocket fillSocket(String name, boolean outBound) throws
-            ClassNotFoundException, NoSuchMethodException,
-            InvocationTargetException, IllegalAccessException, InstantiationException, IOException {
+    private WildflySocket fillSocket(String name, boolean outBound) throws ReflectiveOperationException, IOException {
         WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
         WildflySocket socket = new WildflySocket();
         LinkedHashMap<Object, Object> values = new LinkedHashMap<>();
@@ -1187,7 +1184,7 @@ public class WildflyClient {
                 }
             }
             return connectionFactories;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -1224,14 +1221,12 @@ public class WildflyClient {
                 }
             }
             return listedConnectionFactories;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
 
-    private WildflyConnectionFactory fillConnectionFactory(String name, Object configuration) throws
-            ClassNotFoundException, NoSuchMethodException,
-            InvocationTargetException, IllegalAccessException, InstantiationException, IOException {
+    private WildflyConnectionFactory fillConnectionFactory(String name, Object configuration) throws ReflectiveOperationException, IOException {
         WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
         List properties = modelNodeAsPropertyList(cl, configuration);
         Map<String, String> attributes = new HashMap<>(properties.size());
@@ -1245,9 +1240,7 @@ public class WildflyClient {
         return new WildflyConnectionFactory(attributes, name);
     }
 
-    private WildflyMailSessionResource fillMailSession(String name, Object mailSession) throws
-            ClassNotFoundException, NoSuchMethodException,
-            InvocationTargetException, IllegalAccessException, InstantiationException, IOException {
+    private WildflyMailSessionResource fillMailSession(String name, Object mailSession) throws ReflectiveOperationException, IOException {
         WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
 
         Object configuration = modelNodeAsPropertyForValue(cl, mailSession);
@@ -1307,7 +1300,7 @@ public class WildflyClient {
                 return modelNodeAsString(cl, resolvedExpression);
             }
             return unresolvedString;
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }
@@ -1351,7 +1344,7 @@ public class WildflyClient {
                 }
             }
             return resourceAdapters;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
             throw new IOException(ex);
         }
     }

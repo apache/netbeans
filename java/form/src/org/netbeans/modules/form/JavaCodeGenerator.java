@@ -2310,10 +2310,9 @@ class JavaCodeGenerator extends CodeGenerator {
             }
         }
 
-	String propertyInitializationString = creator.getJavaCreationCode(
-	        creatorProperties.toArray(new FormProperty[creatorProperties.size()]),
-                subBeanPropNames != null ? subBeanPropNames.toArray(new String[subBeanPropNames.size()]) : null,
-                subBeanPropCodes != null ? subBeanPropCodes.toArray(new String[subBeanPropCodes.size()]) : null,
+	String propertyInitializationString = creator.getJavaCreationCode(creatorProperties.toArray(new FormProperty[0]),
+                subBeanPropNames != null ? subBeanPropNames.toArray(new String[0]) : null,
+                subBeanPropCodes != null ? subBeanPropCodes.toArray(new String[0]) : null,
                 prop.getValueType(),
                 null);
         if (codeData != null) {
@@ -2756,7 +2755,7 @@ class JavaCodeGenerator extends CodeGenerator {
             if ((var.getType() &  typeMask) == (type & typeMask))
                 variables.add(var);
         }
-        Collections.sort(variables, new Comparator<CodeVariable>() {
+        variables.sort(new Comparator<CodeVariable>() {
             @Override
             public int compare(CodeVariable o1, CodeVariable o2) {
                 return o1.getName().compareTo(o2.getName());
@@ -3569,7 +3568,7 @@ class JavaCodeGenerator extends CodeGenerator {
                 }
             }
         }
-        int [][] ranges = list.toArray(new int[list.size()][]);
+        int [][] ranges = list.toArray(new int[0][]);
         formEditor.getFormJavaSource().importFQNs(ranges);
     }
 

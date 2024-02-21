@@ -86,13 +86,11 @@ public abstract class SAXGeneratorAbstractPanel extends JPanel implements Custom
                     // object properly, client need to call setIndex and setBean
                     if (bean == null) throw new IllegalStateException();
                     if (index == null) throw new IllegalStateException();
-                    peer = (SAXGeneratorAbstractPanel) peerClass.newInstance();
+                    peer = (SAXGeneratorAbstractPanel) peerClass.getDeclaredConstructor().newInstance();
                     peer.step = this;
                     peer.setObject(bean);
                     peer.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, index);  // NOI18N
-                } catch (InstantiationException ex) {
-                    throw new IllegalStateException();
-                } catch (IllegalAccessException ex) {
+                } catch (ReflectiveOperationException ex) {
                     throw new IllegalStateException();
                 }
             }

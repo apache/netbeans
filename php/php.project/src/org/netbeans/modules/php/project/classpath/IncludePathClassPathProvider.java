@@ -112,7 +112,7 @@ public class IncludePathClassPathProvider implements ClassPathProvider {
         }
         if (globalIncludePathClassPath == null) {
             List<FileObject> includePath = PhpSourcePath.getIncludePath(null);
-            globalIncludePathClassPath = ClassPathSupport.createClassPath(includePath.toArray(new FileObject[includePath.size()]));
+            globalIncludePathClassPath = ClassPathSupport.createClassPath(includePath.toArray(new FileObject[0]));
         }
         return globalIncludePathClassPath;
     }

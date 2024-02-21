@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +61,7 @@ public final class RemotePlatformProbe {
         final String resourcesPath = "org/netbeans/modules/java/j2seembedded/resources/validateconnection.xml"; //NOI18N        
         File buildScript = null;
         try {
-            buildScript = FileUtil.normalizeFile(File.createTempFile("antScript", ".xml")); //NOI18N
+            buildScript = FileUtil.normalizeFile(Files.createTempFile("antScript", ".xml").toFile()); //NOI18N
         } catch (IOException ioe) {
             Exceptions.printStackTrace(ioe);
         }
@@ -102,7 +103,7 @@ public final class RemotePlatformProbe {
             ExecutorTask executorTask = null;
             int antResult = -1;
             try {
-                platformProperties = File.createTempFile("platform", ".properties");   //NOI18N
+                platformProperties = Files.createTempFile("platform", ".properties").toFile();   //NOI18N
                 prop.setProperty("platform.properties.file", platformProperties.getAbsolutePath()); //NOI18N
                 final Set<String> concealedProps;
                 if (connectionMethod.getAuthentification().getKind() == ConnectionMethod.Authentification.Kind.PASSWORD) {

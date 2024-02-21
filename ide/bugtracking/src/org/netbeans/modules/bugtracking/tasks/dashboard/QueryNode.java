@@ -245,8 +245,8 @@ public class QueryNode extends TaskContainerNode implements Comparable<QueryNode
             actions.addAll(Actions.getQueryPopupActions(queryNodes));
         }
         actions.add(null);
-        actions.addAll(Actions.getDefaultActions(selectedNodes.toArray(new TreeListNode[selectedNodes.size()])));
-        return actions.toArray(new Action[actions.size()]);
+        actions.addAll(Actions.getDefaultActions(selectedNodes.toArray(new TreeListNode[0])));
+        return actions.toArray(new Action[0]);
     }
 
     public QueryImpl getQuery() {

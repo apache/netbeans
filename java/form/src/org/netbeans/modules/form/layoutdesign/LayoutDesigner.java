@@ -1634,8 +1634,8 @@ public final class LayoutDesigner implements LayoutConstants {
                     }
                 }
                 eg.canHaveDefaultValue = true;
-                eg.possiblePaddingTypes = padList.toArray(new PaddingType[padList.size()]);
-                eg.paddingDisplayNames = nameList.toArray(new String[nameList.size()]);
+                eg.possiblePaddingTypes = padList.toArray(new PaddingType[0]);
+                eg.paddingDisplayNames = nameList.toArray(new String[0]);
             }
         }
     }

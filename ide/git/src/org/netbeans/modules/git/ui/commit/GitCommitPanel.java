@@ -305,7 +305,7 @@ public class GitCommitPanel extends VCSCommitPanel<GitLocalFileNode> {
                 GitLocalFileNode node = new GitLocalFileNode(repository, file, getAcceptedMode(filter));
                 nodesList.add(node);
             }
-            final GitLocalFileNode[] nodes = nodesList.toArray(new GitLocalFileNode[nodesList.size()]);
+            final GitLocalFileNode[] nodes = nodesList.toArray(new GitLocalFileNode[0]);
             EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run() {
@@ -443,7 +443,7 @@ public class GitCommitPanel extends VCSCommitPanel<GitLocalFileNode> {
                     allCookies.add(cookies[0]);
                 }
             }
-            return allCookies.toArray(new EditorCookie[allCookies.size()]);
+            return allCookies.toArray(new EditorCookie[0]);
         }        
     }    
     

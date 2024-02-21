@@ -22,7 +22,6 @@ package org.netbeans.modules.javahelp;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
@@ -117,7 +116,7 @@ class JavaHelpQuery implements Comparator<SearchTOCItem> {
                     }
                 }
                 //sort the result by their relevance
-                Collections.sort( items, JavaHelpQuery.this );
+                items.sort(JavaHelpQuery.this);
             }
         };
         return res;

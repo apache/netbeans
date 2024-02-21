@@ -88,7 +88,7 @@ public final class RefactoringContextActionsProvider
         assert EventQueue.isDispatchThread();
         if (menuItems == null || reset) {
             List<JComponent> l = createMenuItems(context);
-            menuItems = l.toArray(new JComponent[l.size()]);
+            menuItems = l.toArray(new JComponent[0]);
         }
 
         return menuItems;

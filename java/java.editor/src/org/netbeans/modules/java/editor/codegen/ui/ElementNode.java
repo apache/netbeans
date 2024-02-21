@@ -21,7 +21,6 @@ package org.netbeans.modules.java.editor.codegen.ui;
 
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -120,8 +119,8 @@ public class ElementNode extends AbstractNode {
             
         public ElementChilren(List<Description> descriptions, boolean sortChildren) {
             if( sortChildren ) {
-                descriptions = new ArrayList<Description>(descriptions);
-                Collections.sort( descriptions, Description.ALPHA_COMPARATOR );
+                descriptions = new ArrayList<>(descriptions);
+                descriptions.sort(Description.ALPHA_COMPARATOR );
             }
             setKeys(descriptions);            
         }

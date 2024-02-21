@@ -56,7 +56,7 @@ public final class QuerySupportFactory {
         try {
             return QuerySupport.forRoots(PHPIndexer.Factory.NAME,
                     PHPIndexer.Factory.VERSION,
-                    roots.toArray(new FileObject[roots.size()]));
+                    roots.toArray(new FileObject[0]));
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }

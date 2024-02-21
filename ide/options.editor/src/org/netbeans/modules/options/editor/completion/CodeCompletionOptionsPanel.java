@@ -24,8 +24,6 @@ import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -81,9 +79,8 @@ public class CodeCompletionOptionsPanel extends JPanel implements PropertyChange
 
             // Languages combobox model
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-            ArrayList<String> mimeTypes = new ArrayList<String>();
-            mimeTypes.addAll(selector.getMimeTypes());
-            Collections.sort(mimeTypes, LanguagesComparator.INSTANCE);
+            ArrayList<String> mimeTypes = new ArrayList<>(selector.getMimeTypes());
+            mimeTypes.sort(LanguagesComparator.INSTANCE);
 
             for (String mimeType : mimeTypes) {
                 model.addElement(mimeType);

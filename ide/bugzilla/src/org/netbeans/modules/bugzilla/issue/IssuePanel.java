@@ -4126,7 +4126,7 @@ private void workedFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                     }
                 });
             }
-            attachmentsSectionActions = actions.toArray(new Action[actions.size()]);
+            attachmentsSectionActions = actions.toArray(new Action[0]);
         }
         return attachmentsSectionActions;
     }

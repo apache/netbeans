@@ -349,19 +349,19 @@ public class ClassFileUtil {
     public static ClassName[] getTypesFromMethodTypeSignature (final String jvmTypeId) {
         Set<ClassName> result = new HashSet<ClassName> ();
         methodTypeSignature (jvmTypeId, new int[] {0}, result);        
-        return result.toArray(new ClassName[result.size()]);
+        return result.toArray(new ClassName[0]);
     }
     
     public static ClassName[] getTypesFromFiledTypeSignature (final String jvmTypeId) {
         Set<ClassName> result = new HashSet<ClassName> ();
         typeSignatureType (jvmTypeId, new int[] {0}, result, false);        
-        return result.toArray(new ClassName[result.size()]);
+        return result.toArray(new ClassName[0]);
     }
     
     public static ClassName[] getTypesFromClassTypeSignature (final String jvmTypeId) {
         Set<ClassName> result = new HashSet<ClassName> ();
         classTypeSignature (jvmTypeId, new int[] {0}, result);        
-        return result.toArray(new ClassName[result.size()]);
+        return result.toArray(new ClassName[0]);
     }
     
     private static char getChar (final String buffer, final int pos) {

@@ -26,12 +26,9 @@ import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
 import org.netbeans.api.java.source.CompilationController;
@@ -44,7 +41,6 @@ import org.netbeans.modules.refactoring.java.WhereUsedElement;
 import org.netbeans.modules.refactoring.java.spi.JavaWhereUsedFilters;
 import org.netbeans.modules.refactoring.java.spi.ToPhaseException;
 import org.openide.ErrorManager;
-import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
 /**
@@ -343,7 +339,7 @@ public class FindUsagesVisitor extends ErrorAwareTreePathScanner<Tree, Element> 
     
     public Collection<WhereUsedElement> getElements() {
         if(findInComments) { // the elements need to be sorted. Comments are searched for the whole file at once.
-            Collections.sort(elements, new Comparator<WhereUsedElement>() {
+            elements.sort(new Comparator<WhereUsedElement>() {
 
                 @Override
                 public int compare(WhereUsedElement o1, WhereUsedElement o2) {

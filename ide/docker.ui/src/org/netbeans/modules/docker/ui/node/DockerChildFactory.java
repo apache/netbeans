@@ -19,7 +19,6 @@
 package org.netbeans.modules.docker.ui.node;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -83,7 +82,7 @@ public class DockerChildFactory extends NodeClosingFactory<StatefulDockerInstanc
     @Override
     protected boolean createKeys(List<StatefulDockerInstance> toPopulate) {
         List<? extends DockerInstance> fresh = new ArrayList<>(registry.getInstances());
-        Collections.sort(fresh, UiUtils.getInstanceComparator());
+        fresh.sort(UiUtils.getInstanceComparator());
         for (DockerInstance i : fresh) {
             toPopulate.add(new StatefulDockerInstance(i));
         }

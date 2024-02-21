@@ -221,7 +221,7 @@ public final class TestRunnerReporter {
     
     private void handleTrouble() {
         if (trouble != null) {
-            trouble.setStackTrace(stackTrace.toArray(new String[stackTrace.size()]));
+            trouble.setStackTrace(stackTrace.toArray(new String[0]));
             addTestCase(testcase, Status.FAILED, duration, trouble);
             stackTrace.clear();
             trouble = null;

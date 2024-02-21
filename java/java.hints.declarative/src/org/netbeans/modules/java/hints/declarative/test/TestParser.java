@@ -125,7 +125,7 @@ public class TestParser extends Parser {
             }
         }
 
-        return result.toArray(new TestCase[result.size()]);
+        return result.toArray(new TestCase[0]);
     }
 
     private static @CheckForNull TestCase handleTestCase(int testCaseIndex, String testName, String options, int codeIndex, String testCase) {

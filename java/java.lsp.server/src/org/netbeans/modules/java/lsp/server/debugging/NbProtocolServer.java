@@ -375,7 +375,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                     }
                 }
                 StackTraceResponse response = new StackTraceResponse();
-                response.setStackFrames(result.toArray(new StackFrame[result.size()]));
+                response.setStackFrames(result.toArray(new StackFrame[0]));
                 response.setTotalFrames(cnt);
                 long t2 = System.nanoTime();
                 LOGGER.log(LOGLEVEL, "stackTrace() END after {0} ns", (t2 - t1));
@@ -426,7 +426,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
             result.add(scope);
         }
         ScopesResponse response = new ScopesResponse();
-        response.setScopes(result.toArray(new Scope[result.size()]));
+        response.setScopes(result.toArray(new Scope[0]));
         return CompletableFuture.completedFuture(response);
     }
 
@@ -475,7 +475,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                     result.add(thread);
                 });
                 ThreadsResponse response = new ThreadsResponse();
-                response.setThreads(result.toArray(new org.eclipse.lsp4j.debug.Thread[result.size()]));
+                response.setThreads(result.toArray(new org.eclipse.lsp4j.debug.Thread[0]));
                 long t2 = System.nanoTime();
                 LOGGER.log(LOGLEVEL, "threads() END after {0} ns", (t2 - t1));
                 return response;

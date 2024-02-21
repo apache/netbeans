@@ -352,7 +352,7 @@ public class ChromeManagerAccessor implements ExtensionManagerAccessor {
                         }
                     }
                 }
-                return result.toArray(new String[result.size()]);
+                return result.toArray(new String[0]);
             }
             else if (Utilities.isMac()) {
                 return Utils.getUserPaths("/Library/Application Support/Google/Chrome");// NOI18N

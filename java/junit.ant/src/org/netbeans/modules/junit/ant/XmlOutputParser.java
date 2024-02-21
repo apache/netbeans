@@ -465,7 +465,7 @@ final class XmlOutputParser extends DefaultHandler {
             List<String> stList = new ArrayList<>(Arrays.asList(trouble.getStackTrace()));
             if (!line.startsWith(stList.get(stList.size()-1))){
                 stList.add(line);
-                tr.setStackTrace(stList.toArray(new String[stList.size()]));
+                tr.setStackTrace(stList.toArray(new String[0]));
             }
         }
     }

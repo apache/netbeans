@@ -560,7 +560,7 @@ public class ClassesListController extends AbstractController {
 
     // --- Private implementation ------------------------------------------------
     private static List getSortedClasses(List filteredClasses, int sortingColumn, boolean sortingOrder) {
-        Collections.sort(filteredClasses, new ClassesComparator(sortingColumn, sortingOrder));
+        filteredClasses.sort(new ClassesComparator(sortingColumn, sortingOrder));
 
         return filteredClasses;
     }

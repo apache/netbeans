@@ -720,7 +720,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
                     }
                 }
 
-                Collections.sort(layers[i], crossingNodeComparator);
+                layers[i].sort(crossingNodeComparator);
 
                 int z = 0;
                 for (LayoutNode n : layers[i]) {
@@ -754,7 +754,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
                 }
 
-                Collections.sort(layers[i], crossingNodeComparator);
+                layers[i].sort(crossingNodeComparator);
 
                 int z = 0;
                 for (LayoutNode n : layers[i]) {
@@ -889,8 +889,8 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
                     upProcessingOrder[i].add(n);
                 }
 
-                Collections.sort(downProcessingOrder[i], nodeProcessingDownComparator);
-                Collections.sort(upProcessingOrder[i], nodeProcessingUpComparator);
+                downProcessingOrder[i].sort(nodeProcessingDownComparator);
+                upProcessingOrder[i].sort(nodeProcessingUpComparator);
             }
 
             initialPositions();

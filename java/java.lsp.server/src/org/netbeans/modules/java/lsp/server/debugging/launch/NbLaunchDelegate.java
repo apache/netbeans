@@ -227,7 +227,7 @@ public abstract class NbLaunchDelegate {
                     runContext.add(selectConfiguration);
                 }
                 
-                lookup = Lookups.fixed(runContext.toArray(new Object[runContext.size()]));
+                lookup = Lookups.fixed(runContext.toArray(new Object[0]));
                 // the execution Lookup is fully populated now. If the Project supports Configurations,
                 // check if the action is actually enabled in the prescribed configuration. If it is not, 
                 if (pcp != null) {
@@ -245,7 +245,7 @@ public abstract class NbLaunchDelegate {
                         boolean defConfig = true;
                         for (ProjectConfiguration c : pcp.getConfigurations()) {
                             runContext.set(confIndex, c);
-                            Lookup tryConf = Lookups.fixed(runContext.toArray(new Object[runContext.size()]));
+                            Lookup tryConf = Lookups.fixed(runContext.toArray(new Object[0]));
                             if (ap.isActionEnabled(cmd, tryConf)) {
                                 supportive = c;
                                 break;

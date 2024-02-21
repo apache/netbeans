@@ -99,7 +99,7 @@ public abstract class SendJMSMessageUiSupport extends MessageDestinationUiSuppor
         comboBox.setRenderer(new MdbHolderListCellRenderer());
 
         List<MdbHolder> sortedMdbs = new ArrayList<>(mdbs);
-        Collections.sort(sortedMdbs, new MdbHolderComparator());
+        sortedMdbs.sort(new MdbHolderComparator());
 
         comboBox.removeAllItems();
         textField.setText("");

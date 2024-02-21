@@ -150,7 +150,7 @@ public class Block extends Node implements BreakableNode, Terminal, Flags<Block>
      * @param statements All statements in the block
      */
     public Block(final long token, final int finish, final int flags, final List<Statement> statements) {
-        this(token, finish, flags, statements.toArray(new Statement[statements.size()]));
+        this(token, finish, flags, statements.toArray(new Statement[0]));
     }
 
     private Block(final Block block, final int finish, final List<Statement> statements, final int flags, final Map<String, Symbol> symbols) {

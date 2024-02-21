@@ -606,7 +606,7 @@ public class GridDesigner extends JPanel {
                             nodes.add(new LayoutConstraintsNode(metacomp.getNodeReference()));
                         }
                         setSelectedNodes(nodes);
-                        sheet.setNodes(nodes.toArray(new Node[nodes.size()]));
+                        sheet.setNodes(nodes.toArray(new Node[0]));
                     }
                 });
                 return;
@@ -615,7 +615,7 @@ public class GridDesigner extends JPanel {
             }
         }
         setSelectedNodes(nodes);
-        sheet.setNodes(nodes.toArray(new Node[nodes.size()]));
+        sheet.setNodes(nodes.toArray(new Node[0]));
     }
 
     /**

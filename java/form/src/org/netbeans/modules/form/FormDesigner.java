@@ -1086,7 +1086,7 @@ public class FormDesigner {
         }
         try {
             synchronizingSelection = true;
-            setSelectedNodes(nodes.toArray(new Node[nodes.size()]));
+            setSelectedNodes(nodes.toArray(new Node[0]));
         } finally {
             synchronizingSelection = false;
         }
@@ -1185,7 +1185,7 @@ public class FormDesigner {
         }
         try {
             synchronizingSelection = true;
-            setSelectedComponents(components.toArray(new RADComponent[components.size()]));
+            setSelectedComponents(components.toArray(new RADComponent[0]));
         } finally {
             synchronizingSelection = false;
         }
@@ -1217,7 +1217,7 @@ public class FormDesigner {
             Collection<String> selectedIds = selectedLayoutComponentIds();
             enabled = layoutDesigner.canAlign(selectedIds);
             selectedIds = getSelectedComponentsForLayoutDesigner(selectedIds);
-            layoutDesigner.setSelectedComponents(selectedIds.toArray(new String[selectedIds.size()]));
+            layoutDesigner.setSelectedComponents(selectedIds.toArray(new String[0]));
         } else {
             enabled = false;
         }
@@ -2384,7 +2384,7 @@ public class FormDesigner {
             if (metacomp instanceof RADVisualContainer) {
                 List<String> l = collectRootLayoutSubComponents((RADVisualContainer)metacomp, null);
                 if (l != null) {
-                    return l.toArray(new String[l.size()]);
+                    return l.toArray(new String[0]);
                 }
             }
             return null;
@@ -2712,7 +2712,7 @@ public class FormDesigner {
                     }
                 }
             }
-            return l.toArray(new FormModelEvent[l.size()]);
+            return l.toArray(new FormModelEvent[0]);
         }
 
         /**

@@ -1087,7 +1087,7 @@ public final class Utilities {
             arr.add(k);
         }
 
-        return arr.toArray(new KeyStroke[arr.size()]);
+        return arr.toArray(new KeyStroke[0]);
     }
 
     /** Adds characters for modifiers to the buffer.

@@ -597,7 +597,7 @@ public class Node {
                 popupPaths.add(path);
             }
         }
-        verifyPopup(popupPaths.toArray(new String[popupPaths.size()]));
+        verifyPopup(popupPaths.toArray(new String[0]));
     }
 
     /**

@@ -1331,7 +1331,7 @@ public final class GeneratorUtilities {
 
         // sort the elements to import
         ImportsComparator comparator = new ImportsComparator(cs);
-        Collections.sort(elementsToImport, comparator);
+        elementsToImport.sort(comparator);
         
         // merge the elements to import with the existing import statemetns
         TreeMaker make = copy.getTreeMaker();

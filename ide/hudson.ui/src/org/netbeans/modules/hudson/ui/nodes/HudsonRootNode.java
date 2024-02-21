@@ -62,7 +62,7 @@ public class HudsonRootNode extends AbstractNode {
             actions.add(new AddTestInstanceAction());
         }
          */
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     private static class RootNodeChildren extends ChildFactory<HudsonInstance> implements HudsonChangeListener {

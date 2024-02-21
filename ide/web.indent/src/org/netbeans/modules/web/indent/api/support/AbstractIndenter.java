@@ -21,7 +21,6 @@ package org.netbeans.modules.web.indent.api.support;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -467,7 +466,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
             }
         };
 
-        Collections.sort(newBlocks, c);
+        newBlocks.sort(c);
         List<ForeignLanguageBlock> result = new ArrayList<ForeignLanguageBlock>();
         for (ForeignLanguageBlock b : newBlocks) {
             addBlockAndMergeIfNeeded(result, b);
@@ -786,7 +785,7 @@ public abstract class AbstractIndenter<T1 extends TokenId> {
         // which alligns with "class" attribute
         //
         List<LineCommandsPair> s1 = new ArrayList<LineCommandsPair>(pairs);
-        Collections.sort(s1, c);
+        s1.sort(c);
         List<LineCommandsPair> s2 = new ArrayList<LineCommandsPair>();
         LineCommandsPair previous = null;
         // merge commands on one line:

@@ -381,7 +381,7 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
         for (String name : processorNames) {
             try {
                 Class<?> clazz = Class.forName(name, true, cl);
-                Object instance = clazz.newInstance();
+                Object instance = clazz.getDeclaredConstructor().newInstance();
                 if (instance instanceof Processor) {
                     result.add(new ErrorToleratingProcessor((Processor) instance));
                 }

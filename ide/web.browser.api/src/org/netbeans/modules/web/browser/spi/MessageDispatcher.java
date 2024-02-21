@@ -62,7 +62,7 @@ public class MessageDispatcher {
     protected void dispatchMessage(String featureId, String message) {
         MessageListener[] listenersCopy;
         synchronized(listeners) {
-            listenersCopy = listeners.toArray(new MessageListener[listeners.size()]);
+            listenersCopy = listeners.toArray(new MessageListener[0]);
         }
         for (MessageListener listener : listenersCopy) {
             listener.messageReceived(featureId, message);

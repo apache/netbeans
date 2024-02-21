@@ -73,7 +73,7 @@ public class DataObjectSyncSupport extends SyncSupport implements Synchronizator
      */
     protected Representation[] getRepresentations() {
         synchronized (reps) {
-            return reps.toArray(new Representation[reps.size()]);
+            return reps.toArray(new Representation[0]);
         }
     }
 

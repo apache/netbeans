@@ -284,7 +284,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                             }
                         }
                         // TBD: possibly include project configuration ?
-                        final Lookup ctx = Lookups.fixed(ctxObjects.toArray(new Object[ctxObjects.size()]));
+                        final Lookup ctx = Lookups.fixed(ctxObjects.toArray(new Object[0]));
                         ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
                         if (ap != null && ap.isActionEnabled(actionName, ctx)) {
                             ap.invokeAction(actionName, ctx);
@@ -868,7 +868,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                         // should not happen
                     }
                 }
-                info.subprojects = subprojectDirs.toArray(new URI[subprojectDirs.size()]);
+                info.subprojects = subprojectDirs.toArray(new URI[0]);
                 Project root = ProjectUtils.rootOf(p);
                 if (root != null) {
                     try {
@@ -912,7 +912,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
             }
             list.addAll(infos.values());
-            LspProjectInfo[] toArray = list.toArray(new LspProjectInfo[list.size()]);
+            LspProjectInfo[] toArray = list.toArray(new LspProjectInfo[0]);
             return CompletableFuture.completedFuture(toArray);
         }
     }

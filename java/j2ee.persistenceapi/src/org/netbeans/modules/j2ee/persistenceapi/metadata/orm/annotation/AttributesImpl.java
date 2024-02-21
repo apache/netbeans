@@ -222,7 +222,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
 
     @Override
     public Id[] getId() {
-        return idList.toArray(new Id[idList.size()]);
+        return idList.toArray(new Id[0]);
     }
 
     @Override
@@ -249,7 +249,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
     }
 
     public Id[] getDerivedId() {
-        return derivedIdList.toArray(new Id[derivedIdList.size()]);
+        return derivedIdList.toArray(new Id[0]);
     }
 
     @Override
@@ -289,7 +289,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
 
     @Override
     public Basic[] getBasic() {
-        return basicList.toArray(new Basic[basicList.size()]);
+        return basicList.toArray(new Basic[0]);
     }
 
     @Override
@@ -329,7 +329,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
 
     @Override
     public Version[] getVersion() {
-        return versionList.toArray(new Version[versionList.size()]);
+        return versionList.toArray(new Version[0]);
     }
 
     @Override
@@ -369,7 +369,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
 
     @Override
     public ManyToOne[] getManyToOne() {
-        return manyToOneList.toArray(new ManyToOne[manyToOneList.size()]);
+        return manyToOneList.toArray(new ManyToOne[0]);
     }
 
     @Override
@@ -409,7 +409,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
 
     @Override
     public OneToMany[] getOneToMany() {
-        return oneToManyList.toArray(new OneToMany[oneToManyList.size()]);
+        return oneToManyList.toArray(new OneToMany[0]);
     }
 
     @Override
@@ -449,7 +449,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
 
     @Override
     public OneToOne[] getOneToOne() {
-        return oneToOneList.toArray(new OneToOne[oneToOneList.size()]);
+        return oneToOneList.toArray(new OneToOne[0]);
     }
 
     @Override
@@ -489,7 +489,7 @@ public class AttributesImpl implements Attributes, PropertyHandler {
 
     @Override
     public ManyToMany[] getManyToMany() {
-        return manyToManyList.toArray(new ManyToMany[manyToManyList.size()]);
+        return manyToManyList.toArray(new ManyToMany[0]);
     }
 
     @Override

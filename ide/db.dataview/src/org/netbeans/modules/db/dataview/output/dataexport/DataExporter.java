@@ -44,7 +44,7 @@ abstract class DataExporter {
     public DataExporter(String[] suffixes, String suffixDescription) {
         SUFFIXES = Stream.of(suffixes).collect(Collectors.toSet());
         SUFFIX_DESCRIPTION = suffixDescription;
-        FILE_FILTER = new FileNameExtensionFilter(SUFFIX_DESCRIPTION, SUFFIXES.toArray(new String[SUFFIXES.size()]));
+        FILE_FILTER = new FileNameExtensionFilter(SUFFIX_DESCRIPTION, SUFFIXES.toArray(new String[0]));
     }
 
     /**

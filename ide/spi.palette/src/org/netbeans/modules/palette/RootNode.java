@@ -95,7 +95,7 @@ public final class RootNode extends FilterNode {
             actionList.add( new Utils.SortCategoriesAction( this ) );
             actionList.add( null );
             actionList.add( new Utils.RefreshPaletteAction() );
-            actions = actionList.toArray( new Action[actionList.size()] );
+            actions = actionList.toArray(new Action[0]);
         }
         PaletteActions customActions = (PaletteActions)getLookup().lookup( PaletteActions.class );
         if( null != customActions ) {

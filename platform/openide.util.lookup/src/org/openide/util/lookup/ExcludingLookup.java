@@ -375,7 +375,7 @@ BIG:
                     arr = new LookupListener[] { (LookupListener) listeners };
                 } else {
                     ArrayList<?> l = (ArrayList<?>) listeners;
-                    arr = l.toArray(new LookupListener[l.size()]);
+                    arr = l.toArray(new LookupListener[0]);
                 }
             }
 

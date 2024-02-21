@@ -21,7 +21,6 @@ package org.netbeans.modules.editor.bookmarks;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.netbeans.lib.editor.util.ArrayUtilities;
 import org.openide.filesystems.FileObject;
@@ -90,7 +89,7 @@ public final class FileBookmarks {
     void add(BookmarkInfo bookmark) {
         bookmarks.add(bookmark);
         bookmark.setFileBookmarks(this);
-        Collections.sort(bookmarks, BookmarkInfo.CURRENT_LINE_COMPARATOR);
+        bookmarks.sort(BookmarkInfo.CURRENT_LINE_COMPARATOR);
     }
 
     boolean remove(BookmarkInfo bookmark) {

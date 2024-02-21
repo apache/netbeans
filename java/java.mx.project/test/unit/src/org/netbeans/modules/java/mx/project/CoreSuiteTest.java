@@ -25,7 +25,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.junit.Assume;
@@ -115,10 +114,8 @@ public final class CoreSuiteTest {
     }
 
     private static Iterable<Method> sortMethods(Method[] methods) {
-        List<Method> arr = new ArrayList<Method>(Arrays.asList(methods));
-        Collections.sort(arr, (o1, o2) -> {
-            return o1.getName().compareTo(o2.getName());
-        });
+        List<Method> arr = new ArrayList<>(Arrays.asList(methods));
+        arr.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
         return arr;
     }
 }

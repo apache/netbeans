@@ -477,7 +477,7 @@ public class FormUtils
     public static boolean getPresetValue(String key, boolean defaultValue) {
         try {
             String s = NbBundle.getMessage(FormUtils.class, key);
-            return "true".equals(s.toLowerCase()); // NOI18N
+            return "true".equalsIgnoreCase(s); // NOI18N
         } catch( MissingResourceException ex) { // ignore
         }
         return defaultValue;

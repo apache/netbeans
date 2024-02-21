@@ -223,7 +223,7 @@ public abstract class SunBaseBean extends BaseBean implements CommonDDBean {
                 return (SunBaseBean) this.clone();
             }
             
-            bean = (SunBaseBean) newBeanClass.newInstance();
+            bean = (SunBaseBean) newBeanClass.getDeclaredConstructor().newInstance();
         } catch(Exception e) {
             throw new IllegalArgumentException(e.getMessage(), e);
         }

@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -124,7 +125,7 @@ public final class MIMETypes {
     
     private static synchronized String getTruffleJarPath() throws IOException {
         if (TEMP_TRUFFLE_JAR == null) {
-            File truffleJarFile = File.createTempFile("TmpTruffleBcknd", ".jar");   // NOI18N
+            File truffleJarFile = Files.createTempFile("TmpTruffleBcknd", ".jar").toFile();   // NOI18N
             truffleJarFile.deleteOnExit();
             FileUtil.copy(RemoteServices.openRemoteClasses(), new FileOutputStream(truffleJarFile));
             TEMP_TRUFFLE_JAR = truffleJarFile.getAbsolutePath();

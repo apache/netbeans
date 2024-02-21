@@ -76,7 +76,7 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
                     if (documentBase.getFileObject(configFiles[i]) != null)
                         files.add(configFiles[i]);
                 }
-                configFiles = (String[])files.toArray(new String[files.size()]);
+                configFiles = (String[])files.toArray(new String[0]);
             }
             jComboBoxConfigFile.setModel(new javax.swing.DefaultComboBoxModel(configFiles));
             //No config files found

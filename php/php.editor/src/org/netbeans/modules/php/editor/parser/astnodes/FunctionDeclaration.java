@@ -61,7 +61,7 @@ public class FunctionDeclaration extends Statement implements Attributed {
     }
 
     private FunctionDeclaration(int start, int end, Identifier functionName, List<FormalParameter> formalParameters, Expression returnType, Block body, boolean isReference, List<Attribute> attributes) {
-        this(start, end, functionName, (FormalParameter[]) formalParameters.toArray(new FormalParameter[formalParameters.size()]), returnType, body, isReference, attributes);
+        this(start, end, functionName, (FormalParameter[]) formalParameters.toArray(new FormalParameter[0]), returnType, body, isReference, attributes);
     }
 
     public FunctionDeclaration(int start, int end, Identifier functionName, List<FormalParameter> formalParameters, Expression returnType, Block body, boolean isReference) {

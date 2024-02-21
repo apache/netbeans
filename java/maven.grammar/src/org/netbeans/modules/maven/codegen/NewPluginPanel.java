@@ -31,7 +31,6 @@ import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -214,7 +213,7 @@ public class NewPluginPanel extends javax.swing.JPanel implements ChangeListener
                 }
                 final List<String> keyList = new ArrayList<String>(map.keySet());
                 // sort specially using our comparator, see compare method
-                Collections.sort(keyList, NewPluginPanel.this);
+                keyList.sort(NewPluginPanel.this);
 
                 SwingUtilities.invokeLater(new Runnable() {
 

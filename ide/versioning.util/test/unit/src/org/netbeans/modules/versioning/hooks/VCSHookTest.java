@@ -55,7 +55,7 @@ public class VCSHookTest extends NbTestCase {
         
         Collection<TestVCSHook> c = VCSHooks.getInstance().getHooks(TestVCSHook.class);
 
-        TestVCSHook[] hooks = c.toArray(new TestVCSHook[c.size()]);
+        TestVCSHook[] hooks = c.toArray(new TestVCSHook[0]);
         assertEquals(2, hooks.length);
 
         boolean a = false;

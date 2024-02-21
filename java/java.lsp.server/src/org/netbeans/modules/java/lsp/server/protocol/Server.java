@@ -700,7 +700,7 @@ public final class Server {
             }
 
             // Wait for all priming builds, even those already pending, to finish:
-            CompletableFuture.allOf(primingBuilds.toArray(new CompletableFuture[primingBuilds.size()])).thenRun(() -> {
+            CompletableFuture.allOf(primingBuilds.toArray(new CompletableFuture[0])).thenRun(() -> {
                 Set<Project> additionalProjects = new LinkedHashSet<>();
                 for (Project prj : projects) {
                     Set<Project> containedProjects = ProjectUtils.getContainedProjects(prj, true);
@@ -729,8 +729,8 @@ public final class Server {
                 projectSet.retainAll(openedProjects);
                 projectSet.addAll(projects);
 
-                Project[] prjsRequested = projects.toArray(new Project[projects.size()]);
-                Project[] prjs = projects.toArray(new Project[projects.size()]);
+                Project[] prjsRequested = projects.toArray(new Project[0]);
+                Project[] prjs = projects.toArray(new Project[0]);
                 LOG.log(Level.FINER, "{0}: Finished opening projects: {1}", new Object[]{id, Arrays.asList(projects)});
                 synchronized (this) {
                     openedProjects = projectSet;
@@ -741,7 +741,7 @@ public final class Server {
                         ns.addAll(current);
                         LOG.log(Level.FINER, "Current is: {0}, ns: {1}", new Object[] { current, ns });
                         if (s != ns.size()) {
-                            prjs = ns.toArray(new Project[ns.size()]);
+                            prjs = ns.toArray(new Project[0]);
                             workspaceProjects = CompletableFuture.completedFuture(prjs);
                         }
                     }

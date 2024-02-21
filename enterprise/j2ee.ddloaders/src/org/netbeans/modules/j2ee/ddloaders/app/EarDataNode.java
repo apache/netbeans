@@ -91,7 +91,7 @@ public final class EarDataNode extends DataNode {
                 }
                 actions.add(origActions[i]);
             }
-            filteredActions = actions.toArray(new Action[actions.size()]);
+            filteredActions = actions.toArray(new Action[0]);
         }
         return filteredActions;
     }

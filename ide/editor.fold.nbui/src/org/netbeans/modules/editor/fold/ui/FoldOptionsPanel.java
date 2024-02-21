@@ -24,12 +24,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
@@ -244,10 +242,10 @@ final class FoldOptionsPanel extends javax.swing.JPanel implements ActionListene
                 s, EditorSettings.getDefault().getLanguageName(s)
             });
         }
-        Collections.sort(langMimes, LANG_COMPARATOR);
+        langMimes.sort(LANG_COMPARATOR);
         languageMimeTypes = langMimes;
         int idx = langSelect.getSelectedIndex();
-        langSelect.setModel(new DefaultComboBoxModel(languageMimeTypes.toArray(new Object[languageMimeTypes.size()])));
+        langSelect.setModel(new DefaultComboBoxModel(languageMimeTypes.toArray(new Object[0])));
         langSelect.setSelectedIndex(idx >= 0 && idx < langSelect.getItemCount() ? idx : 0);
     }
     

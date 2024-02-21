@@ -266,7 +266,7 @@ final class DefaultEMLookup extends ProxyLookup implements LookupListener, Prope
                 LookupListener[] ls;
 
                 synchronized (listeners) {
-                    ls = listeners.toArray(new LookupListener[listeners.size()]);
+                    ls = listeners.toArray(new LookupListener[0]);
                 }
 
                 for (int i = 0; i < ls.length; i++) {

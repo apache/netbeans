@@ -168,7 +168,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                 return null;
             }
             List<String> imports = pi.getImports();
-            return imports.toArray(new String[imports.size()]);
+            return imports.toArray(new String[0]);
         }
 
         return null;

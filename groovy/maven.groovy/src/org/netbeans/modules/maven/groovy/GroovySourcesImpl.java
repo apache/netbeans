@@ -51,7 +51,7 @@ public class GroovySourcesImpl implements Sources, SourceGroupModifierImplementa
             List<SourceGroup> groups = new ArrayList<SourceGroup>();
             addTestGroup(groups);
             addSourcesGroup(groups);
-            return groups.toArray(new SourceGroup[groups.size()]);
+            return groups.toArray(new SourceGroup[0]);
         } else {
             return new SourceGroup[0];
         }

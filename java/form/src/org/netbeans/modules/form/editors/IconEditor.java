@@ -380,7 +380,7 @@ public class IconEditor extends PropertyEditorSupport
                 }
             }
         }
-        String[] fileNames = namesSet.toArray(new String[namesSet.size()]);
+        String[] fileNames = namesSet.toArray(new String[0]);
         Arrays.sort(fileNames);
         String[] namesWithNone = new String[fileNames.length + 1];
         namesWithNone[0] = noneText;

@@ -323,7 +323,7 @@ public class JavaWhereUsedQueryPlugin extends JavaRefactoringPlugin implements F
                 a.addAll(customScope.getFiles());
                 fireProgressListenerStep(a.size());
                 try {
-                    queryFiles(a, findTask,  RefactoringUtils.getClasspathInfoFor(a.toArray(new FileObject[a.size()])));
+                    queryFiles(a, findTask,  RefactoringUtils.getClasspathInfoFor(a.toArray(new FileObject[0])));
                 } catch (IOException e) {
                     problem = JavaPluginUtils.chainProblems(problem, createProblemAndLog(null, e));
                 }

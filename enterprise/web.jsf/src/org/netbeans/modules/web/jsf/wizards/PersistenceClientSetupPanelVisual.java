@@ -362,7 +362,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         processValidPath(menu, paths, paginationTemplatePath, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.paginationTemplate"));
         processValidPath(menu, paths, utilTemplatePath, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.utilTemplate"));
         processValidPath(menu, paths, bundleTemplatePath, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.bundleTemplate"));
-        menu.insert(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.allTemplates"), paths.toArray(new String[paths.size()])), 0);
+        menu.insert(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.allTemplates"), paths.toArray(new String[0])), 0);
         menu.show(customizeTemplatesLabel, evt.getX(), evt.getY());
     }//GEN-LAST:event_customizeTemplatesLabelMouseClicked
 

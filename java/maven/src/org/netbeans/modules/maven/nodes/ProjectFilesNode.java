@@ -81,7 +81,7 @@ public class ProjectFilesNode extends AnnotatedAbstractNode {
         if (!SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE.exists()) {
             col.add(new AddSettingsXmlAction());
         }
-        return col.toArray(new Action[col.size()]);
+        return col.toArray(new Action[0]);
     }
     
     private Image getIcon(boolean opened) {

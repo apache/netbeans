@@ -121,7 +121,7 @@ public class ClientExplorerPanel extends DefaultClientSelectionPanel {
             for (WebService ws : wsData.getServiceConsumers()) {
                 nodes.add(ws.createNode());
             }
-            return nodes.toArray(new Node[nodes.size()]);
+            return nodes.toArray(new Node[0]);
         }
         return new Node[]{};
     }

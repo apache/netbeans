@@ -33,8 +33,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.EventObject;
 import java.util.HashMap;
@@ -490,7 +488,7 @@ public class Outline extends ETable {
                         }
                     }
                     tempSortMap = tsm;
-                    Collections.sort(rows, c);
+                    rows.sort(c);
                     tempSortMap = null;
                 }
                 int [] res = new int[rows.size()];

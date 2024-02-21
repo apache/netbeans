@@ -20,6 +20,7 @@
 package org.netbeans;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -57,7 +58,7 @@ public final class Util {
         if (prefix.length() < 3) prefix += '.';
         if (prefix.length() < 3) prefix += '.';
         String suffix = "-test.jar"; // NOI18N
-        File physicalModuleFile = File.createTempFile(prefix, suffix);
+        File physicalModuleFile = Files.createTempFile(prefix, suffix).toFile();
         physicalModuleFile.deleteOnExit();
         InputStream is = new FileInputStream(moduleFile);
         try {
@@ -520,7 +521,7 @@ public final class Util {
                     if (listeners.isEmpty()) {
                         return;
                     }
-                    _listeners = listeners.toArray(new LookupListener[listeners.size()]);
+                    _listeners = listeners.toArray(new LookupListener[0]);
                 }
                 LookupEvent ev = new LookupEvent(this);
                 for (int i = 0; i < _listeners.length; i++) {

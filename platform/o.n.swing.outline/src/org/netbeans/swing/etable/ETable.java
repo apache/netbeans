@@ -1847,7 +1847,7 @@ public class ETable extends JTable {
                         rows.add(new RowMapping(i, model, this));
                     }
                 }
-                Collections.sort(rows, c);
+                rows.sort(c);
                 int [] res = new int[rows.size()];
                 int [] invRes = new int[noRows]; // carefull - this one is bigger!
                 for (int i = 0; i < res.length; i++) {

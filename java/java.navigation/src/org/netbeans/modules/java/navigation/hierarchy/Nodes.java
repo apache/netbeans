@@ -152,7 +152,7 @@ class Nodes {
             cld = Children.LEAF;
         } else {
             cld = new SuperTypeChildren(filters);
-            cld.add(childNodes.toArray(new Node[childNodes.size()]));
+            cld.add(childNodes.toArray(new Node[0]));
         }
         return new TypeNode(
             cld,
@@ -304,7 +304,7 @@ class Nodes {
                     actions.add(null);
                 }
                 actions.addAll(Arrays.asList(globalActions));
-                return actions.toArray(new Action[actions.size()]);
+                return actions.toArray(new Action[0]);
             }
         }
 
@@ -557,7 +557,7 @@ class Nodes {
                     cld = Children.LEAF;
                 } else {
                     cld = new SuperTypeChildren(filters);
-                    cld.add(childNodes.toArray(new Node[childNodes.size()]));
+                    cld.add(childNodes.toArray(new Node[0]));
                 }
                 type2Node.put(toProcess, new TypeNode(
                     cld,

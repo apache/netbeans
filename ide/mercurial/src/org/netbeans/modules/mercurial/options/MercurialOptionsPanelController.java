@@ -259,7 +259,7 @@ final class MercurialOptionsPanelController extends OptionsPanelController imple
             );
             variables.add(variable);   
         }       
-        labelsPanel.labelsList.setListData(variables.toArray(new LabelVariable[variables.size()]));                
+        labelsPanel.labelsList.setListData(variables.toArray(new LabelVariable[0]));                
                 
         String title = NbBundle.getMessage(MercurialPanel.class, "MercurialPanel.labelVariables.title"); // NOI18N
         String acsd = NbBundle.getMessage(MercurialPanel.class, "MercurialPanel.labelVariables.acsd"); // NOI18N

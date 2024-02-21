@@ -101,7 +101,7 @@ public abstract class AbstractFileWizard implements WizardDescriptor.ProgressIns
     }
 
     protected final SourceGroup[] sourceGroupToArray(List<SourceGroup> groups) {
-        return groups.toArray(new SourceGroup[groups.size()]);
+        return groups.toArray(new SourceGroup[0]);
     }
 
     private String[] createSteps(String[] before, WizardDescriptor.Panel[] panels) {

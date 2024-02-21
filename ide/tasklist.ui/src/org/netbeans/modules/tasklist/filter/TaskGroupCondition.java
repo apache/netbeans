@@ -63,7 +63,7 @@ class TaskGroupCondition extends FilterCondition {
      */
     public TaskGroupCondition() {
         List<TaskGroup> groupList = new ArrayList<TaskGroup>( TaskGroup.getGroups() );
-        groups = groupList.toArray( new TaskGroup[groupList.size()] );
+        groups = groupList.toArray(new TaskGroup[0]);
         groupState = new boolean[groups.length];
         Arrays.fill(groupState, true);
     }

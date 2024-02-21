@@ -810,7 +810,7 @@ implements Serializable, AbstractLookup.Storage<ArrayList<Class>> {
             if (reordered && value instanceof List) {
                 // if reordered, than update the order in the collection
                 List l = (List) value;
-                Collections.sort(l, ALPairComparator.DEFAULT);
+                l.sort(ALPairComparator.DEFAULT);
             }
 
             if (changed) {

@@ -1042,7 +1042,7 @@ public class OutlineView extends JScrollPane {
                 al.add(n);
             }
         }
-        Node[] arr = al.toArray (new Node[al.size ()]);
+        Node[] arr = al.toArray (new Node[0]);
         if (arr.length == 0) {
             if (manager.getRootContext() != null) {
                 // display the context menu of the root node
@@ -1409,7 +1409,7 @@ public class OutlineView extends JScrollPane {
                 }
             }
             //System.err.println("  => selectedNodes = "+selectedNodes);
-            callSelectionChanged(selectedNodes.toArray (new Node[selectedNodes.size ()]));
+            callSelectionChanged(selectedNodes.toArray (new Node[0]));
         }
 
         @Override

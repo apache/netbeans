@@ -191,7 +191,7 @@ public class SourceForBinaryQueryTest extends NbTestCase {
             lastResult = null;
             List<FileObject> data =  map.get(binaryRoot);
             if (data != null) {
-                return lastResult = new R2(data.toArray(new FileObject[data.size()]), prefSources(data));
+                return lastResult = new R2(data.toArray(new FileObject[0]), prefSources(data));
             }
             return null;
         }
@@ -240,7 +240,7 @@ public class SourceForBinaryQueryTest extends NbTestCase {
         public Result findSourceRoots(URL binaryRoot) {
             List<FileObject> data =  map.get(binaryRoot);
             if (data != null) {
-                return new R(data.toArray(new FileObject[data.size()]));
+                return new R(data.toArray(new FileObject[0]));
             }
             return null;
         }

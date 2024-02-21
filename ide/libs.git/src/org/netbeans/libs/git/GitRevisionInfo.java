@@ -202,7 +202,7 @@ public final class GitRevisionInfo {
                     result.add(new GitFileInfo(new File(repository.getWorkTree(), walk.getPathString()), walk.getPathString(), GitFileInfo.Status.ADDED, null, null));
                 }
             }
-            this.modifiedFiles = result.toArray(new GitFileInfo[result.size()]);
+            this.modifiedFiles = result.toArray(new GitFileInfo[0]);
         } catch (IOException ex) {
             throw new GitException(ex);
         }

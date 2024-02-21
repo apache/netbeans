@@ -913,7 +913,7 @@ public abstract class AbstractLayoutSupport implements LayoutSupportDelegate
      */
     protected AbstractLayoutSupport createLayoutSupportInstance() {
         try {
-            return (AbstractLayoutSupport) getClass().newInstance();
+            return (AbstractLayoutSupport) getClass().getDeclaredConstructor().newInstance();
         }
         catch (Exception ex) { // should not happen for AbstractLayoutSupport subclasses
             return null;

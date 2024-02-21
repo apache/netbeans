@@ -59,7 +59,7 @@ public class MavenTestForSourceImpl implements MultipleRootsUnitTestForSourceQue
                 }
                 urls.add(url);
             }
-            return urls.isEmpty() ? null : urls.toArray(new URL[urls.size()]);
+            return urls.isEmpty() ? null : urls.toArray(new URL[0]);
         } catch (MalformedURLException exc) {
             ErrorManager.getDefault().notify(exc);
         }
@@ -78,7 +78,7 @@ public class MavenTestForSourceImpl implements MultipleRootsUnitTestForSourceQue
                 }
                 urls.add(url);
             }
-            return urls.isEmpty() ? null : urls.toArray(new URL[urls.size()]);
+            return urls.isEmpty() ? null : urls.toArray(new URL[0]);
         } catch (MalformedURLException exc) {
             ErrorManager.getDefault().notify(exc);
         }

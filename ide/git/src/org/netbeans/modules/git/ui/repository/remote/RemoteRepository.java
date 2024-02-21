@@ -423,7 +423,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
                         public void run() {
                             ignoreComboEvents = true;
                             sortedModelUrls = uris;
-                            RemoteRepository.this.schemeUris = schemeUris.toArray(new String[schemeUris.size()]);
+                            RemoteRepository.this.schemeUris = schemeUris.toArray(new String[0]);
                             panel.urlComboBox.setModel(model);
                             if (forPath != null) {
                                 setComboText(forPath, 0, forPath.length());

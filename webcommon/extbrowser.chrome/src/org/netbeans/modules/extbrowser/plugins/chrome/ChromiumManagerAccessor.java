@@ -79,7 +79,7 @@ public class ChromiumManagerAccessor implements ExtensionManagerAccessor {
                             result.add(f.getPath()+"\\Chromium\\User Data");
                     }
                 }
-                return result.toArray(new String[result.size()]);
+                return result.toArray(new String[0]);
             } 
             else if (Utilities.isMac()) {
                 return Utils.getUserPaths("/Library/Application Support/Chromium");// NOI18N

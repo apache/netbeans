@@ -4606,8 +4606,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
     private PropertyEditor createPropertyEditor(Class editorClass,
                                                 Class propertyType,
                                                 FormProperty property)
-        throws InstantiationException,
-               IllegalAccessException
+        throws ReflectiveOperationException
     {
         PropertyEditor ed = null;
         if (editorClass.equals(RADConnectionPropertyEditor.class)) {
@@ -4623,7 +4622,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
                 ed = RADProperty.createDefaultEnumEditor(propertyType);
             }
         } else {
-            ed = (PropertyEditor) editorClass.newInstance();
+            ed = (PropertyEditor) editorClass.getDeclaredConstructor().newInstance();
         }
 
         if (property != null)
@@ -5575,10 +5574,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
             try {
                 prEd = createPropertyEditor(editorClass, propertyType, null);
             }
-            catch (Exception ex) {
-                t = ex;
-            }
-            catch (LinkageError ex) {
+            catch (Exception | LinkageError ex) {
                 t = ex;
             }
             if (t != null) {
@@ -5938,7 +5934,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
             // sort the attributes by attribute name
             // probably not necessary, but there is no guarantee that
             // the order of attributes will remain the same in DOM
-            Collections.sort(attribList, new Comparator<org.w3c.dom.Node>() {
+            attribList.sort(new Comparator<org.w3c.dom.Node>() {
                 @Override
                 public int compare(org.w3c.dom.Node n1, org.w3c.dom.Node n2) {
                     return n1.getNodeName().compareTo(n2.getNodeName());

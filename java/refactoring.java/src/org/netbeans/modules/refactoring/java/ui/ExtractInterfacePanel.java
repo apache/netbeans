@@ -416,7 +416,7 @@ public final class ExtractInterfacePanel extends JPanel implements CustomRefacto
 
             // the members are collected
             // now, create a tree map (to sort them) and create the table data
-            Collections.sort(result, new Comparator() {
+            result.sort(new Comparator() {
                 @Override
                 public int compare(Object o1, Object o2) {
                     ExtractInterfaceInfo i1 = (ExtractInterfaceInfo) o1;

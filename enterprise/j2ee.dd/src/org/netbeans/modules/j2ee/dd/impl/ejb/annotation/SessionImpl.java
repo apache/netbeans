@@ -332,8 +332,8 @@ public class SessionImpl extends PersistentObject implements Session {
         
         EjbRefHelper.setEjbRefsForClass(getHelper(), getTypeElement(), resultEjbRefs, resultEjbLocalRefs);
         
-        ejbRefs = resultEjbRefs.toArray(new EjbRef[resultEjbRefs.size()]);
-        ejbLocalRefs = resultEjbLocalRefs.toArray(new EjbLocalRef[resultEjbLocalRefs.size()]);
+        ejbRefs = resultEjbRefs.toArray(new EjbRef[0]);
+        ejbLocalRefs = resultEjbLocalRefs.toArray(new EjbLocalRef[0]);
                 
     }
     
@@ -409,12 +409,12 @@ public class SessionImpl extends PersistentObject implements Session {
     
     public String[] getBusinessLocal() throws VersionNotSupportedException {
         initBusinessInterfaces();
-        return businessLocal.toArray(new String[businessLocal.size()]);
+        return businessLocal.toArray(new String[0]);
     }
     
     public String[] getBusinessRemote() throws VersionNotSupportedException {
         initBusinessInterfaces();
-        return businessRemote.toArray(new String[businessRemote.size()]);
+        return businessRemote.toArray(new String[0]);
     }
     
     public EjbRef[] getEjbRef() {

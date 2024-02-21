@@ -36,7 +36,6 @@ import java.util.prefs.Preferences;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.queries.JavadocForBinaryQuery;
-import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -93,12 +92,10 @@ final class QueriesCache<T extends QueriesCache.ResultBase> {
             }
             if (currentMapping == null) {
                 try {
-                    currentMapping = clazz.newInstance();
+                    currentMapping = clazz.getDeclaredConstructor().newInstance();
                     currentRoots.put(binaryRoot, currentMapping);
-                } catch (InstantiationException ie) {
+                } catch (ReflectiveOperationException ie) {
                     Exceptions.printStackTrace(ie);
-                } catch (IllegalAccessException iae) {
-                    Exceptions.printStackTrace(iae);
                 }
             }
         }
@@ -131,19 +128,13 @@ final class QueriesCache<T extends QueriesCache.ResultBase> {
                            }
                        }
                        for (Map.Entry<URL,List<URL>> e : bindings.entrySet()) {
-                           final T instance = clazz.newInstance();
+                           final T instance = clazz.getDeclaredConstructor().newInstance();
                            instance.update(e.getValue());
                            result.put(e.getKey(), instance);
                        }
                    }
-               } catch (BackingStoreException bse) {
+               } catch (BackingStoreException | MalformedURLException | ReflectiveOperationException bse) {
                    Exceptions.printStackTrace(bse);
-               } catch (MalformedURLException mue) {
-                   Exceptions.printStackTrace(mue);
-               } catch (InstantiationException ie) {
-                   Exceptions.printStackTrace(ie);
-               } catch (IllegalAccessException iae) {
-                   Exceptions.printStackTrace(iae);
                }
                cache = result;
            }
@@ -221,7 +212,7 @@ final class QueriesCache<T extends QueriesCache.ResultBase> {
 
         @Override
         protected void updateImpl(final Collection<? extends URL> roots) {
-            this.roots = roots.toArray(new URL[roots.size()]);
+            this.roots = roots.toArray(new URL[0]);
         }
 
         @NonNull
@@ -266,7 +257,7 @@ final class QueriesCache<T extends QueriesCache.ResultBase> {
                     fos.add(fo);
                 }
             }
-            this.roots = fos.toArray(new FileObject[fos.size()]);
+            this.roots = fos.toArray(new FileObject[0]);
         }
 
         @NonNull

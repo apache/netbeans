@@ -198,7 +198,7 @@ public abstract class ErrorHintsTestBase extends NbTestCase {
     }
     
     protected List<Fix> computeFixes(CompilationInfo info, String diagnosticCode, int pos, TreePath path) throws Exception {
-        if (ruleToInvoke != null) return ruleToInvoke.newInstance().run(info, diagnosticCode, pos, path, null);
+        if (ruleToInvoke != null) return ruleToInvoke.getDeclaredConstructor().newInstance().run(info, diagnosticCode, pos, path, null);
         return computeFixes(info, pos, path);
     }
     
@@ -325,7 +325,7 @@ public abstract class ErrorHintsTestBase extends NbTestCase {
     }
     
     protected Set<String> getSupportedErrorKeys() throws Exception {
-        if (ruleToInvoke != null) return ruleToInvoke.newInstance().getCodes();
+        if (ruleToInvoke != null) return ruleToInvoke.getDeclaredConstructor().newInstance().getCodes();
         return null;
     }
 

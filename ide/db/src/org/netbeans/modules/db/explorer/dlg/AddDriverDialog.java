@@ -612,7 +612,7 @@ public final class AddDriverDialog extends javax.swing.JPanel {
         message popping up if a different driver is picked from the dropdown after an unrelated JAR
         file is added.) */
         jarClassLoader =
-                new URLClassLoader(drvs.toArray(new URL[drvs.size()]),
+                new URLClassLoader(drvs.toArray(new URL[0]),
                 this.getClass().getClassLoader());
         return jarClassLoader;
     }

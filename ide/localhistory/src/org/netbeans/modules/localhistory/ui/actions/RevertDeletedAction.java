@@ -262,7 +262,7 @@ public class RevertDeletedAction extends NodeAction {
         
         // check all previosly deleted children files if they by chance 
         // also contain something deleted
-        for (StoreEntryNode sen : deletedEntries.toArray(new StoreEntryNode[deletedEntries.size()])) {
+        for (StoreEntryNode sen : deletedEntries.toArray(new StoreEntryNode[0])) {
             node.add(sen);
             if(!sen.getStoreEntry().representsFile()) {
                 populateNode(sen, sen.getStoreEntry().getFile(), true);

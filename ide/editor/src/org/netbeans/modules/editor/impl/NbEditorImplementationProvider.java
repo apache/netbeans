@@ -52,7 +52,7 @@ public final class NbEditorImplementationProvider implements EditorImplementatio
         String mimeType = NbEditorUtilities.getMimeType(target);
         if (mimeType != null) {
             List actions = GlyphGutterActionsProvider.getGlyphGutterActions(mimeType);
-            return (Action []) actions.toArray(new Action [actions.size()]);
+            return (Action []) actions.toArray(new Action [0]);
         } else {
             return NO_ACTIONS;
         }

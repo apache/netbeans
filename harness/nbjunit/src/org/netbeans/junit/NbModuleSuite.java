@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -739,7 +740,7 @@ public class NbModuleSuite {
                 //Fix for issue #57304
                 l.add(Character.toString(dosHack));
             }
-            return l.toArray(new String[l.size()]);
+            return l.toArray(new String[0]);
         }
 
         static void findClusters(Collection<File> clusters, List<String> regExps) throws IOException {
@@ -928,7 +929,7 @@ public class NbModuleSuite {
                     }else{
                         Class<? extends Test> sndClazz =
                             testLoader.loadClass(item.clazz.getName()).asSubclass(Test.class);
-                        toRun.addTest(sndClazz.newInstance());
+                        toRun.addTest(sndClazz.getDeclaredConstructor().newInstance());
                     }
                 }
 
@@ -1129,7 +1130,7 @@ public class NbModuleSuite {
                 if (dep == null) {
                     throw new IOException("no match for " + artifact + " found in " + classpath);
                 }
-                File depCopy = File.createTempFile(artifact.replace(':', '-') + '-', ".jar");
+                File depCopy = Files.createTempFile(artifact.replace(':', '-') + '-', ".jar").toFile();
                 depCopy.deleteOnExit();
                 NbTestCase.copytree(dep, depCopy);
                 if (classPathHeader.length() > 0) {
@@ -1139,7 +1140,7 @@ public class NbModuleSuite {
             }
             String n = jar.getName();
             int dot = n.lastIndexOf('.');
-            File jarCopy = File.createTempFile(n.substring(0, dot) + '-', n.substring(dot));
+            File jarCopy = Files.createTempFile(n.substring(0, dot) + '-', n.substring(dot)).toFile();
             jarCopy.deleteOnExit();
             InputStream is = new FileInputStream(jar);
             try {

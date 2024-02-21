@@ -192,7 +192,7 @@ public class KeyStrokeUtils {
             }
         }
 
-        return result.toArray(new KeyStroke[result.size()]);
+        return result.toArray(new KeyStroke[0]);
     }
 
     /**

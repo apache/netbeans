@@ -131,7 +131,7 @@ final class OutlineViewDragSupport extends ExplorerDragSupport {
                 al.add(n);
             }
         }
-        Node[] result = al.toArray (new Node[al.size ()]);
+        Node[] result = al.toArray (new Node[0]);
         return result;
         // dge.getDragOrigin()
         

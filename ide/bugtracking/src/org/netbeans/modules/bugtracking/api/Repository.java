@@ -203,7 +203,7 @@ public final class Repository {
         for (IssueImpl issueImpl : impls) {
             ret.add(issueImpl.getIssue());
         }
-        return ret.toArray(new Issue[ret.size()]);
+        return ret.toArray(new Issue[0]);
     }
     
     <R, Q, I> RepositoryImpl<R, Q, I> getImpl() {

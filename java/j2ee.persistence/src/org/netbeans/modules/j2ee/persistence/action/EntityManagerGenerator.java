@@ -161,13 +161,13 @@ public final class EntityManagerGenerator {
         EntityManagerGenerationStrategy result = null;
         
         try{
-            result = strategy.newInstance();
+            result = strategy.getDeclaredConstructor().newInstance();
             result.setClassTree(clazz);
             result.setWorkingCopy(workingCopy);
             result.setGenerationOptions(options);
             result.setTreeMaker(make);
             result.setPersistenceUnit(getPersistenceUnit());
-        } catch (IllegalAccessException | InstantiationException ex){
+        } catch (ReflectiveOperationException ex){
             throw new RuntimeException(ex); //TODO
         }
         

@@ -27,7 +27,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.lang.model.element.Element;
@@ -232,7 +231,7 @@ public class ExtractSuperclassPanel extends JPanel implements CustomRefactoringP
             }
         }
         // return the array of selected members
-        return (MemberInfo[]) list.toArray(new MemberInfo[list.size()]);
+        return (MemberInfo[]) list.toArray(new MemberInfo[0]);
     }
     
     // --- GENERATED CODE ------------------------------------------------------
@@ -411,7 +410,7 @@ public class ExtractSuperclassPanel extends JPanel implements CustomRefactoringP
             
             // the members are collected
             // now, create a tree map (to sort them) and create the table data
-            Collections.sort(result, new Comparator<MemberInfo<?>>() {
+            result.sort(new Comparator<MemberInfo<?>>() {
                 @Override
                 public int compare(MemberInfo<?> mi1, MemberInfo<?> mi2) {
                     int result = mi1.getGroup().compareTo(mi2.getGroup());

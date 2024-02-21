@@ -405,7 +405,7 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
          */
         acts.add(null);
         acts.add(PropertiesAction.get(PropertiesAction.class));
-        return acts.toArray(new Action[acts.size()]);
+        return acts.toArray(new Action[0]);
     }
 
     
@@ -1402,7 +1402,7 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
             result.addAll(Arrays.asList(super.getActions(false)));
             result.add(new OpenJavadocAction());
 
-            return result.toArray(new Action[result.size()]);
+            return result.toArray(new Action[0]);
         }
 
         @Messages("BTN_View_Javadoc=Show Javadoc")
@@ -1490,7 +1490,7 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
                             }
                         }
                     }
-                    OpenProjects.getDefault().open(projects.toArray(new NbMavenProjectImpl[projects.size()]), false, true);
+                    OpenProjects.getDefault().open(projects.toArray(new NbMavenProjectImpl[0]), false, true);
                 }
             };
         }

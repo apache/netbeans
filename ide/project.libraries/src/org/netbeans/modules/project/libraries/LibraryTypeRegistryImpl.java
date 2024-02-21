@@ -56,6 +56,6 @@ public final class LibraryTypeRegistryImpl extends LibraryTypeRegistry {
         assert result != null;
         final Collection<? extends LibraryTypeProvider> instances = result.allInstances();
         LOG.log(Level.FINE, "found providers: {0}", instances);
-        return instances.toArray(new LibraryTypeProvider[instances.size()]);
+        return instances.toArray(new LibraryTypeProvider[0]);
     }
 }

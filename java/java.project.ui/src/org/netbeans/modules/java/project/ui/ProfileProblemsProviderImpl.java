@@ -221,10 +221,9 @@ final class ProfileProblemsProviderImpl implements ProjectProblemsProvider, Prop
                 slRes.addChangeListener(this);
                 final File baseFolder = FileUtil.toFile(antProjectHelper.getProjectDirectory());
                 if (baseFolder != null) {
-                    final ClassPath cp = ClassPathFactory.createClassPath(ProjectClassPathSupport.createPropertyBasedClassPathImplementation(
-                        baseFolder,
+                    final ClassPath cp = ClassPathFactory.createClassPath(ProjectClassPathSupport.createPropertyBasedClassPathImplementation(baseFolder,
                         evaluator,
-                        classPathProperties.toArray(new String[classPathProperties.size()])));
+                        classPathProperties.toArray(new String[0])));
                     cp.addPropertyChangeListener(this);
                     cp.getRoots();
                     classPath = cp;
@@ -485,7 +484,7 @@ final class ProfileProblemsProviderImpl implements ProjectProblemsProvider, Prop
                     result.set(result.size()-1, last.substring(0, last.length()-1));
                 }
                 if (changed) {
-                    props.setProperty(classPathId, result.toArray(new String[result.size()]));
+                    props.setProperty(classPathId, result.toArray(new String[0]));
                     helper.putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, props);
                 }
             }

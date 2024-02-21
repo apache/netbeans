@@ -93,7 +93,7 @@ public final class NodesRegistrationSupport {
                         newPath.add(pkgReg.pkg);
                     }
                     newPath.addAll(originalPath);
-                    PropertyEditorManager.setEditorSearchPath(newPath.toArray(new String[newPath.size()]));
+                    PropertyEditorManager.setEditorSearchPath(newPath.toArray(new String[0]));
                 }
 
                 @Override
@@ -118,7 +118,7 @@ public final class NodesRegistrationSupport {
                         newPath.add(biReg.searchPath);
                     }
                     newPath.addAll(originalBeanInfoSearchPath);
-                    Introspector.setBeanInfoSearchPath(newPath.toArray(new String[newPath.size()]));
+                    Introspector.setBeanInfoSearchPath(newPath.toArray(new String[0]));
                 }
 
                 @Override

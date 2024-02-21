@@ -122,7 +122,7 @@ implements DDTableModel {
     }
 
     private void sort() {
-        Collections.sort(modelIndex,comp);
+        modelIndex.sort(comp);
         fireTableDataChanged();
     } 
 

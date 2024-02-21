@@ -124,7 +124,7 @@ public class ManyToOneImpl implements ManyToOne {
     }
 
     public JoinColumn[] getJoinColumn() {
-        return joinColumnList.toArray(new JoinColumn[joinColumnList.size()]);
+        return joinColumnList.toArray(new JoinColumn[0]);
     }
 
     public int addJoinColumn(JoinColumn value) {

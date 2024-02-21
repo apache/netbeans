@@ -78,7 +78,7 @@ public class FileObjectSearchGroup extends SearchGroup {
     
     /** Gets data folder roots on which to search. */
     private FileObject[] getFileFolders() {
-        Node[] nodes = normalizeNodes(searchRoots.toArray(new Node[searchRoots.size()]));
+        Node[] nodes = normalizeNodes(searchRoots.toArray(new Node[0]));
 
         List<FileObject> children = new ArrayList<FileObject>(nodes.length);
 
@@ -89,7 +89,7 @@ public class FileObjectSearchGroup extends SearchGroup {
             }
         }
 
-        return children.toArray(new FileObject[children.size()]);
+        return children.toArray(new FileObject[0]);
     }
     
     /** Scans data folder recursivelly. 
@@ -148,7 +148,7 @@ public class FileObjectSearchGroup extends SearchGroup {
             }
         }
 
-        return ret.toArray(new Node[ret.size()]);
+        return ret.toArray(new Node[0]);
     }
 
     /** Tests if the node has parent. Helper method. */

@@ -20,7 +20,6 @@ package org.netbeans.modules.openide.filesystems;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -234,7 +233,7 @@ public final class FileFilterSupport {
     private static List<FileFilter> sortFiltersByDescription(
             List<FileFilter> list) {
 
-        Collections.sort(list, new Comparator<FileFilter>() {
+        list.sort(new Comparator<FileFilter>() {
             @Override
             public int compare(FileFilter o1, FileFilter o2) {
                 return o1.getDescription().compareTo(o2.getDescription());
@@ -245,7 +244,7 @@ public final class FileFilterSupport {
 
     private static List<FilterElement> sortFilterElements(
             List<FilterElement> elements) {
-        Collections.sort(elements, new Comparator<FilterElement>() {
+        elements.sort(new Comparator<FilterElement>() {
             @Override
             public int compare(FilterElement o1, FilterElement o2) {
                 return o1.getName().compareTo(o2.getName());

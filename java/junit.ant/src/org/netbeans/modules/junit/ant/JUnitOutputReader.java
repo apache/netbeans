@@ -994,7 +994,7 @@ final class JUnitOutputReader {
             List<String> stList = new ArrayList<>(Arrays.asList(testcase.getTrouble().getStackTrace()));
             if (!line.startsWith(stList.get(stList.size()-1))){
                 stList.add(line);
-                trouble.setStackTrace(stList.toArray(new String[stList.size()]));
+                trouble.setStackTrace(stList.toArray(new String[0]));
             }
         }
     }

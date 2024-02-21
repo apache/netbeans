@@ -36,6 +36,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -104,7 +105,7 @@ public class VectorIconTester extends javax.swing.JFrame {
             @Override
             public void run() {
                 try {
-                    File tempFile = File.createTempFile("VectorIconTester", ".png");
+                    File tempFile = Files.createTempFile("VectorIconTester", ".png").toFile();
                     ImageIO.write(bi, "PNG", tempFile);
                     System.out.println("Output was written to " + tempFile);
                 } catch (IOException e) {

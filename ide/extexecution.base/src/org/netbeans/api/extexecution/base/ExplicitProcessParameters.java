@@ -258,7 +258,7 @@ public final class ExplicitProcessParameters {
      */
     public static ExplicitProcessParameters buildExplicitParameters(Collection<? extends ExplicitProcessParameters> items) {
         List<? extends ExplicitProcessParameters> all = new ArrayList<>(items);
-        Collections.sort(all, (a, b) -> a.position - b.position);
+        all.sort((a, b) -> a.position - b.position);
         Builder b = builder();
         for (ExplicitProcessParameters item : all) {
             b.combine(item);

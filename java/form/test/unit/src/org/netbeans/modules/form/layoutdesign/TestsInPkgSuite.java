@@ -68,6 +68,6 @@ public class TestsInPkgSuite extends Suite {
             }
         }
 
-        return (Class<?>[]) classes.toArray(new Class<?>[classes.size()]);
+        return (Class<?>[]) classes.toArray(new Class<?>[0]);
     }
 }

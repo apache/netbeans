@@ -176,7 +176,7 @@ public class ExtKit extends BaseKit {
             try {
                 ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
                 Class extEditorUIClass = loader.loadClass("org.netbeans.editor.ext.ExtEditorUI"); //NOI18N
-                return (EditorUI) extEditorUIClass.newInstance();
+                return (EditorUI) extEditorUIClass.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 noExtEditorUIClass = true;
             }
@@ -196,7 +196,7 @@ public class ExtKit extends BaseKit {
         actions.add(new CommentAction()); // to make ctrl-shift-T in Netbeans55 profile work
         actions.add(new UncommentAction()); // to make ctrl-shift-D in Netbeans55 profile work
                 
-        return TextAction.augmentList(super.createActions(), actions.toArray(new Action[actions.size()]));
+        return TextAction.augmentList(super.createActions(), actions.toArray(new Action[0]));
     }
     
     /**

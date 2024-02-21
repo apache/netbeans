@@ -927,7 +927,7 @@ final class CompletionContextFinder {
 
         tokenSequence.move(orgOffset);
         tokenSequence.moveNext();
-        return tokens.toArray(new Token[tokens.size()]);
+        return tokens.toArray(new Token[0]);
     }
 
     @CheckForNull

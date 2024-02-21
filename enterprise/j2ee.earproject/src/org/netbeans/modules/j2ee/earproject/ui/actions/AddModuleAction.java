@@ -108,7 +108,7 @@ public class AddModuleAction extends CookieAction {
             }
         }
         Children.Array children = new Children.Array();
-        children.add(moduleProjectNodes.toArray(new Node[moduleProjectNodes.size()]));
+        children.add(moduleProjectNodes.toArray(new Node[0]));
         final AbstractNode root = new AbstractNode(children);
         String moduleSelector = NbBundle.getMessage(AddModuleAction.class, "LBL_ModuleSelectorTitle");
         

@@ -124,7 +124,7 @@ public abstract class NbPreferences extends AbstractPreferences implements  Chan
     private String[] getKeysSpi() throws BackingStoreException {
         synchronized (lock) {
             Set<String> keySet = properties().keySet();
-            return keySet.toArray(new String[keySet.size()]);
+            return keySet.toArray(new String[0]);
         }
     }
     

@@ -205,7 +205,7 @@ public class ModuleActions extends ActionManager
 
         }
 
-        return (SystemAction[])arr.toArray (new SystemAction[arr.size ()]);
+        return (SystemAction[])arr.toArray (new SystemAction[0]);
     }
 
     

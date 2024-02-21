@@ -121,7 +121,7 @@ final class SelectFolderPanel extends JPanel implements DocumentListener {
         // Needs to be DFS, so children(true) is no good
         visit(folders, top);
         folders.remove(0);
-        return folders.toArray(new DataFolder[folders.size()]);
+        return folders.toArray(new DataFolder[0]);
     }
     
     private static void visit(List<DataFolder> folders, DataFolder f) {

@@ -154,7 +154,7 @@ public class CodeStructure {
             if (originMetaObject.equals(exp.getOrigin().getMetaObject()))
                 list.add(exp);
         }
-        return list.toArray(new CodeExpression[list.size()]);
+        return list.toArray(new CodeExpression[0]);
     }
 
     // --------
@@ -208,7 +208,7 @@ public class CodeStructure {
             if (metaObject.equals(statement.getMetaObject()))
                 list.add(statement);
         }
-        return list.toArray(new CodeStatement[list.size()]);
+        return list.toArray(new CodeStatement[0]);
     }
 
     // --------

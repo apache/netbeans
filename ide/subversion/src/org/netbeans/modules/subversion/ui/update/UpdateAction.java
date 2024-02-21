@@ -178,7 +178,7 @@ public class UpdateAction extends ContextAction {
                     Subversion.LOG.log(Level.WARNING, "Could not retrieve repository root for context file {0}", new Object[]{root});
                     continue;
                 }
-                update(e.getKey(), files.toArray(new File[files.size()]), progress, contextDisplayName, repositoryUrl, revision);
+                update(e.getKey(), files.toArray(new File[0]), progress, contextDisplayName, repositoryUrl, revision);
             } catch (SVNClientException ex) {
                 SvnClientExceptionHandler.notifyException(ex, true, true);
             }
@@ -244,7 +244,7 @@ public class UpdateAction extends ContextAction {
                 // because locally added files can be replaced with those in repository and their status would be still the same in the cache
                 HashSet<File> filesToRefresh = new HashSet<File>(l.existedFiles);
                 filesToRefresh.addAll(l.conflictedFiles);
-                Subversion.getInstance().getStatusCache().refreshAsync(filesToRefresh.toArray(new File[filesToRefresh.size()]));
+                Subversion.getInstance().getStatusCache().refreshAsync(filesToRefresh.toArray(new File[0]));
             }
             if (!l.conflictedFiles.isEmpty()) {
                 SwingUtilities.invokeLater(new Runnable() {
@@ -318,7 +318,7 @@ public class UpdateAction extends ContextAction {
                     int maxItems = 5;
                     filesToRefresh = patchFilesRecursively(root, svnRevision, maxItems);
                     // if >= 10000 rather refresh everything than just too large set of files
-                    fileArray = filesToRefresh.size() >= maxItems ? null : filesToRefresh.toArray(new File[filesToRefresh.size()]);
+                    fileArray = filesToRefresh.size() >= maxItems ? null : filesToRefresh.toArray(new File[0]);
                 } else {
                     filesToRefresh = new ArrayList<>();
                     filesToRefresh.add(root);
@@ -326,7 +326,7 @@ public class UpdateAction extends ContextAction {
                     if (files != null) {
                         filesToRefresh.addAll(Arrays.asList(files));
                     }
-                    fileArray = filesToRefresh.toArray(new File[filesToRefresh.size()]);
+                    fileArray = filesToRefresh.toArray(new File[0]);
                     Subversion.getInstance().getStatusCache().patchRevision(fileArray, svnRevision);
                 }
 

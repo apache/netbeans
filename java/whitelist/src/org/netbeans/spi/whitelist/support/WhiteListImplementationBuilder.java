@@ -354,12 +354,8 @@ final class WhiteListImplementationBuilder {
 
         private Model() {
                 try {
-                    names  = (Names) Class.forName(System.getProperty("WhiteListBuilder.names", DEF_NAMES)).newInstance();  //NOI18N
-                } catch (InstantiationException ex) {
-                    throw new IllegalStateException("Cannot instantiate names", ex);    //NOI18N
-                } catch (IllegalAccessException ex) {
-                    throw new IllegalStateException("Cannot instantiate names", ex);    //NOI18N
-                } catch (ClassNotFoundException ex) {
+                    names  = (Names) Class.forName(System.getProperty("WhiteListBuilder.names", DEF_NAMES)).getDeclaredConstructor().newInstance();  //NOI18N
+                } catch (ReflectiveOperationException ex) {
                     throw new IllegalStateException("Cannot instantiate names", ex);    //NOI18N
                 }
                 checkedPkgs = Union2.<StringBuilder,Pattern>createFirst(new StringBuilder());

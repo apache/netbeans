@@ -86,8 +86,8 @@ public class MetadataElementHandle<T extends MetadataElement> {
         }
         Collections.reverse(names);
         Collections.reverse(kinds);
-        String[] namesArray = names.toArray(new String[names.size()]);
-        Kind[] kindsArray = kinds.toArray(new Kind[kinds.size()]);
+        String[] namesArray = names.toArray(new String[0]);
+        Kind[] kindsArray = kinds.toArray(new Kind[0]);
 
         return new MetadataElementHandle<T>(namesArray,kindsArray);
     }

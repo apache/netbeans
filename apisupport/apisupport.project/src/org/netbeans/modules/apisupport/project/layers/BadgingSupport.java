@@ -451,7 +451,7 @@ final class BadgingSupport implements SynchronousStatus, FileChangeListener {
                         LOG.log(Level.WARNING, "could not find locale variants of {0}", jar);
                     }
                     LOG.log(Level.FINE, "from {0} getting {1}", new Object[] {layer, roots});
-                    return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+                    return ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
                 }
                 Project p;
                 try {

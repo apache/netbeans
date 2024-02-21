@@ -569,7 +569,7 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
                 } else if (this.artifacts.equals(q.specs)) {
                     return;
                 } else {
-                    ll = listeners.toArray(new ChangeListener[listeners.size()]);
+                    ll = listeners.toArray(new ChangeListener[0]);
                 }
             }
             ChangeEvent e = new ChangeEvent(this);

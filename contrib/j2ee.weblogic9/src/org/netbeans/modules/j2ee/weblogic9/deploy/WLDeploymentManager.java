@@ -622,7 +622,7 @@ public class WLDeploymentManager implements DeploymentManager2 {
                             }
                         }
                     }
-                    return targets.toArray(new Target[targets.size()]);
+                    return targets.toArray(new Target[0]);
                 }
             });
         } catch (Exception ex) {
@@ -643,7 +643,7 @@ public class WLDeploymentManager implements DeploymentManager2 {
                                     ret.add(t);
                                 }
                             }
-                            return ret.toArray(new Target[ret.size()]);
+                            return ret.toArray(new Target[0]);
                         }
                         return targets;
                     }
@@ -745,7 +745,7 @@ public class WLDeploymentManager implements DeploymentManager2 {
                             }
                         }
                         return registerProgressObject(new ServerProgressObject(
-                                manager.redeploy(toRedeploy.toArray(new TargetModuleID[toRedeploy.size()]), (File) null, null)));
+                                manager.redeploy(toRedeploy.toArray(new TargetModuleID[0]), (File) null, null)));
                     } catch (TargetException ex) {
                         throw new ExecutionException(ex);
                     } catch (IllegalStateException ex) {
@@ -899,7 +899,7 @@ public class WLDeploymentManager implements DeploymentManager2 {
                 }
             }
         }
-        return deployTargets.toArray(new Target[deployTargets.size()]);
+        return deployTargets.toArray(new Target[0]);
     }
 
     private static ProgressObject registerProgressObject(ServerProgressObject po) {

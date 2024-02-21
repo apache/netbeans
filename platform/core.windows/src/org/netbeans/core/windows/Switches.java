@@ -309,7 +309,7 @@ public final class Switches {
         boolean result = defaultValue;
         try {
             String resValue = NbBundle.getMessage(Switches.class, switchName );
-            result = "true".equals( resValue.toLowerCase() ); //NOI18N
+            result = "true".equalsIgnoreCase(resValue); //NOI18N
         } catch( MissingResourceException mrE ) {
             //ignore
         }

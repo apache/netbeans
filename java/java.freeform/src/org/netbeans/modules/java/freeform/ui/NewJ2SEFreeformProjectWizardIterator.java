@@ -141,7 +141,7 @@ public class NewJ2SEFreeformProjectWizardIterator implements WizardDescriptor.Pr
             JComponent jc = (JComponent)c;
             l.add(jc.getName());
         }
-        String[] steps = l.toArray(new String[l.size()]);
+        String[] steps = l.toArray(new String[0]);
         
         for (int i = 0; i < panels.length; i++) {
             Component c = panels[i].getComponent();

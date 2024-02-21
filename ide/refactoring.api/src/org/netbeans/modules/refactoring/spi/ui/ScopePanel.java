@@ -22,7 +22,6 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.Preferences;
@@ -130,7 +129,7 @@ public final class ScopePanel extends javax.swing.JPanel {
             }
         }
 
-        Collections.sort(scopes, new Comparator<DelegatingScopeInformation>() {
+        scopes.sort(new Comparator<DelegatingScopeInformation>() {
             @Override
             public int compare(DelegatingScopeInformation o1, DelegatingScopeInformation o2) {
                 return o1.getPosition() - o2.getPosition();
@@ -140,7 +139,7 @@ public final class ScopePanel extends javax.swing.JPanel {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    scopeCombobox.setModel(new DefaultComboBoxModel(scopes.toArray(new ScopeProvider[scopes.size()])));
+                    scopeCombobox.setModel(new DefaultComboBoxModel(scopes.toArray(new ScopeProvider[0])));
                     ScopePanel.this.btnCustomScope.setVisible(customizable.get());
                     String preselectId = preferences.get(preferencesKey, null);
                     if (preselectId == null || isNumeric(preselectId)) { // Needed for the old preferences of Java's Where Used Panel.

@@ -169,7 +169,7 @@ final class ClassPathProviderMerger implements LookupMerger<ClassPathProvider> {
                         pr.removePropertyChangeListener(flagsListener);
                     }
                 }
-                this.classPaths = impls.toArray(new ProxyFilteringCPI[impls.size()]);
+                this.classPaths = impls.toArray(new ProxyFilteringCPI[0]);
                 for (ProxyFilteringCPI pr : this.classPaths) {
                     pr.addPropertyChangeListener(flagsListener);
                 }
@@ -290,7 +290,7 @@ final class ClassPathProviderMerger implements LookupMerger<ClassPathProvider> {
             for (ClassPath.Entry ent : classpath.entries()) {
                 urls.add(ent.getURL());
             }
-            return urls.toArray(new URL[urls.size()]);
+            return urls.toArray(new URL[0]);
         }
 
         public ClassPathImplementation getContent() {

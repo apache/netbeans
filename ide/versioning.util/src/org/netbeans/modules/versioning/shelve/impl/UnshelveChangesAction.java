@@ -156,7 +156,7 @@ public final class UnshelveChangesAction extends AbstractAction {
                     EventQueue.invokeLater(new Runnable() {
                         @Override
                         public void run () {
-                            panel.cmbPatches.setModel(new DefaultComboBoxModel(patches.toArray(new Patch[patches.size()])));
+                            panel.cmbPatches.setModel(new DefaultComboBoxModel(patches.toArray(new Patch[0])));
                             if (!patches.isEmpty()) {
                                 panel.cmbPatches.setSelectedIndex(0);
                             }

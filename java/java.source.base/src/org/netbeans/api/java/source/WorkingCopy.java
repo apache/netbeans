@@ -951,7 +951,7 @@ public class WorkingCopy extends CompilationController {
             return;
         }
         List<Diff> orderedDiffs = new ArrayList<>(textChanges);
-        Collections.sort(orderedDiffs, new Comparator<Diff>() {
+        orderedDiffs.sort(new Comparator<Diff>() {
             @Override
             public int compare(Diff o1, Diff o2) {
                 return o1.getPos() - o2.getPos();
@@ -959,7 +959,7 @@ public class WorkingCopy extends CompilationController {
         });
         
         List<int[]> spans = new ArrayList<>(tag2Span.values());
-        Collections.sort(spans, new Comparator<int[]>() {
+        spans.sort(new Comparator<int[]>() {
             @Override
             public int compare(int[] o1, int[] o2) {
                 return o1[0] - o2[0];

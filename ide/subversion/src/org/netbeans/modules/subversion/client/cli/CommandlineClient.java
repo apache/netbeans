@@ -421,7 +421,7 @@ public class CommandlineClient extends AbstractClientAdapter implements ISVNClie
 
         Status[] statusValues = new Status[] {};
         if (!filesForStatus.isEmpty()) {
-            StatusCommand statusCmd = new StatusCommand(filesForStatus.toArray(new File[filesForStatus.size()]), true, false, false, false);
+            StatusCommand statusCmd = new StatusCommand(filesForStatus.toArray(new File[0]), true, false, false, false);
             exec(statusCmd);
             statusValues = statusCmd.getStatusValues();
         }
@@ -432,7 +432,7 @@ public class CommandlineClient extends AbstractClientAdapter implements ISVNClie
         }
         Map<File, ISVNInfo> infoMap = new HashMap<File, ISVNInfo>();
         if (!filesForInfo.isEmpty()) {
-            ISVNInfo[] infos = getInfo(filesForInfo.toArray(new File[filesForInfo.size()]), null, null);
+            ISVNInfo[] infos = getInfo(filesForInfo.toArray(new File[0]), null, null);
             for (ISVNInfo info : infos) infoMap.put(info.getFile(), info);
         }
 
@@ -463,7 +463,7 @@ public class CommandlineClient extends AbstractClientAdapter implements ISVNClie
                 ret.add(s);
             }
         }
-        return ret.toArray(new ISVNStatus[ret.size()]);
+        return ret.toArray(new ISVNStatus[0]);
     }
 
     @Override
@@ -496,7 +496,7 @@ public class CommandlineClient extends AbstractClientAdapter implements ISVNClie
                 filesForInfo.add(new File(status.getPath()));
             }
         }
-        ISVNInfo[] infos = getInfo(filesForInfo.toArray(new File[filesForInfo.size()]), null, null);
+        ISVNInfo[] infos = getInfo(filesForInfo.toArray(new File[0]), null, null);
 
         Map<File, ISVNInfo> infoMap = new HashMap<File, ISVNInfo>();
         for (ISVNInfo info : infos) infoMap.put(info.getFile(), info);
@@ -527,7 +527,7 @@ public class CommandlineClient extends AbstractClientAdapter implements ISVNClie
             }
             ret.add(s);
         }
-        return ret.toArray(new ISVNStatus[ret.size()]);
+        return ret.toArray(new ISVNStatus[0]);
     }
 
     @Override
@@ -769,7 +769,7 @@ public class CommandlineClient extends AbstractClientAdapter implements ISVNClie
                 props.add(prop);
             }
         }
-        return props.toArray(new ISVNProperty[props.size()]);
+        return props.toArray(new ISVNProperty[0]);
     }
 
     @Override
@@ -784,7 +784,7 @@ public class CommandlineClient extends AbstractClientAdapter implements ISVNClie
                 props.add(prop);
             }
         }
-        return props.toArray(new ISVNProperty[props.size()]);
+        return props.toArray(new ISVNProperty[0]);
     }
 
     @Override
@@ -1198,7 +1198,7 @@ public class CommandlineClient extends AbstractClientAdapter implements ISVNClie
                 props.add(prop);
             }
         }
-        return props.toArray(new ISVNProperty[props.size()]);
+        return props.toArray(new ISVNProperty[0]);
     }
 
     @Override

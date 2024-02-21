@@ -817,7 +817,7 @@ public class ActionProviderImpl implements ActionProvider {
                 @Override
                 public void run() {
                     Set<Project> res = ProjectUtils.getContainedProjects(project, true);
-                    Project[] arr = res.toArray(new Project[res.size()]);
+                    Project[] arr = res.toArray(new Project[0]);
                     OpenProjects.getDefault().close(arr);
                 }
             });

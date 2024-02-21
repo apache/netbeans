@@ -353,7 +353,7 @@ public final class Git {
     }
     
     private File getKnownParent(File file) {
-        File[] roots = knownRoots.toArray(new File[knownRoots.size()]);
+        File[] roots = knownRoots.toArray(new File[0]);
         File knownParent = null;
         for (File r : roots) {
             if(!VersioningSupport.isExcluded(file) && Utils.isAncestorOrEqual(r, file) && (knownParent == null || Utils.isAncestorOrEqual(knownParent, r))) {

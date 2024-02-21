@@ -52,7 +52,7 @@ public class TryStatement extends Statement {
     }
 
     public TryStatement(int start, int end, Block tryStatement, List<CatchClause> catchClauses, FinallyClause finallyClause) {
-        this(start, end, tryStatement, catchClauses == null ? null : catchClauses.toArray(new CatchClause[catchClauses.size()]), finallyClause);
+        this(start, end, tryStatement, catchClauses == null ? null : catchClauses.toArray(new CatchClause[0]), finallyClause);
     }
 
     /**

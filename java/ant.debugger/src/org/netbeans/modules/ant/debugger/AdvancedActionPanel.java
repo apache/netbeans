@@ -297,7 +297,7 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
                 // Run default target.
                 targets = null;
             } else {
-                targets = (String[]) targetsL.toArray(new String[targetsL.size()]);
+                targets = (String[]) targetsL.toArray(new String[0]);
             }
         }
         Properties props = new Properties();

@@ -404,7 +404,7 @@ final class BinaryCacheManager extends ParsingLayerCacheManager {
                     return o2.getValue()[0] - o1.getValue()[0];
                 }
             }
-            Collections.sort(lst, new C());
+            lst.sort(new C());
             List<String> res = new ArrayList<String>();
             for (Entry<String, int[]> entry : lst) {
                 res.add(entry.getKey());

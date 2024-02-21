@@ -214,7 +214,7 @@ public class ResourcePathCompleter implements Completer, Completer.Factory {
                     !f.getNameExt().toLowerCase().startsWith(filesMatch)) {
                     continue;
                 }
-                if (f.isFolder() || extMatch == null || extMatch.equals(f.getExt().toLowerCase())) {
+                if (f.isFolder() || extMatch == null || extMatch.equalsIgnoreCase(f.getExt())) {
                     String k = f.getNameExt();
                     if (names.add(k)) {
                         result.add(f);

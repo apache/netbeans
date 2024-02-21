@@ -2985,7 +2985,7 @@ class LayoutFeeder implements LayoutConstants {
 
             // first analyze the interval as a possible sub-group
             if (sub.isParallel() && shouldEnterGroup(sub)) { // group space contains significant edge
-                IncludeDesc[] before = inclusions.isEmpty() ? null : inclusions.toArray(new IncludeDesc[inclusions.size()]);
+                IncludeDesc[] before = inclusions.isEmpty() ? null : inclusions.toArray(new IncludeDesc[0]);
 
                 analyzeParallel(sub, inclusions);
 

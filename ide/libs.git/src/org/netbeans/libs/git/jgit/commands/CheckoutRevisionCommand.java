@@ -146,7 +146,7 @@ public class CheckoutRevisionCommand extends GitCommand {
                         + ex.getMessage());
             } catch (CheckoutConflictException ex) {
                 List<String> conflicts = dco.getConflicts();
-                throw new GitException.CheckoutConflictException(conflicts.toArray(new String[conflicts.size()]), ex);
+                throw new GitException.CheckoutConflictException(conflicts.toArray(new String[0]), ex);
             } finally {
                 cache.unlock();
             }

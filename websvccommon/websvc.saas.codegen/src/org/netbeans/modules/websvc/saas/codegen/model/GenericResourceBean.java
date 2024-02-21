@@ -183,7 +183,7 @@ public class GenericResourceBean {
             }
         }
         
-        return res.toArray(new String[res.size()]);
+        return res.toArray(new String[0]);
     }
 
     public String getQualifiedClassName() {

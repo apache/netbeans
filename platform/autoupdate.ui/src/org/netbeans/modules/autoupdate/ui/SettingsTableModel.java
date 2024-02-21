@@ -21,7 +21,6 @@ package org.netbeans.modules.autoupdate.ui;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -195,7 +194,7 @@ public class SettingsTableModel extends AbstractTableModel {
         return NbBundle.getMessage (SettingsTableModel.class, COLUMN_NAME_KEYS[columnIndex]);
     }
     private static void sortAlphabetically (List<UpdateUnitProvider> res) {
-        Collections.sort (res, new Comparator<UpdateUnitProvider>() {
+        res.sort(new Comparator<UpdateUnitProvider>() {
             @Override
             public int compare(UpdateUnitProvider p1, UpdateUnitProvider p2) {
                 return p1.getDisplayName().compareTo(p2.getDisplayName());

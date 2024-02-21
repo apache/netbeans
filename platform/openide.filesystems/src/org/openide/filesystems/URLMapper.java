@@ -163,7 +163,7 @@ public abstract class URLMapper {
             }
         }
 
-        return retSet.toArray(new FileObject[retSet.size()]);
+        return retSet.toArray(new FileObject[0]);
     }
 
     /** Find an appropriate instance of FileObject that addresses this URL

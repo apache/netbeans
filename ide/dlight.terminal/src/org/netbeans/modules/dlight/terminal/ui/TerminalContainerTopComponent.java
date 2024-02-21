@@ -123,7 +123,7 @@ public final class TerminalContainerTopComponent extends TopComponent {
     private static synchronized Action[] getToolbarActions() {
         if (actions == null) {
             List<? extends Action> termActions = Utilities.actionsForPath(TerminalAction.TERMINAL_ACTIONS_PATH);// NOI18N
-            actions = termActions.toArray(new Action[termActions.size()]);
+            actions = termActions.toArray(new Action[0]);
         }
         return actions;
     }

@@ -179,7 +179,7 @@ public class RestClientSaasBean extends SaasBean {
             findMediaType(response, mimeTypes);
         }
         if(mimeTypes.size() > 0)
-            this.setMimeTypes(mimeTypes.toArray(new MimeType[mimeTypes.size()]));
+            this.setMimeTypes(mimeTypes.toArray(new MimeType[0]));
     }
     
     public static List<QName> findRepresentationTypes(WadlSaasMethod wm) {

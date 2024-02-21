@@ -596,8 +596,7 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
                     getElement(TreePath.getPath( tree, classTree));
                 
                 List<String> imports = getResourceImports( entityFQN );
-                JavaSourceHelper.addImports(workingCopy, imports.toArray(
-                        new String[ imports.size()]));
+                JavaSourceHelper.addImports(workingCopy, imports.toArray(new String[0]));
                 
                 GenerationUtils genUtils = GenerationUtils.newInstance(workingCopy);
                 TreeMaker maker = workingCopy.getTreeMaker();

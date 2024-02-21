@@ -108,7 +108,7 @@ public abstract class BaseEEModuleImpl implements J2eeModuleImplementation2, Mod
                 toRet.add(group.getRootFolder());
             }
         }
-        return toRet.toArray(new FileObject[toRet.size()]);
+        return toRet.toArray(new FileObject[0]);
     }
 
     /**

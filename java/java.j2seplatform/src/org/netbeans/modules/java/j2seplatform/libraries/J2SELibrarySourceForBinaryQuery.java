@@ -215,7 +215,7 @@ public class J2SELibrarySourceForBinaryQuery implements SourceForBinaryQueryImpl
                             result.add (sourceRoot);
                         }
                     }
-                    this.cache = result.toArray(new FileObject[result.size()]);
+                    this.cache = result.toArray(new FileObject[0]);
                 }
                 else {
                     this.cache = new FileObject[0];

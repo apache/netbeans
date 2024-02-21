@@ -70,7 +70,7 @@ public final class ConfigurationFiles extends FileChangeAdapter implements Impor
                 }
             }
         }
-        Collections.sort(files, FileInfo.COMPARATOR);
+        files.sort(FileInfo.COMPARATOR);
         FileObject bootstrap = sourceDir.getFileObject(BOOTSTRAP_FILE);
         if (bootstrap != null) {
             files.add(new FileInfo(bootstrap));

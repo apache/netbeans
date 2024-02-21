@@ -137,7 +137,7 @@ public class ColumnElementTest extends NbTestCase {
 
     private Driver getDriver() throws Exception {
         URLClassLoader driverLoader = new URLClassLoader(new URL[] {new URL(jarpath)});
-        return (Driver)Class.forName(driverClassName, true, driverLoader).newInstance();
+        return (Driver)Class.forName(driverClassName, true, driverLoader).getDeclaredConstructor().newInstance();
     }
     
     @Override

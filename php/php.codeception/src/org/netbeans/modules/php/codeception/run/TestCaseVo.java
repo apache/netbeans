@@ -104,7 +104,7 @@ public final class TestCaseVo {
     }
 
     public String[] getStackTrace() {
-        return stacktrace.toArray(new String[stacktrace.size()]);
+        return stacktrace.toArray(new String[0]);
     }
 
     public TestCase.Diff getDiff() {

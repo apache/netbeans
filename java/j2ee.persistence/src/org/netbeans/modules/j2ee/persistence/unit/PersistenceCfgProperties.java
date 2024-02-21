@@ -19,7 +19,6 @@
 package org.netbeans.modules.j2ee.persistence.unit;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -646,7 +645,7 @@ public class PersistenceCfgProperties {
                 ret.addAll(props.keySet());
             }
         }
-        Collections.sort(ret, new KeyOrder());
+        ret.sort(new KeyOrder());
         return ret;
     }
     

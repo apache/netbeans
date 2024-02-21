@@ -699,7 +699,7 @@ class SummaryCellRenderer implements ListCellRenderer {
                 }
                 rects.add(rec);
                 rects.remove(0);
-                bounds = rects.toArray(new Rectangle[rects.size()]);
+                bounds = rects.toArray(new Rectangle[0]);
             } catch (BadLocationException ex) {
                 bounds = null;
             }
@@ -819,7 +819,7 @@ class SummaryCellRenderer implements ListCellRenderer {
         if (original != null && !path.equals(original)) {
             paths.add(original);
         }
-        return paths.toArray(new String[paths.size()]);
+        return paths.toArray(new String[0]);
     }
     
     private class RemainingFilesRenderer extends JPanel implements ListCellRenderer{

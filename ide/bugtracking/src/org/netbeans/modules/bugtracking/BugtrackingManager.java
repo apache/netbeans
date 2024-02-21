@@ -92,7 +92,7 @@ public final class BugtrackingManager implements LookupListener {
             if(connectorsLookup == null) {
                 refreshConnectors();
             }
-            return connectors.toArray(new DelegatingConnector[connectors.size()]);
+            return connectors.toArray(new DelegatingConnector[0]);
         }
     }
 

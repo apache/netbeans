@@ -308,7 +308,7 @@ class EntrySupportLazy extends EntrySupport {
         } finally {
             Children.PR.exitReadAccess();
         }
-        return created.isEmpty() ? null : created.toArray(new Node[created.size()]);
+        return created.isEmpty() ? null : created.toArray(new Node[0]);
     }
 
     @Override

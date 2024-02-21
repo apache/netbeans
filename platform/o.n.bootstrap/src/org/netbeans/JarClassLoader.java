@@ -39,6 +39,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
@@ -172,7 +173,7 @@ public class JarClassLoader extends ProxyClassLoader {
         } catch (IOException exc) {
             throw new IllegalArgumentException(exc.getMessage());
         }
-        sources = l.toArray(new Source[l.size()]);
+        sources = l.toArray(new Source[0]);
         // overlaps with old packages doesn't matter,PCL uses sets.
         addCoveredPackages(getCoveredPackages(module, sources));
     }
@@ -185,7 +186,7 @@ public class JarClassLoader extends ProxyClassLoader {
         arr.add(new JarSource(f));
 
         synchronized (sources) {
-            sources = arr.toArray(new Source[arr.size()]);
+            sources = arr.toArray(new Source[0]);
         }
 
         // overlaps with old packages doesn't matter,PCL uses sets.
@@ -789,7 +790,7 @@ public class JarClassLoader extends ProxyClassLoader {
             }
             
             while (prefix.length() < 3) prefix += "x"; // NOI18N
-            File temp = File.createTempFile(prefix, suffix);
+            File temp = Files.createTempFile(prefix, suffix).toFile();
             temp.deleteOnExit();
 
             InputStream is = new FileInputStream(orig);

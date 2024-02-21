@@ -206,7 +206,7 @@ public final class NILocationVisualizer implements Consumer<String> {
                 ranges.add(new Range(new Position(interval.l1-1, interval.c1-1), new Position(interval.l2-1, interval.c2-1))); // Position is 0-based
             }
         }
-        return ranges.toArray(new Range[ranges.size()]);
+        return ranges.toArray(new Range[0]);
     }
 
     private static String r2s(List<Range> ranges) {

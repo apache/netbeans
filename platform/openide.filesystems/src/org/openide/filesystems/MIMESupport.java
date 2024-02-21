@@ -196,7 +196,7 @@ final class MIMESupport extends Object {
 
             List<MIMEResolver> all = new ArrayList<MIMEResolver>(declarativeResolvers());
             all.addAll(result.allInstances());
-            MIMEResolver[] toRet = all.toArray(new MIMEResolver[all.size()]);
+            MIMEResolver[] toRet = all.toArray(new MIMEResolver[0]);
 
             ERR.fine("Resolvers computed"); // NOI18N
 

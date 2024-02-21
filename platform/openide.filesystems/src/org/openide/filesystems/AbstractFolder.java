@@ -910,7 +910,7 @@ abstract class AbstractFolder extends FileObject {
         }
 
         if (childrenList.size() != newChildren.length) {
-            newChildren = childrenList.toArray(new String[childrenList.size()]);
+            newChildren = childrenList.toArray(new String[0]);
         }
 
         return newChildren;

@@ -294,8 +294,8 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
                         return null;
                     resolvedTypeArguments.add(resolved);
                 }
-                DeclaredType dt = outer != null ? info.getTypes().getDeclaredType((DeclaredType)outer, te, resolvedTypeArguments.toArray(new TypeMirror[resolvedTypeArguments.size()]))
-                        : info.getTypes().getDeclaredType(te, resolvedTypeArguments.toArray(new TypeMirror[resolvedTypeArguments.size()]));
+                DeclaredType dt = outer != null ? info.getTypes().getDeclaredType((DeclaredType)outer, te, resolvedTypeArguments.toArray(new TypeMirror[0]))
+                        : info.getTypes().getDeclaredType(te, resolvedTypeArguments.toArray(new TypeMirror[0]));
                 t.supertype((Type)dt); //initialize supertype_field
                 t.interfaces((Type)dt); //initialize interfaces_field
                 PlaceholderType pt = map.get(this);

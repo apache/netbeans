@@ -141,8 +141,7 @@ public class SearchInfoHelper {
     static SearchFilterDefinition[] subTreeFilters(SubTreeSearchOptions subTreeSearchOptions) {
         assert subTreeSearchOptions != null;
         List<SearchFilterDefinition> list = subTreeSearchOptions.getFilters();
-        SearchFilterDefinition[] array = list.toArray(
-                new SearchFilterDefinition[list.size()]);
+        SearchFilterDefinition[] array = list.toArray(new SearchFilterDefinition[0]);
         return array;
     }
 }

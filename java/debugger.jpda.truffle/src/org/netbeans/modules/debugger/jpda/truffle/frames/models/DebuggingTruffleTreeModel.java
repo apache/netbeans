@@ -67,7 +67,7 @@ public class DebuggingTruffleTreeModel implements TreeModelFilter {
         propListenerHolder = propEvent -> {
             ModelListener[] mls;
             synchronized (listeners) {
-                mls = listeners.toArray(new ModelListener[listeners.size()]);
+                mls = listeners.toArray(new ModelListener[0]);
             }
             ModelEvent event = new ModelEvent.TreeChanged(TreeModel.ROOT);
             for (ModelListener ml : mls) {

@@ -98,7 +98,7 @@ public final class EjbFacadeVisualPanel2 extends JPanel implements DocumentListe
         inProjectCombo.setVisible(show);
         if (show && projectsList == null) {
             List<Project> projects = SessionEJBWizardPanel.getProjectsList(project);
-            projectsList = new DefaultComboBoxModel(projects.toArray(new Project[projects.size()]));
+            projectsList = new DefaultComboBoxModel(projects.toArray(new Project[0]));
             final ListCellRenderer defaultRenderer = inProjectCombo.getRenderer();
             if (!projects.isEmpty()){
                 inProjectCombo.setRenderer(new ListCellRenderer() {

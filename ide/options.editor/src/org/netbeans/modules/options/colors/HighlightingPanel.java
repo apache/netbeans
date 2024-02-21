@@ -515,7 +515,7 @@ public class HighlightingPanel extends JPanel implements ActionListener, ItemLis
                 c = Collections.<AttributeSet>emptySet(); // XXX OK?
             }
             List<AttributeSet> l = new ArrayList<AttributeSet>(c);
-            Collections.sort(l, new CategoryComparator());
+            l.sort(new CategoryComparator());
             profileToCategories.put(profile, new ArrayList<AttributeSet>(l));
         }
         return profileToCategories.get(profile);
@@ -528,7 +528,7 @@ public class HighlightingPanel extends JPanel implements ActionListener, ItemLis
         if (!profileToDefaults.containsKey(profile)) {
             Collection<AttributeSet> c = colorModel.getHighlightingDefaults(profile);
             List<AttributeSet> l = new ArrayList<AttributeSet>(c);
-            Collections.sort(l, new CategoryComparator());
+            l.sort(new CategoryComparator());
             profileToDefaults.put(profile, l);
         }
         List<AttributeSet> defaultprofile = profileToDefaults.get(profile);

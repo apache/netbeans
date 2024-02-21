@@ -559,7 +559,7 @@ public abstract class AbstractSearchResultsPanel extends javax.swing.JPanel
                 break;
             }
         }
-        return children.toArray(new Node[children.size()]);
+        return children.toArray(new Node[0]);
     }
 
     private static int findRowIndexInOutline(Node node, Outline outline,

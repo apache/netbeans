@@ -1217,7 +1217,7 @@ public abstract class BaseBean implements Cloneable, Bean {
         try {
             // FIXME this seriosly breaks the clone contract :(
             // Create a new instance of ourself
-            bean = (BaseBean)this.getClass().newInstance();
+            bean = (BaseBean)this.getClass().getDeclaredConstructor().newInstance();
         } catch(Exception e) {
             TraceLogger.error(e);
             throw new Schema2BeansRuntimeException(Common.

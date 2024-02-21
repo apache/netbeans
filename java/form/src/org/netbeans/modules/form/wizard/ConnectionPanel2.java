@@ -151,7 +151,7 @@ class ConnectionPanel2 extends javax.swing.JPanel {
                 }
 
                 // sort the properties by name
-                Collections.sort(list, new Comparator<PropertyDescriptor>() {
+                list.sort(new Comparator<PropertyDescriptor>() {
                     @Override
                     public int compare(PropertyDescriptor o1, PropertyDescriptor o2) {
                         return o1.getName().compareTo(o2.getName());
@@ -182,7 +182,7 @@ class ConnectionPanel2 extends javax.swing.JPanel {
                 }
 
                 // sort the methods by name
-                Collections.sort(list, new Comparator<MethodDescriptor>() {
+                list.sort(new Comparator<MethodDescriptor>() {
                     @Override
                     public int compare(MethodDescriptor o1, MethodDescriptor o2) {
                         return o1.getName().compareTo(o2.getName());

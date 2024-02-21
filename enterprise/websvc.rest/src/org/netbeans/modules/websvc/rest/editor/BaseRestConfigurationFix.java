@@ -93,7 +93,7 @@ abstract class BaseRestConfigurationFix implements Fix {
                 packs.addAll( getPackages(fqns, controller));
             }
         }, true);
-        getSupport().configure(packs.toArray( new String[packs.size()]));
+        getSupport().configure(packs.toArray(new String[0]));
         factory.restart(fileObject);
         return null;
     }

@@ -194,7 +194,7 @@ public final class GrailsPlatform {
                 }
             }
 
-            classpath = ClassPathSupport.createClassPath(urls.toArray(new URL[urls.size()]));
+            classpath = ClassPathSupport.createClassPath(urls.toArray(new URL[0]));
             return classpath;
         }
     }

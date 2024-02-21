@@ -18,16 +18,12 @@
  */
 package org.netbeans.modules.html.editor.options.ui;
 
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -35,14 +31,9 @@ import java.util.logging.Logger;
 import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -625,8 +616,8 @@ public class FmtOptions {
             @Override
             public PreferencesCustomizer create(Preferences preferences) {
                 try {
-                    return new CategorySupport(mimeType, preferences, id, panelClass.newInstance(), previewText, forcedOptions);
-                } catch (InstantiationException | IllegalAccessException e) {
+                    return new CategorySupport(mimeType, preferences, id, panelClass.getDeclaredConstructor().newInstance(), previewText, forcedOptions);
+                } catch (ReflectiveOperationException e) {
                     LOGGER.log(Level.WARNING, "Exception during creating formatter customiezer", e);
                     return null;
                 }
@@ -913,7 +904,7 @@ public class FmtOptions {
             for(Preferences p : delegates) {
                 keys.addAll(Arrays.asList(p.keys()));
             }
-            return keys.toArray(new String[ keys.size() ]);
+            return keys.toArray(new String[ 0 ]);
         }
 
         @Override

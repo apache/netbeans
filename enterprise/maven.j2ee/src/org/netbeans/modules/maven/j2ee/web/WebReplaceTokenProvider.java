@@ -101,7 +101,7 @@ public class WebReplaceTokenProvider implements ReplaceTokenProvider, ActionConv
             FileObject f = d.getPrimaryFile();
             files.add(f);
         }
-        return files.toArray(new FileObject[files.size()]);
+        return files.toArray(new FileObject[0]);
     }
 
     @Override
@@ -189,7 +189,7 @@ public class WebReplaceTokenProvider implements ReplaceTokenProvider, ActionConv
                     mappingList.addAll(si.getUrlPatterns());
                 }
             }
-            return mappingList.toArray(new String[mappingList.size()]);
+            return mappingList.toArray(new String[0]);
         } catch (java.io.IOException ex) {
             return null;
         }

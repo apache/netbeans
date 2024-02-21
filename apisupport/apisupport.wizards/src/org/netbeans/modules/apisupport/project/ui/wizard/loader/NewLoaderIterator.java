@@ -417,7 +417,7 @@ public final class NewLoaderIterator extends BasicWizardIterator {
                     }
                     kids.add(DataObject.find(kid));
                 }
-                DataFolder.findFolder(folder).setOrder(kids.toArray(new DataObject[kids.size()]));
+                DataFolder.findFolder(folder).setOrder(kids.toArray(new DataObject[0]));
             }
         }, Collections.<String>emptySet()));
         

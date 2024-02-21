@@ -1771,7 +1771,7 @@ public final class JFXProjectProperties {
             for(AntArtifact a : artifacts) {
                 l.addAll(Arrays.asList(a.getArtifactFiles()));
             }
-            return l.toArray(new FileObject[l.size()]);
+            return l.toArray(new FileObject[0]);
         }
     }
 

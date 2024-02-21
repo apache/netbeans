@@ -130,7 +130,7 @@ public class RepositoryUpdater2Test extends IndexingTestBase {
         for(Map.Entry<String, Set<ClassPath>> entry : registeredClasspaths.entrySet()) {
             String id = entry.getKey();
             Set<ClassPath> classpaths = entry.getValue();
-            GlobalPathRegistry.getDefault().unregister(id, classpaths.toArray(new ClassPath[classpaths.size()]));
+            GlobalPathRegistry.getDefault().unregister(id, classpaths.toArray(new ClassPath[0]));
         }
 
         MockMimeLookup.setInstances(MimePath.parse("text/plain"));
@@ -433,7 +433,7 @@ public class RepositoryUpdater2Test extends IndexingTestBase {
 
             assertEquals("All roots should be indexed: " + indexer.indexedRoots, 3, indexer.indexedRoots.size());
             ArrayList<URL> expectedSourceRoots = new ArrayList<URL>(indexer.indexedRoots);
-            Collections.sort(expectedSourceRoots, new RepositoryUpdater.LexicographicComparator(true));
+            expectedSourceRoots.sort(new RepositoryUpdater.LexicographicComparator(true));
             assertEquals("Wrong scanned sources", expectedSourceRoots, RepositoryUpdater.getDefault().getScannedSources());
             assertEquals("Wrong scanned binaries", 0, RepositoryUpdater.getDefault().getScannedBinaries().size());
             assertEquals("Wrong scanned unknowns", 0, RepositoryUpdater.getDefault().getScannedUnknowns().size());
@@ -596,7 +596,7 @@ public class RepositoryUpdater2Test extends IndexingTestBase {
                 return customIndexerInstance;
             } else {
                 try {
-                    return customIndexerClass.newInstance();
+                    return customIndexerClass.getDeclaredConstructor().newInstance();
                 } catch (Exception ex) {
                     throw new IllegalStateException(ex);
                 }
@@ -652,7 +652,7 @@ public class RepositoryUpdater2Test extends IndexingTestBase {
                 return parserInstance;
             } else {
                 try {
-                    return parserClass.newInstance();
+                    return parserClass.getDeclaredConstructor().newInstance();
                 } catch (Exception ex) {
                     throw new IllegalStateException(ex);
                 }

@@ -376,7 +376,7 @@ class IndexedPropertyEditor extends Object implements ExPropertyEditor {
             }
         } else {
             try {
-                value = getConvertedType().newInstance();
+                value = getConvertedType().getDeclaredConstructor().newInstance();
             } catch (Exception x) {
                 // ignore any exception - if this fails just
                 // leave null as the value

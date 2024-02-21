@@ -162,7 +162,7 @@ public class FakePeerSupport
                 // The type of the component field changed to List<Component>
                 // in JDK 6 update 10 build 23
                 java.util.List<Component> list = (java.util.List<Component>)value;
-                components = list.toArray(new Component[list.size()]);
+                components = list.toArray(new Component[0]);
             }
             return components;
         }

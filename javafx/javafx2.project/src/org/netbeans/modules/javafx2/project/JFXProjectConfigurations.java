@@ -2833,7 +2833,7 @@ public class JFXProjectConfigurations {
             sb.append(":"); // NOI18N
             List<String> keys = new ArrayList<String>();
             keys.addAll(APP_MULTIPROPS.keySet());
-            Collections.sort(keys, new Comparator<String>() {
+            keys.sort(new Comparator<String>() {
                 @Override
                 public int compare(String o1, String o2) {
                     if(o1 == null) {
@@ -2857,7 +2857,7 @@ public class JFXProjectConfigurations {
                     sb.append(configName);
                     sb.append("}"); // NOI18N
                     List<Map<String,String>> configList = new ArrayList<Map<String,String>>(APP_MULTIPROPS.get(configName));
-                    Collections.sort(configList, new Comparator<Map<String,String>>() {
+                    configList.sort(new Comparator<Map<String,String>>() {
                         @Override
                         public int compare(Map<String, String> o1, Map<String, String> o2) {
                             String n1 = getEntryName(o1);

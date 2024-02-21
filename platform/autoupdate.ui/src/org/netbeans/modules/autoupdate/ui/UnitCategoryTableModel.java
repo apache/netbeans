@@ -203,7 +203,7 @@ public abstract class UnitCategoryTableModel extends AbstractTableModel {
             assert unitData != null;
         }
         if (unitCmp != null) {
-            Collections.sort(unitData,unitCmp);
+            unitData.sort(unitCmp);
         }
         this.fireTableDataChanged();
     }
@@ -378,7 +378,7 @@ public abstract class UnitCategoryTableModel extends AbstractTableModel {
             featuretData = new ArrayList<Unit> (unitData);
             featuretData.removeAll(getStandAloneModules());
             if (unitCmp != null) {
-                Collections.sort(featuretData,unitCmp);
+                featuretData.sort(unitCmp);
             }            
         }
         return featuretData;

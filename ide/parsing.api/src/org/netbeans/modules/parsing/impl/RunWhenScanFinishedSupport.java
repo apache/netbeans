@@ -50,7 +50,7 @@ public class RunWhenScanFinishedSupport {
     public static void performDeferredTasks() {
         DeferredTask[] _todo;
         synchronized (todo) {
-            _todo = todo.toArray(new DeferredTask[todo.size()]);
+            _todo = todo.toArray(new DeferredTask[0]);
             todo.clear();
         }
         for (final DeferredTask rq : _todo) {

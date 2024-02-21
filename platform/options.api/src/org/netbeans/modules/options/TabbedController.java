@@ -293,7 +293,7 @@ public class TabbedController extends OptionsPanelController {
         if (lookups.isEmpty()) {
             return Lookup.EMPTY;
         } else {
-            return new ProxyLookup(lookups.toArray(new Lookup[lookups.size()]));
+            return new ProxyLookup(lookups.toArray(new Lookup[0]));
         }
     }
 

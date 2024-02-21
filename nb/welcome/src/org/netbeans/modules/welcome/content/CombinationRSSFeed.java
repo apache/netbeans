@@ -26,7 +26,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -85,7 +84,7 @@ public class CombinationRSSFeed extends RSSFeed {
     }
 
     private ArrayList<FeedItem> sortNodes( ArrayList<FeedItem> res ) {
-        Collections.sort( res, new DateFeedItemComparator() );
+        res.sort(new DateFeedItemComparator());
         return res;
     }
 

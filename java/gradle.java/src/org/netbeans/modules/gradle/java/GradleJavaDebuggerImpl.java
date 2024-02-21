@@ -149,7 +149,7 @@ public final class GradleJavaDebuggerImpl implements GradleJavaDebugger {
                 }
             }
         }
-        FileObject[] roots = srcs.toArray(new FileObject[srcs.size()]);
+        FileObject[] roots = srcs.toArray(new FileObject[0]);
         return ClassPathSupport.createClassPath(roots);
     }
 }

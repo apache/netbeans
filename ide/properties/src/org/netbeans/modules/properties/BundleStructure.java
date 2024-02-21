@@ -25,7 +25,6 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -370,7 +369,7 @@ public class BundleStructure {
                 }
             }
         }
-        return list != null ? list.toArray(new String[list.size()]) : null;
+        return list != null ? list.toArray(new String[0]) : null;
     }
 
     public void setAllData(String key, String[] data) {
@@ -507,7 +506,7 @@ public class BundleStructure {
             comparator.setIndex(index);
         }
         synchronized (this) {
-            Collections.sort(keyList, comparator);
+            keyList.sort(comparator);
         }
         propBundleSupport.fireBundleDataChanged();
     }
@@ -617,7 +616,7 @@ public class BundleStructure {
             }
         }
         keyList.addAll(interimSet);
-        Collections.sort(keyList, comparator);
+        keyList.sort(comparator);
         this.keyList = keyList;
     }
 
@@ -644,7 +643,7 @@ public class BundleStructure {
         if (list == null) {
             return new PropertiesStructure[] {};
         }
-        Collections.sort(list, new Comparator<PropertiesFileEntry>() {
+        list.sort(new Comparator<PropertiesFileEntry>() {
             public int compare(PropertiesFileEntry pfe1, PropertiesFileEntry pfe2) {
                 return pfe2.getFile().getName().length() - pfe1.getFile().getName().length();
             }

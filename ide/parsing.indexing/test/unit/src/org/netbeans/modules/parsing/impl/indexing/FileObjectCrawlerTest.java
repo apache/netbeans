@@ -434,7 +434,7 @@ public class FileObjectCrawlerTest extends NbTestCase {
             }
             FileObjectCrawler crawler = new FileObjectCrawler(
                 root,
-                testSet.toArray(new FileObject[testSet.size()]),
+                testSet.toArray(new FileObject[0]),
                 EnumSet.<Crawler.TimeStampAction>of(Crawler.TimeStampAction.UPDATE),
                 null,
                 CR,
@@ -448,7 +448,7 @@ public class FileObjectCrawlerTest extends NbTestCase {
 
     private static String[] generateRandomTree(int depth, int childCount) {
         final Collection<String> res = generateRandomTree("",depth, childCount);
-        return res.toArray(new String[res.size()]);
+        return res.toArray(new String[0]);
     }
 
     private static Collection<String> generateRandomTree(String prefix, int depth, int childCount) {
@@ -470,7 +470,7 @@ public class FileObjectCrawlerTest extends NbTestCase {
         for (FileObject fo : files) {
             crawl(fo, root, collector);
         }
-        return collector.toArray(new String[collector.size()]);
+        return collector.toArray(new String[0]);
     }
 
     private static void crawl(final FileObject file, final FileObject root, final Collection<? super String> collector) {

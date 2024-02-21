@@ -24,11 +24,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -231,7 +229,7 @@ public final class GsfTaskProvider extends PushTaskScanner  {
                         QuerySupport querySupport = QuerySupport.forRoots (
                             TLIndexerFactory.INDEXER_NAME,
                             TLIndexerFactory.INDEXER_VERSION,
-                            roots.toArray (new FileObject [roots.size ()])
+                            roots.toArray (new FileObject [0])
                         );
                         if (isCanceled()) {
                             return;
@@ -252,7 +250,7 @@ public final class GsfTaskProvider extends PushTaskScanner  {
                     QuerySupport querySupport = QuerySupport.forRoots (
                         TLIndexerFactory.INDEXER_NAME,
                         TLIndexerFactory.INDEXER_VERSION,
-                        roots.toArray (new FileObject [roots.size ()])
+                        roots.toArray (new FileObject [0])
                     );
                     if (isCanceled()) {
                         return;

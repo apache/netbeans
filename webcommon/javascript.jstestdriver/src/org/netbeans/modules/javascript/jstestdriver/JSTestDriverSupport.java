@@ -625,7 +625,7 @@ public class JSTestDriverSupport {
                     r.add(s);
                 }
             }
-            return r.toArray(new String[r.size()]);
+            return r.toArray(new String[0]);
         }
         
     }

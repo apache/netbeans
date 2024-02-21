@@ -265,7 +265,7 @@ class QuickSearchPopup extends javax.swing.JPanel
     private void populateModel(final String criteria, boolean fullList, final boolean addSearchItem) {
         List<PopupItem> modelList = new ArrayList<PopupItem>();
         List<IssueImpl> recentIssues = new ArrayList<IssueImpl>(BugtrackingManager.getInstance().getRecentIssues(repository));
-        Collections.sort(currentHitlist, Collections.reverseOrder(new IssueComparator(recentIssues)));
+        currentHitlist.sort(Collections.reverseOrder(new IssueComparator(recentIssues)));
 
         for (PopupItem item : currentHitlist) {
             modelList.add(item);

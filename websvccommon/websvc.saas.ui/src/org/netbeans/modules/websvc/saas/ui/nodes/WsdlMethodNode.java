@@ -114,7 +114,7 @@ public class WsdlMethodNode extends AbstractNode {
         for (MethodNodeActionsProvider ext : SaasUtil.getMethodNodeActionsProviders()) {
             actions.addAll(Arrays.asList(ext.getMethodActions(getLookup())));
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     @Override

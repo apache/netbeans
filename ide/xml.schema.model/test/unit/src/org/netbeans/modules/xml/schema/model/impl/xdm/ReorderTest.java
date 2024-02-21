@@ -159,7 +159,7 @@ public class ReorderTest extends TestCase {
                 }
         checkChildren(copies, "CompanyLogo1, CompanyLogo2, Office2, Office1, Office3");
 			// Cannot remove children until after they are copied.
-			for (Component child : children.toArray(new Component[children.size()])) {
+			for (Component child : children.toArray(new Component[0])) {
 				model.removeChildComponent(child);
 			}
 			assertEquals("number of childs",0, parent.getChildren().size());

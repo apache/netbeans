@@ -338,7 +338,7 @@ public class Subversion {
 
         ISVNNotifyListener[] listeners = null;
         synchronized(l) {
-            listeners = l.toArray(new ISVNNotifyListener[l.size()]);
+            listeners = l.toArray(new ISVNNotifyListener[0]);
         }
         for(ISVNNotifyListener listener : listeners) {
             client.addNotifyListener(listener);

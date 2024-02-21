@@ -156,7 +156,7 @@ public final class DefaultProcessor extends OptionProcessor {
             Object inst;
             if (instance == null) {
                 realClazz = Class.forName(clazz, true, l);
-                inst = realClazz.newInstance();
+                inst = realClazz.getDeclaredConstructor().newInstance();
             } else {
                 realClazz = instance.getClass();
                 inst = instance;

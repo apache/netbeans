@@ -106,7 +106,7 @@ public final class FileUtils {
     public static List<File> sortFiles(Collection<File> files) {
         final Collator collator = Collator.getInstance();
         List<File> sortedFiles = new ArrayList<>(files);
-        Collections.sort(sortedFiles, new Comparator<File>() {
+        sortedFiles.sort(new Comparator<File>() {
             @Override
             public int compare(File file1, File file2) {
                 return collator.compare(file1.getName(), file2.getName());

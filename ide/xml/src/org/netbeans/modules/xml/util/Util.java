@@ -138,7 +138,7 @@ public class Util extends AbstractUtil {
                     idSet.add(next);
                 }
             }
-            return (String[]) idSet.toArray(new String[idSet.size()]);
+            return (String[]) idSet.toArray(new String[0]);
         } else {
             Util.THIS.debug("Note SourceResolver not found!");            // NOI18N
             return new String[0];

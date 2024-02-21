@@ -253,7 +253,7 @@ public final class BrokenReferencesModel extends AbstractListModel implements Pr
 
         public Project[] getBrokenProjects() {
             synchronized (toResolve) {
-                return toResolve.toArray(new Project[toResolve.size()]);
+                return toResolve.toArray(new Project[0]);
             }
         }
 

@@ -671,7 +671,7 @@ class AntGrammar implements GrammarQuery {
                 it.remove();
             }
         }
-        return choices.toArray(new String[choices.size()]);
+        return choices.toArray(new String[0]);
     }
 
     private static final String[] PROPERTY_NAME_VALUED_PROPERTY_NAMES = {

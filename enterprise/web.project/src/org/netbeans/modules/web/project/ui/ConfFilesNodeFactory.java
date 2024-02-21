@@ -424,7 +424,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
                 result = true;
             }
             keys.addAll( myKeys );
-            Collections.sort( keys, COMPARATOR);
+            keys.sort(COMPARATOR);
             return true;
         }
         

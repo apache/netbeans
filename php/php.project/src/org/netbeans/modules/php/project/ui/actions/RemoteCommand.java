@@ -26,7 +26,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.Map;
 import java.util.Queue;
@@ -179,7 +178,7 @@ public abstract class RemoteCommand extends Command {
         if (transferInfo.hasAnyTransfered()) {
             printSuccess(io, NbBundle.getMessage(RemoteCommand.class, "LBL_RemoteSucceeded"));
             ArrayList<TransferFile> sorted = new ArrayList<>(transferInfo.getTransfered());
-            Collections.sort(sorted, TransferFile.TRANSFER_FILE_COMPARATOR);
+            sorted.sort(TransferFile.TRANSFER_FILE_COMPARATOR);
             for (TransferFile file : sorted) {
                 printSuccess(io, maxRelativePath, file);
                 if (file.isFile()) {

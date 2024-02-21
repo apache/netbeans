@@ -19,6 +19,7 @@
 package org.netbeans.modules.refactoring.spi;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -99,7 +100,7 @@ abstract class BackupFacility2 {
      * @throws java.io.IOException
      */
     public final Handle backup(Collection<? extends FileObject> fileObjects) throws IOException {
-        return backup(fileObjects.toArray(new FileObject[fileObjects.size()]));
+        return backup(fileObjects.toArray(new FileObject[0]));
     }
 
     /**
@@ -335,7 +336,7 @@ abstract class BackupFacility2 {
          */
         public long backup(FileObject file) throws IOException {
             BackupEntry entry = new BackupEntry();
-            entry.file = File.createTempFile("nbbackup", null); //NOI18N
+            entry.file = Files.createTempFile("nbbackup", null).toFile(); //NOI18N
             copy(file, entry.file);
             entry.orig = file;
             map.put(currentId, entry);
@@ -352,7 +353,7 @@ abstract class BackupFacility2 {
          */
         public long backup(File file) throws IOException {
             BackupEntry entry = new BackupEntry();
-            entry.file = File.createTempFile("nbbackup", null); //NOI18N
+            entry.file = Files.createTempFile("nbbackup", null).toFile(); //NOI18N
             entry.exists = file.exists();
             if(entry.exists) {
                 FileObject fo = FileUtil.toFileObject(file);
@@ -453,7 +454,7 @@ abstract class BackupFacility2 {
             if (entry == null) {
                 throw new IllegalArgumentException("Backup with id " + id + "does not exist"); // NOI18N
             }
-            File backup = File.createTempFile("nbbackup", null); //NOI18N
+            File backup = Files.createTempFile("nbbackup", null).toFile(); //NOI18N
             backup.deleteOnExit();
             boolean exists = false;
             FileObject fo = entry.orig;

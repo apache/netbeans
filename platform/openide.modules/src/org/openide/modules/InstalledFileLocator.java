@@ -238,7 +238,7 @@ public abstract class InstalledFileLocator {
         
         Collection<? extends InstalledFileLocator> c = _result.allInstances();
         synchronized (LOCK) {
-            return instances = c.toArray(new InstalledFileLocator[c.size()]);
+            return instances = c.toArray(new InstalledFileLocator[0]);
         }
     }
     

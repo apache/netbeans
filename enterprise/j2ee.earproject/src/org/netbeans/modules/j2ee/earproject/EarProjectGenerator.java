@@ -321,7 +321,7 @@ public final class EarProjectGenerator {
                     assert false : "Unknown module type: " + type;
             }
         }
-        Project[] webAndCarsArray = webAndCars.toArray(new Project[webAndCars.size()]);
+        Project[] webAndCarsArray = webAndCars.toArray(new Project[0]);
         for (Project ejb : ejbs) {
             addEJBToClassPaths(ejb, webAndCarsArray); // #74123
         }

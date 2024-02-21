@@ -182,7 +182,7 @@ class Matcher {
                  }
             }
         }
-        items = list.toArray(new Item[list.size()]);
+        items = list.toArray(new Item[0]);
         unmatchedValue = unmatched;
     }
     

@@ -296,7 +296,7 @@ final class SelectCodeElementAction extends BaseAction {
 		}
 	    }
 
-	    return orderedPositions.toArray(new SelectionInfo[orderedPositions.size()]);
+	    return orderedPositions.toArray(new SelectionInfo[0]);
         }
 
         public synchronized void run() {

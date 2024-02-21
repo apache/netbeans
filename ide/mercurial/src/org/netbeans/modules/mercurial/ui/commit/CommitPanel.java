@@ -672,7 +672,7 @@ public class CommitPanel extends AutoResizingPanel implements PreferenceChangeLi
                 allCookies.add(cookies[0]);
             }
         }
-        return allCookies.toArray(new EditorCookie[allCookies.size()]);
+        return allCookies.toArray(new EditorCookie[0]);
     }
 
     /**

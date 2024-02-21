@@ -65,7 +65,7 @@ public class WsdlPortNode extends AbstractNode {
     @Override
     public Action[] getActions(boolean context) {
         List<Action> actions = SaasNode.getActions(getLookup());
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     @Override

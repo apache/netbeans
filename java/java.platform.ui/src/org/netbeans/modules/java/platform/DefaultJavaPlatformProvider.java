@@ -92,7 +92,7 @@ public class DefaultJavaPlatformProvider implements JavaPlatformProvider, FileCh
                 }
             }
         }
-        return platforms.toArray(new JavaPlatform[platforms.size()]);
+        return platforms.toArray(new JavaPlatform[0]);
     }
 
     @Override

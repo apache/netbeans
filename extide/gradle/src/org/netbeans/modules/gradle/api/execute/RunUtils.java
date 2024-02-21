@@ -124,7 +124,7 @@ public final class RunUtils {
         if (files.isEmpty()) {
             files.addAll(lookup.lookupAll(FileObject.class));
         }
-        return files.toArray(new FileObject[files.size()]);
+        return files.toArray(new FileObject[0]);
     }
     
     /**
@@ -533,9 +533,9 @@ public final class RunUtils {
             );
         }
         List<Object> ordered = new ArrayList<>(options.keySet());
-        Collections.sort(ordered, (a, b) -> options.get(a) - options.get(b));
+        ordered.sort((a, b) -> options.get(a) - options.get(b));
         ordered.add(DialogDescriptor.CANCEL_OPTION);
-        return Pair.of(ordered.toArray(new Object[ordered.size()]), def);
+        return Pair.of(ordered.toArray(new Object[0]), def);
     };
     
     private static final List<String> TRUST_DIALOG_OPTION_IDS = Arrays.asList(

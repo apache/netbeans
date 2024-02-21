@@ -214,7 +214,7 @@ class NbModuleProviderImpl implements NbModuleProvider {
             }
             XMLFileSystem xfs = new XMLFileSystem();
             try {
-                xfs.setXmlUrls(otherLayerURLs.toArray(new URL[otherLayerURLs.size()]));
+                xfs.setXmlUrls(otherLayerURLs.toArray(new URL[0]));
             } catch (PropertyVetoException ex) {
                 assert false : ex;
             }

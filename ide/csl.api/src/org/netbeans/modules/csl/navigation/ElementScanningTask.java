@@ -211,7 +211,7 @@ public abstract class ElementScanningTask extends IndexingAwareParserResultTask<
         roots.addAll(map.values());
 
         if (roots.size() > 1) {
-            Collections.sort(roots, new Comparator<MimetypeRootNode>() {
+            roots.sort(new Comparator<MimetypeRootNode>() {
                 public int compare(MimetypeRootNode o1, MimetypeRootNode o2) {
                     return o1.getSortText().compareTo(o2.getSortText());
                 }
@@ -334,7 +334,7 @@ public abstract class ElementScanningTask extends IndexingAwareParserResultTask<
         private MimetypeRootNode(Language lang, List<? extends StructureItem> items, MimePath mimePath) {
             this.language = lang;
             this.items = new ArrayList<StructureItem>(items);
-            Collections.sort(items, Description.POSITION_COMPARATOR);
+            items.sort(Description.POSITION_COMPARATOR);
             this.from = items.size() > 0 ? items.get(0).getPosition() : 0;
             this.to = items.size() > 0 ? items.get(items.size() - 1).getEndPosition() : 0;
             this.mimePath = mimePath;

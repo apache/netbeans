@@ -121,7 +121,7 @@ public class GoToSourceActionGroup extends EJBActionGroup {
             actions.add(new GoToSourceAction(results[LOCAL_HOME], NbBundle.getMessage(GoToSourceActionGroup.class, "LBL_GoTo_LocalHomeInterface")));
         }
         
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     public HelpCtx getHelpCtx() {

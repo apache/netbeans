@@ -298,7 +298,7 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
                                 props.add(NbBundle.getMessage(ManagedBeanCustomizer.class, "ManagedBeanCustomizer.notManagedBeanFound")); // NOI18N
                                 dummyBean = true;
                             }
-                            managedBeanCombo.setModel(new DefaultComboBoxModel(props.toArray(new String[props.size()])));
+                            managedBeanCombo.setModel(new DefaultComboBoxModel(props.toArray(new String[0])));
                         }
                     });
                 }

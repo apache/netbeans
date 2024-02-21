@@ -159,7 +159,7 @@ class MultiViewTopComponentLookup extends Lookup {
             LookupEvent ev2 = new LookupEvent(this);
             LookupListener[] ls;
             synchronized (listeners) {
-                ls = listeners.toArray(new LookupListener[listeners.size()]);
+                ls = listeners.toArray(new LookupListener[0]);
             }
             for (int i = 0; i < ls.length; i++) {
                 ls[i].resultChanged(ev2);

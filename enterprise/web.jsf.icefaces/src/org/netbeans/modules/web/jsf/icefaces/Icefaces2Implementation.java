@@ -243,8 +243,7 @@ public class Icefaces2Implementation implements JsfComponentImplementation {
             } else {
                 icefacesLibraries = Icefaces2Customizer.getIcefacesLibraries();
             }
-             ProjectClassPathModifier.removeLibraries(icefacesLibraries.toArray(
-                     new Library[icefacesLibraries.size()]), webModule.getJavaSources()[0], ClassPath.COMPILE);
+             ProjectClassPathModifier.removeLibraries(icefacesLibraries.toArray(new Library[0]), webModule.getJavaSources()[0], ClassPath.COMPILE);
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Exception during removing JSF suite from an web project", ex); //NOI18N
         } catch (UnsupportedOperationException ex) {

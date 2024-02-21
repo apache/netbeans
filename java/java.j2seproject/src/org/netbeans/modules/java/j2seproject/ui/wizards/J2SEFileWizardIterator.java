@@ -180,7 +180,7 @@ public class J2SEFileWizardIterator implements JavaFileWizardIteratorFactory {
             protected final void fireChangeEvent() {
                 ChangeListener[] ls;
                 synchronized (listeners) {
-                    ls = listeners.toArray(new ChangeListener[listeners.size()]);
+                    ls = listeners.toArray(new ChangeListener[0]);
                 }
                 ChangeEvent ev = new ChangeEvent(this);
                 for (ChangeListener l : ls) {
@@ -243,7 +243,7 @@ public class J2SEFileWizardIterator implements JavaFileWizardIteratorFactory {
                     if (!added) {
                         newPath.add(elementToAdd);
                     }
-                    path = newPath.toArray(new String[newPath.size()]);
+                    path = newPath.toArray(new String[0]);
                     changed[0] = true;
                 }
                 return path;

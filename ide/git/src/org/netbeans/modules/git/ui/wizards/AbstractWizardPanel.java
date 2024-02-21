@@ -101,7 +101,7 @@ public abstract class AbstractWizardPanel implements ValidatingPanel<WizardDescr
             ChangeEvent evt = new ChangeEvent(this);
             ChangeListener[] lists;
             synchronized (listeners) {
-                lists = listeners.toArray(new ChangeListener[listeners.size()]);
+                lists = listeners.toArray(new ChangeListener[0]);
             }
             for (ChangeListener list : lists) {
                 list.stateChanged(evt);

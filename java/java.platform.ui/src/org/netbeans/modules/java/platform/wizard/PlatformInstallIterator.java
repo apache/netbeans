@@ -89,7 +89,7 @@ public class PlatformInstallIterator implements WizardDescriptor.InstantiatingIt
         } else {
             c.add(bundle.getString("TITLE_PlatformLocationUnknown")); // NOI18N
         }
-        String[] names = c.toArray(new String[c.size()]);
+        String[] names = c.toArray(new String[0]);
         for (JComponent comp : where) {
             comp.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA,names); // NOI18N
         }

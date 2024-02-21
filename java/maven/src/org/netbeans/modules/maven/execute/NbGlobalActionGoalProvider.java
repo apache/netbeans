@@ -139,7 +139,7 @@ public class NbGlobalActionGoalProvider extends AbstractMavenActionsProvider {
                     }
                 }
             }
-            return toRet.toArray(new NetbeansActionMapping[toRet.size()]);
+            return toRet.toArray(new NetbeansActionMapping[0]);
         } catch (XmlPullParserException ex) {
             LOG.log(Level.FINE, "cannot parse", ex);
         } catch (IOException ex) {

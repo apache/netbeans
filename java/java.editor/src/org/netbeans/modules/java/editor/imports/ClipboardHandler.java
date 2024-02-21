@@ -133,7 +133,7 @@ public class ClipboardHandler {
                     Scope cutScope = copy.getTrees().getScope(new TreePath(context.getCompilationUnit()));
                     List<Position[]> spans = new ArrayList<Position[]>(inSpans);
 
-                    Collections.sort(spans, new Comparator<Position[]>() {
+                    spans.sort(new Comparator<Position[]>() {
                         @Override public int compare(Position[] o1, Position[] o2) {
                             return o1[0].getOffset() - o2[0].getOffset();
                         }

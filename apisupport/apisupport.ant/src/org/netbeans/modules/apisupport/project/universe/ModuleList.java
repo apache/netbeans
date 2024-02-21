@@ -250,7 +250,7 @@ public final class ModuleList {
                 roots.addAll(Arrays.asList(bce.getSourceRoots()));
             }
         }
-        return roots.toArray(new URL[roots.size()]);
+        return roots.toArray(new URL[0]);
     }
 
     public static URL[] getJavadocRootsForExternalModule(File binaryRootF) {
@@ -263,7 +263,7 @@ public final class ModuleList {
                 roots.addAll(Arrays.asList(bce.getJavadocRoots()));
             }
         }
-        return roots.toArray(new URL[roots.size()]);
+        return roots.toArray(new URL[0]);
     }
 
     private static void registerEntry(ModuleEntry entry, Set<File> files) {
@@ -648,7 +648,7 @@ public final class ModuleList {
         if (files == null) {
             List<String> l = new ArrayList<String>(250);
             doScanDirForFiles(dir, l, "");
-            files = l.toArray(new String[l.size()]);
+            files = l.toArray(new String[0]);
         }
         return files;
     }
@@ -678,7 +678,7 @@ public final class ModuleList {
             lists.add(findOrCreateModuleListFromSuiteWithoutBinaries(root, nbdestdir, eval));
             lists.addAll(findOrCreateModuleListsFromClusterPath(clup, nbdestdir));
             // XXX should this also omit excluded modules? or should that be done only in e.g. LayerUtils.getPlatformJarsForSuiteComponentProject?
-            return merge(lists.toArray(new ModuleList[lists.size()]), root);
+            return merge(lists.toArray(new ModuleList[0]), root);
         } else {
             return merge(new ModuleList[]{
                         findOrCreateModuleListFromSuiteWithoutBinaries(root, nbdestdir, eval),
@@ -776,7 +776,7 @@ public final class ModuleList {
         List<PropertyProvider> providers = new ArrayList<PropertyProvider>();
         providers.add(loadPropertiesFile(new File(root, "nbproject" + File.separatorChar + "private" + File.separatorChar + "platform-private.properties"))); // NOI18N
         providers.add(loadPropertiesFile(new File(root, "nbproject" + File.separatorChar + "platform.properties"))); // NOI18N
-        PropertyEvaluator eval = PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[providers.size()]));
+        PropertyEvaluator eval = PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[0]));
         String buildS = eval.getProperty("user.properties.file"); // NOI18N
         if (buildS != null) {
             providers.add(loadPropertiesFile(PropertyUtils.resolveFile(root, buildS)));
@@ -786,9 +786,9 @@ public final class ModuleList {
         }
         providers.add(loadPropertiesFile(new File(root, "nbproject" + File.separatorChar + "private" + File.separatorChar + "private.properties"))); // NOI18N
         providers.add(loadPropertiesFile(new File(root, "nbproject" + File.separatorChar + "project.properties"))); // NOI18N
-        eval = PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[providers.size()]));
+        eval = PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[0]));
         providers.add(new DestDirProvider(eval));
-        return PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[providers.size()]));
+        return PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[0]));
     }
     
     static File[] findModulesInSuite(File root) throws IOException {
@@ -1071,7 +1071,7 @@ public final class ModuleList {
         if (type == NbModuleType.SUITE_COMPONENT) {
             providers.add(loadPropertiesFile(new File(basedir, "nbproject" + File.separatorChar + "private" + File.separatorChar + "suite-private.properties"))); // NOI18N
             providers.add(loadPropertiesFile(new File(basedir, "nbproject" + File.separatorChar + "suite.properties"))); // NOI18N
-            PropertyEvaluator eval = PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[providers.size()]));
+            PropertyEvaluator eval = PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[0]));
             String suiteS = eval.getProperty("suite.dir"); // NOI18N
             if (suiteS != null) {
                 File suite = PropertyUtils.resolveFile(basedir, suiteS);
@@ -1083,14 +1083,14 @@ public final class ModuleList {
             providers.add(loadPropertiesFile(new File(basedir, "nbproject" + File.separatorChar + "platform.properties"))); // NOI18N
         }
         if (type != NbModuleType.NETBEANS_ORG) {
-            PropertyEvaluator eval = PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[providers.size()]));
+            PropertyEvaluator eval = PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[0]));
             String buildS = eval.getProperty("user.properties.file"); // NOI18N
             if (buildS != null) {
                 providers.add(loadPropertiesFile(PropertyUtils.resolveFile(basedir, buildS)));
             } else {
                 providers.add(PropertyUtils.globalPropertyProvider());
             }
-            eval = PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[providers.size()]));
+            eval = PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[0]));
             providers.add(new DestDirProvider(eval));
         }
         // private.properties & project.properties.
@@ -1112,7 +1112,7 @@ public final class ModuleList {
         }
         providers.add(PropertyUtils.fixedPropertyProvider(defaults));
         defaults.put("cluster", findClusterLocation(basedir, root, type));
-        return PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[providers.size()]));
+        return PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[0]));
     }
     
     private static PropertyProvider loadPropertiesFile(File f) throws IOException {

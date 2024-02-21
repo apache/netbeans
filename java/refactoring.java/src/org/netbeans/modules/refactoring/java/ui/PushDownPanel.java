@@ -116,7 +116,7 @@ public class PushDownPanel extends JPanel implements CustomRefactoringPanel {
             }
         }
         // return the array of selected members
-        return (MemberInfo[]) list.toArray(new MemberInfo[list.size()]);
+        return (MemberInfo[]) list.toArray(new MemberInfo[0]);
     }
     
     /** This method is called from within the constructor to

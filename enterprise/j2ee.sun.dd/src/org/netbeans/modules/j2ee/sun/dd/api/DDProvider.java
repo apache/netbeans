@@ -472,7 +472,7 @@ public final class DDProvider {
                 try {
                     // Formerly invoked static 'createGraph()' method, but that is merely a wrapper 
                     // for the default constructor so we'll call it directly.
-                    graphRoot = (SunBaseBean) vInfo.getImplClass().newInstance();
+                    graphRoot = (SunBaseBean) vInfo.getImplClass().getDeclaredConstructor().newInstance();
                     graphRoot.graphManager().setDoctype(vInfo.getPublicId(), vInfo.getSystemId());
                     
                     Class proxyClass = vInfo.getProxyClass();

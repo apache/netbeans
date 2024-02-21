@@ -201,7 +201,7 @@ public final class Favorites {
                 }
             }
         }
-        return createdDO.toArray(new DataShadow[createdDO.size()]);
+        return createdDO.toArray(new DataShadow[0]);
     }
 
 }

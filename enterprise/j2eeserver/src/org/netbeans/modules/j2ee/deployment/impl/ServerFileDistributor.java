@@ -698,12 +698,12 @@ public class ServerFileDistributor extends ServerProgress {
 
         @Override
         public File[] getChangedFiles() {
-            return (File[]) changedFiles.toArray(new File[changedFiles.size()]);
+            return (File[]) changedFiles.toArray(new File[0]);
         }
 
         @Override
         public File[] getRemovedFiles() {
-            return (File[]) removedFiles.toArray(new File[removedFiles.size()]);
+            return (File[]) removedFiles.toArray(new File[0]);
         }
 
         @Override

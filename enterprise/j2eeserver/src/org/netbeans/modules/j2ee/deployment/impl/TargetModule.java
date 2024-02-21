@@ -268,7 +268,7 @@ public class TargetModule implements WebTargetModuleID, java.io.Serializable {
                 targetModules.add(tm);
             }
         }
-        return (TargetModule[]) targetModules.toArray(new TargetModule[targetModules.size()]);
+        return (TargetModule[]) targetModules.toArray(new TargetModule[0]);
     }
     public void save(String fileName) {
         TargetModuleConverter.writeTargetModule(this, getManagerDirName(), getReadableName(targetName), fileName);

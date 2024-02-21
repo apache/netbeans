@@ -156,7 +156,7 @@ public class AndroidConfigurationPanel extends javax.swing.JPanel {
             public void run() {
                 avdCombo.setEnabled(true);
                 avdCombo.setRenderer(new DeviceRenderer());
-                final AVD[] avds = avDs.toArray(new AVD[avDs.size()]);
+                final AVD[] avds = avDs.toArray(new AVD[0]);
                 avdCombo.setModel(new DefaultComboBoxModel(avds));
                 for (AVD avd : avds) {
                     if (avd.getName().equals(config.getProperty(Device.DEVICE_PROP))) {//NOI18N

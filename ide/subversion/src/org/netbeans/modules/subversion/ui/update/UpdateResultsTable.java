@@ -361,7 +361,7 @@ class UpdateResultsTable implements MouseListener, ListSelectionListener, Ancest
             }
             files.add(fui.getFile());
         }        
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
     
     public void valueChanged(ListSelectionEvent e) {
@@ -382,7 +382,7 @@ class UpdateResultsTable implements MouseListener, ListSelectionListener, Ancest
         }
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                tc.setActivatedNodes((Node[]) selectedNodes.toArray(new Node[selectedNodes.size()]));
+                tc.setActivatedNodes((Node[]) selectedNodes.toArray(new Node[0]));
             }            
         });        
     }
@@ -453,7 +453,7 @@ class UpdateResultsTable implements MouseListener, ListSelectionListener, Ancest
             EventQueue.invokeLater(new Runnable() {
                 public void run() {
                     if (currentNodes == nodes) {
-                        setTableModel(nodesList.toArray(new UpdateResultNode[nodesList.size()]));
+                        setTableModel(nodesList.toArray(new UpdateResultNode[0]));
                     }
                 }
             });

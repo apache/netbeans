@@ -149,7 +149,7 @@ public class JavadocForBinaryQueryLibraryImpl implements JavadocForBinaryQueryIm
                 for (URL u : lib.getContent(J2SELibraryTypeProvider.VOLUME_TYPE_JAVADOC)) {
                     result.add (getIndexFolder(u));
                 }
-                this.cachedRoots = result.toArray(new URL[result.size()]);
+                this.cachedRoots = result.toArray(new URL[0]);
             }
             return this.cachedRoots;
         }

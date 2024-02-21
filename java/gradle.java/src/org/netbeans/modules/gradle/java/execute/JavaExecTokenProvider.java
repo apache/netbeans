@@ -189,7 +189,7 @@ public class JavaExecTokenProvider implements ReplaceTokenProvider {
         // need to pass JVM args and program args separately
         if (changedParams.getLauncherArguments() != null) {
             List<String> params = changedParams.getLauncherArguments();
-            String jvmArgs = Utilities.escapeParameters(params.toArray(new String[params.size()]));
+            String jvmArgs = Utilities.escapeParameters(params.toArray(new String[0]));
             result.put(TOKEN_JAVA_JVMARGS, jvmArgs);
 
             String prop = Utilities.escapeParameters(new String[] {
@@ -200,7 +200,7 @@ public class JavaExecTokenProvider implements ReplaceTokenProvider {
         }
         if (changedParams.getArguments() != null && !changedParams.getArguments().isEmpty()) {
             List<String> params = changedParams.getArguments();
-            String args = Utilities.escapeParameters(params.toArray(new String[params.size()]));
+            String args = Utilities.escapeParameters(params.toArray(new String[0]));
 
             String prop = Utilities.escapeParameters(new String[] {
                 args
@@ -227,7 +227,7 @@ public class JavaExecTokenProvider implements ReplaceTokenProvider {
                     envParams.add("!" + entry.getKey());
                 }
             }
-            String env = Utilities.escapeParameters(envParams.toArray(new String[envParams.size()]));
+            String env = Utilities.escapeParameters(envParams.toArray(new String[0]));
             result.put(TOKEN_JAVA_ENV, env);
             String prop = Utilities.escapeParameters(new String[] {
                 "-PrunEnvironment=" + env   // NOI18N

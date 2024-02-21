@@ -50,7 +50,7 @@ public class ClobFieldTableCellEditor extends AbstractCellEditor
         
         CharsetSelector() {
             List<Charset> charset = new ArrayList<Charset>(Charset.availableCharsets().values());
-            Collections.sort(charset, new Comparator<Charset>() {
+            charset.sort(new Comparator<Charset>() {
                 @Override
                 public int compare(Charset o1, Charset o2) {
                     return o1.displayName().compareTo(o2.displayName());
@@ -58,7 +58,7 @@ public class ClobFieldTableCellEditor extends AbstractCellEditor
             });
             charsetSelect = new JComboBox();
             charsetSelect.setModel(new DefaultComboBoxModel(
-                    charset.toArray(new Charset[charset.size()])));
+                    charset.toArray(new Charset[0])));
             charsetSelect.setSelectedItem(Charset.defaultCharset());
             this.add(charsetSelect);
         }

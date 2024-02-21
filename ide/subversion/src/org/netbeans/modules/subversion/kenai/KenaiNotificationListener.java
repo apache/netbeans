@@ -85,7 +85,7 @@ public class KenaiNotificationListener extends VCSKenaiAccessor.KenaiNotificatio
             }
         }
         if(notifyFiles.size() > 0) {
-            notifyFileChange(notifyFiles.toArray(new File[notifyFiles.size()]), projectDir, notification.getUri().toString(), revision);
+            notifyFileChange(notifyFiles.toArray(new File[0]), projectDir, notification.getUri().toString(), revision);
             try {
                 NotificationsManager.getInstance().notfied(files, Long.parseLong(revision));
             } catch (NumberFormatException e) {

@@ -20,7 +20,6 @@
 package org.netbeans.modules.spellchecker.options;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -33,7 +32,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -43,9 +41,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
@@ -529,7 +524,7 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
         DefaultComboBoxModel<Locale> dlm = new DefaultComboBoxModel<>();
         List<Locale> locales = new ArrayList<>(Arrays.asList(Locale.getAvailableLocales()));
         
-        Collections.sort(locales, new LocaleComparator());
+        locales.sort(new LocaleComparator());
         
         for (Locale l : locales) {
             dlm.addElement(l);
@@ -559,7 +554,7 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
                 }
             }
         }
-        Collections.sort (result, CategoryComparator);
+        result.sort(CategoryComparator);
         return result;
     }
 

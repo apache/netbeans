@@ -828,7 +828,7 @@ public class AddDependencyPanel extends javax.swing.JPanel {
                 break;
             }
         }
-        Collections.sort(result, new Comparator<Dependency>() {
+        result.sort(new Comparator<Dependency>() {
 
             @Override
             public int compare(Dependency o1, Dependency o2) {
@@ -1276,7 +1276,7 @@ public class AddDependencyPanel extends javax.swing.JPanel {
 
             final List<String> keyList = new ArrayList<String>(map.keySet());
             // sort specially using our comparator, see compare method
-            Collections.sort(keyList, QueryPanel.this);
+            keyList.sort(QueryPanel.this);
 
             SwingUtilities.invokeLater(new Runnable() {
                 @Override

@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URI;
+import java.nio.file.Files;
 import javax.swing.text.Document;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigModel;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigModelFactory;
@@ -151,7 +152,7 @@ public class Util {
     }
     
     public static File dumpToTempFile(Document doc) throws Exception {
-        File f = File.createTempFile("faces-config-tmp", "xml");
+        File f = Files.createTempFile("faces-config-tmp", "xml").toFile();
         System.out.println("file: " + f.getAbsolutePath());
         dumpToFile(doc, f);
         return f;

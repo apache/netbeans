@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
@@ -106,7 +107,7 @@ public class PHPSamplesWizardIterator implements WizardDescriptor./*Progress*/In
 
         if (!DO_NOT_OPEN_README_HTML) {
             // Open readme.html in a browser
-            File urlTempF = File.createTempFile("phpSamplesReadme", ".url"); // NOI18N
+            File urlTempF = Files.createTempFile("phpSamplesReadme", ".url").toFile(); // NOI18N
 
             urlTempF.deleteOnExit();
             FileObject readmeURL = FileUtil.toFileObject(FileUtil.normalizeFile(urlTempF));

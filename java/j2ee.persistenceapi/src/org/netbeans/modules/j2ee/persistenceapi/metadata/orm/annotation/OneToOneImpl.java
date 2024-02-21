@@ -135,7 +135,7 @@ public class OneToOneImpl implements OneToOne {
     }
 
     public PrimaryKeyJoinColumn[] getPrimaryKeyJoinColumn() {
-        return pkJoinColumnList.toArray(new PrimaryKeyJoinColumn[pkJoinColumnList.size()]);
+        return pkJoinColumnList.toArray(new PrimaryKeyJoinColumn[0]);
     }
 
     public int addPrimaryKeyJoinColumn(PrimaryKeyJoinColumn value) {
@@ -167,7 +167,7 @@ public class OneToOneImpl implements OneToOne {
     }
 
     public JoinColumn[] getJoinColumn() {
-        return joinColumnList.toArray(new JoinColumn[joinColumnList.size()]);
+        return joinColumnList.toArray(new JoinColumn[0]);
     }
 
     public int addJoinColumn(JoinColumn value) {

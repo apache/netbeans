@@ -140,7 +140,7 @@ public class ChromeBrowserImpl extends HtmlBrowser.Impl implements EnhancedBrows
             lookups.add(Lookups.fixed(transport,
                     Factory.createWebKitDebugging(transport)));
         }
-        return new ProxyLookup(lookups.toArray(new Lookup[lookups.size()]));
+        return new ProxyLookup(lookups.toArray(new Lookup[0]));
     }
     
     /** Dummy implementations */

@@ -241,7 +241,7 @@ public class TemplateClientPanelVisual extends javax.swing.JPanel implements Hel
         // libraries contracts roots
         roots.addAll(getLibContractsRoots());
 
-        return roots.toArray(new FileObject[roots.size()]);
+        return roots.toArray(new FileObject[0]);
     }
 
     private SourceGroup[] getProjectDocumentSourceGroups() {

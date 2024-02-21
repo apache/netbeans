@@ -84,8 +84,7 @@ class CompoundSearchInfo implements SearchInfo.Files {
             }
         }
         return new CompoundSearchIterator(
-            searchableElements.toArray(
-                    new SearchInfo[searchableElements.size()]));
+            searchableElements.toArray(new SearchInfo[0]));
     }
     
 }

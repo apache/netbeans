@@ -251,7 +251,7 @@ public class SearchPanel extends javax.swing.JPanel {
                 list.add(library);
             }
         }
-        return list.toArray(new Library[list.size()]);
+        return list.toArray(new Library[0]);
     }
 
     /**

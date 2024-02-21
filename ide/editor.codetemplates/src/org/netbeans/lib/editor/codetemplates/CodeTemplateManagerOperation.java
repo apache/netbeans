@@ -412,12 +412,12 @@ public final class CodeTemplateManagerOperation
         }
 
         List<CodeTemplate> byAbbrev = new ArrayList<CodeTemplate>(map.values());
-        Collections.sort(byAbbrev, CodeTemplateComparator.BY_ABBREVIATION_IGNORE_CASE);
+        byAbbrev.sort(CodeTemplateComparator.BY_ABBREVIATION_IGNORE_CASE);
 
         List<CodeTemplate> byText = new ArrayList<CodeTemplate>(map.values());
-        Collections.sort(byText, CodeTemplateComparator.BY_PARAMETRIZED_TEXT_IGNORE_CASE);
+        byText.sort(CodeTemplateComparator.BY_PARAMETRIZED_TEXT_IGNORE_CASE);
         
-        Collections.sort(templatesWithSelection, CodeTemplateComparator.BY_PARAMETRIZED_TEXT_IGNORE_CASE);
+        templatesWithSelection.sort(CodeTemplateComparator.BY_PARAMETRIZED_TEXT_IGNORE_CASE);
 
         boolean fire = false;
 

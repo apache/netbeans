@@ -204,7 +204,7 @@ public final class ReplaceTask implements Runnable {
     String[] getProblems() {
         return problems.isEmpty()
                ? null
-               : problems.toArray(new String[problems.size()]);
+               : problems.toArray(new String[0]);
     }
 
     BasicReplaceResultsPanel getPanel() {

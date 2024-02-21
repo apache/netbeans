@@ -441,7 +441,7 @@ public final class ModuleManager extends Modules {
         if (moduleFactory.removeBaseClassLoader()) {
             parents.remove(base);
         }
-        ClassLoader[] parentCLs = parents.toArray(new ClassLoader[parents.size()]);
+        ClassLoader[] parentCLs = parents.toArray(new ClassLoader[0]);
         SystemClassLoader nue;
         try {
             nue = new SystemClassLoader(classLoaderPatches, parentCLs, modules);
@@ -1488,7 +1488,7 @@ public final class ModuleManager extends Modules {
                         }
                     }
                 }
-                classLoader.append((nueclassloaders.toArray(new ClassLoader[nueclassloaders.size()])));
+                classLoader.append((nueclassloaders.toArray(new ClassLoader[0])));
                 classLoader.size += toEnable.size();
             } else {
                 Util.err.fine("enable: no class loader yet, not appending");

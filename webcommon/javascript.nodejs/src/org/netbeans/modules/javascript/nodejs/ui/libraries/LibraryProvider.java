@@ -313,7 +313,7 @@ public class LibraryProvider {
                 libraries.add(library);
             }
             
-            return libraries.toArray(new Library[libraries.size()]);
+            return libraries.toArray(new Library[0]);
         }
 
     }

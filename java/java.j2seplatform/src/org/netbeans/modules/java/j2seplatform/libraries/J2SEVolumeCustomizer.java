@@ -537,7 +537,7 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
                 result.add(uri);
             }
         }
-        return result.toArray(new URI[result.size()]);
+        return result.toArray(new URI[0]);
     }
 
     private static String checkFile(File f, String volume) {

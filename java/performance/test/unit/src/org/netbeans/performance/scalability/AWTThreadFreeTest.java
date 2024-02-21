@@ -130,7 +130,7 @@ public class AWTThreadFreeTest extends NbTestCase {
             try {
                 if (dump != null) {
                     Class<?> type = Class.forName("org.netbeans.lib.profiler.results.cpu.StackTraceSnapshotBuilder");
-                    Object builder = type.newInstance();
+                    Object builder = type.getDeclaredConstructor().newInstance();
                     long base = System.currentTimeMillis();
                     long time = base;
                     for (StackTraceElement[] arr : traces) {

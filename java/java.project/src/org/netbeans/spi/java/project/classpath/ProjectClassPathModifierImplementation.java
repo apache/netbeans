@@ -160,7 +160,7 @@ public abstract class ProjectClassPathModifierImplementation {
                 Exceptions.printStackTrace(ex);
             }
         }
-        return content.toArray(new URL[content.size()]);
+        return content.toArray(new URL[0]);
     }
 
     /**
@@ -175,7 +175,7 @@ public abstract class ProjectClassPathModifierImplementation {
         for (URL url : entry) {
             content.add(URI.create(url.toExternalForm()));
         }
-        return content.toArray(new URI[content.size()]);
+        return content.toArray(new URI[0]);
     }
 
     /**

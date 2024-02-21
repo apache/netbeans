@@ -90,7 +90,7 @@ public class RevertModificationsAction extends ContextAction {
                 l.add(file);
             }
         }
-        roots = l.toArray(new File[l.size()]);
+        roots = l.toArray(new File[0]);
 
         if(roots == null || roots.length == 0) return;
 

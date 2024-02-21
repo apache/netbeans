@@ -1182,7 +1182,7 @@ public abstract class Children extends Object {
             */
             public Collection<Node> nodes(Object source) {
                 List<Node> al = new ArrayList<Node>(getCollection());
-                Collections.sort(al, comp);
+                al.sort(comp);
 
                 return al;
             }

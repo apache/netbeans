@@ -693,7 +693,7 @@ final class ModuleClassPaths {
                         activeProjectSourceRoots = ClasspathInfo.create(
                                 ClassPath.EMPTY,
                                 ClassPath.EMPTY,
-                                org.netbeans.spi.java.classpath.support.ClassPathSupport.createClassPath(newActiveProjectSourceRoots.toArray(new URL[newActiveProjectSourceRoots.size()])));
+                                org.netbeans.spi.java.classpath.support.ClassPathSupport.createClassPath(newActiveProjectSourceRoots.toArray(new URL[0])));
                         activeProjectSourceRoots.getClassIndex().addClassIndexListener(this);
                         LOG.log(
                             Level.FINER,

@@ -71,7 +71,7 @@ public final class SourceGroups {
                 result.add(sourceGroup);
             }
         }
-        return result.toArray(new SourceGroup[result.size()]);
+        return result.toArray(new SourceGroup[0]);
     }
 
     /**

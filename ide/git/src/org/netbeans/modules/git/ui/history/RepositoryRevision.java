@@ -98,11 +98,11 @@ public class RepositoryRevision {
     }
 
     public Event[] getEvents() {
-        return events.toArray(new Event[events.size()]);
+        return events.toArray(new Event[0]);
     }
 
     Event[] getDummyEvents () {
-        return dummyEvents.toArray(new Event[dummyEvents.size()]);
+        return dummyEvents.toArray(new Event[0]);
     }
 
     public GitRevisionInfo getLog() {
@@ -138,11 +138,11 @@ public class RepositoryRevision {
     }
 
     public GitBranch[] getBranches () {
-        return branches == null ? new GitBranch[0] : branches.toArray(new GitBranch[branches.size()]);
+        return branches == null ? new GitBranch[0] : branches.toArray(new GitBranch[0]);
     }
 
     public GitTag[] getTags () {
-        return tags == null ? new GitTag[0] : tags.toArray(new GitTag[tags.size()]);
+        return tags == null ? new GitTag[0] : tags.toArray(new GitTag[0]);
     }
     
     boolean expandEvents () {
@@ -245,7 +245,7 @@ public class RepositoryRevision {
                 });
             }
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     private String getPreferredRevision () {
@@ -381,7 +381,7 @@ public class RepositoryRevision {
                 actions.add(getRevertAction(forNodes ? null : this));
                 actions.add(getViewCurrentAction(forNodes ? null : this));
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         void openFile (boolean showAnnotations, ProgressMonitor pm) {
@@ -450,7 +450,7 @@ public class RepositoryRevision {
                     events.add(n.getEvent());
                 }
             }
-            return createAction(root, events.toArray(new Event[events.size()]));
+            return createAction(root, events.toArray(new Event[0]));
         }
 
         protected abstract Action createAction (File repositoryRoot, Event... events);
@@ -542,7 +542,7 @@ public class RepositoryRevision {
                     fileSet.add(e.getFile());
                 }
             }
-            return new ViewCurrentAction(fileSet.toArray(new File[fileSet.size()]));
+            return new ViewCurrentAction(fileSet.toArray(new File[0]));
         }
     }
     
@@ -624,7 +624,7 @@ public class RepositoryRevision {
                 }
             }
             final boolean enbl = rev != null;
-            return new RevertAction(repositoryRoot, fileList.toArray(new File[fileList.size()]), rev) {
+            return new RevertAction(repositoryRoot, fileList.toArray(new File[0]), rev) {
 
                 @Override
                 public boolean isEnabled () {

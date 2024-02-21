@@ -179,7 +179,7 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
                 }
                 filesList.addAll(doFiles);
             }
-            initFiles(filesList.toArray(new VCSFileProxy[filesList.size()]));
+            initFiles(filesList.toArray(new VCSFileProxy[0]));
         }
         Runnable r = new Runnable() {
             @Override
@@ -204,7 +204,7 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
                     l.add(fo);
                 }
             }    
-            this.files = l.toArray(new FileObject[l.size()]);
+            this.files = l.toArray(new FileObject[0]);
             registerFileListeners();
         }
     }

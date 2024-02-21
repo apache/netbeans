@@ -363,7 +363,7 @@ public class CloneableEditor extends CloneableTopComponent implements CloneableE
         // XXX nicer to use MimeLookup for type-specific actions, but not easy; see org.netbeans.modules.editor.impl.EditorActionsProvider
         actions.add(null);
         actions.addAll(Utilities.actionsForPath("Editors/TabActions"));
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     /** Transfer the focus to the editor pane.

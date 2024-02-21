@@ -371,7 +371,7 @@ public class Utils {
                 Line l = lineCookie.getLineSet ().getCurrent (ln);
                 annotatables.add (l);
             }
-        return annotatables.toArray (new Annotatable [annotatables.size ()]);
+        return annotatables.toArray (new Annotatable [0]);
     }
     
     private static int findIndexOf(String text, String target) {

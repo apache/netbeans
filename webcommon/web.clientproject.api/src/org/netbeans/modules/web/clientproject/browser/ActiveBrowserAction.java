@@ -430,7 +430,7 @@ public class ActiveBrowserAction extends CallableSystemAction implements LookupL
                 TopComponent activeTc = reg.getActivated();
                 if( null != activeTc ) {
                     Collection<? extends Node> nodesFromLookup = activeTc.getLookup().lookupAll(Node.class );
-                    nodes = nodesFromLookup.toArray( new Node[nodesFromLookup.size()] );
+                    nodes = nodesFromLookup.toArray(new Node[0] );
                 }
             }
             Lookup[] delegates = new Lookup[nodes.length];
@@ -472,7 +472,7 @@ public class ActiveBrowserAction extends CallableSystemAction implements LookupL
                 result.add( p );
             }
         }
-        Project[] projectsArray = result.toArray(new Project[result.size()]);
+        Project[] projectsArray = result.toArray(new Project[0]);
 
         if ( command != null ) {
             // All projects have to have the command enabled

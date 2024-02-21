@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.41
+#Version 2.42
 
 CLSS public java.beans.FeatureDescriptor
 cons public init()

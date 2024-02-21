@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.63.0
+#Version 2.65.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -1506,6 +1506,7 @@ meth public com.sun.source.tree.PrimitiveTypeTree PrimitiveType(javax.lang.model
 meth public com.sun.source.tree.ProvidesTree Provides(com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.ExpressionTree>)
 meth public com.sun.source.tree.RequiresTree Requires(boolean,boolean,com.sun.source.tree.ExpressionTree)
 meth public com.sun.source.tree.ReturnTree Return(com.sun.source.tree.ExpressionTree)
+meth public com.sun.source.tree.StringTemplateTree StringTemplate(com.sun.source.tree.ExpressionTree,java.util.List<java.lang.String>,java.util.List<? extends com.sun.source.tree.ExpressionTree>)
 meth public com.sun.source.tree.SwitchTree Switch(com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.CaseTree>)
 meth public com.sun.source.tree.SwitchTree addSwitchCase(com.sun.source.tree.SwitchTree,com.sun.source.tree.CaseTree)
 meth public com.sun.source.tree.SwitchTree insertSwitchCase(com.sun.source.tree.SwitchTree,int,com.sun.source.tree.CaseTree)

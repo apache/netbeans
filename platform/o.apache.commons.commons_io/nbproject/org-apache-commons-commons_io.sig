@@ -2849,7 +2849,7 @@ meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
 supr java.io.InputStream
-hfds eof,mark,markSupported,position,readlimit,size,throwEofException
+hfds eof,mark,markSupported,position,readLimit,size,throwEofException
 
 CLSS public org.apache.commons.io.input.NullReader
 cons public init()
@@ -2869,7 +2869,7 @@ meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
 supr java.io.Reader
-hfds eof,mark,markSupported,position,readlimit,size,throwEofException
+hfds eof,mark,markSupported,position,readLimit,size,throwEofException
 
 CLSS public org.apache.commons.io.input.ObservableInputStream
 cons public !varargs init(java.io.InputStream,org.apache.commons.io.input.ObservableInputStream$Observer[])

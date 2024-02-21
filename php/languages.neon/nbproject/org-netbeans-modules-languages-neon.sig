@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.44
+#Version 1.45
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)

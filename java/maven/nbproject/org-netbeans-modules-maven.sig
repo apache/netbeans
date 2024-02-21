@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.160.0
+#Version 2.162.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1157,6 +1157,9 @@ meth public org.apache.maven.project.MavenProject loadAlternateMavenProject(org.
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static boolean isErrorPlaceholder(org.apache.maven.project.MavenProject)
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static boolean isIncomplete(org.apache.maven.project.MavenProject)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static org.apache.maven.project.MavenProject getPartialProject(org.apache.maven.project.MavenProject)
 meth public static void addPropertyChangeListener(org.netbeans.api.project.Project,java.beans.PropertyChangeListener)
 meth public static void fireMavenProjectReload(org.netbeans.api.project.Project)
 meth public static void removePropertyChangeListener(org.netbeans.api.project.Project,java.beans.PropertyChangeListener)
@@ -2021,7 +2024,7 @@ innr public final static !enum Status
 innr public final static ProxyResult
 meth public java.util.concurrent.CompletableFuture<org.netbeans.modules.maven.execute.MavenProxySupport$ProxyResult> checkProxySettings()
 supr java.lang.Object
-hfds FILENAME_BASE_SETTINGS,FILENAME_SETTINGS,FILENAME_SETTINGS_EXT,FILENAME_SUFFIX_OLD,ICON_MAVEN_PROJECT,LOG,PORT_DEFAULT_HTTP,PORT_DEFAULT_HTTPS,PROBE_URI_STRING,SUFFIX_NEW_PROXY,SUFFIX_NONE_PROXY,TAG_ACTIVE_END,TAG_ACTIVE_START,TAG_NAME_ACTIVE,TAG_PROXIES,TAG_PROXY,TAG_SETTINGS,acknowledgedResults
+hfds FILENAME_BASE_SETTINGS,FILENAME_SETTINGS,FILENAME_SETTINGS_EXT,FILENAME_SUFFIX_OLD,ICON_MAVEN_PROJECT,LOG,PORT_DEFAULT_HTTP,PORT_DEFAULT_HTTPS,PROBE_URI_STRING,PROXY_PROBE_TIMEOUT,SUFFIX_NEW_PROXY,SUFFIX_NONE_PROXY,TAG_ACTIVE_END,TAG_ACTIVE_START,TAG_NAME_ACTIVE,TAG_PROXIES,TAG_PROXY,TAG_SETTINGS,acknowledgedResults
 hcls LineAndColumn,Processor,ProxyInfo,TagInfo,TextInfo,XppDelegate
 
 CLSS public final static org.netbeans.modules.maven.execute.MavenProxySupport$ProxyResult
@@ -2382,9 +2385,12 @@ supr java.lang.Enum<org.netbeans.modules.maven.options.MavenSettings$OutputTabNa
 
 CLSS public final org.netbeans.modules.maven.options.MavenVersionSettings
 fld public final static java.lang.String VERSION_COMPILER = "maven-compiler-plugin"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String VERSION_RESOURCES = "maven-resources-plugin"
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getNBVersion()
 meth public java.lang.String getVersion(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getVersion(java.lang.String,java.lang.String)
 meth public static org.netbeans.modules.maven.options.MavenVersionSettings getDefault()
 supr java.lang.Object

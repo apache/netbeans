@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.68
+#Version 7.70
 
 CLSS public abstract interface java.io.Serializable
 
@@ -283,10 +283,13 @@ CLSS public static org.openide.NotifyDescriptor$InputLine
 cons public init(java.lang.String,java.lang.String)
 cons public init(java.lang.String,java.lang.String,int,int)
 fld protected javax.swing.JTextField textField
+fld public final static java.lang.String PROP_INPUT_TEXT = "inputText"
 meth protected java.awt.Component createDesign(java.lang.String)
 meth public java.lang.String getInputText()
 meth public void setInputText(java.lang.String)
+meth public void setInputTextEventEnabled(boolean)
 supr org.openide.NotifyDescriptor
+hfds inputTextEventEnabled,inputTextEventSuppressed
 
 CLSS public static org.openide.NotifyDescriptor$Message
  outer org.openide.NotifyDescriptor

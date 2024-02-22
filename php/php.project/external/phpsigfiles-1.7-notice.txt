@@ -1,6 +1,6 @@
 phpsigfiles is build from the PHP Manual by converting it to PHPdoc format.
 
-The PHP Manual is Copyright © 1997 - 2018 by the PHP Documentation Group.
+The PHP Manual is Copyright © 1997 - 2024 by the PHP Documentation Group.
 This material may be distributed only subject to the terms and conditions set
 forth in the Creative Commons Attribution 3.0 License or later. A copy of the
 Creative Commons Attribution 3.0 license is distributed with this distribution.

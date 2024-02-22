@@ -411,6 +411,17 @@ public enum ServerDetails {
         "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.11/glassfish-7.0.11.zip", // NOI18N
         "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.11/glassfish-7.0.11.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+
+    /**
+     * details for an instance of GlassFish Server 7.0.12
+     */
+    GLASSFISH_SERVER_7_0_12(NbBundle.getMessage(ServerDetails.class, "STR_7012_SERVER_NAME", new Object[]{}), // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE10_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_7_0_12,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.12/glassfish-7.0.12.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.12/glassfish-7.0.12.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     );
     
     /**

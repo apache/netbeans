@@ -41,7 +41,6 @@ import org.apache.maven.model.ReportPlugin;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
-import org.codehaus.plexus.util.IOUtil;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.maven.api.Constants;
@@ -93,14 +92,8 @@ public class AuxPropsImpl implements AuxiliaryProperties, PropertyChangeListener
         if (file == null) {
             file = cacheDir.createData("checkstyle-checker", "xml");
         }
-        InputStream inst = in;
-        OutputStream outst = null;
-        try {
-            outst = file.getOutputStream();
+        try (in; OutputStream outst = file.getOutputStream()) {
             FileUtil.copy(in, outst);
-        } finally {
-            IOUtil.close(inst);
-            IOUtil.close(outst);
         }
         return file;
     }
@@ -159,10 +152,8 @@ public class AuxPropsImpl implements AuxiliaryProperties, PropertyChangeListener
                                     RP.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            InputStream urlis = null;
-                                            try {
-                                                urlis = url.openStream();
-                                                byte[] arr = IOUtil.toByteArray(urlis);
+                                            try (InputStream urlis = url.openStream()) {
+                                                byte[] arr = urlis.readAllBytes();
                                                 synchronized (AuxPropsImpl.this) {
                                                     //#174401
                                                     ByteArrayInputStream bais = new ByteArrayInputStream(arr);
@@ -171,8 +162,6 @@ public class AuxPropsImpl implements AuxiliaryProperties, PropertyChangeListener
                                                 }
                                             } catch (IOException ex) {
                                                 ex.printStackTrace();
-                                            } finally {
-                                                IOUtil.close(urlis);
                                             }
                                         }
                                     });

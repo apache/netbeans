@@ -35,7 +35,6 @@ import org.netbeans.modules.web.beans.analysis.analyzer.annotation.TargetVerifie
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 class InterceptorBindingChecker extends RuntimeAnnotationChecker {
     
     static final String INTERCEPTOR_BINDING = "javax.interceptor.InterceptorBinding"; // NOI18N

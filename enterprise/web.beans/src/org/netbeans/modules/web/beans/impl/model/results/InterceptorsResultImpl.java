@@ -45,7 +45,6 @@ import org.netbeans.modules.web.beans.impl.model.WebBeansModelProviderImpl;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 public class InterceptorsResultImpl implements InterceptorsResult {
     
     static final String INTERCEPTORS = "javax.interceptor.Interceptors";    // NOI18N

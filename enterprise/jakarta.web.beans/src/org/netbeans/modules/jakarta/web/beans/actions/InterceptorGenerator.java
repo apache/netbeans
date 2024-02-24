@@ -72,7 +72,7 @@ class InterceptorGenerator implements CodeGenerator {
     private static final Logger LOG = Logger.getLogger( 
             InterceptorGenerator.class.getName() );
     
-    private static final String INTERCEPTOR = "javax.interceptor.Interceptor";  // NOI18N
+    private static final String INTERCEPTOR = "jakarta.interceptor.Interceptor";  // NOI18N
 
     InterceptorGenerator( String bindingName, FileObject bindingFileObject ) {
         myBindingName = bindingName;

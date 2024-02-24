@@ -54,7 +54,6 @@ import org.netbeans.modules.web.beans.navigation.actions.WebBeansActionHelper;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 public class BindingsPanel extends CDIPanel {
     
     private static final long serialVersionUID = 1230555367053797509L;

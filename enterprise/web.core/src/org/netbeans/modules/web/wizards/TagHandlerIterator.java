@@ -24,12 +24,13 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.j2ee.core.Profile;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.modules.web.core.Util;
 import org.openide.filesystems.FileObject;
@@ -41,6 +42,7 @@ import org.openide.NotifyDescriptor;
 import org.openide.DialogDisplayer;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.j2ee.core.api.support.classpath.ContainerClassPathModifier;
@@ -64,23 +66,26 @@ import org.netbeans.modules.web.taglib.model.TldAttributeType;
 public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiatingIterator {
     private static final Logger LOG = Logger.getLogger(TagHandlerIterator.class.getName());
     private WizardDescriptor.Panel<WizardDescriptor> packageChooserPanel,tagHandlerSelectionPanel,tagInfoPanel;
-    
+
     // You should define what panels you want to use here:
     protected WizardDescriptor.Panel<WizardDescriptor>[] createPanels (Project project,TemplateWizard wiz) {
-        Sources sources = (Sources) project.getLookup().lookup(org.netbeans.api.project.Sources.class);
+        Sources sources = (Sources) ProjectUtils.getSources(project);
         SourceGroup[] sourceGroups = Util.getJavaSourceGroups(project);
         tagHandlerSelectionPanel = new TagHandlerSelection(wiz);
-        
+
         if (sourceGroups.length == 0)
-            packageChooserPanel = Templates.createSimpleTargetChooser(project, sourceGroups, tagHandlerSelectionPanel);
+            packageChooserPanel = Templates
+                    .buildSimpleTargetChooser(project, sourceGroups)
+                    .bottomPanel(tagHandlerSelectionPanel)
+                    .create();
         else
             packageChooserPanel = JavaTemplates.createPackageChooser(project,sourceGroups,tagHandlerSelectionPanel);
-        
+
         sourceGroups = sources.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
         if (sourceGroups==null || sourceGroups.length==0)
             sourceGroups = Util.getJavaSourceGroups(project);
         if (sourceGroups==null || sourceGroups.length==0)
-            sourceGroups = sources.getSourceGroups(Sources.TYPE_GENERIC);        
+            sourceGroups = sources.getSourceGroups(Sources.TYPE_GENERIC);
         tagInfoPanel = new TagInfoPanel(wiz, project, sourceGroups);
         return new WizardDescriptor.Panel[] {
             packageChooserPanel,
@@ -88,6 +93,7 @@ public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiat
         };
     }
 
+    @Override
     public Set instantiate () throws IOException/*, IllegalStateException*/ {
         // Here is the default plain behavior. Simply takes the selected
         // template (you need to have included the standard second panel
@@ -97,23 +103,31 @@ public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiat
         // More advanced wizards can create multiple objects from template
         // (return them all in the result of this method), populate file
         // contents on the fly, etc.
-       
+
         org.openide.filesystems.FileObject dir = Templates.getTargetFolder( wiz );
         DataFolder df = DataFolder.findFolder( dir );
-        
+
+        HashMap<String, Object> templateParameters = new HashMap<>();
+        ClassPath cp = ClassPath.getClassPath(dir, ClassPath.COMPILE);
+        if(cp != null && cp.findResource("jakarta/servlet/http/HttpServlet.class") != null) {
+            templateParameters.put("jakartaPackages", true);
+        } else {
+            templateParameters.put("jakartaPackages", false);
+        }
+
         FileObject template = Templates.getTemplate( wiz );
-        
+
         if (((TagHandlerSelection)tagHandlerSelectionPanel).isBodyTagSupport()) {
             FileObject templateParent = template.getParent();
             template = templateParent.getFileObject("BodyTagHandler","java"); //NOI18N
         }
-        DataObject dTemplate = DataObject.find( template );                
-        DataObject dobj = dTemplate.createFromTemplate( df, Templates.getTargetName( wiz )  );
+        DataObject dTemplate = DataObject.find( template );
+        DataObject dobj = dTemplate.createFromTemplate(df, Templates.getTargetName(wiz), templateParameters);
         // writing to TLD File
         TagInfoPanel tldPanel = (TagInfoPanel)tagInfoPanel;
         Object[][] attrs = tldPanel.getAttributes();
         boolean isBodyTag = ((TagHandlerSelection)tagHandlerSelectionPanel).isBodyTagSupport();
-        
+
         // writing setters to tag handler
         if (attrs.length>0 || isBodyTag) {
             JavaSource clazz = JavaSource.forFileObject(dobj.getPrimaryFile());
@@ -136,15 +150,13 @@ public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiat
         }
 
 
-        
+
         // writing to TLD file
         if (tldPanel.writeToTLD()) {
             FileObject tldFo = tldPanel.getTLDFile();
             if (tldFo!=null) {
                 if (!tldFo.canWrite()) {
-                    String mes = MessageFormat.format (
-                            NbBundle.getMessage (TagHandlerIterator.class, "MSG_tldRO"),
-                            new Object [] {tldFo.getNameExt()});
+                    String mes = NbBundle.getMessage (TagHandlerIterator.class, "MSG_tldRO",tldFo.getNameExt());
                     NotifyDescriptor desc = new NotifyDescriptor.Message(mes,NotifyDescriptor.Message.ERROR_MESSAGE);
                     DialogDisplayer.getDefault().notify(desc);
                 } else {
@@ -153,9 +165,7 @@ public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiat
                     try {
                         taglib = tldDO.getTaglib();
                     } catch (IOException ex) {
-                        String mes = MessageFormat.format (
-                                NbBundle.getMessage (TagHandlerIterator.class, "MSG_tldCorrupted"),
-                                new Object [] {tldFo.getNameExt()});
+                        String mes = NbBundle.getMessage (TagHandlerIterator.class, "MSG_tldCorrupted",tldFo.getNameExt());
                         NotifyDescriptor desc = new NotifyDescriptor.Message(mes,NotifyDescriptor.Message.ERROR_MESSAGE);
                         DialogDisplayer.getDefault().notify(desc);
                     }
@@ -204,28 +214,29 @@ public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiat
                 }
             }
         }
-        
+
         return Collections.singleton(dobj);
     }
 
     // --- The rest probably does not need to be touched. ---
-    
+
     private transient int index;
     private transient WizardDescriptor.Panel[] panels;
     private transient TemplateWizard wiz;
 
     private static final long serialVersionUID = -7586964579556513549L;
-    
+
     // You can keep a reference to the TemplateWizard which can
     // provide various kinds of useful information such as
     // the currently selected target name.
     // Also the panels will receive wiz as their "settings" object.
+    @Override
     public void initialize (WizardDescriptor wiz) {
         this.wiz = (TemplateWizard) wiz;
         index = 0;
         Project project = Templates.getProject( wiz );
         panels = createPanels (project,this.wiz);
-        
+
         // Creating steps.
         Object prop = wiz.getProperty (WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
@@ -233,7 +244,7 @@ public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiat
             beforeSteps = (String[])prop;
         }
         String[] steps = Utilities.createSteps (beforeSteps, panels);
-        
+
         for (int i = 0; i < panels.length; i++) {
             Component c = panels[i].getComponent ();
             if (steps[i] == null) {
@@ -251,6 +262,7 @@ public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiat
             }
         }
     }
+    @Override
     public void uninitialize (WizardDescriptor wiz) {
         this.wiz = null;
         panels = null;
@@ -261,31 +273,39 @@ public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiat
     // few more options for customization. If you e.g. want to make panels appear
     // or disappear dynamically, go ahead.
 
+    @Override
     public String name () {
         return NbBundle.getMessage(TagHandlerIterator.class, "TITLE_x_of_y",
             index + 1, panels.length);
     }
-    
+
+    @Override
     public boolean hasNext () {
         return index < panels.length - 1;
     }
+    @Override
     public boolean hasPrevious () {
         return index > 0;
     }
+    @Override
     public void nextPanel () {
         if (! hasNext ()) throw new NoSuchElementException ();
         index++;
     }
+    @Override
     public void previousPanel () {
         if (! hasPrevious ()) throw new NoSuchElementException ();
         index--;
     }
+    @Override
     public WizardDescriptor.Panel<WizardDescriptor> current () {
         return panels[index];
     }
-    
+
     // If nothing unusual changes in the middle of the wizard, simply:
+    @Override
     public final void addChangeListener (ChangeListener l) {}
+    @Override
     public final void removeChangeListener (ChangeListener l) {}
     // If something changes dynamically (besides moving between panels),
     // e.g. the number of panels changes in response to user input, then

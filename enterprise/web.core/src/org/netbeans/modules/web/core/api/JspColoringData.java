@@ -34,7 +34,6 @@ import javax.servlet.jsp.tagext.TagLibraryInfo;
  *
  * @author Petr Jiricka
  */
-// @todo: Support JakartaEE
 public final class JspColoringData extends PropertyChangeSupport {
     
     /** An property whose change is fired every time the tag library 

@@ -113,11 +113,11 @@ public final class FileChooserAccessory extends javax.swing.JPanel
     public String[] getFiles() {
         assert isRelative();
         if (isCopy()) {
-            return copiedRelativeFiles.toArray(new String[copiedRelativeFiles.size()]);
+            return copiedRelativeFiles.toArray(new String[0]);
         } else {
             List<File> files = Arrays.asList(getSelectedFiles());
             List<String> l = getRelativeFiles(files);
-            return l.toArray(new String[l.size()]);
+            return l.toArray(new String[0]);
         }
     }
 
@@ -348,7 +348,7 @@ public final class FileChooserAccessory extends javax.swing.JPanel
         assert isVariableBased();
         List<File> files = Arrays.asList(getSelectedFiles());
         List<String> l = getVariableBasedFiles(files);
-        return l.toArray(new String[l.size()]);
+        return l.toArray(new String[0]);
     }
 
     private List<String> getVariableBasedFiles(List<File> files) {

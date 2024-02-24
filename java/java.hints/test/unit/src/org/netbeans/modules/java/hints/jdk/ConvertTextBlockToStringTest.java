@@ -46,7 +46,7 @@ public class ConvertTextBlockToStringTest {
                         + "                  \"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -69,7 +69,7 @@ public class ConvertTextBlockToStringTest {
                         + "                  abc\"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -98,7 +98,7 @@ public class ConvertTextBlockToStringTest {
                         + "                  \"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -126,7 +126,7 @@ public class ConvertTextBlockToStringTest {
                         + "                 ;\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -160,7 +160,7 @@ public class ConvertTextBlockToStringTest {
                         + "                  wxyz\"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -184,7 +184,7 @@ public class ConvertTextBlockToStringTest {
                         + "                  def\"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -209,7 +209,7 @@ public class ConvertTextBlockToStringTest {
                         + "                 \"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -232,7 +232,7 @@ public class ConvertTextBlockToStringTest {
                         + "                 \\\\\"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -256,7 +256,7 @@ public class ConvertTextBlockToStringTest {
                         + "                  \"def\"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -284,7 +284,7 @@ public class ConvertTextBlockToStringTest {
                         + "                  \"\"\";\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("3:18-3:21:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -308,7 +308,7 @@ public class ConvertTextBlockToStringTest {
                         + "                           abc\"\"\");\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("4:27-4:30:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
@@ -333,7 +333,7 @@ public class ConvertTextBlockToStringTest {
                         + "                           ghi\"\"\");\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertTextBlockToString.class)
                 .findWarning("2:27-2:30:hint:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()

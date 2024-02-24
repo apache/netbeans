@@ -354,7 +354,7 @@ public class JavaSourceTaskFactoryTest extends NbTestCase {
                 }
                 roots.add (url);
             }
-            return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+            return ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
         } catch (MalformedURLException ex) {}
         return null;
     }

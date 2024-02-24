@@ -389,7 +389,7 @@ public class SvnUtils {
             }
         }
         files.remove(null);
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
 
     /**
@@ -1098,7 +1098,7 @@ public class SvnUtils {
             }
         }
 
-        return ret.toArray(new File[ret.size()]);
+        return ret.toArray(new File[0]);
     }
 
     /**
@@ -1129,7 +1129,7 @@ public class SvnUtils {
                 files.add(file);
             }
         }
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
 
 
@@ -1529,7 +1529,7 @@ public class SvnUtils {
             }
         }
         if (!sorted) {
-            Collections.sort(ret, new Comparator<ISVNLogMessage>() {
+            ret.sort(new Comparator<ISVNLogMessage>() {
                 @Override
                 public int compare(ISVNLogMessage m1, ISVNLogMessage m2) {
                     long revNum1 = m1.getRevision().getNumber();
@@ -1539,7 +1539,7 @@ public class SvnUtils {
                 }
             });
         }
-        return ret.toArray(new ISVNLogMessage[ret.size()]);
+        return ret.toArray(new ISVNLogMessage[0]);
     }
 
     private static Logger TY9_LOG = null;
@@ -1576,7 +1576,7 @@ public class SvnUtils {
             }
         }
 
-        roots = l.toArray(new File[l.size()]);
+        roots = l.toArray(new File[0]);
         if(Utils.shareCommonDataObject(roots)) {
             return roots;
         }
@@ -1794,7 +1794,7 @@ public class SvnUtils {
             Subversion.getInstance().getParallelRequestProcessor().post(new Runnable() {
                 @Override
                 public void run() {
-                    FileUtil.refreshFor(parents.toArray(new File[parents.size()]));
+                    FileUtil.refreshFor(parents.toArray(new File[0]));
                 }
             }, 100);
         }
@@ -1802,7 +1802,7 @@ public class SvnUtils {
 
     static ThreadLocal<Set<File>> indexingFiles = new ThreadLocal<Set<File>>();
     public static <T> T runWithoutIndexing (Callable<T> callable, List<File> files) throws SVNClientException {
-        return runWithoutIndexing(callable, files.toArray(new File[files.size()]));
+        return runWithoutIndexing(callable, files.toArray(new File[0]));
     }
 
     public static <T> T runWithoutIndexing (Callable<T> callable, File... files) throws SVNClientException {

@@ -20,6 +20,7 @@ package org.netbeans.modules.micronaut.symbol;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -93,10 +94,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
         if (initialize(cc)) {
             try {
                 if (cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED).compareTo(JavaSource.Phase.ELEMENTS_RESOLVED) >= 0) {
-                    List<SymbolLocation> symbols = scan(cc);
-                    if (!symbols.isEmpty()) {
-                        store(context.getIndexFolder(), indexable.getURL(), indexable.getRelativePath(), symbols);
-                    }
+                    store(context.getIndexFolder(), indexable.getURL(), indexable.getRelativePath(), scan(cc, false));
                 }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
@@ -126,7 +124,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
         return ret;
     }
 
-    public static List<SymbolLocation> scan(CompilationController cc) {
+    public static List<SymbolLocation> scan(CompilationController cc, boolean selectEndpointAnnotation) {
         final List<SymbolLocation> ret = new ArrayList<>();
         SourcePositions sp = cc.getTrees().getSourcePositions();
         TreePathScanner<Void, String> scanner = new TreePathScanner<Void, String>() {
@@ -162,7 +160,8 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
                     TreePath treePath = this.getCurrentPath();
                     MthIterator it = new MthIterator(cc.getTrees().getElement(treePath), cc.getElements(), cc.getTypes());
                     while (it.hasNext()) {
-                        for (AnnotationMirror ann : it.next().getAnnotationMirrors()) {
+                        ExecutableElement ee = it.next();
+                        for (AnnotationMirror ann : ee.getAnnotationMirrors()) {
                             String method = getEndpointMethod((TypeElement) ann.getAnnotationType().asElement());
                             if (method != null) {
                                 List<String> ids = new ArrayList<>();
@@ -183,6 +182,12 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
                                 for (Object id : ids) {
                                     String name = '@' + path + id + " -- " + method;
                                     int[] span = cc.getTreeUtilities().findNameSpan(node);
+                                    if (selectEndpointAnnotation) {
+                                        Tree tree = cc.getTrees().getTree(ee, ann);
+                                        if (tree != null) {
+                                            span = new int[] {(int) sp.getStartPosition(treePath.getCompilationUnit(), tree), (int) sp.getEndPosition(treePath.getCompilationUnit(), tree)};
+                                        }
+                                    }
                                     ret.add(new SymbolLocation(name, (int) sp.getStartPosition(treePath.getCompilationUnit(), node), (int) sp.getEndPosition(treePath.getCompilationUnit(), node), span[0], span[1]));
                                 }
                                 return null;

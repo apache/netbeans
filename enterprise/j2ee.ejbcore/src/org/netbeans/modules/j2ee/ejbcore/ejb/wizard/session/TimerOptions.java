@@ -116,7 +116,7 @@ public final class TimerOptions {
         if (!"".equals(sb.toString())) {
             finalSections.add(sb.toString());
         }
-        return finalSections.toArray(new String[finalSections.size()]);
+        return finalSections.toArray(new String[0]);
     }
 
     private static int getCountOfQuotes(String string) {

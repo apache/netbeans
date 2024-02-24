@@ -23,6 +23,7 @@ import java.util.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 
 import org.xml.sax.*;
 
@@ -588,7 +589,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                     if (WrapperClassHelper.isWrapperClass(lClass))
                         lObj = new WrapperClassHelper(lClass, lIDName);
                     else
-                        lObj = lClass.newInstance();
+                        lObj = lClass.getDeclaredConstructor().newInstance();
                 }
                 catch (IllegalAccessException e1)
                 {
@@ -598,7 +599,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                     SAXException useError = new SAXException(message);
                     throw useError;
                 }
-                catch (InstantiationException e2)
+                catch (InstantiationException | NoSuchMethodException | InvocationTargetException e2)
                 {
 
                     lObj = NewInstanceHelper.newInstance(lClassName, this.topObject());
@@ -688,7 +689,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                 try
                 {
                     Class lArrayTypeClass = this.findClass(lArrayType);
-                    lArray = lArrayTypeClass.newInstance();
+                    lArray = lArrayTypeClass.getDeclaredConstructor().newInstance();
                 }
                 catch (ClassNotFoundException e1)
                 {
@@ -708,7 +709,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                     SAXException accessError = new SAXException(message);
                     throw accessError;
                 }
-                catch (InstantiationException e3)
+                catch (InstantiationException | NoSuchMethodException | InvocationTargetException e3)
                 {
                     e3.printStackTrace();
                     //java.lang.String message = new String("Instantiation exception whilst trying to init new instance of " + lArrayType);
@@ -822,11 +823,11 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                     // does not declare the field anymore => ignore. 
                     this.pushObject(new Object());
                 else
-                    this.pushObject(lField.getType().newInstance());
+                    this.pushObject(lField.getType().getDeclaredConstructor().newInstance());
 
                 this.State = new Integer(this.XGD_NEED_END_NULLVALUE);
             }
-            catch (InstantiationException e1)
+            catch (InstantiationException | NoSuchMethodException | InvocationTargetException e1)
             {
                 e1.printStackTrace();
                 //java.lang.String message = new String("Could not init instance of " + lField.getType().getName());

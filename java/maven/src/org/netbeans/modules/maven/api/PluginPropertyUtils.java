@@ -353,7 +353,7 @@ public class PluginPropertyUtils {
                             String chvalue = ch.getValue() == null ? "" : ch.getValue().trim();  //NOI18N
                             toRet.add(chvalue);  //NOI18N
                         }
-                        return toRet.toArray(new String[toRet.size()]);
+                        return toRet.toArray(new String[0]);
                     }
                 }
                 return null;
@@ -592,7 +592,7 @@ public class PluginPropertyUtils {
                 exes.add(exe);
             }
         }
-        Collections.sort(exes, new Comparator<PluginExecution>() {
+        exes.sort(new Comparator<PluginExecution>() {
             @Override public int compare(PluginExecution e1, PluginExecution e2) {
                 return e2.getPriority() - e1.getPriority();
             }

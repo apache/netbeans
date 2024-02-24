@@ -261,7 +261,7 @@ public final class ImportantFiles {
 
         private void setKeys() {
             List<ImportantFilesImplementation.FileInfo> importantFiles = getImportantFiles();
-            Collections.sort(importantFiles, new FileInfoComparator());
+            importantFiles.sort(new FileInfoComparator());
             setKeys(importantFiles);
         }
 

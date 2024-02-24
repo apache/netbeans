@@ -235,7 +235,7 @@ public final class ExplorerManager extends Object implements Serializable, Clone
                     }
                 }
                 if (validNodes != null) {
-                    newValue = validNodes.toArray(new Node[validNodes.size()]);
+                    newValue = validNodes.toArray(new Node[0]);
                     if (equalNodes(newValue, selectedNodes)) {
                         return;
                     }                    
@@ -776,7 +776,7 @@ bigloop:
                     }
 
                     // set the selection
-                    Node[] newSelection = selNodes.toArray(new Node[selNodes.size()]);
+                    Node[] newSelection = selNodes.toArray(new Node[0]);
 
                     if (exploredCtx != null) {
                         setExploredContext(findPath(root, exploredCtx), newSelection);
@@ -1004,7 +1004,7 @@ bigloop:
                     i.remove();
             }
             
-            Node[] selNodes = newSel.toArray(new Node[newSel.size()]);
+            Node[] selNodes = newSel.toArray(new Node[0]);
             setSelectedNodes0(selNodes);
             
             

@@ -1702,7 +1702,7 @@ public class BeanProp implements BaseProperty {
 		    c = this.propClass.getDeclaredConstructor(cc);
 		}
 		catch(NoSuchMethodException me) {
-		    return (BaseBean)this.propClass.newInstance();
+		    return (BaseBean)this.propClass.getDeclaredConstructor().newInstance();
 		}
 		
 		//  Do not initialize the default values

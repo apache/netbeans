@@ -91,13 +91,13 @@ public abstract class EntityManagerGenerationTestSupport  extends SourceTestSupp
         EntityManagerGenerationStrategy result = null;
         
         try{
-            result = getStrategyClass().newInstance();
+            result = getStrategyClass().getDeclaredConstructor().newInstance();
             result.setClassTree(clazz);
             result.setWorkingCopy(workingCopy);
             result.setGenerationOptions(options);
             result.setTreeMaker(make);
             result.setPersistenceUnit(getPersistenceUnit());
-        } catch (IllegalAccessException | InstantiationException ex){
+        } catch (ReflectiveOperationException ex){
             throw new RuntimeException(ex);
         }
         

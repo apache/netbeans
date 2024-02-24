@@ -32,6 +32,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
@@ -248,7 +249,7 @@ public final class LibraryProvider {
                 prefix = "tmp" + prefix; // NOI18N
             }
             String suffix = (index == -1) ? "" : fileName.substring(index);
-            File file = File.createTempFile(prefix, suffix);
+            File file = Files.createTempFile(prefix, suffix).toFile();
             try (OutputStream output = new FileOutputStream(file)) {
                 FileUtil.copy(input, output);
                 return file;

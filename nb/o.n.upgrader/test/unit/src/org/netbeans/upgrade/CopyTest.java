@@ -202,7 +202,7 @@ public final class CopyTest extends org.netbeans.junit.NbTestCase {
         fileList.addAll(Arrays.asList(new java.lang.String[]{ 
         "path/Yes.txt", "path/No.txt", "path/Existing.txt"}));
         
-        FileSystem fs = createLocalFileSystem(fileList.toArray(new String[fileList.size()]));
+        FileSystem fs = createLocalFileSystem(fileList.toArray(new String[0]));
 
         
         FileObject path = fs.findResource("path");

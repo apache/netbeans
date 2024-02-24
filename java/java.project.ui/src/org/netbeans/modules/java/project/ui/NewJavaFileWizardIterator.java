@@ -175,7 +175,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
                     List<SourceGroup> all = new ArrayList<>();
                     all.addAll(Arrays.asList(groups));
                     all.addAll(Arrays.asList(groovySourceGroups));
-                    groups = all.toArray(new SourceGroup[all.size()]);
+                    groups = all.toArray(new SourceGroup[0]);
                 }
 
                 SourceGroup[] resources = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES);
@@ -184,7 +184,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
                     List<SourceGroup> all = new ArrayList<SourceGroup>();
                     all.addAll(Arrays.asList(groups));
                     all.addAll(Arrays.asList(resources));
-                    groups = all.toArray(new SourceGroup[all.size()]);
+                    groups = all.toArray(new SourceGroup[0]);
                 }
                 panels.add(new JavaTargetChooserPanel(project, groups, null, Type.PACKAGE, false));
             }
@@ -197,7 +197,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
                     panels.add(it.current());
                 }
             }
-            return panels.toArray(new WizardDescriptor.Panel<?>[panels.size()]);
+            return panels.toArray(new WizardDescriptor.Panel<?>[0]);
         }
     }
 
@@ -208,7 +208,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
                 Exceptions.printStackTrace (new NullPointerException (sources + " returns null SourceGroup!"));
             else
                 sourceGroups.add (sourceGroup);
-        return sourceGroups.toArray (new SourceGroup [sourceGroups.size ()]);
+        return sourceGroups.toArray (new SourceGroup [0]);
     }
     
     private String[] createSteps(String[] before, WizardDescriptor.Panel[] panels) {
@@ -523,7 +523,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
     protected final void fireChangeEvent() {
         ChangeListener[] ls;
         synchronized (listeners) {
-            ls = listeners.toArray(new ChangeListener[listeners.size()]);
+            ls = listeners.toArray(new ChangeListener[0]);
         }
         ChangeEvent ev = new ChangeEvent(this);
         for (ChangeListener l : ls) {

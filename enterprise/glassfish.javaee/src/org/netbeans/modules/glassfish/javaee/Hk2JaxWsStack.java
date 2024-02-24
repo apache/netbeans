@@ -193,7 +193,7 @@ public class Hk2JaxWsStack implements WSStackImplementation<JaxWs> {
                     }
                 }
             }
-            return cPath.toArray(new URL[cPath.size()]);
+            return cPath.toArray(URL[]::new);
         }
 
     }

@@ -41,11 +41,9 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.Action;
-import javax.swing.SwingUtilities;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.tools.ant.module.api.support.ActionUtils;
@@ -84,7 +82,6 @@ import org.openide.ErrorManager;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -232,7 +229,7 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
                 }
             }
             if ( keys != null ){
-                Collections.sort(keys, WsdlOperationComparator.getInstance() );
+                keys.sort(WsdlOperationComparator.getInstance());
                 setKeys(keys);
             }
             else {
@@ -409,8 +406,7 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
                         keys[0] = Collections.emptyList();
                     }
                     else {
-                        Collections.sort( (List<WebOperationInfo>)keys[0], 
-                                OPERATION_INFO_COMPARATOR);
+                        ((List<WebOperationInfo>)keys[0]).sort(OPERATION_INFO_COMPARATOR);
                     }
                     setKeys(keys[0]);
                 }

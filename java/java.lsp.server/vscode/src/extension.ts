@@ -47,6 +47,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ChildProcess } from 'child_process';
 import * as vscode from 'vscode';
+import * as ls from 'vscode-languageserver-protocol';
 import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
 import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, MutliStepInputRequest, TestProgressNotification, DebugConnector,
@@ -535,21 +536,15 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.surround.with', async (items) => {
         const selected: any = await window.showQuickPick(items, { placeHolder: 'Surround with ...' });
         if (selected) {
-            if (selected.userData.edit && selected.userData.edit.changes) {
-                let edit = new vscode.WorkspaceEdit();
-                Object.keys(selected.userData.edit.changes).forEach(key => {
-                    edit.set(vscode.Uri.parse(key), selected.userData.edit.changes[key].map((change: any) => {
-                        let start = new vscode.Position(change.range.start.line, change.range.start.character);
-                        let end = new vscode.Position(change.range.end.line, change.range.end.character);
-                        return new vscode.TextEdit(new vscode.Range(start, end), change.newText);
-                    }));
-                });
+            if (selected.userData.edit) {
+                const edit = await (await client).protocol2CodeConverter.asWorkspaceEdit(selected.userData.edit as ls.WorkspaceEdit);
                 await workspace.applyEdit(edit);
+                await commands.executeCommand('workbench.action.focusActiveEditorGroup');
             }
             await commands.executeCommand(selected.userData.command.command, ...(selected.userData.command.arguments || []));
         }
     }));
-    context.subscriptions.push(commands.registerCommand('nbls.db.add.all.connection', async () => {
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.db.add.all.connection', async () => {
         const ADD_JDBC = 'Add Database Connection';
         const ADD_ADB = 'Add Oracle Autonomous DB';
         const selected: any = await window.showQuickPick([ADD_JDBC, ADD_ADB], { placeHolder: 'Select type...' });
@@ -557,6 +552,15 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             await commands.executeCommand('nbls.db.add.connection');
         } else if (selected == ADD_ADB) {
             await commands.executeCommand('nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddADBAction');
+        }
+    }));
+
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.generate.code', async (command, data) => {
+        const edit: any = await commands.executeCommand(command, data);
+        if (edit) {
+            const wsEdit = await (await client).protocol2CodeConverter.asWorkspaceEdit(edit as ls.WorkspaceEdit);
+            await workspace.applyEdit(wsEdit);
+            await commands.executeCommand('workbench.action.focusActiveEditorGroup');
         }
     }));
 

@@ -108,12 +108,12 @@ public class SingleGroovySourceRunActionProvider implements ActionProvider {
     private static FileObject getGroovyFile(Lookup lookup) {
         for (DataObject dObj : lookup.lookupAll(DataObject.class)) {
             FileObject fObj = dObj.getPrimaryFile();
-            if (GROOVY_EXTENSION.equals(fObj.getExt().toLowerCase())) {
+            if (GROOVY_EXTENSION.equalsIgnoreCase(fObj.getExt())) {
                 return fObj;
             }
         }
         for (FileObject fObj : lookup.lookupAll(FileObject.class)) {
-            if (GROOVY_EXTENSION.equals(fObj.getExt().toLowerCase())) {
+            if (GROOVY_EXTENSION.equalsIgnoreCase(fObj.getExt())) {
                 return fObj;
             }
         }

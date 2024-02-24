@@ -454,7 +454,7 @@ public class PlatformLayersCacheManager {
                 })));
             }
         }
-        return allJars.toArray(new File[allJars.size()]);
+        return allJars.toArray(new File[0]);
     }
 
     private static PLFSCache fillCache(File clusterDir) throws IOException {

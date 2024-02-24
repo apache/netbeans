@@ -165,6 +165,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     private static final RequestProcessor WORKER = new RequestProcessor(WorkspaceServiceImpl.class.getName(), 1, false, false);
     private static final RequestProcessor PROJECT_WORKER = new RequestProcessor(WorkspaceServiceImpl.class.getName(), 5, false, false);
+    private static final String NETBEANS_JAVA_HINTS = "hints";
 
     private final Gson gson = new Gson();
     private final LspServerState server;
@@ -175,7 +176,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
      * and then updated by didChangeWorkspaceFolder notifications.
      */
     private volatile List<FileObject> clientWorkspaceFolders = Collections.emptyList();
-
+    
     WorkspaceServiceImpl(LspServerState server) {
         this.server = server;
     }
@@ -283,7 +284,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                             }
                         }
                         // TBD: possibly include project configuration ?
-                        final Lookup ctx = Lookups.fixed(ctxObjects.toArray(new Object[ctxObjects.size()]));
+                        final Lookup ctx = Lookups.fixed(ctxObjects.toArray(new Object[0]));
                         ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
                         if (ap != null && ap.isActionEnabled(actionName, ctx)) {
                             ap.invokeAction(actionName, ctx);
@@ -867,7 +868,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                         // should not happen
                     }
                 }
-                info.subprojects = subprojectDirs.toArray(new URI[subprojectDirs.size()]);
+                info.subprojects = subprojectDirs.toArray(new URI[0]);
                 Project root = ProjectUtils.rootOf(p);
                 if (root != null) {
                     try {
@@ -911,7 +912,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
             }
             list.addAll(infos.values());
-            LspProjectInfo[] toArray = list.toArray(new LspProjectInfo[list.size()]);
+            LspProjectInfo[] toArray = list.toArray(new LspProjectInfo[0]);
             return CompletableFuture.completedFuture(toArray);
         }
     }
@@ -1331,6 +1332,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         String fullConfigPrefix = client.getNbCodeCapabilities().getConfigurationPrefix();
         String configPrefix = fullConfigPrefix.substring(0, fullConfigPrefix.length() - 1);
         server.openedProjects().thenAccept(projects -> {
+            ((TextDocumentServiceImpl)server.getTextDocumentService()).updateJavaHintPreferences(((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject(NETBEANS_JAVA_HINTS));
             if (projects != null && projects.length > 0) {
                 updateJavaFormatPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("format"));
                 updateJavaImportPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("java").getAsJsonObject("imports"));

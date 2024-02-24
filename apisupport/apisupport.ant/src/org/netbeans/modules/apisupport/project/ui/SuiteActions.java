@@ -312,7 +312,7 @@ public final class SuiteActions implements ActionProvider, ExecProject {
             ActionProvider.COMMAND_MOVE,
             ActionProvider.COMMAND_DELETE
         ));
-        return actions.toArray(new String[actions.size()]);
+        return actions.toArray(new String[0]);
     }
     
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {

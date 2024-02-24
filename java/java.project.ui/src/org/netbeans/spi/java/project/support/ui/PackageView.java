@@ -129,7 +129,7 @@ public class PackageView {
         Parameters.notNull("group", group); //NOI18N
         SortedSet<PackageItem> data = new TreeSet<PackageItem>();
         findNonExcludedPackages(null, data, group.getRootFolder(), group, false);
-        return new DefaultComboBoxModel(data.toArray(new PackageItem[data.size()]));
+        return new DefaultComboBoxModel(data.toArray(new PackageItem[0]));
     }
 
     /**

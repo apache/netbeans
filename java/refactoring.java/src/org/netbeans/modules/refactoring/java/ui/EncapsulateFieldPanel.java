@@ -533,7 +533,7 @@ private void jButtonSelectSettersActionPerformed(java.awt.event.ActionEvent evt)
     
     private static <E extends Enum<E> & Comparator<E>> void initEnumCombo(JComboBox combo, E defValue) {
         Vector<E> enumList = new Vector<E>(EnumSet.allOf(defValue.getDeclaringClass()));
-        Collections.sort(enumList, defValue);
+        enumList.sort(defValue);
         combo.setModel(new DefaultComboBoxModel(enumList));
         combo.setSelectedItem(defValue);
     }

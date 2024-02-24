@@ -151,7 +151,7 @@ public class VersioningConfig {
             if (disconnectedRepos == null) {
                 paths = new String[0];
             } else {
-                paths = disconnectedRepos.toArray(new String[disconnectedRepos.size()]);
+                paths = disconnectedRepos.toArray(new String[0]);
             }
         }
         return paths;

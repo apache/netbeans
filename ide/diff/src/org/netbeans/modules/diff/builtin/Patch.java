@@ -106,7 +106,7 @@ public class Patch extends Reader {
                 fileDifferences.add(new FileDifferences(fileName[0], fileName[1], diffs));
             }
         }
-        return fileDifferences.toArray(new FileDifferences[fileDifferences.size()]);
+        return fileDifferences.toArray(new FileDifferences[0]);
     }
     
     public int read(char[] cbuf, int off, int length) throws java.io.IOException {
@@ -297,7 +297,7 @@ public class Patch extends Reader {
             }
             mergeChanges(firstInterval, secondInterval, firstChanges, secondChanges, diffs);
         } while (line != null);
-        return diffs.toArray(new Difference[diffs.size()]);
+        return diffs.toArray(new Difference[0]);
     }
 
 
@@ -531,7 +531,7 @@ public class Patch extends Reader {
             }
             line = fillUnidifChanges(intervals, br, diffs);
         } while (line != null);
-        return diffs.toArray(new Difference[diffs.size()]);
+        return diffs.toArray(new Difference[0]);
     }
     
     private static void readUnifiedNums(String str, int off, int[] values) throws NumberFormatException {
@@ -649,7 +649,7 @@ public class Patch extends Reader {
             CmdlineDiffProvider.outputLine(line, normRegexp, diffs, firstText, secondText);
         }
         CmdlineDiffProvider.setTextOnLastDifference(diffs, firstText, secondText);
-        return diffs.toArray(new Difference[diffs.size()]);
+        return diffs.toArray(new Difference[0]);
     }
     
     /**

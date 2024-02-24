@@ -149,12 +149,8 @@ public class AgentWorker extends RemoteExecutionControl implements Executor, Run
         } else if (o instanceof String) {
             try {
                 Class executorClazz = Class.forName((String)o);
-                return (Executor)executorClazz.newInstance();
-            } catch (ClassNotFoundException ex) {
-                LOG.log(Level.SEVERE, null, ex);
-            } catch (InstantiationException ex) {
-                LOG.log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
+                return (Executor)executorClazz.getDeclaredConstructor().newInstance();
+            } catch (ReflectiveOperationException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
         }
@@ -223,7 +219,7 @@ public class AgentWorker extends RemoteExecutionControl implements Executor, Run
     private void installNewClassLoader(ClassLoader delegate) {
         lastClassLoader = delegate;
         loader = new NbRemoteLoader(delegate, loader, 
-                additionalClasspath.toArray(new URL[additionalClasspath.size()]));
+                additionalClasspath.toArray(new URL[0]));
     }
 
     @Override

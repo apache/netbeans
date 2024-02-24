@@ -246,7 +246,7 @@ final class PackageRootNode extends AbstractNode implements Runnable, FileStatus
                 }
                 if (isPackageFlavor && !hasTheSameRoot) {
                     list.add(new PackageViewChildren.PackagePasteType(this.group.getRootFolder(),
-                            l.toArray(new PackageViewChildren.PackageNode[l.size()]),
+                            l.toArray(new PackageViewChildren.PackageNode[0]),
                             op));
                 }
                 else if (!isPackageFlavor) {

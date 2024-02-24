@@ -1182,7 +1182,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
                 if (propertyEditorClass == null)
                     return null;
                 try {
-                    return propertyEditorClass.newInstance();
+                    return propertyEditorClass.getDeclaredConstructor().newInstance();
                 }
                 catch (Exception ex) { //should not happen
                     ex.printStackTrace();
@@ -1380,7 +1380,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
                 tagList.add(bundle.getString("VALUE_anchor_below_baseline_leading")); // NOI18N
                 tagList.add(bundle.getString("VALUE_anchor_below_baseline_trailing")); // NOI18N
             }
-            tags = tagList.toArray(new String[tagList.size()]);
+            tags = tagList.toArray(new String[0]);
 
             // Values
             List<Integer> valueList = new LinkedList<Integer>();
@@ -1413,7 +1413,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
                 valueList.add(2048); // GridBagConstraints.BELOW_BASELINE_LEADING
                 valueList.add(2304); // GridBagConstraints.BELOW_BASELINE_TRAILING
             }
-            values = valueList.toArray(new Integer[valueList.size()]);
+            values = valueList.toArray(new Integer[0]);
 
             // Java initialization strings
             List<String> initStringList = new LinkedList<String>();
@@ -1445,7 +1445,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
                 initStringList.add("java.awt.GridBagConstraints.BELOW_BASELINE_LEADING"); // NOI18N
                 initStringList.add("java.awt.GridBagConstraints.BELOW_BASELINE_TRAILING"); // NOI18N
             }
-            javaInitStrings = initStringList.toArray(new String[initStringList.size()]);
+            javaInitStrings = initStringList.toArray(new String[0]);
 
             otherValuesAllowed = false;
         }

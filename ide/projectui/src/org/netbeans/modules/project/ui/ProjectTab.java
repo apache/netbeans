@@ -453,7 +453,7 @@ public class ProjectTab extends TopComponent
                 EventQueue.invokeLater(new Runnable() {
                     @Override public void run() {
                         try {
-                            manager.setSelectedNodes(selectedNodes.toArray(new Node[selectedNodes.size()]));
+                            manager.setSelectedNodes(selectedNodes.toArray(new Node[0]));
                         } catch (PropertyVetoException x) {
                             LOG.log(Level.FINE, null, x);
                         }

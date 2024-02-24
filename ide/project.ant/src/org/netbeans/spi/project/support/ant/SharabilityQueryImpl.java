@@ -80,7 +80,7 @@ final class SharabilityQueryImpl implements SharabilityQueryImplementation2, Pro
             result.addAll(ProjectLibraryProvider.getUnsharablePathsWithinProject(h));
         }
         // XXX should remove overlaps somehow
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
 
     @Override public SharabilityQuery.Sharability getSharability(URI uri) {

@@ -20,7 +20,6 @@ package org.netbeans.modules.nativeexecution.api.util;
 
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -102,7 +101,7 @@ import java.util.concurrent.atomic.AtomicLong;
         out.printf("%20s|%8s|%8s|%10s|%s\n", "Category", "Count", "Time", "~Traffic", "Args"); // NOI18N
 
         LinkedList<Map.Entry<String, Counters>> dataList = new LinkedList<>(data.entrySet());
-        Collections.sort(dataList, new CategoriesStatComparator());
+        dataList.sort(new CategoriesStatComparator());
 
         for (Map.Entry<String, Counters> entry : dataList) {
             String cat = entry.getKey();
@@ -132,7 +131,7 @@ import java.util.concurrent.atomic.AtomicLong;
         out.printf("%20s|%8s|%8s|%10s|%s\n", "Category", "Count", "Time", "~Traffic", "Args"); // NOI18N
 
         LinkedList<Map.Entry<String, Counters>> dataList = new LinkedList<>(data.entrySet());
-        Collections.sort(dataList, new CategoriesStatComparator());
+        dataList.sort(new CategoriesStatComparator());
 
         for (Map.Entry<String, Counters> entry : dataList) {
             String cat = entry.getKey();

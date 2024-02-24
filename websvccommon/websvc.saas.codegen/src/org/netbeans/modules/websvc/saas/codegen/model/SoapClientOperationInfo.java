@@ -184,7 +184,7 @@ public class SoapClientOperationInfo {
             }
         }
 
-        return names.toArray(new String[names.size()]);
+        return names.toArray(new String[0]);
     }
 
     //TODO maybe parse SEI class (using Retouche) for @WebParam.Mode annotation
@@ -225,7 +225,7 @@ public class SoapClientOperationInfo {
             }
         }
 
-        return types.toArray(new Class[types.size()]);
+        return types.toArray(new Class[0]);
     }
 
     public Class getType(Project project, String typeName) {

@@ -509,7 +509,7 @@ public final class EjbJarProvider extends J2eeModuleProvider
             }
             files.add(FileUtil.toFile(FileUtil.getArchiveFile(fo)));
         }
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
 
     private class EjbJarResourceChangeReporter implements ResourceChangeReporterImplementation {

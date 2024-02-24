@@ -120,7 +120,7 @@ public class DialogBoundsPreserver implements WindowListener {
             GraphicsConfiguration gc = gd.getDefaultConfiguration();
             rects.add(Utilities.getUsableScreenBounds(gc));
         }
-        return rects.toArray(new Rectangle[rects.size()]);
+        return rects.toArray(new Rectangle[0]);
     }
     
 }

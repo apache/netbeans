@@ -121,7 +121,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
                         }
                         }
                     
-                    actions = newActions.toArray(new Action[newActions.size()]);
+                    actions = newActions.toArray(new Action[0]);
                     }
                 }
             final boolean finalIncludeFilters = includeFilters;

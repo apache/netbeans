@@ -90,7 +90,7 @@ public class J2SEDeployActionProvider implements ActionProvider {
         for (NativeBundleType nbt : nbts) {
             res.add(nbt.getCommand());
         }
-        return res.toArray(new String[res.size()]);
+        return res.toArray(new String[0]);
     }
 
     @NbBundle.Messages("LBL_No_Build_XML_Found=The project does not have a valid build script {0}.")

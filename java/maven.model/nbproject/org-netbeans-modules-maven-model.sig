@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.66
+#Version 1.67
 
 CLSS public abstract interface java.io.Serializable
 
@@ -79,6 +79,7 @@ meth public abstract void performOperation({org.netbeans.modules.maven.model.Mod
 
 CLSS public org.netbeans.modules.maven.model.Utilities
 meth public static org.netbeans.modules.xml.xam.ModelSource createModelSource(org.openide.filesystems.FileObject)
+meth public static org.netbeans.modules.xml.xam.ModelSource createModelSource(org.openide.filesystems.FileObject,javax.swing.text.Document)
 meth public static org.netbeans.modules.xml.xam.ModelSource createModelSource(org.openide.filesystems.FileObject,org.openide.loaders.DataObject,org.netbeans.editor.BaseDocument)
 meth public static org.netbeans.modules.xml.xam.ModelSource createModelSourceForMissingFile(java.io.File,boolean,java.lang.String,java.lang.String)
 meth public static void openAtPosition(org.netbeans.modules.maven.model.pom.POMModel,int)

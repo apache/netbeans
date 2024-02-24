@@ -49,12 +49,6 @@ enterprise/websvc.restlib/external/jakarta.xml.bind-api-2.3.3.jar ide/xml.jaxb.a
 # osgi.core-8.0.0.jar is used by multiple modules.
 enterprise/websvc.restlib/external/osgi.core-8.0.0.jar platform/libs.osgi/external/osgi.core-8.0.0.jar
 
-#Struts taglib is used by both web.core.syntax and web.struts
-enterprise/web.core.syntax/external/struts-taglib-1.3.10.jar enterprise/web.struts/external/struts-taglib-1.3.10.jar
-
-# Struts Tiles is used by both web.core.syntax and web.struts
-enterprise/web.core.syntax/external/struts-tiles-1.3.10.jar enterprise/web.struts/external/struts-tiles-1.3.10.jar
-
 # gradle is used at build-time, so we can ignore the duplicates
 extide/gradle/external/gradle-7.4-bin.zip enterprise/libs.amazon/external/ion-java-1.0.2.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/c.google.guava.failureaccess/external/failureaccess-1.0.1.jar
@@ -102,8 +96,8 @@ nb/ide.launcher/external/launcher-external-binaries-1-94a19f0.zip platform/o.n.b
 nb/ide.launcher/external/launcher-external-binaries-1-94a19f0.zip harness/apisupport.harness/external/launcher-external-binaries-1-94a19f0.zip
 
 # only one is part of the product:
-java/libs.javacapi/external/nb-javac-jdk-21u-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-21u-api.jar
-java/libs.javacapi/external/nb-javac-jdk-21u.jar java/libs.nbjavacapi/external/nb-javac-jdk-21u.jar
+java/libs.javacapi/external/nb-javac-jdk-22+33-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-22+33-api.jar
+java/libs.javacapi/external/nb-javac-jdk-22+33.jar java/libs.nbjavacapi/external/nb-javac-jdk-22+33.jar
 
 # Used only in unittests for mysql db specific tests
 ide/db.metadata.model/external/mysql-connector-j-8.0.31.jar ide/db.mysql/external/mysql-connector-j-8.0.31.jar

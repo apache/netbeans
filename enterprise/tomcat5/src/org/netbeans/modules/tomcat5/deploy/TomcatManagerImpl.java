@@ -47,6 +47,7 @@ import org.openide.util.NbBundle;
 import java.io.*;
 import java.net.Proxy;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Base64;
 import java.util.MissingResourceException;
 import java.util.logging.Level;
@@ -348,7 +349,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
      * @return properly escaped URL (<code>application/x-www-form-urlencoded</code>) in string form
      */
     private String createTempContextXml(String docBase, Context ctx) throws IOException {
-        File tmpContextXml = File.createTempFile("context", ".xml"); // NOI18N
+        File tmpContextXml = Files.createTempFile("context", ".xml").toFile(); // NOI18N
         tmpContextXml.deleteOnExit();
         if (!docBase.equals (ctx.getAttributeValue ("docBase"))) { //NOI18N
             ctx.setAttributeValue ("docBase", docBase); //NOI18N

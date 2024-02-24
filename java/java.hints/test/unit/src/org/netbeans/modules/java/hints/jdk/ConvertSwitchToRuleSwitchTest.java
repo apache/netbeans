@@ -60,7 +60,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -91,7 +91,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -122,7 +122,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -153,7 +153,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .assertWarnings();
     }
@@ -173,7 +173,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -204,7 +204,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -244,7 +244,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -284,7 +284,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .assertWarnings();
     }
@@ -304,7 +304,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .assertWarnings();
     }
@@ -326,7 +326,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -362,7 +362,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .assertWarnings();
     }
@@ -381,7 +381,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .assertWarnings();
     }
@@ -402,7 +402,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("4:9-4:15:verifier:Convert switch to rule switch")
                 .applyFix()
@@ -437,7 +437,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .assertWarnings();
     }
@@ -460,7 +460,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("5:13-5:19:verifier:Convert switch to rule switch")
                 .applyFix()
@@ -501,7 +501,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -536,7 +536,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "        }\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:8-3:14:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -570,7 +570,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "        }\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:8-3:14:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -601,7 +601,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "        }\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:8-3:14:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -636,7 +636,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("4:9-4:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -671,7 +671,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("2:9-2:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -701,7 +701,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -731,7 +731,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("2:9-2:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -764,7 +764,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -806,7 +806,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("4:9-4:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -851,7 +851,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("6:16-6:22:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -893,7 +893,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                         "         }\n" +
                         "     }\n" +
                         "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -924,7 +924,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                         "         }\n" +
                         "     }\n" +
                         "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -959,7 +959,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                         "         }\n" +
                         "     }\n" +
                         "}\n")
-                .sourceLevel("21")
+                .sourceLevel(21)
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -994,7 +994,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                         "         }\n" +
                         "     }\n" +
                         "}\n")
-                .sourceLevel("21")
+                .sourceLevel(21)
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -1030,7 +1030,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                         + "        }\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel("21")
+                .sourceLevel(21)
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("2:8-2:14:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()

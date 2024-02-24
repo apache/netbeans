@@ -46,8 +46,8 @@ public class DeclareStatement extends Statement {
 
     public DeclareStatement(int start, int end, List<Identifier> directiveNames, List<Expression> directiveValues, Statement action) {
         this(start, end,
-                directiveNames  == null ? null : directiveNames.toArray(new Identifier[directiveNames.size()]),
-                directiveValues == null ? null : directiveValues.toArray(new Expression[directiveValues.size()]),
+                directiveNames  == null ? null : directiveNames.toArray(new Identifier[0]),
+                directiveValues == null ? null : directiveValues.toArray(new Expression[0]),
                 action);
     }
 

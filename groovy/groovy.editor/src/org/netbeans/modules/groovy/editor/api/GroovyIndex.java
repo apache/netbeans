@@ -74,7 +74,7 @@ public final class GroovyIndex {
             return new GroovyIndex(QuerySupport.forRoots(
                     GroovyIndexer.Factory.NAME,
                     GroovyIndexer.Factory.VERSION,
-                    roots.toArray(new FileObject[roots.size()])));
+                    roots.toArray(new FileObject[0])));
         } catch (IOException ioe) {
             LOG.log(Level.WARNING, null, ioe);
             return EMPTY;

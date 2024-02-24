@@ -75,7 +75,7 @@ public final class TaskNode extends AbstractNode {
         if (fvmgr != null) {
             actions.add(new FavoriteAction(task));
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     public GradleTask getTask() {

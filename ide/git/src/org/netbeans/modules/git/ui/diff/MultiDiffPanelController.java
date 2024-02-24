@@ -901,7 +901,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
                 filtered.add(f);
             }
         }
-        return filtered.toArray(new File[filtered.size()]);
+        return filtered.toArray(new File[0]);
     }
     
     private boolean showingFileComponent() {
@@ -1374,12 +1374,12 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         for (DiffNode n : nodes) {
             sorted.add(cookies.get(n.getFile()));
         }
-        return sorted.toArray(new EditorCookie[sorted.size()]);
+        return sorted.toArray(new EditorCookie[0]);
     }
 
     private void setupsChanged (final Map<File, Setup> newSetups, final List<DiffNode> nodes) {
         final Map<File, EditorCookie> cookies = getCookiesFromSetups(newSetups);
-        final DiffNode[] nodeArray = nodes.toArray(new DiffNode[nodes.size()]);
+        final DiffNode[] nodeArray = nodes.toArray(new DiffNode[0]);
         final Object modelDataList = fileListComponent.prepareModel(nodeArray);
         final Object modelDataTree = fileTreeComponent.prepareModel(nodeArray);
         Mutex.EVENT.readAccess(new Runnable() {
@@ -1695,8 +1695,8 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
             EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run () {
-                    panel.cmbDiffTreeFirst.setModel(new DefaultComboBoxModel(modelRight.toArray(new Object[modelRight.size()])));
-                    panel.cmbDiffTreeSecond.setModel(new DefaultComboBoxModel(modelLeft.toArray(new Object[modelLeft.size()])));
+                    panel.cmbDiffTreeFirst.setModel(new DefaultComboBoxModel(modelRight.toArray(new Object[0])));
+                    panel.cmbDiffTreeSecond.setModel(new DefaultComboBoxModel(modelLeft.toArray(new Object[0])));
                     panel.cmbDiffTreeFirst.setEnabled(true);
                     panel.cmbDiffTreeSecond.setEnabled(true);
                 }

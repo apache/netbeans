@@ -37,6 +37,7 @@ import java.net.PasswordAuthentication;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1205,7 +1206,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                 }
             }
         }
-        return branches.toArray(new HgBranch[branches.size()]);
+        return branches.toArray(new HgBranch[0]);
     }
 
     private static HgTag[] processTags (List<String> lines, File repository, OutputLogger logger) throws HgException {
@@ -1266,7 +1267,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                 tags.add(new HgTag(t.name, info, t.local, !HG_TIP_CONST.equals(t.name)));
             }
         }
-        return tags.toArray(new HgTag[tags.size()]);
+        return tags.toArray(new HgTag[0]);
     }
 
     public static HgLogMessage[] getIncomingMessages(final File root, String toRevision, String branchName,
@@ -2372,7 +2373,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                 commitMessage = HG_COMMIT_DEFAULT_MESSAGE;
             }
             // Create temporary file.
-            tempfile = File.createTempFile(HG_COMMIT_TEMPNAME, HG_COMMIT_TEMPNAME_SUFFIX);
+            tempfile = Files.createTempFile(HG_COMMIT_TEMPNAME, HG_COMMIT_TEMPNAME_SUFFIX).toFile();
 
             // Write to temp file
             BufferedWriter out = new BufferedWriter(ENCODING == null 
@@ -2772,7 +2773,7 @@ public abstract class HgCommand<T> implements Callable<T> {
              }
         }
         List<HgLogMessage> messages = processLogMessages(repository, null, list, false);
-        return messages.toArray(new HgLogMessage[messages.size()]);
+        return messages.toArray(new HgLogMessage[0]);
     }
 
     public static HgBranch[] getBranches (File repository, OutputLogger logger) throws HgException {
@@ -3418,7 +3419,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                 }
             }
         }
-        return patches.toArray(new QPatch[patches.size()]);
+        return patches.toArray(new QPatch[0]);
     }
 
     public static Queue[] qListQueues (File repository) throws HgException {
@@ -3550,7 +3551,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         if (patches.isEmpty() && !list.isEmpty()) {
             Mercurial.LOG.log(Level.INFO, "parsePatches(): No qpatches found: {0}", list);
         }
-        return patches.toArray(new QPatch[patches.size()]);
+        return patches.toArray(new QPatch[0]);
     }
 
     private static Queue[] parseQueues (List<String> list) {
@@ -3567,7 +3568,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         if (queues.isEmpty() && !list.isEmpty()) {
             Mercurial.LOG.log(Level.INFO, "parseQueues(): No qqueue found: {0}", list);
         }
-        return queues.toArray(new Queue[queues.size()]);
+        return queues.toArray(new Queue[0]);
     }
 
     public static void qCreatePatch (File repository, Collection<File> includedFiles, Collection<File> excludedFiles,
@@ -3614,7 +3615,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                 commitMessage = HG_COMMIT_DEFAULT_MESSAGE;
             }
             // Create temporary file.
-            tempfile = File.createTempFile(HG_COMMIT_TEMPNAME, HG_COMMIT_TEMPNAME_SUFFIX);
+            tempfile = Files.createTempFile(HG_COMMIT_TEMPNAME, HG_COMMIT_TEMPNAME_SUFFIX).toFile();
 
             // Write to temp file
             BufferedWriter out = new BufferedWriter(ENCODING == null 
@@ -3944,9 +3945,8 @@ public abstract class HgCommand<T> implements Callable<T> {
 
                     String template = str.substring("--template=".length()); //NOI18N
 
-                    File tempFile = File.createTempFile(
-                                                "hg-output-style",      //NOI18N
-                                                null);    //extension (default)
+                    File tempFile = Files.createTempFile("hg-output-style", //NOI18N
+                            null).toFile();    //extension (default)
                     Writer writer = ENCODING == null 
                             ? new OutputStreamWriter(new FileOutputStream(tempFile)) 
                             : new OutputStreamWriter(new FileOutputStream(tempFile), ENCODING);

@@ -374,7 +374,7 @@ public class AnnotationColorsPanel extends javax.swing.JPanel implements ActionL
 
     private void updateColorList() {
         List<AttributeSet> allCats = getAllCategories();
-        lCategories.setListData(allCats.toArray(new AttributeSet[allCats.size()]));
+        lCategories.setListData(allCats.toArray(new AttributeSet[0]));
         lCategories.setPreferredSize(null);
         int width = lCategories.getPreferredSize().width;
         if (versioningSystemsList.getSelectedValue() == null) {

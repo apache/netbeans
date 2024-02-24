@@ -76,7 +76,7 @@ public final class HLFactory implements HighlightsLayerFactory {
             ));
         }
         
-        return layers.toArray(new HighlightsLayer[layers.size()]);
+        return layers.toArray(new HighlightsLayer[0]);
     }
     
     private static String getMimeType(JTextComponent c, Document d) {

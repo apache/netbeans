@@ -313,10 +313,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
             Set<String> disabledRoots = getRemoteDisabledSourceRoots();
             
             synchronized (this) {
-                unorderedOriginalSourcePath = createClassPath (
-                    allSourceRoots.toArray
-                        (new FileObject [allSourceRoots.size()])
-                );
+                unorderedOriginalSourcePath = createClassPath(allSourceRoots.toArray(new FileObject[0]));
                 
                 Map<String, Integer> orderIndexes = getRemoteSourceRootsOrder();
                 String[] unorderedOriginalRoots = getSourceRoots(unorderedOriginalSourcePath);
@@ -397,8 +394,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
                 }
             }
             this.additionalSourceRoots = new LinkedHashSet<String>(additionalSourceRoots);
-            return createClassPath(
-                    additionalSourcePath.toArray(new FileObject[0]));
+            return createClassPath(additionalSourcePath.toArray(new FileObject[0]));
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
             return null;
@@ -1077,12 +1073,8 @@ public class SourcePathProviderImpl extends SourcePathProvider {
                 newSourcePathPermutation[i] = i;
             }
             sourcePathPermutation = newSourcePathPermutation;
-            originalSourcePath =
-                    createClassPath(
-                        sourcePathOriginal.toArray(new FileObject[0]));
-            unorderedOriginalSourcePath =
-                    createClassPath(
-                        unorderedSourcePathOriginal.toArray(new FileObject[0]));
+            originalSourcePath = createClassPath(sourcePathOriginal.toArray(new FileObject[0]));
+            unorderedOriginalSourcePath = createClassPath(unorderedSourcePathOriginal.toArray(new FileObject[0]));
             projectSourceRoots = getSourceRoots(originalSourcePath);
         }
         if (newSteppingRoots.size() > 0 || removedSteppingRoots.size() > 0) {
@@ -1094,9 +1086,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
             }
             sourcePath.removeAll(removedSteppingRoots);
             oldCP_ptr[0] = smartSteppingSourcePath;
-            smartSteppingSourcePath =
-                    createClassPath(
-                        sourcePath.toArray(new FileObject[0]));
+            smartSteppingSourcePath = createClassPath(sourcePath.toArray(new FileObject[0]));
             newCP_ptr[0] = smartSteppingSourcePath;
         }
         Set<FileObject> disabledRoots = new HashSet<FileObject>(sourcePathOriginal);
@@ -1318,7 +1308,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
             Arrays.sort(indexedRoots, cmp);
         } else if (!indexed.isEmpty()) {
             // Sort only the elements with index != null
-            Collections.sort(indexed, cmp);
+            indexed.sort(cmp);
             // and merge them in in the correct order:
             int indexedi = 0;
             for (int i = 0; i < n; i++) {
@@ -1573,15 +1563,11 @@ public class SourcePathProviderImpl extends SourcePathProvider {
                     }
                     List<URL> sourcePaths = getURLRoots(originalSourcePath);
                     sourcePaths.addAll(added);
-                    originalSourcePath =
-                            SourcePathProviderImpl.createClassPath(
-                                sourcePaths.toArray(new URL[0]));
+                    originalSourcePath = SourcePathProviderImpl.createClassPath(sourcePaths.toArray(new URL[0]));
 
                     sourcePaths = getURLRoots(smartSteppingSourcePath);
                     sourcePaths.addAll(added);
-                    smartSteppingSourcePath =
-                            SourcePathProviderImpl.createClassPath(
-                                sourcePaths.toArray(new URL[0]));
+                    smartSteppingSourcePath = SourcePathProviderImpl.createClassPath(sourcePaths.toArray(new URL[0]));
                 }
                 changed = true;
             }

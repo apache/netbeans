@@ -161,7 +161,7 @@ public class ShelveChangesAction extends ContextAction {
                         }
                     }
                     if (!l.isEmpty()) {
-                        filteredRoots = l.toArray(new File[l.size()]);
+                        filteredRoots = l.toArray(new File[0]);
                         context = new Context(filteredRoots);
                         logger = getLogger();
                         shelveChanges(filteredRoots);

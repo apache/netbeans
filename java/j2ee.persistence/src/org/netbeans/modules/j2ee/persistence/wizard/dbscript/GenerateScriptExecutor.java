@@ -39,7 +39,7 @@ public class GenerateScriptExecutor {
         try {
 
             Class pClass = Thread.currentThread().getContextClassLoader().loadClass("javax.persistence.Persistence");//NOI18N
-            javax.persistence.Persistence p = (javax.persistence.Persistence) pClass.newInstance();
+            javax.persistence.Persistence p = (javax.persistence.Persistence) pClass.getDeclaredConstructor().newInstance();
 
             //
             map.put("javax.persistence.schema-generation.scripts.action", "create");
@@ -55,7 +55,7 @@ public class GenerateScriptExecutor {
                 p.generateSchema(pu.getName(), map);
                 handle.progress(95);
             }
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException ex) {
+        } catch (ReflectiveOperationException ex) {
                 problems.add( NbBundle.getMessage(GenerateScriptExecutor.class, "ERR_Classpath", file.getPath()));
         }
 

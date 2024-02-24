@@ -27,7 +27,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -284,7 +283,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
             v = getAnnotations (currentScheme);
         }
         toBeSaved.add(currentScheme);
-        lCategories.setListData (v.toArray(new AttributeSet[v.size()]));
+        lCategories.setListData (v.toArray(new AttributeSet[0]));
         if (lCategories.getModel ().getSize () > 0)
             lCategories.setSelectedIndex (0);
         refreshUI ();
@@ -483,7 +482,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
             Collection<AttributeSet> c = colorModel.getAnnotations(currentScheme);
             if (c == null) return null;
             List<AttributeSet> l = new ArrayList<AttributeSet>(c);
-            Collections.sort(l, new CategoryComparator());
+            l.sort(new CategoryComparator());
             schemes.put(scheme, new ArrayList<AttributeSet>(l));
         }
         return schemes.get(scheme);
@@ -495,7 +494,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
         if (!profileToDefaults.containsKey(profile)) {
             Collection<AttributeSet> c = colorModel.getAnnotationsDefaults(profile);
             List<AttributeSet> l = new ArrayList<AttributeSet>(c);
-            Collections.sort(l, new CategoryComparator());
+            l.sort(new CategoryComparator());
             profileToDefaults.put(profile, l);
         }
         List<AttributeSet> defaultprofile = profileToDefaults.get(profile);

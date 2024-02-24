@@ -210,7 +210,7 @@ public class ServerLocationManager  {
 	    try {
 		data.cachedClassLoader =new ExtendedClassLoader( new Empty().getClass().getClassLoader());
 		updatePluginLoader( platformLocation, data.cachedClassLoader);
-		data.deploymentFactory =  (DeploymentFactory) data.cachedClassLoader.loadClass("com.sun.enterprise.deployapi.SunDeploymentFactory").newInstance();//NOI18N
+		data.deploymentFactory =  (DeploymentFactory) data.cachedClassLoader.loadClass("com.sun.enterprise.deployapi.SunDeploymentFactory").getDeclaredConstructor().newInstance();//NOI18N
                 data.serverOnlyClassLoader = new ExtendedClassLoader();
                 updatePluginLoader(platformLocation, data.serverOnlyClassLoader);
 	    } catch (Exception ex2) {

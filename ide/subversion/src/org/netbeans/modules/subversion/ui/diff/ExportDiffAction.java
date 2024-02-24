@@ -177,7 +177,7 @@ public class ExportDiffAction extends ContextAction {
                 Setup setup = (Setup) i.next();
                 setupFiles.add(setup.getBaseFile()); 
             }
-            root = getCommonParent(setupFiles.toArray(new File[setupFiles.size()]));
+            root = getCommonParent(setupFiles.toArray(new File[0]));
         } else {
             Context context = getContext(nodes);
             File [] files = SvnUtils.getModifiedFiles(context, FileInformation.STATUS_LOCAL_CHANGE);
@@ -218,7 +218,7 @@ public class ExportDiffAction extends ContextAction {
             out.write(("# Above lines and this line are ignored by the patching process." + sep).getBytes("utf8"));  // NOI18N
 
 
-            Collections.sort(setups, new Comparator<Setup>() {
+            setups.sort(new Comparator<Setup>() {
                 @Override
                 public int compare(Setup o1, Setup o2) {
                     return o1.getBaseFile().compareTo(o2.getBaseFile());

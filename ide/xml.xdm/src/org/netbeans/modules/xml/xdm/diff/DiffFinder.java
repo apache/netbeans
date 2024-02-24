@@ -22,9 +22,7 @@ package org.netbeans.modules.xml.xdm.diff;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import org.netbeans.modules.xml.spi.dom.NodeListImpl;
 import org.netbeans.modules.xml.xam.dom.ElementIdentity;
 import org.netbeans.modules.xml.xdm.nodes.Document;
@@ -139,7 +137,7 @@ public class DiffFinder {
             }
             
             //sort pairs
-            Collections.sort(pairList, new PairComparator());
+            pairList.sort(new PairComparator());
             
             for ( int i=0; i < pairList.size(); i++ ) {
                 int[] pair = pairList.get(i);
@@ -381,7 +379,7 @@ public class DiffFinder {
         
         for (Node parent:parentList) {
             List<Difference> childDeList = deMap.get(parent);
-            Collections.sort(childDeList, new PairComparator2());
+            childDeList.sort(new PairComparator2());
             HashMap<Difference, Integer> oldPosMap = new HashMap<Difference, Integer>();
             for ( int i=0; i < childDeList.size(); i++ ) {
                 Difference de = childDeList.get(i);

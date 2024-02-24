@@ -390,7 +390,7 @@ public class ClassHierarchyPanel extends JPanel implements HelpCtx.Provider {
             childernList.add(new ErrTypeNode(parent, classElement));
         }
         stackDepth--;
-        retval.setChildern(sortTypes(childernList.toArray(new TypeNode[childernList.size()])));
+        retval.setChildern(sortTypes(childernList.toArray(new TypeNode[0])));
         return retval;
     }
 

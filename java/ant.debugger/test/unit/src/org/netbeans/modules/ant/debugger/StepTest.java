@@ -61,11 +61,11 @@ public class StepTest extends NbTestCase {
     }
     
     public static final class Lkp extends ProxyLookup {
-        public Lkp() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        public Lkp() throws ReflectiveOperationException {
             setLookups(new Lookup[] {
                 Lookups.fixed(new Object[] {
                     new IFL(),
-                    Class.forName("org.netbeans.modules.masterfs.MasterURLMapper").newInstance(),
+                    Class.forName("org.netbeans.modules.masterfs.MasterURLMapper").getDeclaredConstructor().newInstance(),
                     new DebuggerAntLogger ()
                 }),
             });

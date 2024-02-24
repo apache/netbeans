@@ -28,7 +28,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -92,12 +91,11 @@ public class ElementHeadersTest extends NbTestCase {
         List<Object> extras = new ArrayList<>();
         extras.add(JavaDataLoader.class);
         extras.addAll(extraServicesInLookup);
-        SourceUtilsTestUtil.prepareTest(
-                new String[] { 
+        SourceUtilsTestUtil.prepareTest(new String[] { 
                     "org/netbeans/modules/java/platform/resources/layer.xml",
                     "org/netbeans/modules/java/j2seplatform/resources/layer.xml" 
                 }, 
-                extras.toArray(new Object[extras.size()])
+                extras.toArray(new Object[0])
         );
 
         clearWorkDir();
@@ -305,7 +303,7 @@ public class ElementHeadersTest extends NbTestCase {
     
     private List<StructureElement> sortChildren(StructureElement parent) {
         List<StructureElement> ch = new ArrayList<>(parent.getChildren());
-        Collections.sort(ch, new Comparator<StructureElement>() {
+        ch.sort(new Comparator<StructureElement>() {
             @Override
             public int compare(StructureElement o1, StructureElement o2) {
                 return o1.getSelectionStartOffset() - o2.getSelectionStartOffset();

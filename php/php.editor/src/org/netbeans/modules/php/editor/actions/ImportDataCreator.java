@@ -64,7 +64,7 @@ public class ImportDataCreator {
 
     private static Collection<FullyQualifiedElement> sortFQElements(final Collection<FullyQualifiedElement> filteredFQElements) {
         final List<FullyQualifiedElement> sortedFQElements = new ArrayList<>(filteredFQElements);
-        Collections.sort(sortedFQElements, new FQElementsComparator());
+        sortedFQElements.sort(new FQElementsComparator());
         return sortedFQElements;
     }
 

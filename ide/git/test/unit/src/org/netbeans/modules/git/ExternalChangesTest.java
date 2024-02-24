@@ -455,7 +455,7 @@ public class ExternalChangesTest extends AbstractGitTestCase {
     }
 
     private void waitForInitialScan() throws Exception {
-        StatusRefreshLogHandler handler = new StatusRefreshLogHandler(getWorkDir());
+        StatusRefreshLogHandler handler = new StatusRefreshLogHandler(testBase);
         Git.STATUS_LOG.addHandler(handler);
         handler.setFilesToRefresh(Collections.singleton(repositoryLocation));
         Git.getInstance().getVCSInterceptor().pingRepositoryRootFor(repositoryLocation);

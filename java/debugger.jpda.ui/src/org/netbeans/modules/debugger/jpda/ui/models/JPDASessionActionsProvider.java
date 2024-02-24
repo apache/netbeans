@@ -80,7 +80,7 @@ public class JPDASessionActionsProvider implements NodeActionsProviderFilter {
         for (int i = 1; i < actions.length; i++) {
             myActions.add(actions[i]);
         }
-        return (Action[]) myActions.toArray(new Action[myActions.size()]);
+        return (Action[]) myActions.toArray(new Action[0]);
     }
 
     private String localize(String s) {

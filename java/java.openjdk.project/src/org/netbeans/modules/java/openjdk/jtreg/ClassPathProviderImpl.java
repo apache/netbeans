@@ -112,7 +112,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
                                                               "build/jdk.dev/classes/"}) {
                             roots.add(testRoot.getParent().toURI().resolve(rootPaths).toURL());
                         }
-                        return ClassPathSupport.createProxyClassPath(ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()])), langtoolsBCP);
+                        return ClassPathSupport.createProxyClassPath(ClassPathSupport.createClassPath(roots.toArray(new URL[0])), langtoolsBCP);
                     } catch (MalformedURLException ex) {
                         Exceptions.printStackTrace(ex);
                     }

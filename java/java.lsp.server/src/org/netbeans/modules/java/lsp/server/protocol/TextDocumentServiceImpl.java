@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.tree.ClassTree;
@@ -31,6 +32,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URL;
@@ -40,6 +42,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -246,6 +250,7 @@ import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
 import org.openide.text.NbDocument;
@@ -257,6 +262,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Union2;
+import org.openide.util.Utilities;
 import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -315,7 +321,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         public void indexingComplete(Set<URL> indexedRoots) {
             TextDocumentServiceImpl[] delegates;
             synchronized (this) {
-                delegates = this.delegates.toArray(new TextDocumentServiceImpl[this.delegates.size()]);
+                delegates = this.delegates.toArray(new TextDocumentServiceImpl[0]);
             }
             for (TextDocumentServiceImpl delegate : delegates) {
                 //augmenting the lookup with NbCodeLanguageClient, so that the
@@ -920,8 +926,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             Document rawDoc = server.getOpenedDocuments().getDocument(uri);
             if (file != null && rawDoc instanceof StyledDocument) {
                 StyledDocument doc = (StyledDocument)rawDoc;
-                StructureProvider structureProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookup(StructureProvider.class);
-                if (structureProvider != null) {
+                Collection<? extends StructureProvider> structureProviders = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookupAll(StructureProvider.class);
+                for (StructureProvider structureProvider : structureProviders) {
                     List<StructureElement> structureElements = structureProvider.getStructure(doc);
                     if (!structureElements.isEmpty()) {
                         for (StructureElement structureElement : structureElements) {
@@ -930,7 +936,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                 result.add(Either.forRight(ds));
                             }
                         }
-                    };
+                    }
                 }
             }
             resultFuture.complete(result);
@@ -1044,7 +1050,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                 data.put(INDEX, index.getAndIncrement());
                                 action.setData(data);
                             } else if (inputAction.getEdit() != null) {
-                                action.setEdit(fromAPI(inputAction.getEdit(), uri, client));
+                                action.setEdit(Utils.workspaceEditFromApi(inputAction.getEdit(), uri, client));
                             }
                             result.add(Either.forRight(action));
                         }
@@ -1154,7 +1160,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     LazyCodeAction inputAction = lastCodeActions.get(data.getAsJsonPrimitive(INDEX).getAsInt());
                     if (inputAction != null) {
                         try {
-                            unresolved.setEdit(fromAPI(inputAction.getLazyEdit().get(), data.getAsJsonPrimitive(URL).getAsString(), client));
+                            unresolved.setEdit(Utils.workspaceEditFromApi(inputAction.getLazyEdit().get(), data.getAsJsonPrimitive(URL).getAsString(), client));
                         } catch (Exception e) {
                             future.completeExceptionally(e);
                             return;
@@ -1961,7 +1967,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     private static final int DELAY = 500;
-
+    public boolean hintsSettingsRead = false;
+    private FileObject hintsPrefsFile = null;
     
     /**
      * Recomputes a specific kinds of diagnostics for the file, and returns a complete set diagnostics for that
@@ -1981,17 +1988,21 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             // the file does not exist.
             return result;
         }
+        if(!this.hintsSettingsRead){
+            // hints preferences file is not read yet
+            return result;
+        }
         try {
             String keyPrefix = key(errorKind);
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             long originalVersion = orgV != -1 ? orgV : documentVersion(doc);
             Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
-            ErrorProvider errorProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc))
-                                                    .lookup(ErrorProvider.class);
+            Collection<? extends ErrorProvider> errorProviders = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc))
+                                                    .lookupAll(ErrorProvider.class);
             List<? extends org.netbeans.api.lsp.Diagnostic> errors;
-            if (errorProvider != null) {
-                ErrorProvider.Context context = new ErrorProvider.Context(file, offset, errorKind);
+            if (!errorProviders.isEmpty()) {
+                ErrorProvider.Context context = new ErrorProvider.Context(file, offset, errorKind, hintsPrefsFile);
                 class CancelListener implements DocumentListener {
                     @Override
                     public void insertUpdate(DocumentEvent e) {
@@ -2013,7 +2024,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 try {
                     doc.addDocumentListener(l);
                     l.checkCancel();
-                    errors = errorProvider.computeErrors(context);
+                    errors = errorProviders.stream().flatMap(errorPorvider -> errorPorvider.computeErrors(context).stream()).collect(Collectors.toList());
                 } finally {
                     doc.removeDocumentListener(l);
                 }
@@ -2072,6 +2083,24 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             throw new IllegalStateException(ex);
         }
         return result;
+    }
+    
+    void updateJavaHintPreferences(JsonObject configuration) {
+        this.hintsSettingsRead = true;
+        
+        if (configuration != null && configuration.has("preferences") && configuration.get("preferences").isJsonPrimitive()) {
+            JsonElement pathPrimitive = configuration.get("preferences");
+            String path = pathPrimitive.getAsString();
+            Path p = Paths.get(path);
+            FileObject preferencesFile = FileUtil.toFileObject(p);
+            if (preferencesFile != null && preferencesFile.isValid() && preferencesFile.canRead() && preferencesFile.getName().endsWith(".xml")) {
+                this.hintsPrefsFile = preferencesFile;
+            }
+            else {
+                this.hintsPrefsFile = null;
+            }
+        }
+        reRunDiagnostics();
     }
     
     private String key(ErrorProvider.Kind errorKind) {
@@ -2218,36 +2247,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
     }
 
-    static WorkspaceEdit fromAPI(org.netbeans.api.lsp.WorkspaceEdit edit, String uri, NbCodeLanguageClient client) {
-        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-        for (Union2<org.netbeans.api.lsp.TextDocumentEdit, org.netbeans.api.lsp.ResourceOperation> parts : edit.getDocumentChanges()) {
-            if (parts.hasFirst()) {
-                String docUri = parts.first().getDocument();
-                try {
-                    FileObject file = Utils.fromUri(docUri);
-                    if (file == null) {
-                        file = Utils.fromUri(uri);
-                    }
-                    FileObject fo = file;
-                    if (fo != null) {
-                        List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), te.getNewText())).collect(Collectors.toList());
-                        TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
-                        documentChanges.add(Either.forLeft(tde));
-                    }
-                } catch (Exception ex) {
-                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-                }
-            } else {
-                if (parts.second() instanceof org.netbeans.api.lsp.ResourceOperation.CreateFile) {
-                    documentChanges.add(Either.forRight(new CreateFile(((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile())));
-                } else {
-                    throw new IllegalStateException(String.valueOf(parts.second()));
-                }
-            }
-        }
-        return new WorkspaceEdit(documentChanges);
-    }
-
     static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {//TODO: is this still used?
         FileObject[] file = new FileObject[1];
         LineMap[] lm = new LineMap[1];
@@ -2352,7 +2351,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                     long column = 0;
                                     int lastLine = 0;
                                     long currentLineStart = 0;
-                                    long nextLineStart = info.getCompilationUnit().getLineMap().getStartPosition(line + 2);
+                                    long nextLineStart = getStartPosition(line + 2);
                                     Map<Token, ColoringAttributes.Coloring> ordered = new TreeMap<>((t1, t2) -> t1.offset(null) - t2.offset(null));
                                     ordered.putAll(colorings);
                                     for (Entry<Token, ColoringAttributes.Coloring> e : ordered.entrySet()) {
@@ -2360,7 +2359,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                         while (nextLineStart < currentOffset) {
                                             line++;
                                             currentLineStart = nextLineStart;
-                                            nextLineStart = info.getCompilationUnit().getLineMap().getStartPosition(line + 2);
+                                            nextLineStart = getStartPosition(line + 2);
                                             column = 0;
                                         }
                                         Optional<Integer> tokenType = e.getValue().stream().map(c -> coloring2TokenType[c.ordinal()]).collect(Collectors.maxBy((v1, v2) -> v1.intValue() - v2.intValue()));
@@ -2380,6 +2379,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                             lastLine = line;
                                             column = currentOffset - currentLineStart;
                                         }
+                                    }
+                                }
+
+                                private long getStartPosition(int line) {
+                                    try {
+                                        return line < 0 ? -1 : info.getCompilationUnit().getLineMap().getStartPosition(line);
+                                    } catch (Exception e) {
+                                        return info.getText().length();
                                     }
                                 }
                             });

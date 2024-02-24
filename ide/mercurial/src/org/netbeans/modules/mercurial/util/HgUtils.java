@@ -31,6 +31,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.ArrayList;
@@ -1341,14 +1342,14 @@ itor tabs #66700).
             File fileToOpen, HgRevision revisionToOpen, boolean showAnnotations) throws IOException {
         File file = org.netbeans.modules.mercurial.VersionsCache.getInstance().getFileRevision(fileRevision1, revision1);
         if (file == null) { // can be null if the file does not exist or is empty in the given revision
-            file = File.createTempFile("tmp", "-" + fileRevision1.getName()); //NOI18N
+            file = Files.createTempFile("tmp", "-" + fileRevision1.getName()).toFile(); //NOI18N
             file.deleteOnExit();
         }
         fileRevision1 = file;
         
         file = org.netbeans.modules.mercurial.VersionsCache.getInstance().getFileRevision(fileToOpen, revisionToOpen);
         if (file == null) { // can be null if the file does not exist or is empty in the given revision
-            file = File.createTempFile("tmp", "-" + fileToOpen.getName()); //NOI18N
+            file = Files.createTempFile("tmp", "-" + fileToOpen.getName()).toFile(); //NOI18N
             file.deleteOnExit();
         }
         int matchingLine = DiffUtils.getMatchingLine(fileRevision1, file, lineNumber);
@@ -1360,7 +1361,7 @@ itor tabs #66700).
         File file = org.netbeans.modules.mercurial.VersionsCache.getInstance().getFileRevision(originalFile, revision);
 
         if (file == null) { // can be null if the file does not exist or is empty in the given revision
-            file = File.createTempFile("tmp", "-" + originalFile.getName()); //NOI18N
+            file = Files.createTempFile("tmp", "-" + originalFile.getName()).toFile(); //NOI18N
             file.deleteOnExit();
         }
         openFile(file, originalFile, lineNumber, revision, showAnnotations);

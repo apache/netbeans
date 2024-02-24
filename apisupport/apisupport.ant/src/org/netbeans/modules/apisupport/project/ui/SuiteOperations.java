@@ -167,7 +167,7 @@ public final class SuiteOperations implements DeleteOperationImplementation,
                     }
 
                 });
-                OpenProjects.getDefault().open(toOpen.toArray(new Project[toOpen.size()]), false);
+                OpenProjects.getDefault().open(toOpen.toArray(new Project[0]), false);
             }
             boolean isRename = original.getProjectDirectory().getParent().equals(
                     suite.getProjectDirectory().getParent());

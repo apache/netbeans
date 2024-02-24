@@ -283,7 +283,7 @@ final class RendererFactory {
 
                 if (c != null) {
                     try {
-                        result = (PropertyEditor) c.newInstance();
+                        result = (PropertyEditor) c.getDeclaredConstructor().newInstance();
 
                         //Check the values first
                         Object mdlValue = pm.getValue();

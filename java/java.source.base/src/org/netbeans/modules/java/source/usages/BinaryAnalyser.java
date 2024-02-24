@@ -39,7 +39,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1186,7 +1185,7 @@ public class BinaryAnalyser {
         protected final boolean execute(Predicate<ClassFile> accept) throws IOException {
             final boolean res = executeImpl(accept);
             if (res) {
-                Collections.sort(result, COMPARATOR);
+                result.sort(COMPARATOR);
             }
             return res;
         }

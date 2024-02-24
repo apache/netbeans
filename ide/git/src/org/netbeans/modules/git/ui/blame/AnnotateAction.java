@@ -156,7 +156,7 @@ public class AnnotateAction extends GitAction {
         for (int i = 0; i < result.getLineCount(); ++i) {
             lines.add(new AnnotateLine(result.getLineDetails(i), i + 1));
         }
-        return lines.toArray(new AnnotateLine[lines.size()]);
+        return lines.toArray(new AnnotateLine[0]);
     }
 
     /**

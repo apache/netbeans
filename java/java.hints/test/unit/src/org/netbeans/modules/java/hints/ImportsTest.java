@@ -63,7 +63,7 @@ public class ImportsTest extends NbTestCase {
     public void testRedundantLangImportRemove() throws Exception {
         assumeTrue(Runtime.version().feature() >= 21); // API dependency
         HintTest.create()
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .options("--enable-preview")
                 .input(
                     "package test;\n" +

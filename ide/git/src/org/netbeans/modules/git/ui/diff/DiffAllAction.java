@@ -50,7 +50,7 @@ public class DiffAllAction extends GitAction {
     protected void performContextAction (Node[] nodes) {
         VCSContext context = getCurrentContext(nodes);
         Set<File> roots = GitUtils.getRepositoryRoots(context);
-        SystemAction.get(DiffAction.class).diff(GitUtils.getContextForFiles(roots.toArray(new File[roots.size()])));
+        SystemAction.get(DiffAction.class).diff(GitUtils.getContextForFiles(roots.toArray(new File[0])));
     }
 
     @Override

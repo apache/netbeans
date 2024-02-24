@@ -104,12 +104,12 @@ public class EnterpriseBeansImpl implements EnterpriseBeans {
 
     public Session[] getSession() {
         Collection<SessionImpl> sessions = sessionManager.getObjects();
-        return sessions.toArray(new Session[sessions.size()]);
+        return sessions.toArray(new Session[0]);
     }
 
     public MessageDriven[] getMessageDriven() {
         Collection<MessageDrivenImpl> messageDrivens = messageDrivenManager.getObjects();
-        return messageDrivens.toArray(new MessageDriven[messageDrivens.size()]);
+        return messageDrivens.toArray(new MessageDriven[0]);
     }
 
     public Entity[] getEntity() {

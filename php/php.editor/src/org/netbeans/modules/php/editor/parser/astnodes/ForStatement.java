@@ -54,9 +54,9 @@ public class ForStatement extends Statement {
 
     public ForStatement(int start, int end, List<Expression> initializations, List<Expression> conditions, List<Expression> increasements, Statement action) {
         this(start, end,
-                initializations == null ? null : initializations.toArray(new Expression[initializations.size()]),
-                conditions == null ? null : conditions.toArray(new Expression[conditions.size()]),
-                increasements == null ? null : increasements.toArray(new Expression[increasements.size()]),
+                initializations == null ? null : initializations.toArray(new Expression[0]),
+                conditions == null ? null : conditions.toArray(new Expression[0]),
+                increasements == null ? null : increasements.toArray(new Expression[0]),
                 action);
     }
 

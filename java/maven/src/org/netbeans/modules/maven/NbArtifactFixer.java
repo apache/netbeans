@@ -22,6 +22,7 @@ package org.netbeans.modules.maven;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -133,7 +134,7 @@ public class NbArtifactFixer implements ArtifactFixer {
         String k = groupId + ':' + artifactId + ':' + version;
         File fallbackPOM = fallbackPOMs.get(k);
         if (fallbackPOM == null) {
-            fallbackPOM = File.createTempFile("fallback", ".netbeans.pom");
+            fallbackPOM = Files.createTempFile("fallback", ".netbeans.pom").toFile();
             fallbackPOM.deleteOnExit();
             PrintWriter w = new PrintWriter(fallbackPOM);
             try {

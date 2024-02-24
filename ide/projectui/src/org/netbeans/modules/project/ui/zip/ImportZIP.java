@@ -264,7 +264,7 @@ public class ImportZIP extends JPanel {
         } finally {
             handle.finish();
         }
-        OpenProjects.getDefault().open(projects.toArray(new Project[projects.size()]), false, true);
+        OpenProjects.getDefault().open(projects.toArray(new Project[0]), false, true);
     }
 
     @Messages({

@@ -22,7 +22,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -79,7 +78,7 @@ public class GridGraphLayoutUtility {
             }
             Point index = new Point();
             ArrayList<N> connected = new ArrayList<N> (node2connected.get(node));
-            Collections.sort(connected, new Comparator<N>() {
+            connected.sort(new Comparator<N>() {
                 public int compare(N node1, N node2) {
                     return node2connected.get(node1).size() - node2connected.get(node2).size();
                 }

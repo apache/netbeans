@@ -441,7 +441,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 }
             }
         }
-        return toRet.toArray(new J2eeModule[toRet.size()]);
+        return toRet.toArray(new J2eeModule[0]);
     }
 
     @Override

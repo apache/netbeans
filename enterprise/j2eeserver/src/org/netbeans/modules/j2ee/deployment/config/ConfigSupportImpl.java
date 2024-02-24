@@ -159,7 +159,7 @@ public final class ConfigSupportImpl implements J2eeModuleProvider.ConfigSupport
                 files.add(FileUtil.toFileObject(configs[j]));
             }
         }
-        return (FileObject[]) files.toArray(new FileObject[files.size()]);
+        return (FileObject[]) files.toArray(new FileObject[0]);
     }
     
     public String getDeploymentName() {
@@ -856,7 +856,7 @@ public final class ConfigSupportImpl implements J2eeModuleProvider.ConfigSupport
                 files.add(file);
             }
         }
-        return (File[])files.toArray(new File[files.size()]);
+        return (File[])files.toArray(new File[0]);
     }
     
     /**

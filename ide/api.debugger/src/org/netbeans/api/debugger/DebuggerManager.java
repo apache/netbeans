@@ -487,7 +487,7 @@ public final class DebuggerManager implements ContextProvider {
      */
     public DebuggerEngine[] getDebuggerEngines () {
         synchronized (engines) {
-            return (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            return (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
         }
     }
     
@@ -1643,9 +1643,9 @@ public final class DebuggerManager implements ContextProvider {
         DebuggerEngine[] ne;
         synchronized (engines) {
             if (engines.contains (engine)) return;
-            old = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            old = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
             engines.add (engine);
-            ne = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            ne = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
         }
         fireEngineAdded (engine, old, ne);
     }
@@ -1655,9 +1655,9 @@ public final class DebuggerManager implements ContextProvider {
         DebuggerEngine[] ne;
         synchronized (engines) {
             if (!engines.contains (engine)) return;
-            old = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            old = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
             engines.remove (engine);
-            ne = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            ne = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
         }
         fireEngineRemoved (engine, old, ne);
     }

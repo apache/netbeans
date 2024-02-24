@@ -572,7 +572,7 @@ implements FileChangeListener, DataObject.Container {
         if (LOG) {
             err.fine("carefullySort on " + folder);
         }
-        Collections.sort (l, c);
+        l.sort(c);
         Map<FileObject,DataObject> files = new LinkedHashMap<FileObject,DataObject>(l.size());
         for (DataObject d : l) {
             FileObject f = d.getPrimaryFile();

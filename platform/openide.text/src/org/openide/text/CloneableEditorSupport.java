@@ -845,7 +845,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
             }
         }
 
-        return ll.isEmpty() ? null : ll.toArray(new JEditorPane[ll.size()]);
+        return ll.isEmpty() ? null : ll.toArray(new JEditorPane[0]);
     }
 
     /**
@@ -1759,7 +1759,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
             ChangeListener[] ls;
 
             synchronized (this) {
-                ls = listeners.toArray(new ChangeListener[listeners.size()]);
+                ls = listeners.toArray(new ChangeListener[0]);
             }
 
             for (ChangeListener l : ls) {

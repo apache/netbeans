@@ -119,7 +119,7 @@ public final class AdvancedTasksPanel extends JPanel {
     private void init(String tasksLabel, List<String> tasks, boolean showSimpleTasks) {
         assert EventQueue.isDispatchThread();
         Mnemonics.setLocalizedText(this.tasksLabel, tasksLabel);
-        tasksComboBox.setModel(new DefaultComboBoxModel(tasks.toArray(new String[tasks.size()])));
+        tasksComboBox.setModel(new DefaultComboBoxModel(tasks.toArray(new String[0])));
         tasksList.setModel(tasksListModel);
         tasksList.setCellRenderer(new AdvancedTaskListCellRenderer());
         showSimpleTasksCheckBox.setSelected(showSimpleTasks);

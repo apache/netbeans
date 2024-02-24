@@ -238,6 +238,6 @@ public class JavaUtil {
         List<SoapClientJavaOperationInfo> infos = new ArrayList<SoapClientJavaOperationInfo>();
         infos.add(new SoapClientJavaOperationInfo(m, project));
         
-        return infos.toArray(new SoapClientJavaOperationInfo[infos.size()]);
+        return infos.toArray(new SoapClientJavaOperationInfo[0]);
     }
 }

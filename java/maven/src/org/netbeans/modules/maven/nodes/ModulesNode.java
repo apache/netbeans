@@ -203,7 +203,7 @@ public class ModulesNode extends AbstractNode {
             lst.add(OpenPOMAction.instance());
             lst.add(new RemoveModuleAction(parent, project));
 //            lst.addAll(Arrays.asList(super.getActions(b)));
-            return lst.toArray(new Action[lst.size()]);
+            return lst.toArray(new Action[0]);
         }
 
         @Override

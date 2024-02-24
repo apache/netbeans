@@ -23,10 +23,10 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreePath;
 import java.awt.Color;
 import java.io.CharConversionException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 import javax.lang.model.element.Element;
@@ -39,7 +39,6 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
 import javax.swing.Action;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -58,6 +57,7 @@ import org.netbeans.modules.micronaut.db.Utils;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.editor.completion.CompletionDocumentation;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionProvider;
@@ -119,8 +119,9 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
             MicronautDataCompletionTask task = new MicronautDataCompletionTask();
             resultSet.addAllItems(task.query(doc, caretOffset, new MicronautDataCompletionTask.ItemFactory<CompletionItem>() {
                 @Override
-                public CompletionItem createControllerMethodItem(CompilationInfo info, VariableElement delegateRepository, ExecutableElement delegateMethod, String id, int offset) {
-                    String methodName = Utils.getEndpointMethodName(delegateMethod.getSimpleName().toString(), id);
+                public CompletionItem createControllerMethodItem(CompilationInfo info, VariableElement delegateRepository, ExecutableElement delegateMethod, String controllerId, String id, int offset) {
+                String delegateMethodName = delegateMethod.getSimpleName().toString();
+                    String methodName = Utils.getControllerDataEndpointMethodName(delegateMethodName, id);
                     TypeMirror delegateRepositoryType = delegateRepository.asType();
                     if (delegateRepositoryType.getKind() == TypeKind.DECLARED) {
                         ExecutableType type = (ExecutableType) info.getTypes().asMemberOf((DeclaredType) delegateRepositoryType, delegateMethod);
@@ -137,7 +138,7 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                                 break;
                             }
                             cnt++;
-                            String paramTypeName = MicronautDataCompletionTask.getTypeName(info, tm, false, delegateMethod.isVarArgs() && !tIt.hasNext()).toString();
+                            String paramTypeName = Utils.getTypeName(info, tm, false, delegateMethod.isVarArgs() && !tIt.hasNext()).toString();
                             String paramName = it.next().getSimpleName().toString();
                             label.append(escape(paramTypeName)).append(' ').append(PARAMETER_NAME_COLOR).append(paramName).append(COLOR_END);
                             sortParams.append(paramTypeName);
@@ -148,21 +149,14 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                         }
                         label.append(')');
                         sortParams.append(')');
-                        TypeMirror returnType = type.getReturnType();
-                        if ("findAll".contentEquals(delegateMethod.getSimpleName()) && !delegateMethod.getParameters().isEmpty() && returnType.getKind() == TypeKind.DECLARED) {
-                            TypeElement te = (TypeElement) ((DeclaredType) returnType).asElement();
-                            Optional<ExecutableElement> getContentMethod = ElementFilter.methodsIn(te.getEnclosedElements()).stream().filter(m -> "getContent".contentEquals(m.getSimpleName()) && m.getParameters().isEmpty()).findAny();
-                            if (getContentMethod.isPresent()) {
-                                returnType = (ExecutableType) info.getTypes().asMemberOf((DeclaredType) returnType, getContentMethod.get());
-                            }
-                        }
+                        TypeMirror returnType = Utils.getControllerDataEndpointReturnType(info, delegateMethodName, type);
                         ElementHandle<VariableElement> repositoryHandle = ElementHandle.create(delegateRepository);
                         ElementHandle<ExecutableElement> methodHandle = ElementHandle.create(delegateMethod);
                         return CompletionUtilities.newCompletionItemBuilder(methodName)
                                 .startOffset(offset)
                                 .iconResource(METHOD_PUBLIC)
                                 .leftHtmlText(label.toString())
-                                .rightHtmlText(MicronautDataCompletionTask.getTypeName(info, returnType, false, false).toString())
+                                .rightHtmlText(Utils.getTypeName(info, returnType, false, false).toString())
                                 .sortPriority(100)
                                 .sortText(String.format("%s#%02d%s", methodName, cnt, sortParams.toString()))
                                 .onSelect(ctx -> {
@@ -187,7 +181,7 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                                                     if (repository != null && method != null) {
                                                         TypeMirror repositoryType = repository.asType();
                                                         if (repositoryType.getKind() == TypeKind.DECLARED) {
-                                                            MethodTree mt = Utils.createControllerDataEndpointMethod(copy, (DeclaredType) repositoryType, repository.getSimpleName().toString(), method, id);
+                                                            MethodTree mt = Utils.createControllerDataEndpointMethod(copy, (DeclaredType) repositoryType, repository.getSimpleName().toString(), method, controllerId, id);
                                                             copy.rewrite(clazz, GeneratorUtilities.get(copy).insertClassMember(clazz, mt, offset));
                                                         }
                                                     }
@@ -195,7 +189,7 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                                             }
                                         });
                                         mr.commit();
-                                    } catch (Exception ex) {
+                                    } catch (IOException | ParseException ex) {
                                         Exceptions.printStackTrace(ex);
                                     }
                                 }).build();
@@ -341,7 +335,7 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                                 break;
                             }
                             cnt++;
-                            String paramTypeName = MicronautDataCompletionTask.getTypeName(info, tm, false, ((ExecutableElement)element).isVarArgs() && !tIt.hasNext()).toString();
+                            String paramTypeName = Utils.getTypeName(info, tm, false, ((ExecutableElement)element).isVarArgs() && !tIt.hasNext()).toString();
                             String paramName = it.next().getSimpleName().toString();
                             label.append(escape(paramTypeName)).append(' ').append(PARAMETER_NAME_COLOR).append(paramName).append(COLOR_END);
                             sortParams.append(paramTypeName);
@@ -360,7 +354,7 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                                 .startOffset(offset)
                                 .iconResource(element.getModifiers().contains(Modifier.STATIC) ? METHOD_ST_PUBLIC : METHOD_PUBLIC)
                                 .leftHtmlText(label.toString())
-                                .rightHtmlText(MicronautDataCompletionTask.getTypeName(info, ((ExecutableElement)element).getReturnType(), false, false).toString())
+                                .rightHtmlText(Utils.getTypeName(info, ((ExecutableElement)element).getReturnType(), false, false).toString())
                                 .sortPriority(100)
                                 .sortText(String.format("%s#%02d%s", simpleName, cnt, sortParams.toString()))
                                 .insertText(insertText.toString());

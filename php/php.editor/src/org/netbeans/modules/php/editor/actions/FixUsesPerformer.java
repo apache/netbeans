@@ -318,7 +318,7 @@ public class FixUsesPerformer {
     }
 
     private void sort(List<UsePart> useParts, final Map<UsePart.Type, Integer> typePriorities) {
-        Collections.sort(useParts, (u1, u2) -> {
+        useParts.sort((u1, u2) -> {
             int result = 0;
             Integer p1 = typePriorities.get(u1.getType());
             Integer p2 = typePriorities.get(u2.getType());

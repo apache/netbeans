@@ -381,6 +381,7 @@ public final class Server {
 
         private static final String NETBEANS_FORMAT = "format";
         private static final String NETBEANS_JAVA_IMPORTS = "java.imports";
+        private static final String NETBEANS_JAVA_HINTS = "hints";
 
         // change to a greater throughput if the initialization waits on more processes than just (serialized) project open.
         private static final RequestProcessor SERVER_INIT_RP = new RequestProcessor(LanguageServerImpl.class.getName());
@@ -699,7 +700,7 @@ public final class Server {
             }
 
             // Wait for all priming builds, even those already pending, to finish:
-            CompletableFuture.allOf(primingBuilds.toArray(new CompletableFuture[primingBuilds.size()])).thenRun(() -> {
+            CompletableFuture.allOf(primingBuilds.toArray(new CompletableFuture[0])).thenRun(() -> {
                 Set<Project> additionalProjects = new LinkedHashSet<>();
                 for (Project prj : projects) {
                     Set<Project> containedProjects = ProjectUtils.getContainedProjects(prj, true);
@@ -728,8 +729,8 @@ public final class Server {
                 projectSet.retainAll(openedProjects);
                 projectSet.addAll(projects);
 
-                Project[] prjsRequested = projects.toArray(new Project[projects.size()]);
-                Project[] prjs = projects.toArray(new Project[projects.size()]);
+                Project[] prjsRequested = projects.toArray(new Project[0]);
+                Project[] prjs = projects.toArray(new Project[0]);
                 LOG.log(Level.FINER, "{0}: Finished opening projects: {1}", new Object[]{id, Arrays.asList(projects)});
                 synchronized (this) {
                     openedProjects = projectSet;
@@ -740,7 +741,7 @@ public final class Server {
                         ns.addAll(current);
                         LOG.log(Level.FINER, "Current is: {0}, ns: {1}", new Object[] { current, ns });
                         if (s != ns.size()) {
-                            prjs = ns.toArray(new Project[ns.size()]);
+                            prjs = ns.toArray(new Project[0]);
                             workspaceProjects = CompletableFuture.completedFuture(prjs);
                         }
                     }
@@ -985,8 +986,18 @@ public final class Server {
 
         private void initializeOptions() {
             getWorkspaceProjects().thenAccept(projects -> {
+                ConfigurationItem item = new ConfigurationItem();
+                item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVA_HINTS);
+                client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
+                    if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
+                        textDocumentService.updateJavaHintPreferences((JsonObject) c.get(0));
+                    }
+                    else {
+                        textDocumentService.hintsSettingsRead = true;
+                        textDocumentService.reRunDiagnostics();
+                    }
+                });
                 if (projects != null && projects.length > 0) {
-                    ConfigurationItem item = new ConfigurationItem();
                     FileObject fo = projects[0].getProjectDirectory();
                     item.setScopeUri(Utils.toUri(fo));
                     item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_FORMAT);

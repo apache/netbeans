@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.77
+#Version 2.78
 
 CLSS public abstract interface !annotation com.google.common.annotations.GwtCompatible
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -8619,7 +8619,7 @@ meth public void releaseAll(java.util.Map<java.lang.String,?>)
 meth public void setLoggerManager(org.codehaus.plexus.logging.LoggerManager)
  anno 0 com.google.inject.Inject(boolean optional=true)
 supr java.lang.Object
-hfds DEFAULT_REALM_NAME,NO_CUSTOM_MODULES,classRealmManager,componentVisibility,containerModule,containerRealm,context,defaultsModule,descriptorMap,disposing,isAutoWiringEnabled,logger,loggerManager,loggerManagerProvider,lookupRealm,plexusBeanLocator,plexusBeanManager,plexusRank,qualifiedBeanLocator,scanning,variables
+hfds DEFAULT_REALM_NAME,NO_CUSTOM_MODULES,componentVisibility,containerModule,containerRealm,context,defaultsModule,descriptorMap,disposing,isAutoWiringEnabled,logger,loggerManager,loggerManagerProvider,lookupRealm,plexusBeanLocator,plexusBeanManager,plexusRank,qualifiedBeanLocator,realmManager,scanning,variables
 hcls BootModule,ContainerModule,DefaultsModule,LoggerManagerProvider,LoggerProvider,SLF4JLoggerFactoryProvider
 
 CLSS public abstract interface org.codehaus.plexus.MutablePlexusContainer
@@ -10649,6 +10649,7 @@ fld public final static java.lang.String HTTPS_SECURITY_MODE_DEFAULT = "default"
 fld public final static java.lang.String HTTPS_SECURITY_MODE_INSECURE = "insecure"
 fld public final static java.lang.String HTTP_CONNECTION_MAX_TTL = "aether.connector.http.connectionMaxTtl"
 fld public final static java.lang.String HTTP_CREDENTIAL_ENCODING = "aether.connector.http.credentialEncoding"
+fld public final static java.lang.String HTTP_EXPECT_CONTINUE = "aether.connector.http.expectContinue"
 fld public final static java.lang.String HTTP_HEADERS = "aether.connector.http.headers"
 fld public final static java.lang.String HTTP_MAX_CONNECTIONS_PER_ROUTE = "aether.connector.http.maxConnectionsPerRoute"
 fld public final static java.lang.String HTTP_PREEMPTIVE_AUTH = "aether.connector.http.preemptiveAuth"
@@ -11534,6 +11535,7 @@ meth public static org.eclipse.aether.util.FileUtils$TempFile newTempFile() thro
 meth public static void writeFile(java.nio.file.Path,org.eclipse.aether.util.FileUtils$FileWriter) throws java.io.IOException
 meth public static void writeFileWithBackup(java.nio.file.Path,org.eclipse.aether.util.FileUtils$FileWriter) throws java.io.IOException
 supr java.lang.Object
+hfds IS_WINDOWS
 
 CLSS public abstract interface static org.eclipse.aether.util.FileUtils$CollocatedTempFile
  outer org.eclipse.aether.util.FileUtils

@@ -49,7 +49,7 @@ public final class CaretFoldExpanderImpl extends CaretFoldExpander {
                     int offset = posList.get(0).getOffset();
                     int endOffset;
                     if (posListSize > 1) {
-                        Collections.sort(posList, PositionComparator.INSTANCE);
+                        posList.sort(PositionComparator.INSTANCE);
                         endOffset = posList.get(posListSize - 1).getOffset();
                     } else {
                         endOffset = offset;

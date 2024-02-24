@@ -67,7 +67,7 @@ class ActiveEditorDropProvider implements InstanceContent.Convertor<String,Activ
                 if (loader == null)
                     loader = getClass ().getClassLoader ();
                 Class instanceClass = loader.loadClass (instanceName);
-                drop = (ActiveEditorDrop)instanceClass.newInstance();
+                drop = (ActiveEditorDrop)instanceClass.getDeclaredConstructor().newInstance();
             }
             catch (Exception ex) {
                 ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);

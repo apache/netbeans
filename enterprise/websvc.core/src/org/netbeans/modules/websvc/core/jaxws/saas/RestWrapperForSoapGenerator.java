@@ -253,7 +253,7 @@ public class RestWrapperForSoapGenerator {
                 }
             }
         }
-        return types.toArray(new String[types.size()]);
+        return types.toArray(new String[0]);
     }
 
     private String[] getHttpParamNames(List<WsdlParameter> queryParams) {
@@ -264,7 +264,7 @@ public class RestWrapperForSoapGenerator {
             }
 
         }
-        return names.toArray(new String[names.size()]);
+        return names.toArray(new String[0]);
     }
 
     private Object generateDefaultValue(Class type) {
@@ -303,7 +303,7 @@ public class RestWrapperForSoapGenerator {
                 annos.add(annotations);
             }
         }
-        return annos.toArray(new String[annos.size()][]);
+        return annos.toArray(new String[0][]);
     }
 
     public Class getGenericRawType(String typeName, ClassLoader loader) {
@@ -381,7 +381,7 @@ public class RestWrapperForSoapGenerator {
                 types.add(type);
             }
         }
-        return types.toArray(new Class[types.size()]);
+        return types.toArray(new Class[0]);
     }
 
     private Object[][] getHttpParamAnnotationAttrs(List<WsdlParameter> queryParams, String[] typeNames) {
@@ -403,7 +403,7 @@ public class RestWrapperForSoapGenerator {
                 attrs.add(annotationAttrs);
             }
         }
-        return attrs.toArray(new Object[attrs.size()][]);
+        return attrs.toArray(new Object[0][]);
     }
 
     private String getMethodName(String prefix) {
@@ -646,7 +646,7 @@ public class RestWrapperForSoapGenerator {
             attributes.add(TEXT_PLAIN_MIME);
         }
         attributes.add(operationName.toLowerCase() + "/");
-        return attributes.toArray(new Object[attributes.size()]);
+        return attributes.toArray(new Object[0]);
     }
 
     private String[] getOperationAnnotations(String returnType, String[] parameterTypes) {

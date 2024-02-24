@@ -96,7 +96,7 @@ public final class ProxyPreferences extends AbstractPreferences {
                 }
             }
         }
-        return keys.toArray(new String[ keys.size() ]);
+        return keys.toArray(new String[ 0 ]);
     }
 
     @Override

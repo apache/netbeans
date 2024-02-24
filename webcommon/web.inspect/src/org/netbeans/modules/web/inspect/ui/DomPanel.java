@@ -485,7 +485,7 @@ public class DomPanel extends JPanel implements ExplorerManager.Provider {
     private void updateSelection() {
         if (EventQueue.isDispatchThread()) {
             List<? extends Node> nodes = pageModel.getSelectedNodes();
-            Node[] selection = nodes.toArray(new Node[nodes.size()]);
+            Node[] selection = nodes.toArray(new Node[0]);
             updatingView = true;
             try {
                 manager.setSelectedNodes(selection);

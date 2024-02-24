@@ -418,10 +418,7 @@ public class LibraryCustomizer implements ProjectCustomizer.CompositeCategoryPro
             }
 
             Library.Version versionToStore = newVersion.filterVersion(Collections.emptySet());
-            versionToStore.setFileInfo(
-                    fileList.toArray(new String[fileList.size()]),
-                    localFileList.toArray(new String[localFileList.size()])
-            );
+            versionToStore.setFileInfo(fileList.toArray(new String[0]), localFileList.toArray(new String[0]));
             return versionToStore;
         }
 

@@ -177,7 +177,7 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             }
             displayedVars.add(displayedVar);
         }
-        return displayedVars.toArray(new NIVariable[displayedVars.size()]);
+        return displayedVars.toArray(new NIVariable[0]);
     }
 
     private static String displayType(String type) {
@@ -1053,7 +1053,7 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         if (inherited != null) {
             collected.add(inherited);
         }
-        return collected.toArray(new NIVariable[collected.size()]);
+        return collected.toArray(new NIVariable[0]);
     }
 
     private NIVariable createInherited(NIVariable[] children) {

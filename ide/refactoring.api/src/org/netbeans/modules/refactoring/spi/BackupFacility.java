@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -96,7 +97,7 @@ public abstract class BackupFacility {
      * @throws java.io.IOException 
      */
     public final Handle backup(Collection<? extends FileObject> fileObjects) throws IOException {
-        return backup(fileObjects.toArray(new FileObject[fileObjects.size()]));
+        return backup(fileObjects.toArray(new FileObject[0]));
     }
     
     /**
@@ -184,7 +185,7 @@ public abstract class BackupFacility {
         public long backup(FileObject file) throws IOException {
             try {
                 BackupEntry entry = new BackupEntry();
-                entry.file = File.createTempFile("nbbackup", null); //NOI18N
+                entry.file = Files.createTempFile("nbbackup", null).toFile(); //NOI18N
                 copy(file, entry.file);
                 entry.path = file.getURL().toURI();
                 map.put(currentId, entry);
@@ -204,7 +205,7 @@ public abstract class BackupFacility {
             if(entry==null) {
                 throw new IllegalArgumentException("Backup with id " + id + "does not exist"); // NOI18N
             }
-            File backup = File.createTempFile("nbbackup", null); //NOI18N
+            File backup = Files.createTempFile("nbbackup", null).toFile(); //NOI18N
             backup.deleteOnExit();
             File f = new File(entry.path);
             if (createNewFile(f)) {

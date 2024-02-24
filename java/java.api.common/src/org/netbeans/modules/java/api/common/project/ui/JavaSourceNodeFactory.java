@@ -144,7 +144,7 @@ public final class JavaSourceNodeFactory implements NodeFactory {
             }
             File[] removeFrom;
             synchronized (listensOn) {
-                removeFrom = listensOn.toArray(new File[listensOn.size()]);
+                removeFrom = listensOn.toArray(new File[0]);
                 listensOn.clear();
             }
             for (File file : removeFrom) {

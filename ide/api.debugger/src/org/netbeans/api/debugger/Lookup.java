@@ -577,7 +577,7 @@ abstract class Lookup implements ContextProvider {
                 //System.err.println("  unsorted: "+lookupLists+"\n");
                 ll.addAll(lookupLists);
             }
-            Collections.sort(ll, getMetaInfLookupListComparator(load));
+            ll.sort(getMetaInfLookupListComparator(load));
             //System.err.println("    sorted: "+ll+"\n");
             for (MetaInfLookupList mll : ll) {
                 mll.refreshContent();

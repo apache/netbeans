@@ -108,7 +108,7 @@ public class I18nWizardAction extends NodeAction {
         panels.add(new HardStringWizardPanel.Panel());
         
         return new WizardDescriptor.ArrayIterator<I18nWizardDescriptor.Settings>(
-            panels.toArray(new WizardDescriptor.Panel[panels.size()])
+            panels.toArray(new WizardDescriptor.Panel[0])
         );
     }
 
@@ -125,9 +125,8 @@ public class I18nWizardAction extends NodeAction {
         contents.add(Util.getString("TXT_AdditionalHelp"));             //NOI18N
         contents.add(Util.getString("TXT_FoundStringsHelp"));           //NOI18N
         
-        wizardDesc.putProperty(
-            WizardDescriptor.PROP_CONTENT_DATA,
-            contents.toArray(new String[contents.size()])
+        wizardDesc.putProperty(WizardDescriptor.PROP_CONTENT_DATA,
+            contents.toArray(new String[0])
         ); 
         
         wizardDesc.setTitle(Util.getString("LBL_WizardTitle"));         //NOI18N

@@ -56,7 +56,7 @@ public class ClassPathModifierLookupMerger implements LookupMerger<ProjectClassP
             for (ProjectClassPathModifierImplementation impl : context.lookupAll(ProjectClassPathModifierImplementation.class)) {
                 sgs.addAll(Arrays.asList(ProjectClassPathModifierAccessor.INSTANCE.getExtensibleSourceGroups(impl)));
             }
-            return sgs.toArray(new SourceGroup[sgs.size()]);
+            return sgs.toArray(new SourceGroup[0]);
         }
 
         @Override protected String[] getExtensibleClassPathTypes(SourceGroup sourceGroup) {
@@ -64,7 +64,7 @@ public class ClassPathModifierLookupMerger implements LookupMerger<ProjectClassP
             for (ProjectClassPathModifierImplementation impl : context.lookupAll(ProjectClassPathModifierImplementation.class)) {
                 types.addAll(Arrays.asList(ProjectClassPathModifierAccessor.INSTANCE.getExtensibleClassPathTypes(impl, sourceGroup)));
             }
-            return types.toArray(new String[types.size()]);
+            return types.toArray(new String[0]);
         }
         
         private interface Op {

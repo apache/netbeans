@@ -39,12 +39,6 @@ jobs:
     timeout-minutes: 20
     steps:
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: '22-ea'
-          distribution: 'zulu'
-
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
         uses: actions/checkout@v4
         with:
@@ -54,11 +48,11 @@ jobs:
 
       - name: Check Dependencies
         run: |
-          mvn -q dependency:get  -Dartifact=org.apache.maven.indexer:search-backend-smo:7.1.1
           mvn -q dependency:copy -Dartifact=org.apache.maven.indexer:search-backend-smo:7.1.1 -DoutputDirectory=./lib
           mvn -q dependency:copy -Dartifact=org.apache.maven.indexer:search-api:7.1.1         -DoutputDirectory=./lib
           mvn -q dependency:copy -Dartifact=com.google.code.gson:gson:2.10.1                  -DoutputDirectory=./lib
+          mvn -q dependency:copy -Dartifact=org.apache.maven:maven-artifact:3.9.6             -DoutputDirectory=./lib
           echo "<pre>" >> $GITHUB_STEP_SUMMARY
-          java --enable-preview --source 22 -cp "lib/*" .github/scripts/BinariesListUpdates.java ./ | tee -a $GITHUB_STEP_SUMMARY
+          $JAVA_HOME_21_X64/bin/java --enable-preview --source 21 -cp "lib/*" .github/scripts/BinariesListUpdates.java ./ | tee -a $GITHUB_STEP_SUMMARY
           echo "</pre>" >> $GITHUB_STEP_SUMMARY
           rm -Rf lib

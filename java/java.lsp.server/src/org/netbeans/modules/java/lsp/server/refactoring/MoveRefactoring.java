@@ -383,7 +383,7 @@ public final class MoveRefactoring extends CodeRefactoring {
                     if (handle.getKind() == Tree.Kind.CLASS) {
                         refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(handle.getFileObject()));
                     } else {
-                        JavaMoveMembersProperties properties = new JavaMoveMembersProperties(selectedElements.toArray(new TreePathHandle[selectedElements.size()]));
+                        JavaMoveMembersProperties properties = new JavaMoveMembersProperties(selectedElements.toArray(new TreePathHandle[0]));
                         properties.setVisibility(JavaMoveMembersProperties.Visibility.valueOf(ui.getSelectedVisibility().name()));
                         properties.setDelegate(ui.isKeepMethodSelected());
                         properties.setUpdateJavaDoc(ui.getSelectedJavaDoc() == JavaDoc.UPDATE);

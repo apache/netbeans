@@ -126,7 +126,7 @@ public class MiscPrivateUtilities {
             ClassPath path = provider.findClassPath(rootFolder, type);
             classPaths.add(path);
         }
-        return ClassPathSupport.createProxyClassPath(classPaths.toArray(new ClassPath[classPaths.size()]));
+        return ClassPathSupport.createProxyClassPath(classPaths.toArray(new ClassPath[0]));
     }
 
     public static boolean hasResource(Project project, String resource) {

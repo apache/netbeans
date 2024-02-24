@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.web.struts/1
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/web/struts/resources/Bundle.properties
-OpenIDE-Module-Layer: org/netbeans/modules/web/struts/resources/layer.xml
-OpenIDE-Module-Implementation-Version: 1
-OpenIDE-Module-Provides: org.netbeans.modules.web.project.framework

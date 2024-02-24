@@ -1307,7 +1307,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
         loader = new CL ();
         c = loader.loadClass (Garbage.class.getName ());
 
-        Object theInstance = c.newInstance ();
+        Object theInstance = c.getDeclaredConstructor().newInstance ();
 
         ic.addPair (new SerialPair (theInstance));
 

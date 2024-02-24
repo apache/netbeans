@@ -112,7 +112,7 @@ public final class DefaultAWTBridge extends ActionPresenterProvider {
                 }
             }
             if (atLeastOne) {
-                return col.toArray(new Component[col.size()]);
+                return col.toArray(new Component[0]);
             } else {
                 return toRet;
             }

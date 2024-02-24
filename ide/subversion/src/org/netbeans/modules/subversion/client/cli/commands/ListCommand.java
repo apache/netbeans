@@ -250,7 +250,7 @@ public class ListCommand extends SvnCommand {
         }
 
         public ISVNDirEntry[] getEntryAttributes() {            
-            return entries != null ? entries.toArray(new ISVNDirEntry[entries.size()]) : new ISVNDirEntry[] {} ;
+            return entries != null ? entries.toArray(new ISVNDirEntry[0]) : new ISVNDirEntry[] {} ;
         }
 
         private String toString(int length, char[] ch, int start) {

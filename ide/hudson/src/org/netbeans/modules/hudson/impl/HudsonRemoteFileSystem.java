@@ -168,7 +168,7 @@ final class HudsonRemoteFileSystem extends RemoteFileSystem implements
                 is.close();
             }
             LOG.log(Level.FINE, "children: {0} -> {1}", new Object[] {url, kids});
-            return kids.toArray(new String[kids.size()]);
+            return kids.toArray(new String[0]);
         } catch (IOException x) {
             LOG.log(Level.FINE, "cannot list children of {0} in {1}: {2}", new Object[] {f, baseURL, x});
             return new String[0];

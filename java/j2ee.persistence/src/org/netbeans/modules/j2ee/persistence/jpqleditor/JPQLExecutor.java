@@ -101,7 +101,7 @@ public class JPQLExecutor {
             ph.progress(60);
 
             Class pClass = Thread.currentThread().getContextClassLoader().loadClass("javax.persistence.Persistence");//NOI18N
-            javax.persistence.Persistence p = (javax.persistence.Persistence) pClass.newInstance();
+            javax.persistence.Persistence p = (javax.persistence.Persistence) pClass.getDeclaredConstructor().newInstance();
             
             emf = p.createEntityManagerFactory(pu.getName(), props);
 

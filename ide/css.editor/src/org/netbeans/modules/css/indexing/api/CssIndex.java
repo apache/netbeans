@@ -162,8 +162,7 @@ public class CssIndex {
             throw new IllegalArgumentException(String.format("No %s class registered as a system service!", factoryClass.getName()));
         }
         final Collection<String> fieldsToLoad = factory.getIndexKeys();
-        final Collection<? extends IndexResult> results = querySupport.getQueryFactory().file(file).execute(
-            fieldsToLoad.toArray(new String[fieldsToLoad.size()]));
+        final Collection<? extends IndexResult> results = querySupport.getQueryFactory().file(file).execute(fieldsToLoad.toArray(new String[0]));
         if (!results.isEmpty()) {
             return factory.loadFromIndex(results.iterator().next());
         }

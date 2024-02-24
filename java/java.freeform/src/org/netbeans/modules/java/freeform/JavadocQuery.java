@@ -107,7 +107,7 @@ final class JavadocQuery implements JavadocForBinaryQueryImplementation {
         }
 
         public URL[] getRoots() {
-            return urls.toArray(new URL[urls.size()]);
+            return urls.toArray(new URL[0]);
         }
         
         public void addChangeListener(ChangeListener l) {}

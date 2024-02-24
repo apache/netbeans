@@ -238,7 +238,7 @@ public abstract class ActionUtils {
             }
         }
         
-        Action[] res = actions.toArray(new Action[actions.size()]);
+        Action[] res = actions.toArray(new Action[0]);
         for( ActionsFactory factory : Lookup.getDefault().lookupAll( ActionsFactory.class ) ) {
             res = factory.createPopupActions( tc, res );
         }
@@ -347,7 +347,7 @@ public abstract class ActionUtils {
             }
         }
         
-        Action[] res = actions.toArray(new Action[actions.size()]);
+        Action[] res = actions.toArray(new Action[0]);
         for( ActionsFactory factory : Lookup.getDefault().lookupAll( ActionsFactory.class ) ) {
             res = factory.createPopupActions( mode, res );
         }

@@ -154,7 +154,7 @@ public class IgnoreAction extends MultipleRepositoryAction {
                 toIgnore.add(root);
             }
         }
-        return toIgnore.toArray(new File[toIgnore.size()]);
+        return toIgnore.toArray(new File[0]);
     }
 
     private static File[] getForRemovalFromIndex (File[] roots) {
@@ -168,7 +168,7 @@ public class IgnoreAction extends MultipleRepositoryAction {
                 ret.add(root);
             }
         }
-        return ret.toArray(new File[ret.size()]);
+        return ret.toArray(new File[0]);
     }
 
     private File[] filterFolders (File repository, File[] roots) {
@@ -194,6 +194,6 @@ public class IgnoreAction extends MultipleRepositoryAction {
                 LOG.log(Level.FINE, "File {0} already ignored", f);
             }
         }
-        return unignoredFolders.toArray(new File[unignoredFolders.size()]);
+        return unignoredFolders.toArray(new File[0]);
     }
 }

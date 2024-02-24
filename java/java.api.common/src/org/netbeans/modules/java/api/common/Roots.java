@@ -149,7 +149,7 @@ public abstract class Roots {
 
         @Override
         public String[] getRootProperties() {
-            return rootPropNames.toArray(new String[rootPropNames.size()]);
+            return rootPropNames.toArray(new String[0]);
         }
     }
 

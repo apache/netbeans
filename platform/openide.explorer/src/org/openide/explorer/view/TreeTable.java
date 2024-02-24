@@ -1553,8 +1553,7 @@ class TreeTable extends JTable implements Runnable {
                         if (list.isEmpty()) {
                             clearSelection();
                         } else {
-                            int[] rows = (int[]) Utilities.toPrimitiveArray(
-                                    list.toArray(new Integer[list.size()])
+                            int[] rows = (int[]) Utilities.toPrimitiveArray(list.toArray(new Integer[0])
                                 );
                             tree.setSelectionRows(rows);
                         }

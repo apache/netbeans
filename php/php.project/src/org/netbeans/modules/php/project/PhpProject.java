@@ -1260,7 +1260,7 @@ public final class PhpProject implements Project {
             addRoots(roots, project.getTestRoots());
             addRoots(roots, project.getSeleniumRoots());
             addIncludePath(roots, PhpSourcePath.getIncludePath(project.getSourcesDirectory()));
-            return roots.toArray(new FileObject[roots.size()]);
+            return roots.toArray(new FileObject[0]);
         }
 
         // #197968

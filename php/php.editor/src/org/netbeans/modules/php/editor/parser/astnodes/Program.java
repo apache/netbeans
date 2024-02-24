@@ -46,7 +46,7 @@ public class Program extends ASTNode {
     }
 
     public Program(int start, int end, List<Statement> statements, List<Comment> commentsList) {
-        this(start, end, statements.toArray(new Statement[statements.size()]), commentsList);
+        this(start, end, statements.toArray(new Statement[0]), commentsList);
     }
 
     public List<Comment> getComments() {

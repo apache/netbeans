@@ -439,7 +439,7 @@ public final class ModulePathsProblemsProvider implements ProjectProblemsProvide
                         if (!added) {
                             newPath.add(elementToAddRef);
                         }
-                        path = newPath.toArray(new String[newPath.size()]);
+                        path = newPath.toArray(new String[0]);
                         changed[0] = true;
                     }
                     return path;

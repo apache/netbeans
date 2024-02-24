@@ -86,7 +86,7 @@ final class ArtifactProvider implements AntArtifactProvider {
             artifact.configureId(id);
             artifacts.add(artifact);
         }
-        return artifacts.toArray(new AntArtifact[artifacts.size()]);
+        return artifacts.toArray(new AntArtifact[0]);
     }
     
     public static URI readArtifactLocation(Element export, PropertyEvaluator eval) {
@@ -214,7 +214,7 @@ final class ArtifactProvider implements AntArtifactProvider {
         }
 
         public URI[] getArtifactLocations() {
-            return locations.toArray(new URI[locations.size()]);
+            return locations.toArray(new URI[0]);
         }
         
         private void addLocation(URI u) {

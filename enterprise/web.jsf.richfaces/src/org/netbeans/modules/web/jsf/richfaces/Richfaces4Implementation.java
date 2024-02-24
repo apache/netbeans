@@ -104,8 +104,7 @@ public class Richfaces4Implementation implements JsfComponentImplementation {
             } else {
                 richfacesLibraries = Richfaces4Customizer.getRichfacesLibraries();
             }
-            ProjectClassPathModifier.removeLibraries(richfacesLibraries.toArray(
-                    new Library[richfacesLibraries.size()]), webModule.getJavaSources()[0], ClassPath.COMPILE);
+            ProjectClassPathModifier.removeLibraries(richfacesLibraries.toArray(new Library[0]), webModule.getJavaSources()[0], ClassPath.COMPILE);
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Exception during removing JSF suite from an web project", ex); //NOI18N
         } catch (UnsupportedOperationException ex) {

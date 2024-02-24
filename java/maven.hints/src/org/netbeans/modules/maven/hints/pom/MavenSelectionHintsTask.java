@@ -115,7 +115,7 @@ public class MavenSelectionHintsTask extends ParserResultTask<MavenResult> {
                 if (old != null) {
                 }
 
-                styled.putProperty("maven_annot", anns.toArray(new Annotation[0]));
+                styled.putProperty("maven_annot", anns.toArray(Annotation[]::new));
             } else {
                 // clear on error
                 if (styled != null) {

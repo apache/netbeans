@@ -67,7 +67,7 @@ public final class StorageSupport {
      */
     public static String keyStrokesToString(Collection<? extends KeyStroke> keys, boolean emacsStyle) {
         if (!emacsStyle) {
-            return KeyStrokeUtils.getKeyStrokesAsText(keys.toArray(new KeyStroke[keys.size()]), " "); // NOI18N
+            return KeyStrokeUtils.getKeyStrokesAsText(keys.toArray(new KeyStroke[0]), " "); // NOI18N
         }
         StringBuilder sb = new StringBuilder();
 

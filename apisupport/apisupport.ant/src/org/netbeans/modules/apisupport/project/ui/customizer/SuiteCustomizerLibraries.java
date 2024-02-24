@@ -430,7 +430,7 @@ public final class SuiteCustomizerLibraries extends NbPropertyPanel.Suite
         }
 
         if (oldPlaf) {
-            getProperties().setEnabledClusters(enabledClusters.toArray(new String[enabledClusters.size()]));
+            getProperties().setEnabledClusters(enabledClusters.toArray(new String[0]));
         } else {
             for (ClusterNode e : libChildren.extraNodes()) {
                 clusterPath.add(e.getClusterInfo());
@@ -447,7 +447,7 @@ public final class SuiteCustomizerLibraries extends NbPropertyPanel.Suite
             }
             getProperties().setClusterPath(clusterPath);
         }
-        getProperties().setDisabledModules(disabledModules.toArray(new String[disabledModules.size()]));
+        getProperties().setDisabledModules(disabledModules.toArray(new String[0]));
     }
     
     /** This method is called from within the constructor to

@@ -238,7 +238,7 @@ public class GenericTablePanel extends BeanTablePanel {
 			GenericTableDialogPanelAccessor subPanel = null;
 			
 			try {
-				subPanel = (GenericTableDialogPanelAccessor) entryPanelClass.newInstance();
+				subPanel = (GenericTableDialogPanelAccessor) entryPanelClass.getDeclaredConstructor().newInstance();
 				subPanel.init(getTableModel().getAppServerVersion(), 
                         GenericTablePanel.this.getWidth()*3/4, entryList, extraData);
 				
@@ -246,10 +246,7 @@ public class GenericTablePanel extends BeanTablePanel {
 					resourceBundle.getString("ACSN_POPUP_" + resourceBase));	// NOI18N
 				((JPanel) subPanel).getAccessibleContext().setAccessibleDescription(
 					resourceBundle.getString("ACSD_POPUP_" + resourceBase));	// NOI18N
-			} catch(InstantiationException ex) {
-				// !PW Should never happen, but it's fatal for field editing if 
-				// it does so what should exception should we throw?
-			} catch(IllegalAccessException ex) {
+			} catch(ReflectiveOperationException ex) {
 				// !PW Should never happen, but it's fatal for field editing if 
 				// it does so what should exception should we throw?
 			}

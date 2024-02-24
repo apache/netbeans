@@ -26,11 +26,17 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.swing.Icon;
+import javax.swing.text.StyledDocument;
 import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.lsp.Diagnostic;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -43,10 +49,13 @@ import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport.Kind;
+import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -66,11 +75,60 @@ public class MicronautSymbolSearcher implements IndexSearcher {
         if (project == null || !textForQuery.startsWith("@") || IndexingManager.getDefault().isIndexing()) {
             return Collections.emptySet();
         }
-        Set<Descriptor> symbols = new HashSet<>();
+        if (textForQuery.equals("@/")) {
+            RequestProcessor.getDefault().post(() -> {
+                try {
+                    Set<FileObject> duplicates = getSymbolsWithPathDuplicates(project, null).stream().map(descriptor -> descriptor.getFileObject()).collect(Collectors.toSet());
+                    if (!duplicates.isEmpty()) {
+                        Diagnostic.ReporterControl control = Diagnostic.findReporterControl(Lookup.getDefault(), project.getProjectDirectory());
+                        control.diagnosticChanged(duplicates, "text/x-java");
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            });
+        }
+        return getSymbols(project, textForQuery);
+    }
+
+    static Set<SymbolDescriptor> getSymbolsWithPathDuplicates(Project project, FileObject fo) throws IOException {
+        EditorCookie ec = fo != null ? fo.getLookup().lookup(EditorCookie.class) : null;
+        StyledDocument doc = ec != null ? ec.openDocument() : null;
+        Set<SymbolDescriptor> duplicates = new HashSet<>();
+        Map<String, SymbolDescriptor> map = new HashMap<>();
+        for (SymbolDescriptor symbol : getSymbols(project, "@/")) {
+            if (doc == null || symbol.getFileObject() != fo) {
+                SymbolDescriptor previous = map.put(symbol.getSimpleName().replaceAll("\\{.*}", "{}"), symbol);
+                if (previous != null) {
+                    duplicates.add(symbol);
+                    duplicates.add(previous);
+                }
+            }
+        }
+        JavaSource js = doc != null ? JavaSource.forDocument(doc) : null;
+        if (js != null) {
+            js.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                for (MicronautSymbolFinder.SymbolLocation sl : MicronautSymbolFinder.scan(cc, true)) {
+                    SymbolDescriptor symbol = new SymbolDescriptor(sl.getName(), fo, sl.getSelectionStart(), sl.getSelectionEnd());
+                    SymbolDescriptor previous = map.put(symbol.getSimpleName().replaceAll("\\{.*}", "{}"), symbol);
+                    if (previous != null) {
+                        duplicates.add(symbol);
+                        duplicates.add(previous);
+                    }
+                }
+            }, true);
+        }
+        return duplicates;
+    }
+
+    private static Set<SymbolDescriptor> getSymbols(Project project, String textForQuery) {
+        Set<SymbolDescriptor> symbols = new HashSet<>();
         for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
             try {
                 FileObject cacheRoot = getCacheRoot(sg.getRootFolder().toURL());
                 if (cacheRoot != null) {
+                    cacheRoot.refresh();
                     Enumeration<? extends FileObject> children = cacheRoot.getChildren(true);
                     while (children.hasMoreElements()) {
                         FileObject child = children.nextElement();
@@ -79,12 +137,14 @@ public class MicronautSymbolSearcher implements IndexSearcher {
                         }
                     }
                 }
-            } catch (IOException ex) {}
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
         return symbols;
     }
 
-    private static void loadSymbols(FileObject input, String textForQuery, Set<Descriptor> symbols) {
+    private static void loadSymbols(FileObject input, String textForQuery, Set<SymbolDescriptor> symbols) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(input.getInputStream(), StandardCharsets.UTF_8))) {
             FileObject fo = null;
             String line;
@@ -120,7 +180,7 @@ public class MicronautSymbolSearcher implements IndexSearcher {
         return dataFolder != null ? FileUtil.createFolder(dataFolder, MicronautSymbolFinder.NAME + "/" + MicronautSymbolFinder.VERSION) : null; //NOI18N
     }
 
-    private static class SymbolDescriptor extends IndexSearcher.Descriptor implements org.netbeans.modules.csl.api.ElementHandle {
+    static class SymbolDescriptor extends IndexSearcher.Descriptor implements org.netbeans.modules.csl.api.ElementHandle {
 
         private final String name;
         private final FileObject fo;

@@ -552,14 +552,8 @@ public final class DerbyDatabasesImpl {
             URL[] driverURLs = new URL[] { derbyClient.toURI().toURL() }; // NOI18N
             DbURLClassLoader l = new DbURLClassLoader(driverURLs);
             Class<?> c = Class.forName(DerbyOptions.DRIVER_CLASS_NET, true, l);
-            return (Driver)c.newInstance();
-        } catch (MalformedURLException e) {
-            exception = e;
-        } catch (IllegalAccessException e) {
-            exception = e;
-        } catch (ClassNotFoundException e) {
-            exception = e;
-        } catch (InstantiationException e) {
+            return (Driver)c.getDeclaredConstructor().newInstance();
+        } catch (MalformedURLException | ReflectiveOperationException e) {
             exception = e;
         }
         if (exception != null) {

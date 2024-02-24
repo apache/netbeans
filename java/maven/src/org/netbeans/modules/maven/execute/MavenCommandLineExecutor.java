@@ -786,7 +786,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                     it.remove();
                 }
             }
-            display.append(Utilities.escapeParameters(command.toArray(new String[command.size()])));
+            display.append(Utilities.escapeParameters(command.toArray(new String[0])));
         }
 
         printGray(ioput, display.toString());

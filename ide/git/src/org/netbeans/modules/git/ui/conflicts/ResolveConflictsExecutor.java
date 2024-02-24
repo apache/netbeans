@@ -388,7 +388,7 @@ public class ResolveConflictsExecutor extends GitProgressSupport {
             }
         }
         if (generateDiffs) {
-            return diffList.toArray(new Difference[diffList.size()]);
+            return diffList.toArray(new Difference[0]);
         } else {
             return null;
         }
@@ -452,7 +452,7 @@ public class ResolveConflictsExecutor extends GitProgressSupport {
                 for (File f : toResolve) {
                     nodes.add(new AbstractNode(Children.LEAF, Lookups.fixed(f)));
                 }
-                SystemAction.get(MarkResolvedAction.class).performAction(VCSContext.forNodes(nodes.toArray(new Node[nodes.size()])));
+                SystemAction.get(MarkResolvedAction.class).performAction(VCSContext.forNodes(nodes.toArray(new Node[0])));
             }
         } catch (GitException ex) {
             GitClientExceptionHandler.notifyException(ex, true);

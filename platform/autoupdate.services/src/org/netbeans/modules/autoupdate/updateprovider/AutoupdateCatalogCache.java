@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.autoupdate.services.AutoupdateSettings;
@@ -211,7 +212,7 @@ public final class AutoupdateCatalogCache {
         while (prefix.length () < 3) {
             prefix += cache.getName();
         }
-        final File temp = File.createTempFile (prefix, null, cache.getParentFile ()); //NOI18N
+        final File temp = Files.createTempFile(cache.getParentFile ().toPath(), prefix, null).toFile (); //NOI18N
         temp.deleteOnExit();        
 
         DownloadListener nwl = new DownloadListener(sourceUrl, temp, allowZeroSize);

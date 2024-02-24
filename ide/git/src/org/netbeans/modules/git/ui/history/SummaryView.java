@@ -170,7 +170,7 @@ class SummaryView extends AbstractSummaryView {
                 });
             }
             actions.addAll(Arrays.asList(revision.getActions()));
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -277,7 +277,7 @@ class SummaryView extends AbstractSummaryView {
                 });
             }
             actions.addAll(Arrays.asList(event.getActions(false)));
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -429,7 +429,7 @@ class SummaryView extends AbstractSummaryView {
                         }
                         GitRevisionInfo info1 = ((GitLogEntry) selection[0]).getRepositoryRevision().getLog();
                         GitRevisionInfo info2 = ((GitLogEntry) selection[1]).getRepositoryRevision().getLog();
-                        SystemAction.get(DiffAction.class).diff(VCSContext.forNodes(nodes.toArray(new Node[nodes.size()])),
+                        SystemAction.get(DiffAction.class).diff(VCSContext.forNodes(nodes.toArray(new Node[0])),
                                 new Revision(info2.getRevision(), info2.getRevision(), info2.getShortMessage(), info2.getFullMessage()),
                                 new Revision(info1.getRevision(), info1.getRevision(), info1.getShortMessage(), info1.getFullMessage()));
                     }

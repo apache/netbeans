@@ -93,7 +93,7 @@ jobs:
           show-progress: false
 
       - name: Caching dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.hgexternalcache
           key: profiler-${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}

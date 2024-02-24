@@ -1572,7 +1572,7 @@ final class ModuleList implements Stamps.Updater {
                         LOG.fine("Strange file encountered in modules folder: " + f);
                     }
                 }
-                names = arr.toArray(new String[arr.size()]);
+                names = arr.toArray(new String[0]);
             }
             ev.log(Events.MODULES_FILE_SCANNED, names.length);
             XMLReader reader = null;

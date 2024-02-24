@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -140,7 +141,7 @@ public class EditorTestLookup extends ProxyLookup {
             } else if (layer.getPath().endsWith(".zip")) {
                 if (!xmlLayers.isEmpty()) {
                     XMLFileSystem layersFs = new XMLFileSystem();
-                    layersFs.setXmlUrls(xmlLayers.toArray(new URL [xmlLayers.size()]));
+                    layersFs.setXmlUrls(xmlLayers.toArray(new URL [0]));
                     fs.add(layersFs);
                     xmlLayers.clear();
                 }
@@ -158,11 +159,11 @@ public class EditorTestLookup extends ProxyLookup {
         
         if (!xmlLayers.isEmpty()) {
             XMLFileSystem layersFs = new XMLFileSystem();
-            layersFs.setXmlUrls(xmlLayers.toArray(new URL [xmlLayers.size()]));
+            layersFs.setXmlUrls(xmlLayers.toArray(new URL [0]));
             fs.add(layersFs);
         }
         
-        setLookup(fs.toArray(new FileSystem [fs.size()]), instances, cl, exclude);
+        setLookup(fs.toArray(new FileSystem [0]), instances, cl, exclude);
     }
     
     @SuppressWarnings("deprecation")
@@ -294,7 +295,7 @@ public class EditorTestLookup extends ProxyLookup {
         public ZipFileSystem(URL zipURL) throws IOException {
             this.zipPath = zipURL.toString();
             
-            File zipFile = File.createTempFile("ZipFileSystem", ".zip");
+            File zipFile = Files.createTempFile("ZipFileSystem", ".zip").toFile();
             zipFile.deleteOnExit();
             
             OutputStream os = new FileOutputStream(zipFile);

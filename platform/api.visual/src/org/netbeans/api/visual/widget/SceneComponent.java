@@ -291,7 +291,7 @@ final class SceneComponent extends JComponent implements Accessible, MouseListen
             WidgetAction.State state;
 
             List<Widget> children = widget.getChildren ();
-            Widget[] childrenArray = children.toArray (new Widget[children.size ()]);
+            Widget[] childrenArray = children.toArray (new Widget[0]);
 
             for (int i = childrenArray.length - 1; i >= 0; i --) {
                 Widget child = childrenArray[i];
@@ -353,7 +353,7 @@ final class SceneComponent extends JComponent implements Accessible, MouseListen
         WidgetAction.State state;
 
         List<Widget> children = widget.getChildren ();
-        Widget[] childrenArray = children.toArray (new Widget[children.size ()]);
+        Widget[] childrenArray = children.toArray (new Widget[0]);
 
         for (int i = childrenArray.length - 1; i >= 0; i --) {
             Widget child = childrenArray[i];

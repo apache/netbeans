@@ -98,7 +98,7 @@ public class CreateTestClassHint {
                     }
                 }
                 validCombinations.clear();
-                return ErrorDescriptionFactory.forTree(context, context.getPath(), Bundle.ERR_CreateTestClassHint(), fixes.toArray(new Fix[fixes.size()]));
+                return ErrorDescriptionFactory.forTree(context, context.getPath(), Bundle.ERR_CreateTestClassHint(), fixes.toArray(new Fix[0]));
             }
         }
         validCombinations.clear();

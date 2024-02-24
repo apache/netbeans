@@ -33,7 +33,7 @@ public final class Inst extends ModuleInstall {
         if (value != null) {
             try {
                 Class<?> c = Thread.currentThread().getContextClassLoader().loadClass(value);
-                Object run = c.newInstance();
+                Object run = c.getDeclaredConstructor().newInstance();
                 ((Runnable)run).run();
             } catch (Exception ex) {
                 throw new IllegalStateException(ex);

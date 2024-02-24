@@ -37,6 +37,6 @@ public abstract class QueryAction extends AbstractAction {
     }
 
     public QueryNode[] getQueryNodes() {
-        return queryNodes.toArray(new QueryNode[queryNodes.size()]);
+        return queryNodes.toArray(new QueryNode[0]);
     }
 }

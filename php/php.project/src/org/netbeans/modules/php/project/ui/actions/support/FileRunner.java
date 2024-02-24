@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -202,7 +203,7 @@ public final class FileRunner {
 
     File createTempFile() {
         try {
-            File tmpFile = File.createTempFile(file.getName(), ".html"); // NOI18N
+            File tmpFile = Files.createTempFile(file.getName(), ".html").toFile(); // NOI18N
             tmpFile.deleteOnExit();
             return tmpFile;
         } catch (IOException ex) {

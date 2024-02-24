@@ -593,12 +593,11 @@ public class FormEditor {
             // the form was loaded with some non-fatal errors - some data
             // was not loaded - show a warning about possible data loss
             userErrorMsgs.append(FormUtils.getBundleString("MSG_FormLoadedWithErrors"));
-            dd = FormUtils.createErrorDialogWithExceptions(
-                     FormUtils.getBundleString("CTL_FormLoadedWithErrors"), // NOI18N
+            dd = FormUtils.createErrorDialogWithExceptions(FormUtils.getBundleString("CTL_FormLoadedWithErrors"), // NOI18N
                      userErrorMsgs.toString(),
                      DialogDescriptor.WARNING_MESSAGE,
                      options,
-                     persistenceErrors.toArray(new Throwable[persistenceErrors.size()]));
+                     persistenceErrors.toArray(new Throwable[0]));
         }
         resetPersistenceErrorLog();
         return dd;

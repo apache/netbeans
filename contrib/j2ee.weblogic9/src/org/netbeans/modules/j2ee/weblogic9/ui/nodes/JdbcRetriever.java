@@ -246,7 +246,7 @@ public class JdbcRetriever implements JdbcChildrenFactory.Retriever {
                     jdbcConfig.getInputStream()), handler);
             List<String> jndiNames = handler.getJndiNames();
             list.add( new JDBCDataBean( handler.getName(),
-                    jndiNames.toArray(new String[jndiNames.size()]), deplName));
+                    jndiNames.toArray(new String[0]), deplName));
         } catch (ParserConfigurationException e) {
             LOGGER.log(Level.INFO, null, e);
         } catch (SAXException e) {

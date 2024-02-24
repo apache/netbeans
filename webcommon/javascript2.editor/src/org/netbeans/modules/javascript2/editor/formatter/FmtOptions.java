@@ -634,8 +634,8 @@ public class FmtOptions {
             @Override
             public PreferencesCustomizer create(Preferences preferences) {
                 try {
-                    return new CategorySupport(mimeType, provider, preferences, id, panelClass.newInstance(), previewText, forcedOptions);
-                } catch (RuntimeException | IllegalAccessException | InstantiationException e) {
+                    return new CategorySupport(mimeType, provider, preferences, id, panelClass.getDeclaredConstructor().newInstance(), previewText, forcedOptions);
+                } catch (RuntimeException | ReflectiveOperationException e) {
                     LOGGER.log(Level.WARNING, "Exception during creating formatter customiezer", e);
                     return null;
                 }

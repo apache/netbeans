@@ -186,7 +186,7 @@ public abstract class VCSStatusTable<T extends VCSStatusNode> implements FileVie
             T selectedNode = tableModel.getNode(table.convertRowIndexToModel(i));
             files.add(selectedNode.getFile());
         }
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
 
     public final void setSelectedNodes (File[] selectedFiles) {

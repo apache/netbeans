@@ -20,9 +20,10 @@ package org.netbeans.modules.php.dbgp.breakpoints;
 
 import java.util.Map;
 import java.util.WeakHashMap;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.debugger.Breakpoint;
-import org.netbeans.api.debugger.Breakpoint.VALIDITY;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.dbgp.DebugSession;
 import org.netbeans.modules.php.dbgp.models.ViewModelSupport;
 import org.netbeans.modules.php.dbgp.packets.Stack;
@@ -53,6 +54,12 @@ public class BreakpointModel extends ViewModelSupport implements NodeModel {
     private static final String METHOD = "TXT_Method"; // NOI18N
     private static final String EXCEPTION = "TXT_Exception"; // NOI18N
     private static final String PARENS = "()"; // NOI18N
+    private static final String MESSAGE = "Message: "; // NOI18N
+    private static final String CODE = "Code: "; // NOI18N
+    private static final String FONT_COLOR = "<font color=\"#7D694A\">"; //NOI18N
+    private static final String CLOSE_FONT = "</font>"; //NOI18N
+    private static final String OPEN_HTML = "<html>"; //NOI18N
+    private static final String CLOSE_HTML = "</html>"; //NOI18N
     private final Map<DebugSession, AbstractBreakpoint> myCurrentBreakpoints;
     private volatile boolean searchCurrentBreakpointById = false;
 
@@ -79,12 +86,35 @@ public class BreakpointModel extends ViewModelSupport implements NodeModel {
             return builder.toString();
         } else if (node instanceof ExceptionBreakpoint) {
             ExceptionBreakpoint breakpoint = (ExceptionBreakpoint) node;
-            StringBuilder builder = new StringBuilder(NbBundle.getMessage(BreakpointModel.class, EXCEPTION));
-            builder.append(" "); // NOI18N
-            builder.append(breakpoint.getException());
+            StringBuilder builder = new StringBuilder()
+                .append(OPEN_HTML)
+                .append(NbBundle.getMessage(BreakpointModel.class, EXCEPTION))
+                .append(" ") // NOI18N
+                .append(breakpoint.getException());
+            String message = breakpoint.getExceptionMessage();
+            String code = breakpoint.getExceptionCode();
+            synchronized (myCurrentBreakpoints) {
+                for (AbstractBreakpoint brkp : myCurrentBreakpoints.values()) {
+                    if (breakpoint.equals(brkp)) {
+                        buildAppend(builder, MESSAGE, message);
+                        buildAppend(builder, CODE, code);
+                    }
+                }
+            }
+            builder.append(CLOSE_HTML);
             return builder.toString();
         }
         throw new UnknownTypeException(node);
+    }
+
+    private void buildAppend(StringBuilder builder, String prepend, @NullAllowed String text) {
+        if (!StringUtils.isEmpty(text)) {
+            builder.append(" ") // NOI18N
+                .append(FONT_COLOR)
+                .append(prepend)
+                .append(text)
+                .append(CLOSE_FONT);
+        }
     }
 
     @Override
@@ -218,6 +248,12 @@ public class BreakpointModel extends ViewModelSupport implements NodeModel {
                 new ModelEvent.NodeChanged(this, bpnt),
                 new ModelEvent.NodeChanged(this, abpnt)
             });
+        }
+    }
+
+    public AbstractBreakpoint getCurrentBreakpoint(DebugSession session) {
+        synchronized (myCurrentBreakpoints) {
+            return myCurrentBreakpoints.get(session);
         }
     }
 

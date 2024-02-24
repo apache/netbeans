@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.36
+#Version 2.38
 
 CLSS public abstract interface java.io.Serializable
 
@@ -276,6 +276,7 @@ meth public static java.util.Map<java.lang.String,org.netbeans.api.project.Proje
 supr java.lang.Object
 
 CLSS public final org.netbeans.modules.gradle.api.GradleReport
+innr public final static !enum Severity
 meth public boolean equals(java.lang.Object)
 meth public int getLine()
 meth public int hashCode()
@@ -286,10 +287,22 @@ meth public java.lang.String getLocation()
 meth public java.lang.String getMessage()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public java.lang.String toString()
+meth public java.lang.String[] getDetails()
 meth public org.netbeans.modules.gradle.api.GradleReport getCause()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public org.netbeans.modules.gradle.api.GradleReport$Severity getSeverity()
 supr java.lang.Object
-hfds causedBy,errorClass,line,location,message
+hfds causedBy,details,errorClass,line,location,message,severity
+
+CLSS public final static !enum org.netbeans.modules.gradle.api.GradleReport$Severity
+ outer org.netbeans.modules.gradle.api.GradleReport
+fld public final static org.netbeans.modules.gradle.api.GradleReport$Severity ERROR
+fld public final static org.netbeans.modules.gradle.api.GradleReport$Severity EXCEPTION
+fld public final static org.netbeans.modules.gradle.api.GradleReport$Severity INFO
+fld public final static org.netbeans.modules.gradle.api.GradleReport$Severity WARNING
+meth public static org.netbeans.modules.gradle.api.GradleReport$Severity valueOf(java.lang.String)
+meth public static org.netbeans.modules.gradle.api.GradleReport$Severity[] values()
+supr java.lang.Enum<org.netbeans.modules.gradle.api.GradleReport$Severity>
 
 CLSS public final org.netbeans.modules.gradle.api.GradleTask
 intf java.io.Serializable
@@ -572,7 +585,7 @@ meth public static java.net.URI getWrapperDistributionURI(java.io.File) throws j
 meth public static org.netbeans.modules.gradle.api.execute.GradleDistributionManager get()
 meth public static org.netbeans.modules.gradle.api.execute.GradleDistributionManager get(java.io.File)
 supr java.lang.Object
-hfds CACHE,DIST_VERSION_PATTERN,DOWNLOAD_URI,JDK_COMPAT,MINIMUM_SUPPORTED_VERSION,RP,VERSION_BLACKLIST,gradleUserHome
+hfds CACHE,DIST_VERSION_PATTERN,DOWNLOAD_URI,JDK_COMPAT,LAST_KNOWN_GRADLE,MINIMUM_SUPPORTED_VERSION,RP,VERSION_BLACKLIST,gradleUserHome
 hcls DownloadTask,GradleVersionRange
 
 CLSS public final org.netbeans.modules.gradle.api.execute.GradleDistributionManager$GradleDistribution

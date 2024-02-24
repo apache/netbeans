@@ -141,7 +141,7 @@ public final class HostInfoFactory {
                     for (int i = 0; i < gids.size(); i++) {
                         info.gids[i] = gids.get(i).intValue();                                                        
                     }
-                    info.groups = groups.toArray(new String[groups.size()]);
+                    info.groups = groups.toArray(new String[0]);
                 }
             } else {
                 error = true;

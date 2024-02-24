@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
 import java.sql.Blob;
 import java.sql.SQLException;
 import org.openide.util.Exceptions;
@@ -45,7 +46,7 @@ public class FileBackedBlob implements Blob {
 
     public FileBackedBlob() throws SQLException {
         try {
-            backingFile = File.createTempFile("netbeans-db-blob", null);
+            backingFile = Files.createTempFile("netbeans-db-blob", null).toFile();
             backingFile.deleteOnExit();
         } catch (IOException ex) {
             throw new SQLException(ex);

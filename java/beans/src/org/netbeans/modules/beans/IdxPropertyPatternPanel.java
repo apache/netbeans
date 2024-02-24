@@ -627,7 +627,7 @@ public final class IdxPropertyPatternPanel extends javax.swing.JPanel
                 String type = st.nextToken().trim();
                 l.add(type);
             }
-            TYPES = l.toArray(new String[l.size()]);
+            TYPES = l.toArray(new String[0]);
         }
         return TYPES;
     }

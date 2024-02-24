@@ -533,7 +533,7 @@ public final class OpenProjectList {
             }
 
             if (initial != null) {
-                Project[] initialA = initial.toArray(new Project[initial.size()]);
+                Project[] initialA = initial.toArray(new Project[0]);
                 log(createRecord("UI_INIT_PROJECTS", initialA),"org.netbeans.ui.projects");
                 log(createRecordMetrics("USG_PROJECT_OPEN", initialA),"org.netbeans.ui.metrics.projects");
             }
@@ -886,10 +886,9 @@ public final class OpenProjectList {
         log(addedRec,"org.netbeans.ui.metrics.projects");
         
         Mutex.EVENT.readAccess(new Action<Void>() {
-                @Override
+            @Override
             public Void run() {
-                pchSupport.firePropertyChange( PROPERTY_OPEN_PROJECTS, oldprjs.toArray(new Project[oldprjs.size()]), 
-                                                                       newprjs.toArray(new Project[newprjs.size()]) );
+                pchSupport.firePropertyChange(PROPERTY_OPEN_PROJECTS, oldprjs.toArray(new Project[0]), newprjs.toArray(new Project[0]));
                 if ( recentProjectsChangedCopy ) {
                     pchSupport.firePropertyChange( PROPERTY_RECENT_PROJECTS, null, null );
                 }
@@ -1007,8 +1006,8 @@ public final class OpenProjectList {
             });
             logProjects("close(): openProjects == ", openProjects.toArray(new Project[0])); // NOI18N
             if (someClosed.get()) {
-                pchSupport.firePropertyChange( PROPERTY_OPEN_PROJECTS,
-                                oldprjs.toArray(new Project[oldprjs.size()]), newprjs.toArray(new Project[newprjs.size()]) );
+                pchSupport.firePropertyChange(PROPERTY_OPEN_PROJECTS,
+                                oldprjs.toArray(new Project[0]), newprjs.toArray(new Project[0]) );
             }
             if (mainClosed.get()) {
                 pchSupport.firePropertyChange( PROPERTY_MAIN_PROJECT, null, null );
@@ -1044,7 +1043,7 @@ public final class OpenProjectList {
     public Project[] getOpenProjects() {
         return MUTEX.readAccess(new Mutex.Action<Project[]>() {
             public @Override Project[] run() {
-                return openProjects.toArray(new Project[openProjects.size()]);
+                return openProjects.toArray(new Project[0]);
             }
         });
     }
@@ -2060,7 +2059,7 @@ public final class OpenProjectList {
             for (Project prj : toRemove) {
                 removeModuleInfo(prj, info);
             }
-            close(toRemove.toArray(new Project[toRemove.size()]), false);
+            close(toRemove.toArray(new Project[0]), false);
         }
     }
     

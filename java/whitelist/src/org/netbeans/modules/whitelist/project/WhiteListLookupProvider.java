@@ -144,7 +144,7 @@ public class WhiteListLookupProvider implements LookupProvider {
                     impls.add(w);
                 }
             }
-            return impls.toArray(new UserSelectable[impls.size()]);
+            return impls.toArray(new UserSelectable[0]);
         }
     }
 }

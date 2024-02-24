@@ -134,7 +134,7 @@ public class LicenseComboBoxModel implements ComboBoxModel {
     private void fireContentsChanged(int index) {
         final ListDataListener[] clone;
         synchronized (listeners) {
-            clone = listeners.toArray(new ListDataListener[listeners.size()]);
+            clone = listeners.toArray(new ListDataListener[0]);
         }
 
         final ListDataEvent event = new ListDataEvent(

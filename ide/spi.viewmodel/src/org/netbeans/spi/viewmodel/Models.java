@@ -4306,9 +4306,7 @@ public final class Models {
             this.tableRendererModel = tableRendererModel;
             this.tablePropertyEditorsModel = tablePropertyEditorsModel;
             this.nodeActionsProvider = nodeActionsProvider;
-            this.columnModels = columnModels.toArray (
-                new ColumnModel [columnModels.size ()]
-            );
+            this.columnModels = columnModels.toArray(new ColumnModel[0]);
             this.asynchModel = asynchModel;
             this.propertiesHelpID = propertiesHelpID;
         }

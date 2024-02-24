@@ -24,7 +24,6 @@ import java.io.*;
 import java.lang.ref.*;
 import java.lang.reflect.*;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.*;
 import javax.xml.parsers.DocumentBuilder;
@@ -1243,7 +1242,7 @@ public class XMLDataObject extends MultiDataObject {
                     if (Processor.class.isAssignableFrom (next)) {
                         // the class implements Processor interface, so use
                         // default constructor to construct instance
-                        obj = next.newInstance ();
+                        obj = next.getDeclaredConstructor().newInstance ();
                         Processor proc = (Processor) obj;
                         proc.attachTo (xmlDataObject);
                         return obj;
@@ -1269,11 +1268,7 @@ public class XMLDataObject extends MultiDataObject {
                         }
                     }
                     throw new InternalError ("XMLDataObject processor class " + next + " invalid"); // NOI18N
-                } catch (InvocationTargetException e) {
-                    xmlDataObject.notifyEx (e);
-                } catch (InstantiationException e) {
-                    xmlDataObject.notifyEx(e);
-                } catch (IllegalAccessException e) {
+                } catch (ReflectiveOperationException e) {
                     xmlDataObject.notifyEx(e);
                 }
                 

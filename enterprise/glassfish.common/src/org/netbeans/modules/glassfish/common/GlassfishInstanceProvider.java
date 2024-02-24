@@ -535,7 +535,7 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
             retVal.addAll(noPasswordOptions);
         }
         retVal.add(domain);
-        return retVal.toArray(new String[retVal.size()]);
+        return retVal.toArray(String[]::new);
     }
 
     public CommandFactory getCommandFactory() {

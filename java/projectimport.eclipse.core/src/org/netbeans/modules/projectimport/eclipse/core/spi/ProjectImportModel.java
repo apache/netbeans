@@ -242,7 +242,7 @@ public final class ProjectImportModel {
         for (DotClassPathEntry entry : entries) {
             res.add(new File(entry.getAbsolutePath()));
         }
-        return res.toArray(new File[res.size()]);
+        return res.toArray(new File[0]);
     }
 
     /**

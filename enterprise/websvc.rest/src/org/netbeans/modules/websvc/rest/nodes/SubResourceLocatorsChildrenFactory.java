@@ -20,7 +20,6 @@ package org.netbeans.modules.websvc.rest.nodes;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -70,7 +69,7 @@ class SubResourceLocatorsChildrenFactory extends ChildFactory<SubResourceLocator
                                 locators.add((SubResourceLocator)method);
                             }
                         }
-                        Collections.sort( locators , COMPARATOR );
+                        locators.sort(COMPARATOR);
                         for (SubResourceLocator locator : locators){
                             list.add( new SubResourceLocatorNode(project, 
                                    className , locator));

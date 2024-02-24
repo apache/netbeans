@@ -235,7 +235,7 @@ public class TableChildren extends Children.Keys {
         }
         
         if ((filter == null) || filter.isSorted ()) 
-            Collections.sort(keys, comparator);
+            keys.sort(comparator);
 
         return keys;    
     }

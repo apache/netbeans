@@ -20,7 +20,6 @@ package org.netbeans.modules.docker.ui.node;
 
 import java.io.Closeable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
@@ -89,7 +88,7 @@ public class DockerImagesChildFactory extends NodeClosingFactory<DockerTag> impl
         for (DockerImage image : facade.getImages()) {
             tags.addAll(image.getTags());
         }
-        Collections.sort(tags, COMPARATOR);
+        tags.sort(COMPARATOR);
         toPopulate.addAll(tags);
         return true;
     }

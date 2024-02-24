@@ -157,7 +157,7 @@ public abstract class AbstractMicronautArtifacts implements PropertyChangeListen
             if (listeners == null || listeners.isEmpty()) {
                 return;
             }
-            ll = listeners.toArray(new ChangeListener[listeners.size()]);
+            ll = listeners.toArray(new ChangeListener[0]);
         }
         ChangeEvent e = new ChangeEvent(this);
         for (ChangeListener l : ll) {

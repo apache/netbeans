@@ -335,7 +335,7 @@ public class BugzillaIssue extends AbstractNbTaskWrapper {
                                               loc.getString("CTL_Issue_Whiteboard_Desc"),           // NOI18N
                                               0, false));
             }
-        return ret.toArray(new ColumnDescriptor[ret.size()]);
+        return ret.toArray(new ColumnDescriptor[0]);
     }
 
 
@@ -813,7 +813,7 @@ public class BugzillaIssue extends AbstractNbTaskWrapper {
                 }
             }
         });
-        return comments.toArray(new Comment[comments.size()]);
+        return comments.toArray(new Comment[0]);
     }
 
     // XXX carefull - implicit refresh

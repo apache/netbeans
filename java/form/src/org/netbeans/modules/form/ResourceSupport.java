@@ -1355,7 +1355,7 @@ public class ResourceSupport {
             for (TableColumnModelEditor.FormTableColumn column : columnModel.getColumns()) {
                 props.add(column.getTitle());
             }
-            return props.toArray(new Node.Property[props.size()]);
+            return props.toArray(new Node.Property[0]);
         }
         // [An alternative would be to use BeanPropertyEditor, but calling
         //  getCurrentEditor() forces searching for the PropertyEditor.
@@ -1824,7 +1824,7 @@ public class ResourceSupport {
                 props.add(localeProp);
             }
         }
-        return props.toArray(new Node.Property[props.size()]);
+        return props.toArray(new Node.Property[0]);
     }
 
     private String getValidBundleName(String name) {

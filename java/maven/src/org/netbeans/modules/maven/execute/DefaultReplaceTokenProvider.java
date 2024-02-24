@@ -96,7 +96,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
             files.add(method.getFile());
         }
 
-        return files.toArray(new FileObject[files.size()]);
+        return files.toArray(new FileObject[0]);
     }
 
     @Override public Map<String, String> createReplacements(String actionName, Lookup lookup) {

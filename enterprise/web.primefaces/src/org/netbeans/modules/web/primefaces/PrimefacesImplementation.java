@@ -144,8 +144,7 @@ public class PrimefacesImplementation implements JsfComponentImplementation {
             } else {
                 primefacesLibraries = getAllRegisteredPrimefaces();
             }
-            ProjectClassPathModifier.removeLibraries(primefacesLibraries.toArray(
-                    new Library[primefacesLibraries.size()]), webModule.getJavaSources()[0], ClassPath.COMPILE);
+            ProjectClassPathModifier.removeLibraries(primefacesLibraries.toArray(new Library[0]), webModule.getJavaSources()[0], ClassPath.COMPILE);
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Exception during removing JSF suite from an web project", ex); //NOI18N
         } catch (UnsupportedOperationException ex) {

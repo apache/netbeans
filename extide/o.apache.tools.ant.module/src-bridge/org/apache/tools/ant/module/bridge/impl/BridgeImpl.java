@@ -120,7 +120,7 @@ public class BridgeImpl implements BridgeInterface {
     public String[] getEnumeratedValues(Class<?> c) {
         if (EnumeratedAttribute.class.isAssignableFrom(c)) {
             try {
-                return ((EnumeratedAttribute)c.newInstance()).getValues();
+                return ((EnumeratedAttribute)c.getDeclaredConstructor().newInstance()).getValues();
             } catch (Exception e) {
                 AntModule.err.notify(ErrorManager.INFORMATIONAL, e);
             }
@@ -214,7 +214,7 @@ public class BridgeImpl implements BridgeInterface {
                 targs = new Vector<String>(1);
                 targs.add(project.getDefaultTarget());
             }
-            logger.setActualTargets(targets != null ? targets.toArray(new String[targets.size()]) : null);
+            logger.setActualTargets(targets != null ? targets.toArray(new String[0]) : null);
         }
         catch (BuildException be) {
             logger.buildInitializationFailed(be);

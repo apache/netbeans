@@ -110,6 +110,36 @@ public final class OptionsUtils {
             if (settingName == null || CodeCompletionPanel.PHP_CODE_COMPLETION_TYPE.equals(settingName)) {
                 codeCompletionType = CodeCompletionPanel.CodeCompletionType.resolve(preferences.get(CodeCompletionPanel.PHP_CODE_COMPLETION_TYPE, null));
             }
+
+            if (settingName == null || CodeCompletionPanel.PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_TYPE.equals(settingName)) {
+                globalNSImportType = CodeCompletionPanel.GlobalNamespaceAutoImportType.resolve(preferences.get(CodeCompletionPanel.PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_TYPE, CodeCompletionPanel.PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_TYPE_DEFAULT));
+            }
+
+            if (settingName == null || CodeCompletionPanel.PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_FUNCTION.equals(settingName)) {
+                globalNSImportFunction = CodeCompletionPanel.GlobalNamespaceAutoImportType.resolve(preferences.get(CodeCompletionPanel.PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_FUNCTION, CodeCompletionPanel.PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_FUNCTION_DEFAULT));
+            }
+
+            if (settingName == null || CodeCompletionPanel.PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_CONST.equals(settingName)) {
+                globalNSImportConst = CodeCompletionPanel.GlobalNamespaceAutoImportType.resolve(preferences.get(CodeCompletionPanel.PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_CONST, CodeCompletionPanel.PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_CONST_DEFAULT));
+            }
+
+            if (settingName == null || CodeCompletionPanel.PHP_AUTO_IMPORT.equals(settingName)) {
+                autoImport = preferences.getBoolean(
+                        CodeCompletionPanel.PHP_AUTO_IMPORT,
+                        CodeCompletionPanel.PHP_AUTO_IMPORT_DEFAULT);
+            }
+
+            if (settingName == null || CodeCompletionPanel.PHP_AUTO_IMPORT_FILE_SCOPE.equals(settingName)) {
+                autoImportFileScope = preferences.getBoolean(
+                        CodeCompletionPanel.PHP_AUTO_IMPORT_FILE_SCOPE,
+                        CodeCompletionPanel.PHP_AUTO_IMPORT_FILE_SCOPE_DEFAULT);
+            }
+
+            if (settingName == null || CodeCompletionPanel.PHP_AUTO_IMPORT_NAMESPACE_SCOPE.equals(settingName)) {
+                autoImportNamespaceScope = preferences.getBoolean(
+                        CodeCompletionPanel.PHP_AUTO_IMPORT_NAMESPACE_SCOPE,
+                        CodeCompletionPanel.PHP_AUTO_IMPORT_NAMESPACE_SCOPE_DEFAULT);
+            }
         }
     };
 
@@ -128,10 +158,16 @@ public final class OptionsUtils {
     private static Boolean codeCompletionNonStaticMethods = null;
     private static Boolean codeCompletionSmartParametersPreFilling = null;
     private static Boolean codeCompletionFirstClassCallable = null;
+    private static Boolean autoImport = null;
+    private static Boolean autoImportFileScope = null;
+    private static Boolean autoImportNamespaceScope = null;
 
     private static CodeCompletionPanel.VariablesScope codeCompletionVariablesScope = null;
 
     private static CodeCompletionPanel.CodeCompletionType codeCompletionType = null;
+    private static CodeCompletionPanel.GlobalNamespaceAutoImportType globalNSImportType = null;
+    private static CodeCompletionPanel.GlobalNamespaceAutoImportType globalNSImportFunction = null;
+    private static CodeCompletionPanel.GlobalNamespaceAutoImportType globalNSImportConst = null;
 
     private OptionsUtils() {
     }
@@ -272,6 +308,59 @@ public final class OptionsUtils {
         lazyInit();
         assert codeCompletionType != null;
         return codeCompletionType;
+    }
+
+    public static CodeCompletionPanel.GlobalNamespaceAutoImportType globalNSImportType() {
+        lazyInit();
+        assert globalNSImportType != null;
+        return globalNSImportType;
+    }
+
+    public static CodeCompletionPanel.GlobalNamespaceAutoImportType globalNSImportFunction() {
+        lazyInit();
+        assert globalNSImportFunction != null;
+        return globalNSImportFunction;
+    }
+
+    public static CodeCompletionPanel.GlobalNamespaceAutoImportType globalNSImportConst() {
+        lazyInit();
+        assert globalNSImportConst != null;
+        return globalNSImportConst;
+    }
+
+    /**
+     * Check whether auto import is enabled.
+     *
+     * @return {@code true} if auto import is enabled, {@code false} otherwise
+     */
+    public static boolean autoImport() {
+        lazyInit();
+        assert autoImport != null;
+        return autoImport;
+    }
+
+    /**
+     * Auto import for a file scope.
+     *
+     * @return {@code true} if import a use in a file scope, otherwise
+     * {@code false}
+     */
+    public static boolean autoImportFileScope() {
+        lazyInit();
+        assert autoImportFileScope != null;
+        return autoImportFileScope;
+    }
+
+    /**
+     * Auto import for a namespace scope.
+     *
+     * @return {@code true} if import a use in a namespace scope, otherwise
+     * {@code false}
+     */
+    public static boolean autoImportNamespaceScope() {
+        lazyInit();
+        assert autoImportNamespaceScope != null;
+        return autoImportNamespaceScope;
     }
 
     private static void lazyInit() {

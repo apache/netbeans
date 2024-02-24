@@ -131,7 +131,7 @@ public abstract class IgnoreUnignoreCommand extends GitCommand {
 
     protected final void save (File gitIgnore, List<IgnoreRule> ignoreRules) throws IOException {
         BufferedWriter bw = null;
-        File tmpFile = File.createTempFile(Constants.DOT_GIT_IGNORE, "tmp", gitIgnore.getParentFile()); //NOI18N
+        File tmpFile = Files.createTempFile(gitIgnore.getParentFile().toPath(), Constants.DOT_GIT_IGNORE, "tmp").toFile(); //NOI18N
         try {
             bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tmpFile), Constants.CHARSET));
             for (ListIterator<IgnoreRule> it = ignoreRules.listIterator(); it.hasNext(); ) {
@@ -190,7 +190,7 @@ public abstract class IgnoreUnignoreCommand extends GitCommand {
     }
 
     public File[] getModifiedIgnoreFiles () {
-        return ignoreFiles.toArray(new File[ignoreFiles.size()]);
+        return ignoreFiles.toArray(new File[0]);
     }
 
     protected abstract MatchResult addStatement (List<IgnoreRule> ignoreRules, File gitIgnore, String path, boolean isDirectory, boolean forceWrite, boolean writable) throws IOException;

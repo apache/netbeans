@@ -262,7 +262,7 @@ public class BlameCommand extends SvnCommand {
         }
 
         public Annotation[] getAnnotations() {            
-            return annotations.toArray(new Annotation[annotations.size()]);
+            return annotations.toArray(new Annotation[0]);
         }
 
         private String toString(int length, char[] ch, int start) {

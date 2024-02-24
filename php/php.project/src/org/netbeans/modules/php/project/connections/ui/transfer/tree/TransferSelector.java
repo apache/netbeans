@@ -24,7 +24,6 @@ import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -344,7 +343,7 @@ public final class TransferSelector extends TransferFilesChooserPanel implements
             }
             projectRoot = projRoot;
 
-            Collections.sort(roots, TRANSFER_FILE_COMPARATOR);
+            roots.sort(TRANSFER_FILE_COMPARATOR);
             setKeys(roots);
         }
 
@@ -370,7 +369,7 @@ public final class TransferSelector extends TransferFilesChooserPanel implements
         @Override
         protected boolean createKeys(List<TransferFile> transferFiles) {
             transferFiles.addAll(getChildren(transferFile));
-            Collections.sort(transferFiles, TRANSFER_FILE_COMPARATOR);
+            transferFiles.sort(TRANSFER_FILE_COMPARATOR);
             return true;
         }
 

@@ -33,6 +33,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -46,7 +47,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+
 import static javax.swing.Action.NAME;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
@@ -910,7 +913,7 @@ public class AttachmentsPanel extends JPanel {
             if (prefix.length()<3) {
                 prefix = prefix + "tmp";                                //NOI18N
             }
-            File file = File.createTempFile(prefix, suffix);
+            File file = Files.createTempFile(prefix, suffix).toFile();
             getAttachmentData(file);
             return file;
         }

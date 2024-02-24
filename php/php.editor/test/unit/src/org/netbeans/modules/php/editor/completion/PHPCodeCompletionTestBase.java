@@ -28,6 +28,7 @@ import java.util.concurrent.Future;
 import javax.swing.text.Document;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
@@ -43,6 +44,7 @@ import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.PHPTestBase;
+import org.netbeans.modules.php.editor.options.CodeCompletionPanel;
 import org.netbeans.modules.php.project.api.PhpSourcePath;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -79,7 +81,20 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
         return null;
     }
 
+    protected String getTestDirName() {
+        String name = getName();
+        int indexOf = name.indexOf("_");
+        if (indexOf != -1) {
+            name = name.substring(0, indexOf);
+        }
+        return name;
+    }
+
     protected void checkCompletionCustomTemplateResult(final String file, final String caretLine, CompletionProposalFilter filter, boolean checkAllItems) throws Exception {
+        checkCompletionCustomTemplateResult(file, caretLine, filter, checkAllItems, null);
+    }
+
+    protected void checkCompletionCustomTemplateResult(final String file, final String caretLine, CompletionProposalFilter filter, boolean checkAllItems, @NullAllowed AutoImportOptions autoImportOptions) throws Exception {
         final CodeCompletionHandler.QueryType type = CodeCompletionHandler.QueryType.COMPLETION;
         final boolean caseSensitive = true;
 
@@ -181,6 +196,14 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
         List<CompletionProposal> proposals = completionResult.getItems();
         for (CompletionProposal proposal : proposals) {
             if (completionProposalFilter.accept(proposal)) {
+                if (proposal instanceof PHPCompletionItem) {
+                    PHPCompletionItem phpCompletionItem = (PHPCompletionItem) proposal;
+                    if (autoImportOptions != null) {
+                        phpCompletionItem.setAutoImport(autoImportOptions.isAutoImport());
+                        phpCompletionItem.setCodeCompletionType(autoImportOptions.getCodeCompletionType());
+                        phpCompletionItem.setGlobalItemImportable(autoImportOptions.isGlobalItemImportable());
+                    }
+                }
                 completionProposals.add(proposal);
                 if (!checkAllItems) {
                     break;
@@ -204,14 +227,14 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
     }
 
     //~ Inner class
-    public interface CompletionProposalFilter {
+    public static interface CompletionProposalFilter {
 
         CompletionProposalFilter ACCEPT_ALL = proposal -> true;
 
         boolean accept(CompletionProposal proposal);
     }
 
-    public final class DefaultFilter implements CompletionProposalFilter {
+    public static final class DefaultFilter implements CompletionProposalFilter {
 
         private final PhpVersion phpVersion;
         private final String prefix;
@@ -245,6 +268,40 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
                 return name.startsWith(prefix);
             }
             return false;
+        }
+    }
+
+    static final class AutoImportOptions {
+
+        private CodeCompletionPanel.CodeCompletionType codeCompletionType = CodeCompletionPanel.CodeCompletionType.SMART;
+        private boolean autoImport = false;
+        private boolean globalItemImportable = false;
+
+        public CodeCompletionPanel.CodeCompletionType getCodeCompletionType() {
+            return codeCompletionType;
+        }
+
+        public boolean isAutoImport() {
+            return autoImport;
+        }
+
+        public boolean isGlobalItemImportable() {
+            return globalItemImportable;
+        }
+
+        public AutoImportOptions codeCompletionType(CodeCompletionPanel.CodeCompletionType codeCompletionType) {
+            this.codeCompletionType = codeCompletionType;
+            return this;
+        }
+
+        public AutoImportOptions autoImport(boolean autoImport) {
+            this.autoImport = autoImport;
+            return this;
+        }
+
+        public AutoImportOptions globalItemImportable(boolean globalItemImportable) {
+            this.globalItemImportable = globalItemImportable;
+            return this;
         }
     }
 }

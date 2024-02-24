@@ -292,7 +292,7 @@ public class DbUtil {
             // get the driver jar files and load them manually
             URL[] urls = drv.getURLs();
             ClassLoader cl = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
-            newDriverClass = (Driver) cl.loadClass(driverName).newInstance();
+            newDriverClass = (Driver) cl.loadClass(driverName).getDeclaredConstructor().newInstance();
             Properties prop = new Properties();
             prop.setProperty("user", username);
             prop.setProperty("password", password);

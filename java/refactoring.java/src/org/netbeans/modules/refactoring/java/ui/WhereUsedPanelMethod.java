@@ -55,7 +55,7 @@ public class WhereUsedPanelMethod extends WhereUsedPanel.WhereUsedInnerPanel {
         this.tph = element;
         initComponents();
         jComboBox1.setRenderer(new ComboBoxRenderer());
-        jComboBox1.setModel(new DefaultComboBoxModel(classes.toArray(new Pair[classes.size()])));
+        jComboBox1.setModel(new DefaultComboBoxModel(classes.toArray(new Pair[0])));
         jComboBox1.setSelectedIndex(1 % jComboBox1.getItemCount());
         jComboBox1.setEnabled(classes.size() > 1);
     }

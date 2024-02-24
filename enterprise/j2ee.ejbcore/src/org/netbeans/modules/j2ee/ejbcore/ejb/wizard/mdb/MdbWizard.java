@@ -217,7 +217,7 @@ public final class MdbWizard implements WizardDescriptor.InstantiatingIterator {
                 toRemove.add(library);
             }
         }
-        return Utils.removeLibraryFromClasspath(Templates.getProject(wiz), toRemove.toArray(new Library[toRemove.size()]));
+        return Utils.removeLibraryFromClasspath(Templates.getProject(wiz), toRemove.toArray(new Library[0]));
     }
 
     private void enhanceProjectClasspath(Profile targetProfile) throws IOException {

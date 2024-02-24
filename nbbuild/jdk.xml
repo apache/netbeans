@@ -210,10 +210,10 @@
         <!-- Define fallback values of some things. -->
         <property name="java.home.parent" location="${java.home}/.."/>
         <condition property="nbjdk.home" value="${java.home.parent}">
-            <available file="${java.home.parent}/lib/tools.jar" type="file"/>
+            <available file="${java.home.parent}/jmods/java.base.jmod" type="file"/>
         </condition>
         <condition property="nbjdk.home" value="${java.home}">
-            <available file="${java.home}/lib/tools.jar" type="file"/>
+            <available file="${java.home}/jmods/java.base.jmod" type="file"/>
         </condition>
 
         <!-- Mac OS X -->

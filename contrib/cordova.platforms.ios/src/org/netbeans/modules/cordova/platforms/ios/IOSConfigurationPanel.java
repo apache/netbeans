@@ -50,7 +50,7 @@ public class IOSConfigurationPanel extends javax.swing.JPanel {
     final RequestProcessor RP = new RequestProcessor(IOSConfigurationPanel.class);
     
     private void refreshDeviceCombo(Collection sdKs) {
-        final IOSSDK[] sdks = (IOSSDK[]) sdKs.toArray(new IOSSDK[sdKs.size()]);
+        final IOSSDK[] sdks = (IOSSDK[]) sdKs.toArray(new IOSSDK[0]);
         sdkCombo.setEnabled(true);
         sdkCombo.setRenderer(new SDKRenderer());
         sdkCombo.setModel(new DefaultComboBoxModel(sdks));

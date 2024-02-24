@@ -30,8 +30,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
@@ -690,11 +688,7 @@ public class UnusedImportsTest extends NbTestCase {
             }
         }, true);
 
-        Collections.sort(realSpans, new Comparator<int[]>() {
-            @Override public int compare(int[] o1, int[] o2) {
-                return o1[0] - o2[0];
-            }
-        });
+        realSpans.sort((int[] o1, int[] o2) -> o1[0] - o2[0]);
         
         int[][] goldenSpansArray = goldenSpans.toArray(new int[0][]);
         int[][] realSpansArray = realSpans.toArray(new int[0][]);

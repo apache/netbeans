@@ -159,7 +159,7 @@ public final class
     */
     protected NbClassPath createLibraryPath() {
         List<File> l = Main.getModuleSystem().getModuleJars();
-        return new NbClassPath (l.toArray (new File[l.size ()]));
+        return new NbClassPath (l.toArray (new File[0]));
     }
 
     /** adds a listener */

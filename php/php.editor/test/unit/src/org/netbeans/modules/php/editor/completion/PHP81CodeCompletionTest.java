@@ -44,15 +44,6 @@ public class PHP81CodeCompletionTest extends PHPCodeCompletionTestBase {
         );
     }
 
-    private String getTestDirName() {
-        String name = getName();
-        int indexOf = name.indexOf("_");
-        if (indexOf != -1) {
-            name = name.substring(0, indexOf);
-        }
-        return name;
-    }
-
     private String getTestPath(String fileName) {
         return String.format("testfiles/completion/lib/php81/%s/%s.php", getTestDirName(), fileName);
     }
@@ -1144,6 +1135,10 @@ public class PHP81CodeCompletionTest extends PHPCodeCompletionTestBase {
 
     public void testEnumsSpecialVariablesWithinInstanceContextGH5100_04() throws Exception {
         checkCompletion("enumsSpecialVariablesWithinInstanceContextGH5100", "        stat^ic::class;");
+    }
+
+    public void testEnumsAliasedName_01() throws Exception {
+        checkCompletion("enumsAliasedName", "Aliased^ // test");
     }
 
     public void testFirstClassCallableSyntax_01() throws Exception {

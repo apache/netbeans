@@ -584,7 +584,7 @@ public final class EncapsulateFieldRefactoringPlugin extends JavaRefactoringPlug
 
                     if (!newMembers.isEmpty()) {
                         if (sortBy == SortBy.ALPHABETICALLY) {
-                            Collections.sort(newMembers, new SortMethodsByNameComparator());
+                            newMembers.sort(new SortMethodsByNameComparator());
                         }
                         if (insertPoint < 0) {
                             if(insertPoint > Integer.MIN_VALUE) {

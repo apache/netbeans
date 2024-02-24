@@ -219,7 +219,7 @@ class LibraryChooserGUI extends JPanel implements ExplorerManager.Provider, Help
             if (libs.isEmpty()) {
                 return new Node[0];
             } else {
-                Collections.sort(libs,new Comparator<Library>() {
+                libs.sort(new Comparator<Library>() {
                     Collator COLL = Collator.getInstance();
                     public int compare(Library lib1, Library lib2) {
                         return COLL.compare(lib1.getDisplayName(), lib2.getDisplayName());
@@ -395,7 +395,7 @@ class LibraryChooserGUI extends JPanel implements ExplorerManager.Provider, Help
             }
         }
         try {
-            explorer.setSelectedNodes(selection.toArray(new Node[selection.size()]));
+            explorer.setSelectedNodes(selection.toArray(new Node[0]));
         } catch (PropertyVetoException e) {
             //Ignore it
         }

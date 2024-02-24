@@ -405,7 +405,7 @@ public class CommitAction extends ContextAction {
                     recentUsers.remove(userName);
                     recentUsers.add(0, userName);
                 }
-                final ComboBoxModel<String> model = new DefaultComboBoxModel<String>(recentUsers.toArray(new String[recentUsers.size()]));
+                final ComboBoxModel<String> model = new DefaultComboBoxModel<String>(recentUsers.toArray(new String[0]));
                 EventQueue.invokeLater(new Runnable() {
                     @Override
                     public void run () {
@@ -578,7 +578,7 @@ public class CommitAction extends ContextAction {
                 for (List<File> values : commitCandidates.values()) {
                     candidates.addAll(values);
                 }
-                hookFiles = candidates.toArray(new File[candidates.size()]);
+                hookFiles = candidates.toArray(new File[0]);
             }
             String originalMessage = message;
             HgHookContext context = new HgHookContext(hookFiles, message, new HgHookContext.LogEntry[] {});
@@ -617,7 +617,7 @@ public class CommitAction extends ContextAction {
         Mercurial.getInstance().getParallelRequestProcessor().post(new Runnable() {
             @Override
             public void run() {
-                FileUtil.refreshFor(files.toArray(new File[files.size()]));
+                FileUtil.refreshFor(files.toArray(new File[0]));
             }
         }, 100);
     }
@@ -879,7 +879,7 @@ public class CommitAction extends ContextAction {
                 } finally {
                     refreshFilesPerRepository.put(repository, refreshFiles);
                     if(commitedFiles != null) {
-                        Mercurial.getInstance().getMercurialHistoryProvider().fireHistoryChange(commitedFiles.toArray(new File[commitedFiles.size()]));
+                        Mercurial.getInstance().getMercurialHistoryProvider().fireHistoryChange(commitedFiles.toArray(new File[0]));
                     }
                 }
 

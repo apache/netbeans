@@ -40,7 +40,6 @@ import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 import org.openide.util.datatransfer.ExTransferable;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -330,7 +329,7 @@ public final class PaletteItemNode extends FilterNode implements Node.Cookie {
                     if( isDataFlavorSupported( flavors[i] ) )
                         tmp.add( flavors[i] );
                 }
-                flavors = tmp.toArray( new DataFlavor[tmp.size()] );
+                flavors = tmp.toArray(new DataFlavor[0]);
             }
             return flavors;
         }

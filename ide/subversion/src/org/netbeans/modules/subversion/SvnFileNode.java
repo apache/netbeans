@@ -104,7 +104,7 @@ public class SvnFileNode {
         if (fo != null) {
             list.add(fo);
         }
-        return list.toArray(new Object[list.size()]);
+        return list.toArray(new Object[0]);
     }
 
     /**

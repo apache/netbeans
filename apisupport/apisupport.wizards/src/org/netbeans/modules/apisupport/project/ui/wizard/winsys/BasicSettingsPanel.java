@@ -119,7 +119,7 @@ final class BasicSettingsPanel extends BasicWizardIterator.Panel {
 
             @Override
             public void finished() {
-                comMode.setModel(new DefaultComboBoxModel(modes != null ? modes.toArray(new String[modes.size()]) : DEFAULT_MODES));
+                comMode.setModel(new DefaultComboBoxModel(modes != null ? modes.toArray(new String[0]) : DEFAULT_MODES));
                 setComModeSelectedItem();
                 windowPosChanged(null);
                 setCursor(currentCursor);

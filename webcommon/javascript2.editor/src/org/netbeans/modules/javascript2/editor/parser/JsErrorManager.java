@@ -192,7 +192,7 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
                 for (ParserError error : parserErrors) {
                     errors.add(error.toSimpleError(snapshot, language));
                 }
-                Collections.sort(errors, POSITION_COMPARATOR);
+                errors.sort(POSITION_COMPARATOR);
                 convertedErrors = convert(snapshot, errors);
             }
         }

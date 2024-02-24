@@ -456,7 +456,7 @@ public class PushAction extends SingleRepositoryAction {
                             message.getRevision(),
                             new Date(message.getCommitTime())));
                 }
-                GitHookContext context = new GitHookContext(new File[] { getRepositoryRoot() }, null, entries.toArray(new GitHookContext.LogEntry[entries.size()]));
+                GitHookContext context = new GitHookContext(new File[] { getRepositoryRoot() }, null, entries.toArray(new GitHookContext.LogEntry[0]));
                 return context;
             }
 

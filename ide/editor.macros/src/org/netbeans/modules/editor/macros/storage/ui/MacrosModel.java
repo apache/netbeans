@@ -110,7 +110,7 @@ public final class MacrosModel {
             }
         }
         
-        Collections.sort(allMacrosList, MACRO_COMPARATOR);
+        allMacrosList.sort(MACRO_COMPARATOR);
 
         loaded = true;
         tableModel.fireTableDataChanged();
@@ -476,7 +476,7 @@ public final class MacrosModel {
                     for(int j = 0; j < allMacrosList.get(rowIndex).getShortcuts().size(); j++) {
                         MultiKeyBinding mkb = allMacrosList.get(rowIndex).getShortcuts().get(j);
                         List<KeyStroke> list = mkb.getKeyStrokeList();
-                        KeyStroke[] arr = list.toArray(new KeyStroke[list.size()]);
+                        KeyStroke[] arr = list.toArray(new KeyStroke[0]);
                         sb.append(KeyStrokeUtils.getKeyStrokesAsText(arr, " ")); // NOI18N
                         if (j + 1 < allMacrosList.get(rowIndex).getShortcuts().size()) {
                             sb.append(", "); //NOI18N

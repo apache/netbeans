@@ -164,7 +164,7 @@ public class StringArrayCustomEditor extends javax.swing.JPanel {
             lastToken = actToken;
         }
         
-        editor.setStringArray(list.toArray(new String[list.size()]));
+        editor.setStringArray(list.toArray(new String[0]));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -768,7 +768,7 @@ public class JPDAStart extends Task implements Runnable {
             if (url == null) continue;
             l.add (url);
         }
-        URL[] urls = (URL[]) l.toArray (new URL [l.size ()]);
+        URL[] urls = (URL[]) l.toArray (new URL [0]);
         return ClassPathSupport.createClassPath (urls);
     }
 

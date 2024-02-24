@@ -873,7 +873,7 @@ public final class NbMavenProjectImpl implements Project {
                 uris.add(root.toURI());
             }
         }
-        return uris.toArray(new URI[uris.size()]);
+        return uris.toArray(new URI[0]);
     }
 
     public URI[] getGeneratedSourceRoots(boolean test) {
@@ -947,7 +947,7 @@ public final class NbMavenProjectImpl implements Project {
             uris.addAll(BHTestUris);
         }
 
-        return uris.toArray(new URI[uris.size()]);
+        return uris.toArray(new URI[0]);
     }
 
     public URI getWebAppDirectory() {
@@ -1019,7 +1019,7 @@ public final class NbMavenProjectImpl implements Project {
             toRet.add(uri);
 //            }
         }
-        return toRet.toArray(new URI[toRet.size()]);
+        return toRet.toArray(new URI[0]);
     }
 
     public File[] getOtherRoots(boolean test) {
@@ -1233,7 +1233,7 @@ public final class NbMavenProjectImpl implements Project {
                 }
                 LOG.log(Level.FINE, "Composing lookups for {0}, packaging: {1}, lookups: {2}: ", 
                         new Object[] { watcher.getMavenProject().getFile(), newPackaging, newComponents });
-                setLookups(lookups.toArray(new Lookup[lookups.size()]));
+                setLookups(lookups.toArray(new Lookup[0]));
             }
         }
         

@@ -82,7 +82,7 @@ class ColumnSelectionPanel extends JPanel {
         ETableColumnModel etcm = (ETableColumnModel)colModel;
         this.columnModel = etcm;
         List<TableColumn> columns = etcm.getAllColumns();
-        Collections.sort(columns, ETableColumnComparator.DEFAULT );
+        columns.sort(ETableColumnComparator.DEFAULT);
         int width = 1; // columns.size() / 10 + 1;
 
         JPanel p = layoutPanel(columns, width, table);
@@ -166,7 +166,7 @@ class ColumnSelectionPanel extends JPanel {
             displayNames.add(dName);
         }
         String first = displayNames.remove (0);
-        Collections.sort(displayNames, Collator.getInstance());
+        displayNames.sort(Collator.getInstance());
         displayNames.add (0, first);
         int i = 0;
         int j = 0;
@@ -274,7 +274,7 @@ class ColumnSelectionPanel extends JPanel {
         } else {
             final ETableColumnModel etcm = (ETableColumnModel)columnModel;
             List<TableColumn> columns = etcm.getAllColumns();
-            Collections.sort(columns, ETableColumnComparator.DEFAULT);
+            columns.sort(ETableColumnComparator.DEFAULT);
             Map<String,Object> displayNameToCheckBox = new HashMap<String,Object>();
             ArrayList<String> displayNames = new ArrayList<String>();
             for (Iterator<TableColumn> it = columns.iterator(); it.hasNext(); ) {
@@ -323,7 +323,7 @@ class ColumnSelectionPanel extends JPanel {
                 }
                 displayNames.add(dName);
             }
-            Collections.sort(displayNames, Collator.getInstance());
+            displayNames.sort(Collator.getInstance());
             int index = 0;
             for (Iterator<String> it = displayNames.iterator(); it.hasNext(); ) {
                 String displayName = it.next();
@@ -393,7 +393,7 @@ class ColumnSelectionPanel extends JPanel {
         }
         final ETableColumnModel etcm = (ETableColumnModel)columnModel;
         List<TableColumn> columns = etcm.getAllColumns();
-        Collections.sort(columns, ETableColumnComparator.DEFAULT);
+        columns.sort(ETableColumnComparator.DEFAULT);
         Map<String, ETableColumn> nameToColumn = new HashMap<String, ETableColumn>();
         for (Iterator<TableColumn> it = columns.iterator(); it.hasNext(); ) {
             final ETableColumn etc = (ETableColumn)it.next();
@@ -426,15 +426,15 @@ class ColumnSelectionPanel extends JPanel {
         } else {
             columns = etcm.getAllColumns();
         }
-        Collections.sort(columns, ETableColumnComparator.DEFAULT);
+        columns.sort(ETableColumnComparator.DEFAULT);
         ArrayList<String> displayNames = new ArrayList<String>();
         for (Iterator<TableColumn> it = columns.iterator(); it.hasNext(); ) {
             final ETableColumn etc = (ETableColumn)it.next();
             String dName = table.getColumnDisplayName(etc.getHeaderValue().toString());
             displayNames.add(dName);
         }
-        Collections.sort(displayNames, Collator.getInstance());
-        return displayNames.toArray(new String[displayNames.size()]);
+        displayNames.sort(Collator.getInstance());
+        return displayNames.toArray(new String[0]);
     }
     
     private static class ETableColumnComparator implements Comparator<TableColumn> {

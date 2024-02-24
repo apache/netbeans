@@ -175,7 +175,7 @@ public class ConfigurationImpl implements ProjectConfiguration {
                 newConfigurations.add(0, newActive);
             }
 
-            Collections.sort(newConfigurations, new Comparator<ConfigurationImpl>() {
+            newConfigurations.sort(new Comparator<ConfigurationImpl>() {
                 @Override public int compare(ConfigurationImpl o1, ConfigurationImpl o2) {
                     return o1.getLocation().getName().compareTo(o2.getLocation().getName());
                 }

@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -132,7 +133,7 @@ public final class SymfonyScript {
     public List<SymfonyCommandVO> getCommands(PhpModule phpModule) {
         File tmpFile;
         try {
-            tmpFile = File.createTempFile("nb-symfony23-commands-", ".xml"); // NOI18N
+            tmpFile = Files.createTempFile("nb-symfony23-commands-", ".xml").toFile(); // NOI18N
             tmpFile.deleteOnExit();
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, null, ex);

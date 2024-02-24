@@ -754,7 +754,7 @@ public final class SingleModuleProperties extends ModuleProperties {
                 set.add(dep.getModuleEntry().getCodeNameBase());
             }
         } // else standalone module - leave empty (see the UI spec)
-        return set.toArray(new String[set.size()]);
+        return set.toArray(new String[0]);
     }
 
     FriendListModel getFriendListModel() {

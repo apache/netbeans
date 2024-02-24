@@ -1035,7 +1035,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             }
             if (branchMergeWith != null) {
                 keys = new ArrayList<GitBranchInfo>(keys);
-                Collections.sort(keys, new Comparator<GitBranchInfo>() {
+                keys.sort(new Comparator<GitBranchInfo>() {
                     @Override
                     public int compare (GitBranchInfo i1, GitBranchInfo i2) {
                         assert i1.mergedStatus != null;
@@ -1353,7 +1353,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                     }
                 }
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -1780,7 +1780,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                 a.putValue(PROP_DELETE_ACTION, Boolean.TRUE);
                 actions.add(a);
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -2032,7 +2032,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                 actions.add(null);
                 actions.add(a);
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -2213,7 +2213,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                     });
                 }
             });
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
     }
 
@@ -2248,7 +2248,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                     urls.add(new RemoteUri(s, true));
                 }
             }
-            Collections.sort(urls, new Comparator<RemoteUri>() {
+            urls.sort(new Comparator<RemoteUri>() {
                 @Override
                 public int compare (RemoteUri o1, RemoteUri o2) {
                     return o1.uri.compareTo(o2.uri);
@@ -2321,7 +2321,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                     }
                 });
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
     }
     //</editor-fold>

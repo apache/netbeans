@@ -92,8 +92,7 @@ public class OpenFilesSearchScopeProvider extends SearchScopeDefinitionProvider 
         public SearchInfo getSearchInfo() {
             Collection<FileObject> files = getCurrentlyOpenedFiles();
             //use all current open files
-            return SearchInfoUtils.createSearchInfoForRoots(
-                    files.toArray(new FileObject[files.size()]));
+            return SearchInfoUtils.createSearchInfoForRoots(files.toArray(new FileObject[0]));
         }
 
         @Override

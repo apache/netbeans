@@ -28,7 +28,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import javax.swing.JEditorPane;
 import javax.swing.text.Document;
-import org.netbeans.ModuleManager;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -39,11 +38,8 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.gen.WhitespaceIgnoringDiff;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.xml.lexer.XMLTokenId;
-import org.netbeans.core.ModuleActions;
-import org.netbeans.core.startup.ModuleLifecycleManager;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.editor.completion.CompletionItemComparator;
-import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.JavaDataLoader;
 import org.netbeans.modules.java.source.indexing.TransactionContext;
 import org.netbeans.modules.java.source.parsing.JavacParserFactory;
@@ -66,8 +62,6 @@ import org.openide.LifecycleManager;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.*;
 import org.openide.loaders.DataObject;
-import org.openide.modules.ModuleInfo;
-import org.openide.modules.ModuleInstall;
 import org.openide.util.Lookup;
 import org.openide.util.SharedClassObject;
 import org.openide.util.lookup.Lookups;
@@ -144,7 +138,7 @@ public class FXMLCompletionTestBase extends NbTestCase {
                 allUrls.add(en.nextElement());
             }
         }
-        system.setXmlUrls(allUrls.toArray(new URL[allUrls.size()]));
+        system.setXmlUrls(allUrls.toArray(new URL[0]));
         Repository repository = new Repository(new MultiFileSystem(new FileSystem[] {FileUtil.createMemoryFileSystem(), system}));
         final ClassPath bootPath = createClassPath(System.getProperty("sun.boot.class.path"));
         final ClassPath fxPath = ClassPathSupport.createClassPath(getFxrtJarURL());
@@ -288,7 +282,7 @@ public class FXMLCompletionTestBase extends NbTestCase {
             doc.insertString(caretPos, textToInsert, null);
         Source s = Source.create(doc);
         List<? extends CompletionItem> items = performQuery(s, queryType, caretPos + textToInsertLength, caretPos + textToInsertLength, doc);
-        Collections.sort(items, CompletionItemComparator.BY_PRIORITY);
+        items.sort(CompletionItemComparator.BY_PRIORITY);
         
         File output = new File(getWorkDir(), getName() + ".out");
         Writer out = new FileWriter(output);

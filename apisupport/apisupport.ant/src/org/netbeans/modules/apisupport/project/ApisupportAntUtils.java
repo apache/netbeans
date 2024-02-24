@@ -186,7 +186,7 @@ public class ApisupportAntUtils {
                 }
                 if (!bundleFOs.isEmpty()) {
                     Collections.reverse(bundleFOs);
-                    return LocalizedBundleInfo.load(bundleFOs.toArray(new FileObject[bundleFOs.size()]));
+                    return LocalizedBundleInfo.load(bundleFOs.toArray(new FileObject[0]));
                 }
             }
         } catch (IOException e) {
@@ -264,7 +264,7 @@ public class ApisupportAntUtils {
                         addBundlesFromJar(main, bundleISs, locBundleResource);
                         if (!bundleISs.isEmpty()) {
                             Collections.reverse(bundleISs);
-                            return LocalizedBundleInfo.load(bundleISs.toArray(new InputStream[bundleISs.size()]));
+                            return LocalizedBundleInfo.load(bundleISs.toArray(new InputStream[0]));
                         }
                     } finally {
                         for (InputStream bundleIS : bundleISs) {

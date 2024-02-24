@@ -169,7 +169,7 @@ public class StartTask extends BasicTask<TaskState> {
                 }
             }
         });
-        this.stateListener = listeners.toArray(new TaskStateListener[listeners.size()]);
+        this.stateListener = listeners.toArray(new TaskStateListener[0]);
         this.support = support;
         this.recognizers = recognizers;
         this.jvmArgs = (jvmArgs != null) ? Arrays.asList(removeEscapes(jvmArgs)) : null;

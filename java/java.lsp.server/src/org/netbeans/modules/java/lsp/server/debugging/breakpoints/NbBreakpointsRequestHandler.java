@@ -103,7 +103,7 @@ public final class NbBreakpointsRequestHandler {
             res.add(added[i].convertDebuggerBreakpointToClient());
         }
         SetBreakpointsResponse response = new SetBreakpointsResponse();
-        response.setBreakpoints(res.toArray(new Breakpoint[res.size()]));
+        response.setBreakpoints(res.toArray(new Breakpoint[0]));
         resultFuture.complete(response);
         return resultFuture;
     }

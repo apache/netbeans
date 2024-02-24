@@ -334,7 +334,7 @@ public final class QueryTopComponent extends TopComponent
     private static QueryTopComponent[] getOpenQueries() {
         QueryTopComponent[] tcs;
         synchronized(openQueries) {
-            tcs = openQueries.toArray(new QueryTopComponent[openQueries.size()]);
+            tcs = openQueries.toArray(new QueryTopComponent[0]);
         }
         return tcs;
     }

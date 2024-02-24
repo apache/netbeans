@@ -244,7 +244,7 @@ public final class PullUpRefactoring extends CodeRefactoring {
             }, true);
             org.netbeans.modules.refactoring.java.api.PullUpRefactoring refactoring = new org.netbeans.modules.refactoring.java.api.PullUpRefactoring(TreePathHandle.from(sourceHandle, info));
             refactoring.setTargetType(targetHandle);
-            refactoring.setMembers(memberHandles.toArray(new MemberInfo[memberHandles.size()]));
+            refactoring.setMembers(memberHandles.toArray(new MemberInfo[0]));
             refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
             client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "PullUp")));
         } catch (Exception ex) {

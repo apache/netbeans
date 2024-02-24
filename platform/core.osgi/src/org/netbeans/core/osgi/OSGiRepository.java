@@ -96,7 +96,7 @@ class OSGiRepository extends Repository {
                 layers.add(generated);
             }
         }
-        return layers.toArray(new URL[layers.size()]);
+        return layers.toArray(new URL[0]);
     }
 
     public void addLayersFor(List<Bundle> bundles) {
@@ -127,7 +127,7 @@ class OSGiRepository extends Repository {
                 setPropagateMasks(true);
             }
             void _setDelegates(Collection<FileSystem> delegates) {
-                setDelegates(delegates.toArray(new FileSystem[delegates.size()]));
+                setDelegates(delegates.toArray(new FileSystem[0]));
             }
         }
 
@@ -205,7 +205,7 @@ class OSGiRepository extends Repository {
                     delegates.add(fs);
                 }
             }
-            setDelegates(delegates.toArray(new FileSystem[delegates.size()]));
+            setDelegates(delegates.toArray(new FileSystem[0]));
             assert getRoot().isValid();
             assert !isReadOnly() : delegates;
         }

@@ -276,7 +276,7 @@ public class LafPanel extends javax.swing.JPanel {
             cl = LafPanel.class.getClassLoader();
         try {
             Class klz = cl.loadClass( COLOR_MODEL_CLASS_NAME );
-            Object colorModel = klz.newInstance();
+            Object colorModel = klz.getDeclaredConstructor().newInstance();
             Method m = klz.getDeclaredMethod( "getCurrentProfile", new Class[0] ); //NOI18N
             Object res = m.invoke( colorModel, new Object[0] );
             return res != null && !preferredProfile.equals( res );
@@ -296,7 +296,7 @@ public class LafPanel extends javax.swing.JPanel {
             cl = LafPanel.class.getClassLoader();
         try {
             Class klz = cl.loadClass( COLOR_MODEL_CLASS_NAME );
-            Object colorModel = klz.newInstance();
+            Object colorModel = klz.getDeclaredConstructor().newInstance();
             Method m = klz.getDeclaredMethod( "getAnnotations", String.class ); //NOI18N
             Object annotations = m.invoke( colorModel, preferredProfile );
             m = klz.getDeclaredMethod( "setAnnotations", String.class, Collection.class ); //NOI18N
@@ -349,7 +349,7 @@ public class LafPanel extends javax.swing.JPanel {
 
         try {
             Class klazz = loader.loadClass( className );
-            LookAndFeel laf = ( LookAndFeel ) klazz.newInstance();
+            LookAndFeel laf = ( LookAndFeel ) klazz.getDeclaredConstructor().newInstance();
             return laf.getDefaults().getString( "nb.preferred.color.profile" ); //NOI18N
         } catch( Exception e ) {
             //ignore

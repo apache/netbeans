@@ -310,7 +310,7 @@ public class TestUtil extends CommonTestUtil {
 
         FileObject[] javaFilesArr = (javaFiles.size() == children.length)
                                     ? children
-                                    : javaFiles.toArray(new FileObject[javaFiles.size()]);
+                                    : javaFiles.toArray(new FileObject[0]);
         final JavaSource source = JavaSource.create(cpInfo, javaFilesArr);
         if (source == null) {
             ErrorManager.getDefault().log(

@@ -176,7 +176,7 @@ public abstract class ClassIndexImpl {
             @NullAllowed final ClassIndexImplEvent changed) {
         WeakReference<ClassIndexImplListener>[] _listeners;
         synchronized (this.listeners) {
-            _listeners = this.listeners.toArray(new WeakReference[this.listeners.size()]);
+            _listeners = this.listeners.toArray(new WeakReference[0]);
         }
         for (WeakReference<ClassIndexImplListener> lr : _listeners) {
             ClassIndexImplListener l = lr.get();

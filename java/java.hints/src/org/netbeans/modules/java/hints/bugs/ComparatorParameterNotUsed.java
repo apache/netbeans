@@ -26,7 +26,6 @@ import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -119,7 +118,7 @@ public class ComparatorParameterNotUsed extends ErrorAwareTreePathScanner {
         
         List<? extends VariableElement> ll = new ArrayList<VariableElement>(v.unusedVars);
         List<ErrorDescription> res = new ArrayList<>(ll.size());
-        Collections.sort(ll, Collator.getInstance());
+        ll.sort(Collator.getInstance());
         for (VariableElement ve : ll) {
             Tree vt = ve.getSimpleName() == par1.getName() ? par1 : par2;
             res.add(

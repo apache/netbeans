@@ -228,7 +228,7 @@ public final class FoldRegistry  {
                 if (listeners == null) {
                     return;
                 }
-                ll = listeners.toArray(new ChangeListener[listeners.size()]);
+                ll = listeners.toArray(new ChangeListener[0]);
             }
             ChangeEvent e = new ChangeEvent(this);
             for (int i = 0; i < ll.length; i++) {

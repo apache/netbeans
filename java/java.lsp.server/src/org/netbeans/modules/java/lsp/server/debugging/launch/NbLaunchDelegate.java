@@ -244,7 +244,7 @@ public abstract class NbLaunchDelegate {
                         boolean defConfig = true;
                         for (ProjectConfiguration c : pcp.getConfigurations()) {
                             runContext.set(confIndex, c);
-                            Lookup tryConf = Lookups.fixed(runContext.toArray(new Object[runContext.size()]));
+                            Lookup tryConf = Lookups.fixed(runContext.toArray(new Object[0]));
                             if (ap.isActionEnabled(cmd, tryConf)) {
                                 supportive = c;
                                 break;

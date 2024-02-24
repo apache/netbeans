@@ -49,7 +49,7 @@ public class Hacks {
         if (diags.isEmpty()) {
             return null;
         }
-        return diags.toArray(new Diagnostic[diags.size()]);
+        return diags.toArray(new Diagnostic[0]);
     }
     
     private static void getNestedDiagnostics(Diagnostic<?> d, List<Diagnostic> diags) {

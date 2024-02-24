@@ -126,7 +126,7 @@ public class HudsonInstanceNode extends AbstractNode {
 
     public @Override Action[] getActions(boolean context) {
         List<? extends Action> actions = org.openide.util.Utilities.actionsForPath(HudsonInstance.ACTION_PATH);
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     public @Override boolean canDestroy() {

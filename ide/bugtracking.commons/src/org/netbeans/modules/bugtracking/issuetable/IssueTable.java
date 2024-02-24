@@ -453,7 +453,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                setTableModel(filteredNodes.toArray(new IssueNode[filteredNodes.size()]));
+                setTableModel(filteredNodes.toArray(new IssueNode[0]));
             }
         });
     }
@@ -654,7 +654,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
                 visible.add(d);
             }
         }
-        return visible.toArray(new ColumnDescriptor[visible.size()]);
+        return visible.toArray(new ColumnDescriptor[0]);
     }
 
     @Override
@@ -689,7 +689,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
                 }
             }
         }
-        descriptors = properties.toArray(new ColumnDescriptor[properties.size()]);
+        descriptors = properties.toArray(new ColumnDescriptor[0]);
         tableModel.setProperties(descriptors);        
     }
 
@@ -758,7 +758,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
                 synchronized(cellActions) {
                     Cell cell = new Cell(row, column);
                     Set<CellAction> set = cellActions.get(cell);
-                    actions = set != null ? set.toArray(new CellAction[set.size()]) : null;
+                    actions = set != null ? set.toArray(new CellAction[0]) : null;
                 }
                 if(actions != null) {
                     for (CellAction cellAction : actions) {

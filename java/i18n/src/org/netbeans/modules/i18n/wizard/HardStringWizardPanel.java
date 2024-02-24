@@ -497,7 +497,7 @@ final class HardStringWizardPanel extends JPanel implements ListSelectionListene
                             DialogDisplayer.getDefault().notify(nd);
                         } else {               
                             Set<HardCodedString> hcStrings = stringMap.keySet();
-                            HardCodedString[] hcStringsArr = hcStrings.toArray(new HardCodedString[hcStrings.size()]);
+                            HardCodedString[] hcStringsArr = hcStrings.toArray(new HardCodedString[0]);
                             HardCodedString hardString = hcStringsArr[rowIndex];
 
                             Set<HardCodedString> removedStrings = getRemovedStrings();

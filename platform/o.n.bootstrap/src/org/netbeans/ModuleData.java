@@ -148,7 +148,7 @@ class ModuleData {
                     if (exports.isEmpty()) {
                         throw new IllegalArgumentException("Illegal OpenIDE-Module-Public-Packages: " + exportsS); // NOI18N
                     }
-                    publicPackages = exports.toArray(new Module.PackageExport[exports.size()]);
+                    publicPackages = exports.toArray(new Module.PackageExport[0]);
                 }
             } else {
                 // XXX new link?
@@ -394,7 +394,7 @@ class ModuleData {
     private Dependency[] initDeps(Module forModule, Set<?> knownDeps, Attributes attr)
         throws IllegalStateException, IllegalArgumentException {
         if (knownDeps != null) {
-            return knownDeps.toArray(new Dependency[knownDeps.size()]);
+            return knownDeps.toArray(new Dependency[0]);
         }
 
         // deps
@@ -428,7 +428,7 @@ class ModuleData {
         deps.addAll(Dependency.create(Dependency.TYPE_NEEDS, attr.getValue("OpenIDE-Module-Needs"))); // NOI18N
         deps.addAll(Dependency.create(Dependency.TYPE_RECOMMENDS, attr.getValue("OpenIDE-Module-Recommends"))); // NOI18N
         forModule.refineDependencies(deps);
-        return deps.toArray(new Dependency[deps.size()]);
+        return deps.toArray(new Dependency[0]);
     }
     
     final String getFragmentHostCodeName() {
@@ -499,7 +499,7 @@ class ModuleData {
     private String[] readStrings(ObjectInput dis) throws IOException {
         List<String> arr = new ArrayList<String>();
         readStrings(dis, arr, false);
-        return arr.toArray(new String[arr.size()]);
+        return arr.toArray(new String[0]);
     }
     private void writeStrings(DataOutput dos, Collection<String> set) 
     throws IOException {

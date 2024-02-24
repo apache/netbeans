@@ -484,7 +484,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
 
                 // the comparator instance must not be cached, because it uses data
                 // from the default lookup
-                Collections.sort(_orderedInfos, new C());
+                _orderedInfos.sort(new C());
                 sortInfosByMimeType(_infosByMimeType);
                 if (transientUpdate) {
                     return new Object [] {
@@ -710,7 +710,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
             }
         }
         if (needsSort) {
-            Collections.sort(data, IIC);
+            data.sort(IIC);
         }        
     }
     

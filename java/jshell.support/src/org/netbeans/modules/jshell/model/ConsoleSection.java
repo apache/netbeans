@@ -165,13 +165,13 @@ public final class ConsoleSection {
         Rng first = ranges.get(0);
         this.contentStart = first.start;
         if (ranges.size() > 1) {
-            this.partOffsets = ranges.toArray(new Rng[ranges.size()]);
+            this.partOffsets = ranges.toArray(Rng[]::new);
         }
     }
 
     void setSnippetRanges(List<Rng> ranges) {
         if (ranges.size() > 1) {
-            this.snippetOffsets = ranges.toArray(new Rng[ranges.size()]);
+            this.snippetOffsets = ranges.toArray(Rng[]::new);
         }
     }
 
@@ -323,7 +323,7 @@ public final class ConsoleSection {
                 res.add(new Rng(pr.start, jr.end));
             }
         }
-        return res.toArray(new Rng[res.size()]);
+        return res.toArray(Rng[]::new);
     }
 
     /**

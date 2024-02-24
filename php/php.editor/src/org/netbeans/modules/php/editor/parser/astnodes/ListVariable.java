@@ -73,7 +73,7 @@ public class ListVariable extends VariableBase {
     }
 
     public ListVariable(int start, int end, List<ArrayElement> elements, SyntaxType syntaxType) {
-        this(start, end, elements == null ? null : elements.toArray(new ArrayElement[elements.size()]), syntaxType);
+        this(start, end, elements == null ? null : elements.toArray(new ArrayElement[0]), syntaxType);
     }
 
     /**

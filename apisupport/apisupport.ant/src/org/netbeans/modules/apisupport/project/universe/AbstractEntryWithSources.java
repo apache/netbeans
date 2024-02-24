@@ -129,7 +129,7 @@ abstract class AbstractEntryWithSources extends AbstractEntry {
             String cnb = XMLUtil.findText(cnbEl);
             deps.add(cnb);
         }
-        return deps.toArray(new String[deps.size()]);
+        return deps.toArray(new String[0]);
     }
 
     public String getSpecificationVersion() {

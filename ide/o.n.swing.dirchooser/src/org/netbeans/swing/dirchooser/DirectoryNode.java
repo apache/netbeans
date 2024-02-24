@@ -23,7 +23,6 @@
 package org.netbeans.swing.dirchooser;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -159,7 +158,7 @@ public class DirectoryNode extends DefaultMutableTreeNode {
                     list.add(child);
                 }
             }
-            Collections.sort(list, FILE_NAME_COMPARATOR);
+            list.sort(FILE_NAME_COMPARATOR);
         } else if(mode == JFileChooser.FILES_AND_DIRECTORIES || mode == JFileChooser.FILES_ONLY) {
             ArrayList dirList = new ArrayList();
             ArrayList fileList = new ArrayList();
@@ -172,8 +171,8 @@ public class DirectoryNode extends DefaultMutableTreeNode {
                 }
             }
             
-            Collections.sort(dirList, FILE_NAME_COMPARATOR);
-            Collections.sort(fileList, FILE_NAME_COMPARATOR);
+            dirList.sort(FILE_NAME_COMPARATOR);
+            fileList.sort(FILE_NAME_COMPARATOR);
             
             list.addAll(dirList);
             list.addAll(fileList);

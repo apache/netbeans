@@ -26,7 +26,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -41,6 +40,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.DialogDisplayer;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.modules.j2ee.common.dd.DDHelper;
@@ -66,7 +66,7 @@ import org.openide.loaders.TemplateWizard;
 public class ListenerIterator implements TemplateWizard.AsynchronousInstantiatingIterator {
 
     private static final Logger LOG = Logger.getLogger(ListenerIterator.class.getName());
-    
+
     //                                    CHANGEME vvv
     //private static final long serialVersionUID = ...L;
 
@@ -76,12 +76,15 @@ public class ListenerIterator implements TemplateWizard.AsynchronousInstantiatin
         Project project = Templates.getProject( wiz );
         SourceGroup[] sourceGroups = Util.getJavaSourceGroups(project);
         panel = new ListenerPanel(wizard);
-        
+
         WizardDescriptor.Panel packageChooserPanel;
         if (sourceGroups.length == 0) {
-            Sources sources = (Sources) project.getLookup().lookup(org.netbeans.api.project.Sources.class);
+            Sources sources = (Sources) ProjectUtils.getSources(project);
             sourceGroups = sources.getSourceGroups(Sources.TYPE_GENERIC);
-            packageChooserPanel = Templates.createSimpleTargetChooser(project, sourceGroups, panel);
+            packageChooserPanel = Templates
+                    .buildSimpleTargetChooser(project, sourceGroups)
+                    .bottomPanel(panel)
+                    .create();
         }
         else
             packageChooserPanel = JavaTemplates.createPackageChooser(project, sourceGroups, panel);
@@ -92,6 +95,7 @@ public class ListenerIterator implements TemplateWizard.AsynchronousInstantiatin
         };
     }
 
+    @Override
     public Set<DataObject> instantiate () throws IOException/*, IllegalStateException*/ {
         // Here is the default plain behavior. Simply takes the selected
         // template (you need to have included the standard second panel
@@ -101,16 +105,23 @@ public class ListenerIterator implements TemplateWizard.AsynchronousInstantiatin
         // More advanced wizards can create multiple objects from template
         // (return them all in the result of this method), populate file
         // contents on the fly, etc.
-       
+
         FileObject folder = Templates.getTargetFolder(wiz);
         DataFolder targetFolder = DataFolder.findFolder(folder);
-        
+
+
         ClassPath classPath = ClassPath.getClassPath(folder,ClassPath.SOURCE);
         String listenerName = wiz.getTargetName();
-        DataObject result = null;
-        
+        DataObject result;
+
         if (classPath != null) {
-            Map<String, String> templateParameters = new HashMap<String, String>();
+            Map<String, Object> templateParameters = new HashMap<>();
+            ClassPath cp = ClassPath.getClassPath(folder, ClassPath.COMPILE);
+            if (cp != null && cp.findResource("jakarta/servlet/http/HttpServlet.class") != null) {
+                templateParameters.put("jakartaPackages", true);
+            } else {
+                templateParameters.put("jakartaPackages", false);
+            }
             if (!panel.createElementInDD() && Utilities.isJavaEE6Plus(wiz)) {
                 templateParameters.put("classAnnotation", AnnotationGenerator.webListener());
             }
@@ -134,7 +145,7 @@ public class ListenerIterator implements TemplateWizard.AsynchronousInstantiatin
                 if (webAppFo!=null) {
                     webApp = DDProvider.getDefault().getDDRoot(webAppFo);
                 }
-                if (webApp!=null) {     
+                if (webApp!=null) {
                     Listener[] oldListeners = webApp.getListener();
                     boolean found=false;
                     for (int i=0;i<oldListeners.length;i++) {
@@ -147,7 +158,7 @@ public class ListenerIterator implements TemplateWizard.AsynchronousInstantiatin
                         try {
                             Listener listener = (Listener)webApp.createBean("Listener");//NOI18N
                             listener.setListenerClass(className);
-                            StringBuffer desc= new StringBuffer();
+                            StringBuilder desc= new StringBuilder();
                             int i=0;
                             if (panel.isContextListener()) {
                                 desc.append("ServletContextListener"); //NOI18N
@@ -213,11 +224,9 @@ public class ListenerIterator implements TemplateWizard.AsynchronousInstantiatin
                 }
             }
         } else {
-            String mes = MessageFormat.format (
-                    NbBundle.getMessage (ListenerIterator.class, "TXT_wrongFolderForClass"),
-                    new Object [] {"Servlet Listener"}); //NOI18N
+            String mes = NbBundle.getMessage (ListenerIterator.class, "TXT_wrongFolderForClass", "Servlet Listener"); //NOI18N
             NotifyDescriptor desc = new NotifyDescriptor.Message(mes,NotifyDescriptor.Message.ERROR_MESSAGE);
-            DialogDisplayer.getDefault().notify(desc);                         
+            DialogDisplayer.getDefault().notify(desc);
             return null;
         }
         return Collections.singleton (result);
@@ -230,16 +239,17 @@ public class ListenerIterator implements TemplateWizard.AsynchronousInstantiatin
     private transient TemplateWizard wiz;
 
     private static final long serialVersionUID = -7586964579556513549L;
-    
+
     // You can keep a reference to the TemplateWizard which can
     // provide various kinds of useful information such as
     // the currently selected target name.
     // Also the panels will receive wiz as their "settings" object.
+    @Override
     public void initialize (WizardDescriptor wiz) {
         this.wiz = (TemplateWizard) wiz;
         index = 0;
         panels = createPanels (this.wiz);
-        
+
         // Creating steps.
         Object prop = wiz.getProperty (WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
@@ -247,7 +257,7 @@ public class ListenerIterator implements TemplateWizard.AsynchronousInstantiatin
             beforeSteps = (String[])prop;
         }
         String[] steps = Utilities.createSteps (beforeSteps, panels);
-        
+
         for (int i = 0; i < panels.length; i++) {
             Component c = panels[i].getComponent ();
             if (steps[i] == null) {
@@ -265,6 +275,7 @@ public class ListenerIterator implements TemplateWizard.AsynchronousInstantiatin
             }
         }
     }
+    @Override
     public void uninitialize (WizardDescriptor wiz) {
         this.wiz = null;
         panels = null;
@@ -275,31 +286,39 @@ public class ListenerIterator implements TemplateWizard.AsynchronousInstantiatin
     // few more options for customization. If you e.g. want to make panels appear
     // or disappear dynamically, go ahead.
 
+    @Override
     public String name () {
         return NbBundle.getMessage(ListenerIterator.class, "TITLE_x_of_y",
             index + 1, panels.length);
     }
 
+    @Override
     public boolean hasNext () {
         return index < panels.length - 1;
     }
+    @Override
     public boolean hasPrevious () {
         return index > 0;
     }
+    @Override
     public void nextPanel () {
         if (! hasNext ()) throw new NoSuchElementException ();
         index++;
     }
+    @Override
     public void previousPanel () {
         if (! hasPrevious ()) throw new NoSuchElementException ();
         index--;
     }
+    @Override
     public WizardDescriptor.Panel current() {
         return panels[index];
     }
 
     // If nothing unusual changes in the middle of the wizard, simply:
+    @Override
     public final void addChangeListener (ChangeListener l) {}
+    @Override
     public final void removeChangeListener (ChangeListener l) {}
     // If something changes dynamically (besides moving between panels),
     // e.g. the number of panels changes in response to user input, then

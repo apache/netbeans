@@ -272,7 +272,7 @@ public final class J2eePlatform implements Lookup.Provider {
     public File[] getClasspathEntries() {
         if (classpathCache == null) {
             List<File> classpath = getClasspath(impl.getLibraries());
-            classpathCache = (File[]) classpath.toArray(new File[classpath.size()]);
+            classpathCache = (File[]) classpath.toArray(new File[0]);
         }
         return classpathCache;
     }
@@ -281,7 +281,7 @@ public final class J2eePlatform implements Lookup.Provider {
     public File[] getClasspathEntries(Set<ServerLibraryDependency> libraries) {
         // FIXME optimize - cache
         List<File> classpath = getClasspath(impl.getLibraries(libraries));
-        return (File[]) classpath.toArray(new File[classpath.size()]);
+        return (File[]) classpath.toArray(new File[0]);
     }
     
     private List<File> getClasspath(LibraryImplementation[] libraries) {
@@ -774,7 +774,7 @@ public final class J2eePlatform implements Lookup.Provider {
                 }
             }
         }
-        return ret.toArray(new FileObject[ret.size()]);
+        return ret.toArray(new FileObject[0]);
     }
 
     private void copyFiles(Map<FileObject, String> copied, Map<String, Integer> usedNames,
@@ -795,7 +795,7 @@ public final class J2eePlatform implements Lookup.Provider {
             }
         }
         copyFiles(copied, usedNames, jarFolder, folderName,
-                fileObjects.toArray(new FileObject[fileObjects.size()]), content);
+                fileObjects.toArray(new FileObject[0]), content);
     }
 
     private void copyFiles(Map<FileObject, String> copied, Map<String, Integer> usedNames,

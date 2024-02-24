@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.InterruptedIOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -106,7 +107,7 @@ public final class TerminalLocalNativeProcess extends AbstractNativeProcess {
 
             final File workingDirectory = (wDir == null) ? new File(".") : new File(wDir); // NOI18N
 
-            pidFileFile = File.createTempFile("dlight", "termexec", hostInfo.getTempDirFile()).getAbsoluteFile(); // NOI18N
+            pidFileFile = Files.createTempFile(hostInfo.getTempDirFile().toPath(), "dlight", "termexec").toFile().getAbsoluteFile(); // NOI18N
             shFileFile = new File(pidFileFile.getPath() + ".sh"); // NOI18N
             resultFile = new File(shFileFile.getPath() + ".res"); // NOI18N
 

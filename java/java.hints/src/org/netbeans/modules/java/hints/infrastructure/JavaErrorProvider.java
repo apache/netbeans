@@ -36,6 +36,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.prefs.Preferences;
 import javax.lang.model.element.Element;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.CompilationController;
@@ -56,6 +57,7 @@ import org.netbeans.api.lsp.ResourceOperation.CreateFile;
 import org.netbeans.api.lsp.TextDocumentEdit;
 import org.netbeans.api.lsp.TextEdit;
 import org.netbeans.api.lsp.WorkspaceEdit;
+import org.netbeans.modules.editor.tools.storage.api.ToolPreferences;
 import org.netbeans.modules.java.hints.errors.ModificationResultBasedFix;
 import org.netbeans.modules.java.hints.errors.ImportClass;
 import org.netbeans.modules.java.hints.project.IncompleteClassPath;
@@ -85,7 +87,8 @@ import org.openide.util.Union2;
  */
 @MimeRegistration(mimeType="text/x-java", service=ErrorProvider.class)
 public class JavaErrorProvider implements ErrorProvider {
-
+    
+    public static final String HINTS_TOOL_ID = "hints";
     public static Consumer<ErrorProvider.Kind> computeDiagsCallback; //for tests
 
     @Override
@@ -113,7 +116,16 @@ public class JavaErrorProvider implements ErrorProvider {
                                 if (disabled.size() != Severity.values().length) {
                                     AtomicBoolean cancel = new AtomicBoolean();
                                     context.registerCancelCallback(() -> cancel.set(true));
-                                    result.addAll(convert2Diagnostic(context.errorKind(), new HintsInvoker(HintsSettings.getGlobalSettings(), context.getOffset(), cancel).computeHints(cc), ed -> !disabled.contains(ed.getSeverity())));
+                                    HintsSettings settings;
+                                    
+                                    if (context.getHintsConfigFile() != null) {
+                                        Preferences hintSettings = ToolPreferences.from(context.getHintsConfigFile().toURI()).getPreferences(HINTS_TOOL_ID, "text/x-java");
+                                        settings = HintsSettings.createPreferencesBasedHintsSettings(hintSettings, true, null);
+                                    } else {
+                                        settings = HintsSettings.getGlobalSettings();
+                                    }
+                                    result.addAll(convert2Diagnostic(context.errorKind(), new HintsInvoker(settings, context.getOffset(), cancel).computeHints(cc), ed -> !disabled.contains(ed.getSeverity())));
+                                    
                                 }
                                 break;
                         }
@@ -303,7 +315,7 @@ public class JavaErrorProvider implements ErrorProvider {
     private static List<Fix> sortFixes(Collection<Fix> fixes) {
         List<Fix> result = new ArrayList<Fix>(fixes);
 
-        Collections.sort(result, new FixComparator());
+        result.sort(new FixComparator());
 
         return result;
     }

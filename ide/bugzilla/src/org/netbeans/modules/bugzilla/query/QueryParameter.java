@@ -324,7 +324,7 @@ public abstract class QueryParameter {
             return ret;
         }
         public void setParameterValues(List<ParameterValue> values) {
-            setParameterValues(values.toArray(new ParameterValue[values.size()]));
+            setParameterValues(values.toArray(new ParameterValue[0]));
         }
         public void setParameterValues(ParameterValue[] values) {
             DefaultListModel<ParameterValue> m = new DefaultListModel<>();

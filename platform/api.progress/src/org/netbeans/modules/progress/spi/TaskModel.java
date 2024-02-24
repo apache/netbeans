@@ -193,13 +193,13 @@ public final class TaskModel {
     
     private ListDataListener[] getDataListeners() {
         synchronized (dataListeners) {
-            return dataListeners.toArray(new ListDataListener[dataListeners.size()]);
+            return dataListeners.toArray(new ListDataListener[0]);
         }
     } 
     
     private ListSelectionListener[] getSelectionListeners() {
         synchronized (selectionListeners) {
-            return selectionListeners.toArray(new ListSelectionListener[selectionListeners.size()]);
+            return selectionListeners.toArray(new ListSelectionListener[0]);
         }
     }
      

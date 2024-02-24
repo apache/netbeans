@@ -91,7 +91,7 @@ public abstract class AbstractCheckoutAction extends SingleRepositoryAction {
                 }
                 
                 Collection<File> seenRoots = Git.getInstance().getSeenRoots(repository);
-                final Set<String> seenPaths = new HashSet<String>(GitUtils.getRelativePaths(repository, seenRoots.toArray(new File[seenRoots.size()])));
+                final Set<String> seenPaths = new HashSet<String>(GitUtils.getRelativePaths(repository, seenRoots.toArray(new File[0])));
                 try {
                     final GitClient client = getClient();
                     revision = revisionToCheckout;
@@ -223,7 +223,7 @@ public abstract class AbstractCheckoutAction extends SingleRepositoryAction {
                 for (String path : conflicts) {
                     files.add(new File(repository, path));
                 }
-                return files.toArray(new File[files.size()]);
+                return files.toArray(new File[0]);
             }
         };
         supp.start(Git.getInstance().getRequestProcessor(repository), repository, progressLabel);

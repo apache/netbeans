@@ -1047,7 +1047,7 @@ public final class MultiModuleClassPathProvider extends AbstractClassPathProvide
                 final List<ClassPath> cps = new ArrayList<>();
                 collectPath(cps, Owner.GLOBAL_SOURCE, f);
                 collectPath(cps, Owner.GLOBAL_TESTS, f);
-                return cps.toArray(new ClassPath[cps.size()]);
+                return cps.toArray(new ClassPath[0]);
             }
             assert false : "Unsupported ClassPath type: " + type;   //NOI18N
             return new ClassPath[0];
@@ -1088,7 +1088,7 @@ public final class MultiModuleClassPathProvider extends AbstractClassPathProvide
             if (f != null) {
                 final List<ClassPath> cps = new ArrayList<>();
                 collectPath(cps, Owner.GLOBAL_SOURCE, f);
-                return cps.isEmpty() ? null : org.netbeans.spi.java.classpath.support.ClassPathSupport.createProxyClassPath(cps.toArray(new ClassPath[cps.size()]));
+                return cps.isEmpty() ? null : org.netbeans.spi.java.classpath.support.ClassPathSupport.createProxyClassPath(cps.toArray(new ClassPath[0]));
             }
             assert false : "Unsupported ClassPath type: " + type;   //NOI18N
             return null;

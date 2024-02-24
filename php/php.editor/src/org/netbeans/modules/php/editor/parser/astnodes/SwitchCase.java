@@ -53,7 +53,7 @@ public class SwitchCase extends Statement {
 
     public SwitchCase(int start, int end, Expression value, List<Statement> actions, boolean isDefault) {
         this(start, end, value,
-                actions == null ? null : actions.toArray(new Statement[actions.size()]), isDefault);
+                actions == null ? null : actions.toArray(new Statement[0]), isDefault);
     }
 
     /**

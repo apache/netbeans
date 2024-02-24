@@ -140,7 +140,7 @@ public class TabSwitchSpeedTest extends NbTestCase {
     final void activateComponent(TopComponent tc) {
         if (map == null) {
             try {
-                Object o = Class.forName("org.netbeans.performance.scalability.Calls").newInstance();
+                Object o = Class.forName("org.netbeans.performance.scalability.Calls").getDeclaredConstructor().newInstance();
                 @SuppressWarnings("unchecked")
                 Map<String,Object> m = (Map<String,Object>)o;
                 map = m;

@@ -534,7 +534,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
                         } catch (IOException ex) {
                             Exceptions.printStackTrace(ex);
                         }
-                        Collections.sort(items, new Comparator() {
+                        items.sort(new Comparator() {
                             private Comparator COLLATOR = Collator.getInstance();
 
                             @Override
@@ -553,7 +553,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
                                 return COLLATOR.compare(p1.getDisplayName(), p2.getDisplayName());
                             }
                         });
-                        model = new DefaultComboBoxModel(items.toArray(new ClassItem[items.size()]));
+                        model = new DefaultComboBoxModel(items.toArray(new ClassItem[0]));
                     } else {
                         model = new DefaultComboBoxModel();
                     }

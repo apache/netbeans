@@ -139,7 +139,7 @@ public class Nodes {
                     categoryWarnings += typeWarnings;
                 }
                 
-                Collections.sort(warningTypNodes, new Comparator<Node>() {
+                warningTypNodes.sort(new Comparator<Node>() {
                     @Override public int compare(Node o1, Node o2) {
                         return o1.getDisplayName().compareTo(o2.getDisplayName());
                     }
@@ -166,7 +166,7 @@ public class Nodes {
                 categoryNodes.add(categoryNode);
             }
 
-            Collections.sort(categoryNodes, new Comparator<Node>() {
+            categoryNodes.sort(new Comparator<Node>() {
                 @Override public int compare(Node o1, Node o2) {
                     return o1.getDisplayName().compareTo(o2.getDisplayName());
                 }
@@ -343,7 +343,7 @@ public class Nodes {
             nodes.add(constructSemiLogicalView(p, lvc, projects.get(p)));
         }
 
-        Collections.sort(nodes, new Comparator<Node>() {
+        nodes.sort(new Comparator<Node>() {
             @Override public int compare(Node o1, Node o2) {
                 return o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
             }
@@ -584,7 +584,7 @@ public class Nodes {
                 }
             }
 
-            Collections.sort(eds, new Comparator<ErrorDescription>() {
+            eds.sort(new Comparator<ErrorDescription>() {
                 @Override public int compare(ErrorDescription o1, ErrorDescription o2) {
                     try {
                         try {

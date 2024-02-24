@@ -217,7 +217,7 @@ public class ExportDiffChangesAction extends ContextAction {
             out.write(("# Above lines and this line are ignored by the patching process." + sep).getBytes("utf8"));  // NOI18N
 
 
-            Collections.sort(setups, new Comparator<Setup>() {
+            setups.sort(new Comparator<Setup>() {
                 @Override
                 public int compare(Setup o1, Setup o2) {
                     return o1.getBaseFile().compareTo(o2.getBaseFile());
@@ -344,6 +344,6 @@ public class ExportDiffChangesAction extends ContextAction {
                 roots.add(f);
             }
         }
-        return roots.toArray(new File[roots.size()]);
+        return roots.toArray(new File[0]);
     }
 }

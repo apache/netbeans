@@ -1142,7 +1142,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                         }
                     }
                 }
-                return filters.toArray(new ElementFilter[filters.size()]);
+                return filters.toArray(new ElementFilter[0]);
             }
         };
     }
@@ -2208,6 +2208,8 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                         aliasedElement = new AliasedInterface(aliasedName, (InterfaceElement) nextElement);
                     } else if (nextElement instanceof TraitElement) {
                         aliasedElement = new AliasedTrait(aliasedName, (TraitElement) nextElement);
+                    } else if (nextElement instanceof EnumElement) {
+                        aliasedElement = new AliasedEnum(aliasedName, (EnumElement) nextElement);
                     }
                     if (aliasedElement != null) {
                         if (trait != null) {
@@ -2242,6 +2244,24 @@ public final class IndexQueryImpl implements ElementQuery.Index {
 
     public Set<TraitElement> getTraits() {
         return getTraits(NameKind.empty());
+    }
+
+    @Override
+    public Set<TraitElement> getTraits(NameKind query, Set<AliasedName> aliasedNames, Trait trait) {
+        final Set<TraitElement> retval = new HashSet<>();
+        for (final AliasedName aliasedName : aliasedNames) {
+            for (final NameKind nextQuery : queriesForAlias(query, aliasedName, PhpElementKind.TRAIT)) {
+                for (final TraitElement nextTrait : getTraitsImpl(nextQuery)) {
+                    final AliasedTrait aliasedTrait = new AliasedTrait(aliasedName, nextTrait);
+                    if (trait != null) {
+                        aliasedTrait.setTrait(trait);
+                    }
+                    retval.add(aliasedTrait);
+                }
+            }
+        }
+        retval.addAll(getTraitsImpl(query));
+        return retval;
     }
 
     @Override

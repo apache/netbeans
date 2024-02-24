@@ -121,7 +121,7 @@ public final class GitCherryPickResult {
      * @return array of commits cherry-picked to head.
      */
     public GitRevisionInfo[] getCherryPickedCommits () {
-        return cherryPickedCommits.toArray(new GitRevisionInfo[cherryPickedCommits.size()]);
+        return cherryPickedCommits.toArray(new GitRevisionInfo[0]);
     }
     
 }

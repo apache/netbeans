@@ -287,7 +287,7 @@ public final class ShellProjectUtils {
                 delegates.add(del);
             }
         }
-        return ClassPathSupport.createProxyClassPath(delegates.toArray(new ClassPath[delegates.size()]));
+        return ClassPathSupport.createProxyClassPath(delegates.toArray(ClassPath[]::new));
     }
     
     public static ClassPath projecRuntimeClassPath(Project project) {
@@ -310,7 +310,7 @@ public final class ShellProjectUtils {
                 delegates.add(del);
             }
         }
-        return ClassPathSupport.createProxyClassPath(delegates.toArray(new ClassPath[delegates.size()]));
+        return ClassPathSupport.createProxyClassPath(delegates.toArray(ClassPath[]::new));
     }
 
     @NonNull

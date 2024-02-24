@@ -226,7 +226,7 @@ public final class HighlightingManager {
 
                 containers.add(layerAccessor.getContainer());
             }
-            return new DirectMergeContainer(containers.toArray(new HighlightsContainer[containers.size()]), true);
+            return new DirectMergeContainer(containers.toArray(new HighlightsContainer[0]), true);
                 
         }
         
@@ -314,7 +314,7 @@ public final class HighlightingManager {
                         lookups.add(MimeLookup.getLookup(mimePath));
                     }
 
-                    ProxyLookup lookup = new ProxyLookup(lookups.toArray(new Lookup[lookups.size()]));
+                    ProxyLookup lookup = new ProxyLookup(lookups.toArray(new Lookup[0]));
                     factories = lookup.lookup(new Lookup.Template<HighlightsLayerFactory>(HighlightsLayerFactory.class));
                     settings = lookup.lookup(new Lookup.Template<FontColorSettings>(FontColorSettings.class));
                 } else {
@@ -451,10 +451,8 @@ public final class HighlightingManager {
 
                 origBottomHighlights = bottomHighlights;
                 origTopHighlights = topHighlights;
-                bottomHighlights = new DirectMergeContainer(bottomContainers.toArray(
-                        new HighlightsContainer[bottomContainers.size()]), true);
-                topHighlights = new DirectMergeContainer(topContainers.toArray(
-                        new HighlightsContainer[topContainers.size()]), true);
+                bottomHighlights = new DirectMergeContainer(bottomContainers.toArray(new HighlightsContainer[0]), true);
+                topHighlights = new DirectMergeContainer(topContainers.toArray(new HighlightsContainer[0]), true);
             } finally {
                 inRebuildAllLayers = false;
             }

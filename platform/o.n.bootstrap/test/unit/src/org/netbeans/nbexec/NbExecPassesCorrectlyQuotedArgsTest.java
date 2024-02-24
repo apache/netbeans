@@ -108,7 +108,7 @@ public class NbExecPassesCorrectlyQuotedArgsTest extends NbTestCase {
         }
         
         StringBuffer sb = new StringBuffer();
-        Process p = Runtime.getRuntime().exec(allArgs.toArray(new String[allArgs.size()]), new String[0], workDir);
+        Process p = Runtime.getRuntime().exec(allArgs.toArray(new String[0]), new String[0], workDir);
         int res = readOutput(sb, p);
         
         String output = sb.toString();

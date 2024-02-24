@@ -333,7 +333,7 @@ public class GotoLineOrBookmarkPanel extends JPanel implements ActionListener, F
     }
 
     private void updateCombo() {
-        gotoCombo.setModel(new DefaultComboBoxModel(history.toArray(new String[history.size()])));
+        gotoCombo.setModel(new DefaultComboBoxModel(history.toArray(new String[0])));
     }
 
     private String getValue() {

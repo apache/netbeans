@@ -129,7 +129,7 @@ public final class LookupProviderSupport {
             old = new ArrayList<LookupProvider>(providers);
             currentLookups = newLookups;
             newLookups.add(baseLookup);
-            Lookup lkp = new ProxyLookup(newLookups.toArray(new Lookup[newLookups.size()]));
+            Lookup lkp = new ProxyLookup(newLookups.toArray(new Lookup[0]));
             
             setLookups(lkp);
         }

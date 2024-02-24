@@ -116,7 +116,7 @@ final class SourceForBinaryQueryImpl implements SourceForBinaryQueryImplementati
                             assert compilationUnit.getLocalName().equals("compilation-unit") : compilationUnit;
                             List<URL> binaries = findBinaries(compilationUnit);
                             List<FileObject> packageRoots = Classpaths.findPackageRoots(helper, evaluator, compilationUnit);
-                            FileObject[] sources = packageRoots.toArray(new FileObject[packageRoots.size()]);
+                            FileObject[] sources = packageRoots.toArray(new FileObject[0]);
                             if (binaries.isEmpty()) {
                                 binaries = createArtificialBinaries(sources);
                             }

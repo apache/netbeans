@@ -85,7 +85,7 @@ public class MatchedPropertiesNode extends AbstractNode {
                 }
             }
         }
-        children.add(nodes.toArray(new MatchedPropertyNode[nodes.size()]));
+        children.add(nodes.toArray(new MatchedPropertyNode[0]));
     }
 
     /**

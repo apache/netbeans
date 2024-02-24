@@ -83,7 +83,7 @@ public final class GradleTestMethodNode extends JUnitTestMethodNode implements L
                 actions.add(new ReRunTestAction(actionProvider, nodeContext, COMMAND_DEBUG_SINGLE_METHOD, Bundle.LBL_DebugTest()));
             }
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     @Override

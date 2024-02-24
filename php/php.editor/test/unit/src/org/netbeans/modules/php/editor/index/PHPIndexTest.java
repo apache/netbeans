@@ -157,7 +157,7 @@ public class PHPIndexTest extends PHPNavTestBase {
     public void testGetClasses_preferred() throws Exception {
         Collection<TypeElement> ccClasses = new ArrayList<TypeElement>(index.getClasses(NameKind.exact("CCC")));
         assertEquals(2, ccClasses.size());
-        TypeElement[] classesArray = ccClasses.toArray(new TypeElement[ccClasses.size()]);
+        TypeElement[] classesArray = ccClasses.toArray(new TypeElement[0]);
         final TypeElement firstCC = classesArray[0];
         final TypeElement secondCC = classesArray[1];
         assertNotNull(firstCC);
@@ -262,7 +262,7 @@ public class PHPIndexTest extends PHPNavTestBase {
     public void testGetInterfaces_preferred() throws Exception {
         Collection<TypeElement> ccInterfaces = new ArrayList<TypeElement>(index.getInterfaces(NameKind.exact("CCC")));
         assertEquals(2, ccInterfaces.size());
-        TypeElement[] interfacesArray = ccInterfaces.toArray(new TypeElement[ccInterfaces.size()]);
+        TypeElement[] interfacesArray = ccInterfaces.toArray(new TypeElement[0]);
         TypeElement firstCC = interfacesArray[0];
         TypeElement secondCC = interfacesArray[1];
         assertNotNull(firstCC);

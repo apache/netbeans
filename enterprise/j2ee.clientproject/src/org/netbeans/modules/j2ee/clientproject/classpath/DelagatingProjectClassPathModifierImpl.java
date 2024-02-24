@@ -59,7 +59,7 @@ public class DelagatingProjectClassPathModifierImpl extends ProjectClassPathModi
     protected String[] getExtensibleClassPathTypes(SourceGroup sourceGroup) {
         List<String> res = new ArrayList<String>(Arrays.asList(cpMod.getExtensibleClassPathTypes(sourceGroup)));
         res.add(JavaClassPathConstants.COMPILE_ONLY);
-        return res.toArray(new String[res.size()]);
+        return res.toArray(new String[0]);
     }
 
     @Override

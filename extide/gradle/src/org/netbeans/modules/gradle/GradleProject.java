@@ -128,7 +128,7 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         for (String s : reason) {
             reports.add(createGradleReport(scriptPath, s));
         }
-        return invalidate(reports.toArray(new GradleReport[reports.size()]));
+        return invalidate(reports.toArray(new GradleReport[0]));
     }
 
     private static void setProblems(GradleBaseProject baseProject, Set<GradleReport> problems) {

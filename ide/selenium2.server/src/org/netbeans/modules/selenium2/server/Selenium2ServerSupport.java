@@ -234,7 +234,7 @@ public class Selenium2ServerSupport implements Runnable {
         Class remoteControlConfiguration = urlClassLoader.loadClass(
                 "org.openqa.selenium.server.RemoteControlConfiguration"); //NOI18N
 
-        Object remoteControlConfigurationInstance = remoteControlConfiguration.newInstance();
+        Object remoteControlConfigurationInstance = remoteControlConfiguration.getDeclaredConstructor().newInstance();
         int port = getPrefs().getInt(PORT, PORT_DEFAULT);
         remoteControlConfiguration.getMethod("setPort", int.class).invoke(
             remoteControlConfigurationInstance, port); //NOI18N

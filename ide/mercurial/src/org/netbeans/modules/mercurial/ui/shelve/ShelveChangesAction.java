@@ -137,7 +137,7 @@ public class ShelveChangesAction extends ContextAction {
                 Set<File> roots = e.getValue();
                 if (!roots.isEmpty()) {
                     support.setDisplayName(NbBundle.getMessage(ShelveChangesAction.class, "MSG_ShelveChanges.progress.reverting", root.getName())); //NOI18N
-                    RevertModificationsAction.performRevert(root, null, roots.toArray(new File[roots.size()]), doBackup, doPurge, logger);
+                    RevertModificationsAction.performRevert(root, null, roots.toArray(new File[0]), doBackup, doPurge, logger);
                 }
             }
         }
@@ -153,7 +153,7 @@ public class ShelveChangesAction extends ContextAction {
                 protected void perform () {
                     logger = getLogger();
                     filteredRoots = new HashSet<File>(Arrays.asList(HgUtils.getModifiedFiles(context, FileInformation.STATUS_LOCAL_CHANGE, true)));
-                    shelveChanges(filteredRoots.toArray(new File[filteredRoots.size()]));
+                    shelveChanges(filteredRoots.toArray(new File[0]));
                 }
             };
             support.start(rp, root, NbBundle.getMessage(ShelveChangesAction.class, "LBL_ShelveChanges_Progress")); //NOI18N

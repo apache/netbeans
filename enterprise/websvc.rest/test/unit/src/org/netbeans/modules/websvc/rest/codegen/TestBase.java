@@ -171,7 +171,7 @@ public abstract class TestBase extends NbTestCase {
                         
                     }
                 }
-                bootClassPath = ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+                bootClassPath = ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
             }
             return bootClassPath;
         }

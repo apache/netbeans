@@ -119,12 +119,8 @@ public class Utils {
         Object object = null;
         try {
           Class classObject = Class.forName(type);
-          object = classObject.newInstance();
-        } catch (InstantiationException e) {
-          System.out.println(e);
-        } catch (IllegalAccessException e) {
-          System.out.println(e);
-        } catch (ClassNotFoundException e) {
+          object = classObject.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
           System.out.println(e);
         }
         return object;
@@ -142,10 +138,8 @@ public class Utils {
     public Object createObject(Class classObject) {
         Object object = null;
         try {
-          object = classObject.newInstance();
-        } catch (InstantiationException e) {
-          System.out.println(e);
-        } catch (IllegalAccessException e) {
+          object = classObject.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
           System.out.println(e);
         }
         return object;
@@ -171,13 +165,7 @@ public class Utils {
         object = constructor.newInstance(arguments);
         //System.out.println ("Object: " + object.toString());
         return object;
-        } catch (InstantiationException e) {
-          System.out.println(e);
-        } catch (IllegalAccessException e) {
-          System.out.println(e);
-        } catch (IllegalArgumentException e) {
-          System.out.println(e);
-        } catch (InvocationTargetException e) {
+        } catch (ReflectiveOperationException e) {
           System.out.println(e);
         }
         return object;

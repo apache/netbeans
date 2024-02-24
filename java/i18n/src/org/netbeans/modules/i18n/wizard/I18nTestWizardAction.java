@@ -123,7 +123,7 @@ public class I18nTestWizardAction extends NodeAction {
         contents.add(Util.getString("TXT_SelectTestResources"));        //NOI18N
         contents.add(Util.getString("TXT_FoundMissingResources"));      //NOI18N
         
-        wizardDesc.putProperty(WizardDescriptor.PROP_CONTENT_DATA, (String[])contents.toArray(new String[contents.size()]));
+        wizardDesc.putProperty(WizardDescriptor.PROP_CONTENT_DATA, (String[])contents.toArray(new String[0]));
         
         wizardDesc.setTitle(Util.getString("LBL_TestWizardTitle"));     //NOI18N
         wizardDesc.setTitleFormat(new MessageFormat("{0} ({1})"));      //NOI18N

@@ -748,7 +748,7 @@ public final class RemoteConnectionsPanel extends JPanel implements ChangeListen
             if (!data.add(configuration)) {
                 return false;
             }
-            Collections.sort(data, ConfigManager.getConfigurationComparator());
+            data.sort(ConfigManager.getConfigurationComparator());
             int idx = indexOf(configuration);
             fireIntervalAdded(this, idx, idx);
             return true;
@@ -781,7 +781,7 @@ public final class RemoteConnectionsPanel extends JPanel implements ChangeListen
             }
             if (configurations.size() > 0) {
                 data.addAll(configurations);
-                Collections.sort(data, ConfigManager.getConfigurationComparator());
+                data.sort(ConfigManager.getConfigurationComparator());
                 fireIntervalAdded(this, 0, data.size() - 1);
             }
         }

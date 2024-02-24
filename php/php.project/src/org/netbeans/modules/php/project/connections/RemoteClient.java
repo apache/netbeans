@@ -555,7 +555,7 @@ public final class RemoteClient implements Cancellable {
                 files.add(f);
             }
         }
-        return prepareDownload(FileUtil.toFile(baseLocalDirectory), files.toArray(new File[files.size()]));
+        return prepareDownload(FileUtil.toFile(baseLocalDirectory), files.toArray(new File[0]));
     }
 
     public Set<TransferFile> prepareDownload(File baseLocalDir, File... filesToDownload) throws RemoteException {

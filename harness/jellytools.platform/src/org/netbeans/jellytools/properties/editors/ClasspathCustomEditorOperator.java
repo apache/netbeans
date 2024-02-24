@@ -258,7 +258,7 @@ public class ClasspathCustomEditorOperator extends NbDialogOperator {
         for (int i=0; i<model.getSize(); i++) {
             data.add(model.getElementAt(i).toString());
         }
-        return data.toArray(new String[data.size()]);
+        return data.toArray(new String[0]);
     }
     
     /** Performs verification by accessing all sub-components */    

@@ -220,7 +220,7 @@ public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactori
                     }
                 }, true);
                 ExtractSuperclassRefactoring r = new ExtractSuperclassRefactoring(TreePathHandle.from(handle, info));
-                r.setMembers(memberHandles.toArray(new MemberInfo[memberHandles.size()]));
+                r.setMembers(memberHandles.toArray(new MemberInfo[0]));
                 r.setSuperClassName(name);
                 refactoring = r;
             } else {

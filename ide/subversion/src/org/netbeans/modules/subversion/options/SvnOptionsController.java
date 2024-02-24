@@ -409,7 +409,7 @@ public final class SvnOptionsController extends OptionsPanelController implement
             );
             variables.add(variable);   
         }       
-        labelsPanel.labelsList.setListData(variables.toArray(new LabelVariable[variables.size()]));                
+        labelsPanel.labelsList.setListData(variables.toArray(new LabelVariable[0]));                
                 
         String title = NbBundle.getMessage(AnnotationSettings.class, "AnnotationSettings.labelVariables.title");
         String acsd = NbBundle.getMessage(AnnotationSettings.class, "AnnotationSettings.labelVariables.acsd");

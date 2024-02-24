@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.micronaut.completion;
 
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -27,12 +28,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -100,7 +99,7 @@ public class MicronautDataCompletionTask {
     private int anchorOffset;
 
     public static interface ItemFactory<T> extends MicronautExpressionLanguageCompletion.ItemFactory<T> {
-        T createControllerMethodItem(CompilationInfo info, VariableElement delegateRepository, ExecutableElement delegateMethod, String id, int offset);
+        T createControllerMethodItem(CompilationInfo info, VariableElement delegateRepository, ExecutableElement delegateMethod, String controllerId, String id, int offset);
         T createFinderMethodItem(String name, String returnType, int offset);
         T createFinderMethodNameItem(String prefix, String name, int offset);
         T createSQLItem(CompletionItem item);
@@ -144,8 +143,16 @@ public class MicronautDataCompletionTask {
                         switch (path.getLeaf().getKind()) {
                             case CLASS:
                             case INTERFACE:
-                                resolveFinderMethods(cc, path, prefix, true, consumer);
-                                items.addAll(resolveControllerMethods(cc, path, prefix, factory));
+                                int startPos = (int) sp.getEndPosition(cc.getCompilationUnit(), ((ClassTree) path.getLeaf()).getModifiers());
+                                if (startPos <= 0) {
+                                    startPos = (int) sp.getStartPosition(cc.getCompilationUnit(), path.getLeaf());
+                                }
+                                String headerText = cc.getText().substring(startPos, anchorOffset);
+                                int idx = headerText.indexOf('{'); //NOI18N
+                                if (idx >= 0) {
+                                    resolveFinderMethods(cc, path, prefix, true, consumer);
+                                    items.addAll(resolveControllerMethods(cc, path, prefix, factory));
+                                }
                                 break;
                             case METHOD:
                                 Tree returnType = ((MethodTree) path.getLeaf()).getReturnType();
@@ -248,8 +255,8 @@ public class MicronautDataCompletionTask {
         if (controllerAnn != null) {
             List<VariableElement> repositories = Utils.getRepositoriesFor(cc, te);
             if (!repositories.isEmpty()) {
-                Utils.collectMissingDataEndpoints(cc, te, prefix, (repository, delegateMethod, id) -> {
-                    T item = factory.createControllerMethodItem(cc, repository, delegateMethod, id, anchorOffset);
+                Utils.collectMissingDataEndpoints(cc, te, prefix, (repository, delegateMethod, controllerId, id) -> {
+                    T item = factory.createControllerMethodItem(cc, repository, delegateMethod, controllerId, id, anchorOffset);
                     if (item != null) {
                         items.add(item);
                     }
@@ -391,17 +398,6 @@ public class MicronautDataCompletionTask {
             }
         }
         return null;
-    }
-
-    static CharSequence getTypeName(CompilationInfo info, TypeMirror type, boolean fqn, boolean varArg) {
-        Set<TypeUtilities.TypeNameOptions> options = EnumSet.noneOf(TypeUtilities.TypeNameOptions.class);
-        if (fqn) {
-            options.add(TypeUtilities.TypeNameOptions.PRINT_FQN);
-        }
-        if (varArg) {
-            options.add(TypeUtilities.TypeNameOptions.PRINT_AS_VARARG);
-        }
-        return info.getTypeUtilities().getTypeName(type, options.toArray(new TypeUtilities.TypeNameOptions[0]));
     }
 
     @FunctionalInterface

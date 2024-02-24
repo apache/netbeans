@@ -311,7 +311,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
                     }
                 } else {
                     try {
-                        inst = clazz.newInstance();
+                        inst = clazz.getDeclaredConstructor().newInstance();
                     } catch (Exception ex) {
                         IOException ioe = new IOException();
                         ErrorManager emgr = ErrorManager.getDefault();

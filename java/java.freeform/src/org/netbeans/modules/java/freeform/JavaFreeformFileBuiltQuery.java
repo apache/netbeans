@@ -127,8 +127,8 @@ final class JavaFreeformFileBuiltQuery implements FileBuiltQueryImplementation, 
             ERR.log(ErrorManager.INFORMATIONAL, "JavaFreeformFileBuiltQuery from=" + from + " to=" + to); // NOI18N
         }
         
-        String[] fromStrings = from.toArray(new String[from.size()]);
-        String[] toStrings = to.toArray(new String[to.size()]);
+        String[] fromStrings = from.toArray(new String[0]);
+        String[] toStrings = to.toArray(new String[0]);
         
         FileBuiltQueryImplementation fbqi = projectHelper.createGlobFileBuiltQuery(projectEvaluator, fromStrings, toStrings);
         

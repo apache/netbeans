@@ -518,7 +518,7 @@ public class CssModuleSupport {
             }
         }
 
-        Collections.sort(list, new Comparator<HelpResolver>() {
+        list.sort(new Comparator<HelpResolver>() {
 
             @Override
             public int compare(HelpResolver t1, HelpResolver t2) {

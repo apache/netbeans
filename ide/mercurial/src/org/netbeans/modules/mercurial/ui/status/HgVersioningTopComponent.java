@@ -142,7 +142,7 @@ public class HgVersioningTopComponent extends TopComponent implements Externaliz
                     OpenProjects.getDefault().openProjects().get();
                 } catch (InterruptedException | ExecutionException ex) {
                 }
-                final VCSContext ctx = VCSContext.forNodes(nodes.toArray(new Node[nodes.size()]));
+                final VCSContext ctx = VCSContext.forNodes(nodes.toArray(new Node[0]));
                 EventQueue.invokeLater(new Runnable() {
 
                     @Override

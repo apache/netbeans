@@ -148,11 +148,11 @@ public class CreationFactory {
         if (uiCl != null) {
             loaders.add(uiCl);
         }
-        ClassLoader newCl = new MultiClassLoader(loaders.toArray(new ClassLoader[loaders.size()]));
+        ClassLoader newCl = new MultiClassLoader(loaders.toArray(new ClassLoader[0]));
         UIManager.put("ClassLoader", newCl); // NOI18N
         Object instance = cd != null ?
                               cd.createDefaultInstance() :
-                              cls.newInstance();
+                cls.getDeclaredConstructor().newInstance();
         if (cl == cl2) {
             // The original classloader (i.e., cl) was in look and feel defaults.
             // It remains there, we just have to remove the value that
@@ -173,7 +173,7 @@ public class CreationFactory {
 
         CreationDescriptor cd = CreationFactory.getDescriptor(cls);
         instance = cd != null ? cd.createDefaultInstance() :
-                                cls.newInstance();
+                cls.getDeclaredConstructor().newInstance();
 
         initAfterCreation(instance);
         return instance;

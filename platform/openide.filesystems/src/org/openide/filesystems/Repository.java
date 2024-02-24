@@ -213,7 +213,7 @@ public class Repository implements Serializable {
             List<URL> layerUrls = new ArrayList<URL>();
             try {
                 provideLayers(Thread.currentThread().getContextClassLoader(), layerUrls);
-                layers.setXmlUrls(layerUrls.toArray(new URL[layerUrls.size()]));
+                layers.setXmlUrls(layerUrls.toArray(new URL[0]));
                 LOG.log(Level.FINE, "Loading classpath layers: {0}", layerUrls);
             } catch (Exception x) {
                 LOG.log(Level.WARNING, "Setting layer URLs: " + layerUrls, x);

@@ -1835,7 +1835,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
                 continue;
             editors.add( tc );
         }
-        return editors.toArray( new TopComponent[editors.size()] );
+        return editors.toArray(new TopComponent[0] );
     }
 
     /**
@@ -1895,7 +1895,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
     public TopComponent[] getOpenedTopComponents(Mode mode) {
         if( mode instanceof ModeImpl ) {
             java.util.List<TopComponent> openedTcs = ((ModeImpl)mode).getOpenedTopComponents();
-            return openedTcs.toArray(new TopComponent[openedTcs.size()]);
+            return openedTcs.toArray(new TopComponent[0]);
         }
         return super.getOpenedTopComponents(mode);
     }

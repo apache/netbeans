@@ -251,7 +251,7 @@ public final class AntBuildExtender {
                     } else {
                         libIDSet.remove(value);
                     }
-                    String newLibIDs[] = libIDSet.toArray(new String[libIDSet.size()]);
+                    String newLibIDs[] = libIDSet.toArray(new String[0]);
                     StringBuilder propValue = new StringBuilder();
                     for (String newLibID : newLibIDs) {
                         propValue.append(newLibID);

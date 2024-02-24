@@ -614,7 +614,7 @@ public final class OptionsExportModel {
                 FileObject[] itemsFOs = categoryFO.getChildren();
                 // respect ordering defined in layers
                 List<FileObject> sortedItems = FileUtil.getOrder(Arrays.asList(itemsFOs), false);
-                itemsFOs = sortedItems.toArray(new FileObject[sortedItems.size()]);
+                itemsFOs = sortedItems.toArray(new FileObject[0]);
                 for (FileObject itemFO : itemsFOs) {
                     String dispName = (String) itemFO.getAttribute(DISPLAY_NAME);
                     assert dispName != null : "Display name of export option item not defined in layer.";  //NOI18N

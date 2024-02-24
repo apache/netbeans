@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.101
+#Version 2.102
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -415,6 +415,7 @@ fld public final static java.lang.String PROP_CLASS_LOADER = "classLoader"
 fld public final static java.lang.String PROP_ENABLED_MODULES = "enabledModules"
 fld public final static java.lang.String PROP_MODULES = "modules"
 meth public boolean hasToEnableCompatModules(java.util.Set<org.netbeans.Module>)
+meth public boolean isOrWillEnable(org.netbeans.Module)
 meth public boolean shouldDelegateResource(org.netbeans.Module,org.netbeans.Module,java.lang.String)
  anno 0 java.lang.Deprecated()
 meth public boolean shouldDelegateResource(org.netbeans.Module,org.netbeans.Module,java.lang.String,java.lang.ClassLoader)

@@ -263,7 +263,7 @@ public class UseNbBundleMessages {
                             Tree enclosing = findEnclosingElement(wc, treePath);
                             Tree modifiers;
                             Tree nueModifiers;
-                            ExpressionTree[] linesA = lines.toArray(new ExpressionTree[lines.size()]);
+                            ExpressionTree[] linesA = lines.toArray(new ExpressionTree[0]);
                             switch (enclosing.getKind()) {
                             case METHOD:
                                 modifiers = wc.resolveRewriteTarget(((MethodTree) enclosing).getModifiers());

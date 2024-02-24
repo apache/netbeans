@@ -183,7 +183,7 @@ public class IncludeExcludeVisualizer {
     }
 
     private void updatePanelFiles() {
-        panel.setFiles(included.toArray(new File[included.size()]), excluded.toArray(new File[excluded.size()]), busy, roots.length == 1 ? roots[0] : null);
+        panel.setFiles(included.toArray(new File[0]), excluded.toArray(new File[0]), busy, roots.length == 1 ? roots[0] : null);
     }
 
     private static final int DELAY = 200;

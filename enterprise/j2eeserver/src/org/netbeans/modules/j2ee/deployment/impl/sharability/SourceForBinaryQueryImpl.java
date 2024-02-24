@@ -157,7 +157,7 @@ public class SourceForBinaryQueryImpl implements SourceForBinaryQueryImplementat
                             result.add(sourceRootURL);
                         }
                     }
-                    this.cache = result.toArray(new FileObject[result.size()]);
+                    this.cache = result.toArray(new FileObject[0]);
                 } else {
                     this.cache = new FileObject[0];
                 }

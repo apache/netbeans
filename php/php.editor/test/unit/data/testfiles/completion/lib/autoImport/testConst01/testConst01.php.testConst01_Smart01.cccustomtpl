@@ -1,0 +1,2 @@
+Name: EXAMPLE_CONST
+EXAMPLE_CONST${php-auto-import default="" fqName=AutoImport\EXAMPLE_CONST aliasName="" useType=const editable=false}

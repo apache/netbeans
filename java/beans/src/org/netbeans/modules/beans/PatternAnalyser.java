@@ -22,7 +22,6 @@ package org.netbeans.modules.beans;
 import java.beans.IntrospectionException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -506,7 +505,7 @@ public final class PatternAnalyser {
         for( Property property: p.propertyPatterns.values() ) {
             currentPropertyPatterns.add(property.createPattern(this));
         }
-        Collections.sort(currentPropertyPatterns, Pattern.NAME_COMPARATOR);
+        currentPropertyPatterns.sort(Pattern.NAME_COMPARATOR);
         // currentPropertyPatterns = resolveChanges( currentPropertyPatterns, propertyPatterns, LevelComparator.PROPERTY );
     }
 
@@ -515,7 +514,7 @@ public final class PatternAnalyser {
         for( IdxProperty property: p.idxPropertyPatterns.values() ) {
             currentIdxPropertyPatterns.add(property.createPattern(this));
         }
-        Collections.sort(currentIdxPropertyPatterns, Pattern.NAME_COMPARATOR);
+        currentIdxPropertyPatterns.sort(Pattern.NAME_COMPARATOR);
         // currentIdxPropertyPatterns = resolveChanges( currentIdxPropertyPatterns, idxPropertyPatterns, LevelComparator.IDX_PROPERTY );
     }
 
@@ -524,7 +523,7 @@ public final class PatternAnalyser {
         for( EventSet property: p.eventSetPatterns.values() ) {
             currentEventSetPatterns.add(property.createPattern(this));
         }
-        Collections.sort(currentEventSetPatterns, Pattern.NAME_COMPARATOR);
+        currentEventSetPatterns.sort(Pattern.NAME_COMPARATOR);
         // currentEventSetPatterns = resolveChanges( currentEventSetPatterns, eventSetPatterns, LevelComparator.EVENT_SET );
     }
 //

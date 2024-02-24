@@ -26,7 +26,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import junit.framework.Test;
@@ -368,7 +367,7 @@ public class NativeExecutionBaseTestSuite extends NbTestSuite {
     }
     
     private static void sortTestData(TestClassData data) {
-        Collections.sort(data.testMethods, new Comparator<TestMethodData>() {
+        data.testMethods.sort(new Comparator<TestMethodData>() {
             @Override
             public int compare(TestMethodData d1, TestMethodData d2) {
                 return d1.name.compareTo(d2.name);

@@ -298,7 +298,7 @@ public class AntProjectTypeStrategy extends ProjectTypeStrategy {
             libsToAdd = null;
         }
         if (librariesToRemove != null) {
-            libsToRemove = librariesToRemove.toArray(new Library[librariesToRemove.size()]);
+            libsToRemove = librariesToRemove.toArray(new Library[0]);
         } else {
             libsToRemove = null;
         }

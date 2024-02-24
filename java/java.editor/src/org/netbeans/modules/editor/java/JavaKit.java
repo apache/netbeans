@@ -270,7 +270,7 @@ public class JavaKit extends NbEditorKit {
                 value.add(action);
             }
         }
-        return value.toArray(new Action[value.size()]);
+        return value.toArray(new Action[0]);
     }
 
     @Override

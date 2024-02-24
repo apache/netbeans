@@ -1431,7 +1431,7 @@ public class ListView extends JScrollPane implements Externalizable {
                 }
             }
 
-            Node[] nodes = ll.toArray(new Node[ll.size()]);
+            Node[] nodes = ll.toArray(new Node[0]);
 
             // forwarding TO E.M., so we won't listen to its cries for a while
             manager.removePropertyChangeListener(wlpc);

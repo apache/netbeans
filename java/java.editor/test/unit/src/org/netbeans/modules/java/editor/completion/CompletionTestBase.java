@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -86,7 +85,7 @@ public class CompletionTestBase extends CompletionTestBaseBase {
             doc.insertString(caretPos, textToInsert, null);
         Source s = Source.create(doc);
         List<? extends CompletionItem> items = JavaCompletionProvider.query(s, CompletionProvider.COMPLETION_QUERY_TYPE, caretPos + textToInsertLength, caretPos + textToInsertLength);
-        Collections.sort(items, CompletionItemComparator.BY_PRIORITY);
+        items.sort(CompletionItemComparator.BY_PRIORITY);
         
         assertNotNull(goldenFileName);            
 

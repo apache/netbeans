@@ -69,7 +69,7 @@ class RevisionNode extends AbstractNode implements Comparable {
         }
         lookup.addAll(Arrays.asList(entry.getLookupObjects()));
         lookup.add(entry);
-        return new RevisionNode(entry, Lookups.fixed(lookup.toArray(new Object[lookup.size()])));
+        return new RevisionNode(entry, Lookups.fixed(lookup.toArray(new Object[0])));
     }
     
     private static Children createChildren(HistoryEntry entry) {
@@ -421,7 +421,7 @@ class RevisionNode extends AbstractNode implements Comparable {
             }
             lookup.add(entry);
             lookup.addAll(Arrays.asList(entry.getLookupObjects()));
-            return Lookups.fixed(lookup.toArray(new Object[lookup.size()]));
+            return Lookups.fixed(lookup.toArray(new Object[0]));
         }        
     
         @Override

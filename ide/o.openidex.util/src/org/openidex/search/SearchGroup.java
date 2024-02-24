@@ -136,7 +136,7 @@ public abstract class SearchGroup {
 
     /** Gets search root nodes.  */
     public Node[] getSearchRoots() {
-        return searchRoots.toArray(new Node[searchRoots.size()]);
+        return searchRoots.toArray(new Node[0]);
     }
     
     /** This method is invoked when the current search is being stopped.
@@ -309,7 +309,7 @@ public abstract class SearchGroup {
                 groupSet.add(group);
             }
         }
-        return groupSet.toArray(new SearchGroup[groupSet.size()]);
+        return groupSet.toArray(new SearchGroup[0]);
     }
 
 

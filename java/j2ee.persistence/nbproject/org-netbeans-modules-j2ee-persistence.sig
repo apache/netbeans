@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.77.0
+#Version 1.78.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1035,7 +1035,7 @@ meth public java.lang.String getBody(java.lang.String)
 meth public static org.netbeans.modules.j2ee.persistence.action.GenerationOptions$Operation valueOf(java.lang.String)
 meth public static org.netbeans.modules.j2ee.persistence.action.GenerationOptions$Operation[] values()
 supr java.lang.Enum<org.netbeans.modules.j2ee.persistence.action.GenerationOptions$Operation>
-hfds body,body2_0
+hfds JPA_VERSION_COMPARATOR,body,body2_0,body3_0
 
 CLSS public org.netbeans.modules.j2ee.persistence.action.UseEntityManagerCodeGenerator
 cons public init(org.openide.filesystems.FileObject)
@@ -2247,7 +2247,7 @@ meth public void ancestorMoved(javax.swing.event.AncestorEvent)
 meth public void ancestorRemoved(javax.swing.event.AncestorEvent)
 meth public void initialize(org.netbeans.api.project.Project,org.netbeans.modules.j2ee.persistence.wizard.fromdb.DBSchemaFileList,org.netbeans.modules.j2ee.persistence.wizard.fromdb.PersistenceGenerator,org.netbeans.modules.j2ee.persistence.wizard.fromdb.TableSource,org.openide.filesystems.FileObject)
 supr javax.swing.JPanel
-hfds addAllButton,addAllTypeCombo,addButton,allowUpdateRecreate,availableTablesLabel,availableTablesList,availableTablesScrollPane,buttonPanel,changeListener,changeSupport,comboPanel,datasourceComboBox,datasourceLabel,datasourceName,datasourceRadioButton,dbconn,dbschemaComboBox,dbschemaFile,dbschemaFileList,dbschemaManager,dbschemaRadioButton,filterAvailable,filterComboTxts,persistenceGen,project,removeAllButton,removeButton,schemaSource,selectedTablesLabel,selectedTablesList,selectedTablesScrollPane,serverStatusProvider,sourceSchemaElement,sourceSchemaUpdateEnabled,tableClosure,tableClosureCheckBox,tableError,tableErrorScroll,tableSource,tablesPanel,targetFolder
+hfds addAllButton,addAllTypeCombo,addButton,allowUpdateRecreate,availableTablesLabel,availableTablesList,availableTablesScrollPane,buttonPanel,changeListener,changeSupport,comboPanel,datasourceLabel,datasourceLocalComboBox,datasourceLocalRadioButton,datasourceName,datasourceServerComboBox,datasourceServerRadioButton,dbconn,dbschemaComboBox,dbschemaFile,dbschemaFileList,dbschemaManager,dbschemaRadioButton,filterAvailable,filterComboTxts,persistenceGen,project,removeAllButton,removeButton,schemaSource,selectedTablesLabel,selectedTablesList,selectedTablesScrollPane,serverStatusProvider,sourceSchemaElement,sourceSchemaUpdateEnabled,tableClosure,tableClosureCheckBox,tableError,tableErrorScroll,tableSource,tablesPanel,targetFolder
 hcls ItemListCellRenderer,TablesPanel
 
 CLSS public final static org.netbeans.modules.j2ee.persistence.wizard.fromdb.DatabaseTablesPanel$WizardPanel

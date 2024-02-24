@@ -208,7 +208,7 @@ public class SourceForBinaryQueryLibraryImplTest extends NbTestCase {
         }
         
         public ChangeEvent[] getEvents () {
-            return queue.toArray(new ChangeEvent[queue.size()]);
+            return queue.toArray(new ChangeEvent[0]);
         }                                    
     }
     

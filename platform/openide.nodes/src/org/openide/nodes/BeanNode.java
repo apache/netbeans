@@ -383,14 +383,9 @@ public class BeanNode<T> extends AbstractNode {
         Object o;
 
         try {
-            o = clazz.newInstance();
-        } catch (InstantiationException e) {
+            o = clazz.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
             NodeOp.exception(e);
-
-            return null;
-        } catch (IllegalAccessException e) {
-            NodeOp.exception(e);
-
             return null;
         }
 

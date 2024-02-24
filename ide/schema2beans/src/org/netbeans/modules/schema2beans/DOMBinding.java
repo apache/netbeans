@@ -386,7 +386,7 @@ public class DOMBinding {
 		    try {
                 //  If cls implements Wrapper, use it first
                 if ((Wrapper.class).isAssignableFrom(cls)) {
-                    Wrapper w = (Wrapper)cls.newInstance();
+                    Wrapper w = (Wrapper)cls.getDeclaredConstructor().newInstance();
                     w.setWrapperValue(ret);
                     return w;
                 }

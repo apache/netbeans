@@ -375,6 +375,14 @@ ${cursor}]]></code></codetemplate>
      <codetemplate abbreviation="sb"><code><![CDATA[${stype type="java.util.StringBuilder" default="StringBuilder" editable="false"} ${var newVarName default="sb"} = new ${stype}(${str instanceof="java.lang.String" default=""});
     ${cursor}]]></code></codetemplate>
 
+    <!-- Instantiating common collections -->
+    <codetemplate abbreviation="lof"><code><![CDATA[${no-indent}${stype type="java.util.List" default="List" editable="false"}.of(${args default=""})${cursor}]]></code></codetemplate>
+    <codetemplate abbreviation="mof"><code><![CDATA[${no-indent}${stype type="java.util.Map" default="Map" editable="false"}.of(${args default=""})${cursor}]]></code></codetemplate>
+    <codetemplate abbreviation="sof"><code><![CDATA[${no-indent}${stype type="java.util.Set" default="Set" editable="false"}.of(${args default=""})${cursor}]]></code></codetemplate>
+    <codetemplate abbreviation="vlof"><code><![CDATA[var ${list list} = ${stype type="java.util.List" default="List" editable="false"}.of(${args default=""});${cursor}]]></code></codetemplate>
+    <codetemplate abbreviation="vmof"><code><![CDATA[var ${map map} = ${stype type="java.util.Map" default="Map" editable="false"}.of(${args default=""});${cursor}]]></code></codetemplate>
+    <codetemplate abbreviation="vsof"><code><![CDATA[var ${set set} = ${stype type="java.util.Set" default="Set" editable="false"}.of(${args default=""});${cursor}]]></code></codetemplate>
+
     <!-- #167824 -->
     <codetemplate abbreviation="in"><code><![CDATA[${no-indent}interface ]]></code></codetemplate>
 

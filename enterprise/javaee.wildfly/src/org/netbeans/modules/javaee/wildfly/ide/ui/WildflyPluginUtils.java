@@ -111,6 +111,8 @@ public class WildflyPluginUtils {
     
     public static final Version WILDFLY_30_0_0 = new Version("30.0.0", true); // NOI18N
 
+    public static final Version WILDFLY_31_0_0 = new Version("31.0.0", true); // NOI18N
+
     private static final Logger LOGGER = Logger.getLogger(WildflyPluginUtils.class.getName());
 
     public static final String LIB = "lib" + separatorChar;
@@ -325,15 +327,13 @@ public class WildflyPluginUtils {
                 props.load(reader);
                 String slot = props.getProperty("slot");
                 if (slot != null) {
-                    File manifestFile = new File(serverPath, getModulesBase(serverPath.getAbsolutePath()) + "org.jboss.as.product".replace('.', separatorChar) + separatorChar + slot + separatorChar + "dir" + separatorChar + "META-INF" + separatorChar + "MANIFEST.MF");
-                    InputStream stream = new FileInputStream(manifestFile);
-                    Manifest manifest = new Manifest(stream);
-                    String productName = manifest.getMainAttributes().getValue("JBoss-Product-Release-Name");
+                    Attributes manifestAttributes = findManifestAttributes(serverPath, slot);
+                    String productName = manifestAttributes.getValue("JBoss-Product-Release-Name");
                     if(productName == null || productName.isEmpty()) {
-                        productName = manifest.getMainAttributes().getValue("JBoss-Project-Release-Name");
+                        productName = manifestAttributes.getValue("JBoss-Project-Release-Name");
                     }
                     boolean wildfly =  productName == null || !productName.toLowerCase().contains("eap");
-                    return new Version(manifest.getMainAttributes().getValue("JBoss-Product-Release-Version"), wildfly);
+                    return new Version(manifestAttributes.getValue("JBoss-Product-Release-Version"), wildfly);
                 }
             } catch (Exception e) {
                 // Don't care
@@ -368,12 +368,10 @@ public class WildflyPluginUtils {
                 props.load(reader);
                 String slot = props.getProperty("slot");
                 if (slot != null) {
-                    File manifestFile = new File(serverPath, getModulesBase(serverPath.getAbsolutePath()) + "org.jboss.as.product".replace('.', separatorChar) + separatorChar + slot + separatorChar + "dir" + separatorChar + "META-INF" + separatorChar + "MANIFEST.MF");
-                    InputStream stream = new FileInputStream(manifestFile);
-                    Manifest manifest = new Manifest(stream);
-                    String productName = manifest.getMainAttributes().getValue("JBoss-Product-Release-Name");
+                    Attributes manifestAttributes = findManifestAttributes(serverPath, slot);
+                    String productName = manifestAttributes.getValue("JBoss-Product-Release-Name");
                     if(productName == null || productName.isEmpty()) {
-                        productName = manifest.getMainAttributes().getValue("JBoss-Project-Release-Name");
+                        productName = manifestAttributes.getValue("JBoss-Project-Release-Name");
                     }
                     return productName == null || !productName.toLowerCase().contains("eap");
                 }
@@ -403,12 +401,10 @@ public class WildflyPluginUtils {
                     props.load(reader);
                     String slot = props.getProperty("slot");
                     if (slot != null) {
-                        File manifestFile = new File(serverPath, getModulesBase(serverPath.getAbsolutePath()) + "org.jboss.as.product".replace('.', separatorChar) + separatorChar + slot + separatorChar + "dir" + separatorChar + "META-INF" + separatorChar + "MANIFEST.MF");
-                        InputStream stream = new FileInputStream(manifestFile);
-                        Manifest manifest = new Manifest(stream);
-                        String productName = manifest.getMainAttributes().getValue("JBoss-Product-Release-Name");
+                        Attributes manifestAttributes = findManifestAttributes(serverPath, slot);
+                        String productName = manifestAttributes.getValue("JBoss-Product-Release-Name");
                         if(productName == null || productName.isEmpty()) {
-                            productName = manifest.getMainAttributes().getValue("JBoss-Project-Release-Name");
+                            productName = manifestAttributes.getValue("JBoss-Project-Release-Name");
                         }
                         return productName != null && (productName.contains("WildFly Web Lite") || productName.contains("WildFly Servlet"));
                     }
@@ -433,6 +429,29 @@ public class WildflyPluginUtils {
 
         File jakartaDir = new File(serverPath, getModulesBase(serverPath.getAbsolutePath()) + "jakarta");
         return jakartaDir.exists();
+    }
+
+    private static Attributes findManifestAttributes(File serverPath, String slot) {
+        File productDir = new File(serverPath, getModulesBase(serverPath.getAbsolutePath()) + "org.jboss.as.product".replace('.', separatorChar) + separatorChar + slot);
+        File[] files = productDir.listFiles();
+        for (File file : files) {
+            try {
+                if (file.getName().startsWith("wildfly-feature-pack-product-conf") && file.getName().endsWith(".jar")) {
+                    JarFileSystem featurePackProductConfJar = new JarFileSystem(file);
+                    return featurePackProductConfJar.getManifest().getMainAttributes();
+                }
+            } catch (Exception ignore) {
+            }
+        }
+        File manifestFile = new File(productDir, "dir" + separatorChar + "META-INF" + separatorChar + "MANIFEST.MF");
+        if (manifestFile.exists()) {
+            try (InputStream stream = new FileInputStream(manifestFile)) {
+                Manifest manifest = new Manifest(stream);
+                return manifest.getMainAttributes();
+            } catch (Exception ignore) {
+            }
+        }
+        return null;
     }
 
     private static class VersionJarFileFilter implements FilenameFilter {

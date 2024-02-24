@@ -138,7 +138,7 @@ public abstract class TestCodeLanguageClient implements NbCodeLanguageClient {
 
     @Override
     public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams params) {
-        throw new UnsupportedOperationException();
+        return CompletableFuture.completedFuture(new MessageActionItem(params.getActions().get(0).getTitle()));
     }
 
     @Override

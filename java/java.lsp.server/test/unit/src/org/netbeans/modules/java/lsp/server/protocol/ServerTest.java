@@ -317,7 +317,10 @@ public class ServerTest extends NbTestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         TextDocumentServiceImpl.HOOK_NOTIFICATION = null;
-        serverThread.stop();
+        try {
+            serverThread.stop();
+        } catch (UnsupportedOperationException ex) {
+        }
         OpenProjects.getDefault().close(OpenProjects.getDefault().getOpenProjects());
     }
     
@@ -370,7 +373,7 @@ public class ServerTest extends NbTestCase {
 
         @Override
         public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
         }
 
         @Override
@@ -710,7 +713,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -815,7 +818,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -962,7 +965,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -1045,7 +1048,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -1109,7 +1112,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(params.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -1167,7 +1170,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(params.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -1280,7 +1283,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -1335,7 +1338,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -1384,7 +1387,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -1442,7 +1445,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -1510,7 +1513,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -1648,7 +1651,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -1805,7 +1808,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -1910,7 +1913,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -1980,7 +1983,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -2119,7 +2122,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -2208,7 +2211,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -2298,7 +2301,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -2391,7 +2394,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -2481,7 +2484,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -2572,7 +2575,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -2680,7 +2683,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -2783,7 +2786,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -2886,7 +2889,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -2988,7 +2991,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -3121,7 +3124,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -3640,7 +3643,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -3782,7 +3785,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -4665,7 +4668,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -4744,7 +4747,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -4827,7 +4830,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -4906,7 +4909,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -4969,7 +4972,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -5103,7 +5106,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override
@@ -5165,7 +5168,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return CompletableFuture.completedFuture(new MessageActionItem(arg0.getActions().get(0).getTitle()));
             }
 
             @Override

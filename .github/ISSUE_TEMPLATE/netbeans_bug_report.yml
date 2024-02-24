@@ -27,8 +27,8 @@ body:
         Latest releases are always available from https://netbeans.apache.org/download/
       multiple: false
       options:
-        - "Apache NetBeans 20"
-        - "Apache NetBeans 21 release candidate"
+        - "Apache NetBeans 21"
+#        - "Apache NetBeans 22 release candidate"
         - "Apache NetBeans latest daily build"
     validations:
       required: true

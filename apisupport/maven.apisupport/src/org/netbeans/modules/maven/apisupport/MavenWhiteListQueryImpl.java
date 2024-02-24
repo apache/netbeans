@@ -44,7 +44,6 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.netbeans.api.annotations.common.NonNull;
@@ -367,18 +366,14 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
     private Manifest getManifest(FileObject root) {
         FileObject manifestFo = root.getFileObject("META-INF/MANIFEST.MF");
         if (manifestFo != null) {
-            InputStream is = null;
-            try {
-                is = manifestFo.getInputStream();
-                return new Manifest(is);
+            try (InputStream is = manifestFo.getInputStream()) {
+                Manifest manifest = new Manifest(is);
+                return manifest;
             } catch (IOException ex) {
                 //Exceptions.printStackTrace(ex);
-            } finally {
-                IOUtil.close(is);
             }
         }
         return null;
-
     }
     
     private static class MavenWhiteListImplementation implements WhiteListImplementation {

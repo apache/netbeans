@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.maven.format.checkstyle;
 
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -103,7 +102,7 @@ private static String PROP_NEWLINE_WHILE = "org-netbeans-modules-editor-indent.t
                return is;
             }
         });
-        try {
+        try (checkstyleStream) {
             Document doc = bldr.build(checkstyleStream);
             Element root = doc.getRootElement();
             processModule(root, "", props);
@@ -114,8 +113,6 @@ private static String PROP_NEWLINE_WHILE = "org-netbeans-modules-editor-indent.t
             Exceptions.printStackTrace(ex);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
-        } finally {
-            IOUtil.close(checkstyleStream);
         }
         return props;
 

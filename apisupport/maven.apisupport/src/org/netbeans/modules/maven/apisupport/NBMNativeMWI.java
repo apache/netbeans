@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -32,7 +34,6 @@ import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.PluginManagement;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.netbeans.modules.apisupport.project.api.EditableManifest;
@@ -103,14 +104,10 @@ final class NBMNativeMWI {
             if (packageName != null) {
                 String path = packageName.replace(".", "/") + "/Bundle.properties";
                 mf.setAttribute("OpenIDE-Module-Localizing-Bundle", path, null);
-                BufferedOutputStream bos = null;
-                try {
-                    bos = new BufferedOutputStream(new FileOutputStream(new File(src, "manifest.mf")));
-                    mf.write(bos);
+                try (OutputStream os = new BufferedOutputStream(new FileOutputStream(new File(src, "manifest.mf")))) {
+                    mf.write(os);
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
-                } finally {
-                    IOUtil.close(bos);
                 }
                 
             }
@@ -121,20 +118,13 @@ final class NBMNativeMWI {
                 String path = packageName.replace(".", File.separator);
                 File res = new File(src, path);
                 res.mkdirs();
-                OutputStream bos = null;
-                try {
-                    bos = new BufferedOutputStream(new FileOutputStream(new File(res, "Bundle.properties")));
+                try (OutputStream os = new BufferedOutputStream(new FileOutputStream(new File(res, "Bundle.properties")))) {
                     Properties p = new Properties();
-                    p.store(bos, EMPTY_BUNDLE_FILE);
-                    
+                    p.store(os, EMPTY_BUNDLE_FILE);
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
-                } finally {
-                    IOUtil.close(bos);
                 }
-                
             }
-            
         }
     }
 

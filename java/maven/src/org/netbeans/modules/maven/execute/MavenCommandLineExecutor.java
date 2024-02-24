@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,7 +55,6 @@ import org.apache.maven.model.Prerequisites;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
 import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.netbeans.api.annotations.common.NonNull;
@@ -1029,7 +1029,6 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         } else {
             f.mkdirs();
             ioput.getOut().println("NetBeans: Downloading and unzipping Maven version " + ver);
-            ZipInputStream str = null;
             try {
                 //this url pattern works for all versions except the last one 3.2.3
                 //which is only under <mirror>/apache/maven/maven-3/3.2.3/binaries/
@@ -1048,24 +1047,19 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                     LOGGER.log(Level.WARNING, "wasn''t able to download maven binaries, version {0}", ver);
                     return null;
                 }
-                str = new ZipInputStream(is);
-                ZipEntry entry;
-                while ((entry = str.getNextEntry()) != null) {
-                    //base it of f not child as the zip contains the maven base folder
-                    File fileOrDir = new File(f,  entry.getName());
-                    if (entry.isDirectory()) {
-                        fileOrDir.mkdirs();
-                    } else {
-                        FileOutputStream fos = null;
-                        try {
-                            fos = new FileOutputStream(fileOrDir);
-                            FileUtil.copy(str, fos);
-                        } finally {
-                            IOUtil.close(fos);
-                        }
-                        // correct way to set executable flag?
-                        if ("bin".equals(fileOrDir.getParentFile().getName()) && !fileOrDir.getName().endsWith(".conf")) {
-                            fileOrDir.setExecutable(true);
+                try (ZipInputStream str = new ZipInputStream(is)) {
+                    ZipEntry entry;
+                    while ((entry = str.getNextEntry()) != null) {
+                        //base it of f not child as the zip contains the maven base folder
+                        File fileOrDir = new File(f,  entry.getName());
+                        if (entry.isDirectory()) {
+                            fileOrDir.mkdirs();
+                        } else {
+                            Files.copy(str, fileOrDir.toPath());
+                            // correct way to set executable flag?
+                            if ("bin".equals(fileOrDir.getParentFile().getName()) && !fileOrDir.getName().endsWith(".conf")) {
+                                fileOrDir.setExecutable(true);
+                            }
                         }
                     }
                 }
@@ -1088,8 +1082,6 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 } catch (IOException ex1) {
                     Exceptions.printStackTrace(ex1);
                 }
-            } finally {
-                IOUtil.close(str);
             }
         }
         return null;

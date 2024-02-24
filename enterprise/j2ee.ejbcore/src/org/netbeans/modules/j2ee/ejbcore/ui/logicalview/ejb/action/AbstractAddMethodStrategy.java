@@ -21,6 +21,7 @@ package org.netbeans.modules.j2ee.ejbcore.ui.logicalview.ejb.action;
 
 import java.io.IOException;
 import javax.lang.model.element.TypeElement;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ui.ScanDialog;
 import org.netbeans.modules.j2ee.api.ejbjar.EjbJar;
@@ -49,7 +50,7 @@ public abstract class AbstractAddMethodStrategy {
         this.name = name;
     }
 
-    protected abstract MethodModel getPrototypeMethod();
+    protected abstract MethodModel getPrototypeMethod(boolean jakartaVariant);
 
     /** Describes method type handled by this action. */
     public abstract MethodType.Kind getPrototypeMethodKind();
@@ -69,7 +70,14 @@ public abstract class AbstractAddMethodStrategy {
         if (className == null) {
             return;
         }
-        final MethodModel methodModel = getPrototypeMethod();
+
+        boolean jakartaVariant = true;
+        ClassPath cp = ClassPath.getClassPath(fileObject, ClassPath.COMPILE);
+        if (cp != null) {
+            jakartaVariant = cp.findResource("javax/ejb/Stateless.class") == null // NOI18N
+                    || cp.findResource("jakarta/ejb/Stateless.class") != null; // NOI18N
+        }
+        final MethodModel methodModel = getPrototypeMethod(jakartaVariant);
         ScanDialog.runWhenScanFinished(new Runnable() {
             @Override
             public void run() {
@@ -106,18 +114,16 @@ public abstract class AbstractAddMethodStrategy {
      * Gets whether the type of given {@code TypeElement} is Entity bean.
      * @param compilationController compilationController
      * @param typeElement examined element
-     * @return {@code true} if the element is subtype of {@code javax.ejb.EntityBean}, {@code false} otherwise
+     * @return {@code true} if the element is subtype of {@code jakarta.ejb.EntityBean} or {@code javax.ejb.EntityBean}, {@code false} otherwise
      */
     protected static boolean isEntity(CompilationController compilationController, TypeElement typeElement) {
         Parameters.notNull("compilationController", compilationController);
         Parameters.notNull("typeElement", typeElement);
 
         TypeElement entity = compilationController.getElements().getTypeElement("javax.ejb.EntityBean");
-        if (entity != null) {
-            typeElement.getKind().getDeclaringClass().isAssignableFrom(entity.getKind().getDeclaringClass());
-            return (compilationController.getTypes().isSubtype(typeElement.asType(), entity.asType()));
-        }
-        return false;
+        TypeElement entityJakarta = compilationController.getElements().getTypeElement("jakarta.ejb.EntityBean");
+        return (entity != null && (compilationController.getTypes().isSubtype(typeElement.asType(), entity.asType())))
+                || (entityJakarta != null && (compilationController.getTypes().isSubtype(typeElement.asType(), entityJakarta.asType())));
     }
 
     /**
@@ -134,12 +140,15 @@ public abstract class AbstractAddMethodStrategy {
         TypeElement stateless = compilationController.getElements().getTypeElement("javax.ejb.Stateless");
         TypeElement stateful = compilationController.getElements().getTypeElement("javax.ejb.Stateful");
         TypeElement singleton = compilationController.getElements().getTypeElement("javax.ejb.Singleton");
-        if (stateful != null && stateless != null && singleton != null) {
-            return (compilationController.getTypes().isSubtype(typeElement.asType(), stateless.asType())
-                    || compilationController.getTypes().isSubtype(typeElement.asType(), stateful.asType())
-                    || compilationController.getTypes().isSubtype(typeElement.asType(), singleton.asType()));
-        }
-        return false;
+        TypeElement statelessJakarta = compilationController.getElements().getTypeElement("jakarta.ejb.Stateless");
+        TypeElement statefulJakarta = compilationController.getElements().getTypeElement("jakarta.ejb.Stateful");
+        TypeElement singletonJakarta = compilationController.getElements().getTypeElement("jakarta.ejb.Singleton");
+        return (stateless != null && compilationController.getTypes().isSubtype(typeElement.asType(), stateless.asType()))
+                || (stateful != null && compilationController.getTypes().isSubtype(typeElement.asType(), stateful.asType()))
+                || (singleton != null && compilationController.getTypes().isSubtype(typeElement.asType(), singleton.asType()))
+                || (statelessJakarta != null && compilationController.getTypes().isSubtype(typeElement.asType(), statelessJakarta.asType()))
+                || (statefulJakarta != null && compilationController.getTypes().isSubtype(typeElement.asType(), statefulJakarta.asType()))
+                || (singletonJakarta != null && compilationController.getTypes().isSubtype(typeElement.asType(), singletonJakarta.asType()));
     }
 
     /**
@@ -153,10 +162,9 @@ public abstract class AbstractAddMethodStrategy {
         Parameters.notNull("typeElement", typeElement);
 
         TypeElement stateful = compilationController.getElements().getTypeElement("javax.ejb.Stateful");
-        if (stateful != null) {
-            return (compilationController.getTypes().isSubtype(typeElement.asType(), stateful.asType()));
-        }
-        return false;
+        TypeElement statefulJakarta = compilationController.getElements().getTypeElement("jakarta.ejb.Stateful");
+        return (stateful != null && compilationController.getTypes().isSubtype(typeElement.asType(), stateful.asType()))
+                || (statefulJakarta != null && compilationController.getTypes().isSubtype(typeElement.asType(), statefulJakarta.asType()));
     }
 
 }

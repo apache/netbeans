@@ -65,7 +65,7 @@ public class AddBusinessMethodStrategy extends AbstractAddMethodStrategy {
         super(NbBundle.getMessage(AddBusinessMethodStrategy.class, "LBL_AddBusinessMethodAction"));
     }
 
-    protected MethodModel getPrototypeMethod() {
+    protected MethodModel getPrototypeMethod(boolean jakartaVariant) {
         return MethodModel.create(
                 "businessMethod",
                 "void",

@@ -45,6 +45,9 @@ import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 
+import static org.netbeans.modules.j2ee.ejbcore.ejb.wizard.jpa.dao.EjbFacadeWizardIterator.EJB_STATELESS;
+import static org.netbeans.modules.j2ee.ejbcore.ejb.wizard.jpa.dao.EjbFacadeWizardIterator.EJB_STATELESS_JAKARTA;
+
 public class EjbFacadeWizardPanel2 implements WizardDescriptor.Panel, ChangeListener {
     
     /**
@@ -120,8 +123,11 @@ public class EjbFacadeWizardPanel2 implements WizardDescriptor.Panel, ChangeList
         }
         if (!statelessIfaceOnProjectCP()) {
             wizardDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,
-                    NbBundle.getMessage(EjbFacadeWizardPanel2.class, "ERR_SessionIfaceNotOnProjectClasspath", //NOI18N
-                    EjbFacadeWizardIterator.EJB_STATELESS));
+                    NbBundle.getMessage(
+                            EjbFacadeWizardPanel2.class,
+                            "ERR_SessionIfaceNotOnProjectClasspath", //NOI18N
+                            EJB_STATELESS_JAKARTA + "/" + EJB_STATELESS_JAKARTA //NOI18N
+                    ));
             return false;
         }
 
@@ -231,13 +237,12 @@ public class EjbFacadeWizardPanel2 implements WizardDescriptor.Panel, ChangeList
 
     private boolean statelessIfaceOnProjectCP() {
         ClassPath cp = ClassPath.getClassPath(project.getProjectDirectory(), ClassPath.COMPILE);
-        ClassLoader cl = cp.getClassLoader(true);
-        try {
-            Class.forName(EjbFacadeWizardIterator.EJB_STATELESS, false, cl);
-        } catch (ClassNotFoundException cnfe) {
+        if(cp == null) {
             return false;
         }
-        return true;
+        FileObject javaxStatelessFo = cp.findResource(EJB_STATELESS.replace(".", "/") + ".class");
+        FileObject jakartaStatelessFo = cp.findResource(EJB_STATELESS_JAKARTA.replace(".", "/") + ".class");
+        return javaxStatelessFo != null || jakartaStatelessFo != null;
     }
 
     private static boolean isValidPackageName(String str) {

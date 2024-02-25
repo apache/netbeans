@@ -87,6 +87,22 @@ is the proper place.
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="ResultProcessor">
+          <api name="ParsingAPI"/>
+          <summary>Adding ResultProcessor Functional Interface</summary>
+          <version major="9" minor="31"/>
+          <date day="25" month="2" year="2024"/>
+          <author login="lkishalmi"/>
+          <compatibility source="compatible" binary="compatible" addition="yes"/>
+          <description>
+              <p>
+                  Adding a new functionale interface <code>ResultProcessor</code>, that
+                  can be added to new <code>ParserManager.parse()</code> calls, allowing
+                  remove of common boilerplate code needed for creating <code>new UserTask() {...}</code>.
+              </p>
+          </description>
+          <class package="org.netbeans.modules.parsing.api" name="ResultProcessor"/>
+      </change>
       <change id="Parser.Result.processingFinished">
           <api name="ParsingAPI"/>
           <summary>Adding Parser.Result.processingFinished</summary>

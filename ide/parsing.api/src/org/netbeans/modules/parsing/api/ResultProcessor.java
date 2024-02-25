@@ -16,24 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.parsing.api;
 
-
 /**
- * UserTask allows control process of parsing of {@link Source}
- * containing blocks of embedded languages, and do some computations based on 
- * all (or some) parser {@link org.netbeans.modules.parsing.spi.Parser.Result}s. 
- * It is useful when you need to implement code completion based on results of more
- * embedded languages, or if you want to implement refactoring of some 
- * blocks of code embedded in some other blocks of other code, etc...
+ * Functional core of {@linkplain UserTask} , allow calls like:
+ * {@snippet :
+ *     ParserManager.parse(Set.of(source), (result) -> {});
+ * }
  *
- * @author Jan Jancura
+ * @since 9.31
+ * @author lkishalmi
  */
-public abstract class UserTask extends Task implements ResultProcessor {
-
+@FunctionalInterface
+public interface ResultProcessor {
+    /**
+     * Functional UserTask implementation.
+     *
+     * @param resultIterator  A {@linkplain ResultIterator} instance.
+     * @throws Exception re-thrown by the infrastructure as a
+     *                      {@link org.netbeans.modules.parsing.spi.ParseException}.
+     */
+    void run(ResultIterator resultIterator) throws Exception;
 }
-
-
-
-

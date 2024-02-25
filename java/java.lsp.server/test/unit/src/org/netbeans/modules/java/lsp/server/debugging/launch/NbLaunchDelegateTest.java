@@ -102,6 +102,22 @@ public class NbLaunchDelegateTest {
     }
 
     @Test
+    public void testFindsWithFileObjectAndDataObjectNoMethod() throws Exception {
+        FileObject dir = FileUtil.createMemoryFileSystem().getRoot().createFolder("testprj");
+        FileObject xml = dir.createData("build.xml");
+        Project prj = ProjectManager.getDefault().findProject(dir);
+        assertNotNull("Project dir recognized", prj);
+
+        Lookup lkp = NbLaunchDelegate.createTargetLookup(prj, null, xml);
+        assertEquals("File object is available", xml, lkp.lookup(FileObject.class));
+        DataObject obj = lkp.lookup(DataObject.class);
+        assertNotNull("DataObject is available", obj);
+        assertEquals("DataObject's FileObject is correct", xml, obj.getPrimaryFile());
+        assertNull("No Single method is present", lkp.lookup(SingleMethod.class));
+        assertEquals(prj, lkp.lookup(Project.class));
+    }
+
+    @Test
     public void testAvoidNPEWithoutActionsProviderInLookup() throws Exception {
         MockProjectFactory.MockProject prj = new MockProjectFactory.MockProject(FileUtil.getConfigRoot());
         Collection<ActionProvider> all = NbLaunchDelegate.findActionProviders(prj);

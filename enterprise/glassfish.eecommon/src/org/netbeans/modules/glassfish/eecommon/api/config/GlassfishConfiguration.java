@@ -70,7 +70,7 @@ import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 
 /**
- * Basic Java EE server configuration API support for V2, V3 and V4 plugins.
+ * Basic Java/Jakarta EE server configuration API support for V2-V8 plugins.
  * <p/>
  * @author Peter Williams, Tomas Kraus
  */
@@ -85,7 +85,7 @@ public abstract class GlassfishConfiguration implements
     ////////////////////////////////////////////////////////////////////////////
 
     /** GlassFish Java EE common module Logger. */
-    private static final Logger LOGGER = Logger.getLogger("glassfish-eecommon");
+    private static final Logger LOGGER = Logger.getLogger(GlassfishConfiguration.class.getName());
 
     /** GlassFish resource file suffix is {@code .xml}. */
     private static final String RESOURCE_FILES_SUFFIX = ".xml";
@@ -136,19 +136,7 @@ public abstract class GlassfishConfiguration implements
         if (version == null) {
             return new int[]{0,1};
         }
-        // glassfish-resources.xml for v7
-        if (GlassFishVersion.ge(version, GlassFishVersion.GF_7_0_0)) {
-            return new int[]{0};
-        }
-        // glassfish-resources.xml for v6
-        if (GlassFishVersion.ge(version, GlassFishVersion.GF_6) || GlassFishVersion.ge(version, GlassFishVersion.GF_6_1_0)) {
-            return new int[]{0};
-        }
-        // glassfish-resources.xml for v5
-        if (GlassFishVersion.ge(version, GlassFishVersion.GF_5) || GlassFishVersion.ge(version, GlassFishVersion.GF_5_1_0)) {
-            return new int[]{0};
-        }
-        // glassfish-resources.xml for v4
+        // glassfish-resources.xml for v4 and onwards
         if (GlassFishVersion.ge(version, GlassFishVersion.GF_4)) {
             return new int[]{0};
         }
@@ -515,7 +503,8 @@ public abstract class GlassfishConfiguration implements
         "gfv510ee8",
         "gfv6ee9",
         "gfv610ee9",
-        "gfv700ee10"
+        "gfv700ee10",
+        "gfv800ee11"
     };
 
     protected ASDDVersion getTargetAppServerVersion() {
@@ -567,7 +556,13 @@ public abstract class GlassfishConfiguration implements
         boolean geGF5 = false;
         boolean geGF6 = false;
         boolean geGF7 = false;
+        boolean geGF8 = false;
         if(schemaFolder.exists()){
+            if(new File(schemaFolder, "jakartaee11.xsd").exists() &&
+                    new File(dtdFolder, "glassfish-web-app_3_0-1.dtd").exists()){
+              geGF8 = true;
+              return ASDDVersion.GLASSFISH_8;
+            }
             if(new File(schemaFolder, "jakartaee10.xsd").exists() &&
                     new File(dtdFolder, "glassfish-web-app_3_0-1.dtd").exists()){
               geGF7 = true;
@@ -584,7 +579,7 @@ public abstract class GlassfishConfiguration implements
               return ASDDVersion.GLASSFISH_5_1;
             }
         }
-        if (!geGF5 && !geGF6 && !geGF7 && dtdFolder.exists()) {
+        if (!geGF5 && !geGF6 && !geGF7 && !geGF8 && dtdFolder.exists()) {
             if (new File(dtdFolder, "glassfish-web-app_3_0-1.dtd").exists()) {
                 return ASDDVersion.SUN_APPSERVER_10_1;
             }

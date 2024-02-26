@@ -70,6 +70,7 @@ public class JSFUtils {
     public static final String DEFAULT_JSF_2_0_NAME = "jsf20";    //NOI18N
     public static final String DEFAULT_JSF_3_0_NAME = "jsf30";    //NOI18N
     public static final String DEFAULT_JSF_4_0_NAME = "jsf40";    //NOI18N
+    public static final String DEFAULT_JSF_4_1_NAME = "jsf41";    //NOI18N
 
     // the name of jstl library
     public static final String DEFAULT_JSTL_1_1_NAME = "jstl11";  //NOI18N
@@ -86,6 +87,7 @@ public class JSFUtils {
     public static final String JSF_2_3__API_SPECIFIC_CLASS = "javax.faces.push.PushContext"; //NOI18N
     public static final String JSF_3_0__API_SPECIFIC_CLASS = "jakarta.faces.push.PushContext"; //NOI18N
     public static final String JSF_4_0__API_SPECIFIC_CLASS = "jakarta.faces.lifecycle.ClientWindowScoped"; //NOI18N
+    public static final String JSF_4_1__API_SPECIFIC_CLASS = "jakarta.faces.convert.UUIDConverter"; //NOI18N
     public static final String MYFACES_SPECIFIC_CLASS = "org.apache.myfaces.webapp.StartupServletContextListener"; //NOI18N
 
     //constants for web.xml (Java EE)
@@ -432,7 +434,9 @@ public class JSFUtils {
     public static String getNamespaceDomain(WebModule webModule) {
         JsfVersion version = webModule != null ? JsfVersionUtils.forWebModule(webModule) : null;
         String nsLocation = NamespaceUtils.SUN_COM_LOCATION;
-        if (version != null && version.isAtLeast(JsfVersion.JSF_2_2)) {
+        if (version != null && version.isAtLeast(JsfVersion.JSF_4_0)) {
+            nsLocation = NamespaceUtils.JAKARTA_ORG_LOCATION;
+        } else if (version != null && version.isAtLeast(JsfVersion.JSF_2_2)) {
             nsLocation = NamespaceUtils.JCP_ORG_LOCATION;
         }
         return nsLocation;

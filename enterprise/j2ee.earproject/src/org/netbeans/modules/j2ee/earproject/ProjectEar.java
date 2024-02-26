@@ -310,7 +310,9 @@ public final class ProjectEar extends J2eeApplicationProvider
         if (p == null) {
             p = Profile.JAVA_EE_7_FULL;
         }
-        if (Profile.JAKARTA_EE_10_FULL.equals(p) || Profile.JAKARTA_EE_10_FULL.equals(p)) {
+        if (Profile.JAKARTA_EE_11_FULL.equals(p)) {
+            return Application.VERSION_11;
+        } else if (Profile.JAKARTA_EE_10_FULL.equals(p)) {
             return Application.VERSION_10;
         } else if (Profile.JAKARTA_EE_9_1_FULL.equals(p) || Profile.JAKARTA_EE_9_FULL.equals(p)) {
             return Application.VERSION_9;

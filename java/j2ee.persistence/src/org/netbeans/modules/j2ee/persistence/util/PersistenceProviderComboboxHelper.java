@@ -180,7 +180,8 @@ public final class PersistenceProviderComboboxHelper {
                     || Util.isJPAVersionSupported(project, Persistence.VERSION_2_1)
                     || Util.isJPAVersionSupported(project, Persistence.VERSION_2_2)
                     || Util.isJPAVersionSupported(project, Persistence.VERSION_3_0)
-                    || Util.isJPAVersionSupported(project, Persistence.VERSION_3_1))
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_3_1)
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_3_2))
                     && (defProviderVersion == null || defProviderVersion.equals(Persistence.VERSION_1_0));//jpa 3.1 is supported by default (or first) is jpa1.0 or udefined version provider
             if(specialCase){
                 for (int i = 1; i<providers.getSize() ; i++){

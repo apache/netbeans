@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.jakartaee11.api
+OpenIDE-Module-Layer: org/netbeans/modules/jakartaee11/api/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/jakartaee11/api/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.23
+OpenIDE-Module-Java-Dependencies: Java > 11
+OpenIDE-Module-Provides: jakartaee11.api

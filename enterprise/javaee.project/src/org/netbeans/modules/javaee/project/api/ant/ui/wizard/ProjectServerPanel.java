@@ -426,23 +426,17 @@ final class ProjectServerPanel extends javax.swing.JPanel implements DocumentLis
                 Set<Profile> profiles = new TreeSet<>(Profile.UI_COMPARATOR);
                 profiles.addAll(j2eePlatform.getSupportedProfiles(j2eeModuleType));
                 for (Profile profile : profiles) {
-                    // j2ee 1.3 and 1.4 is not supported anymore
+                    // j2ee 1.3 and 1.4 are not supported anymore
                     if (Profile.J2EE_13.equals(profile) || Profile.J2EE_14.equals(profile)) {
                         continue;
                     }
                     if (j2eeModuleType == J2eeModule.Type.WAR) {
-                        if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_7_FULL.equals(profile)
-                                || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_FULL.equals(profile)
-                                || Profile.JAKARTA_EE_9_FULL.equals(profile) || Profile.JAKARTA_EE_9_1_FULL.equals(profile)
-                                || Profile.JAKARTA_EE_10_FULL.equals(profile)) {
+                        if (profile.isFullProfile() && profile.isAtLeast(Profile.JAVA_EE_6_FULL)) {
                             // for web apps always offer only JAVA_EE_6_WEB profile and skip full one
                             continue;
                         }
                     } else {
-                        if (Profile.JAVA_EE_6_WEB.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile)
-                                || Profile.JAVA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile)
-                                || Profile.JAKARTA_EE_9_WEB.equals(profile) || Profile.JAKARTA_EE_9_1_WEB.equals(profile)
-                                || Profile.JAKARTA_EE_10_WEB.equals(profile)) {
+                        if (profile.isWebProfile() && profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
                             // for EE apps always skip web profile
                             continue;
                         }
@@ -617,7 +611,9 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                 Set<String> jdks = j2eePlatform.getSupportedJavaPlatformVersions();
                 // make sure that chosen source level is suported by server:
                 if (jdks != null && !jdks.contains(sourceLevel)) { // workaround for #212146 when jdks == null
-                    if ("11".equals(sourceLevel) && jdks.contains("1.8")) {
+                    if ("21".equals(sourceLevel) && jdks.contains("11")) {
+                        sourceLevel = "11";
+                    } else if ("11".equals(sourceLevel) && jdks.contains("1.8")) {
                         sourceLevel = "1.8";
                     } else if ("1.8".equals(sourceLevel) && jdks.contains("1.7")) {
                         sourceLevel = "1.7";
@@ -638,6 +634,9 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                 String warningType = warningPanel.getWarningType();
                 if (warningType != null) {
                     switch (warningType) {
+                        case J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_21:
+                            sourceLevel = "21"; //NOI18N
+                            break;
                         case J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_11:
                             sourceLevel = "11"; //NOI18N
                             break;
@@ -987,6 +986,8 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                 j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAKARTA_EE_9_FULL));
             } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_10_0).equals(version)) {
                 j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAKARTA_EE_10_FULL));
+            } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_11_0).equals(version)) {
+                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAKARTA_EE_11_FULL));
             }
         } catch (IOException e) {
             String message = NbBundle.getMessage(ProjectServerPanel.class, "MSG_AppClientXmlCorrupted"); // NOI18N

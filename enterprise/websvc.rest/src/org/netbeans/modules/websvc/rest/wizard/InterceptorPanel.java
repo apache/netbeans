@@ -80,18 +80,7 @@ public class InterceptorPanel implements Panel<WizardDescriptor> {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
             Profile profile = webModule.getJ2eeProfile();
-            if (!Profile.JAVA_EE_7_FULL.equals(profile)
-                    && !Profile.JAVA_EE_7_WEB.equals(profile)
-                    && !Profile.JAVA_EE_8_FULL.equals(profile)
-                    && !Profile.JAVA_EE_8_WEB.equals(profile)
-                    && !Profile.JAKARTA_EE_8_FULL.equals(profile)
-                    && !Profile.JAKARTA_EE_8_WEB.equals(profile)
-                    && !Profile.JAKARTA_EE_9_FULL.equals(profile)
-                    && !Profile.JAKARTA_EE_9_WEB.equals(profile)
-                    && !Profile.JAKARTA_EE_9_1_FULL.equals(profile)
-                    && !Profile.JAKARTA_EE_9_1_WEB.equals(profile)
-                    && !Profile.JAKARTA_EE_10_FULL.equals(profile)
-                    && !Profile.JAKARTA_EE_10_WEB.equals(profile)) {
+            if (profile.isAtMost(Profile.JAVA_EE_6_FULL)) {
                 setErrorMessage(NbBundle.getMessage(InterceptorPanel.class,
                         "MSG_NoJEE7Profile"));          // NOI18N
                 return false;

@@ -183,6 +183,7 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
                     libraryList.add(ServerUtilities.fileToUrl(f));
                 }
             }
+            // TODO: add support for JPA 3.x
 
             File j2eeDoc = InstalledFileLocator.getDefault().locate(
                     "docs/" + PERSISTENCE_JAVADOC,
@@ -241,7 +242,8 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
              {"jackson-asl", "jackson-core-asl", "jersey-bundle", "jersey-gf-bundle", "jersey-multipart", "jettison", "mimepull", "jsr311-api"}; //NOI18N
 
     private static final String[] JAXRS_LIBRARIES_31 =
-             {"jackson-core-asl", "jackson-jaxrs", "jackson-mapper-asl", "jersey-client", "jersey-core", JERSEY_GF_SERVER, "jersey-json", "jersey-multipart", "jettison", "mimepull"}; //NOI18N
+             {"jackson-core-asl", "jackson-jaxrs", "jackson-mapper-asl", "jersey-client", 
+                 "jersey-core", JERSEY_GF_SERVER, "jersey-json", "jersey-multipart", "jettison", "mimepull"}; //NOI18N
 
     private static final String JAVA_EE_6_LIB = "Java-EE-GlassFish-v3"; // NOI18N
     private static final String JAVA_EE_5_LIB = "Java-EE-GlassFish-v3-Prelude"; // NOI18N
@@ -250,6 +252,7 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
     private static final String JAKARTA_EE_8_JAVADOC = "jakartaee8-doc-api.jar"; // NOI18N
     private static final String JAKARTA_EE_9_JAVADOC = "jakartaee9-doc-api.jar"; // NOI18N
     private static final String JAKARTA_EE_10_JAVADOC = "jakartaee10-doc-api.jar"; // NOI18N
+    private static final String JAKARTA_EE_11_JAVADOC = "jakartaee11-doc-api.jar"; // NOI18N
 
     private static boolean ensureGlassFishApiSupport(GlassFishServer server) {
         String installRoot = server.getServerRoot();
@@ -263,7 +266,11 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
         }
         
         File j2eeDoc;
-        if (GlassFishVersion.ge(server.getVersion(), GlassFishVersion.GF_7_0_0)) {
+        if (GlassFishVersion.ge(server.getVersion(), GlassFishVersion.GF_8_0_0)) {
+            j2eeDoc = InstalledFileLocator.getDefault().locate(
+                "docs/" + JAKARTA_EE_11_JAVADOC,
+                Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);
+        } else if (GlassFishVersion.ge(server.getVersion(), GlassFishVersion.GF_7_0_0)) {
             j2eeDoc = InstalledFileLocator.getDefault().locate(
                 "docs/" + JAKARTA_EE_10_JAVADOC,
                 Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);

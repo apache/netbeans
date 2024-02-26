@@ -153,7 +153,8 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
                     }
                     if (!found) {
                         InitParam contextParam = (InitParam) ddRoot.createBean(INIT_PARAM);
-                        if(WebApp.VERSION_6_0.equals(ddRoot.getVersion()) || WebApp.VERSION_5_0.equals(ddRoot.getVersion())) {
+                        if(WebApp.VERSION_6_1.equals(ddRoot.getVersion()) || WebApp.VERSION_6_0.equals(ddRoot.getVersion()) || 
+                                WebApp.VERSION_5_0.equals(ddRoot.getVersion())) {
                             contextParam.setParamName(JAKARTAEE_FACES_CONFIG_PARAM);
                         } else {
                             contextParam.setParamName(FACES_CONFIG_PARAM);
@@ -190,7 +191,9 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
         // not found on project classpath (case of Maven project with JSF in deps)
         if (jsfVersion == null) {
             Profile profile = wm.getJ2eeProfile();
-            if (profile.isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
+            if (profile.isAtLeast(Profile.JAKARTA_EE_11_WEB)) {
+                return JSFCatalog.RES_FACES_CONFIG_4_1;
+            } else if (profile.isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
                 return JSFCatalog.RES_FACES_CONFIG_4_0;
             } else if (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
                 return JSFCatalog.RES_FACES_CONFIG_3_0;
@@ -224,6 +227,8 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
 
     private static String facesConfigForVersion(JsfVersion jsfVersion) {
         switch (jsfVersion) {
+            case JSF_4_1:
+                return JSFCatalog.RES_FACES_CONFIG_4_1;
             case JSF_4_0:
                 return JSFCatalog.RES_FACES_CONFIG_4_0;
             case JSF_3_0:

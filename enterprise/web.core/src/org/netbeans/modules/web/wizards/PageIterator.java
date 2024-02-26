@@ -202,6 +202,11 @@ public class PageIterator implements TemplateWizard.Iterator {
         ClassPath classpath = ClassPath.getClassPath(wm.getDocumentBase(), ClassPath.COMPILE);
         return classpath != null && classpath.findResource("jakarta/faces/lifecycle/ClientWindowScoped.class") != null; //NOI18N
     }
+    
+    private static boolean isJSF41(WebModule wm) {
+        ClassPath classpath = ClassPath.getClassPath(wm.getDocumentBase(), ClassPath.COMPILE);
+        return classpath != null && classpath.findResource("jakarta/faces/convert/UUIDConverter.class") != null; //NOI18N
+    }
 
     public Set<DataObject> instantiate(TemplateWizard wiz) throws IOException {
         // Here is the default plain behavior. Simply takes the selected
@@ -236,7 +241,9 @@ public class PageIterator implements TemplateWizard.Iterator {
                     template = templateParent.getFileObject("JSP", "xhtml"); //NOI18N
                     WebModule wm = WebModule.getWebModule(df.getPrimaryFile());
                     if (wm != null) {
-                        if (isJSF40(wm)) {
+                        if (isJSF41(wm)) {
+                            wizardProps.put("isJSF41", Boolean.TRUE);
+                        } else if (isJSF40(wm)) {
                             wizardProps.put("isJSF40", Boolean.TRUE);
                         } else if (isJSF30(wm)) {
                             wizardProps.put("isJSF30", Boolean.TRUE);

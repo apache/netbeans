@@ -27,12 +27,14 @@ import org.openide.loaders.MultiDataObject;
  * A data loader for web.xml version 6.0. Required for providing
  * a different action context than for older versions - see #85570.
  * 
+ * @author Jose Contreras
  */
 public class DDWeb60DataLoader extends DDDataLoader {
 
     private static final long serialVersionUID = 1L;
 
     public static final String REQUIRED_MIME_60 = "text/x-dd-servlet6.0"; // NOI18N
+    public static final String REQUIRED_MIME_61 = "text/x-dd-servlet6.1"; // NOI18N
 
     public DDWeb60DataLoader() {
         super("org.netbeans.modules.j2ee.ddloaders.web.DDDataObject");  // NOI18N
@@ -45,7 +47,7 @@ public class DDWeb60DataLoader extends DDDataLoader {
 
     @Override
     protected String[] getSupportedMimeTypes() {
-        return new String[]{REQUIRED_MIME_60};
+        return new String[]{REQUIRED_MIME_60, REQUIRED_MIME_61};
     }
 
     @Override

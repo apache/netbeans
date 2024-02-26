@@ -155,6 +155,7 @@ public class ServerSelectionHelper {
         // If <No Server> option was selected, show all supported profiles except Java EE 7 profiles
         if (ExecutionChecker.DEV_NULL.equals(serverInstance)) {
             if (J2eeModule.Type.WAR.equals(projectType)) {
+                profiles.add(Profile.JAKARTA_EE_11_WEB);
                 profiles.add(Profile.JAKARTA_EE_10_WEB);
                 profiles.add(Profile.JAKARTA_EE_9_1_WEB);
                 profiles.add(Profile.JAKARTA_EE_9_WEB);
@@ -163,6 +164,7 @@ public class ServerSelectionHelper {
                 profiles.add(Profile.JAVA_EE_7_WEB);
                 profiles.add(Profile.JAVA_EE_6_WEB);
             } else {
+                profiles.add(Profile.JAKARTA_EE_11_FULL);
                 profiles.add(Profile.JAKARTA_EE_10_FULL);
                 profiles.add(Profile.JAKARTA_EE_9_1_FULL);
                 profiles.add(Profile.JAKARTA_EE_9_FULL);
@@ -188,6 +190,7 @@ public class ServerSelectionHelper {
 
             // We want to have Java EE 6 Full profile for all project types except Web project
             if (J2eeModule.Type.WAR.equals(projectType)) {
+                profiles.remove(Profile.JAKARTA_EE_11_FULL);
                 profiles.remove(Profile.JAKARTA_EE_10_FULL);
                 profiles.remove(Profile.JAKARTA_EE_9_1_FULL);
                 profiles.remove(Profile.JAKARTA_EE_9_FULL);
@@ -196,6 +199,7 @@ public class ServerSelectionHelper {
                 profiles.remove(Profile.JAVA_EE_7_FULL);
                 profiles.remove(Profile.JAVA_EE_6_FULL);
             } else {
+                profiles.remove(Profile.JAKARTA_EE_11_WEB);
                 profiles.remove(Profile.JAKARTA_EE_10_WEB);
                 profiles.remove(Profile.JAKARTA_EE_9_1_WEB);
                 profiles.remove(Profile.JAKARTA_EE_9_WEB);

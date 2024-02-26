@@ -31,6 +31,9 @@ import org.netbeans.api.annotations.common.CheckForNull;
  */
 public final class NamespaceUtils {
 
+    /** Location of namespaces since JSF 4.0. */
+    public static final String JAKARTA_ORG_LOCATION = "jakarta.faces"; //NOI18N
+    
     /** Location of namespaces since JSF 2.2. */
     public static final String JCP_ORG_LOCATION = "http://xmlns.jcp.org"; //NOI18N
     
@@ -38,7 +41,7 @@ public final class NamespaceUtils {
     public static final String SUN_COM_LOCATION = "http://java.sun.com";  //NOI18N
 
     /** Mapping of the new namespace to the legacy one. */
-    public static final Map<String, String> NS_MAPPING = new HashMap<>(8);
+    public static final Map<String, String> NS_MAPPING = new HashMap<>(16);
 
     static {
         NS_MAPPING.put("http://xmlns.jcp.org/jsf/html", "http://java.sun.com/jsf/html");                     //NOI18N
@@ -49,6 +52,22 @@ public final class NamespaceUtils {
         NS_MAPPING.put("http://xmlns.jcp.org/jsf/composite", "http://java.sun.com/jsf/composite");           //NOI18N
         NS_MAPPING.put("http://xmlns.jcp.org/jsf", "http://java.sun.com/jsf");                               //NOI18N
         NS_MAPPING.put("http://xmlns.jcp.org/jsf/passthrough", "http://java.sun.com/jsf/passthrough");       //NOI18N
+    }
+    
+    /** Mapping of the new Jakarta EE namespace to the JCP. */
+    public static final Map<String, String> JAKARTA_NS_MAPPING = new HashMap<>(16);
+
+    static {
+        JAKARTA_NS_MAPPING.put("jakarta.faces.html", "http://xmlns.jcp.org/jsf/html");                     //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.faces.core", "http://xmlns.jcp.org/jsf/core");                     //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.tags.core", "http://xmlns.jcp.org/jsp/jstl/core");           //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.tags.fmt", "http://xmlns.jcp.org/jsp/jstl/fmt"); //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.tags.functions", "http://xmlns.jcp.org/jsp/jstl/functions"); //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.faces.facelets", "http://xmlns.jcp.org/jsf/facelets");             //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.faces.composite", "http://xmlns.jcp.org/jsf/composite");           //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.faces", "http://xmlns.jcp.org/jsf");                               //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.faces.passthrough", "http://xmlns.jcp.org/jsf/passthrough");       //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.faces.component", "http://xmlns.jcp.org/jsf/component");       //NOI18N
     }
 
     /**

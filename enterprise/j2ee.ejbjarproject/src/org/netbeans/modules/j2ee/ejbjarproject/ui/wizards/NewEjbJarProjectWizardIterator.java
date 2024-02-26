@@ -227,9 +227,11 @@ public class NewEjbJarProjectWizardIterator implements WizardDescriptor.Progress
     public final void removeChangeListener(ChangeListener l) {}
 
     private static String adaptSourceLevelToJavaEEProfile(Profile javaEEProfile, String defaultSourceLevel) {
-        if (javaEEProfile.isAtLeast(Profile.JAKARTA_EE_9_1_WEB) || javaEEProfile.isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
+        if (javaEEProfile.isAtLeast(Profile.JAKARTA_EE_11_WEB)) {
+            return "21"; //NOI18N
+        } else if (javaEEProfile.isAtLeast(Profile.JAKARTA_EE_9_1_WEB)) {
             return "11"; //NOI18N
-        } else if (javaEEProfile.isAtLeast(Profile.JAVA_EE_8_WEB) || javaEEProfile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+        } else if (javaEEProfile.isAtLeast(Profile.JAVA_EE_8_WEB)) {
             return "1.8"; //NOI18N
         } else if (javaEEProfile.isAtLeast(Profile.JAVA_EE_7_WEB)) {
             return "1.7"; //NOI18N

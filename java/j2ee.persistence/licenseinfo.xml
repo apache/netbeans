@@ -65,7 +65,9 @@
     <fileset>
         <file>src/org/netbeans/modules/j2ee/persistence/dd/resources/orm_3_0.xsd</file>
         <file>src/org/netbeans/modules/j2ee/persistence/dd/resources/orm_3_1.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/dd/resources/orm_3_2.xsd</file>
         <file>src/org/netbeans/modules/j2ee/persistence/dd/resources/persistence_3_0.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/dd/resources/persistence_3_2.xsd</file>
         <license ref="EDL-1.0" >
             Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
         </license>
@@ -78,6 +80,7 @@
         <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/persistence-2.2.xml</file>
         <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/persistence-3.0.xml</file>
         <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/persistence-3.1.xml</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/persistence-3.2.xml</file>
         <file>src/org/netbeans/modules/j2ee/persistence/wizard/jpacontroller/resources/IllegalOrphanException.java.txt</file>
         <file>src/org/netbeans/modules/j2ee/persistence/wizard/jpacontroller/resources/NonexistentEntityException.java.txt</file>
         <file>src/org/netbeans/modules/j2ee/persistence/wizard/jpacontroller/resources/PreexistingEntityException.java.txt</file>

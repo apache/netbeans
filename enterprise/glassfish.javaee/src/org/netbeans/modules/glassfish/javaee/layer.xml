@@ -407,13 +407,74 @@
                         </folder>
                     </folder>
             </folder>
-                <folder name="gfv700ee10">
-                    <file name="Descriptor" url="nbdepjakartaee10.xml"/>
+            <folder name="gfv700ee10">
+                <file name="Descriptor" url="nbdepjakartaee10.xml"/>
+                <!-- -->
+                <file name="Factory.instance">
+                    <attr name="urlPattern" stringvalue="^\[.*deployer:gfv700ee10[w]?[c]?:.*$"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyDeploymentFactory.create"/>
+                    <attr name="delegate" methodvalue="org.netbeans.modules.glassfish.javaee.Hk2DeploymentFactory.createJakartaEe10"/>
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyDeploymentFactory"/>
+                    <attr name="instanceOf" stringvalue="javax.enterprise.deploy.spi.factories.DeploymentFactory"/>
+                </file>
+                <file name="J2eePlatformFactory.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.glassfish.javaee.Hk2JavaEEPlatformFactory.getFactory"/>
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.glassfish.javaee.Hk2JavaEEPlatformFactory"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformFactory"/>
+                </file>
+                <file name="OptionalFactory.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyOptionalFactory.create"/>
+                    <attr name="delegate" methodvalue="org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory.createJakartaEe10"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.OptionalDeploymentManagerFactory"/>
+                </file>
+                <file name="ModuleConfigFactory.instance">
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.glassfish.javaee.Hk2ModuleConfigFactory"/>
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.glassfish.javaee.Hk2ModuleConfigFactory"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.config.ModuleConfigurationFactory"/>
+                </file>
+                <file name="J2eeVerifierSupport.instance">
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.glassfish.javaee.verifier.VerifierImpl"/>
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.glassfish.javaee.verifier.VerifierImpl"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.VerifierSupport"/>
+                </file>
+                <!-- -->
+                <folder name="DeploymentFileNames">
+                    <folder name="WAR">
+                        <file name="WEB-INF\sun-web.xml"/>
+                        <file name="WEB-INF\glassfish-web.xml"/>
+                        <file name="WEB-INF\glassfish-resources.xml"/>
+                    </folder>
+                    <folder name="EJB">
+                        <file name="META-INF\sun-ejb-jar.xml"/>
+                        <file name="META-INF\sun-cmp-mappings.xml"/>
+                        <file name="META-INF\glassfish-ejb-jar.xml"/>
+                        <file name="META-INF\glassfish-cmp-mappings.xml"/>
+                        <file name="META-INF\glassfish-resources.xml"/>
+                    </folder>
+                    <folder name="EAR">
+                        <file name="META-INF\sun-application.xml"/>
+                        <file name="META-INF\glassfish-application.xml"/>
+                        <file name="META-INF\glassfish-resources.xml"/>
+                    </folder>
+                    <folder name="RAR">
+                        <file name="META-INF\sun-ra.xml"/>
+                        <file name="META-INF\glassfish-ra.xml"/>
+                        <file name="META-INF\glassfish-resources.xml"/>
+                    </folder>
+                    <folder name="CAR">
+                        <file name="META-INF\sun-application-client.xml"/>
+                        <file name="META-INF\glassfish-application-client.xml"/>
+                        <file name="META-INF\glassfish-resources.xml"/>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="gfv800ee11">
+                    <file name="Descriptor" url="nbdepjakartaee11.xml"/>
                     <!-- -->
                     <file name="Factory.instance">
-                        <attr name="urlPattern" stringvalue="^\[.*deployer:gfv700ee10[w]?[c]?:.*$"/>
+                        <attr name="urlPattern" stringvalue="^\[.*deployer:gfv800ee11[w]?[c]?:.*$"/>
                         <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyDeploymentFactory.create"/>
-                        <attr name="delegate" methodvalue="org.netbeans.modules.glassfish.javaee.Hk2DeploymentFactory.createJakartaEe10"/>
+                        <attr name="delegate" methodvalue="org.netbeans.modules.glassfish.javaee.Hk2DeploymentFactory.createJakartaEe11"/>
                         <attr name="instanceClass" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyDeploymentFactory"/>
                         <attr name="instanceOf" stringvalue="javax.enterprise.deploy.spi.factories.DeploymentFactory"/>
                     </file>
@@ -424,7 +485,7 @@
                     </file>
                     <file name="OptionalFactory.instance">
                         <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyOptionalFactory.create"/>
-                        <attr name="delegate" methodvalue="org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory.createJakartaEe10"/>
+                        <attr name="delegate" methodvalue="org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory.createJakartaEe11"/>
                         <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.OptionalDeploymentManagerFactory"/>
                     </file>
                     <file name="ModuleConfigFactory.instance">

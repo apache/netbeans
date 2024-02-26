@@ -90,6 +90,7 @@ public final class J2eeArchetypeFactory {
     private static class AppClientArchetypes extends BaseJ2eeArchetypeProvider {
         @Override
         protected void setUpProjectArchetypes() {
+            addJakartaEEArchetype(Profile.JAKARTA_EE_11_FULL,"mvn.archetypeGroupId.JakartaEE11_0","mvn.archetypeVersion.JakartaEE11_0","mvn.archetypeArtifactId.JakartaEE11_0");
             addJakartaEEArchetype(Profile.JAKARTA_EE_10_FULL,"mvn.archetypeGroupId.JakartaEE10_0","mvn.archetypeVersion.JakartaEE10_0","mvn.archetypeArtifactId.JakartaEE10_0");
             addJakartaEEArchetype(Profile.JAKARTA_EE_9_1_FULL,"mvn.archetypeGroupId.JakartaEE9_1","mvn.archetypeVersion.JakartaEE9_1","mvn.archetypeArtifactId.JakartaEE9_1");
             addJakartaEEArchetype(Profile.JAKARTA_EE_9_FULL,"mvn.archetypeGroupId.JakartaEE9","mvn.archetypeVersion.JakartaEE9","mvn.archetypeArtifactId.JakartaEE9");
@@ -105,6 +106,7 @@ public final class J2eeArchetypeFactory {
     private static class EaArchetypes extends BaseJ2eeArchetypeProvider {
         @Override
         protected void setUpProjectArchetypes() {
+            addJakartaEEArchetype(Profile.JAKARTA_EE_11_FULL,"mvn.archetypeGroupId.JakartaEE11_0","mvn.archetypeVersion.JakartaEE11_0","mvn.archetypeArtifactId.JakartaEE11_0");
             addJakartaEEArchetype(Profile.JAKARTA_EE_10_FULL,"mvn.archetypeGroupId.JakartaEE10_0","mvn.archetypeVersion.JakartaEE10_0","mvn.archetypeArtifactId.JakartaEE10_0");
             addJakartaEEArchetype(Profile.JAKARTA_EE_9_1_FULL,"mvn.archetypeGroupId.JakartaEE9_1","mvn.archetypeVersion.JakartaEE9_1","mvn.archetypeArtifactId.JakartaEE9_1");
             addJakartaEEArchetype(Profile.JAKARTA_EE_9_FULL,"mvn.archetypeGroupId.JakartaEE9","mvn.archetypeVersion.JakartaEE9","mvn.archetypeArtifactId.JakartaEE9");
@@ -118,6 +120,7 @@ public final class J2eeArchetypeFactory {
     private static class EarArchetypes extends BaseJ2eeArchetypeProvider {
         @Override
         protected void setUpProjectArchetypes() {
+            addJakartaEEArchetype(Profile.JAKARTA_EE_11_FULL,"mvn.archetypeGroupId.JakartaEE11_0","mvn.archetypeVersion.JakartaEE11_0","mvn.archetypeArtifactId.JakartaEE11_0");
             addJakartaEEArchetype(Profile.JAKARTA_EE_10_FULL,"mvn.archetypeGroupId.JakartaEE10_0","mvn.archetypeVersion.JakartaEE10_0","mvn.archetypeArtifactId.JakartaEE10_0");
             addJakartaEEArchetype(Profile.JAKARTA_EE_9_1_FULL,"mvn.archetypeGroupId.JakartaEE9_1","mvn.archetypeVersion.JakartaEE9_1","mvn.archetypeArtifactId.JakartaEE9_1");
             addJakartaEEArchetype(Profile.JAKARTA_EE_9_FULL,"mvn.archetypeGroupId.JakartaEE9","mvn.archetypeVersion.JakartaEE9","mvn.archetypeArtifactId.JakartaEE9");
@@ -133,6 +136,7 @@ public final class J2eeArchetypeFactory {
     private static class EjbArchetypes extends BaseJ2eeArchetypeProvider {
         @Override
         protected void setUpProjectArchetypes() {
+            addJakartaEEArchetype(Profile.JAKARTA_EE_11_FULL,"mvn.archetypeGroupId.JakartaEE11_0","mvn.archetypeVersion.JakartaEE11_0","mvn.archetypeArtifactId.JakartaEE11_0");
             addJakartaEEArchetype(Profile.JAKARTA_EE_10_FULL,"mvn.archetypeGroupId.JakartaEE10_0","mvn.archetypeVersion.JakartaEE10_0","mvn.archetypeArtifactId.JakartaEE10_0");
             addJakartaEEArchetype(Profile.JAKARTA_EE_9_1_FULL,"mvn.archetypeGroupId.JakartaEE9_1","mvn.archetypeVersion.JakartaEE9_1","mvn.archetypeArtifactId.JakartaEE9_1");
             addJakartaEEArchetype(Profile.JAKARTA_EE_9_FULL,"mvn.archetypeGroupId.JakartaEE9","mvn.archetypeVersion.JakartaEE9","mvn.archetypeArtifactId.JakartaEE9");
@@ -148,6 +152,7 @@ public final class J2eeArchetypeFactory {
     private static class WebArchetypes extends BaseJ2eeArchetypeProvider {
         @Override
         protected void setUpProjectArchetypes() {
+            addJakartaEEArchetype(Profile.JAKARTA_EE_11_WEB,"mvn.archetypeGroupId.JakartaEE11_0","mvn.archetypeVersion.JakartaEE11_0","mvn.archetypeArtifactId.JakartaEE11_0");
             addJakartaEEArchetype(Profile.JAKARTA_EE_10_WEB,"mvn.archetypeGroupId.JakartaEE10_0","mvn.archetypeVersion.JakartaEE10_0","mvn.archetypeArtifactId.JakartaEE10_0");
             addJakartaEEArchetype(Profile.JAKARTA_EE_9_1_WEB,"mvn.archetypeGroupId.JakartaEE9_1","mvn.archetypeVersion.JakartaEE9_1","mvn.archetypeArtifactId.JakartaEE9_1");
             addJakartaEEArchetype(Profile.JAKARTA_EE_9_WEB,"mvn.archetypeGroupId.JakartaEE9","mvn.archetypeVersion.JakartaEE9","mvn.archetypeArtifactId.JakartaEE9");
@@ -162,6 +167,7 @@ public final class J2eeArchetypeFactory {
             // using Java EE 6 Full profile, then the same profile applies to Ejb, Web and Parent project creation - In that case
             // application is looking for Java EE 6 Full archetype to create the Web project with it, so we need to have it here
             // or otherwise Java EE project would not be created properly
+            addJakartaEEArchetype(Profile.JAKARTA_EE_11_FULL,"mvn.archetypeGroupId.JakartaEE11_0","mvn.archetypeVersion.JakartaEE11_0","mvn.archetypeArtifactId.JakartaEE11_0");
             addJakartaEEArchetype(Profile.JAKARTA_EE_10_FULL,"mvn.archetypeGroupId.JakartaEE10_0","mvn.archetypeVersion.JakartaEE10_0","mvn.archetypeArtifactId.JakartaEE10_0");
             addJakartaEEArchetype(Profile.JAKARTA_EE_9_1_FULL,"mvn.archetypeGroupId.JakartaEE9_1","mvn.archetypeVersion.JakartaEE9_1","mvn.archetypeArtifactId.JakartaEE9_1");
             addJakartaEEArchetype(Profile.JAKARTA_EE_9_FULL,"mvn.archetypeGroupId.JakartaEE9","mvn.archetypeVersion.JakartaEE9","mvn.archetypeArtifactId.JakartaEE9");

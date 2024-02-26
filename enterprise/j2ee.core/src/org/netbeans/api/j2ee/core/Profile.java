@@ -86,7 +86,13 @@ public enum Profile {
     JAKARTA_EE_10_WEB("10", "web"),
 
     @Messages("JAKARTA_EE_10_FULL.displayName=Jakarta EE 10")
-    JAKARTA_EE_10_FULL("10");
+    JAKARTA_EE_10_FULL("10"),
+    
+    @Messages("JAKARTA_EE_11_WEB.displayName=Jakarta EE 11 Web")
+    JAKARTA_EE_11_WEB("11", "web"),
+    
+    @Messages("JAKARTA_EE_11_FULL.displayName=Jakarta EE 11")
+    JAKARTA_EE_11_FULL("11");
     // !!! ATTENTION: BE AWARE OF THE ENUM ORDER! It controls compatibility and UI position.
 
     public static final Comparator<Profile> UI_COMPARATOR = (Profile o1, Profile o2) -> -(o1.ordinal() - o2.ordinal());
@@ -116,6 +122,28 @@ public enum Profile {
     public String toPropertiesString() {
         return propertiesString;
     }
+    
+    /**
+     * Find out if this profile is a Web profile Platform.
+     *
+     * @return true if this is a Java/Jakarta EE Web profile, false if is a Full
+     * Platform
+     */
+    @NonNull
+    public boolean isWebProfile() {
+        return propertiesString.endsWith("web");
+    }
+    
+    /**
+     * Find out if this profile is a Full profile Platform.
+     *
+     * @return true if this is a Java/Jakarta EE Full profile, false if is a Web
+     * profile Platform
+     */
+    @NonNull
+    public boolean isFullProfile() {
+        return !propertiesString.endsWith("web");
+    }
 
     /**
      * Find out if the version of the profile is equal or higher to given profile.
@@ -123,12 +151,12 @@ public enum Profile {
      * Please be aware of the following rules:
      * <br/><br/>
      *
-     * 1) Each Java EE X version is considered as lower than Java EE X+1 version
+     * 1) Each Java/Jakarta EE X version is considered as lower than Java EE X+1 version
      * (this applies regardless on Web/Full specification and in reality it means
      * that even Java EE 6 Full version is considered as lower than Java EE 7 Web)
      * <br/><br/>
      *
-     * 2) Each Java EE X Web version is considered as lower than Java EE X Full
+     * 2) Each Java/Jakarta EE X Web version is considered as lower than Java/Jakarta EE X Full
      * <br/>
      *
      * @param profile profile to compare against
@@ -138,6 +166,29 @@ public enum Profile {
      */
     public boolean isAtLeast(@NonNull Profile profile) {
         return this.ordinal() >= profile.ordinal();
+    }
+    
+    /**
+     * Find out if the version of the profile is equal or lower to given profile.
+     *
+     * Please be aware of the following rules:
+     * <br/><br/>
+     *
+     * 1) Each Java/Jakarta EE X version is considered as lower than Java/Jakarta EE X+1 version
+     * (this applies regardless on Web/Full specification and in reality it means
+     * that even Java EE 6 Full version is considered as lower than Java EE 7 Web)
+     * <br/><br/>
+     *
+     * 2) Each Java/Jakarta EE X Web version is considered as lower than Java/Jakarta EE X Full
+     * <br/>
+     *
+     * @param profile profile to compare against
+     * @return true if this profile is equal or lower to given one,
+     *         false otherwise
+     * @since 1.19
+     */
+    public boolean isAtMost(@NonNull Profile profile) {
+        return this.ordinal() <= profile.ordinal();
     }
 
     @Override

@@ -323,16 +323,30 @@ public final class AppClientProjectProperties {
         PLATFORM_LIST_RENDERER = PlatformUiSupport.createPlatformListCellRenderer();
         SpecificationVersion minimalSourceLevel = null;
         Profile profile = Profile.fromPropertiesString(evaluator.getProperty(J2EE_PLATFORM));
-        if (Profile.JAKARTA_EE_9_1_FULL.equals(profile) || Profile.JAKARTA_EE_10_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("11");
-        } else if (Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_9_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.8");
-        } else if (Profile.JAVA_EE_7_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.7");
-        } else if (Profile.JAVA_EE_6_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.6");
-        } else if (Profile.JAVA_EE_5.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.5");
+        switch (profile) {
+            case JAKARTA_EE_11_FULL:
+                minimalSourceLevel = new SpecificationVersion("21");
+                break;
+            case JAKARTA_EE_9_1_FULL:
+            case JAKARTA_EE_10_FULL:
+                minimalSourceLevel = new SpecificationVersion("11");
+                break;
+            case JAKARTA_EE_8_FULL:
+            case JAVA_EE_8_FULL:
+            case JAKARTA_EE_9_FULL:
+                minimalSourceLevel = new SpecificationVersion("1.8");
+                break;
+            case JAVA_EE_7_FULL:
+                minimalSourceLevel = new SpecificationVersion("1.7");
+                break;
+            case JAVA_EE_6_FULL:
+                minimalSourceLevel = new SpecificationVersion("1.6");
+                break;
+            case JAVA_EE_5:
+                minimalSourceLevel = new SpecificationVersion("1.5");
+                break;
+            default:
+                break;
         }
         JAVAC_SOURCE_MODEL = PlatformUiSupport.createSourceLevelComboBoxModel(PLATFORM_MODEL, evaluator.getProperty(JAVAC_SOURCE), evaluator.getProperty(JAVAC_TARGET), minimalSourceLevel);
         JAVAC_SOURCE_RENDERER = PlatformUiSupport.createSourceLevelListCellRenderer ();

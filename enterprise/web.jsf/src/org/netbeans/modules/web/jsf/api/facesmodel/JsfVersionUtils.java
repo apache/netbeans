@@ -64,6 +64,7 @@ public final class JsfVersionUtils {
     private static final LinkedHashMap<JsfVersion, String> SPECIFIC_CLASS_NAMES = new LinkedHashMap<>();
 
     static {
+        SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_4_1, JSFUtils.JSF_4_1__API_SPECIFIC_CLASS);
         SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_4_0, JSFUtils.JSF_4_0__API_SPECIFIC_CLASS);
         SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_3_0, JSFUtils.JSF_3_0__API_SPECIFIC_CLASS);
         SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_2_3, JSFUtils.JSF_2_3__API_SPECIFIC_CLASS);
@@ -197,7 +198,9 @@ public final class JsfVersionUtils {
     public static JsfVersion forServerLibrary(@NonNull ServerLibrary lib) {
         Parameters.notNull("serverLibrary", lib); //NOI18N
         if ("JavaServer Faces".equals(lib.getSpecificationTitle())) { // NOI18N
-            if (Version.fromJsr277NotationWithFallback("4.0").equals(lib.getSpecificationVersion())) { //NOI18N
+            if (Version.fromJsr277NotationWithFallback("4.1").equals(lib.getSpecificationVersion())) { //NOI18N
+                return JsfVersion.JSF_4_1;
+            } else if (Version.fromJsr277NotationWithFallback("4.0").equals(lib.getSpecificationVersion())) { //NOI18N
                 return JsfVersion.JSF_4_0;
             } else if (Version.fromJsr277NotationWithFallback("3.0").equals(lib.getSpecificationVersion())) { //NOI18N
                 return JsfVersion.JSF_3_0;

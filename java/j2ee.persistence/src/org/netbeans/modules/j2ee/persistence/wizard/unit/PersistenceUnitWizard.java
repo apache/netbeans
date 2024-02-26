@@ -212,7 +212,9 @@ public class PersistenceUnitWizard implements WizardDescriptor.ProgressInstantia
         //
         if (descriptor.isContainerManaged()) {
             LOG.fine("Creating a container managed PU");
-            if(Persistence.VERSION_3_1.equals(version)) {
+            if(Persistence.VERSION_3_2.equals(version)) {
+                punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
+            } else if(Persistence.VERSION_3_1.equals(version)) {
                 punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
             } else if(Persistence.VERSION_3_0.equals(version)) {
                 punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();

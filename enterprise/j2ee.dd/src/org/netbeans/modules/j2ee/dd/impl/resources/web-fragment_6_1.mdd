@@ -1,0 +1,910 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
+
+This program and the accompanying materials are made available under the
+terms of the Eclipse Public License v. 2.0, which is available at
+http://www.eclipse.org/legal/epl-2.0.
+
+This Source Code may also be made available under the following Secondary
+Licenses when the conditions for such availability set forth in the
+Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+version 2 with the GNU Classpath Exception, which is available at
+https://www.gnu.org/software/classpath/license.html.
+
+SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+-->
+<metaDD>
+    <meta-element>
+
+        <!--
+        For now, web-fragment is defined exactly the same way as web-app.
+        -->
+
+        <dtd-name>web-fragment</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>WebFragment</bean-name>
+        <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+        <implements>
+            org.netbeans.modules.j2ee.dd.api.web.WebFragment
+        </implements>
+        <user-code>
+            public org.xml.sax.SAXParseException getError() {
+                return null;
+            }
+            public int getStatus() {
+                return STATE_VALID;
+            }
+            // due to compatibility with servlet2.3
+            public void setTaglib(int index, org.netbeans.modules.j2ee.dd.api.web.Taglib valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_6_1);
+            }
+            public org.netbeans.modules.j2ee.dd.api.web.Taglib getTaglib(int index) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_6_1);
+            }
+            public void setTaglib(org.netbeans.modules.j2ee.dd.api.web.Taglib[] value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_6_1);
+            }
+            public org.netbeans.modules.j2ee.dd.api.web.Taglib[] getTaglib() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_6_1);
+            }
+            public int sizeTaglib() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_6_1);
+            }
+            public int addTaglib(org.netbeans.modules.j2ee.dd.api.web.Taglib valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_6_1);
+            }
+            public int removeTaglib(org.netbeans.modules.j2ee.dd.api.web.Taglib valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_6_1);
+            }
+            public void setJspConfig(org.netbeans.modules.j2ee.dd.api.web.JspConfig value) {
+                if (value==null) setJspConfig(new org.netbeans.modules.j2ee.dd.api.web.JspConfig[]{});
+                else setJspConfig(new org.netbeans.modules.j2ee.dd.api.web.JspConfig[]{value});
+            }
+            public org.netbeans.modules.j2ee.dd.api.web.JspConfig getSingleJspConfig() {
+                org.netbeans.modules.j2ee.dd.api.web.JspConfig[] values = getJspConfig();
+                if (values==null || values.length==0) return null;
+                else return values[0];
+            }
+            public void setWelcomeFileList(org.netbeans.modules.j2ee.dd.api.web.WelcomeFileList value) {
+                if (value==null) setWelcomeFileList(new org.netbeans.modules.j2ee.dd.api.web.WelcomeFileList[]{});
+                setWelcomeFileList(new org.netbeans.modules.j2ee.dd.api.web.WelcomeFileList[]{value});
+            }
+            public org.netbeans.modules.j2ee.dd.api.web.WelcomeFileList getSingleWelcomeFileList() {
+                org.netbeans.modules.j2ee.dd.api.web.WelcomeFileList[] values = getWelcomeFileList();
+                if (values==null || values.length==0) return null;
+                else return values[0];
+            }
+            public void setSessionConfig(org.netbeans.modules.j2ee.dd.api.web.SessionConfig value) {
+                if (value==null) setSessionConfig(new org.netbeans.modules.j2ee.dd.api.web.SessionConfig[]{});
+                else setSessionConfig(new org.netbeans.modules.j2ee.dd.api.web.SessionConfig[]{value});
+            }
+            public org.netbeans.modules.j2ee.dd.api.web.SessionConfig getSingleSessionConfig() {
+                org.netbeans.modules.j2ee.dd.api.web.SessionConfig[] values = getSessionConfig();
+                if (values==null || values.length==0) return null;
+                else return values[0];
+            }
+            public void setLoginConfig(org.netbeans.modules.j2ee.dd.api.web.LoginConfig value) {
+                if (value==null) setLoginConfig(new org.netbeans.modules.j2ee.dd.api.web.LoginConfig[]{});
+                else setLoginConfig(new org.netbeans.modules.j2ee.dd.api.web.LoginConfig[]{value});
+            }
+            public org.netbeans.modules.j2ee.dd.api.web.LoginConfig getSingleLoginConfig() {
+                org.netbeans.modules.j2ee.dd.api.web.LoginConfig[] values = getLoginConfig();
+                if (values==null || values.length==0) return null;
+                else return values[0];
+            }
+            public void setDistributable(boolean value) {
+                if (value) setDistributable(new EmptyType[]{new EmptyType()});
+                else setDistributable(new EmptyType[]{});
+            }
+            public boolean isDistributable() {
+                EmptyType[] values = getDistributable();
+                if (values==null || values.length==0) return false;
+                else return true;
+            }
+            public void setLocaleEncodingMappingList(org.netbeans.modules.j2ee.dd.api.web.LocaleEncodingMappingList value) {
+                if (value==null) setLocaleEncodingMappingList(new org.netbeans.modules.j2ee.dd.api.web.LocaleEncodingMappingList[]{});
+                else setLocaleEncodingMappingList(new org.netbeans.modules.j2ee.dd.api.web.LocaleEncodingMappingList[]{value});
+            }
+            public org.netbeans.modules.j2ee.dd.api.web.LocaleEncodingMappingList getSingleLocaleEncodingMappingList() {
+                org.netbeans.modules.j2ee.dd.api.web.LocaleEncodingMappingList[] values = getLocaleEncodingMappingList();
+                if (values==null || values.length==0) return null;
+                else return values[0];
+            }
+            public org.netbeans.modules.j2ee.dd.api.web.AbsoluteOrdering newAbsoluteOrdering() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException("web-fragment "+VERSION_6_1);
+            }
+            public void setAbsoluteOrdering(org.netbeans.modules.j2ee.dd.api.web.AbsoluteOrdering[] value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException("web-fragment "+VERSION_6_1);
+            }
+            public org.netbeans.modules.j2ee.dd.api.web.AbsoluteOrdering[] getAbsoluteOrdering() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException("web-fragment "+VERSION_6_1);
+            }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>emptyType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EmptyType</bean-name>
+    </meta-element>
+    <meta-element>
+        <dtd-name>param-valueType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+            <bean-name>InitParam</bean-name>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.common.InitParam, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+            </implements>
+            <user-code>
+                public String getKeyProperty() { return "ParamName"; }
+            </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>filterType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+            <bean-name>Filter</bean-name>
+            <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.web.Filter, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+            </implements>
+            <user-code>
+                public String getKeyProperty() { return "FilterName"; }
+            </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>filter-mappingType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+            <bean-name>FilterMapping</bean-name>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.web.FilterMapping
+            </implements>
+            <user-code>
+                public String getServletName() {
+                    return this.sizeServletName() > 0 ? (String)this.getValue(SERVLET_NAME, 0) : null;
+                }
+
+                public void setServletName(String value) {
+                    setServletNames(value != null ? new String[]{value} : new String[]{});
+                }
+
+                public String getUrlPattern() {
+                    return this.sizeUrlPattern() > 0 ? (String)this.getValue(URL_PATTERN, 0) : null;
+                }
+
+                public void setUrlPattern(String value) {
+                    setUrlPatterns(value != null ? new String[]{value} : new String[]{});
+                }
+            </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>listenerType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>Listener</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.web.Listener
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>servletType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>Servlet</bean-name>
+        <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.web.Servlet, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "ServletName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>servlet-mappingType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServletMapping</bean-name>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.web.ServletMapping25, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "UrlPattern"; }
+
+            public void setUrlPattern(String value) {
+                setUrlPatterns(new String[] {value});
+            }
+
+            public String getUrlPattern() {
+                String[] urlPatterns = getUrlPatterns();
+                if (urlPatterns != null &amp;&amp; urlPatterns.length > 0) {
+                    return urlPatterns[0];
+                }
+                return null;
+            }
+
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>session-configType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>SessionConfig</bean-name>
+        <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.web.SessionConfig
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>mime-mappingType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>MimeMapping</bean-name>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.web.MimeMapping, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "Extension"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>welcome-file-listType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>WelcomeFileList</bean-name>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.web.WelcomeFileList
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>error-pageType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ErrorPage</bean-name>
+        <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.web.ErrorPage, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "ErrorCode"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+            <dtd-name>jsp-configType</dtd-name>
+            <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+            <bean-name>JspConfig</bean-name>
+            <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.web.JspConfig
+            </implements>
+    </meta-element>
+    <meta-element>
+            <dtd-name>security-constraintType</dtd-name>
+            <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+            <bean-name>SecurityConstraint</bean-name>
+            <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.web.SecurityConstraint
+            </implements>
+    </meta-element>
+    <meta-element>
+            <dtd-name>login-configType</dtd-name>
+            <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+            <bean-name>LoginConfig</bean-name>
+            <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.web.LoginConfig
+            </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>security-roleType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>SecurityRole</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.SecurityRole, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "RoleName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>message-destinationType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>MessageDestination</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.MessageDestination, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "MessageDestinationName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+            <dtd-name>locale-encoding-mapping-listType</dtd-name>
+            <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+            <bean-name>LocaleEncodingMappingList</bean-name>
+            <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.web.LocaleEncodingMappingList
+            </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>locale-encoding-mappingType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>LocaleEncodingMapping</bean-name>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.web.LocaleEncodingMapping, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "Locale"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>localeType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>LocaleType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>encodingType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EncodingType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>string</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>String</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>descriptionType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>DescriptionType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>xsdStringType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>XsdStringType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>display-nameType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>DisplayNameType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>iconType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>Icon</bean-name>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.Icon
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>pathType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>PathType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>env-entryType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EnvEntry</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.EnvEntry, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "EnvEntryName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>ejb-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EjbRef</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.EjbRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "EjbRefName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>ejb-local-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EjbLocalRef</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.EjbLocalRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "EjbRefName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>resource-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ResourceRef</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.ResourceRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "ResRefName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>resource-env-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ResourceEnvRef</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.ResourceEnvRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "ResourceEnvRefName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>message-destination-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>MessageDestinationRef</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.MessageDestinationRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "MessageDestinationRefName"; }
+        </user-code>
+    </meta-element>
+    <meta-element> 
+        <dtd-name>persistence-context-refType</dtd-name> 
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>PersistenceContextRefType</bean-name> 
+    </meta-element> 
+    <meta-element> 
+        <dtd-name>persistence-unit-refType</dtd-name> 
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>PersistenceUnitRefType</bean-name> 
+    </meta-element> 
+    <meta-element> 
+        <dtd-name>lifecycle-callbackType</dtd-name> 
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>LifecycleCallbackType</bean-name> 
+    </meta-element> 
+    <meta-element>
+        <dtd-name>fully-qualified-classType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>FullyQualifiedClassType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>java-identifierType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>JavaIdentifierType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>jndi-nameType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>JndiNameType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element> 
+        <dtd-name>persistence-context-typeType</dtd-name> 
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>PersistenceContextTypeType</bean-name> 
+        <wrapper-class>java.lang.String</wrapper-class> 
+    </meta-element> 
+    <meta-element> 
+        <dtd-name>propertyType</dtd-name> 
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>PropertyType</bean-name> 
+    </meta-element> 
+    <meta-element>
+        <dtd-name>message-destination-typeType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>MessageDestinationTypeType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>message-destination-usageType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>MessageDestinationUsageType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>message-destination-linkType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>MessageDestinationLinkType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>injection-targetType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>InjectionTarget</bean-name>
+        <implements>org.netbeans.modules.j2ee.dd.api.common.InjectionTarget</implements>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends> 
+    </meta-element>
+    <meta-element>
+        <dtd-name>res-authType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ResAuthType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>res-sharing-scopeType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ResSharingScopeType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>service-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRef</bean-name>
+        <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.ServiceRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "ServiceRefName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>xsdAnyURIType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>XsdAnyURIType</bean-name>
+        <wrapper-class>java.net.URI</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>xsdQNameType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>XsdQNameType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>port-component-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>PortComponentRef</bean-name>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.PortComponentRef
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>service-ref_handlerType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefHandler</bean-name>
+        <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandler, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "HandlerName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>service-ref_handler-chainsType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefHandlerChains</bean-name>
+        <implements>org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChains</implements> 
+    </meta-element>
+    <meta-element>
+        <dtd-name>service-ref_handler-chainType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefHandlerChain</bean-name>
+        <implements>org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChain</implements> 
+    </meta-element>
+    <meta-element>
+        <dtd-name>service-ref_qname-pattern</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefQnamePattern</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>service-ref_protocol-bindingListType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefProtocolBindingListType</bean-name>
+        <wrapper-class>String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>ejb-ref-nameType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EjbRefNameType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>ejb-ref-typeType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EjbRefTypeType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>local-homeType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>LocalHomeType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>localType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>LocalType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>ejb-linkType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EjbLinkType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>homeType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>HomeType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>remoteType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>RemoteType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>env-entry-type-valuesType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>EnvEntryTypeValuesType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>role-nameType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>RoleNameType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>auth-methodType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>AuthMethodType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>form-login-configType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>FormLoginConfig</bean-name>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.web.FormLoginConfig
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>war-pathType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>WarPathType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>web-resource-collectionType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>WebResourceCollection</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.web.WebResourceCollection, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "WebResourceName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>auth-constraintType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>AuthConstraint</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.web.AuthConstraint
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>user-data-constraintType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>UserDataConstraint</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.web.UserDataConstraint
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>transport-guaranteeType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>TransportGuaranteeType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>url-patternType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>UrlPatternType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>http-methodType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>HttpMethodType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>taglibType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>Taglib</bean-name>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.web.Taglib, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "TaglibUri"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>jsp-property-groupType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>JspPropertyGroup</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.web.JspPropertyGroup
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>true-falseType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>TrueFalseType</bean-name>
+        <wrapper-class>boolean</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>error-codeType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ErrorCodeType</bean-name>
+        <wrapper-class>Integer</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>string</dtd-name>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <bean-name>String</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>mime-typeType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>MimeTypeType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>xsdIntegerType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>XsdIntegerType</bean-name>
+        <wrapper-class>java.math.BigInteger</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>servlet-nameType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServletNameType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>nonEmptyStringType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>NonEmptyStringType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>load-on-startupType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>LoadOnStartupType</bean-name>
+        <wrapper-class>java.math.BigInteger</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>run-asType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>RunAs</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.RunAs
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>security-role-refType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>SecurityRoleRef</bean-name>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+        <implements> 
+            org.netbeans.modules.j2ee.dd.api.common.SecurityRoleRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "RoleName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>jsp-fileType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>JspFileType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>filter-nameType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>FilterNameType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>dispatcherType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>DispatcherType</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>absoluteOrderingType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>AbsoluteOrdering</bean-name>
+        <implements>
+            org.netbeans.modules.j2ee.dd.api.web.AbsoluteOrdering
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>orderingType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>RelativeOrdering</bean-name>
+        <implements>
+            org.netbeans.modules.j2ee.dd.api.web.RelativeOrdering
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>ordering-orderingType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>RelativeOrderingItems</bean-name>
+        <implements>
+            org.netbeans.modules.j2ee.dd.api.web.RelativeOrderingItems
+        </implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>ordering-othersType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>RelativeOrderingOthersItem</bean-name>
+        <implements>
+            org.netbeans.modules.j2ee.dd.api.web.RelativeOrderingOthersItem
+        </implements>
+    </meta-element>
+
+    <!-- changes added for EE6: -->
+
+    <meta-element>
+        <dtd-name>handlerType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefHandler</bean-name>
+        <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+        <implements>
+            org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandler, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+        </implements>
+        <user-code>
+            public String getKeyProperty() { return "HandlerName"; }
+        </user-code>
+    </meta-element>
+    <meta-element>
+           <dtd-name>handler-chainsType</dtd-name>
+           <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+           <bean-name>ServiceRefHandlerChains</bean-name>
+           <implements>org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChains</implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>handler-chainType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>ServiceRefHandlerChainType</bean-name>
+        <implements>org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChain</implements>
+    </meta-element>
+    <meta-element>
+        <dtd-name>dewey-versionType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>version</bean-name>
+        <wrapper-class>java.math.BigDecimal</wrapper-class>
+    </meta-element>
+</metaDD>

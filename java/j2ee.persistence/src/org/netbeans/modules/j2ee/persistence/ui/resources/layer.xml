@@ -222,6 +222,7 @@
         <file name="persistence-2.2.xml" url="persistence-2.2.xml"/>
         <file name="persistence-3.0.xml" url="persistence-3.0.xml"/>
         <file name="persistence-3.1.xml" url="persistence-3.1.xml"/>
+        <file name="persistence-3.2.xml" url="persistence-3.2.xml"/>
     </folder>
 
     <folder name="Plugins">

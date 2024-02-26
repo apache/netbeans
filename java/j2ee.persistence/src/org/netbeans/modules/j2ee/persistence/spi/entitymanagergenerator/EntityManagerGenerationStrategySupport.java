@@ -459,7 +459,9 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         } else {
             version = Persistence.VERSION_1_0;
         }
-        if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {// we have persistence unit with specific version, should use it
+        if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) {// we have persistence unit with specific version, should use it
+            version =  Persistence.VERSION_3_2;
+        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {// we have persistence unit with specific version, should use it
             version = Persistence.VERSION_3_1;
         } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) {// we have persistence unit with specific version, should use it
             version = Persistence.VERSION_3_0;

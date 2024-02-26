@@ -24,6 +24,9 @@
      <folder name="Navigator">
         <folder name="Panels">
             <folder name="text">
+                <folder name="x-dd-application11.0">
+                    <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
+                </folder>
                 <folder name="x-dd-application10.0">
                     <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
                 </folder>
@@ -43,6 +46,9 @@
                     <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
                 </folder>
                 <folder name="x-dd-application1.4">
+                    <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
+                </folder>
+                <folder name="x-dd-client11.0">
                     <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
                 </folder>
                 <folder name="x-dd-client10.0">
@@ -114,6 +120,9 @@
                 <folder name="x-dd-servlet6.0">
                     <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
                 </folder>
+                <folder name="x-dd-servlet6.1">
+                    <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
+                </folder>
                 <folder name="x-dd-servlet-fragment3.0">
                     <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
                 </folder>
@@ -127,6 +136,9 @@
                     <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
                 </folder>
                 <folder name="x-dd-servlet-fragment6.0">
+                    <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
+                </folder>
+                <folder name="x-dd-servlet-fragment6.1">
                     <file name="org-netbeans-modules-xml-text-navigator-XMLNavigatorPanel.instance"/>
                 </folder>
             </folder>
@@ -153,6 +165,8 @@
                     <file name="org-netbeans-modules-j2ee-ddloaders-web-DDWeb25DataLoader.instance"/>
                     <file name="org-netbeans-modules-j2ee-ddloaders-web-DDWeb30DataLoader.instance"/>
                     <file name="org-netbeans-modules-j2ee-ddloaders-web-DDWeb40DataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-web-DDWeb50DataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-web-DDWeb60DataLoader.instance"/>
                     <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJarDataLoader.instance"/>
                     <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJar30DataLoader.instance"/>
                     <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJar40DataLoader.instance"/>
@@ -556,6 +570,88 @@
                     </folder>
             </folder>
             <folder name="x-dd-web6.0">
+                <folder name="Factories">
+                    <file name="org-netbeans-modules-j2ee-ddloaders-web-DDDataLoader.instance">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ddloaders.Bundle"/>
+                    </file>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-web-DDWeb60DataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJarDataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJar40DataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-client-ClientDataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-app-EarDataLoader.instance"/>
+                </folder>
+                <folder name="Actions">
+                    <file name="org-netbeans-modules-xml-tools-actions-CheckAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/XML/org-netbeans-modules-xml-tools-actions-CheckAction.instance"/>
+                        <attr name="position" intvalue="1300"/>
+                    </file>
+                    <file name="org-netbeans-modules-xml-tools-actions-ValidateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/XML/org-netbeans-modules-xml-tools-actions-ValidateAction.instance"/>
+                        <attr name="position" intvalue="1400"/>
+                    </file>
+                    <file name="org-openide-actions-CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="600"/>
+                    </file>
+                    <file name="org-openide-actions-CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                    <file name="org-openide-actions-DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="org-openide-actions-EditAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-EditAction.instance"/>
+                        <attr name="position" intvalue="200"/>
+                    </file>
+                    <file name="org-openide-actions-FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="org-openide-actions-OpenAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="org-openide-actions-PasteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+                        <attr name="position" intvalue="700"/>
+                    </file>
+                    <file name="org-openide-actions-PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="1700"/>
+                    </file>
+                    <file name="org-openide-actions-SaveAsTemplateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
+                        <attr name="position" intvalue="1100"/>
+                    </file>
+                    <file name="org-openide-actions-ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="1600"/>
+                    </file>
+                    <file name="sep-1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="400"/>
+                    </file>
+                    <file name="sep-2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="800"/>
+                    </file>
+                    <file name="sep-3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="sep-4.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                    <file name="sep-5.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1500"/>
+                    </file> 
+                    </folder>
+            </folder>
+            <folder name="x-dd-web6.1">
                 <folder name="Factories">
                     <file name="org-netbeans-modules-j2ee-ddloaders-web-DDDataLoader.instance">
                         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ddloaders.Bundle"/>
@@ -1047,6 +1143,88 @@
                     </file>
                     </folder>
             </folder>
+            <folder name="x-dd-web-fragment6.1">
+                <folder name="Factories">
+                    <file name="org-netbeans-modules-j2ee-ddloaders-web-DDDataLoader.instance">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ddloaders.Bundle"/>
+                    </file>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-web-DDWebFragment60DataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJarDataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJar40DataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-client-ClientDataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-app-EarDataLoader.instance"/>
+                </folder>
+                <folder name="Actions">
+                    <file name="org-netbeans-modules-xml-tools-actions-CheckAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/XML/org-netbeans-modules-xml-tools-actions-CheckAction.instance"/>
+                        <attr name="position" intvalue="1300"/>
+                    </file>
+                    <file name="org-netbeans-modules-xml-tools-actions-ValidateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/XML/org-netbeans-modules-xml-tools-actions-ValidateAction.instance"/>
+                        <attr name="position" intvalue="1400"/>
+                    </file>
+                    <file name="org-openide-actions-CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="600"/>
+                    </file>
+                    <file name="org-openide-actions-CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                    <file name="org-openide-actions-DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="org-openide-actions-EditAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-EditAction.instance"/>
+                        <attr name="position" intvalue="200"/>
+                    </file>
+                    <file name="org-openide-actions-FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="org-openide-actions-OpenAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="org-openide-actions-PasteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+                        <attr name="position" intvalue="700"/>
+                    </file>
+                    <file name="org-openide-actions-PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="1700"/>
+                    </file>
+                    <file name="org-openide-actions-SaveAsTemplateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
+                        <attr name="position" intvalue="1100"/>
+                    </file>
+                    <file name="org-openide-actions-ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="1600"/>
+                    </file>
+                    <file name="sep-1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="400"/>
+                    </file>
+                    <file name="sep-2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="800"/>
+                    </file>
+                    <file name="sep-3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="sep-4.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                    <file name="sep-5.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1500"/>
+                    </file>
+                    </folder>
+            </folder>
             <!-- Actions for ejb-jar.xml version 3.0 (see issue 76967)-->
             <folder name="x-dd-ejbjar3.0">
                 <folder name="Factories">
@@ -1346,6 +1524,18 @@
                     <file name="org-netbeans-modules-j2ee-ddloaders-app-EarDataLoader.instance"/>
                 </folder>
             </folder>
+            <folder name="x-dd-servlet6.1">
+                <folder name="Factories">
+                    <file name="org-netbeans-modules-j2ee-ddloaders-web-DDDataLoader.instance">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ddloaders.Bundle"/>
+                    </file>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-web-DDWeb60DataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJarDataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJar40DataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-client-ClientDataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-app-EarDataLoader.instance"/>
+                </folder>
+            </folder>
             <folder name="x-dd-servlet-fragment3.0">
                 <folder name="Factories">
                     <file name="org-netbeans-modules-j2ee-ddloaders-web-DDDataLoader.instance">
@@ -1395,6 +1585,18 @@
                 </folder>
             </folder>
             <folder name="x-dd-servlet-fragment6.0">
+                <folder name="Factories">
+                    <file name="org-netbeans-modules-j2ee-ddloaders-web-DDDataLoader.instance">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ddloaders.Bundle"/>
+                    </file>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-web-DDWebFragment60DataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJarDataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJar40DataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-client-ClientDataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-app-EarDataLoader.instance"/>
+                </folder>
+            </folder>
+            <folder name="x-dd-servlet-fragment6.1">
                 <folder name="Factories">
                     <file name="org-netbeans-modules-j2ee-ddloaders-web-DDDataLoader.instance">
                         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ddloaders.Bundle"/>
@@ -1526,6 +1728,18 @@
                     <file name="org-netbeans-modules-j2ee-ddloaders-app-EarDataLoader.instance"/>
                 </folder>
             </folder>
+            <folder name="x-dd-client11.0">
+                <folder name="Factories">
+                    <file name="org-netbeans-modules-j2ee-ddloaders-web-DDDataLoader.instance">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ddloaders.Bundle"/>
+                    </file>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-web-DDWeb60DataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJarDataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJar40DataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-client-ClientDataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-app-EarDataLoader.instance"/>
+                </folder>
+            </folder>
             <folder name="x-dd-application1.4">
                 <folder name="Factories">
                     <file name="org-netbeans-modules-j2ee-ddloaders-web-DDDataLoader.instance">
@@ -1599,6 +1813,18 @@
                 </folder>
             </folder>
             <folder name="x-dd-application10.0">
+                <folder name="Factories">
+                    <file name="org-netbeans-modules-j2ee-ddloaders-web-DDDataLoader.instance">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ddloaders.Bundle"/>
+                    </file>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-web-DDWeb60DataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJarDataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-ejb-EjbJar40DataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-client-ClientDataLoader.instance"/>
+                    <file name="org-netbeans-modules-j2ee-ddloaders-app-EarDataLoader.instance"/>
+                </folder>
+            </folder>
+            <folder name="x-dd-application11.0">
                 <folder name="Factories">
                     <file name="org-netbeans-modules-j2ee-ddloaders-web-DDDataLoader.instance">
                         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ddloaders.Bundle"/>

@@ -77,7 +77,9 @@ public class BeansXmlIterator implements TemplateWizard.Iterator {
         Profile profile = null;
         if (project != null) {
             J2eeProjectCapabilities cap = J2eeProjectCapabilities.forProject(project);
-            if (cap != null && cap.isCdi40Supported()) {
+            if (cap != null && cap.isCdi41Supported()) {
+                profile = Profile.JAKARTA_EE_11_FULL;
+            } else if (cap != null && cap.isCdi40Supported()) {
                 profile = Profile.JAKARTA_EE_10_FULL;
             } else if (cap != null && cap.isCdi30Supported()) {
                 profile = Profile.JAKARTA_EE_9_FULL;

@@ -519,9 +519,6 @@ public final class ParserManager {
 
         return true;
     }
-    
-    //where
-    private static Map<String,Reference<Parser>> cachedParsers = new HashMap<String,Reference<Parser>>();    
 }
 
 

@@ -114,7 +114,7 @@ public abstract class NbLaunchDelegate {
     public abstract void preLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
 
     public abstract void postLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
-    
+
     protected void notifyFinished(DebugAdapterContext ctx, boolean success) {
         // Remove a possibly staled debugger listener
         DebuggerManagerListener listener = debuggerListeners.remove(ctx);
@@ -167,7 +167,7 @@ public abstract class NbLaunchDelegate {
 
                 @Override
                 public void flush() throws IOException {
-                    // nop 
+                    // nop
                 }
 
                 @Override
@@ -199,10 +199,10 @@ public abstract class NbLaunchDelegate {
                         testProgressHandler != null ? Lookups.fixed(contextObject, ioContext, progress, testProgressHandler) : Lookups.fixed(contextObject, ioContext, progress),
                         Lookup.getDefault()
                 );
-                
+
                 ProjectConfiguration selectConfiguration = null;
                 ProjectConfigurationProvider<ProjectConfiguration> pcp = null;
-                
+
                 Object o = launchArguments.get("launchConfiguration");
                 if (o instanceof String) {
                     if (prj != null) {
@@ -218,23 +218,22 @@ public abstract class NbLaunchDelegate {
                 runContext.add(params);
                 runContext.add(ioContext);
                 runContext.add(progress);
-                
-                Lookup lookup;
-                if (singleMethod != null) {
-                    runContext.add(singleMethod);
-                }
+
                 if (selectConfiguration != null) {
                     runContext.add(selectConfiguration);
                 }
-                
-                lookup = Lookups.fixed(runContext.toArray(new Object[0]));
+
+                Lookup lookup = new ProxyLookup(
+                    createTargetLookup(prj, singleMethod, toRun),
+                    Lookups.fixed(runContext.toArray(new Object[runContext.size()]))
+                );
                 // the execution Lookup is fully populated now. If the Project supports Configurations,
-                // check if the action is actually enabled in the prescribed configuration. If it is not, 
+                // check if the action is actually enabled in the prescribed configuration. If it is not,
                 if (pcp != null) {
                     final ActionProvider ap = providerAndCommand.first();
                     final String cmd = providerAndCommand.second();
                     if (!ap.isActionEnabled(cmd, lookup)) {
-                        
+
                         // attempt to locate a different configuration that enables the action:
                         ProjectConfiguration supportive = null;
                         int confIndex = runContext.indexOf(selectConfiguration);
@@ -255,10 +254,10 @@ public abstract class NbLaunchDelegate {
                         String msg;
                         String recommended = defConfig ? Bundle.ERR_LaunchDefaultConfiguration(): Bundle.ERR_LaunchSupportiveConfigName(supportive.getDisplayName());
                         if (debug) {
-                            msg = supportive == null ? 
+                            msg = supportive == null ?
                                  Bundle.ERR_UnsupportedLaunchDebug() : Bundle.ERR_UnsupportedLaunchDebugConfig(selectConfiguration.getDisplayName(),  recommended);
                         } else {
-                            msg = supportive == null ? 
+                            msg = supportive == null ?
                                  Bundle.ERR_UnsupportedLaunch() : Bundle.ERR_UnsupportedLaunchConfig(selectConfiguration.getDisplayName(), recommended);
                         }
                         LanguageClient client = context.getLspSession().getLookup().lookup(LanguageClient.class);
@@ -487,7 +486,7 @@ public abstract class NbLaunchDelegate {
             throw new IllegalArgumentException("Expected String or String list");
         }
     }
-    
+
     private static CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(Project proj, boolean preferProjActions, FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun, NbProcessConsole ioContext) throws IllegalArgumentException {
         Pair<ActionProvider, String> providerAndCommand = findTarget(proj, preferProjActions, toRun, singleMethod, debug, testRun);
         if (providerAndCommand != null) {
@@ -550,7 +549,7 @@ public abstract class NbLaunchDelegate {
         ActionProvider provider = null;
         String command = null;
         Collection<ActionProvider> actionProviders = findActionProviders(prj);
-        Lookup testLookup = preferProjActions && prj != null ? Lookups.singleton(prj) : (singleMethod != null) ? Lookups.fixed(toRun, singleMethod) : Lookups.singleton(toRun);
+        Lookup testLookup = createTargetLookup(preferProjActions ? prj : null, singleMethod, toRun);
         String[] actions;
         if (!mainSource && singleMethod != null) {
             actions = debug ? new String[] {SingleMethod.COMMAND_DEBUG_SINGLE_METHOD}
@@ -564,7 +563,7 @@ public abstract class NbLaunchDelegate {
                 if (debug && !mainSource) {
                     // We are calling COMMAND_DEBUG_TEST_SINGLE instead of a missing COMMAND_DEBUG_TEST
                     // This is why we need to add the file to the lookup
-                    testLookup = (singleMethod != null) ? Lookups.fixed(toRun, singleMethod) : Lookups.singleton(toRun);
+                    testLookup = createTargetLookup(null, singleMethod, toRun);
                 }
             } else {
                 actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG_SINGLE}
@@ -625,11 +624,26 @@ public abstract class NbLaunchDelegate {
         return Pair.of(provider, command);
     }
 
-    private static Collection<ActionProvider> findActionProviders(Project prj) {
+    static Lookup createTargetLookup(Project prj, SingleMethod singleMethod, FileObject toRun) {
+        List<Lookup> arr = new ArrayList<>();
+        if (prj != null) {
+            arr.add(Lookups.singleton(prj));
+        }
+        if (singleMethod != null) {
+            Lookup methodLookup = Lookups.singleton(singleMethod);
+            arr.add(methodLookup);
+        }
+        if (toRun != null) {
+            arr.add(toRun.getLookup());
+        }
+        return new ProxyLookup(arr.toArray(new Lookup[0]));
+    }
+
+    static Collection<ActionProvider> findActionProviders(Project prj) {
         Collection<ActionProvider> actionProviders = new ArrayList<>();
         if (prj != null) {
-            ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
-            actionProviders.add(ap);
+            Collection<? extends ActionProvider> ap = prj.getLookup().lookupAll(ActionProvider.class);
+            actionProviders.addAll(ap);
         }
         actionProviders.addAll(Lookup.getDefault().lookupAll(ActionProvider.class));
         return actionProviders;

@@ -20,14 +20,17 @@ package org.netbeans.modules.java.mx.project;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URL;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.mx.project.suitepy.MxDistribution;
 import org.netbeans.modules.java.mx.project.suitepy.MxSuite;
 
 public final class ParseSuitesTest extends NbTestCase {
@@ -38,6 +41,15 @@ public final class ParseSuitesTest extends NbTestCase {
 
     public void testParseThemAll() throws IOException {
         assertSuitePys(getDataDir(), 15);
+    }
+
+    public void testParseMultiLineSuite() throws IOException {
+        URL url = getClass().getResource("multilinetexts.py");
+        MxSuite suite = MxSuite.parse(url);
+        assertNotNull("suite parsed", suite);
+        MxDistribution tool = suite.distributions().get("TOOLCHAIN");
+        assertNotNull("toolchain found", tool);
+        assertEquals("No deps", 0, tool.dependencies().size());
     }
 
     public static void main(String... args) throws IOException {

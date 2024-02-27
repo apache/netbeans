@@ -280,13 +280,8 @@ public class CodeHintProviderImpl implements HintProvider {
     }
 
     private static void addHint(Map<HintMetadata, Collection<HintDescription>> hints, HintMetadata metadata, HintDescription hint) {
-        Collection<HintDescription> list = hints.get(metadata);
-
-        if (list == null) {
-            hints.put(metadata, list = new LinkedList<>());
-        }
-
-        list.add(hint);
+        hints.computeIfAbsent(metadata, k -> new LinkedList<>())
+             .add(hint);
     }
 
     //accessed by tests:

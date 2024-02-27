@@ -23,9 +23,12 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -126,19 +129,44 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                 }
                 return null;
             }
-
             @Override
             public Completion createFinderMethodItem(String name, String returnType, int offset) {
                 Builder builder = CompletionCollector.newBuilder(name).kind(Completion.Kind.Method).sortText(String.format("%04d%s", 10, name));
                 if (returnType != null) {
-                    builder.insertText(new StringBuilder("${1:").append(returnType).append("} ").append(name).append("$0()").toString());
-                    builder.insertTextFormat(Completion.TextFormat.Snippet);
+                    builder.labelDetail("(...)")
+                            .labelDescription(returnType)
+                            .insertText(new StringBuilder("${1:").append(returnType).append("} ").append(name).append("$2($0);").toString())
+                            .insertTextFormat(Completion.TextFormat.Snippet);
                 }
                 return builder.build();
             }
             @Override
             public Completion createFinderMethodNameItem(String prefix, String name, int offset) {
                 return CompletionCollector.newBuilder(prefix + name).kind(Completion.Kind.Method).sortText(String.format("%04d%s", 10, name)).build();
+            }
+            @Override
+            public Completion createFinderMethodParam(CompilationInfo info, String name, TypeMirror type, List<TypeElement> annotations, int offset) {
+                String returnType = Utils.getTypeName(info, type, false, false).toString();
+                Set<ElementHandle<TypeElement>> handles = new HashSet<>();
+                StringBuilder sb = new StringBuilder();
+                for (TypeElement ann : annotations) {
+                    sb.append('@').append(ann.getSimpleName()).append(' ');
+                    handles.add(ElementHandle.create(ann));
+                }
+                if (type.getKind() == TypeKind.DECLARED) {
+                    handles.add(ElementHandle.create((TypeElement) ((DeclaredType) type).asElement()));
+                }
+                sb.append(returnType).append(' ').append(name);
+                Builder builder = CompletionCollector.newBuilder(name).kind(Completion.Kind.Property).sortText(String.format("%04d%s", 10, name))
+                        .insertText(sb.toString()).labelDescription(returnType);
+                if (!handles.isEmpty()) {
+                    builder.additionalTextEdits(() -> modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), copy -> {
+                        copy.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                        Set<TypeElement> toImport = handles.stream().map(handle -> handle.resolve(copy)).filter(te -> te != null).collect(Collectors.toSet());
+                        copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), toImport));
+                    }));
+                }
+                return builder.build();
             }
             @Override
             public Completion createSQLItem(CompletionItem item) {
@@ -180,7 +208,6 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                         .insertText(name)
                         .build();
             }
-
             @Override
             public Completion createEnvPropertyItem(String name, String documentation, int anchorOffset, int offset) {
                 return CompletionCollector.newBuilder(name)

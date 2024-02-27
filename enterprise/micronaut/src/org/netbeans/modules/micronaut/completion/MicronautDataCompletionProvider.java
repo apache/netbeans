@@ -26,9 +26,13 @@ import java.io.CharConversionException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -201,7 +205,8 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                 public CompletionItem createFinderMethodItem(String name, String returnType, int offset) {
                     CompletionUtilities.CompletionItemBuilder builder = CompletionUtilities.newCompletionItemBuilder(name)
                             .iconResource(MICRONAUT_ICON)
-                            .leftHtmlText("<b>" + name + "</b>")
+                            .leftHtmlText("<b>" + name + "</b>(...)")
+                            .rightHtmlText(returnType)
                             .sortPriority(10);
                     if (returnType != null) {
                         builder.onSelect(ctx -> {
@@ -211,7 +216,7 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                             } catch (BadLocationException ex) {
                                 Exceptions.printStackTrace(ex);
                             }
-                            String template = "${PAR#1 default=\"" + returnType + "\"} " + name + "${cursor completionInvoke}()";
+                            String template = "${PAR#1 default=\"" + returnType + "\"} " + name + "${PAR#2 default=\"\"}(${cursor completionInvoke})";
                             CodeTemplateManager.get(doc).createTemporary(template).insert(ctx.getComponent());
                         });
                     } else {
@@ -228,6 +233,52 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                             .leftHtmlText(prefix + "<b>" + name + "</b>")
                             .sortPriority(10)
                             .sortText(name)
+                            .build();
+                }
+
+                @Override
+                public CompletionItem createFinderMethodParam(CompilationInfo info, String name, TypeMirror type, List<TypeElement> annotations, int offset) {
+                    String returnType = Utils.getTypeName(info, type, false, false).toString();
+                    Set<ElementHandle<TypeElement>> handles = new HashSet<>();
+                    StringBuilder sb = new StringBuilder();
+                    for (TypeElement ann : annotations) {
+                        sb.append('@').append(ann.getSimpleName()).append(' ');
+                        handles.add(ElementHandle.create(ann));
+                    }
+                    if (type.getKind() == TypeKind.DECLARED) {
+                        handles.add(ElementHandle.create((TypeElement) ((DeclaredType) type).asElement()));
+                    }
+                    sb.append(returnType).append(' ').append(name);
+                    return CompletionUtilities.newCompletionItemBuilder(name)
+                            .startOffset(offset)
+                            .iconResource(MICRONAUT_ICON)
+                            .leftHtmlText("<b>" + name + "</b>")
+                            .rightHtmlText(returnType)
+                            .sortPriority(10)
+                            .sortText(name)
+                            .onSelect(ctx -> {
+                                final Document doc = ctx.getComponent().getDocument();
+                                try {
+                                    doc.remove(offset, ctx.getComponent().getCaretPosition() - offset);
+                                    doc.insertString(offset, sb.toString(), null);
+                                } catch (BadLocationException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
+                                try {
+                                    ModificationResult mr = ModificationResult.runModificationTask(Collections.singletonList(Source.create(doc)), new UserTask() {
+                                        @Override
+                                        public void run(ResultIterator resultIterator) throws Exception {
+                                            WorkingCopy copy = WorkingCopy.get(resultIterator.getParserResult());
+                                            copy.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                                            Set<TypeElement> toImport = handles.stream().map(handle -> handle.resolve(copy)).filter(te -> te != null).collect(Collectors.toSet());
+                                            copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), toImport));
+                                        }
+                                    });
+                                    mr.commit();
+                                } catch (IOException | ParseException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
+                            })
                             .build();
                 }
 

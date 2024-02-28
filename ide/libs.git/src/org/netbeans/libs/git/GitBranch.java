@@ -91,4 +91,16 @@ public final class GitBranch {
     void setTrackedBranch (GitBranch trackedBranch) {
         this.trackedBranch = trackedBranch;
     }
+
+    @Override
+    public String toString() {
+        return "GitBranch{"
+                + "name=" + name
+                + ", id=" + getId()
+                + ", remote=" + remote
+                + ", active=" + active
+                + ", trackedBranch=" + trackedBranch
+                + '}';
+    }
+
 }

@@ -29,10 +29,10 @@ public class IgnoreRule extends org.eclipse.jgit.ignore.FastIgnoreRule {
     private final String noNegationPattern;
     
     public IgnoreRule (String pattern) {
-        super(pattern.trim());
+        super(pattern.strip());
         this.pattern = pattern;
-        pattern = pattern.trim();
-        this.noNegationPattern = pattern.startsWith("!") ? pattern.substring(1) : null;
+        String neg = pattern.strip();
+        this.noNegationPattern = neg.startsWith("!") ? neg.substring(1) : null;
     }
 
     public String getPattern (boolean preprocess) {
@@ -50,7 +50,7 @@ public class IgnoreRule extends org.eclipse.jgit.ignore.FastIgnoreRule {
 
     @Override
     public boolean isMatch(String target, boolean isDirectory) {
-        String trimmed = pattern.trim();
+        String trimmed = pattern.strip();
         if (trimmed.isEmpty() || trimmed.startsWith("#")) {
             // this is a comment or an empty line
             return false;

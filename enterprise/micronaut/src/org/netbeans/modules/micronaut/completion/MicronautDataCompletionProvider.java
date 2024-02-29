@@ -113,6 +113,7 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
         private static final String PACKAGE_COLOR = getHTMLColor(64, 150, 64);
         private static final String CLASS_COLOR = getHTMLColor(150, 64, 64);
         private static final String INTERFACE_COLOR = getHTMLColor(128, 128, 128);
+        private static final String PARAMETERS_COLOR = getHTMLColor(192, 192, 192);
         private static final String PARAMETER_NAME_COLOR = getHTMLColor(224, 160, 65);
         private static final String ATTRIBUTE_VALUE_COLOR = getHTMLColor(128, 128, 128);
         private static final String PROPERTY_COLOR = getHTMLColor(64, 198, 88);
@@ -237,11 +238,13 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                 }
 
                 @Override
-                public CompletionItem createFinderMethodParam(CompilationInfo info, String name, TypeMirror type, List<TypeElement> annotations, int offset) {
+                public CompletionItem createFinderMethodParam(CompilationInfo info, VariableElement variableElement, int offset) {
+                    String name = variableElement.getSimpleName().toString();
+                    TypeMirror type = variableElement.asType();
                     String returnType = Utils.getTypeName(info, type, false, false).toString();
                     Set<ElementHandle<TypeElement>> handles = new HashSet<>();
                     StringBuilder sb = new StringBuilder();
-                    for (TypeElement ann : annotations) {
+                    for (TypeElement ann : Utils.getRelevantAnnotations(variableElement)) {
                         sb.append('@').append(ann.getSimpleName()).append(' ');
                         handles.add(ElementHandle.create(ann));
                     }
@@ -252,7 +255,7 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                     return CompletionUtilities.newCompletionItemBuilder(name)
                             .startOffset(offset)
                             .iconResource(MICRONAUT_ICON)
-                            .leftHtmlText("<b>" + name + "</b>")
+                            .leftHtmlText(PARAMETER_NAME_COLOR + name + COLOR_END)
                             .rightHtmlText(returnType)
                             .sortPriority(10)
                             .sortText(name)
@@ -264,6 +267,72 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                                 } catch (BadLocationException ex) {
                                     Exceptions.printStackTrace(ex);
                                 }
+                                try {
+                                    ModificationResult mr = ModificationResult.runModificationTask(Collections.singletonList(Source.create(doc)), new UserTask() {
+                                        @Override
+                                        public void run(ResultIterator resultIterator) throws Exception {
+                                            WorkingCopy copy = WorkingCopy.get(resultIterator.getParserResult());
+                                            copy.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                                            Set<TypeElement> toImport = handles.stream().map(handle -> handle.resolve(copy)).filter(te -> te != null).collect(Collectors.toSet());
+                                            copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), toImport));
+                                        }
+                                    });
+                                    mr.commit();
+                                } catch (IOException | ParseException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
+                            })
+                            .build();
+                }
+
+                @Override
+                public CompletionItem createFinderMethodParams(CompilationInfo info, List<VariableElement> variableElements, int offset) {
+                    StringBuilder label = new StringBuilder();
+                    StringBuilder insertText = new StringBuilder();
+                    StringBuilder sortParams = new StringBuilder();
+                    Set<ElementHandle<TypeElement>> handles = new HashSet<>();
+                    label.append(PARAMETERS_COLOR).append('(').append(COLOR_END);
+                    sortParams.append('(');
+                    int cnt = 0;
+                    Iterator<VariableElement> it = variableElements.iterator();
+                    while (it.hasNext()) {
+                        cnt++;
+                        VariableElement variableElement = it.next();
+                        String name = variableElement.getSimpleName().toString();
+                        TypeMirror type = variableElement.asType();
+                        String typeName = Utils.getTypeName(info, type, false, false).toString();
+                        for (TypeElement ann : Utils.getRelevantAnnotations(variableElement)) {
+                            insertText.append('@').append(ann.getSimpleName()).append(' ');
+                            handles.add(ElementHandle.create(ann));
+                        }
+                        if (type.getKind() == TypeKind.DECLARED) {
+                            handles.add(ElementHandle.create((TypeElement) ((DeclaredType) type).asElement()));
+                        }
+                        label.append(typeName).append(' ').append(PARAMETER_NAME_COLOR).append(name).append(COLOR_END);
+                        insertText.append(typeName).append(' ').append("${PAR#").append(cnt).append(" default=\"").append(name).append("\"}");
+                        sortParams.append(typeName);
+                        if (it.hasNext()) {
+                            label.append(", ");
+                            insertText.append(", ");
+                            sortParams.append(",");
+                        }
+                    }
+                    label.append(PARAMETERS_COLOR).append(')').append(COLOR_END);
+                    sortParams.append(')');
+                    return CompletionUtilities.newCompletionItemBuilder("(...)")
+                            .startOffset(offset)
+                            .iconResource(MICRONAUT_ICON)
+                            .leftHtmlText(label.toString())
+                            .sortPriority(5)
+                            .sortText(sortParams.toString())
+                            .onSelect(ctx -> {
+                                final Document doc = ctx.getComponent().getDocument();
+                                try {
+                                    doc.remove(offset, ctx.getComponent().getCaretPosition() - offset);
+                                } catch (BadLocationException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
+                                CodeTemplateManager.get(doc).createTemporary(insertText.toString()).insert(ctx.getComponent());;
                                 try {
                                     ModificationResult mr = ModificationResult.runModificationTask(Collections.singletonList(Source.create(doc)), new UserTask() {
                                         @Override

@@ -311,6 +311,18 @@ public final class Utils {
         return idPrefix;
     }
 
+    public static  List<TypeElement> getRelevantAnnotations(VariableElement variableElement) {
+        List<TypeElement> annotations = new ArrayList<>();
+        for (AnnotationMirror am : variableElement.getAnnotationMirrors()) {
+            TypeElement te = (TypeElement) am.getAnnotationType().asElement();
+            String fqn = te.getQualifiedName().toString();
+            if (fqn.equals("io.micronaut.data.annotation.Id") || fqn.startsWith("jakarta.validation.constraints.")) { //NOI18N
+                annotations.add(te);
+            }
+        }
+        return annotations;
+    }
+
     public static boolean isJPASupported(SourceGroup sg) {
         return resolveClassName(sg, "io.micronaut.data.jpa.repository.JpaRepository"); //NOI18N
     }

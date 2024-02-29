@@ -180,10 +180,7 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <friend-packages>
-                <friend>org.openidex.util</friend>
-                <package>org.netbeans.modules.search.project.spi</package>
-            </friend-packages>
+            <public-packages/>
         </data>
     </configuration>
 </project>

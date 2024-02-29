@@ -24,9 +24,9 @@
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <target name="javahelp" depends="projectized.javahelp">
+    <!--target name="javahelp" depends="projectized.javahelp">
         <mkdir dir="${cluster}/docs/org/netbeans/modules/usersguide"/>
         <copy file="javahelp/org/netbeans/modules/usersguide/ide.css" tofile="${cluster}/docs/org/netbeans/modules/usersguide/ide.css"/>
-    </target>
+    </target-->
 
 </project>

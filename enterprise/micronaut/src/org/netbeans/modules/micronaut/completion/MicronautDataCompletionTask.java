@@ -28,8 +28,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -40,7 +40,6 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
@@ -106,7 +105,8 @@ public class MicronautDataCompletionTask {
         T createControllerMethodItem(CompilationInfo info, VariableElement delegateRepository, ExecutableElement delegateMethod, String controllerId, String id, int offset);
         T createFinderMethodItem(String name, String returnType, int offset);
         T createFinderMethodNameItem(String prefix, String name, int offset);
-        T createFinderMethodParam(CompilationInfo info, String name, TypeMirror type, List<TypeElement> annotations, int offset);
+        T createFinderMethodParam(CompilationInfo info, VariableElement variableElement, int offset);
+        T createFinderMethodParams(CompilationInfo info, List<VariableElement> variableElements, int offset);
         T createSQLItem(CompletionItem item);
     }
 
@@ -277,24 +277,12 @@ public class MicronautDataCompletionTask {
         TypeElement entity = getEntityFor(info, path);
         if (entity != null) {
             TypeUtilities tu = info.getTypeUtilities();
-            Map<String, String> prop2Types = new HashMap<>();
-            for (ExecutableElement method : ElementFilter.methodsIn(entity.getEnclosedElements())) {
-                String methodName = method.getSimpleName().toString();
-                if (methodName.startsWith(GET) && methodName.length() > 3 && method.getParameters().isEmpty()) {
-                    TypeMirror type = method.getReturnType();
-                    if (type.getKind() != TypeKind.ERROR) {
-                        methodName = methodName.substring(GET.length());
-                        methodName = methodName.substring(0, 1).toUpperCase(Locale.ENGLISH) + methodName.substring(1);
-                        prop2Types.put(methodName, tu.getTypeName(type).toString());
-                    }
-                }
-            }
-            for (RecordComponentElement recordComponent : ElementFilter.recordComponentsIn(entity.getEnclosedElements())) {
-                TypeMirror type = recordComponent.asType();
+            Map<String, String> prop2Types = new LinkedHashMap<>();
+            for (VariableElement variableElement : ElementFilter.fieldsIn(entity.getEnclosedElements())) {
+                TypeMirror type = variableElement.asType();
                 if (type.getKind() != TypeKind.ERROR) {
-                    String name = recordComponent.getSimpleName().toString();
-                    name = name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1);
-                    prop2Types.put(name, tu.getTypeName(type).toString());
+                    String name = variableElement.getSimpleName().toString();
+                    prop2Types.put(name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1), tu.getTypeName(type).toString());
                 }
             }
             for (String pattern : QUERY_PATTERNS) {
@@ -304,7 +292,7 @@ public class MicronautDataCompletionTask {
                 }
                 String name = pattern + BY;
                 if (prefix.length() >= name.length() && prefix.startsWith(name)) {
-                    addPropertyCriterionCompletions(prop2Types, name, prefix, factory, consumer);
+                    addPropertyCriterionCompletions(prop2Types, name, prefix, full ? entity.getSimpleName().toString() : null, factory, consumer);
                 } else if (Utils.startsWith(name, prefix)) {
                     consumer.accept(full ? factory.createFinderMethodItem(name, entity.getSimpleName().toString(), anchorOffset)
                             : factory.createFinderMethodNameItem(EMPTY, name, anchorOffset));
@@ -313,7 +301,7 @@ public class MicronautDataCompletionTask {
                     for (String propName : prop2Types.keySet()) {
                         name = pattern + projection + propName + BY;
                         if (prefix.length() >= name.length() && prefix.startsWith(name)) {
-                            addPropertyCriterionCompletions(prop2Types, name, prefix, factory, consumer);
+                            addPropertyCriterionCompletions(prop2Types, name, prefix, full ? prop2Types.get(propName) : null, factory, consumer);
                         } else if (Utils.startsWith(name, prefix)) {
                             consumer.accept(full ? factory.createFinderMethodItem(name, prop2Types.get(propName), anchorOffset)
                                     : factory.createFinderMethodNameItem(EMPTY, name, anchorOffset));
@@ -329,7 +317,8 @@ public class MicronautDataCompletionTask {
                 for (String propName : prop2Types.keySet()) {
                     String name = pattern + BY + propName;
                     if (prefix.length() >= name.length() && prefix.startsWith(name)) {
-                        addPropertyCriterionCompletions(prop2Types, name, prefix, factory, consumer);
+                        addPropertyCriterionCompletions(prop2Types, name, prefix, full ? pattern.startsWith(COUNT) ? "int" : pattern.startsWith(EXISTS) ? "boolean" : "void"
+                                : null, factory, consumer);
                     } else if (Utils.startsWith(name, prefix)) {
                         consumer.accept(full ? factory.createFinderMethodItem(name, name.startsWith(COUNT) ? "int" : name.startsWith(EXISTS) ? "boolean" : "void", anchorOffset)
                                 : factory.createFinderMethodNameItem(EMPTY, name, anchorOffset));
@@ -345,31 +334,34 @@ public class MicronautDataCompletionTask {
         }
     }
 
-    private <T> void addPropertyCriterionCompletions(Map<String, String> prop2Types, String namePrefix, String prefix, ItemFactory<T> factory, Consumer<T> consumer) {
+    private <T> void addPropertyCriterionCompletions(Map<String, String> prop2Types, String namePrefix, String prefix, String returnType, ItemFactory<T> factory, Consumer<T> consumer) {
         for (String propName : prop2Types.keySet()) {
             for (String criterion : CRITERION_EXPRESSIONS) {
                 String name = propName + criterion;
                 if (prefix.length() >= namePrefix.length() + name.length() && prefix.startsWith(namePrefix + name)) {
-                    addComposeAndOrderCompletions(prop2Types, namePrefix + name, prefix, factory, consumer);
+                    addComposeAndOrderCompletions(prop2Types, namePrefix + name, prefix, returnType, factory, consumer);
                 } else if (Utils.startsWith(namePrefix + name, prefix)) {
-                    consumer.accept(factory.createFinderMethodNameItem(namePrefix, name, anchorOffset));
+                    consumer.accept(returnType != null ? factory.createFinderMethodItem(namePrefix + name, returnType, anchorOffset)
+                            : factory.createFinderMethodNameItem(namePrefix, name, anchorOffset));
                 }
             }
         }
     }
 
-    private <T> void addComposeAndOrderCompletions(Map<String, String> prop2Types, String namePrefix, String prefix, ItemFactory<T> factory, Consumer<T> consumer) {
+    private <T> void addComposeAndOrderCompletions(Map<String, String> prop2Types, String namePrefix, String prefix, String returnType, ItemFactory<T> factory, Consumer<T> consumer) {
         for (String name : COMPOSE_EXPRESSIONS) {
             if (prefix.length() >= namePrefix.length() + name.length() && prefix.startsWith(namePrefix + name)) {
-                addPropertyCriterionCompletions(prop2Types, namePrefix + name, prefix, factory, consumer);
+                addPropertyCriterionCompletions(prop2Types, namePrefix + name, prefix, returnType, factory, consumer);
             } else if (Utils.startsWith(namePrefix + name, prefix)) {
-                consumer.accept(factory.createFinderMethodNameItem(namePrefix, name, anchorOffset));
+                consumer.accept(returnType != null ? factory.createFinderMethodItem(namePrefix + name, returnType, anchorOffset)
+                        : factory.createFinderMethodNameItem(namePrefix, name, anchorOffset));
             }
         }
         for (String propName : prop2Types.keySet()) {
             String name = ORDER_BY + propName;
             if (prefix.length() < namePrefix.length() + name.length() && Utils.startsWith(namePrefix + name, prefix)) {
-                consumer.accept(factory.createFinderMethodNameItem(namePrefix, name, anchorOffset));
+                consumer.accept(returnType != null ? factory.createFinderMethodItem(namePrefix + name, returnType, anchorOffset)
+                        : factory.createFinderMethodNameItem(namePrefix, name, anchorOffset));
             }
         }
     }
@@ -385,17 +377,52 @@ public class MicronautDataCompletionTask {
                     paramNames.add(param.getName().toString());
                 }
             }
+            Map<String, VariableElement> prop2fields = new LinkedHashMap<>();
             for (VariableElement variableElement : ElementFilter.fieldsIn(entity.getEnclosedElements())) {
-                if (!paramNames.contains(variableElement.getSimpleName().toString())) {
-                    List<TypeElement> annotations = new ArrayList<>();
-                    for (AnnotationMirror am : variableElement.getAnnotationMirrors()) {
-                        TypeElement te = (TypeElement) am.getAnnotationType().asElement();
-                        String fqn = te.getQualifiedName().toString();
-                        if (fqn.equals("io.micronaut.data.annotation.Id") || fqn.startsWith("jakarta.validation.constraints.")) {
-                            annotations.add(te);
+                String name = variableElement.getSimpleName().toString();
+                if (!paramNames.contains(name)) {
+                    TypeMirror type = variableElement.asType();
+                    if (type.getKind() != TypeKind.ERROR) {
+                        prop2fields.put(name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1), variableElement);
+                        consumer.accept(factory.createFinderMethodParam(info, variableElement, anchorOffset));
+                    }
+                }
+            }
+            if (paramNames.isEmpty() && !prop2fields.isEmpty()) {
+                addParamsParsedFromFinderMethodName(info, prop2fields, method.getName().toString(), factory, consumer);
+            }
+        }
+    }
+
+    private <T> void addParamsParsedFromFinderMethodName(CompilationInfo info, Map<String, VariableElement> prop2fields, String name, ItemFactory<T> factory, Consumer<T> consumer) {
+        for (String pattern : QUERY_PATTERNS) {
+            if (name.startsWith(pattern)) {
+                name = name.substring(pattern.length());
+                int idx = name.indexOf("By");
+                if (idx >= 0) {
+                    name = name.substring(idx + 2);
+                    List<VariableElement> fields = new ArrayList<>();
+                    int lastLen = Integer.MAX_VALUE;
+                    while (name.length() < lastLen) {
+                        lastLen = name.length();
+                        for (Map.Entry<String, VariableElement> entry : prop2fields.entrySet()) {
+                            String propName = entry.getKey();
+                            if (name.startsWith(propName)) {
+                                fields.add(entry.getValue());
+                                name = name.substring(propName.length());
+                            }
+                        }
+                        for (String criterion : CRITERION_EXPRESSIONS) {
+                            for (String expr : COMPOSE_EXPRESSIONS) {
+                                if (name.startsWith(criterion + expr)) {
+                                    name = name.substring(criterion.length() + expr.length());
+                                }
+                            }
                         }
                     }
-                    consumer.accept(factory.createFinderMethodParam(info, variableElement.getSimpleName().toString(), variableElement.asType(), annotations, anchorOffset));
+                    if (!fields.isEmpty()) {
+                        consumer.accept(factory.createFinderMethodParams(info, fields, anchorOffset));
+                    }
                 }
             }
         }

@@ -145,20 +145,65 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                 return CompletionCollector.newBuilder(prefix + name).kind(Completion.Kind.Method).sortText(String.format("%04d%s", 10, name)).build();
             }
             @Override
-            public Completion createFinderMethodParam(CompilationInfo info, String name, TypeMirror type, List<TypeElement> annotations, int offset) {
-                String returnType = Utils.getTypeName(info, type, false, false).toString();
+            public Completion createFinderMethodParam(CompilationInfo info, VariableElement variableElement, int offset) {
+                String name = variableElement.getSimpleName().toString();
+                TypeMirror type = variableElement.asType();
+                String typeName = Utils.getTypeName(info, type, false, false).toString();
                 Set<ElementHandle<TypeElement>> handles = new HashSet<>();
                 StringBuilder sb = new StringBuilder();
-                for (TypeElement ann : annotations) {
+                for (TypeElement ann : Utils.getRelevantAnnotations(variableElement)) {
                     sb.append('@').append(ann.getSimpleName()).append(' ');
                     handles.add(ElementHandle.create(ann));
                 }
                 if (type.getKind() == TypeKind.DECLARED) {
                     handles.add(ElementHandle.create((TypeElement) ((DeclaredType) type).asElement()));
                 }
-                sb.append(returnType).append(' ').append(name);
+                sb.append(typeName).append(' ').append(name);
                 Builder builder = CompletionCollector.newBuilder(name).kind(Completion.Kind.Property).sortText(String.format("%04d%s", 10, name))
-                        .insertText(sb.toString()).labelDescription(returnType);
+                        .insertText(sb.toString()).labelDescription(typeName);
+                if (!handles.isEmpty()) {
+                    builder.additionalTextEdits(() -> modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), copy -> {
+                        copy.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                        Set<TypeElement> toImport = handles.stream().map(handle -> handle.resolve(copy)).filter(te -> te != null).collect(Collectors.toSet());
+                        copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), toImport));
+                    }));
+                }
+                return builder.build();
+            }
+            @Override
+            public Completion createFinderMethodParams(CompilationInfo info, List<VariableElement> variableElements, int offset) {
+                StringBuilder label = new StringBuilder();
+                StringBuilder insertText = new StringBuilder();
+                StringBuilder sortParams = new StringBuilder();
+                Set<ElementHandle<TypeElement>> handles = new HashSet<>();
+                label.append('(');
+                int cnt = 0;
+                Iterator<VariableElement> it = variableElements.iterator();
+                while (it.hasNext()) {
+                    cnt++;
+                    VariableElement variableElement = it.next();
+                    String name = variableElement.getSimpleName().toString();
+                    TypeMirror type = variableElement.asType();
+                    String typeName = Utils.getTypeName(info, type, false, false).toString();
+                    for (TypeElement ann : Utils.getRelevantAnnotations(variableElement)) {
+                        insertText.append('@').append(ann.getSimpleName()).append(' ');
+                        handles.add(ElementHandle.create(ann));
+                    }
+                    if (type.getKind() == TypeKind.DECLARED) {
+                        handles.add(ElementHandle.create((TypeElement) ((DeclaredType) type).asElement()));
+                    }
+                    label.append(typeName).append(' ').append(name);
+                    insertText.append(typeName).append(' ').append("${").append(cnt).append(":").append(name).append("}");
+                    sortParams.append(typeName);
+                    if (it.hasNext()) {
+                        label.append(", ");
+                        insertText.append(", ");
+                        sortParams.append(",");
+                    }
+                }
+                label.append(')');
+                Builder builder = CompletionCollector.newBuilder(label.toString()).kind(Completion.Kind.Property).sortText(String.format("%04d#%02d%s", 5, cnt, sortParams.toString()))
+                        .insertText(insertText.toString()).insertTextFormat(Completion.TextFormat.Snippet);
                 if (!handles.isEmpty()) {
                     builder.additionalTextEdits(() -> modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), copy -> {
                         copy.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);

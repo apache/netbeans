@@ -19,24 +19,36 @@
 package org.netbeans.modules.git.ui.history;
 
 import java.awt.Color;
-import org.openide.nodes.*;
+import java.awt.Component;
 import org.openide.util.lookup.Lookups;
 import org.openide.ErrorManager;
 
-import javax.swing.*;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.text.DateFormat;
 import java.util.Date;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JLabel;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.StyleConstants;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.FontColorSettings;
+import org.netbeans.modules.git.options.AnnotationColorProvider;
 import org.netbeans.modules.versioning.history.AbstractSummaryView;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.PropertySupport;
+import org.openide.nodes.Sheet;
+import org.openide.util.ImageUtilities;
+
+import static org.netbeans.modules.git.utils.GitUtils.getColorString;
 
 /**
  * Visible in the Search History Diff view.
@@ -44,7 +56,10 @@ import org.netbeans.modules.versioning.history.AbstractSummaryView;
  * @author Maros Sandor
  */
 class RevisionNode extends AbstractNode {
-    
+
+    private static final Image COMMIT_ICON = ImageUtilities.loadImage("/org/netbeans/modules/git/resources/icons/commit.png", false);
+    private static final Image NO_ICON = ImageUtilities.icon2Image(new NoIcon());
+
     static final String COLUMN_NAME_NAME        = "name"; // NOI18N
     static final String COLUMN_NAME_DATE        = "date"; // NOI18N
     static final String COLUMN_NAME_USERNAME    = "username"; // NOI18N
@@ -78,18 +93,46 @@ class RevisionNode extends AbstractNode {
         initProperties();
     }
 
-    RepositoryRevision getContainer() {
-        return container;
-    }
-
     RepositoryRevision.Event getEvent() {
         return event;
     }
 
     @Override
+    public String getHtmlDisplayName() {
+        if (isCommitNode()) {
+            return "<b>"+getName()+"</b>";
+        } else {
+            String c = annotationColorForAction(event.getAction());
+            return c != null ? "<font color="+c+">"+getName()+"</font>" : getName();
+        }
+    }
+
+    private static String annotationColorForAction(char action) {
+        AnnotationColorProvider acp = AnnotationColorProvider.getInstance();
+        switch (action) {
+            case 'A': return getColorString(acp.ADDED_FILE.getActualColor());
+            case 'C': return getColorString(acp.ADDED_FILE.getActualColor());
+            case 'M': return getColorString(acp.MODIFIED_FILE.getActualColor());
+            case 'R': return null; // no color for renamed files?
+            case 'D': return getColorString(acp.REMOVED_FILE.getActualColor());
+            default : return null;
+        }
+    }
+
+    @Override
+    public Image getIcon(int type) {
+        return isCommitNode() ? COMMIT_ICON : NO_ICON;
+    }
+
+    @Override
+    public Image getOpenedIcon(int type) {
+        return getIcon(type);
+    }
+
+    @Override
     public Action[] getActions (boolean context) {
         if (context) return null;
-        if (event == null) {
+        if (isCommitNode()) {
             return container.getActions();
         } else {
             return event.getActions(true);
@@ -119,16 +162,8 @@ class RevisionNode extends AbstractNode {
         setSheet(sheet);        
     }
 
-    private static String getColorString(Color c) {
-        return "#" + getHex(c.getRed()) + getHex(c.getGreen()) + getHex(c.getBlue()); //NOI18N
-    }
-    
-    private static String getHex(int i) {
-        String hex = Integer.toHexString(i & 0x000000FF);
-        if (hex.length() == 1) {
-            hex = "0" + hex; //NOI18N
-        }
-        return hex;
+    public boolean isCommitNode() {
+        return event == null;
     }
 
     private abstract class CommitNodeProperty<T> extends PropertySupport.ReadOnly<T> {
@@ -179,7 +214,7 @@ class RevisionNode extends AbstractNode {
 
         @Override
         public Object getValue() throws IllegalAccessException, InvocationTargetException {
-            if (event == null) {
+            if (isCommitNode()) {
                 for (AbstractSummaryView.SummaryViewMaster.SearchHighlight h : getLookup().lookup(SearchHistoryPanel.class).getSearchHighlights()) {
                     if (h.getKind() == AbstractSummaryView.SummaryViewMaster.SearchHighlight.Kind.AUTHOR) {
                         return highlight(container.getLog().getAuthor().toString(), h.getSearchText(), bgColor, fgColor);
@@ -201,7 +236,7 @@ class RevisionNode extends AbstractNode {
 
         @Override
         public Object getValue() throws IllegalAccessException, InvocationTargetException {
-            if (event == null) {
+            if (isCommitNode()) {
                 return "";
             } else {
                 return event.getPath();
@@ -218,7 +253,7 @@ class RevisionNode extends AbstractNode {
 
         @Override
         public Object getValue() throws IllegalAccessException, InvocationTargetException {
-            if (event == null) {
+            if (isCommitNode()) {
                 return new Date(container.getLog().getCommitTime());
             } else {
                 return ""; // NOI18N
@@ -240,7 +275,7 @@ class RevisionNode extends AbstractNode {
 
         @Override
         public Object getValue() throws IllegalAccessException, InvocationTargetException {
-            if (event == null) {
+            if (isCommitNode()) {
                 for (AbstractSummaryView.SummaryViewMaster.SearchHighlight h : getLookup().lookup(SearchHistoryPanel.class).getSearchHighlights()) {
                     if (h.getKind() == AbstractSummaryView.SummaryViewMaster.SearchHighlight.Kind.MESSAGE) {
                         return highlight(container.getLog().getFullMessage(), h.getSearchText(), bgColor, fgColor);
@@ -281,5 +316,11 @@ class RevisionNode extends AbstractNode {
         public boolean isPaintable() {
             return true;
         }
+    }
+    
+    private static final class NoIcon implements Icon {
+        @Override public void paintIcon(Component c, Graphics g, int x, int y) {}
+        @Override public int getIconWidth() { return 0; }
+        @Override public int getIconHeight() { return 0; }
     }
 }

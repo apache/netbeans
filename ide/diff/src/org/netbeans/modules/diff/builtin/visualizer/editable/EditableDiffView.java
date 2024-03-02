@@ -229,6 +229,7 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
         jSplitPane1.setResizeWeight(0.5);
         jSplitPane1.setDividerSize(INITIAL_DIVIDER_SIZE);
         jSplitPane1.putClientProperty("PersistenceType", "Never"); // NOI18N
+        jSplitPane1.putClientProperty("diff-view-mode-splitter", true);
         jSplitPane1.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(EditableDiffView.class, "ACS_DiffPanelA11yName"));  // NOI18N
         jSplitPane1.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(EditableDiffView.class, "ACS_DiffPanelA11yDesc"));  // NOI18N
         view.setName(org.openide.util.NbBundle.getMessage(EditableDiffView.class, "DiffComponent.title", ss1.getName(), ss2.getName())); // NOI18N

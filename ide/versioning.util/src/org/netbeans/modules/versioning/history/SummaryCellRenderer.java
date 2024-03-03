@@ -66,6 +66,7 @@ import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.modules.versioning.history.AbstractSummaryView.LogEntry;
 import org.netbeans.modules.versioning.history.AbstractSummaryView.LogEntry.Event;
+import org.netbeans.modules.versioning.history.AbstractSummaryView.MaxPathWidth;
 import org.netbeans.modules.versioning.history.AbstractSummaryView.RevisionItem;
 import org.netbeans.modules.versioning.history.AbstractSummaryView.SummaryViewMaster.SearchHighlight;
 import org.netbeans.modules.versioning.util.Utils;
@@ -84,25 +85,25 @@ import org.openide.util.NbBundle;
  * @author ondra
  */
 class SummaryCellRenderer implements ListCellRenderer {
-    private static final double DARKEN_FACTOR = 0.95;
-    private static final double DARKEN_FACTOR_UNINTERESTING = 0.975;
+    private static final double DARKEN_FACTOR = 0.90;
+    private static final double DARKEN_FACTOR_UNINTERESTING = 0.95;
 
     private final AbstractSummaryView summaryView;
     private final Map<String, VCSKenaiAccessor.KenaiUser> kenaiUsersMap;
     private final VCSHyperlinkSupport linkerSupport;
 
-    private Color selectionBackgroundColor = new JList().getSelectionBackground();
-    private Color selectionBackground = selectionBackgroundColor;
+    private final Color selectionBackgroundColor = new JList().getSelectionBackground();
+    private final Color selectionBackground = selectionBackgroundColor;
     private Color selectionForeground = new JList().getSelectionForeground();
     private static final Color LINK_COLOR = UIManager.getColor("nb.html.link.foreground"); //NOI18N
 
-    private ActionRenderer ar = new ActionRenderer();
-    private MoreRevisionsRenderer mr = new MoreRevisionsRenderer();
-    private DefaultListCellRenderer dlcr = new DefaultListCellRenderer();
-    private ListCellRenderer remainingFilesRenderer = new RemainingFilesRenderer();
+    private final ActionRenderer ar = new ActionRenderer();
+    private final MoreRevisionsRenderer mr = new MoreRevisionsRenderer();
+    private final DefaultListCellRenderer dlcr = new DefaultListCellRenderer();
+    private final ListCellRenderer remainingFilesRenderer = new RemainingFilesRenderer();
     private final ListCellRenderer lessFilesRenderer = new LessFilesRenderer();
 
-    private AttributeSet searchHiliteAttrs;
+    private final AttributeSet searchHiliteAttrs;
 
     private static final Icon ICON_COLLAPSED = UIManager.getIcon("Tree.collapsedIcon"); //NOI18N
     private static final Icon ICON_EXPANDED = UIManager.getIcon("Tree.expandedIcon"); //NOI18N
@@ -111,7 +112,7 @@ class SummaryCellRenderer implements ListCellRenderer {
     private static final String PREFIX_PATH_FROM = NbBundle.getMessage(SummaryCellRenderer.class, "MSG_SummaryCellRenderer.pathPrefixFrom"); //NOI18N
     private Collection<VCSHyperlinkProvider> hpInstances;
     
-    Map<Object, Reference<ListCellRenderer>> renderers = new WeakHashMap<Object, Reference<ListCellRenderer>>();
+    private final Map<Object, Reference<ListCellRenderer>> renderers = new WeakHashMap<>();
 
     public SummaryCellRenderer(AbstractSummaryView summaryView, final VCSHyperlinkSupport linkerSupport, Map<String, VCSKenaiAccessor.KenaiUser> kenaiUsersMap) {
         this.summaryView = summaryView;
@@ -132,6 +133,16 @@ class SummaryCellRenderer implements ListCellRenderer {
         return new Color(Math.max((int)(c.getRed() * factor), 0),
              Math.max((int)(c.getGreen() * factor), 0),
              Math.max((int)(c.getBlue() * factor), 0));
+    }
+
+    // blend into background
+    private static Color desaturate(Color f, Color b) {
+        float a = 0.80f;
+        return new Color(
+            (int)(b.getRed()   + a * (f.getRed()   - b.getRed())),
+            (int)(b.getGreen() + a * (f.getGreen() - b.getGreen())),
+            (int)(b.getBlue()  + a * (f.getBlue()  - b.getBlue()))
+        );
     }
 
     private static Color lessInteresting (Color c, Color bg) {
@@ -192,33 +203,38 @@ class SummaryCellRenderer implements ListCellRenderer {
 
     private static final String FIELDS_SEPARATOR = "      "; //NOI18N
 
-    private int getMaxPathWidth (JList list, RevisionItem revision, Graphics g) {
+    private int getMaxPathWidth(JList list, RevisionItem revision, Graphics g) {
         assert revision.revisionExpanded;
         assert EventQueue.isDispatchThread();
-        
-        Collection<AbstractSummaryView.LogEntry.Event> events = revision.getUserData().isEventsInitialized()
+
+        Collection<LogEntry.Event> events = revision.getUserData().isEventsInitialized()
                 ? revision.getUserData().getEvents()
                 : revision.getUserData().getDummyEvents();
-        int maxWidth = -1;
-        if (events.size() < 20) {
-            for (AbstractSummaryView.LogEntry.Event event : events) {
-                int i = 0;
-                for (String path : getInterestingPaths(event)) {
-                    if (++i == 2) {
-                        if (path == null) {
-                            break;
-                        } else {
-                            path = PREFIX_PATH_FROM + path;
-                        }
-                    }
-                    StringBuilder sb = new StringBuilder(event.getAction()).append(" ").append(path);
-                    FontMetrics fm = list.getFontMetrics(list.getFont());
-                    Rectangle2D rect = fm.getStringBounds(sb.toString(), g);
-                    maxWidth = Math.max(maxWidth, (int) rect.getWidth() + 1);
+
+        String action = null;
+        String longestPath = null;
+        for (LogEntry.Event event : events) {
+            if (!revision.isEventVisible(event)) {
+                continue;
+            }
+            int i = 0;
+            for (String path : getInterestingPaths(event)) {
+                if (++i == 2) {
+                    path = PREFIX_PATH_FROM + path;
+                }
+                if (longestPath == null || longestPath.length() < path.length()) {
+                    longestPath = path;
+                    action = event.getAction();
                 }
             }
         }
-        return maxWidth;
+        if (longestPath != null) {
+            FontMetrics fm = list.getFontMetrics(list.getFont());
+            Rectangle2D rect = fm.getStringBounds(action + " " + longestPath, g);
+            return (int) rect.getWidth() + 1;
+        } else {
+            return -1;
+        }
     }
     
     public Collection<VCSHyperlinkProvider> getHyperlinkProviders() {
@@ -273,8 +289,13 @@ class SummaryCellRenderer implements ListCellRenderer {
             AbstractSummaryView.LogEntry entry = item.getUserData();
 
             Collection<SearchHighlight> highlights = summaryView.getMaster().getSearchHighlights();
-            if (revisionCell.getRevisionControl().getStyledDocument().getLength() == 0 || revisionCell.getDateControl().getStyledDocument().getLength() == 0 || revisionCell.getAuthorControl().getStyledDocument().getLength() == 0 || revisionCell.getCommitMessageControl().getStyledDocument().getLength() == 0 || selected != lastSelection || item.messageExpanded != lastMessageExpanded || item.revisionExpanded != lastRevisionExpanded
+            if (revisionCell.getRevisionControl().getStyledDocument().getLength() == 0
+                    || revisionCell.getDateControl().getStyledDocument().getLength() == 0
+                    || revisionCell.getAuthorControl().getStyledDocument().getLength() == 0
+                    || revisionCell.getCommitMessageControl().getStyledDocument().getLength() == 0
+                    || selected != lastSelection || item.messageExpanded != lastMessageExpanded || item.revisionExpanded != lastRevisionExpanded
                     || !highlights.equals(lastHighlights)) {
+
                 lastSelection = selected;
                 lastMessageExpanded = item.messageExpanded;
                 lastRevisionExpanded = item.revisionExpanded;
@@ -306,7 +327,7 @@ class SummaryCellRenderer implements ListCellRenderer {
                     addRevision(revisionCell.getRevisionControl(), item, selected, highlights);
                     addCommitMessage(revisionCell.getCommitMessageControl(), item, selected, highlights);
                     addAuthor(revisionCell.getAuthorControl(), item, selected, highlights);
-                    addDate(revisionCell.getDateControl(), item, selected, highlights);
+                    addDate(revisionCell.getDateControl(), item, selected);
                 } catch (BadLocationException e) {
                     ErrorManager.getDefault().notify(e);
                 }
@@ -420,7 +441,7 @@ class SummaryCellRenderer implements ListCellRenderer {
             }
         }
 
-        private void addDate (JTextPane pane, RevisionItem item, boolean selected, Collection<SearchHighlight> highlights) throws BadLocationException {
+        private void addDate (JTextPane pane, RevisionItem item, boolean selected) throws BadLocationException {
 
             LogEntry entry = item.getUserData();
             StyledDocument sd = pane.getStyledDocument();
@@ -456,7 +477,7 @@ class SummaryCellRenderer implements ListCellRenderer {
                 style = normalStyle;
             }
             boolean messageChanged = !entry.getMessage().isEmpty();
-            String commitMessage = entry.getMessage().trim();
+            String commitMessage = entry.getMessage().strip();
             int nlc;
             int i;
             for (i = 0, nlc = -1; i != -1; i = commitMessage.indexOf('\n', i + 1), nlc++);
@@ -496,7 +517,11 @@ class SummaryCellRenderer implements ListCellRenderer {
                     lineEnd = sd.getLength();
                 }
                 Style s = pane.addStyle(null, style);
-                StyleConstants.setBold(s, true);
+                if (item.getUserData().isLessInteresting()) {
+                    StyleConstants.setForeground(s, desaturate(UIManager.getColor("List.foreground"), UIManager.getColor("List.background")));
+                } else {
+                    StyleConstants.setBold(s, true);
+                }
                 sd.setCharacterAttributes(0, lineEnd, s, false);
             }
             
@@ -504,16 +529,15 @@ class SummaryCellRenderer implements ListCellRenderer {
             int doclen = sd.getLength();
 
             
-            if (nlc > 0 && !item.messageExpanded) 
-            {
-                //insert expand link
+            if (nlc > 0) {
+                //insert expand/collapse link
                 ExpandMsgHyperlink el = linkerSupport.getLinker(ExpandMsgHyperlink.class, id);
                 if (el == null) {
-                    el = new ExpandMsgHyperlink(item, sd.getLength(), id);
+                    el = item.messageExpanded ? createCollapseMsgHyperlink(item, sd.getLength(), id)
+                                              : createExpandMsgHyperlink(item, sd.getLength(), id);
                     linkerSupport.add(el, id);
                 }
                 el.insertString(sd, linkStyle);
-
             }
 
             {
@@ -677,7 +701,7 @@ class SummaryCellRenderer implements ListCellRenderer {
             try {
                 int lastY = -1;
                 Rectangle rec = null;
-                List<Rectangle> rects = new LinkedList<Rectangle>();
+                List<Rectangle> rects = new LinkedList<>();
                 // get bounds for every line
                 for (int pos = start; pos <= end; ++pos) {
                     Rectangle startr = tui.modelToView(textPane, pos, Position.Bias.Forward);
@@ -699,7 +723,7 @@ class SummaryCellRenderer implements ListCellRenderer {
                 }
                 rects.add(rec);
                 rects.remove(0);
-                bounds = rects.toArray(new Rectangle[0]);
+                bounds = rects.toArray(Rectangle[]::new);
             } catch (BadLocationException ex) {
                 bounds = null;
             }
@@ -723,7 +747,7 @@ class SummaryCellRenderer implements ListCellRenderer {
         public EventRenderer () {
             pathLabel = new JLabel();
             actionLabel = new JLabel();
-            actionButton = new LinkButton("..."); //NOI18N
+            actionButton = new LinkButton("=>"); //NOI18N
             actionButton.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 
             FlowLayout l = new FlowLayout(FlowLayout.LEFT, 0, 0);
@@ -791,7 +815,14 @@ class SummaryCellRenderer implements ListCellRenderer {
                     }
                 }
                 pathLabel.setText(sb.append("</body></html>").toString()); //NOI18N
-                int width = getMaxPathWidth(list, item.getParent(), pathLabel.getGraphics());
+            }
+            RevisionItem rev = item.getParent();
+            if (rev.showingFiles == -1 || rev.showingFiles != lastShowingFiles) {
+                lastShowingFiles = rev.showingFiles;
+                if (rev.maxPathWidth == null || rev.maxPathWidth.visiblePaths != rev.showingFiles) {
+                    rev.maxPathWidth = new MaxPathWidth(rev.showingFiles, getMaxPathWidth(list, rev, pathLabel.getGraphics()));
+                }
+                int width = rev.maxPathWidth.maxPathWidth;
                 if (width > -1) {
                     width = width + 15 + INDENT - actionLabel.getPreferredSize().width;
                     pathLabel.setPreferredSize(new Dimension(width, pathLabel.getPreferredSize().height));
@@ -811,15 +842,10 @@ class SummaryCellRenderer implements ListCellRenderer {
 
     }
 
-    private static String[] getInterestingPaths (Event event) {
-        List<String> paths = new ArrayList<String>(2);
+    private static List<String> getInterestingPaths(Event event) {
         String path = event.getPath();
         String original = event.getOriginalPath();
-        paths.add(path);
-        if (original != null && !path.equals(original)) {
-            paths.add(original);
-        }
-        return paths.toArray(new String[0]);
+        return original != null && !path.equals(original) ? List.of(path, original) : List.of(path);
     }
     
     private class RemainingFilesRenderer extends JPanel implements ListCellRenderer{
@@ -927,7 +953,7 @@ class SummaryCellRenderer implements ListCellRenderer {
     private class ActionRenderer extends JPanel implements ListCellRenderer{
         private String id;
         private Map<Component, Action> labels;
-        private final Map<String, JLabel> ACTION_LABELS = new HashMap<String, JLabel>();
+        private final Map<String, JLabel> ACTION_LABELS = new HashMap<>();
 
         public ActionRenderer () {
             setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
@@ -939,7 +965,7 @@ class SummaryCellRenderer implements ListCellRenderer {
             Action[] actions = ((AbstractSummaryView.ActionsItem) value).getParent().getUserData().getActions();
             id = ((AbstractSummaryView.ActionsItem) value).getItemId();
             removeAll();
-            labels = new HashMap<Component, Action>(actions.length);
+            labels = new HashMap<>(actions.length);
             Component comp = dlcr.getListCellRendererComponent(list, "<html><a href=\"action\">ACTION_NAME</a>", index, isSelected, cellHasFocus); //NOI18N
             setBackground(comp.getBackground());
             for (Action a : actions) {
@@ -966,11 +992,7 @@ class SummaryCellRenderer implements ListCellRenderer {
         }
 
         private JLabel getLabelFor (String actionName, Color fontColor) {
-            JLabel lbl = ACTION_LABELS.get(actionName);
-            if (lbl== null) {
-                lbl = new JLabel();
-                ACTION_LABELS.put(actionName, lbl);
-            }
+            JLabel lbl = ACTION_LABELS.computeIfAbsent(actionName, k -> new JLabel());
             StringBuilder sb = new StringBuilder("<html><a href=\"action\">"); //NOI18N
             if (fontColor == null) {
                 sb.append(actionName);
@@ -995,10 +1017,11 @@ class SummaryCellRenderer implements ListCellRenderer {
         private final Map<Component, String> tooltips;
         private final Map<Component, Integer> moreLabelValues;
 
+        @SuppressWarnings("NestedAssignment")
         public MoreRevisionsRenderer () {
             setLayout(new FlowLayout(FlowLayout.LEFT, 0, 3));
             setBorder(BorderFactory.createMatteBorder(3, 0, 0, 0, UIManager.getColor("List.background"))); //NOI18N
-            labels = new ArrayList<JLabel>();
+            labels = new ArrayList<>();
             labels.add(new JLabel(NbBundle.getMessage(SummaryCellRenderer.class, "MSG_ShowMore"))); //NOI18N
             labels.add(more10Label = new JLabel());
             labels.add(new JLabel("/")); //NOI18N
@@ -1014,13 +1037,13 @@ class SummaryCellRenderer implements ListCellRenderer {
             labels.get(0).setBorder(BorderFactory.createEmptyBorder(0, INDENT, 0, 0));
             backgroundColor = darker(UIManager.getColor("List.background")); //NOI18N
             
-            moreLabelValues = new HashMap<Component, Integer>(4);
+            moreLabelValues = new HashMap<>(4);
             moreLabelValues.put(more10Label, 10);
             moreLabelValues.put(more50Label, 50);
             moreLabelValues.put(more100Label, 100);
             moreLabelValues.put(allLabel, -1);
             
-            tooltips = new HashMap<Component, String>(4);
+            tooltips = new HashMap<>(4);
             tooltips.put(more10Label, NbBundle.getMessage(SummaryCellRenderer.class, "MSG_Show10MoreRevisions")); //NOI18N
             tooltips.put(more50Label, NbBundle.getMessage(SummaryCellRenderer.class, "MSG_Show50MoreRevisions")); //NOI18N
             tooltips.put(more100Label, NbBundle.getMessage(SummaryCellRenderer.class, "MSG_Show100MoreRevisions")); //NOI18N
@@ -1068,7 +1091,7 @@ class SummaryCellRenderer implements ListCellRenderer {
         }
 
         private class MoreRevisionsHyperlink extends VCSHyperlinkSupport.Hyperlink {
-            private Map<Component, Rectangle> bounds = Collections.<Component, Rectangle>emptyMap();
+            private Map<Component, Rectangle> bounds = Collections.emptyMap();
 
             @Override
             public void computeBounds (JTextPane textPane) {
@@ -1076,10 +1099,12 @@ class SummaryCellRenderer implements ListCellRenderer {
             }
 
             public void computeBounds () {
-                bounds = new HashMap<Component, Rectangle>(labels.size());
-                for (JLabel lbl : new JLabel[] { more10Label, more50Label, more100Label, allLabel }) {
-                    bounds.put(lbl, lbl.getBounds());
-                }
+                bounds = Map.of(
+                    more10Label, more10Label.getBounds(),
+                    more50Label, more50Label.getBounds(),
+                    more100Label, more100Label.getBounds(),
+                    allLabel, allLabel.getBounds()
+                );
             }
 
             @Override
@@ -1121,7 +1146,7 @@ class SummaryCellRenderer implements ListCellRenderer {
         
         public void computeBounds (Map<Component, Action> labels) {
             this.labels = labels;
-            bounds = new HashMap<Component, Rectangle>(labels.size());
+            bounds = new HashMap<>(labels.size());
             for (Map.Entry<Component, Action> e : labels.entrySet()) {
                 bounds.put(e.getKey(), e.getKey().getBounds());
             }
@@ -1156,25 +1181,35 @@ class SummaryCellRenderer implements ListCellRenderer {
         }
     }
 
-    private static final String LINK_STRING = " ..."; //NOI18N
-    private static final int LINK_STRING_LEN = LINK_STRING.length();
+    public ExpandMsgHyperlink createExpandMsgHyperlink(AbstractSummaryView.RevisionItem item, int startoffset, String revision) {
+        return new ExpandMsgHyperlink(item, startoffset, revision, " (...)", NbBundle.getMessage(SummaryCellRenderer.class, "MSG_ExpandCommitMessage")); //NOI18N
+    }
+
+    public ExpandMsgHyperlink createCollapseMsgHyperlink(AbstractSummaryView.RevisionItem item, int startoffset, String revision) {
+        return new ExpandMsgHyperlink(item, startoffset, revision, " ^^^", NbBundle.getMessage(SummaryCellRenderer.class, "MSG_CollapseCommitMessage")); //NOI18N
+    }
+
     private class ExpandMsgHyperlink extends VCSHyperlinkSupport.StyledDocumentHyperlink {
         private Rectangle bounds;
         private final int startoffset;
         private final AbstractSummaryView.RevisionItem item;
         private final String revision;
+        private final String linkString;
+        private final String toolTip;
 
-        public ExpandMsgHyperlink (AbstractSummaryView.RevisionItem item, int startoffset, String revision) {
+        private ExpandMsgHyperlink(RevisionItem item, int startoffset, String revision, String linkString, String toolTip) {
             this.startoffset = startoffset;
             this.revision = revision;
             this.item = item;
+            this.linkString = linkString;
+            this.toolTip = toolTip;
         }
 
         @Override
         public boolean mouseMoved(Point p, JComponent component) {
             if (bounds != null && bounds.contains(p)) {
                 component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                component.setToolTipText(NbBundle.getMessage(SummaryCellRenderer.class, "MSG_ExpandCommitMessage")); //NOI18N
+                component.setToolTipText(toolTip);
                 return true;
             }
             return false;
@@ -1183,7 +1218,7 @@ class SummaryCellRenderer implements ListCellRenderer {
         @Override
         public boolean mouseClicked(Point p) {
             if (bounds != null && bounds.contains(p)) {
-                item.messageExpanded = true;
+                item.messageExpanded = !item.messageExpanded;
                 linkerSupport.remove(this, revision);
                 summaryView.itemChanged(p);
                 return true;
@@ -1204,7 +1239,7 @@ class SummaryCellRenderer implements ListCellRenderer {
                 Rectangle mtv = tui.modelToView(textPane, startoffset, Position.Bias.Forward);
                 if(mtv == null) return;
                 Rectangle startr = mtv.getBounds();
-                mtv = tui.modelToView(textPane, startoffset + LINK_STRING_LEN, Position.Bias.Backward);
+                mtv = tui.modelToView(textPane, startoffset + linkString.length(), Position.Bias.Backward);
                 if(mtv == null) return;
                 Rectangle endr = mtv.getBounds();
 
@@ -1219,7 +1254,7 @@ class SummaryCellRenderer implements ListCellRenderer {
 
         @Override
         public void insertString (StyledDocument sd, Style style) throws BadLocationException {
-            sd.insertString(startoffset, LINK_STRING, style);
+            sd.insertString(startoffset, linkString, style);
         }
     }
 

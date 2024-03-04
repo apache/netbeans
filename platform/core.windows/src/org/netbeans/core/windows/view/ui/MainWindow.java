@@ -511,8 +511,8 @@ public final class MainWindow {
    private static final String ICON_1024 = "org/netbeans/core/startup/frame1024.png"; // NOI18N
    static void initFrameIcons(Frame f) {
        List<Image> currentIcons = f.getIconImages();
-       if( !currentIcons.isEmpty() )
-           return; //do not override icons if they have been already provided elsewhere (JDev)
+       if( !currentIcons.isEmpty() || Utilities.isMac())
+           return; //do not override icons if they have been already provided elsewhere (JDev / macOS uses Dock icon)
        f.setIconImages(Arrays.asList(
                ImageUtilities.loadImage(ICON_16, true),
                ImageUtilities.loadImage(ICON_32, true),

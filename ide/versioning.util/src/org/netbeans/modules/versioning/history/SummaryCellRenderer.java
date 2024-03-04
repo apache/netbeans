@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -79,6 +80,8 @@ import org.openide.ErrorManager;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+
+import static java.util.Locale.ROOT;
 
 /**
  *
@@ -387,7 +390,7 @@ class SummaryCellRenderer implements ListCellRenderer {
                     if (highlight.getKind() == SearchHighlight.Kind.REVISION) {
                         int doclen = sd.getLength();
                         String highlightMessage = highlight.getSearchText();
-                        String revisionText = item.getUserData().getRevision().toLowerCase();
+                        String revisionText = item.getUserData().getRevision().toLowerCase(ROOT);
                         int idx = revisionText.indexOf(highlightMessage);
                         if (idx > -1) {
                             sd.setCharacterAttributes(doclen - revisionText.length() + idx, highlightMessage.length(), hiliteStyle, false);
@@ -549,24 +552,18 @@ class SummaryCellRenderer implements ListCellRenderer {
                 linkerSupport.add(messageTooltip, id);
             }
             
-            if (!selected) {
-                for (SearchHighlight highlight : highlights) {
-                    if (highlight.getKind() == SearchHighlight.Kind.MESSAGE) {
-                        String highlightMessage = highlight.getSearchText();
-                        int idx = commitMessage.toLowerCase().indexOf(highlightMessage);
-                        if (idx == -1) {
-                            if (nlc > 0 && !item.messageExpanded && entry.getMessage().toLowerCase().contains(highlightMessage)) {
-                                sd.setCharacterAttributes(doclen, sd.getLength(), hiliteStyle, false);
-                            }
-                        } else {
-                            sd.setCharacterAttributes(doclen - msglen + idx, highlightMessage.length(), hiliteStyle, false);
+            for (SearchHighlight highlight : highlights) {
+                if (highlight.getKind() == SearchHighlight.Kind.MESSAGE) {
+                    String highlightMessage = highlight.getSearchText();
+                    int idx = commitMessage.toLowerCase().indexOf(highlightMessage);
+                    if (idx == -1) {
+                        if (nlc > 0 && !item.messageExpanded && entry.getMessage().toLowerCase().contains(highlightMessage)) {
+                            sd.setCharacterAttributes(doclen, sd.getLength(), hiliteStyle, false);
                         }
+                    } else {
+                        sd.setCharacterAttributes(doclen - msglen + idx, highlightMessage.length(), hiliteStyle, false);
                     }
                 }
-            }
-
-            if (selected) {
-                sd.setCharacterAttributes(0, Integer.MAX_VALUE, style, false);
             }
         }
 
@@ -738,11 +735,15 @@ class SummaryCellRenderer implements ListCellRenderer {
     private class EventRenderer extends JPanel implements ListCellRenderer {
         
         private boolean lastSelection = false;
+        private String lastSearch = null;
+        private int lastShowingFiles = -1;
         private final JLabel pathLabel;
         private final JLabel actionLabel;
         private final JButton actionButton;
         private String id;
         private final String PATH_COLOR = getColorString(lessInteresting(UIManager.getColor("List.foreground"), UIManager.getColor("List.background"))); //NOI18N
+        private final String SEARCH_COLOR_BG = getColorString((Color) Objects.requireNonNullElse(searchHiliteAttrs.getAttribute(StyleConstants.Background), Color.BLUE)); //NOI18N
+        private final String SEARCH_COLOR_FG = getColorString((Color) Objects.requireNonNullElse(searchHiliteAttrs.getAttribute(StyleConstants.Foreground), UIManager.getColor("List.foreground"))); //NOI18N
 
         public EventRenderer () {
             pathLabel = new JLabel();
@@ -760,10 +761,13 @@ class SummaryCellRenderer implements ListCellRenderer {
         }
         
         @Override
+        @SuppressWarnings("NestedAssignment")
         public Component getListCellRendererComponent (JList list, Object value, int index, boolean selected, boolean hasFocus) {
             AbstractSummaryView.EventItem item = (AbstractSummaryView.EventItem) value;
-            if (pathLabel.getText().isEmpty() || lastSelection != selected) {
+            String search = getSearchString();
+            if (pathLabel.getText().isEmpty() || lastSelection != selected || seearchUpdate(item, lastSearch, search)) {
                 lastSelection = selected;
+                lastSearch = search;
                 Color foregroundColor, backgroundColor;
                 if (selected) {
                     foregroundColor = selectionForeground;
@@ -782,7 +786,7 @@ class SummaryCellRenderer implements ListCellRenderer {
                 actionLabel.setBackground(backgroundColor);
                 setBackground(backgroundColor);
 
-                StringBuilder sb = new StringBuilder("<html><body>"); //NOI18N
+                StringBuilder sb = new StringBuilder(80).append("<html><body>"); //NOI18N
                 sb.append("<b>"); //NOI18N
                 String action = item.getUserData().getAction();
                 String color = summaryView.getActionColors().get(action);
@@ -795,7 +799,7 @@ class SummaryCellRenderer implements ListCellRenderer {
                 sb.append("</b></body></html>"); //NOI18N
                 actionLabel.setText(sb.toString());
 
-                sb = new StringBuilder("<html><body>"); //NOI18N
+                sb = new StringBuilder(180).append("<html><body>"); //NOI18N
                 int i = 0;
                 for (String path : getInterestingPaths(item.getUserData())) {
                     if (++i == 2 && path == null) {
@@ -806,8 +810,18 @@ class SummaryCellRenderer implements ListCellRenderer {
                         // additional path information (like replace from, copied from, etc.)
                         sb.append("<br>").append(PREFIX_PATH_FROM); //NOI18N
                     }
-                    if (idx < 0 || selected) {
-                        sb.append(path);
+                    if (idx < 0 || selected || search != null) {
+                        int matchStart;
+                        if (search != null && (matchStart = path.toLowerCase(ROOT).lastIndexOf(search)) != -1) {
+                            int matchEnd = matchStart + search.length();
+                            sb.append(path.substring(0, matchStart));
+                            sb.append("<span style=\"background-color:").append(SEARCH_COLOR_BG).append(";color:").append(SEARCH_COLOR_FG).append(";\">");
+                            sb.append(path.substring(matchStart, matchEnd));
+                            sb.append("</span>");
+                            sb.append(path.substring(matchEnd, path.length()));
+                        } else {
+                            sb.append(path);
+                        }
                     } else {
                         ++idx;
                         sb.append("<font color=\"").append(PATH_COLOR).append("\">").append(path.substring(0, idx)).append("</font>"); //NOI18N
@@ -829,6 +843,33 @@ class SummaryCellRenderer implements ListCellRenderer {
                 }
             }
             return this;
+        }
+
+        @SuppressWarnings("AssignmentToForLoopParameter")
+        private boolean seearchUpdate(AbstractSummaryView.EventItem item, String oldsearch, String newsearch) {
+            if (Objects.equals(oldsearch, newsearch)) {
+                return false;
+            } else {
+                for (String path : getInterestingPaths(item.getUserData())) {
+                    path = path.toLowerCase(ROOT);
+                    if (oldsearch != null && path.contains(oldsearch)) {
+                        return true;
+                    }
+                    if (newsearch != null && path.contains(newsearch)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private String getSearchString() {
+            for (SearchHighlight search : summaryView.getMaster().getSearchHighlights()) {
+                if (search.getKind() == SearchHighlight.Kind.FILE) {
+                    return search.getSearchText().isBlank() ? null : search.getSearchText();
+                }
+            }
+            return null;
         }
 
         @Override
@@ -1037,17 +1078,19 @@ class SummaryCellRenderer implements ListCellRenderer {
             labels.get(0).setBorder(BorderFactory.createEmptyBorder(0, INDENT, 0, 0));
             backgroundColor = darker(UIManager.getColor("List.background")); //NOI18N
             
-            moreLabelValues = new HashMap<>(4);
-            moreLabelValues.put(more10Label, 10);
-            moreLabelValues.put(more50Label, 50);
-            moreLabelValues.put(more100Label, 100);
-            moreLabelValues.put(allLabel, -1);
+            moreLabelValues = Map.of(
+                more10Label, 10,
+                more50Label, 50,
+                more100Label, 100,
+                allLabel, -1
+            );
             
-            tooltips = new HashMap<>(4);
-            tooltips.put(more10Label, NbBundle.getMessage(SummaryCellRenderer.class, "MSG_Show10MoreRevisions")); //NOI18N
-            tooltips.put(more50Label, NbBundle.getMessage(SummaryCellRenderer.class, "MSG_Show50MoreRevisions")); //NOI18N
-            tooltips.put(more100Label, NbBundle.getMessage(SummaryCellRenderer.class, "MSG_Show100MoreRevisions")); //NOI18N
-            tooltips.put(allLabel, NbBundle.getMessage(SummaryCellRenderer.class, "MSG_ShowMoreRevisionsAll")); //NOI18N
+            tooltips = Map.of(
+                more10Label, NbBundle.getMessage(SummaryCellRenderer.class, "MSG_Show10MoreRevisions"), //NOI18N
+                more50Label, NbBundle.getMessage(SummaryCellRenderer.class, "MSG_Show50MoreRevisions"), //NOI18N
+                more100Label, NbBundle.getMessage(SummaryCellRenderer.class, "MSG_Show100MoreRevisions"), //NOI18N
+                allLabel, NbBundle.getMessage(SummaryCellRenderer.class, "MSG_ShowMoreRevisionsAll") //NOI18N
+            );
         }
         
         @Override

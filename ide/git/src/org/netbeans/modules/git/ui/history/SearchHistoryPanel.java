@@ -46,6 +46,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.WeakHashMap;
+import java.util.stream.Collectors;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
@@ -63,6 +65,7 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import org.netbeans.libs.git.GitBranch;
 import org.netbeans.libs.git.GitException;
+import org.netbeans.libs.git.GitRevisionInfo;
 import org.netbeans.libs.git.GitTag;
 import org.netbeans.modules.git.Git;
 import org.netbeans.modules.git.GitModuleConfig;
@@ -76,6 +79,8 @@ import org.netbeans.modules.versioning.util.VCSKenaiAccessor;
 import org.openide.awt.Actions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.WeakListeners;
+
+import static java.util.Locale.ROOT;
 
 /**
  * Contains all components of the Search History panel.
@@ -102,6 +107,7 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
     private Action nextAction;
     private Action prevAction;
     private final File repository;
+    private final ExplorerManager explorerManager;
     
     private static final Icon ICON_COLLAPSED = UIManager.getIcon("Tree.collapsedIcon"); //NOI18N
     private static final Icon ICON_EXPANDED = UIManager.getIcon("Tree.expandedIcon"); //NOI18N
@@ -119,13 +125,15 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
     private final PropertyChangeListener list;
 
     enum FilterKind {
+
         ALL(null, NbBundle.getMessage(SearchHistoryPanel.class, "Filter.All")), //NOI18N
         MESSAGE(SearchHighlight.Kind.MESSAGE, NbBundle.getMessage(SearchHistoryPanel.class, "Filter.Message")), //NOI18N
         USER(SearchHighlight.Kind.AUTHOR, NbBundle.getMessage(SearchHistoryPanel.class, "Filter.User")), //NOI18N
         ID(SearchHighlight.Kind.REVISION, NbBundle.getMessage(SearchHistoryPanel.class, "Filter.Commit")), //NOI18N
         FILE(SearchHighlight.Kind.FILE, NbBundle.getMessage(SearchHistoryPanel.class, "Filter.File")); //NOI18N
-        private String label;
-        private SearchHighlight.Kind kind;
+
+        private final String label;
+        private final SearchHighlight.Kind kind;
         
         FilterKind (SearchHighlight.Kind kind, String label) {
             this.kind = kind;
@@ -241,9 +249,6 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
         refreshBranchFilterModel();
     }
 
-
-    private ExplorerManager             explorerManager;
-
     private Action createJumpAction(String prevOrNext, JButton button, Runnable onActionPerformed) {
         Action mainAction = Actions.forID("System", "org.netbeans.core.actions.Jump"+prevOrNext+"Action"); // NOI18N
         String hotkey = ""; // NOI18N
@@ -331,6 +336,9 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
         updateActions();
         fileInfoCheckBox.setVisible(tbSummary.isSelected());
         layoutButton.setVisible(!tbSummary.isSelected());
+        bPrev.setVisible(!tbSummary.isSelected());
+        bNext.setVisible(!tbSummary.isSelected());
+        jSeparator3.setVisible(!tbSummary.isSelected());
 
         searchCriteriaPanel.setVisible(criteriaVisible);
         bSearch.setVisible(criteriaVisible);
@@ -597,16 +605,11 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
     }//GEN-LAST:event_expandCriteriaButtonActionPerformed
 
     private void cmbFilterKindActionPerformed (java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbFilterKindActionPerformed
-        boolean filterCritVisible = cmbFilterKind.getSelectedItem() != FilterKind.ALL;
-        lblFilterContains.setVisible(filterCritVisible);
-        txtFilter.setVisible(filterCritVisible);
-        if (filterCritVisible) {
-            EventQueue.invokeLater(() -> {
-                if (!cmbFilterKind.isPopupVisible()) {
-                    txtFilter.requestFocusInWindow();
-                }
-            });
-        }
+        EventQueue.invokeLater(() -> {
+            if (!cmbFilterKind.isPopupVisible()) {
+                txtFilter.requestFocusInWindow();
+            }
+        });
         if (filterTimer != null && !txtFilter.getText().isBlank()) {
             filterTimer.restart();
         }
@@ -760,13 +763,18 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
                 NbBundle.getMessage(SearchHistoryPanel.class, "MSG_SearchHistoryPanel.GettingMoreRevisions")); //NOI18N
     }
 
-    Collection<SearchHighlight> getSearchHighlights () {
-        String filterText = txtFilter.getText().trim();
+    Collection<SearchHighlight> getSearchHighlights() {
+        String filterText = txtFilter.getText().strip();
         Object selectedFilterKind = cmbFilterKind.getSelectedItem();
-        if (selectedFilterKind == FilterKind.ALL || filterText.isEmpty() || !(selectedFilterKind instanceof FilterKind)) {
+        if (filterText.isEmpty() || !(selectedFilterKind instanceof FilterKind)) {
             return Collections.emptyList();
+        } else if (selectedFilterKind == FilterKind.ALL) {
+            return List.of(new SearchHighlight(SearchHighlight.Kind.AUTHOR, filterText),
+                           new SearchHighlight(SearchHighlight.Kind.MESSAGE, filterText),
+                           new SearchHighlight(SearchHighlight.Kind.REVISION, filterText),
+                           new SearchHighlight(SearchHighlight.Kind.FILE, filterText));
         } else {
-            return Set.of(new SearchHighlight(((FilterKind) selectedFilterKind).kind, filterText));
+            return List.of(new SearchHighlight(((FilterKind) selectedFilterKind).kind, filterText));
         }
     }
 
@@ -776,47 +784,79 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
         filterModel.addElement(FilterKind.ID);
         filterModel.addElement(FilterKind.MESSAGE);
         filterModel.addElement(FilterKind.USER);
-//        filterModel.addElement(FilterKind.FILE);
+        filterModel.addElement(FilterKind.FILE);
         cmbFilterKind.setModel(filterModel);
         cmbFilterKind.setSelectedItem(FilterKind.ALL);
         txtFilter.getDocument().addDocumentListener(this);
     }
 
-    private List<RepositoryRevision> filter (List<RepositoryRevision> results) {
-        List<RepositoryRevision> newResults = new ArrayList<>(results.size());
-        for (RepositoryRevision rev : results) {
-            if (applyFilter(rev)) {
-                newResults.add(rev);
-            }
-        }
-        return newResults;
+    private List<RepositoryRevision> filter(List<RepositoryRevision> results) {
+        FilterKind kind = (FilterKind)cmbFilterKind.getSelectedItem();
+        String filter = txtFilter.getText().strip().toLowerCase(ROOT);
+        return results.stream()
+                      .filter(rev -> applyFilter(rev, kind, filter))
+                      .collect(Collectors.toList());
     }
 
-    boolean applyFilter (RepositoryRevision rev) {
-        boolean visible = true;
-        String filterText = txtFilter.getText().strip().toLowerCase();
-        Object selectedFilterKind = cmbFilterKind.getSelectedItem();
-        if (selectedFilterKind != FilterKind.ALL && !filterText.isEmpty()) {
-            if (selectedFilterKind == FilterKind.MESSAGE) {
-                visible = rev.getLog().getFullMessage().toLowerCase().contains(filterText);
-            } else if (selectedFilterKind == FilterKind.USER) {
-                visible = rev.getLog().getAuthor().toString().toLowerCase().contains(filterText);
-            } else if (selectedFilterKind == FilterKind.ID) {
-                visible = rev.getLog().getRevision().contains(filterText)
-                        || contains(rev.getBranches(), filterText)
-                        || contains(rev.getTags(), filterText);
-            }
+    // TODO record
+    private final class CachedFilterResult {
+        private final FilterKind kind;
+        private final String text;
+        private final boolean matches;
+        private CachedFilterResult(FilterKind kind, String text, boolean matches) {
+            this.kind = kind;
+            this.text = text;
+            this.matches = matches;
         }
-        Object selectedBranchFilter = currentBranchFilter;
-        if (visible && selectedBranchFilter instanceof GitBranch) {
-            visible = rev.getLog().getBranches().containsKey(((GitBranch) currentBranchFilter).getName());
+        private boolean isValidFor(FilterKind kind, String text) {
+            return this.kind == kind && this.text.equals(text);
+        }
+    }
+
+    private final Map<RepositoryRevision, CachedFilterResult> filterResultCache = new WeakHashMap<>();
+
+    boolean applyFilter(RepositoryRevision rev) {
+        return applyFilter(rev, (FilterKind)cmbFilterKind.getSelectedItem(), txtFilter.getText().strip().toLowerCase(ROOT));
+    }
+
+    private boolean applyFilter(RepositoryRevision rev, FilterKind kind, String text) {
+        CachedFilterResult result = filterResultCache.get(rev);
+        if (result == null || !result.isValidFor(kind, text)) {
+            result = new CachedFilterResult(kind, text, applyFilterImpl(rev, kind, text));
+            filterResultCache.put(rev, result);
+        }
+        return result.matches;
+    }
+
+    private boolean applyFilterImpl(RepositoryRevision rev, FilterKind kind, String text) {
+        GitRevisionInfo log = rev.getLog();
+        boolean visible = text.isEmpty()
+            || (allOrEquals(kind, FilterKind.MESSAGE) && log.getFullMessage().toLowerCase(ROOT).contains(text))
+            || (allOrEquals(kind, FilterKind.USER) && log.getAuthor().toString().toLowerCase(ROOT).contains(text))
+            || (allOrEquals(kind, FilterKind.ID) && (log.getRevision().contains(text) || contains(rev.getBranches(), text) || contains(rev.getTags(), text)))
+            || (allOrEquals(kind, FilterKind.FILE) && containsFiles(log, text));
+        if (visible && currentBranchFilter instanceof GitBranch) {
+            visible = log.getBranches().containsKey(((GitBranch) currentBranchFilter).getName());
         }
         return visible;
     }
-    
+
+    private static boolean allOrEquals(FilterKind toCheck, FilterKind required) {
+        return toCheck == FilterKind.ALL || toCheck == required;
+    }
+
+    private boolean containsFiles(GitRevisionInfo log, String text) {
+        try {
+            return log.getModifiedFiles().values().stream()
+                            .anyMatch(f -> f.getRelativePath().toLowerCase(ROOT).contains(text));
+        } catch (GitException ex) {
+            return false;
+        }
+    }
+
     private static boolean contains (GitBranch[] items, String needle) {
         for (GitBranch item : items) {
-            if (item.getName() != GitBranch.NO_BRANCH && item.getName().toLowerCase().contains(needle)) {
+            if (item.getName() != GitBranch.NO_BRANCH && item.getName().toLowerCase(ROOT).contains(needle)) {
                 return true;
             }
         }
@@ -825,7 +865,7 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
     
     private static boolean contains (GitTag[] items, String needle) {
         for (GitTag item : items) {
-            if (item.getTagName().toLowerCase().contains(needle)) {
+            if (item.getTagName().toLowerCase(ROOT).contains(needle)) {
                 return true;
             }
         }

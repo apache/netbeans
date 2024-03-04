@@ -29,8 +29,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.CharConversionException;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -41,12 +45,13 @@ import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.modules.git.options.AnnotationColorProvider;
-import org.netbeans.modules.versioning.history.AbstractSummaryView;
+import org.netbeans.modules.versioning.history.AbstractSummaryView.SummaryViewMaster.SearchHighlight;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.PropertySupport;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
+import org.openide.xml.XMLUtil;
 
 import static org.netbeans.modules.git.utils.GitUtils.getColorString;
 
@@ -99,11 +104,15 @@ class RevisionNode extends AbstractNode {
 
     @Override
     public String getHtmlDisplayName() {
+        // Note: quicksearch highlighting impl for the filename colum is missing.
+        // NB uses a custom html renderer for the tree's primary column which
+        // doesn't support background-color.
+        String name = escape(getName());
         if (isCommitNode()) {
-            return "<b>"+getName()+"</b>";
+            return "<b>"+name+"</b>";
         } else {
             String c = annotationColorForAction(event.getAction());
-            return c != null ? "<font color="+c+">"+getName()+"</font>" : getName();
+            return c != null ? "<font color="+c+">"+name+"</font>" : name;
         }
     }
 
@@ -140,12 +149,12 @@ class RevisionNode extends AbstractNode {
     }
     
     private void initProperties() {
-        AttributeSet searchHiliteAttrs = ((FontColorSettings) MimeLookup.getLookup(MimePath.get("text/x-java")).lookup(FontColorSettings.class)).getFontColors("highlight-search"); //NOI18N
-        Color c = (Color) searchHiliteAttrs.getAttribute(StyleConstants.Background);
+        AttributeSet searchHighlightAttrs = ((FontColorSettings) MimeLookup.getLookup(MimePath.get("text/x-java")).lookup(FontColorSettings.class)).getFontColors("highlight-search"); //NOI18N
+        Color c = (Color) searchHighlightAttrs.getAttribute(StyleConstants.Background);
         if (c != null) {
             bgColor = getColorString(c);
         }
-        c = (Color) searchHiliteAttrs.getAttribute(StyleConstants.Foreground);
+        c = (Color) searchHighlightAttrs.getAttribute(StyleConstants.Foreground);
         if (c != null) {
             fgColor = getColorString(c);
         }
@@ -192,17 +201,27 @@ class RevisionNode extends AbstractNode {
         }
     }
     
-    private static String highlight (String author, String needle, String bgColor, String fgColor) {
+    private static String escape(String text) {
+        try {
+            return XMLUtil.toElementContent(text);
+        } catch (CharConversionException ex) {
+            Logger.getLogger(RevisionNode.class.getName()).log(Level.INFO, "Can not HTML escape: " + text);  //NOI18N
+            return "";  //NOI18N
+        }
+    }
+
+    private static String highlight(String text, String needle, String bgColor, String fgColor) {
         if (fgColor != null && bgColor != null) {
-            int idx = author.toLowerCase().indexOf(needle);
+            int idx = text.toLowerCase(Locale.ROOT).indexOf(needle);
             if (idx != -1) {
-                return new StringBuilder("<html><body>").append(author.substring(0, idx)) //NOI18N
-                        .append("<span style=\"background-color: ").append(bgColor).append("; color: ").append(fgColor).append(";\">") //NOI18N
-                        .append(author.substring(idx, idx + needle.length())).append("</span>") //NOI18N
-                        .append(author.substring(idx + needle.length())).append("</body></html>").toString(); //NOI18N
+                return new StringBuilder(256)
+                    .append("<html><body><nobr>").append(escape(text.substring(0, idx))) //NOI18N
+                    .append("<span style=\"background-color: ").append(bgColor).append("; color: ").append(fgColor).append(";\">") //NOI18N
+                    .append(escape(text.substring(idx, idx + needle.length()))).append("</span>") //NOI18N
+                    .append(escape(text.substring(idx + needle.length()))).append("</nobr></body></html>").toString(); //NOI18N
             }
         }
-        return author;
+        return text;
     }
     
     private class UsernameProperty extends CommitNodeProperty {
@@ -215,8 +234,8 @@ class RevisionNode extends AbstractNode {
         @Override
         public Object getValue() throws IllegalAccessException, InvocationTargetException {
             if (isCommitNode()) {
-                for (AbstractSummaryView.SummaryViewMaster.SearchHighlight h : getLookup().lookup(SearchHistoryPanel.class).getSearchHighlights()) {
-                    if (h.getKind() == AbstractSummaryView.SummaryViewMaster.SearchHighlight.Kind.AUTHOR) {
+                for (SearchHighlight h : getLookup().lookup(SearchHistoryPanel.class).getSearchHighlights()) {
+                    if (h.getKind() == SearchHighlight.Kind.AUTHOR) {
                         return highlight(container.getLog().getAuthor().toString(), h.getSearchText(), bgColor, fgColor);
                     }
                 }
@@ -276,8 +295,8 @@ class RevisionNode extends AbstractNode {
         @Override
         public Object getValue() throws IllegalAccessException, InvocationTargetException {
             if (isCommitNode()) {
-                for (AbstractSummaryView.SummaryViewMaster.SearchHighlight h : getLookup().lookup(SearchHistoryPanel.class).getSearchHighlights()) {
-                    if (h.getKind() == AbstractSummaryView.SummaryViewMaster.SearchHighlight.Kind.MESSAGE) {
+                for (SearchHighlight h : getLookup().lookup(SearchHistoryPanel.class).getSearchHighlights()) {
+                    if (h.getKind() == SearchHighlight.Kind.MESSAGE) {
                         return highlight(container.getLog().getFullMessage(), h.getSearchText(), bgColor, fgColor);
                     }
                 }

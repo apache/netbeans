@@ -73,13 +73,13 @@ class DiffTreeTable extends OutlineView {
         setPropertyColumnDescription(RevisionNode.COLUMN_NAME_DATE, loc.getString("LBL_DiffTree_Column_Time_Desc"));
         setPropertyColumnDescription(RevisionNode.COLUMN_NAME_USERNAME, loc.getString("LBL_DiffTree_Column_Username_Desc"));
         setPropertyColumnDescription(RevisionNode.COLUMN_NAME_MESSAGE, loc.getString("LBL_DiffTree_Column_Message_Desc"));
+        TableColumn msgColumn = getOutline().getColumn(loc.getString("LBL_DiffTree_Column_Message"));
+        msgColumn.setCellRenderer(new MessageRenderer(getOutline().getCellRenderer(0, msgColumn.getModelIndex())));
         TableColumnModel model = getOutline().getColumnModel();
         if (model instanceof ETableColumnModel) {
             ((ETableColumnModel) model).setColumnHidden(model.getColumn(1), true);
         }
         setDefaultColumnSizes();
-        TableColumn column = getOutline().getColumn(loc.getString("LBL_DiffTree_Column_Message"));
-        column.setCellRenderer(new MessageRenderer(getOutline().getDefaultRenderer(String.class)));
     }
     
     private void setDefaultColumnSizes() {
@@ -188,13 +188,19 @@ class DiffTreeTable extends OutlineView {
                     String tooltip = tooltips.get(val);
                     if (tooltip == null) {
                         tooltip = val.replace("\r\n", "\n").replace("\r", "\n"); //NOI18N
-                        try {
-                            tooltip = XMLUtil.toElementContent(tooltip);
-                        } catch (CharConversionException e1) {
-                            Logger.getLogger(DiffTreeTable.class.getName()).log(Level.INFO, "Can not HTML escape: ", tooltip);  //NOI18N
+                        boolean highlighterActive = tooltip.startsWith("<html>");
+                        if (!highlighterActive) {
+                            try {
+                                tooltip = XMLUtil.toElementContent(tooltip);
+                            } catch (CharConversionException e1) {
+                                Logger.getLogger(DiffTreeTable.class.getName()).log(Level.INFO, "Can not HTML escape: " + tooltip);  //NOI18N
+                            }
                         }
                         if (tooltip.contains("\n")) {
-                            tooltip = "<html><body><p>" + tooltip.replace("\n", "<br>") + "</p></body></html>"; //NOI18N
+                            tooltip = tooltip.replace("\n", "<br>");
+                            if (!highlighterActive) {
+                                tooltip = "<html><body><p>" + tooltip + "</p></body></html>"; //NOI18N
+                            }
                             c.setToolTipText(tooltip);
                         }
                         tooltips.put(val, tooltip);

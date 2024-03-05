@@ -258,9 +258,7 @@ public class QueryController implements org.netbeans.modules.bugtracking.spi.Que
     public void opened() {
         wasOpened = true;
         if(query.isSaved()) {
-            setIssueCount(query.getSize()); // XXX this probably won't work
-                                            // if the query is alredy open and
-                                            // a refresh is invoked on kenai
+            setIssueCount(query.getSize());
             if(!query.wasRun()) {
                 onRefresh();
             }

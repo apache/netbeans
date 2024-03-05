@@ -36,9 +36,7 @@ import javax.swing.plaf.TextUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
 import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor.KenaiUser;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -267,23 +265,26 @@ public class VCSHyperlinkSupport {
         }
     }
 
+    // unused
+    @SuppressWarnings("removal")
+    @Deprecated(forRemoval = true)
     public static class AuthorLinker extends StyledDocumentHyperlink {
         private static final String AUTHOR_ICON_STYLE   = "authorIconStyle";    // NOI18N
 
         private Rectangle bounds;
         private final int docstart;
         private final int docend;
-        private final KenaiUser kenaiUser;
         private final String author;
         private final Style authorStyle;
         private final String insertToChat;
 
-        public AuthorLinker(KenaiUser kenaiUser, Style authorStyle, StyledDocument sd, String author) throws BadLocationException {
-            this(kenaiUser, authorStyle, sd, author, null);
+        @Deprecated(forRemoval = true)
+        public AuthorLinker(org.netbeans.modules.versioning.util.VCSKenaiAccessor.KenaiUser kenaiUser, Style authorStyle, StyledDocument sd, String author) throws BadLocationException {
+            this(null, authorStyle, sd, author, null);
         }
 
-        public AuthorLinker(KenaiUser kenaiUser, Style authorStyle, StyledDocument sd, String author, String insertToChat) throws BadLocationException {
-            this.kenaiUser = kenaiUser;
+        @Deprecated(forRemoval = true)
+        public AuthorLinker(org.netbeans.modules.versioning.util.VCSKenaiAccessor.KenaiUser kenaiUser, Style authorStyle, StyledDocument sd, String author, String insertToChat) throws BadLocationException {
             this.author = author;
             this.authorStyle = authorStyle;
             this.insertToChat = insertToChat;
@@ -307,9 +308,6 @@ public class VCSHyperlinkSupport {
             try {
                 Rectangle startr = tui.modelToView(textPane, docstart, Position.Bias.Forward).getBounds();
                 Rectangle endr = tui.modelToView(textPane, docend, Position.Bias.Backward).getBounds();
-                if(kenaiUser.getIcon() != null) {
-                    endr.x += kenaiUser.getIcon().getIconWidth();
-                }
                 this.bounds = new Rectangle(tpBounds.x + startr.x, startr.y, endr.x - startr.x, startr.height);
                 
                 if (null != translator) {
@@ -323,11 +321,6 @@ public class VCSHyperlinkSupport {
         @Override
         public boolean mouseClicked(Point p) {
             if (bounds != null && bounds.contains(p)) {
-                if(insertToChat != null) {
-                    kenaiUser.startChat(insertToChat);
-                } else {
-                    kenaiUser.startChat();
-                }
                 return true;
             }
             return false;
@@ -354,7 +347,6 @@ public class VCSHyperlinkSupport {
             Style iconStyle = sd.getStyle(iconStyleName);
             if(iconStyle == null) {
                 iconStyle = sd.addStyle(iconStyleName, null);
-                StyleConstants.setIcon(iconStyle, kenaiUser.getIcon());
             }
             sd.insertString(sd.getLength(), " ", style);
             sd.insertString(sd.getLength(), " ", iconStyle);

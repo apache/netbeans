@@ -25,7 +25,6 @@ import org.netbeans.modules.team.spi.TeamBugtrackingConnector.BugtrackingType;
 /**
  * Wrapper for a TeamProject instance returned by team
  * @author Tomas Stupka
- * @see org.netbeans.modules.kenai.ui.api.NbModuleOwnerSupport
  */
 public abstract class TeamProject {
 

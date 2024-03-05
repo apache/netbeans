@@ -19,8 +19,6 @@
 
 package org.netbeans.modules.bugtracking.ui.repository;
 
-import org.netbeans.modules.bugtracking.ui.repository.RepositoryComboModel;
-import javax.swing.ComboBoxModel;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

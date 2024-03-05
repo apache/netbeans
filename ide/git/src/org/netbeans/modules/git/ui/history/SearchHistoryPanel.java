@@ -69,7 +69,6 @@ import org.netbeans.modules.git.ui.history.SearchHistoryTopComponent.DiffResults
 import org.netbeans.modules.git.ui.history.SummaryView.GitLogEntry;
 import org.netbeans.modules.git.ui.repository.RepositoryInfo;
 import org.netbeans.modules.versioning.history.AbstractSummaryView.SummaryViewMaster.SearchHighlight;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor;
 import org.openide.awt.Actions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.WeakListeners;
@@ -104,7 +103,6 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
     private static final Icon ICON_EXPANDED = UIManager.getIcon("Tree.expandedIcon"); //NOI18N
     
     private int showingResults;
-    private Map<String, VCSKenaiAccessor.KenaiUser> kenaiUserMap;
     private List<GitLogEntry> logEntries;
     private boolean selectFirstRevision;
     private DiffResultsViewFactory diffViewFactory;
@@ -291,7 +289,7 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
             } else {
                 if (tbSummary.isSelected()) {
                     if (summaryView == null) {
-                        summaryView = new SummaryView(this, logEntries = createLogEntries(results), kenaiUserMap);
+                        summaryView = new SummaryView(this, logEntries = createLogEntries(results));
                     }
                     resultsPanel.add(summaryView.getComponent());
                     summaryView.requestFocusInWindow();
@@ -337,13 +335,12 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
         prevAction.setEnabled(!tbSummary.isSelected() && diffView != null && diffView.isPrevEnabled());
     }
 
-    void setResults (List<RepositoryRevision> newResults, Map<String, VCSKenaiAccessor.KenaiUser> kenaiUserMap, int limit) {
-        setResults(newResults, kenaiUserMap, false, limit);
+    void setResults(List<RepositoryRevision> newResults, int limit) {
+        setResults(newResults, false, limit);
     }
 
-    private void setResults (List<RepositoryRevision> newResults, Map<String, VCSKenaiAccessor.KenaiUser> kenaiUserMap, boolean searching, int limit) {
+    private void setResults(List<RepositoryRevision> newResults, boolean searching, int limit) {
         this.results = newResults;
-        this.kenaiUserMap = kenaiUserMap;
         this.searchInProgress = searching;
         showingResults = limit;
         if (newResults != null && newResults.size() < limit) {
@@ -366,7 +363,7 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
     void executeSearch() {
         searchStarted = true;
         cancelBackgroundTasks();
-        setResults(null, null, true, -1);
+        setResults(null, true, -1);
         GitModuleConfig.getDefault().setShowHistoryMerges(criteria.isIncludeMerges());
         if (currentBranch != null) {
             // search history opened with request to work only on current branch
@@ -674,11 +671,6 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
         return showingResults > -1;
     }
     
-    static Map<String, VCSKenaiAccessor.KenaiUser> createKenaiUsersMap (List<RepositoryRevision> results) {
-        // TODO implement kenai support for git
-        return Collections.<String, VCSKenaiAccessor.KenaiUser>emptyMap();
-    }
-    
     void getMoreRevisions (PropertyChangeListener callback, int count) {
         if (currentSearch == null) {
             throw new IllegalStateException("No search task active"); //NOI18N
@@ -819,40 +811,35 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
                 GitClientExceptionHandler.notifyException(ex, true);
                 return;
             }
-            final Map<String, VCSKenaiAccessor.KenaiUser> additionalUsersMap = createKenaiUsersMap(newResults);
             if (!isCanceled()) {
-                EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run () {
-                        if (!isCanceled()) {
-                            Set<String> visibleRevisions = new HashSet<>(results.size());
-                            for (RepositoryRevision rev : results) {
-                                visibleRevisions.add(rev.getLog().getRevision());
+                EventQueue.invokeLater(() -> {
+                    if (!isCanceled()) {
+                        Set<String> visibleRevisions = new HashSet<>(results.size());
+                        for (RepositoryRevision rev : results) {
+                            visibleRevisions.add(rev.getLog().getRevision());
+                        }
+                        
+                        List<RepositoryRevision> toAdd = new ArrayList<>(newResults.size());
+                        for (RepositoryRevision rev : newResults) {
+                            if (!visibleRevisions.contains(rev.getLog().getRevision())) {
+                                toAdd.add(rev);
                             }
-                            
-                            List<RepositoryRevision> toAdd = new ArrayList<>(newResults.size());
-                            for (RepositoryRevision rev : newResults) {
-                                if (!visibleRevisions.contains(rev.getLog().getRevision())) {
-                                    toAdd.add(rev);
-                                }
-                            }
-                            results.addAll(toAdd);
-                            if (count == -1) {
-                                showingResults = -1;
-                            } else {
-                                showingResults = count;
-                            }
-                            if (showingResults > newResults.size()) {
-                                showingResults = -1;
-                            }
-                            logEntries = createLogEntries(results);
-                            kenaiUserMap.putAll(additionalUsersMap);
-                            if (diffView != null) {
-                                diffView.refreshResults(results);
-                            }
-                            if (summaryView != null) {
-                                summaryView.entriesChanged(logEntries);
-                            }
+                        }
+                        results.addAll(toAdd);
+                        if (count == -1) {
+                            showingResults = -1;
+                        } else {
+                            showingResults = count;
+                        }
+                        if (showingResults > newResults.size()) {
+                            showingResults = -1;
+                        }
+                        logEntries = createLogEntries(results);
+                        if (diffView != null) {
+                            diffView.refreshResults(results);
+                        }
+                        if (summaryView != null) {
+                            summaryView.entriesChanged(logEntries);
                         }
                     }
                 });

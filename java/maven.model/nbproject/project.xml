@@ -212,7 +212,6 @@
                 <friend>org.javeleon.netbeans</friend>
                 <friend>org.netbeans.modules.groovy.support</friend>
                 <friend>org.netbeans.modules.hudson.maven</friend>
-                <friend>org.netbeans.modules.kenai.maven</friend>
                 <friend>org.netbeans.modules.licensechanger</friend>
                 <friend>org.netbeans.modules.maven</friend>
                 <friend>org.netbeans.modules.maven.apisupport</friend>

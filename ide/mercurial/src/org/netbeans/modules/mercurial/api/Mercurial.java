@@ -61,38 +61,8 @@ import org.openide.util.RequestProcessor;
 public class Mercurial {
 
     /**
-     * <p><strong>Depracated</strong>, use {@link #cloneRepository(String,File,String,String,String,boolean)} instead.</p>
      * Clones the given repository to the given directory. The method blocks
-     * until the whole chcekout is done. Do not call in AWT.
-     * After the clone a scan for netbeans projects will be started.
-     *
-     * @param  repositoryUrl  URL of the Mercurial repository to be cloned
-     * @param  targetDir  target where  cloned repository should be created
-     * @param  cloneName  name of the cloned repository
-     *                    (name of the root folder of the clone)
-     * @param  defaultPull  initial URL for pulling updates
-     * @param  defaultPush  initial URL for pushing updates
-     */
-    @Deprecated
-    public static void cloneRepository(String repositoryUrl,
-                                       File targetDir,
-                                       String cloneName,
-                                       String defaultPull,
-                                       String defaultPush) throws MalformedURLException {
-        assert !SwingUtilities.isEventDispatchThread() : "Accessing remote repository. Do not call in awt!";
-        cloneRepository(repositoryUrl,
-                        targetDir,
-                        cloneName,
-                        defaultPull,
-                        defaultPush,
-                        null,
-                        null,
-                        true);
-    }
-
-    /**
-     * Clones the given repository to the given directory. The method blocks
-     * until the whole chcekout is done. Do not call in AWT.
+     * until the whole checkout is done. Do not call in AWT.
      *
      * @param  repositoryUrl  URL of the Mercurial repository to be cloned
      * @param  targetDir  target where  cloned repository should be created
@@ -120,42 +90,8 @@ public class Mercurial {
     }
 
     /**
-     * <p><strong>Depracated</strong>, use {@link #cloneRepository(String,File,String,String,String,String,String,boolean)} instead.</p>
      * Clones the given repository to the given directory. The method blocks
-     * until the whole chcekout is done. Do not call in AWT.
-     * After the clone a scan for netbeans projects will be started.
-     *
-     * @param  repositoryUrl  URL of the Mercurial repository to be cloned
-     * @param  targetDir  target where  cloned repository should be created
-     * @param  cloneName  name of the cloned repository
-     *                    (name of the root folder of the clone)
-     * @param  defaultPull  initial URL for pulling updates
-     * @param  defaultPush  initial URL for pushing updates
-     * @param  username  username for access to the given repository
-     * @param  password  password for access to the given repository
-     */
-    @Deprecated
-    public static void cloneRepository(String repositoryUrl,
-                                       File targetDir,
-                                       String cloneName,
-                                       String pullUrl,
-                                       String pushUrl,
-                                       String username,
-                                       String password)
-            throws MalformedURLException {
-        cloneRepository(repositoryUrl,
-                targetDir,
-                cloneName,
-                pullUrl,
-                pushUrl,
-                username,
-                password,
-                true);
-    }
-
-    /**
-     * Clones the given repository to the given directory. The method blocks
-     * until the whole chcekout is done. Do not call in AWT.
+     * until the whole checkout is done. Do not call in AWT.
      *
      * @param  repositoryUrl  URL of the Mercurial repository to be cloned
      * @param  targetDir  target where  cloned repository should be created

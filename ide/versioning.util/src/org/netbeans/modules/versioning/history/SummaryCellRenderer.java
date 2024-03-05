@@ -73,9 +73,7 @@ import org.netbeans.modules.versioning.history.AbstractSummaryView.SummaryViewMa
 import org.netbeans.modules.versioning.util.Utils;
 import org.netbeans.modules.versioning.util.VCSHyperlinkProvider;
 import org.netbeans.modules.versioning.util.VCSHyperlinkSupport;
-import org.netbeans.modules.versioning.util.VCSHyperlinkSupport.AuthorLinker;
 import org.netbeans.modules.versioning.util.VCSHyperlinkSupport.IssueLinker;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor;
 import org.openide.ErrorManager;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -92,7 +90,6 @@ class SummaryCellRenderer implements ListCellRenderer {
     private static final double DARKEN_FACTOR_UNINTERESTING = 0.95;
 
     private final AbstractSummaryView summaryView;
-    private final Map<String, VCSKenaiAccessor.KenaiUser> kenaiUsersMap;
     private final VCSHyperlinkSupport linkerSupport;
 
     private final Color selectionBackgroundColor = new JList().getSelectionBackground();
@@ -117,9 +114,8 @@ class SummaryCellRenderer implements ListCellRenderer {
     
     private final Map<Object, Reference<ListCellRenderer>> renderers = new WeakHashMap<>();
 
-    public SummaryCellRenderer(AbstractSummaryView summaryView, final VCSHyperlinkSupport linkerSupport, Map<String, VCSKenaiAccessor.KenaiUser> kenaiUsersMap) {
+    public SummaryCellRenderer(AbstractSummaryView summaryView, VCSHyperlinkSupport linkerSupport) {
         this.summaryView = summaryView;
-        this.kenaiUsersMap = kenaiUsersMap;
         this.linkerSupport = linkerSupport;
         searchHiliteAttrs = ((FontColorSettings) MimeLookup.getLookup(MimePath.get("text/x-java")).lookup(FontColorSettings.class)).getFontColors("highlight-search"); //NOI18N
     }
@@ -246,14 +242,6 @@ class SummaryCellRenderer implements ListCellRenderer {
             hpInstances = (Collection<VCSHyperlinkProvider>) hpResult.allInstances();
         }
         return hpInstances;
-    }
-
-    public VCSKenaiAccessor.KenaiUser getKenaiUser(String author) {
-        VCSKenaiAccessor.KenaiUser kenaiUser = null;
-        if (kenaiUsersMap != null && author != null && !author.isEmpty()) {
-            kenaiUser = kenaiUsersMap.get(author);
-        }
-        return kenaiUser;
     }
 
     private ListCellRenderer getRenderer (Object value) {
@@ -412,24 +400,11 @@ class SummaryCellRenderer implements ListCellRenderer {
             } else {
                 style = normalStyle;
             }
-            Style authorStyle = createAuthorStyle(pane, normalStyle);
             Style hiliteStyle = createHiliteStyleStyle(pane, normalStyle, searchHiliteAttrs);
             String author = entry.getAuthor();
-            AuthorLinker l = linkerSupport.getLinker(VCSHyperlinkSupport.AuthorLinker.class, id);
-            if(l == null) {
-                VCSKenaiAccessor.KenaiUser kenaiUser = getKenaiUser(author);
-                if (kenaiUser != null) {
-                    l = new VCSHyperlinkSupport.AuthorLinker(kenaiUser, authorStyle, sd, author);
-                    linkerSupport.add(l, id);
-                }
-            }
-            int pos = sd.getLength();
-            if(l != null) {
-                l.insertString(sd, selected ? style : null);
-            } else {
-                sd.insertString(sd.getLength(), author, style);
-            }
+            sd.insertString(sd.getLength(), author, style);
             if (!selected) {
+                int pos = sd.getLength();
                 for (SearchHighlight highlight : highlights) {
                     if (highlight.getKind() == SearchHighlight.Kind.AUTHOR) {
                         int doclen = sd.getLength();
@@ -624,10 +599,6 @@ class SummaryCellRenderer implements ListCellRenderer {
         @Override
         public void paint(Graphics g) {
             super.paint(g);
-            AuthorLinker author = linkerSupport.getLinker(AuthorLinker.class, id);
-            if (author != null) {
-                author.computeBounds(revisionCell.getAuthorControl(), revisionCell);
-            }
             IssueLinker issue = linkerSupport.getLinker(IssueLinker.class, id);
             if (issue != null) {
                 issue.computeBounds(revisionCell.getCommitMessageControl(), revisionCell);

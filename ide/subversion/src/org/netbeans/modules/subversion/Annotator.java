@@ -596,9 +596,6 @@ public class Annotator {
             if (info == null) {
                 filesToRefresh.add(file);
             }
-            if (file.isDirectory()) {
-                Utils.addFolderToLog(file);
-            }
         }
         cache.refreshAsync(filesToRefresh);
 

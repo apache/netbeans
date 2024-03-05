@@ -229,7 +229,6 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
         for (File file : context.getRootFiles()) {
             if (file.isDirectory()) {
                 folderAnnotation = true;
-                Utils.addFolderToLog(file);
                 break;
             }
         }

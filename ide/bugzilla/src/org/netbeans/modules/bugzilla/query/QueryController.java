@@ -67,7 +67,6 @@ import org.netbeans.modules.bugzilla.Bugzilla;
 import org.netbeans.modules.bugzilla.BugzillaConfig;
 import org.netbeans.modules.bugzilla.repository.BugzillaRepository;
 import org.netbeans.modules.bugzilla.issue.BugzillaIssue;
-import org.netbeans.modules.bugzilla.kenai.KenaiRepository;
 import org.netbeans.modules.bugzilla.query.QueryParameter.AllWordsTextFieldParameter;
 import org.netbeans.modules.bugzilla.util.BugzillaUtil;
 import org.netbeans.modules.bugzilla.query.QueryParameter.CheckBoxParameter;
@@ -258,9 +257,7 @@ public class QueryController implements org.netbeans.modules.bugtracking.spi.Que
     public void opened() {
         wasOpened = true;
         if(query.isSaved()) {
-            setIssueCount(query.getSize()); // XXX this probably won't work
-                                            // if the query is alredy open and
-                                            // a refresh is invoked on kenai
+            setIssueCount(query.getSize());
             if(!query.wasRun()) {
                 onRefresh();
             }

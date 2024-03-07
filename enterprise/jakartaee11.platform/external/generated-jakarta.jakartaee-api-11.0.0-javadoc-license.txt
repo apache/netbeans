@@ -2,8 +2,8 @@ Name: JakartaEE API 11.0.0 Documentation
 Version: 11.0.0
 License: EPL-v20
 Description: JakartaEE API 11.0.0 Documentation
-Origin: Eclipse Foundation (https://mvnrepository.com/artifact/jakarta.platform/jakarta.jakartaee-api/11.0.0-M1)
-Files: jakarta.jakartaee-api-11.0.0-M1-javadoc.jar
+Origin: Generated from jakarta.jakartaee-api-11.0.0-M1-javadoc.jar
+Type: generated
 
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.

@@ -21,7 +21,6 @@ package org.netbeans.modules.welcome.content;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -33,18 +32,15 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.SocketException;
 import java.net.URL;
-import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.text.DateFormat;
@@ -105,8 +101,6 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
     private static DateFormat parsingDateFormatLong = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH ); // NOI18N
     private static DateFormat printingDateFormatShort = DateFormat.getDateInstance( DateFormat.SHORT );
     
-    private boolean isCached = false;
-    
     private final Logger LOGGER = Logger.getLogger( RSSFeed.class.getName() );
     
     private int maxDescriptionChars = -1;
@@ -114,13 +108,12 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
     private static final RequestProcessor RP = new RequestProcessor("StartPage"); //NOI18N
 
 
-    /** Returns file for caching of content. 
-     * Enclosing folder is created if it does not exist yet.
-     */
-    private static File initCacheStore(String path) throws IOException {
-        File cacheStore = Places.getCacheSubfile("welcome/" + path); // NOI18N
-        cacheStore.createNewFile();
-        return cacheStore;
+    private static Path getCachePathFor(String path) {
+        return Places.getCacheSubfile("welcome/" + path).toPath(); // NOI18N
+    }
+
+    private static boolean cacheExistsFor(String path) {
+        return Files.exists(getCachePathFor(path));
     }
     
     public RSSFeed( String url, boolean showProxyButton ) {
@@ -185,7 +178,7 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
         return pathSB.toString();
     }
     
-    /** Searches either for localy cached copy of URL content of original.
+    /** Searches either for locally cached copy of URL content of original.
      */
     protected InputSource findInputSource( URL u ) throws IOException {
         HttpURLConnection httpCon = (HttpURLConnection) u.openConnection();
@@ -195,8 +188,8 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
         Preferences prefs = NbPreferences.forModule( RSSFeed.class );
         String path = url2path( u );
         String lastModified = prefs.get( path, null );
-        if( lastModified != null ) {
-            httpCon.addRequestProperty("If-Modified-Since",lastModified); // NOI18N
+        if (lastModified != null && cacheExistsFor(path)) {
+            httpCon.addRequestProperty("If-Modified-Since", lastModified); // NOI18N
         }
 
         if( httpCon instanceof HttpsURLConnection ) {
@@ -211,11 +204,10 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
             //the stream on an HTTP 1.1 connection will
             //maintain the connection waiting and be
             //faster the next time around
-            File cacheFile = initCacheStore(path);
+            Path cacheFile = getCachePathFor(path);
             LOGGER.log(Level.FINE, "Reading content of {0} from {1}", //NOI18N
-                    new Object[] {u.toString(), cacheFile.getAbsolutePath()});
-            isCached = true;
-            return new org.xml.sax.InputSource( new BufferedInputStream( new FileInputStream(cacheFile) ) );
+                    new Object[] {u.toString(), cacheFile.toString()});
+            return new org.xml.sax.InputSource(new BufferedInputStream(Files.newInputStream(cacheFile)));
         } else if( httpCon.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP ) {
             String newUrl = httpCon.getHeaderField( "Location"); //NOI18N
             if( null != newUrl && !newUrl.isEmpty() ) {
@@ -306,71 +298,38 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
                 contentPanel.add( new JLabel(), new GridBagConstraints(0,contentRow++,1,1,0.0,1.0,
                                 GridBagConstraints.CENTER,GridBagConstraints.VERTICAL,new Insets(0,0,0,0),0,0 ) );
 
-                SwingUtilities.invokeLater( new Runnable() {
-                    @Override
-                    public void run() {
-//                        contentPanel.setMinimumSize( contentPanel.getPreferredSize() );
-                        setContent( contentPanel );
-                    }
+                SwingUtilities.invokeLater(() -> {
+                    setContent(contentPanel);
                 });
 
                 //schedule feed reload
                 reloadTimer = RP.post( this, RSS_FEED_TIMER_RELOAD_MILLIS );
 
-            } catch( UnknownHostException uhE ) {
-                SwingUtilities.invokeLater( new Runnable() {
-                    @Override
-                    public void run() {
-                        setContent( buildProxyPanel() );
-                    }
+            } catch (IOException ex) {
+                SwingUtilities.invokeLater(() -> {
+                    setContent(buildProxyPanel());
                 });
-            } catch( SocketException sE ) {
-                SwingUtilities.invokeLater( new Runnable() {
-                    @Override
-                    public void run() {
-                        setContent( buildProxyPanel() );
-                    }
-                });
-            } catch( IOException ioE ) {
-                SwingUtilities.invokeLater( new Runnable() {
-                    @Override
-                    public void run() {
-                        setContent( buildProxyPanel() );
-                    }
-                });
-            } catch( SAXException e ) {
-                // cancel the feed loading task if there is a parse exception
+            } catch (Exception ex) {
                 stopReloading();
-                SwingUtilities.invokeLater( new Runnable() {
-                    @Override
-                    public void run() {
-                        setContent( buildErrorLabel() );
-                    }
-                });
-            } catch( Exception e ) {
-                if( isContentCached()) {
-                    isCached = false;
+                try {
+                    // check if this was a cache issue
                     clearCache();
+                    buildItemList();
                     reload();
                     return;
-                }
-                SwingUtilities.invokeLater( new Runnable() {
-                    @Override
-                    public void run() {
-                        setContent( buildErrorLabel() );
-                    }
+                } catch (Exception ignore) {}
+                SwingUtilities.invokeLater(() -> {
+                    setContent(buildErrorLabel());
                 });
-                ErrorManager.getDefault().notify( ErrorManager.INFORMATIONAL, e );
+                ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
             }
         }
     }
 
     protected void clearCache() {
         try {
-            NbPreferences.forModule( RSSFeed.class ).remove( url2path( new URL(url))) ;
-        } catch( MalformedURLException mE ) {
-            //ignore
-        }
+            NbPreferences.forModule(RSSFeed.class).remove(url2path(new URL(url)));
+        } catch(MalformedURLException ignore) {}
     }
 
     protected Component createFeedItemComponent( FeedItem item ) {
@@ -615,10 +574,6 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
         }
     }
     
-    public boolean isContentCached() {
-        return isCached;
-    }
-
     static class FeedHandler implements ContentHandler {
         private FeedItem currentItem;
         private StringBuffer textBuffer;
@@ -759,8 +714,8 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
         CachingInputStream (InputStream is, String path, String time) 
         throws IOException {
             super(is);
-            File storage = initCacheStore(path);
-            os = new BufferedOutputStream(new FileOutputStream(storage));
+            Path storage = getCachePathFor(path);
+            os = new BufferedOutputStream(Files.newOutputStream(storage));
             modTime = time;
             this.path = path;
         }

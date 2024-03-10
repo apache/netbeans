@@ -69,6 +69,7 @@ import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.WizardDescriptor;
+import org.openide.awt.Mnemonics;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
@@ -150,6 +151,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
                 // (server change was not propagated there yet). In worst case combo model will be set twice:
                 datasourceServerComboBox.setModel(new DefaultComboBoxModel());
                 initializeWithDatasources();
+                Mnemonics.setLocalizedText(datasourceLabel, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_Datasource"));
             }
         };
 
@@ -161,14 +163,11 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
             }
         }
 
-
-        boolean serverIsSelected = ProviderUtil.isValidServerInstanceOrNone(project);
-        boolean canServerBeSelected = ProviderUtil.canServerBeSelected(project);
-
         {
             boolean hasJPADataSourcePopulator = project.getLookup().lookup(JPADataSourcePopulator.class) != null;
             initializeWithDatasources();
             initializeWithDbConnections();
+            Mnemonics.setLocalizedText(datasourceLabel, org.openide.util.NbBundle.getMessage(DatabaseTablesPanel.class, "LBL_Datasource"));
 
             DBSchemaUISupport.connect(dbschemaComboBox, dbschemaFileList);
             boolean hasDBSchemas = (dbschemaComboBox.getItemCount() > 0 && dbschemaComboBox.getItemAt(0) instanceof FileObject);

@@ -146,8 +146,6 @@ public class BatchUtilities {
                     return false;
                 }
 
-                final JavacTaskImpl jt = JavaSourceAccessor.getINSTANCE().getJavacTask(copy);
-                Log.instance(jt.getContext()).nerrors = 0;
                 Method getChanges = WorkingCopy.class.getDeclaredMethod("getChanges", Map.class);
                 getChanges.setAccessible(true);
 
@@ -333,8 +331,6 @@ public class BatchUtilities {
         
                 JavaFixImpl.Accessor.INSTANCE.process(f, perFixCopy, false, perFixResourceContentChanges, new ArrayList<>());
                 
-                final JavacTaskImpl jt = JavaSourceAccessor.getINSTANCE().getJavacTask(perFixCopy);
-                Log.instance(jt.getContext()).nerrors = 0;
                 Method getChanges = WorkingCopy.class.getDeclaredMethod("getChanges", Map.class);
                 getChanges.setAccessible(true);
                 

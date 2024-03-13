@@ -426,24 +426,22 @@ public class JavaCompletionCollector implements CompletionCollector {
             TextEdit textEdit = null;
             String filter = null;
             if (castType != null) {
-                try {
-                    int castStartOffset = assignToVarOffset;
-                    TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
-                    if (castStartOffset < 0) {
-                        if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
-                            castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
-                        }
+                int castStartOffset = assignToVarOffset;
+                TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
+                if (castStartOffset < 0) {
+                    if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
+                        castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
                     }
-                    StringBuilder castText = new StringBuilder();
-                    castText.append("((").append(AutoImport.resolveImport(info, tp, castType)).append(CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")");
-                    int castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), castStartOffset, substitutionOffset);
-                    if (castEndOffset >= 0) {
-                        castText.append(info.getText().subSequence(castStartOffset, castEndOffset)).append(")");
-                        castText.append(info.getText().subSequence(castEndOffset, substitutionOffset)).append(elem.getSimpleName());
-                        textEdit = new TextEdit(castStartOffset, offset, castText.toString());
-                        filter = info.getText().substring(castStartOffset, substitutionOffset) + elem.getSimpleName().toString();
-                    }
-                } catch (IOException ex) {}
+                }
+                StringBuilder castText = new StringBuilder();
+                castText.append("((").append(AutoImport.resolveImport(info, tp, castType)).append(CodeStyle.getDefault(doc).spaceAfterTypeCast() ? ") " : ")");
+                int castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), castStartOffset, substitutionOffset);
+                if (castEndOffset >= 0) {
+                    castText.append(info.getText().subSequence(castStartOffset, castEndOffset)).append(")");
+                    castText.append(info.getText().subSequence(castEndOffset, substitutionOffset)).append(elem.getSimpleName());
+                    textEdit = new TextEdit(castStartOffset, offset, castText.toString());
+                    filter = info.getText().substring(castStartOffset, substitutionOffset) + elem.getSimpleName().toString();
+                }
             }
             if (textEdit != null && filter != null) {
                 builder.textEdit(textEdit)
@@ -522,14 +520,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             labelDetail.append('(');
             sortParams.append('(');
             if (setter) {
-                CodeStyle cs = null;
-                try {
-                    cs = CodeStyle.getDefault(info.getDocument());
-                } catch (IOException ex) {
-                }
-                if (cs == null) {
-                    cs = CodeStyle.getDefault(info.getFileObject());
-                }
+                CodeStyle cs = CodeStyle.getDefault(doc);
                 boolean isStatic = elem.getModifiers().contains(Modifier.STATIC);
                 String simpleName = CodeStyleUtils.removePrefixSuffix(elem.getSimpleName(),
                     isStatic ? cs.getStaticFieldNamePrefix() : cs.getFieldNamePrefix(),
@@ -689,32 +680,69 @@ public class JavaCompletionCollector implements CompletionCollector {
             });
             String label = type.asElement().getSimpleName() + "." + memberElem.getSimpleName();
             String sortText = memberElem.getSimpleName().toString();
+            String memberTypeName;
+            StringBuilder labelDetail = new StringBuilder();
+            StringBuilder insertText = new StringBuilder(label);
+            boolean asTemplate = false;
             if (memberElem.getKind().isField()) {
+                memberTypeName = Utilities.getTypeName(info, memberType, false).toString();
                 sortText += String.format("#%s", Utilities.getTypeName(info, type, false)); //NOI18N
-            } else {
+            } else if (memberElem.getKind() == ElementKind.METHOD) {
+                CodeStyle cs = CodeStyle.getDefault(doc);
+                memberTypeName = Utilities.getTypeName(info, ((ExecutableType) memberType).getReturnType(), false).toString();
                 StringBuilder sortParams = new StringBuilder();
+                labelDetail.append('(');
                 sortParams.append('(');
+                insertText.append(cs.spaceBeforeMethodCallParen() ? " (" : "(");
                 int cnt = 0;
-                Iterator<? extends TypeMirror> tIt = ((ExecutableType)memberType).getParameterTypes().iterator();
-                while(tIt.hasNext()) {
+                Iterator<? extends VariableElement> it = ((ExecutableElement) memberElem).getParameters().iterator();
+                Iterator<? extends TypeMirror> tIt = ((ExecutableType) memberType).getParameterTypes().iterator();
+                while (it.hasNext() && tIt.hasNext()) {
                     TypeMirror tm = tIt.next();
                     if (tm == null) {
                         break;
                     }
-                    sortParams.append(Utilities.getTypeName(info, tm, false, ((ExecutableElement)memberElem).isVarArgs() && !tIt.hasNext()).toString());
+                    String paramTypeName = Utilities.getTypeName(info, tm, false, ((ExecutableElement) memberElem).isVarArgs() && !tIt.hasNext()).toString();
+                    String paramName = it.next().getSimpleName().toString();
+                    labelDetail.append(paramTypeName).append(' ').append(paramName);
+                    sortParams.append(paramTypeName);
+                    VariableElement inst = instanceOf(tm, paramName);
+                    if (cnt == 0 && cs.spaceWithinMethodCallParens()) {
+                        insertText.append(' ');
+                    }
+                    insertText.append("${").append(cnt).append(":").append(inst != null ? inst.getSimpleName() : paramName).append("}");
+                    asTemplate = true;
                     if (tIt.hasNext()) {
+                        labelDetail.append(", ");
                         sortParams.append(',');
+                        if (cs.spaceBeforeComma()) {
+                            insertText.append(' ');
+                        }
+                        insertText.append(',');
+                        if (cs.spaceAfterComma()) {
+                            insertText.append(' ');
+                        }
+                    } else if (cs.spaceWithinMethodCallParens()) {
+                        insertText.append(' ');
                     }
                     cnt++;
                 }
+                labelDetail.append(')');
                 sortParams.append(')');
+                insertText.append(')');
                 sortText += String.format("#%02d#%s#s", cnt, sortParams.toString(), Utilities.getTypeName(info, type, false)); //NOI18N
+            } else {
+                return null;
             }
             CompletionCollector.Builder builder = CompletionCollector.newBuilder(label)
                     .kind(elementKind2CompletionItemKind(memberElem.getKind()))
-                    .insertText(label)
-                    .insertTextFormat(Completion.TextFormat.PlainText)
+                    .labelDescription(memberTypeName)
+                    .insertText(insertText.toString())
+                    .insertTextFormat(asTemplate ? Completion.TextFormat.Snippet : Completion.TextFormat.PlainText)
                     .sortText(String.format("%04d%s", memberElem.getKind().isField() ? 720 : 750, sortText));
+            if (labelDetail.length() > 0) {
+                builder.labelDetail(labelDetail.toString());
+            }
             if (currentClassImport != null) {
                 builder.additionalTextEdits(Collections.singletonList(currentClassImport));
             }
@@ -745,16 +773,9 @@ public class JavaCompletionCollector implements CompletionCollector {
             StringBuilder sortParams = new StringBuilder();
             labelDetail.append('(');
             sortParams.append('(');
-            CodeStyle cs = null;
-            try {
-                cs = CodeStyle.getDefault(info.getDocument());
-            } catch (IOException ex) {
-            }
-            if (cs == null) {
-                cs = CodeStyle.getDefault(info.getFileObject());
-            }
             int cnt = 0;
             if (!isDefault) {
+                CodeStyle cs = CodeStyle.getDefault(doc);
                 for (VariableElement ve : fields) {
                     if (cnt > 0) {
                         labelDetail.append(", ");
@@ -826,6 +847,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             StringBuilder label = new StringBuilder();
             StringBuilder insertText = new StringBuilder();
             StringBuilder sortText = new StringBuilder();
+            CodeStyle cs = CodeStyle.getDefault(doc);
             label.append('(');
             insertText.append('(');
             sortText.append('(');
@@ -839,10 +861,8 @@ public class JavaCompletionCollector implements CompletionCollector {
                 if (tm == null) {
                     break;
                 }
-                if (cnt > 0) {
-                    label.append(", ");
-                    insertText.append(", ");
-                    sortText.append(',');
+                if (cnt == 0 && cs.spaceWithinLambdaParens()) {
+                    insertText.append(' ');
                 }
                 cnt++;
                 String paramTypeName = Utilities.getTypeName(info, tm, false, desc.isVarArgs() && !tIt.hasNext()).toString();
@@ -852,17 +872,22 @@ public class JavaCompletionCollector implements CompletionCollector {
                 label.append(paramName);
                 insertText.append("${").append(cnt).append(":").append(paramName).append("}");
                 sortText.append(paramTypeName);
+                if (it.hasNext()) {
+                    label.append(", ");
+                    sortText.append(',');
+                    if (cs.spaceBeforeComma()) {
+                        insertText.append(' ');
+                    }
+                    insertText.append(',');
+                    if (cs.spaceAfterComma()) {
+                        insertText.append(' ');
+                    }
+                } else if (cs.spaceWithinLambdaParens()) {
+                    insertText.append(' ');
+                }
             }
             TypeMirror retType = descType.getReturnType();
             label.append(") -> ").append(Utilities.getTypeName(info, retType, false));
-            CodeStyle cs = null;
-            try {
-                cs = CodeStyle.getDefault(info.getDocument());
-            } catch (IOException ex) {
-            }
-            if (cs == null) {
-                cs = CodeStyle.getDefault(info.getFileObject());
-            }
             insertText.append(cs.spaceAroundLambdaArrow() ? ") ->" : ")->"); //NOI18N
             if (cs.getOtherBracePlacement() == CodeStyle.BracePlacement.SAME_LINE) {
                 insertText.append(cs.spaceAroundLambdaArrow() ? " {\n$0}" : "{\n$0}");
@@ -1033,8 +1058,9 @@ public class JavaCompletionCollector implements CompletionCollector {
             StringBuilder sortParams = new StringBuilder();
             insertText.append(simpleName);
             labelDetail.append("(");
+            CodeStyle cs = CodeStyle.getDefault(doc);
             if (!inImport && !memberRef) {
-                insertText.append(CodeStyle.getDefault(doc).spaceBeforeMethodCallParen() ? " (" : "(");
+                insertText.append(cs.spaceBeforeMethodCallParen() ? " (" : "(");
             }
             sortParams.append('(');
             int cnt = 0;
@@ -1044,6 +1070,9 @@ public class JavaCompletionCollector implements CompletionCollector {
                 TypeMirror tm = tIt.next();
                 if (tm == null) {
                     break;
+                }
+                if (!inImport && !memberRef && cnt == 0 && cs.spaceWithinMethodCallParens()) {
+                    insertText.append(' ');
                 }
                 cnt++;
                 String paramTypeName = Utilities.getTypeName(info, tm, false, elem.isVarArgs() && !tIt.hasNext()).toString();
@@ -1059,8 +1088,16 @@ public class JavaCompletionCollector implements CompletionCollector {
                     labelDetail.append(", ");
                     sortParams.append(',');
                     if (!inImport && !memberRef) {
-                        insertText.append(", ");
+                        if (cs.spaceBeforeComma()) {
+                            insertText.append(' ');
+                        }
+                        insertText.append(',');
+                        if (cs.spaceAfterComma()) {
+                            insertText.append(' ');
+                        }
                     }
+                } else if (!inImport && !memberRef && cs.spaceWithinMethodCallParens()) {
+                    insertText.append(' ');
                 }
             }
             sortParams.append(')');
@@ -1077,16 +1114,13 @@ public class JavaCompletionCollector implements CompletionCollector {
                 if (name == null && elem.getKind() == ElementKind.CONSTRUCTOR
                         && (elem.getEnclosingElement().getModifiers().contains(Modifier.ABSTRACT)
                         || elem.getModifiers().contains(Modifier.PROTECTED) && !info.getTrees().isAccessible(scope, elem, (DeclaredType)elem.getEnclosingElement().asType()))) {
-                    try {
-                        if (CodeStyle.getDefault(info.getDocument()).getClassDeclBracePlacement() == CodeStyle.BracePlacement.SAME_LINE) {
-                            insertText.append(" {\n$0}");
-                        } else {
-                            insertText.append("\n{\n$0}");
-                        }
-                        command = new Command("Complete Abstract Methods", "java.complete.abstract.methods");
-                        asTemplate = true;
-                    } catch (IOException ioe) {
+                    if (cs.getClassDeclBracePlacement() == CodeStyle.BracePlacement.SAME_LINE) {
+                        insertText.append(" {\n$0}");
+                    } else {
+                        insertText.append("\n{\n$0}");
                     }
+                    command = new Command("Complete Abstract Methods", "java.complete.abstract.methods");
+                    asTemplate = true;
                 } else if (asTemplate) {
                     insertText.append("$0");
                 }
@@ -1103,24 +1137,22 @@ public class JavaCompletionCollector implements CompletionCollector {
             TextEdit textEdit = null;
             String filter = null;
             if (castType != null) {
-                try {
-                    TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
-                    int castStartOffset = assignToVarOffset;
-                    if (castStartOffset < 0) {
-                        if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
-                            castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
-                        }
+                TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
+                int castStartOffset = assignToVarOffset;
+                if (castStartOffset < 0) {
+                    if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
+                        castStartOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
                     }
-                    StringBuilder castText = new StringBuilder();
-                    castText.append("((").append(AutoImport.resolveImport(info, tp, castType)).append(CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")");
-                    int castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), castStartOffset, substitutionOffset);
-                    if (castEndOffset >= 0) {
-                        castText.append(info.getText().subSequence(castStartOffset, castEndOffset)).append(")");
-                        castText.append(info.getText().subSequence(castEndOffset, substitutionOffset)).append(insertText);
-                        textEdit = new TextEdit(castStartOffset, offset, castText.toString());
-                        filter = info.getText().substring(castStartOffset, substitutionOffset) + simpleName;
-                    }
-                } catch (IOException ex) {}
+                }
+                StringBuilder castText = new StringBuilder();
+                castText.append("((").append(AutoImport.resolveImport(info, tp, castType)).append(cs.spaceAfterTypeCast() ? ") " : ")");
+                int castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), castStartOffset, substitutionOffset);
+                if (castEndOffset >= 0) {
+                    castText.append(info.getText().subSequence(castStartOffset, castEndOffset)).append(")");
+                    castText.append(info.getText().subSequence(castEndOffset, substitutionOffset)).append(insertText);
+                    textEdit = new TextEdit(castStartOffset, offset, castText.toString());
+                    filter = info.getText().substring(castStartOffset, substitutionOffset) + simpleName;
+                }
             }
             if (textEdit != null && filter != null) {
                 builder.textEdit(textEdit)

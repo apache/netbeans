@@ -19,6 +19,9 @@
 package org.netbeans.modules.javascript2.editor.classpath;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -101,15 +104,24 @@ public class ClassPathProviderImpl implements ClassPathProvider, PlatformProvide
                 }
                 if (stubFile == null) {
                     // Probably inside unit test.
+                    LOG.log(Level.INFO, "Stubfile not found for ({0} / {1}) using InstalledFileLocator, using fallback", new Object[]{bundle.getNameOfPruned(), bundle.getNameOfDocumented()});
                     try {
-                        File moduleJar = Utilities.toFile(ClassPathProviderImpl.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+                        URI moduleJarUri = ClassPathProviderImpl.class.getProtectionDomain().getCodeSource().getLocation().toURI();
+                        LOG.log(Level.FINE, "Module JAR: {0}", moduleJarUri);
+                        if ("jar".equals(moduleJarUri.getScheme())) {
+                            JarURLConnection jarUrlConnection = (JarURLConnection) moduleJarUri.toURL().openConnection();
+                            moduleJarUri = jarUrlConnection.getJarFileURL().toURI();
+                            LOG.log(Level.FINE, "Module JAR (unwrapped): {0}", moduleJarUri);
+                        }
+                        File moduleJar = Utilities.toFile(moduleJarUri);
+                        LOG.log(Level.FINE, "Module File: {0}", moduleJar);
                         stubFile = new File(moduleJar.getParentFile().getParentFile(), "jsstubs/" + bundle.getNameOfPruned()); //NOI18N
-                    } catch (URISyntaxException x) {
+                    } catch (URISyntaxException | IllegalArgumentException | IOException x) {
                         assert false : x;
                     }
                 }
                 if (stubFile == null || !stubFile.isFile() || !stubFile.exists()) {
-                    LOG.log(Level.WARNING, "JavaScript stubs file was not found: {0}", stubFile.getAbsolutePath());
+                    LOG.log(Level.WARNING, "JavaScript stubs file was not found: {0}", stubFile != null ? stubFile.getAbsolutePath() : null);
                 } else {
                     result.add(FileUtil.getArchiveRoot(FileUtil.toFileObject(stubFile)));
                 }

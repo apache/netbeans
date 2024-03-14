@@ -19,8 +19,6 @@
 
 package org.netbeans.upgrade.systemoptions;
 
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author Radek Matous
@@ -30,6 +28,7 @@ class StringPropertyProcessor extends PropertyProcessor {
         super("java.lang.String");//NOI18N
     }
     
+    @Override
     void processPropertyImpl(String propertyName, Object value) {
         if ("userProxyHost".equals(propertyName)) {//NOI18N
             addProperty("proxyHttpHost", value.toString());

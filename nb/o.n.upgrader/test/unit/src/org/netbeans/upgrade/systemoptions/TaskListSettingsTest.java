@@ -27,10 +27,12 @@ public class TaskListSettingsTest extends BasicTestForImport {
         super(testName, "org-netbeans-modules-tasklist-docscan-Settings.settings");
     }
 
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/netbeans/modules/tasklist/docscan");
     }
     
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {"Tag<<<<<<<",
                 "Tag@todo",

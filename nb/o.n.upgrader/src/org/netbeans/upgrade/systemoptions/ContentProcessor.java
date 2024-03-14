@@ -26,7 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 class ContentProcessor  {
-    private static Map<String, ContentProcessor> clsname2Delegate = new HashMap<String, ContentProcessor>();
+    private static final Map<String, ContentProcessor> clsname2Delegate = new HashMap<>();
     protected String systemOptionInstanceName;
     
     static {
@@ -69,9 +69,8 @@ class ContentProcessor  {
     }
     
     private final Map<String, String> processProperties(final Map<String, Object> properties, boolean types) {
-        Map<String, String> allProps = new HashMap<String, String>();
-        for (Iterator<Map.Entry<String, Object>> it = properties.entrySet().iterator(); it.hasNext();) {
-            Map.Entry<String, Object> entry = it.next();
+        Map<String, String> allProps = new HashMap<>();
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
             String name = entry.getKey();
             Object value = entry.getValue();
             allProps.putAll(PropertyProcessor.processProperty(name, value, types));
@@ -80,7 +79,7 @@ class ContentProcessor  {
     }
     
     private final  Map<String, Object> parseProperties(final Iterator<Object> it) { // sequences String, Object, SerParser.ObjectWrapper
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> properties = new HashMap<>();
         for (; it.hasNext();) {
             Object name = it.next();
             if ("null".equals(name) || name == null) {

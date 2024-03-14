@@ -18,8 +18,6 @@
  */
 package org.netbeans.upgrade.systemoptions;
 
-import java.util.Iterator;
-import java.util.List;
 
 /**
  *
@@ -27,19 +25,17 @@ import java.util.List;
  */
 class HashSetProcessor extends PropertyProcessor {
 
-    static final String CVS_PERSISTENT_HASHSET = "org.netbeans.modules.versioning.system.cvss.settings.CvsModuleConfig.PersistentHashSet";  // NOI18N
     static final String SVN_PERSISTENT_HASHSET = "org.netbeans.modules.subversion.settings.SvnModuleConfig.PersistentHashSet";              // NOI18N
     
     HashSetProcessor(String className) {
         super(className);
     }
     
+    @Override
     void processPropertyImpl(String propertyName, Object value) {
         if ("commitExclusions".equals(propertyName)) { // NOI18N
-            List l = ((SerParser.ObjectWrapper) value).data;
             int c = 0;
-            for (Iterator it = l.iterator(); it.hasNext();) {
-                Object elem = it.next();
+            for (Object elem : ((SerParser.ObjectWrapper) value).data) {
                 if(elem instanceof String) {
                     addProperty(propertyName + "." + c, (String) elem);
                     c = c + 1;

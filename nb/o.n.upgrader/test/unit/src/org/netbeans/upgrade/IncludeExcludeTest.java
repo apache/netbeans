@@ -33,6 +33,7 @@ public final class IncludeExcludeTest extends NbTestCase {
         super (name);
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 

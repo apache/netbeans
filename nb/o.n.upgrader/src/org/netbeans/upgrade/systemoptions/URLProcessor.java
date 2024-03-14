@@ -32,9 +32,10 @@ class URLProcessor extends PropertyProcessor {
         super("java.net.URL");//NOI18N
     }
     
+    @Override
     void processPropertyImpl(String propertyName, Object value) {
         if ("mainProjectURL".equals(propertyName)) {//NOI18N
-            List l = ((SerParser.ObjectWrapper)value).data;
+            List<Object> l = ((SerParser.ObjectWrapper)value).data;
             try {
                 URL url = createURL(l);
                 addProperty(propertyName, url.toExternalForm());
@@ -46,20 +47,19 @@ class URLProcessor extends PropertyProcessor {
         }
     }
     
-    public static URL createURL(List l) throws MalformedURLException {
+    public static URL createURL(List<Object> l) throws MalformedURLException {
             String protocol = null;
             String host = null;
             int port = -1;
             String file = null;
             String authority = null;
             String ref = null;
-            for (Iterator it = l.iterator(); it.hasNext();) {
-                Object elem = (Object) it.next();
+            for (Object elem : l) {
                 if (elem instanceof SerParser.NameValue) {
                     SerParser.NameValue nv = (SerParser.NameValue)elem;
                     if (nv.value != null && nv.name != null) {
                         if (nv.name.name.equals("port")) {//NOI18N
-                            port = ((Integer)nv.value).intValue();//NOI18N
+                            port = (Integer)nv.value;//NOI18N
                         }
                         else if (nv.name.name.equals("file")) {//NOI18N
                             file = nv.value.toString();//NOI18N

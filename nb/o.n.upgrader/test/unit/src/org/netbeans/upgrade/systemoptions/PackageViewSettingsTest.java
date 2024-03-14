@@ -25,10 +25,12 @@ public class PackageViewSettingsTest extends BasicTestForImport {
         super(name, "org-netbeans-modules-java-project-packageViewSettings.settings");
     }
 
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/netbeans/modules/java/project");
     }
 
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {
             "packageViewType",

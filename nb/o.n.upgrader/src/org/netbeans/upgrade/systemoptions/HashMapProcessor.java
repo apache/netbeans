@@ -19,8 +19,6 @@
 
 package org.netbeans.upgrade.systemoptions;
 
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author Radek Matous
@@ -30,13 +28,12 @@ class HashMapProcessor extends PropertyProcessor {
         super("java.util.HashMap");//NOI18N
     }
 
+    @Override
     void processPropertyImpl(String propertyName, Object value) {
         if ("properties".equals(propertyName)) {//NOI18N
             StringBuilder b = new StringBuilder();
             int s = 0;
-            List l = ((SerParser.ObjectWrapper)value).data;
-            for (Iterator it = l.iterator(); it.hasNext();) {
-                Object elem = (Object) it.next();
+            for (Object elem : ((SerParser.ObjectWrapper)value).data) {
                 if (elem instanceof String) {
                     switch (s) {
                         case 1:

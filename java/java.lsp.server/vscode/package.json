@@ -183,6 +183,11 @@
 					"description": "Path to the file containing exported formatter settings",
 					"default": null
 				},
+				"netbeans.hints.preferences": {
+					"type": "string",
+					"description": "Path to the file containing exported hints preferences",
+					"default": null
+				},
 				"netbeans.java.onSave.organizeImports": {
 					"type": "boolean",
 					"default": true,

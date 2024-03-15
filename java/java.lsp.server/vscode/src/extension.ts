@@ -1007,6 +1007,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             documentSelector: documentSelectors,
             synchronize: {
                 configurationSection: [
+                    'netbeans.hints',
                     'netbeans.format',
                     'netbeans.java.imports',
                     'java+.runConfig.vmOptions'

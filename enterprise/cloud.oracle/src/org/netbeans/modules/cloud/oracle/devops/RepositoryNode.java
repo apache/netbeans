@@ -54,9 +54,9 @@ public class RepositoryNode extends OCINode {
         return RepositoryNode::new;
     }
 
-    public static ChildrenProvider<DevopsProjectItem, RepositoryFolder> listRepositories() {
-        return project -> {
-            try ( DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider())) {
+    public static ChildrenProvider.SessionAware<DevopsProjectItem, RepositoryFolder> listRepositories() {
+        return (project, session) -> {
+            try ( DevopsClient client = session.newClient(DevopsClient.class)) {
                 ListRepositoriesRequest listRepositoriesRequest = ListRepositoriesRequest.builder()
                         .projectId(project.getKey().getValue()).build();
                 ListRepositoriesResponse response = client.listRepositories(listRepositoriesRequest);

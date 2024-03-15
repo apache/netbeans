@@ -78,7 +78,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.cloud.oracle.OCIManager;
-import static org.netbeans.modules.cloud.oracle.OCIManager.getDefault;
 import org.netbeans.modules.cloud.oracle.OCIProfile;
 import org.netbeans.modules.cloud.oracle.OCISessionInitiator;
 import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
@@ -692,8 +691,7 @@ public class AddDbConnectionToVault implements ActionListener {
         h.progress(Bundle.ReadingSecrets());
            
         try {
-            VaultsClient client = VaultsClient.builder().build(getDefault().getActiveProfile().getConfigProvider());
-
+            VaultsClient client = OCIManager.getDefault().getActiveProfile().newClient(VaultsClient.class);
             ListSecretsRequest listSecretsRequest = ListSecretsRequest.builder()
                     .compartmentId(item.vault.getCompartmentId())
                     .vaultId(item.vault.getKey().getValue())
@@ -756,7 +754,7 @@ public class AddDbConnectionToVault implements ActionListener {
             }
 
             // Add Vault to the ConfigMap artifact
-            DevopsClient devopsClient = DevopsClient.builder().build(OCIManager.getDefault().getActiveProfile().getConfigProvider());
+            DevopsClient devopsClient = OCIManager.getDefault().getActiveProfile().newClient(DevopsClient.class);
             ListDeployArtifactsRequest request = ListDeployArtifactsRequest.builder()
                     .projectId(item.project.getKey().getValue()).build();
             ListDeployArtifactsResponse response = devopsClient.listDeployArtifacts(request);
@@ -980,7 +978,7 @@ public class AddDbConnectionToVault implements ActionListener {
     }
 
     protected static Map<String, DevopsProjectItem> getDevopsProjects(String compartmentId) {
-        try (DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider());) {
+        try (DevopsClient client = OCIManager.getDefault().getActiveProfile().newClient(DevopsClient.class);) {
             ListProjectsRequest request = ListProjectsRequest.builder().compartmentId(compartmentId).build();
             ListProjectsResponse response = client.listProjects(request);
 

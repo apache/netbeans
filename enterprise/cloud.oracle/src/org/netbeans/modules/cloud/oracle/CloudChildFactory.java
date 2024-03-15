@@ -21,6 +21,7 @@ package org.netbeans.modules.cloud.oracle;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.cloud.oracle.compartment.CompartmentNode;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
@@ -75,16 +76,24 @@ public class CloudChildFactory extends ChildFactory<OCIItem> {
     
     @Override
     protected Node[] createNodesForKey(OCIItem key) {
+        Node[] nodes;
         NodeProvider nodeProvider = Lookups.forPath(
                 String.format("Cloud/Oracle/%s/Nodes", key.getKey().getPath()))
                 .lookup(NodeProvider.class);
         if (nodeProvider instanceof NodeProvider.SessionAware) {
-            return new Node[]{((NodeProvider.SessionAware)nodeProvider).apply(key, session)};
+            nodes = new Node[]{((NodeProvider.SessionAware)nodeProvider).apply(key, session)};
         } else {
-            return OCIManager.usingSession(session, () -> 
+            nodes = OCIManager.usingSession(session, () -> 
                 new Node[]{nodeProvider.apply(key)}
             );
         }
+        for (int i = 0; i < nodes.length; i++) {
+            if (nodes[i] instanceof CompartmentNode) {
+                CompartmentNodes.getDefault().addNode((CompartmentNode) nodes[i]);
+            };
+            
+        }
+        return nodes;
     }
     
     public void refreshKeys() {

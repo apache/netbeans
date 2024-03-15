@@ -36,6 +36,8 @@ import com.oracle.bmc.identity.model.Tenancy;
 import com.oracle.bmc.identity.requests.GetTenancyRequest;
 import com.oracle.bmc.identity.responses.GetTenancyResponse;
 import com.oracle.bmc.model.BmcException;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -46,6 +48,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.netbeans.modules.cloud.oracle.items.OCID;
@@ -53,6 +56,7 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.items.TenancyItem;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -65,6 +69,10 @@ public final class OCIProfile implements OCISessionInitiator {
      * ID of the default profile.
      */
     public static final String DEFAULT_ID = "DEFAULT"; // NOI18N
+    /**
+     * name of preference for active region
+     */
+    static final String PROP_ACTIVE_REGION_CODE = "activeRegionCode";
     /**
      * Profile ID.
      */
@@ -81,6 +89,8 @@ public final class OCIProfile implements OCISessionInitiator {
     private IOException initError;
     private Tenancy tenancyOpt;
     private static final Logger LOG = Logger.getLogger(OCIProfile.class.getName());
+    private Region region;
+    
 
     OCIProfile(Path configPath, String id) {
         this(configPath, id, true);
@@ -115,6 +125,13 @@ public final class OCIProfile implements OCISessionInitiator {
             String stringPath = configPath.toAbsolutePath().toString();
             ConfigFileReader.ConfigFile configFile = id == null ? ConfigFileReader.parse(stringPath) : ConfigFileReader.parse(stringPath, id);
             configProvider = new ConfigFileAuthenticationDetailsProvider(configFile);
+            Preferences prefs = NbPreferences.forModule(OCIProfile.class);
+            String regionCode = prefs.get(PROP_ACTIVE_REGION_CODE + "/" + id, null);
+            if (regionCode == null) {
+                region = configProvider.getRegion();
+            } else {
+                region = Region.valueOf(regionCode);
+            }
             fileStamp = stamp;
         } catch (IOException ex) {
             LOG.log(Level.INFO, "init()", ex);
@@ -136,6 +153,18 @@ public final class OCIProfile implements OCISessionInitiator {
     public boolean isValid() {
         return configProvider != null && fileStamp == configPath.toFile().lastModified(); // avoid IOE
     }
+    
+    public void setRegionCode(String regionCode) {
+        Region newRegion = Region.valueOf(regionCode);
+        Preferences prefs = NbPreferences.forModule(OCIProfile.class);
+        if (newRegion != null) {
+            prefs.put(PROP_ACTIVE_REGION_CODE + "/" + id, newRegion.getRegionCode());
+        } else {
+            prefs.remove(PROP_ACTIVE_REGION_CODE + "/" + id);
+        }
+        listeners.firePropertyChange(PROP_ACTIVE_REGION_CODE, this.region, newRegion);
+        region = newRegion;
+    }
 
     @Override
     public BasicAuthenticationDetailsProvider getAuthenticationProvider() {
@@ -144,7 +173,7 @@ public final class OCIProfile implements OCISessionInitiator {
     
     @Override
     public Region getRegion() {
-        return configProvider.getRegion();
+        return region;
     }
 
     @Override
@@ -212,7 +241,7 @@ public final class OCIProfile implements OCISessionInitiator {
         try {
             T client = clientClass.getConstructor(BasicAuthenticationDetailsProvider.class).newInstance(configProvider);
             Method setRegion = clientClass.getMethod("setRegion", Region.class);
-            setRegion.invoke(client, configProvider.getRegion());
+            setRegion.invoke(client, getRegion());
             return client;
         } catch (ReflectiveOperationException ex) {
             throw new IllegalArgumentException("Could not initialize client: " + clientClass);
@@ -251,7 +280,7 @@ public final class OCIProfile implements OCISessionInitiator {
         if (configProvider == null) {
             return null;
         }
-        try (final DatabaseClient client = new DatabaseClient(configProvider)) {
+        try (final DatabaseClient client = newClient(DatabaseClient.class)) {
             GenerateAutonomousDatabaseWalletDetails details = GenerateAutonomousDatabaseWalletDetails.builder().password(password).build();
             GenerateAutonomousDatabaseWalletRequest generateAutonomousDatabaseWalletRequest = GenerateAutonomousDatabaseWalletRequest.builder().autonomousDatabaseId(dbInstance.getKey().getValue()).generateAutonomousDatabaseWalletDetails(details).build();
             GenerateAutonomousDatabaseWalletResponse response = client.generateAutonomousDatabaseWallet(generateAutonomousDatabaseWalletRequest);
@@ -287,7 +316,7 @@ public final class OCIProfile implements OCISessionInitiator {
         if (configProvider == null) {
             return Optional.empty();
         }
-        try (final DatabaseClient client = new DatabaseClient(configProvider)) {
+        try (final DatabaseClient client = newClient(DatabaseClient.class)) {
             CreateAutonomousDatabaseBase createAutonomousDatabaseBase = CreateAutonomousDatabaseDetails.builder().compartmentId(compartmentId).dbName(dbName).adminPassword(new String(password)).cpuCoreCount(1).dataStorageSizeInTBs(1).build();
             CreateAutonomousDatabaseRequest createAutonomousDatabaseRequest = CreateAutonomousDatabaseRequest.builder().createAutonomousDatabaseDetails(createAutonomousDatabaseBase).build();
             try {
@@ -296,6 +325,26 @@ public final class OCIProfile implements OCISessionInitiator {
                 return Optional.of(e.getMessage());
             }
             return Optional.empty();
+        }
+    }
+    
+    private PropertyChangeSupport listeners;
+    
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        synchronized (this) {
+            if (listeners == null) {
+                listeners = new PropertyChangeSupport(this);
+            }
+            listeners.addPropertyChangeListener(listener);
+        }
+    }
+    
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        synchronized (this) {
+            if (listeners == null) {
+                return;
+            }
+            listeners.removePropertyChangeListener(listener);
         }
     }
 

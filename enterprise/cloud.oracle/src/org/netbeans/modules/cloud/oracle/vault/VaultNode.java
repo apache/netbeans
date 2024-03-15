@@ -19,11 +19,11 @@
 package org.netbeans.modules.cloud.oracle.vault;
 
 import com.oracle.bmc.keymanagement.KmsVaultClient;
+import com.oracle.bmc.keymanagement.model.VaultSummary;
 import com.oracle.bmc.keymanagement.requests.ListVaultsRequest;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
-import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.OCINode;
 import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
@@ -55,9 +55,9 @@ public class VaultNode extends OCINode {
      *
      * @return Returns {@code ChildrenProvider} which fetches List of {@code VaultItem} for given {@code CompartmentItem}
      */
-    public static ChildrenProvider<CompartmentItem, VaultItem> getVaults() {
-        return compartmentId -> {
-            KmsVaultClient client = KmsVaultClient.builder().build(OCIManager.getDefault().getActiveProfile().getConfigProvider());
+    public static ChildrenProvider.SessionAware<CompartmentItem, VaultItem> getVaults() {
+        return (compartmentId, session) -> {
+            KmsVaultClient client = session.newClient(KmsVaultClient.class);
             
             ListVaultsRequest listVaultsRequest = ListVaultsRequest.builder()
                     .compartmentId(compartmentId.getKey().getValue())
@@ -67,6 +67,7 @@ public class VaultNode extends OCINode {
             return client.listVaults(listVaultsRequest)
                     .getItems()
                     .stream()
+                    .filter(v -> v.getLifecycleState().equals(VaultSummary.LifecycleState.Active))
                     .map(d -> new VaultItem(
                                 OCID.of(d.getId(), "Vault"), //NOI18N
                                 d.getDisplayName(),

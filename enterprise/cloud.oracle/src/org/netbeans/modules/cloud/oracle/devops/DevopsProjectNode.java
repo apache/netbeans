@@ -54,11 +54,10 @@ public class DevopsProjectNode extends OCINode {
         return DevopsProjectNode::new;
     }
    
-    public static ChildrenProvider<CompartmentItem, DevopsProjectItem> listDevopsProjects() {
-        return compartmentId -> {
+    public static ChildrenProvider.SessionAware<CompartmentItem, DevopsProjectItem> listDevopsProjects() {
+        return (compartmentId, session) -> {
             try (
-                DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider());
-            ) {
+                DevopsClient client = session.newClient(DevopsClient.class)) {
                 ListProjectsRequest request = ListProjectsRequest.builder().compartmentId(compartmentId.getKey().getValue()).build();
                 ListProjectsResponse response = client.listProjects(request);
 

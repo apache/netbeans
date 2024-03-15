@@ -30,6 +30,9 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Jan Horvath
  */
+@NbBundle.Messages({
+    "MSG_BrokenProfile=Broken profile {0}"
+})
 public class TenancyInstance implements ServerInstanceImplementation, Lookup.Provider {
 
     private final OCIItem tenancy;
@@ -41,28 +44,15 @@ public class TenancyInstance implements ServerInstanceImplementation, Lookup.Pro
         this.profile = profile;
         lkp = tenancy != null ? Lookups.fixed(profile, tenancy) : Lookups.fixed(profile);
     }
-    
-    @NbBundle.Messages({
-        "# {0} - tenancy ID",
-        "# {1} - profile ID",
-        "MSG_TenancyDesc={0} ({1})",
-        "# {0} - tenancy ID",
-        "# {1} - profile ID",
-        "MSG_BrokenTenancy=Unavailable tenancy {0}",
-        "# {0} - profile ID",
-        "MSG_BrokenProfile=Broken profile {0}",
-    })
+
     @Override
     public String getDisplayName() {
         if (tenancy != null) {
-            return Bundle.MSG_TenancyDesc(tenancy.getName(), profile.getId());
-        } else if (profile.getTenantId() != null) {
-            return Bundle.MSG_BrokenTenancy(profile.getTenantId(), profile.getId());
-        } else {
-            return Bundle.MSG_BrokenProfile(profile.getId());
+            return tenancy.getName();
         }
+        return profile.getId();
     }
-
+    
     @Override
     public Lookup getLookup() {
         return lkp;

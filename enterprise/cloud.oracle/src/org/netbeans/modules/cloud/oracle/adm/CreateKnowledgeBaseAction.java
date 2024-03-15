@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.cloud.oracle.adm;
 
+import com.oracle.bmc.Region;
 import com.oracle.bmc.adm.ApplicationDependencyManagementClient;
 import com.oracle.bmc.adm.model.CreateKnowledgeBaseDetails;
 import com.oracle.bmc.adm.requests.CreateKnowledgeBaseRequest;
@@ -86,7 +87,8 @@ public class CreateKnowledgeBaseAction implements ActionListener {
                 
                 try (ApplicationDependencyManagementClient client
                         = new ApplicationDependencyManagementClient(OCIManager.getDefault().getConfigProvider())) {
-
+                    Region region = OCIManager.getDefault().getActiveProfile().getRegion();
+                    client.setRegion(region);
                     CreateKnowledgeBaseDetails params = CreateKnowledgeBaseDetails.builder()
                             .compartmentId(context.getKey().getValue())
                             .displayName(result.get()).build();

@@ -696,6 +696,10 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls.oci.setRegion",
+					"when": "false"
+				},
+				{
 					"command": "nbls.cloud.ocid.copy",
 					"when": "false"
 				},

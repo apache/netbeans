@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
-import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.OCINode;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.openide.nodes.Children;
@@ -58,16 +57,14 @@ public class KeyNode extends OCINode {
      *
      * @return Returns {@code ChildrenProvider} which fetches List of {@code KeyItem} for given {@code VaultItem}
      */
-    public static ChildrenProvider<VaultItem, KeyItem> getKeys() {
-        return vault -> {
+    public static ChildrenProvider.SessionAware<VaultItem, KeyItem> getKeys() {
+        return (vault, session) -> {
             Vault v = Vault.builder()
                     .compartmentId(vault.compartmentId)
                     .id(vault.getKey().getValue())
                     .managementEndpoint(vault.managementEndpoint)
                     .build();
-            KmsManagementClient client = KmsManagementClient.builder()
-                    .vault(v)
-                    .build(OCIManager.getDefault().getActiveProfile().getConfigProvider());
+            KmsManagementClient client = session.newClient(KmsManagementClient.class);
             ListKeysRequest listKeysRequest = ListKeysRequest.builder()
                     .compartmentId(vault.getCompartmentId())
                     .limit(88)

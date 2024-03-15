@@ -1192,6 +1192,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             if (enableJava) {
                 c.findTreeViewService().createView('cloud.resources', undefined, { canSelectMany : false });
             }
+            createRegionStatus();
         }).catch(setClient[1]);
     }).catch((reason) => {
         activationPending = false;
@@ -1367,6 +1368,28 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         } else {
             window.setStatusBarMessage(decorated);
         }
+    }
+
+    async function createRegionStatus() {
+        const commands = await vscode.commands.getCommands();
+        if (!commands.includes("nbls.oci.setRegion")) {
+            return;
+        }
+        let statusBarMessage = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1000);
+        statusBarMessage.text = `$(cloud) Region`;
+        statusBarMessage.tooltip = "Select OCI Region";
+        statusBarMessage.command = "local.oci.setRegion";
+        statusBarMessage.show();
+        vscode.commands.executeCommand('nbls.oci.getRegion').then((region) => {
+            statusBarMessage.text = `$(cloud) Region: ${region}`;
+        });
+        let disposable = vscode.commands.registerCommand('local.oci.setRegion', function () {
+            vscode.commands.executeCommand('nbls.oci.setRegion').then((region) => {
+                statusBarMessage.text = `$(cloud) Region: ${region}`;
+            });
+        });
+        context.subscriptions.push(statusBarMessage);
+        context.subscriptions.push(disposable);
     }
 
     function checkInstallNbJavac(msg : string) {

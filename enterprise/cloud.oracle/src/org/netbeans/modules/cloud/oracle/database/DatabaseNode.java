@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
-import static org.netbeans.modules.cloud.oracle.OCIManager.getDefault;
 import org.netbeans.modules.cloud.oracle.OCINode;
 import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
@@ -65,33 +64,34 @@ public class DatabaseNode extends OCINode {
      * @return List of {@code OCIItem} describing databases in a given
      * Compartment
      */
-    public static ChildrenProvider<CompartmentItem, DatabaseItem> getDatabases() {
-        return compartmentId -> {
-            DatabaseClient client = new DatabaseClient(getDefault().getConfigProvider());
-            ListAutonomousDatabasesRequest listAutonomousDatabasesRequest = ListAutonomousDatabasesRequest.builder()
-                    .compartmentId(compartmentId.getKey().getValue())
-                    .limit(88)
-                    .build();
-            
-            
-            return client.listAutonomousDatabases(listAutonomousDatabasesRequest)
-                    .getItems()
-                    .stream()
-                    .map(d -> {
-                        List<DatabaseConnectionStringProfile> profiles = d.getConnectionStrings().getProfiles();
-                        DatabaseItem item = new DatabaseItem(
-                                OCID.of(d.getId(), "Databases"), //NOI18N
-                                d.getDbName(),
-                                d.getConnectionUrls().getOrdsUrl()+SERVICE_CONSOLE_SUFFIX,
-                                getConnectionName(profiles));
-                        StringBuilder sb = new StringBuilder();
-                        sb.append(Bundle.LBL_WorkloadType(d.getDbWorkload().getValue()));
-                        sb.append(Bundle.LBL_DatabaseVersion(d.getDbVersion()));
-                        sb.append(Bundle.LBL_Storage(d.getDataStorageSizeInTBs()));
-                        item.setDescription(sb.toString());
-                        return item;
-                    })
-                    .collect(Collectors.toList());
+    public static ChildrenProvider.SessionAware<CompartmentItem, DatabaseItem> getDatabases() {
+        return (compartmentId, session) -> {
+            try(DatabaseClient client = session.newClient(DatabaseClient.class)) {
+                ListAutonomousDatabasesRequest listAutonomousDatabasesRequest = ListAutonomousDatabasesRequest.builder()
+                        .compartmentId(compartmentId.getKey().getValue())
+                        .limit(88)
+                        .build();
+
+
+                return client.listAutonomousDatabases(listAutonomousDatabasesRequest)
+                        .getItems() 
+                        .stream()
+                        .map(d -> {
+                            List<DatabaseConnectionStringProfile> profiles = d.getConnectionStrings().getProfiles();
+                            DatabaseItem item = new DatabaseItem(
+                                    OCID.of(d.getId(), "Databases"), //NOI18N
+                                    d.getDbName(),
+                                    d.getConnectionUrls().getOrdsUrl()+SERVICE_CONSOLE_SUFFIX,
+                                    getConnectionName(profiles));
+                            StringBuilder sb = new StringBuilder();
+                            sb.append(Bundle.LBL_WorkloadType(d.getDbWorkload().getValue()));
+                            sb.append(Bundle.LBL_DatabaseVersion(d.getDbVersion()));
+                            sb.append(Bundle.LBL_Storage(d.getDataStorageSizeInTBs()));
+                            item.setDescription(sb.toString());
+                            return item;
+                        })
+                        .collect(Collectors.toList());
+            }
         };
     }
 

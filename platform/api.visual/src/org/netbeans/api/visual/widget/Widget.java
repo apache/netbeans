@@ -72,7 +72,7 @@ import javax.swing.SwingUtilities;
 // TODO - Should Widget be an abstract class?
 public class Widget implements Accessible, Lookup.Provider {
 
-    static final String MESSAGE_NULL_BOUNDS = "Scene.validate was not called after last change. Widget is not validated. See first Q/A at http://graph.netbeans.org/faq.html page.";
+    static final String MESSAGE_NULL_BOUNDS = "Scene.validate was not called after last change. Widget is not validated. See first Q/A at https://netbeans.apache.org/front/main/projects/graph/faq/ page.";
 
     private static final HashMap<String, WidgetAction.Chain> EMPTY_HASH_MAP = new HashMap<String, WidgetAction.Chain> (0);
 

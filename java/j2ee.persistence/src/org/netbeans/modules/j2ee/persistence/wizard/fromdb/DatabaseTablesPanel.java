@@ -179,7 +179,9 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
             datasourceLocalRadioButton.setVisible(hasDBSchemas || hasJPADataSourcePopulator);
             datasourceServerRadioButton.setVisible(hasJPADataSourcePopulator);
             datasourceServerRadioButton.setEnabled(hasJPADataSourcePopulator);
-            
+            datasourceServerComboBox.setEnabled(hasJPADataSourcePopulator);
+            datasourceServerComboBox.setVisible(hasJPADataSourcePopulator);
+
             selectDefaultTableSource(tableSource, hasJPADataSourcePopulator, project, targetFolder);
         } 
 
@@ -203,7 +205,11 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
 
     private void initializeWithDatasources() {
         JPADataSourcePopulator dsPopulator = project.getLookup().lookup(JPADataSourcePopulator.class);
-        dsPopulator.connect(datasourceServerComboBox);
+        if(dsPopulator != null) {
+            dsPopulator.connect(datasourceServerComboBox);
+        } else {
+            datasourceServerComboBox.removeAllItems();
+        }
     }
 
     private void initializeWithDbConnections() {
@@ -315,7 +321,11 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         // nothing got selected so far, so select the data source / connection
         // radio button, but don't select an actual data source or connection
         // (since this would cause the connect dialog to be displayed)
-        datasourceServerRadioButton.setSelected(true);
+        if(datasourceServerComboBox.isVisible()) {
+            datasourceServerRadioButton.setSelected(true);
+        } else {
+            datasourceLocalRadioButton.setSelected(true);
+        }
     }
 
     /**

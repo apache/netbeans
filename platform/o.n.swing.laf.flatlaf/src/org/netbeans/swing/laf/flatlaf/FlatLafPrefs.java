@@ -35,6 +35,7 @@ class FlatLafPrefs {
     private static final String MENU_BAR_EMBEDDED = "menuBarEmbedded";
     private static final String UNDERLINE_MENU_SELECTION = "underlineMenuSelection";
     private static final String ALWAYS_SHOW_MNEMONICS = "alwaysShowMnemonics";
+    private static final String SHOW_FILECHOOSER_FAVORITES = "showFileChooserFavorites";
 
     private static final Preferences prefs = NbPreferences.forModule(FlatLafPrefs.class);
 
@@ -100,6 +101,14 @@ class FlatLafPrefs {
 
     static void setAlwaysShowMnemonics(boolean value) {
         putBoolean(ALWAYS_SHOW_MNEMONICS, value, false);
+    }
+
+    static boolean isShowFileChooserFavorites() {
+        return prefs.getBoolean(SHOW_FILECHOOSER_FAVORITES, false);
+    }
+
+    static void setShowFileChooserFavorites(boolean value) {
+        putBoolean(SHOW_FILECHOOSER_FAVORITES, value, false);
     }
 
     private static void putBoolean(String key, boolean value, boolean def) {

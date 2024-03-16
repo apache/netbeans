@@ -62,6 +62,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.Vector;
+import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -82,6 +83,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
+import org.netbeans.swing.plaf.LFCustoms;
 import org.openide.awt.HtmlRenderer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -251,7 +253,13 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         fc.getAccessibleContext().setAccessibleDescription(title);
         return title;
     }
-    
+
+    private static boolean useNBShortcutsPanel() {
+        return UIManager.get(LFCustoms.FILECHOOSER_SHORTCUTS_FILESFUNCTION) != null
+            && UIManager.get(LFCustoms.FILECHOOSER_SHORTCUTS_PANEL_FACTORY) != null
+            && UIManager.getBoolean(LFCustoms.FILECHOOSER_FAVORITES_ENABLED);
+    }
+
     private void updateUseShellFolder() {
         // Decide whether to use the ShellFolder class to populate shortcut
         // panel and combobox.
@@ -271,8 +279,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                 }
             }
         }
-        
-        if (Utilities.isWindows()) {
+        if (useNBShortcutsPanel() || Utilities.isWindows()) {
             if (useShellFolder) {
                 if (placesBar == null) {
                     placesBar = getPlacesBar();
@@ -295,9 +302,17 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         }
     }
 
-    /** Returns instance of WindowsPlacesBar class or null in case of failure
+    /** 
+     * Returns a shortcuts panel, e.g the windows places bar or the NB favorites shortcuts panel
      */
-    private JComponent getPlacesBar () {
+    private JComponent getPlacesBar() {
+        if (useNBShortcutsPanel()) {
+            Function<JFileChooser, JComponent> fac = (Function<JFileChooser, JComponent>) UIManager.get(LFCustoms.FILECHOOSER_SHORTCUTS_PANEL_FACTORY);
+            JComponent favBar = fac.apply(fileChooser);
+            JScrollPane sp = new JScrollPane(favBar, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            sp.setPreferredSize(new Dimension(100, 300));
+            return sp;
+        }
         if (placesBarFailed) {
             return null;
         }

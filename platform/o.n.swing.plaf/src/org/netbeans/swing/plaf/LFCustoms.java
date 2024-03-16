@@ -436,4 +436,11 @@ public abstract class LFCustoms {
     public static final String OPTIONS_USE_UI_DEFAULT_COLORS = "nb.options.useUIDefaultsColors";
     public static final String OPTIONS_CATEGORIES_SEPARATOR_COLOR = "nb.options.categories.separatorColor";
     public static final String OPTIONS_CATEGORIES_BUTTON_USE_NIMBUS = "nb.options.categories.button.useNimbusCategoryButton";
+
+    /**
+     * FileChooser
+     */
+    public static final String FILECHOOSER_SHORTCUTS_FILESFUNCTION = "FileChooser.shortcuts.filesFunction";
+    public static final String FILECHOOSER_SHORTCUTS_PANEL_FACTORY = "FileChooser.shortcuts.panel.factory";
+    public static final String FILECHOOSER_FAVORITES_ENABLED = "FileChooser.favorites.enabled";
 }

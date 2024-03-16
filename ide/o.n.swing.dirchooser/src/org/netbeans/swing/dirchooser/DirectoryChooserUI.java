@@ -46,13 +46,27 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.AccessControlException;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.Vector;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
@@ -242,10 +256,9 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         // Decide whether to use the ShellFolder class to populate shortcut
         // panel and combobox.
         
-        Boolean prop =
-                (Boolean)fileChooser.getClientProperty(DelegatingChooserUI.USE_SHELL_FOLDER);
+        Boolean prop = (Boolean)fileChooser.getClientProperty(DelegatingChooserUI.USE_SHELL_FOLDER);
         if (prop != null) {
-            useShellFolder = prop.booleanValue();
+            useShellFolder = prop;
         } else {
             // See if FileSystemView.getRoots() returns the desktop folder,
             // i.e. the normal Windows hierarchy.
@@ -410,7 +423,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         
         // disable TAB focus transfer, we need it for completion
         Set<AWTKeyStroke> tKeys = filenameTextField.getFocusTraversalKeys(java.awt.KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
-        Set<AWTKeyStroke> newTKeys = new HashSet<AWTKeyStroke>(tKeys);
+        Set<AWTKeyStroke> newTKeys = new HashSet<>(tKeys);
         newTKeys.remove(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB, 0));
         // #107305: enable at least Ctrl+TAB if we have TAB for completion
         newTKeys.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB, KeyEvent.CTRL_DOWN_MASK));
@@ -604,7 +617,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         }
         // on Mac all icons from UIManager are the same, some default, so load our own.
         // it's also fallback if icon from UIManager not found, may happen
-        if (isMac || upOneLevelIcon == null || jdkBug6840086Workaround() ) {
+        if (isMac || upOneLevelIcon == null) {
             if (isMac) {
                 upOneLevelIcon = ImageUtilities.loadImageIcon("org/netbeans/swing/dirchooser/resources/upFolderIcon_mac.png", false);
             } else {
@@ -664,7 +677,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         }
         // on Mac all icons from UIManager are the same, some default, so load our own.
         // it's also fallback if icon from UIManager not found, may happen
-        if (isMac || newFoldIcon == null || jdkBug6840086Workaround()) {
+        if (isMac || newFoldIcon == null) {
             if (isMac) {
                 newFoldIcon = ImageUtilities.loadImageIcon("org/netbeans/swing/dirchooser/resources/newFolderIcon_mac.png", false);
             } else {
@@ -770,13 +783,6 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         return scrollBar;
     }
 
-    private boolean jdkBug6840086Workaround() {
-        //see issue #167080
-        return Utilities.isWindows()
-                && "Windows 7".equals(System.getProperty("os.name"))
-                && "1.6.0_16".compareTo(System.getProperty("java.version")) >=0;
-    }
-
     /** 
      * Handles alt-up key 
      */
@@ -789,7 +795,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         
         @Override
         public void keyPressed(KeyEvent evt) {
-            if(evt.getKeyCode() == KeyEvent.VK_UP && (evt.getModifiers() & KeyEvent.ALT_MASK) == KeyEvent.ALT_MASK) {
+            if(evt.getKeyCode() == KeyEvent.VK_UP && evt.isAltDown()) {
                 Action action = getChangeToParentDirectoryAction();
                 action.actionPerformed(new ActionEvent(evt.getSource(), 0, ""));
                 component.requestFocus();
@@ -804,12 +810,9 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         
         StringBuffer searchBuf = new StringBuffer();
         
-        java.util.List<TreePath> paths;
-        private final Timer resetBufferTimer = new Timer(2000, new ActionListener() {
-            @Override
-            public void actionPerformed (ActionEvent e) {
-                resetBuffer();
-            }
+        List<TreePath> paths;
+        private final Timer resetBufferTimer = new Timer(2000, (ActionEvent e) -> {
+            resetBuffer();
         });
                 
         @Override
@@ -895,7 +898,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                 return false;
             }
             // #110975: refuse modifiers
-            if (evt.getModifiers() != 0) {
+            if (evt.getModifiersEx() != 0) {
                 return false;
             }
             return (Character.isJavaIdentifierPart(ch) && !Character.isIdentifierIgnorable(ch)) 
@@ -909,10 +912,9 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         
     }
     
-    private java.util.List<TreePath> getVisiblePaths () {
+    private List<TreePath> getVisiblePaths () {
         int rowCount = tree.getRowCount();
-        DirectoryNode node = null;
-        java.util.List<TreePath> result = new ArrayList<TreePath>(rowCount);
+        List<TreePath> result = new ArrayList<>(rowCount);
         for (int i = 0; i < rowCount; i++) {
             result.add(tree.getPathForRow(i));
         }
@@ -925,20 +927,14 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         item1.addActionListener(newFolderAction);
         
         JMenuItem item2 = new JMenuItem(getBundle().getString("LBL_Rename"));
-        item2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                DirectoryNode node = (DirectoryNode)tree.getLastSelectedPathComponent();
-                applyEdit(node);
-            }
+        item2.addActionListener((ActionEvent e) -> {
+            DirectoryNode node = (DirectoryNode)tree.getLastSelectedPathComponent();
+            applyEdit(node);
         });
         
         JMenuItem item3 = new JMenuItem(getBundle().getString("LBL_Delete"));
-        item3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteAction();
-            }
+        item3.addActionListener((ActionEvent e) -> {
+            deleteAction();
         });
         
         popupMenu.add(item1);
@@ -974,9 +970,9 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             
             RequestProcessor.getDefault().post(new Runnable() {
                 DirectoryNode node;
-                ArrayList<File> list = new ArrayList<File>();
+                ArrayList<File> list = new ArrayList<>();
                 int cannotDelete;
-                ArrayList<DirectoryNode> nodes2Remove = new ArrayList<DirectoryNode>(nodePath.length);
+                ArrayList<DirectoryNode> nodes2Remove = new ArrayList<>(nodePath.length);
 
                 @Override
                 public void run() {
@@ -1015,7 +1011,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                                 message = cannotDelete + " " + getBundle().getString("MSG_Plur_Delete");
                             }
                             
-                            setSelected((File[])list.toArray(new File[0]));
+                            setSelected((File[])list.toArray(File[]::new));
                             
                             JOptionPane.showConfirmDialog(fileChooser, message , getBundle().getString("MSG_Confirm"), JOptionPane.OK_OPTION);
                         } else {
@@ -1057,7 +1053,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                 synchronized (listFilesWorker) {
                     if (!dir.equals(lastDir)) {
                         if (completionPopup != null) {
-                            completionPopup.setDataList(new Vector<File>(0));
+                            completionPopup.setDataList(new Vector<>(0));
                             completionPopup.detach();
                             completionPopup = null;
                         }
@@ -1095,7 +1091,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             synchronized (this) {
                 dir = d;
             }
-            List<File> files = new LinkedList<File>();
+            List<File> files = new LinkedList<>();
             File[] children = dir.listFiles();
             if (children != null) {
                 for (File f : children) {
@@ -1116,21 +1112,16 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             }
             synchronized (this) {
                 lastDir = dir;
-                lastChildren = files.toArray(new File[0]);
+                lastChildren = files.toArray(File[]::new);
             }
             if (lastChildren.length > 0) {
-                EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateCompletions();
-                    }
-                });
+                EventQueue.invokeLater(() -> updateCompletions());
             }
         }
     }
     
     public Vector<File> buildList(String text, File[] children, int max) {
-        Vector<File> files = new Vector<File>(children.length);
+        Vector<File> files = new Vector<>(children.length);
         Arrays.sort(children, DirectoryNode.FILE_NAME_COMPARATOR);
         
         for (File completion : children) {
@@ -1204,7 +1195,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
     }
     
     private void markStartTime () {
-        fileChooser.putClientProperty(DelegatingChooserUI.START_TIME, Long.valueOf(System.currentTimeMillis()));
+        fileChooser.putClientProperty(DelegatingChooserUI.START_TIME, System.currentTimeMillis());
     }
 
     private void checkUpdate() {
@@ -1216,7 +1207,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             // clean for future marking
             fileChooser.putClientProperty(DelegatingChooserUI.START_TIME, null);
 
-            long elapsed = System.currentTimeMillis() - startTime.longValue();
+            long elapsed = System.currentTimeMillis() - startTime;
             long timeOut = NbPreferences.forModule(DirectoryChooserUI.class).
                     getLong(TIMEOUT_KEY, 10000);
             if (timeOut > 0 && elapsed > timeOut && slownessPanel == null) {
@@ -1226,13 +1217,10 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                 slownessPanel = new JPanel();
                 JButton notShow = new JButton(
                         NbBundle.getMessage(DirectoryChooserUI.class, "BTN_NotShow"));
-                notShow.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        NbPreferences.forModule(DirectoryChooserUI.class).putLong(TIMEOUT_KEY, 0);
-                        centerPanel.remove(slownessPanel);
-                        centerPanel.revalidate();
-                    }
+                notShow.addActionListener((ActionEvent e) -> {
+                    NbPreferences.forModule(DirectoryChooserUI.class).putLong(TIMEOUT_KEY, 0);
+                    centerPanel.remove(slownessPanel);
+                    centerPanel.revalidate();
                 });
                 JPanel notShowP = new JPanel();
                 notShowP.add(notShow);
@@ -1251,7 +1239,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         Boolean themeActive = (Boolean)toolkit.getDesktopProperty("win.xpstyle.themeActive");
         if(themeActive == null)
             themeActive = Boolean.FALSE;
-        if (themeActive.booleanValue() && System.getProperty("swing.noxp") == null) {
+        if (themeActive && System.getProperty("swing.noxp") == null) {
             themeActive = Boolean.TRUE;
         }
         return themeActive;
@@ -1682,33 +1670,22 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
     }
     
     private void addNewDirectory(final TreePath path) {
-        RequestProcessor.getDefault().post(new Runnable() {
-            @Override
-            public void run() {
-                EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        DirectoryNode selectedNode = (DirectoryNode)path.getLastPathComponent();
-                        
-                        if(selectedNode == null || !canWrite(selectedNode.getFile())) {
-                            return;
-                        }
-                        
-                        try {
-                            newFolderNode = new DirectoryNode(fileChooser.getFileSystemView().createNewFolder(selectedNode.getFile()));
-                            model.insertNodeInto(newFolderNode, selectedNode, selectedNode.getChildCount());
-                            EventQueue.invokeLater(new Runnable() {
-                                @Override
-                                public void run () {
-                                    applyEdit(newFolderNode);
-                                }
-                            });
-                        } catch (IOException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                    }
-                });
-            }
+        RequestProcessor.getDefault().post(() -> {
+            EventQueue.invokeLater(() -> {
+                DirectoryNode selectedNode = (DirectoryNode)path.getLastPathComponent();
+                if(selectedNode == null || !canWrite(selectedNode.getFile())) {
+                    return;
+                }
+                try {
+                    newFolderNode = new DirectoryNode(fileChooser.getFileSystemView().createNewFolder(selectedNode.getFile()));
+                    model.insertNodeInto(newFolderNode, selectedNode, selectedNode.getChildCount());
+                    EventQueue.invokeLater(() -> {
+                        applyEdit(newFolderNode);
+                    });
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            });
         });
     }
     
@@ -1778,11 +1755,8 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
     
     private void setCursor (final JComponent comp, final int type) {
         if (!EventQueue.isDispatchThread()) {
-            EventQueue.invokeLater(new Runnable () {
-                @Override
-                public void run () {
-                    setCursor(comp, type);
-                }
+            EventQueue.invokeLater(() -> {
+                setCursor(comp, type);
             });
         } else {
             Window window = SwingUtilities.getWindowAncestor(comp);
@@ -1882,7 +1856,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
      * Data model for a type-face selection combo-box.
      */
     private class DirectoryComboBoxModel extends AbstractListModel implements ComboBoxModel {
-        Vector<File> directories = new Vector<File>();
+        Vector<File> directories = new Vector<>();
         int[] depths = null;
         File selectedDirectory = null;
         JFileChooser chooser = getFileChooser();
@@ -1920,7 +1894,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             // Get the canonical (full) path. This has the side
             // benefit of removing extraneous chars from the path,
             // for example /foo/bar/ becomes /foo/bar
-            File canonical = null;
+            File canonical;
             try {
                 canonical = directory.getCanonicalFile();
             } catch (IOException e) {
@@ -1931,7 +1905,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             // create File instances of each directory leading up to the top
             File sf = useShellFolder? getShellFolderForFile(canonical) : canonical;
             File f = sf;
-            Vector<File> path = new Vector<File>(10);
+            Vector<File> path = new Vector<>(10);
 
             
             /*
@@ -2220,7 +2194,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             JTree tree = (JTree) e.getSource();
             TreePath path = tree.getSelectionPath();
             TreePath curSel = e.getNewLeadSelectionPath();
-            curSelPath = (curSel != null) ? new WeakReference<TreePath>(curSel) : null;
+            curSelPath = (curSel != null) ? new WeakReference<>(curSel) : null;
             
             if(path != null) {
                 
@@ -2240,7 +2214,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         }
         
         private File[] getSelectedNodes(TreePath[] paths) {
-            List<File> files = new LinkedList<File>();
+            List<File> files = new LinkedList<>();
             for(int i = 0; i < paths.length; i++) {
                 File file = ((DirectoryNode)paths[i].getLastPathComponent()).getFile();
                 if(file.isDirectory()
@@ -2250,7 +2224,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                 }
                 files.add(file);
             }
-            return files.toArray(new File[0]);
+            return files.toArray(File[]::new);
         }
         
         /********* impl of MouseListener ***********/
@@ -2258,7 +2232,6 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         @Override
         public void mouseClicked(MouseEvent e) {
             final JTree tree = (JTree) e.getSource();
-            Point p = e.getPoint();
             final int x = e.getX();
             final int y = e.getY();
             int row = tree.getRowForLocation(x, y);
@@ -2510,7 +2483,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             public void run() {
                 if (!EventQueue.isDispatchThread()) {
                     // first phase
-                    realDirs = new HashSet<String>();
+                    realDirs = new HashSet<>();
                     File[] files = folder.listFiles();
                     files = files == null ? new File[0] : files;
                     for (File file : files) {
@@ -2525,7 +2498,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                     // second phase, in EQ thread, invoked from first phase
                     int count = node.getChildCount();
                     Map<String,DirectoryNode> currentFiles =
-                        new HashMap<String,DirectoryNode>( );
+                        new HashMap<>( );
                     for( int i=0; i< count ; i++ ){
                         TreeNode child = node.getChildAt(i);
                         if ( child instanceof DirectoryNode ){
@@ -2534,7 +2507,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                         }
                     }
 
-                    Set<String> realCloned = new HashSet<String>( realDirs );
+                    Set<String> realCloned = new HashSet<>( realDirs );
                     if ( realCloned.removeAll( currentFiles.keySet()) ){
                         // Handle added folders
                         for ( String name : realCloned ){
@@ -2542,7 +2515,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                             model.insertNodeInto( added, node, node.getChildCount());
                         }
                     }
-                    Set<String> currentNames = new HashSet<String>( currentFiles.keySet());
+                    Set<String> currentNames = new HashSet<>( currentFiles.keySet());
                     if ( currentNames.removeAll( realDirs )){
                         // Handle deleted folders
                         for ( String name : currentNames ){
@@ -2593,12 +2566,9 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             public void run () {
                 final File f = file;
                 if (canWrite(f)) {
-                    EventQueue.invokeLater(new Runnable() {
-                        @Override
-                        public void run () {
-                            if (f == file) {
-                                setEnabled(true);
-                            }
+                    EventQueue.invokeLater(() -> {
+                        if (f == file) {
+                            setEnabled(true);
                         }
                     });
                 }
@@ -2720,15 +2690,12 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             node.loadChildren(fileChooser, true);
 
             // update UI in EQ thread
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    ui.model = new DirectoryTreeModel(node);
-                    tree.setModel(ui.model);
-                    tree.repaint();
-                    ui.checkUpdate();
-                    restoreCursor();
-                }
+            SwingUtilities.invokeLater(() -> {
+                ui.model = new DirectoryTreeModel(node);
+                tree.setModel(ui.model);
+                tree.repaint();
+                ui.checkUpdate();
+                restoreCursor();
             });
         }
 

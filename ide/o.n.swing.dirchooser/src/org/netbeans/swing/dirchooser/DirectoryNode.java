@@ -24,6 +24,7 @@ package org.netbeans.swing.dirchooser;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -110,15 +111,13 @@ public class DirectoryNode extends DefaultMutableTreeNode {
         //fixed bug #97124
         if (loaded == false) {
             
-            ArrayList files = getFiles(chooser);
+            List<File> files = getFiles(chooser);
             
             if(files.isEmpty()) {
                 return false;
             }
             
-            for(int i = 0; i < files.size(); i++) {
-                File child = (File) files.get(i);
-                
+            for (File child : files) {
                 if(chooser.accept(child)) {
                     try {
                         DirectoryNode node = new DirectoryNode(child);
@@ -132,7 +131,7 @@ public class DirectoryNode extends DefaultMutableTreeNode {
                 }
             }
             
-            if (descend == true ||  (getChildCount() > 0)) {
+            if (descend == true || getChildCount() > 0) {
                 loaded = true;
             }
         }
@@ -140,9 +139,9 @@ public class DirectoryNode extends DefaultMutableTreeNode {
         return loaded;
     }
 
-    private ArrayList getFiles(JFileChooser chooser) {
+    private List<File> getFiles(JFileChooser chooser) {
         //fixed bug #97124
-        ArrayList list = new ArrayList();
+        List<File> list = new ArrayList<>();
         
         // Fix for IZ#116859 [60cat] Node update bug in the "open project" panel while deleting directories
         if ( directory == null || !directory.exists() ){
@@ -151,7 +150,7 @@ public class DirectoryNode extends DefaultMutableTreeNode {
 
         File[] files = chooser.getFileSystemView().getFiles(directory, chooser.isFileHidingEnabled());
         int mode = chooser.getFileSelectionMode();
-        if(mode == JFileChooser.DIRECTORIES_ONLY) {
+        if (mode == JFileChooser.DIRECTORIES_ONLY) {
             for(int i = 0; i < files.length; i++) {
                 File child = files[i];
                 if (child.isDirectory()) {
@@ -159,9 +158,9 @@ public class DirectoryNode extends DefaultMutableTreeNode {
                 }
             }
             list.sort(FILE_NAME_COMPARATOR);
-        } else if(mode == JFileChooser.FILES_AND_DIRECTORIES || mode == JFileChooser.FILES_ONLY) {
-            ArrayList dirList = new ArrayList();
-            ArrayList fileList = new ArrayList();
+        } else if (mode == JFileChooser.FILES_AND_DIRECTORIES || mode == JFileChooser.FILES_ONLY) {
+            List<File> dirList = new ArrayList<>();
+            List<File> fileList = new ArrayList<>();
             for(int i = 0; i < files.length; i++) {
                 File child = files[i];
                 if (child.isDirectory()) {
@@ -205,7 +204,7 @@ public class DirectoryNode extends DefaultMutableTreeNode {
     private static FileObject convertToValidDir(File f) {
         FileObject fo;
         File testFile = new File(f.getPath());
-        if (testFile == null || testFile.getParent() == null) {
+        if (testFile.getParent() == null) {
             // BTW this means that roots of file systems can't be project
             // directories.
             return null;

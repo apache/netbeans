@@ -111,8 +111,8 @@ public class FileCompletionPopup extends JPopupMenu implements KeyListener {
         if(list.getModel().getSize() == 0) {
             return;
         }
-        setPreferredSize(new Dimension(source.getWidth(), source.getHeight() * 4));
-        show(source,  x, y);
+        setPreferredSize(new Dimension(source.getWidth(), source.getHeight() * 6));
+        show(source, x, y);
         ensureSelection();
     }
     

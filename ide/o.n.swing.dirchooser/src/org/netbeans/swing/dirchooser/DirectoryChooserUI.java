@@ -1091,23 +1091,21 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             synchronized (this) {
                 dir = d;
             }
-            List<File> files = new LinkedList<>();
-            File[] children = dir.listFiles();
-            if (children != null) {
-                for (File f : children) {
-                    if(fileChooser.accept(f)) {
-                        if(fileChooser.getFileSelectionMode() == JFileChooser.DIRECTORIES_ONLY) {
-                            if(f.isDirectory()) {
-                                files.add(f);
-                            }
-                        } else if(fileChooser.getFileSelectionMode() == JFileChooser.FILES_ONLY) {
-                            if(f.isFile()) {
-                                files.add(f);
-                            }
-                        } else if(fileChooser.getFileSelectionMode() == JFileChooser.FILES_AND_DIRECTORIES) {
-                            files.add(f);
-                        }
-                    }
+            List<File> files = Collections.emptyList();
+            if (dir.exists()) {
+                try (Stream<Path> stream = Files.list(dir.toPath())) {
+                    int mode = fileChooser.getFileSelectionMode();
+                    files = stream.filter(p -> Files.isReadable(p))
+                                  .filter(p -> !p.getFileName().toString().startsWith("."))
+                                  .filter(p -> mode == JFileChooser.FILES_AND_DIRECTORIES
+                                            || mode == JFileChooser.FILES_ONLY && !Files.isDirectory(p)
+                                            || mode == JFileChooser.DIRECTORIES_ONLY && Files.isDirectory(p))
+                                  .filter(p -> fileChooser.accept(p.toFile()))
+                                  .sorted()
+                                  .map(Path::toFile)
+                                  .collect(Collectors.toList());
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
             synchronized (this) {
@@ -2152,9 +2150,8 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                     }
                 }
                 
-                if ((keyCode == KeyEvent.VK_TAB || keyCode == KeyEvent.VK_DOWN) ||
-                    (keyCode == KeyEvent.VK_RIGHT && 
-                    (filenameTextField.getCaretPosition() >= (filenameTextField.getDocument().getLength() - 1)))) {
+                if ((keyCode == KeyEvent.VK_TAB || keyCode == KeyEvent.VK_DOWN || (evt.isControlDown() && keyCode == KeyEvent.VK_SPACE))
+                 || (keyCode == KeyEvent.VK_RIGHT && (filenameTextField.getCaretPosition() >= (filenameTextField.getDocument().getLength() - 1)))) {
                     updateCompletions();
                 }
                 

@@ -3,5 +3,5 @@ OpenIDE-Module: org.netbeans.modules.languages.hcl
 OpenIDE-Module-Layer: org/netbeans/modules/languages/hcl/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/languages/hcl/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.4
-OpenIDE-Module-Java-Dependencies: Java > 11
+OpenIDE-Module-Java-Dependencies: Java > 17
 AutoUpdate-Show-In-Client: true

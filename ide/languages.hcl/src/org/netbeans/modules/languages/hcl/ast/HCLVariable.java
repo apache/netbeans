@@ -18,28 +18,14 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  *
  * @author lkishalmi
  */
-public final class HCLVariable extends HCLExpression {
-
-    public final HCLIdentifier name;
-
-    public HCLVariable(HCLIdentifier name) {
-        this.name = name;
-    }
+public record HCLVariable(HCLIdentifier name) implements HCLExpression {
 
     @Override
     public String asString() {
-        return name.id;
-    }
-
-    @Override
-    public List<? extends HCLExpression> getChildren() {
-        return Collections.emptyList();
+        return name.id();
     }
 }

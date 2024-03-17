@@ -25,24 +25,10 @@ import java.util.StringJoiner;
  *
  * @author lkishalmi
  */
-public class HCLFunction extends HCLExpression {
+public record HCLFunction(HCLIdentifier name, List<HCLExpression> args, boolean expand) implements HCLExpression {
 
-    final HCLIdentifier name;
-    final List<HCLExpression> args;
-    final boolean expand;
-
-    public HCLFunction(HCLIdentifier name, List<HCLExpression> args, boolean expand) {
-        this.name = name;
-        this.args = args;
-        this.expand = expand;
-    }
-
-    public HCLIdentifier getName() {
-        return name;
-    }
-
-    public List<HCLExpression> getArgs() {
-        return args;
+    public HCLFunction {
+        args = List.copyOf(args);
     }
 
     @Override
@@ -53,9 +39,7 @@ public class HCLFunction extends HCLExpression {
     }
 
     @Override
-    public List<? extends HCLExpression> getChildren() {
-        return args;
-    }
-
-    
+    public List<? extends HCLExpression> elements() {
+        return args();
+    }    
 }

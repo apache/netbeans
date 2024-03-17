@@ -18,46 +18,21 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
+import java.util.List;
+
 
 /**
  *
  * @author Laszlo Kishalmi
  */
-public final class HCLAttribute extends HCLAddressableElement {
+public record HCLAttribute(HCLIdentifier name, HCLExpression value) implements HCLElement {
 
-    final HCLIdentifier name;
-    final HCLExpression value;
-    final int group;
-
-    public HCLAttribute(HCLContainer parent, HCLIdentifier name, HCLExpression value, int group) {
-        super(parent);
-        this.name = name;
-        this.value = value;
-        this.group = group;
-    }
- 
-    @Override
     public String id() {
         return name.id();
     }
 
-    public HCLIdentifier getName() {
-        return name;
-    }
-
-    public HCLExpression getValue() {
-        return value;
-    }
-
-    public int getGroup() {
-        return group;
-    }
-
     @Override
-    public void accept(Visitor v) {
-        if (!v.visit(this) && (value != null)) {
-            value.accept(v);
-        }
+    public List<? extends HCLElement> elements() {
+        return  value != null ? List.of(name, value) : List.of(name);
     }
-    
 }

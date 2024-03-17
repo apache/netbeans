@@ -29,11 +29,10 @@ import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.languages.hcl.ast.HCLAttribute;
 import org.netbeans.modules.languages.hcl.ast.HCLBlock;
 import org.netbeans.modules.languages.hcl.ast.HCLCollection;
-import org.netbeans.modules.languages.hcl.ast.HCLDocument;
 import org.netbeans.modules.languages.hcl.ast.HCLElement;
-import org.netbeans.modules.languages.hcl.ast.HCLExpression;
 import org.netbeans.modules.languages.hcl.ast.HCLFunction;
 import org.netbeans.modules.languages.hcl.ast.HCLIdentifier;
+import org.netbeans.modules.languages.hcl.ast.HCLTreeWalker;
 import org.netbeans.modules.languages.hcl.ast.HCLVariable;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
@@ -64,8 +63,7 @@ public class HCLSemanticAnalyzer extends SemanticAnalyzer<HCLParserResult> {
         resume();
 
         Highlighter h = createHighlighter(result);
-        result.getDocument().accept(h);
-        highlights = h.work;
+        highlights = h.process(result.getDocument());
     }
 
     protected Highlighter createHighlighter(HCLParserResult result) {
@@ -74,7 +72,7 @@ public class HCLSemanticAnalyzer extends SemanticAnalyzer<HCLParserResult> {
     
     @Override
     public int getPriority() {
-        return 0;
+        return 100;
     }
 
     @Override
@@ -87,7 +85,7 @@ public class HCLSemanticAnalyzer extends SemanticAnalyzer<HCLParserResult> {
         cancelled = true;
     }
     
-    protected abstract class Highlighter extends HCLElement.BAEVisitor {
+    protected abstract class Highlighter {
         protected final Map<OffsetRange, Set<ColoringAttributes>> work = new HashMap<>();
 
         protected final SourceRef refs;
@@ -95,17 +93,25 @@ public class HCLSemanticAnalyzer extends SemanticAnalyzer<HCLParserResult> {
             this.refs = refs;
         }
 
-        @Override
-        public final boolean visit(HCLElement e) {
+        protected abstract void highlight(HCLTreeWalker.Step step);
+
+        private boolean cancellableHighlight(HCLTreeWalker.Step step) {
             if (isCancelled()) {
-                return true;
+                return false;
             }
-            return super.visit(e);
+            highlight(step);
+            return true;
+        }
+
+        public Map<OffsetRange, Set<ColoringAttributes>> process(HCLElement element) {
+            HCLTreeWalker.depthFirst(element, this::cancellableHighlight);
+            return work;
         }
         
         protected final void mark(HCLElement e, Set<ColoringAttributes> attrs) {
             refs.getOffsetRange(e).ifPresent((range) -> work.put(range, attrs));
         }
+
     }
     
     protected class DefaultHighlighter extends Highlighter {
@@ -115,9 +121,12 @@ public class HCLSemanticAnalyzer extends SemanticAnalyzer<HCLParserResult> {
         }
         
         @Override
-        protected boolean visitBlock(HCLBlock block) {
-            if (block.getParent() instanceof HCLDocument) {
-                List<HCLIdentifier> decl = block.getDeclaration();
+        protected void highlight(HCLTreeWalker.Step step) {
+
+            // TODO: Can use record patterns from Java 21
+            HCLElement e = step.node();
+            if (e instanceof HCLBlock block && step.depth() == 1) {
+                List<HCLIdentifier> decl = block.declaration();
                 HCLIdentifier type = decl.get(0);
 
                 mark(type, ColoringAttributes.CLASS_SET);
@@ -127,35 +136,17 @@ public class HCLSemanticAnalyzer extends SemanticAnalyzer<HCLParserResult> {
                         mark(id, ColoringAttributes.CONSTRUCTOR_SET);
                     }
                 }
-            } else {
-                //TODO: Handle nested Blocks...
-            }
-            return false;
-        }
-
-        @Override
-        protected boolean visitAttribute(HCLAttribute attr) {
-            mark(attr.getName(), ColoringAttributes.FIELD_SET);
-            return false;
-        }
-
-        @Override
-        protected boolean visitExpression(HCLExpression expr) {
-            if (expr instanceof HCLFunction) {
-                HCLFunction func =  (HCLFunction) expr;
-                mark(func.getName(), ColoringAttributes.CONSTRUCTOR_SET);
-            }
-
-            if (expr instanceof HCLCollection.Object) {
-                HCLCollection.Object obj = (HCLCollection.Object) expr;
-                for (HCLExpression key : obj.getKeys()) {
-                    if (key instanceof HCLVariable) {
-                        mark(key, ColoringAttributes.FIELD_SET);
+            } else if (e instanceof HCLAttribute attr) {
+                mark(attr.name(), ColoringAttributes.FIELD_SET);
+            } else if (e instanceof HCLFunction func) {
+                mark(func.name(), ColoringAttributes.CONSTRUCTOR_SET);
+            } else if (e instanceof HCLCollection.Object obj) {
+                for (HCLCollection.ObjectElement oe : obj.elements()) {
+                    if (oe.key() instanceof HCLVariable) {
+                        mark(oe.key(), ColoringAttributes.FIELD_SET);
                     }
                 }
             }
-            return false;
-        }
-        
+        }        
     }
 }

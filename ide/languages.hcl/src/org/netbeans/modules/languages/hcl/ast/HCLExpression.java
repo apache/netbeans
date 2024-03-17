@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
+import java.util.Collections;
 import java.util.List;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -28,30 +29,28 @@ import org.netbeans.modules.languages.hcl.grammar.HCLParser;
  *
  * @author lkishalmi
  */
-public abstract class HCLExpression extends HCLElement {
+public sealed interface HCLExpression extends HCLElement permits
+        HCLArithmeticOperation,
+        HCLCollection,
+        HCLCollection.ObjectElement,
+        HCLConditionalOperation,
+        HCLForExpression,
+        HCLFunction,
+        HCLLiteral,
+        HCLResolveOperation,
+        HCLTemplate,
+        HCLVariable {
 
     public static HCLExpression parse(String expr) {
         HCLLexer lexer = new HCLLexer(CharStreams.fromString(expr));
         HCLParser parser = new HCLParser(new CommonTokenStream(lexer));
         return new HCLExpressionFactory().process(parser.expression());
     }
-    
-    public String toString() {
-        return getClass().getSimpleName() + ": " + asString();
+
+    default List<? extends HCLExpression> elements() {
+        return Collections.emptyList();
     }
-    
-    public abstract List<? extends HCLExpression> getChildren();
-    
+
     public abstract String asString();
-    
-    @Override
-    public final void accept(Visitor v) {
-        if (!v.visit(this)) {
-            for (HCLExpression c : getChildren()) {
-                if (c != null) {
-                    c.accept(v);
-                }
-            }
-        }
-    }
+
 }

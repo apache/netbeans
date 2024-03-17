@@ -18,36 +18,21 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
  *
  * @author lkishalmi
  */
-public abstract class HCLForExpression extends HCLExpression {
+public sealed interface HCLForExpression extends HCLExpression {
     
-    public final HCLIdentifier keyVar;
-    public final HCLIdentifier valueVar;
+    HCLIdentifier keyVar();
+    HCLIdentifier valueVar();
 
-    public final HCLExpression iterable;
-    public final HCLExpression condition;
+    HCLExpression iterable();
+    HCLExpression condition();
     
-    public HCLForExpression(HCLIdentifier keyVar, HCLIdentifier valueVar, HCLExpression iterable, HCLExpression condition) {
-        this.keyVar = keyVar;
-        this.valueVar = valueVar;
-        this.iterable = iterable;
-        this.condition = condition;
-    }
-
-    public final static class Tuple extends HCLForExpression {
-
-        public final HCLExpression result;
-        
-        public Tuple(HCLIdentifier keyVar, HCLIdentifier valueVar, HCLExpression iterable, HCLExpression condition, HCLExpression result) {
-            super(keyVar, valueVar, iterable, condition);
-            this.result = result;
-        }
+    public record Tuple(HCLIdentifier keyVar, HCLIdentifier valueVar, HCLExpression iterable, HCLExpression condition, HCLExpression result) implements HCLForExpression {
 
         @Override
         public String asString() {
@@ -66,24 +51,12 @@ public abstract class HCLForExpression extends HCLExpression {
         }
         
         @Override
-        public List<? extends HCLExpression> getChildren() {
-            return Arrays.asList(iterable, result, condition);
+        public List<? extends HCLExpression> elements() {
+            return List.of(iterable, result, condition);
         }
     }
     
-    public final static class Object extends HCLForExpression {
-        public final HCLExpression resultKey;
-        public final HCLExpression resultValue;
-        
-        public final boolean grouping;
-
-        public Object(HCLIdentifier keyVar, HCLIdentifier valueVar, HCLExpression iterable, HCLExpression condition, HCLExpression resultKey, HCLExpression resultValue, boolean grouping) {
-            super(keyVar, valueVar, iterable, condition);
-            this.resultKey = resultKey;
-            this.resultValue = resultValue;
-            this.grouping = grouping;
-        }
-
+    public record Object(HCLIdentifier keyVar, HCLIdentifier valueVar, HCLExpression iterable, HCLExpression condition, HCLExpression resultKey, HCLExpression resultValue, boolean grouping) implements HCLForExpression {
         @Override
         public String asString() {
             StringBuilder sb = new StringBuilder();
@@ -104,8 +77,8 @@ public abstract class HCLForExpression extends HCLExpression {
         }
 
         @Override
-        public List<? extends HCLExpression> getChildren() {
-            return Arrays.asList(iterable, resultKey, resultValue, condition);
+        public List<? extends HCLExpression> elements() {
+            return List.of(iterable, resultKey, resultValue, condition);
         }
         
     }

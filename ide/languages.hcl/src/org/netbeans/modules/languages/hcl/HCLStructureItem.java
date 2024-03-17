@@ -30,10 +30,10 @@ import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.spi.ParserResult;
-import org.netbeans.modules.languages.hcl.ast.HCLAddressableElement;
 import org.netbeans.modules.languages.hcl.ast.HCLAttribute;
 import org.netbeans.modules.languages.hcl.ast.HCLBlock;
 import org.netbeans.modules.languages.hcl.ast.HCLContainer;
+import org.netbeans.modules.languages.hcl.ast.HCLElement;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -42,11 +42,11 @@ import org.openide.filesystems.FileObject;
  */
 public class HCLStructureItem implements ElementHandle, StructureItem {
 
-    final HCLAddressableElement element;
+    final HCLElement element;
     final SourceRef references;
     private List<? extends StructureItem> nestedCache;
 
-    public HCLStructureItem(HCLAddressableElement element, SourceRef references) {
+    public HCLStructureItem(HCLElement element, SourceRef references) {
         this.element = element;
         this.references = references;
     }
@@ -63,7 +63,12 @@ public class HCLStructureItem implements ElementHandle, StructureItem {
 
     @Override
     public String getName() {
-        return element.id();
+        if (element instanceof HCLAttribute a) {
+            return a.id();
+        } else if (element instanceof HCLBlock b) {
+            return b.id();
+        }
+        return  "<" + element.getClass().getSimpleName() + ">";
     }
 
     @Override
@@ -113,10 +118,10 @@ public class HCLStructureItem implements ElementHandle, StructureItem {
             if (element instanceof HCLContainer) {
                 HCLContainer c = (HCLContainer) element;
                 List<HCLStructureItem> nested = new ArrayList<>();
-                for (HCLBlock block : c.getBlocks()) {
+                for (HCLBlock block : c.blocks()) {
                     nested.add(new HCLStructureItem(block, references));
                 }
-                for (HCLAttribute attribute : c.getAttributes()) {
+                for (HCLAttribute attribute : c.attributes()) {
                     nested.add(new HCLStructureItem(attribute, references));
                 }
                 nestedCache = nested;

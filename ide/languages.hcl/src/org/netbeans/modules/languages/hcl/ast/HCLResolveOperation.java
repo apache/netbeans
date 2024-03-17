@@ -18,92 +18,50 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
  *
  * @author lkishalmi
  */
-public abstract class HCLResolveOperation extends HCLExpression {
+public sealed interface HCLResolveOperation extends HCLExpression {
 
-    public final HCLExpression base;
 
-    public HCLResolveOperation(HCLExpression base) {
-        this.base = base;
+    HCLExpression base();
+    default List<? extends HCLExpression> elements() {
+            return List.of(base());
     }
 
-    @Override
-    public List<? extends HCLExpression> getChildren() {
-        return Collections.singletonList(base);
-    }
-
-    public final static class Attribute extends HCLResolveOperation {
-        public final HCLIdentifier attr;
-
-        public Attribute(HCLExpression base, HCLIdentifier attr) {
-            super(base);
-            this.attr = attr;
-        }
-
-        @Override
-        public String toString() {
-            return getClass().getSimpleName() + ": ." + attr;
-        }
-
-        
+    public record Attribute(HCLExpression base, HCLIdentifier attr) implements HCLResolveOperation {
         @Override
         public String asString() {
             return base.asString() + "." + attr;
         }
-        
+
     }
 
-    public final static class Index extends HCLResolveOperation {
-        public final HCLExpression index;
-        public final boolean legacy;
-
-        public Index(HCLExpression base, HCLExpression index, boolean legacy) {
-            super(base);
-            this.index = index;
-            this.legacy = legacy;
-        }
-
+    public record Index(HCLExpression base, HCLExpression index, boolean legacy) implements HCLResolveOperation {
         @Override
         public String asString() {
             return base.asString() + (legacy ? "." + index : "[" + index + "]");
         }
-
         @Override
-        public List<? extends HCLExpression> getChildren() {
-            return Arrays.asList(base, index);
+        public List<? extends HCLExpression> elements() {
+            return List.of(base, index);
         }
     }
     
-    public final static class AttrSplat extends HCLResolveOperation {
-
-        public AttrSplat(HCLExpression base) {
-            super(base);
-        }
-
+    public record AttrSplat(HCLExpression base) implements HCLResolveOperation {
         @Override
         public String asString() {
             return base.asString() + ".*";
         }
-        
     }
 
-    public final static class FullSplat extends HCLResolveOperation {
-
-        public FullSplat(HCLExpression base) {
-            super(base);
-        }
-
+    public record FullSplat(HCLExpression base) implements HCLResolveOperation {
         @Override
         public String asString() {
             return base.asString() + "[*]";
         }
-        
     }
 }

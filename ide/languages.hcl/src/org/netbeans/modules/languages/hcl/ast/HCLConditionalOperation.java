@@ -25,17 +25,7 @@ import java.util.List;
  *
  * @author lkishalmi
  */
-public final class HCLConditionalOperation extends HCLExpression {
-
-    final HCLExpression condition;
-    final HCLExpression trueValue;
-    final HCLExpression falseValue;
-
-    public HCLConditionalOperation(HCLExpression condition, HCLExpression trueValue, HCLExpression falseValue) {
-        this.condition = condition;
-        this.trueValue = trueValue;
-        this.falseValue = falseValue;
-    }
+public record HCLConditionalOperation(HCLExpression condition, HCLExpression trueValue, HCLExpression falseValue) implements HCLExpression {
 
     @Override
     public String asString() {
@@ -43,7 +33,7 @@ public final class HCLConditionalOperation extends HCLExpression {
     }
 
     @Override
-    public List<? extends HCLExpression> getChildren() {
+    public List<? extends HCLExpression> elements() {
         return Arrays.asList(condition, trueValue, falseValue);
     }
         

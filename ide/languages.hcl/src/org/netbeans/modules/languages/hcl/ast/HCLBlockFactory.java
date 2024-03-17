@@ -19,6 +19,7 @@
 package org.netbeans.modules.languages.hcl.ast;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -32,16 +33,14 @@ import org.netbeans.modules.languages.hcl.grammar.HCLParser;
  *
  * @author lkishalmi
  */
-public class HCLBlockFactory {
-
-    private final Consumer<HCLElement.CreateContext> createAction;
+public final class HCLBlockFactory extends HCLElementFactory {
     private final HCLExpressionFactory exprFactory;
 
     private int group = 0;
     private ParserRuleContext prev = null;
 
-    public HCLBlockFactory(Consumer<HCLElement.CreateContext> createAction) {
-        this.createAction = createAction;
+    public HCLBlockFactory(Consumer<CreateContext> createAction) {
+        super(createAction);
         this.exprFactory = new HCLExpressionFactory(createAction);
     }
     
@@ -50,27 +49,23 @@ public class HCLBlockFactory {
     }
     
     public final HCLDocument process(HCLParser.ConfigFileContext ctx) {
-        var ret = new HCLDocument();
-        if (ctx.body() != null) {
-            body(ret, ctx.body());
-        }
-        return ret;
+        return new HCLDocument(ctx.body() != null ? body(ctx.body()) : List.of());
     }
     
-    protected HCLBlock block(HCLContainer parent, HCLParser.BlockContext ctx) {
-        HCLBlock ret = created(new HCLBlock(parent), ctx);
+    protected HCLBlock block(HCLParser.BlockContext ctx) {
         
+       ArrayList<HCLElement> elements = new ArrayList<>();
         
         if (ctx.body() != null) {
-            body(ret, ctx.body());
+            elements.addAll(body(ctx.body()));
         }
         
-        ArrayList<HCLIdentifier> decl = new ArrayList<>(4);
+        List<HCLIdentifier> decl = new ArrayList<>(4);
         
         if (ctx.children != null) {
             for (ParseTree pt : ctx.children) {
-                if (pt instanceof TerminalNode) {
-                    Token token = ((TerminalNode) pt).getSymbol();
+                if (pt instanceof TerminalNode tn) {
+                    Token token = tn.getSymbol();
                     if (token.getType() == HCLLexer.IDENTIFIER) {
                         HCLIdentifier attrName = created(new HCLIdentifier.SimpleId( token.getText()), token);
                         if (pt instanceof ErrorNode) {
@@ -78,15 +73,14 @@ public class HCLBlockFactory {
                             if (prev != null) {
                                 group += prev.stop.getLine() + 1 < token.getLine() ? 1 : 0;
                             }
-                            HCLAttribute attr = created(new HCLAttribute(ret, attrName, null, group), token);
-                            ret.add(attr);
+                            HCLAttribute attr = created(new HCLAttribute(attrName, null), token, token, group);
+                            elements.add(attr);
                         } else {
                             decl.add(attrName);
                         }
                     }
                 }
-                if (pt instanceof HCLParser.StringLitContext) {
-                    HCLParser.StringLitContext slit = (HCLParser.StringLitContext) pt;
+                if (pt instanceof HCLParser.StringLitContext slit) {
                     String sid = slit.getText();
                     if (sid.length() > 1) { // Do not process the '"' string literal
                         sid = sid.substring(1, sid.length() - (sid.endsWith("\"") ? 1 : 0));
@@ -97,59 +91,41 @@ public class HCLBlockFactory {
             }
         }
         
-        ret.setDeclaration(decl);
-        
-        return ret;
+        return created(new HCLBlock(decl, elements), ctx);
     }
 
-    protected void body(HCLContainer c, HCLParser.BodyContext ctx) {
+    protected List<HCLElement> body(HCLParser.BodyContext ctx) {
+        List<HCLElement> c = new ArrayList<>();
         if (ctx.children != null) {
             for (ParseTree pt : ctx.children) {
-                if (pt instanceof HCLParser.AttributeContext) {
-                    HCLParser.AttributeContext actx = (HCLParser.AttributeContext) pt;
+                if (pt instanceof HCLParser.AttributeContext actx) {
                     if (prev != null) {
                         group += prev.stop.getLine() + 1 < actx.start.getLine() ? 1 : 0;
                     }
                     HCLIdentifier attrName = created(new HCLIdentifier.SimpleId(actx.IDENTIFIER().getText()), actx.IDENTIFIER().getSymbol());
                     HCLExpression attrValue = exprFactory.process(actx.expression());
-                    HCLAttribute attr = created(new HCLAttribute(c, attrName, attrValue, group), actx);
+                    HCLAttribute attr = created(new HCLAttribute(attrName, attrValue), actx, group);
                     c.add(attr);
                     prev = actx;
                     continue;
                 }
-                if (pt instanceof HCLParser.BlockContext) {
-                    c.add(block(c, (HCLParser.BlockContext) pt));
+                if (pt instanceof HCLParser.BlockContext bct) {
+                    c.add(block(bct));
                     continue;
                 }
-                if (pt instanceof ErrorNode) {
-                    Token token = ((ErrorNode) pt).getSymbol();
+                if (pt instanceof ErrorNode en) {
+                    Token token = en.getSymbol();
                     if (token.getType() == HCLLexer.IDENTIFIER) {
                         if (prev != null) {
                             group += prev.stop.getLine() + 1 < token.getLine() ? 1 : 0;
                         }
                         HCLIdentifier attrName = created(new HCLIdentifier.SimpleId(token.getText()), token);
-                        HCLAttribute attr = new HCLAttribute(c, attrName, null, group);
+                        HCLAttribute attr = new HCLAttribute(attrName, null); //TODO: created?
                         c.add(attr);
                     }
                 }
             }
         }
+        return c;
     }
-    
-    private <E extends HCLElement> E created(E element, Token token) {
-        elementCreated(element, token, token);
-        return element;
-    }
-
-    private <E extends HCLElement> E created(E element, ParserRuleContext ctx) {
-        elementCreated(element, ctx.start, ctx.stop);
-        return element;
-    }
-
-    private void elementCreated(HCLElement element, Token start, Token stop) {
-        if (createAction != null) {
-            createAction.accept(new HCLElement.CreateContext(element, start, stop));
-        }
-    }
-
 }

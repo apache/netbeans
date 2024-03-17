@@ -19,7 +19,7 @@
 package org.netbeans.modules.languages.hcl;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +28,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.languages.hcl.ast.HCLElement;
+import org.netbeans.modules.languages.hcl.ast.HCLElementFactory;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.openide.filesystems.FileObject;
 
@@ -37,7 +38,7 @@ import org.openide.filesystems.FileObject;
  */
 public class SourceRef {
     public final Snapshot source;
-    private Map<HCLElement, OffsetRange> elementOffsets = new HashMap<>();
+    private Map<HCLElement, OffsetRange> elementOffsets = new IdentityHashMap<>();
 
     private TreeMap<OffsetRange, HCLElement> elementAt = new TreeMap<>((o1, o2) -> o1.getStart() != o2.getStart() ? o1.getStart() - o2.getStart() : o2.getEnd() - o1.getEnd());
     
@@ -53,8 +54,8 @@ public class SourceRef {
         }
     }
 
-    void elementCreated(HCLElement.CreateContext ctx) {
-        add(ctx.element, new OffsetRange(ctx.start.getStartIndex(), ctx.stop.getStopIndex() + 1));
+    void elementCreated(HCLElementFactory.CreateContext ctx) {
+        add(ctx.element(), new OffsetRange(ctx.start().getStartIndex(), ctx.stop().getStopIndex() + 1));
     }
 
     public FileObject getFileObject() {

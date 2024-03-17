@@ -26,9 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import org.antlr.v4.runtime.NoViableAltException;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.netbeans.modules.languages.hcl.grammar.HCLLexer;
 import static org.netbeans.modules.languages.hcl.grammar.HCLLexer.*;
 import org.netbeans.modules.languages.hcl.grammar.HCLParser;
@@ -37,12 +35,10 @@ import org.netbeans.modules.languages.hcl.grammar.HCLParser;
  *
  * @author lkishalmi
  */
-public class HCLExpressionFactory {
+public final class HCLExpressionFactory extends HCLElementFactory {
 
-    private final Consumer<HCLElement.CreateContext> createAction;
-
-    public HCLExpressionFactory(Consumer<HCLElement.CreateContext> createAction) {
-        this.createAction = createAction;
+    public HCLExpressionFactory(Consumer<CreateContext> createAction) {
+        super(createAction);
     }
 
     public HCLExpressionFactory() {
@@ -65,12 +61,11 @@ public class HCLExpressionFactory {
                 return created(new HCLArithmeticOperation.Binary(op, expr(ctx.left), expr(ctx.right)), ctx);
             }
             if (ctx.right != null) {
-                switch (ctx.op.getType()) {
-                    case NOT:
-                        return created(new HCLArithmeticOperation.Unary(HCLArithmeticOperation.Operator.NOT, expr(ctx.right)), ctx);
-                    case MINUS:
-                        return created(new HCLArithmeticOperation.Unary(HCLArithmeticOperation.Operator.MINUS, expr(ctx.right)), ctx);
-                }
+                return switch (ctx.op.getType()) {
+                    case NOT ->  created(new HCLArithmeticOperation.Unary(HCLArithmeticOperation.Operator.NOT, expr(ctx.right)), ctx);
+                    case MINUS -> created(new HCLArithmeticOperation.Unary(HCLArithmeticOperation.Operator.MINUS, expr(ctx.right)), ctx);
+                    default -> throw new UnsupportedOperationException("Unsupported expression: " + ctx.getText());
+                };
             }
             if (ctx.exprCond != null && ctx.exprTrue != null && ctx.exprFalse != null) {
                 return created(new HCLConditionalOperation(expr(ctx.exprCond), expr(ctx.exprTrue), expr(ctx.exprFalse)), ctx);
@@ -109,8 +104,7 @@ public class HCLExpressionFactory {
             ret = expr(ctx.exprTerm(), splat);
         }
         if (ctx.exception != null) {
-            if (ctx.exception instanceof NoViableAltException) {
-                NoViableAltException nva = (NoViableAltException) ctx.exception;
+            if (ctx.exception instanceof NoViableAltException nva) {
                 if (nva.getStartToken().getType() == HCLLexer.DOT) {
                     //Most probably a single DOT would mean a started attribute resolve expression
                     //Let's create an empty one on the fly
@@ -168,7 +162,8 @@ public class HCLExpressionFactory {
                 if ((prev != null) && (ec.key != null)) {
                     group += prev.stop.getLine() + 1 < ec.key.start.getLine() ? 1 : 0;
                 }
-                elements.add(new HCLCollection.ObjectElement(expr(ec.key), expr(ec.value), group));
+                HCLCollection.ObjectElement oe = new HCLCollection.ObjectElement(expr(ec.key), expr(ec.value));
+                elements.add(created(oe, ec, group));
                 prev = ec;
             }
             return new HCLCollection.Object(elements);
@@ -193,36 +188,22 @@ public class HCLExpressionFactory {
     }
 
     private static HCLArithmeticOperation.Operator binOp(int tokenType) {
-        switch (tokenType) {
-            case STAR:
-                return HCLArithmeticOperation.Operator.MUL;
-            case SLASH:
-                return HCLArithmeticOperation.Operator.DIV;
-            case PERCENT:
-                return HCLArithmeticOperation.Operator.MOD;
-            case PLUS:
-                return HCLArithmeticOperation.Operator.ADD;
-            case MINUS:
-                return HCLArithmeticOperation.Operator.SUB;
-            case OR:
-                return HCLArithmeticOperation.Operator.OR;
-            case AND:
-                return HCLArithmeticOperation.Operator.AND;
-            case LT:
-                return HCLArithmeticOperation.Operator.LT;
-            case LTE:
-                return HCLArithmeticOperation.Operator.LTE;
-            case GT:
-                return HCLArithmeticOperation.Operator.GT;
-            case GTE:
-                return HCLArithmeticOperation.Operator.GTE;
-            case EQUALS:
-                return HCLArithmeticOperation.Operator.EQUALS;
-            case NOT_EQUALS:
-                return HCLArithmeticOperation.Operator.NOT_EQUALS;
-            default:
-                return null;
-        }
+        return switch (tokenType) {
+            case STAR -> HCLArithmeticOperation.Operator.MUL;
+            case SLASH -> HCLArithmeticOperation.Operator.DIV;
+            case PERCENT -> HCLArithmeticOperation.Operator.MOD;
+            case PLUS -> HCLArithmeticOperation.Operator.ADD;
+            case MINUS -> HCLArithmeticOperation.Operator.SUB;
+            case OR -> HCLArithmeticOperation.Operator.OR;
+            case AND -> HCLArithmeticOperation.Operator.AND;
+            case LT -> HCLArithmeticOperation.Operator.LT;
+            case LTE -> HCLArithmeticOperation.Operator.LTE;
+            case GT -> HCLArithmeticOperation.Operator.GT;
+            case GTE -> HCLArithmeticOperation.Operator.GTE;
+            case EQUALS -> HCLArithmeticOperation.Operator.EQUALS;
+            case NOT_EQUALS -> HCLArithmeticOperation.Operator.NOT_EQUALS;
+            default -> null;
+        };
     }
 
     protected HCLExpression expr(HCLParser.TemplateExprContext ctx) {
@@ -267,13 +248,13 @@ public class HCLExpressionFactory {
         if (ctx.heredocTemplate() != null && ctx.heredocTemplate().children != null) {
             for (ParseTree pt : ctx.heredocTemplate().children) {
                 if (pt instanceof HCLParser.HeredocContentContext) {
-                    parts.add(new HCLTemplate.StringPart(pt.getText()));
+                    parts.add(new HCLTemplate.Part.StringPart(pt.getText()));
                 }
                 if (pt instanceof HCLParser.InterpolationContext) {
-                    parts.add(new HCLTemplate.InterpolationPart(pt.getText()));
+                    parts.add(new HCLTemplate.Part.InterpolationPart(pt.getText()));
                 }
                 if (pt instanceof HCLParser.TemplateContext) {
-                    parts.add(new HCLTemplate.TemplatePart(pt.getText()));
+                    parts.add(new HCLTemplate.Part.TemplatePart(pt.getText()));
                 }
             }
         }
@@ -287,13 +268,13 @@ public class HCLExpressionFactory {
         LinkedList<HCLTemplate.Part> parts = new LinkedList<>();
         for (ParseTree pt : ctx.children) {
             if (pt instanceof HCLParser.StringContentContext) {
-                parts.add(new HCLTemplate.StringPart(pt.getText()));
+                parts.add(new HCLTemplate.Part.StringPart(pt.getText()));
             }
             if (pt instanceof HCLParser.InterpolationContext) {
-                parts.add(new HCLTemplate.InterpolationPart(pt.getText()));
+                parts.add(new HCLTemplate.Part.InterpolationPart(pt.getText()));
             }
             if (pt instanceof HCLParser.TemplateContext) {
-                parts.add(new HCLTemplate.TemplatePart(pt.getText()));
+                parts.add(new HCLTemplate.Part.TemplatePart(pt.getText()));
             }
         }
         return new HCLTemplate.StringTemplate(parts);
@@ -308,7 +289,7 @@ public class HCLExpressionFactory {
         HCLParser.ForIntroContext intro = isTuple ? ctx.forTupleExpr().forIntro() : ctx.forObjectExpr().forIntro();
 
         HCLIdentifier keyVar = null;
-        HCLIdentifier valueVar = null;
+        HCLIdentifier valueVar;
         if (intro.second != null) {
             keyVar = id(intro.first);
             valueVar = id(intro.second);
@@ -342,12 +323,11 @@ public class HCLExpressionFactory {
         if (splat.fullSplat() != null) {
             base = expr(base, splat);
             for (ParseTree pt : splat.fullSplat().children) {
-                if (pt instanceof HCLParser.GetAttrContext) {
-                    HCLParser.GetAttrContext ac = (HCLParser.GetAttrContext) pt;
-                    base = expr(base, ac);
+                if (pt instanceof HCLParser.GetAttrContext gac) {
+                    base = expr(base, gac);
                 }
-                if (pt instanceof HCLParser.IndexContext) {
-                    base = expr(base, (HCLParser.IndexContext) pt);
+                if (pt instanceof HCLParser.IndexContext ic) {
+                    base = expr(base, ic);
                 }
             }
         }
@@ -376,32 +356,5 @@ public class HCLExpressionFactory {
                 : created(new HCLLiteral.NumericLit(idx.LEGACY_INDEX().getText().substring(1)), idx); // Split the dot from .<index>
         return created(new HCLResolveOperation.Index(base, index, idx.LEGACY_INDEX() != null), idx);
 
-    }
-
-    private HCLIdentifier id(TerminalNode tn) {
-        return tn != null ? id(tn.getSymbol()) : null;
-    }
-    
-    protected HCLIdentifier id(Token t) {
-        return (t != null) && (t.getType() == HCLLexer.IDENTIFIER) ? created(new HCLIdentifier.SimpleId(t.getText()), t) : null;
-    }
-    
-    private <E extends HCLElement> E created(E element, Token token) {
-        return created(element, token, token);
-    }
-
-    private <E extends HCLElement> E created(E element, ParserRuleContext ctx) {
-        return created(element, ctx.start, ctx.stop);
-    }
-
-    private <E extends HCLElement> E created(E element, Token start, Token stop) {
-        elementCreated(element, start, stop);
-        return element;
-    }
-
-    private void elementCreated(HCLElement element, Token start, Token stop) {
-        if (createAction != null) {
-            createAction.accept(new HCLElement.CreateContext(element, start, stop));
-        }
     }
 }

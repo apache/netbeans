@@ -58,9 +58,7 @@ import * as launchConfigurations from './launchConfigurations';
 import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
 import { initializeRunConfiguration, runConfigurationProvider, runConfigurationNodeProvider, configureRunSettings, runConfigurationUpdateAll } from './runConfiguration';
 import { dBConfigurationProvider, onDidTerminateSession } from './dbConfigurationProvider';
-import { TLSSocket } from 'tls';
 import { InputStep, MultiStepInput } from './utils';
-import { env } from 'process';
 import { PropertiesView } from './propertiesView/propertiesView';
 
 const API_VERSION : string = "1.0";
@@ -884,320 +882,309 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     handleLog(log, launchMsg);
     vscode.window.setStatusBarMessage(launchMsg, 2000);
 
-    let ideRunning = new Promise((resolve, reject) => {
-        let stdOut : string | null = '';
-        function logAndWaitForEnabled(text: string, isOut: boolean) {
-            if (p == nbProcess) {
-                activationPending = false;
-            }
-            handleLogNoNL(log, text);
-            if (stdOut == null) {
-                return;
-            }
-            if (isOut) {
-                stdOut += text;
-            }
-            if (stdOut.match(/org.netbeans.modules.java.lsp.server/)) {
-                resolve(text);
-                stdOut = null;
-            }
-        }
-        let extras : string[] = ["--modules", "--list", "-J-XX:PerfMaxStringConstLength=10240"];
-        if (isDarkColorTheme()) {
-            extras.push('--laf', 'com.formdev.flatlaf.FlatDarkLaf');
-        }
-        if (isJavaSupportEnabled()) {
-            extras.push('--direct-disable', 'org.netbeans.modules.nbcode.integration.java');
-        } else {
-            extras.push('--enable', 'org.netbeans.modules.nbcode.integration.java');
-        }
-        let p = launcher.launch(info, ...extras);
-        handleLog(log, "LSP server launching: " + p.pid);
-        handleLog(log, "LSP server user directory: " + userdir);
-        p.stdout.on('data', function(d: any) {
-            logAndWaitForEnabled(d.toString(), true);
-        });
-        p.stderr.on('data', function(d: any) {
-            logAndWaitForEnabled(d.toString(), false);
-        });
-        nbProcess = p;
-        p.on('close', function(code: number) {
-            if (p == nbProcess) {
-                nbProcess = null;
-            }
-            if (p == nbProcess && code != 0 && code) {
-                vscode.window.showWarningMessage("Apache NetBeans Language Server exited with " + code);
-            }
-            if (stdOut != null) {
-                let match = stdOut.match(/org.netbeans.modules.java.lsp.server[^\n]*/)
-                if (match?.length == 1) {
-                    handleLog(log, match[0]);
-                } else {
-                    handleLog(log, "Cannot find org.netbeans.modules.java.lsp.server in the log!");
-                }
-                log.show(false);
-                killNbProcess(false, log, p);
-                reject("Apache NetBeans Language Server not enabled!");
-            } else {
-                handleLog(log, "LSP server " + p.pid + " terminated with " + code);
-                handleLog(log, "Exit code " + code);
-            }
-        });
-    });
-
-    ideRunning.then(() => {
-        const connection = () => new Promise<StreamInfo>((resolve, reject) => {
-            const server = net.createServer(socket => {
-                server.close();
-                resolve({
-                    reader: socket,
-                    writer: socket
-                });
-            });
-            server.on('error', (err) => {
-                reject(err);
-            });
-            server.listen(() => {
-                const address: any = server.address();
-                const srv = launcher.launch(info,
-                    `--start-java-language-server=connect:${address.port}`,
-                    `--start-java-debug-adapter-server=listen:0`
-                );
-                if (!srv) {
-                    reject();
-                } else {
-                    if (!srv.stdout) {
-                        reject(`No stdout to parse!`);
-                        srv.disconnect();
-                        return;
-                    }
-                    debugPort = -1;
-                    srv.stdout.on("data", (chunk) => {
-                        if (debugPort < 0) {
-                            const info = chunk.toString().match(/Debug Server Adapter listening at port (\d*)/);
-                            if (info) {
-                                debugPort = info[1];
-                            }
-                        }
-                    });
-                    srv.once("error", (err) => {
-                        reject(err);
-                    });
-                }
+    const connection = () => new Promise<StreamInfo>((resolve, reject) => {
+        const server = net.createServer(socket => {
+            server.close();
+            resolve({
+                reader: socket,
+                writer: socket
             });
         });
-        const conf = workspace.getConfiguration();
-        let documentSelectors : DocumentSelector = [
-                { language: 'java' },
-                { language: 'yaml', pattern: '**/{application,bootstrap}*.yml' },
-                { language: 'properties', pattern: '**/{application,bootstrap}*.properties' },
-                { language: 'jackpot-hint' },
-                { language: 'xml', pattern: '**/pom.xml' },
-                { pattern: '**/build.gradle'}
-        ];
-        documentSelectors.push(...collectDocumentSelectors());
-        const enableJava = isJavaSupportEnabled();
-        const enableGroovy : boolean = conf.get("netbeans.groovySupport.enabled") as boolean;
-        if (enableGroovy) {
-            documentSelectors.push({ language: 'groovy'});
-        }
-        // Options to control the language client
-        let clientOptions: LanguageClientOptions = {
-            // Register the server for java documents
-            documentSelector: documentSelectors,
-            synchronize: {
-                configurationSection: [
-                    'netbeans.format',
-                    'netbeans.java.imports',
-                    'java+.runConfig.vmOptions'
-                ],
-                fileEvents: [
-                    workspace.createFileSystemWatcher('**/*.java')
-                ]
-            },
-            outputChannel: log,
-            revealOutputChannelOn: RevealOutputChannelOn.Never,
-            progressOnInitialization: true,
-            initializationOptions : {
-                'nbcodeCapabilities' : {
-                    'statusBarMessageSupport' : true,
-                    'testResultsSupport' : true,
-                    'showHtmlPageSupport' : true,
-                    'wantsJavaSupport' : enableJava,
-                    'wantsGroovySupport' : enableGroovy
-                }
-            },
-            errorHandler: {
-                error : function(error: Error, _message: Message, count: number): ErrorHandlerResult {
-                    return { action: ErrorAction.Continue, message: error.message };
-                },
-                closed : function(): CloseHandlerResult {
-                    handleLog(log, "Connection to Apache NetBeans Language Server closed.");
-                    if (!activationPending) {
-                        restartWithJDKLater(10000, false);
-                    }
-                    return { action: CloseAction.DoNotRestart };
-                }
+        server.on('error', (err) => {
+            reject(err);
+        });
+        server.listen(() => {
+            const address: any = server.address();
+            let extras : string[] = ["--modules", "-J-XX:PerfMaxStringConstLength=10240"];
+            if (isDarkColorTheme()) {
+                extras.push('--laf', 'com.formdev.flatlaf.FlatDarkLaf');
             }
-        }
-
-
-        let c = new NbLanguageClient(
-                'java',
-                'NetBeans Java',
-                connection,
-                log,
-                clientOptions
-        );
-        handleLog(log, 'Language Client: Starting');
-        c.start().then(() => {
             if (isJavaSupportEnabled()) {
-                testAdapter = new NbTestAdapter();
+                extras.push('--direct-disable', 'org.netbeans.modules.nbcode.integration.java');
+            } else {
+                extras.push('--enable', 'org.netbeans.modules.nbcode.integration.java');
             }
-            c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
-            c.onRequest(HtmlPageRequest.type, showHtmlPage);
-            c.onRequest(ExecInHtmlPageRequest.type, execInHtmlPage);
-            c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
-            c.onRequest(QuickPickRequest.type, async param => {
-                const selected = await window.showQuickPick(param.items, { title: param.title, placeHolder: param.placeHolder, canPickMany: param.canPickMany, ignoreFocusOut: true });
-                return selected ? Array.isArray(selected) ? selected : [selected] : undefined;
-            });
-            c.onRequest(UpdateConfigurationRequest.type, async (param) => {
-                await vscode.workspace.getConfiguration(param.section).update(param.key, param.value);
-                runConfigurationUpdateAll();
-            });
-            c.onRequest(SaveDocumentsRequest.type, async (request : SaveDocumentRequestParams) => {
-                const uriList = request.documents.map(s => {
-                    let re = /^file:\/(?:\/\/)?([A-Za-z]):\/(.*)$/.exec(s);
-                    if (!re) {
-                        return s;
-                    }
-                    // don't ask why vscode mangles URIs this way; in addition, it uses lowercase drive letter ???
-                    return `file:///${re[1].toLowerCase()}%3A/${re[2]}`;
-                });
-                for (let ed of workspace.textDocuments) {
-                    if (uriList.includes(ed.uri.toString())) {
-                        return ed.save();
-                    }
+            extras.push(`--start-java-language-server=connect:${address.port}`);
+            extras.push(`--start-java-debug-adapter-server=listen:0`);
+            const srv = launcher.launch(info,...extras);
+            var p = srv;
+            if (!srv) {
+                reject();
+            } else {
+                if (!srv.stdout) {
+                    reject(`No stdout to parse!`);
+                    srv.disconnect();
+                    return;
                 }
-                return false;
-            });
-            c.onRequest(InputBoxRequest.type, async param => {
-                return await window.showInputBox({ title: param.title, prompt: param.prompt, value: param.value, password: param.password });
-            });
-            c.onRequest(MutliStepInputRequest.type, async param => {
-                const data: { [name: string]: readonly vscode.QuickPickItem[] | string } = {};
-                async function nextStep(input: MultiStepInput, step: number, state: { [name: string]: readonly vscode.QuickPickItem[] | string }): Promise<InputStep | void> {
-                    const inputStep = await c.sendRequest(MutliStepInputRequest.step, { inputId: param.id, step, data: state });
-                    if (inputStep && inputStep.hasOwnProperty('items')) {
-                        const quickPickStep = inputStep as QuickPickStep;
-                        state[inputStep.stepId] = await input.showQuickPick({
-                            title: param.title,
-                            step,
-                            totalSteps: quickPickStep.totalSteps,
-                            placeholder: quickPickStep.placeHolder,
-                            items: quickPickStep.items,
-                            canSelectMany: quickPickStep.canPickMany,
-                            selectedItems: quickPickStep.items.filter(item => item.picked)
-                        });
-                        return (input: MultiStepInput) => nextStep(input, step + 1, state);
-                    } else if (inputStep && inputStep.hasOwnProperty('value')) {
-                        const inputBoxStep = inputStep as InputBoxStep;
-                        state[inputStep.stepId] = await input.showInputBox({
-                            title: param.title,
-                            step,
-                            totalSteps: inputBoxStep.totalSteps,
-                            value: state[inputStep.stepId] as string || inputBoxStep.value,
-                            prompt: inputBoxStep.prompt,
-                            password: inputBoxStep.password,
-                            validate: (val) => {
-                                const d = { ...state };
-                                d[inputStep.stepId] = val;
-                                return c.sendRequest(MutliStepInputRequest.validate, { inputId: param.id, step, data: d });
-                            }
-                        });
-                        return (input: MultiStepInput) => nextStep(input, step + 1, state);
-                    }
-                }
-                await MultiStepInput.run(input => nextStep(input, 1, data));
-                return data;
-            });
-            c.onNotification(TestProgressNotification.type, param => {
-                if (testAdapter) {
-                    testAdapter.testProgress(param.suite);
-                }
-            });
-            let decorations = new Map<string, TextEditorDecorationType>();
-            let decorationParamsByUri = new Map<vscode.Uri, SetTextEditorDecorationParams>();
-            c.onRequest(TextEditorDecorationCreateRequest.type, param => {
-                let decorationType = vscode.window.createTextEditorDecorationType(param);
-                decorations.set(decorationType.key, decorationType);
-                return decorationType.key;
-            });
-            c.onNotification(TextEditorDecorationSetNotification.type, param => {
-                let decorationType = decorations.get(param.key);
-                if (decorationType) {
-                    let editorsWithUri = vscode.window.visibleTextEditors.filter(
-                        editor => editor.document.uri.toString() == param.uri
-                    );
-                    if (editorsWithUri.length > 0) {
-                        editorsWithUri[0].setDecorations(decorationType, asRanges(param.ranges));
-                        decorationParamsByUri.set(editorsWithUri[0].document.uri, param);
-                    }
-                }
-            });
-            let disposableListener = vscode.window.onDidChangeVisibleTextEditors(editors => {
-                editors.forEach(editor => {
-                    let decorationParams = decorationParamsByUri.get(editor.document.uri);
-                    if (decorationParams) {
-                        let decorationType = decorations.get(decorationParams.key);
-                        if (decorationType) {
-                            editor.setDecorations(decorationType, asRanges(decorationParams.ranges));
+                debugPort = -1;
+                srv.stdout.on("data", (chunk) => {
+                    if (debugPort < 0) {
+                        const info = chunk.toString().match(/Debug Server Adapter listening at port (\d*)/);
+                        if (info) {
+                            debugPort = info[1];
                         }
                     }
                 });
+                srv.once("error", (err) => {
+                    reject(err);
+                });
+            }
+            let stdOut : string | null = '';
+            function logAndWaitForEnabled(text: string, isOut: boolean) {
+                if (p == nbProcess) {
+                    activationPending = false;
+                }
+                handleLogNoNL(log, text);
+                if (stdOut == null) {
+                    return;
+                }
+                if (isOut) {
+                    stdOut += text;
+                }
+                if (stdOut.match(/org.netbeans.modules.java.lsp.server/)) {
+                    stdOut = null;
+                }
+            }
+            handleLog(log, "LSP server launching: " + p.pid);
+            handleLog(log, "LSP server user directory: " + userdir);
+            p.stdout.on('data', function(d: any) {
+                logAndWaitForEnabled(d.toString(), true);
             });
-            context.subscriptions.push(disposableListener);
-            c.onNotification(TextEditorDecorationDisposeNotification.type, param => {
-                let decorationType = decorations.get(param);
-                if (decorationType) {
-                    decorations.delete(param);
-                    decorationType.dispose();
-                    decorationParamsByUri.forEach((value, key, map) => {
-                        if (value.key == param) {
-                            map.delete(key);
+            p.stderr.on('data', function(d: any) {
+                logAndWaitForEnabled(d.toString(), false);
+            });
+            nbProcess = p;
+            p.on('close', function(code: number) {
+                if (p == nbProcess) {
+                    nbProcess = null;
+                }
+                if (p == nbProcess && code != 0 && code) {
+                    vscode.window.showWarningMessage("Apache NetBeans Language Server exited with " + code);
+                }
+                if (stdOut != null) {
+                    let match = stdOut.match(/org.netbeans.modules.java.lsp.server[^\n]*/)
+                    if (match?.length == 1) {
+                        handleLog(log, match[0]);
+                    } else {
+                        handleLog(log, "Cannot find org.netbeans.modules.java.lsp.server in the log!");
+                    }
+                    log.show(false);
+                    killNbProcess(false, log, p);
+                    reject("Apache NetBeans Language Server not enabled!");
+                } else {
+                    handleLog(log, "LSP server " + p.pid + " terminated with " + code);
+                    handleLog(log, "Exit code " + code);
+                }
+            });
+
+        });
+    });
+    const conf = workspace.getConfiguration();
+    let documentSelectors : DocumentSelector = [
+            { language: 'java' },
+            { language: 'yaml', pattern: '**/{application,bootstrap}*.yml' },
+            { language: 'properties', pattern: '**/{application,bootstrap}*.properties' },
+            { language: 'jackpot-hint' },
+            { language: 'xml', pattern: '**/pom.xml' },
+            { pattern: '**/build.gradle'}
+    ];
+    documentSelectors.push(...collectDocumentSelectors());
+    const enableJava = isJavaSupportEnabled();
+    const enableGroovy : boolean = conf.get("netbeans.groovySupport.enabled") as boolean;
+    if (enableGroovy) {
+        documentSelectors.push({ language: 'groovy'});
+    }
+    // Options to control the language client
+    let clientOptions: LanguageClientOptions = {
+        // Register the server for java documents
+        documentSelector: documentSelectors,
+        synchronize: {
+            configurationSection: [
+                'netbeans.format',
+                'netbeans.java.imports',
+                'java+.runConfig.vmOptions'
+            ],
+            fileEvents: [
+                workspace.createFileSystemWatcher('**/*.java')
+            ]
+        },
+        outputChannel: log,
+        revealOutputChannelOn: RevealOutputChannelOn.Never,
+        progressOnInitialization: true,
+        initializationOptions : {
+            'nbcodeCapabilities' : {
+                'statusBarMessageSupport' : true,
+                'testResultsSupport' : true,
+                'showHtmlPageSupport' : true,
+                'wantsJavaSupport' : enableJava,
+                'wantsGroovySupport' : enableGroovy
+            }
+        },
+        errorHandler: {
+            error : function(error: Error, _message: Message, count: number): ErrorHandlerResult {
+                return { action: ErrorAction.Continue, message: error.message };
+            },
+            closed : function(): CloseHandlerResult {
+                handleLog(log, "Connection to Apache NetBeans Language Server closed.");
+                if (!activationPending) {
+                    restartWithJDKLater(10000, false);
+                }
+                return { action: CloseAction.DoNotRestart };
+            }
+        }
+    }
+
+    let c = new NbLanguageClient(
+            'java',
+            'NetBeans Java',
+            connection,
+            log,
+            clientOptions
+    );
+    handleLog(log, 'Language Client: Starting');
+    c.start().then(() => {
+        if (isJavaSupportEnabled()) {
+            testAdapter = new NbTestAdapter();
+        }
+        c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
+        c.onRequest(HtmlPageRequest.type, showHtmlPage);
+        c.onRequest(ExecInHtmlPageRequest.type, execInHtmlPage);
+        c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
+        c.onRequest(QuickPickRequest.type, async param => {
+            const selected = await window.showQuickPick(param.items, { title: param.title, placeHolder: param.placeHolder, canPickMany: param.canPickMany, ignoreFocusOut: true });
+            return selected ? Array.isArray(selected) ? selected : [selected] : undefined;
+        });
+        c.onRequest(UpdateConfigurationRequest.type, async (param) => {
+            await vscode.workspace.getConfiguration(param.section).update(param.key, param.value);
+            runConfigurationUpdateAll();
+        });
+        c.onRequest(SaveDocumentsRequest.type, async (request : SaveDocumentRequestParams) => {
+            const uriList = request.documents.map(s => {
+                let re = /^file:\/(?:\/\/)?([A-Za-z]):\/(.*)$/.exec(s);
+                if (!re) {
+                    return s;
+                }
+                // don't ask why vscode mangles URIs this way; in addition, it uses lowercase drive letter ???
+                return `file:///${re[1].toLowerCase()}%3A/${re[2]}`;
+            });
+            for (let ed of workspace.textDocuments) {
+                if (uriList.includes(ed.uri.toString())) {
+                    return ed.save();
+                }
+            }
+            return false;
+        });
+        c.onRequest(InputBoxRequest.type, async param => {
+            return await window.showInputBox({ title: param.title, prompt: param.prompt, value: param.value, password: param.password });
+        });
+        c.onRequest(MutliStepInputRequest.type, async param => {
+            const data: { [name: string]: readonly vscode.QuickPickItem[] | string } = {};
+            async function nextStep(input: MultiStepInput, step: number, state: { [name: string]: readonly vscode.QuickPickItem[] | string }): Promise<InputStep | void> {
+                const inputStep = await c.sendRequest(MutliStepInputRequest.step, { inputId: param.id, step, data: state });
+                if (inputStep && inputStep.hasOwnProperty('items')) {
+                    const quickPickStep = inputStep as QuickPickStep;
+                    state[inputStep.stepId] = await input.showQuickPick({
+                        title: param.title,
+                        step,
+                        totalSteps: quickPickStep.totalSteps,
+                        placeholder: quickPickStep.placeHolder,
+                        items: quickPickStep.items,
+                        canSelectMany: quickPickStep.canPickMany,
+                        selectedItems: quickPickStep.items.filter(item => item.picked)
+                    });
+                    return (input: MultiStepInput) => nextStep(input, step + 1, state);
+                } else if (inputStep && inputStep.hasOwnProperty('value')) {
+                    const inputBoxStep = inputStep as InputBoxStep;
+                    state[inputStep.stepId] = await input.showInputBox({
+                        title: param.title,
+                        step,
+                        totalSteps: inputBoxStep.totalSteps,
+                        value: state[inputStep.stepId] as string || inputBoxStep.value,
+                        prompt: inputBoxStep.prompt,
+                        password: inputBoxStep.password,
+                        validate: (val) => {
+                            const d = { ...state };
+                            d[inputStep.stepId] = val;
+                            return c.sendRequest(MutliStepInputRequest.validate, { inputId: param.id, step, data: d });
                         }
                     });
+                    return (input: MultiStepInput) => nextStep(input, step + 1, state);
                 }
-            });
-            c.onNotification(TelemetryEventNotification.type, (param) => {
-                const ls = listeners.get(param);
-                if (ls) {
-                    for (const listener of ls) {
-                        commands.executeCommand(listener);
+            }
+            await MultiStepInput.run(input => nextStep(input, 1, data));
+            return data;
+        });
+        c.onNotification(TestProgressNotification.type, param => {
+            if (testAdapter) {
+                testAdapter.testProgress(param.suite);
+            }
+        });
+        let decorations = new Map<string, TextEditorDecorationType>();
+        let decorationParamsByUri = new Map<vscode.Uri, SetTextEditorDecorationParams>();
+        c.onRequest(TextEditorDecorationCreateRequest.type, param => {
+            let decorationType = vscode.window.createTextEditorDecorationType(param);
+            decorations.set(decorationType.key, decorationType);
+            return decorationType.key;
+        });
+        c.onNotification(TextEditorDecorationSetNotification.type, param => {
+            let decorationType = decorations.get(param.key);
+            if (decorationType) {
+                let editorsWithUri = vscode.window.visibleTextEditors.filter(
+                    editor => editor.document.uri.toString() == param.uri
+                );
+                if (editorsWithUri.length > 0) {
+                    editorsWithUri[0].setDecorations(decorationType, asRanges(param.ranges));
+                    decorationParamsByUri.set(editorsWithUri[0].document.uri, param);
+                }
+            }
+        });
+        let disposableListener = vscode.window.onDidChangeVisibleTextEditors(editors => {
+            editors.forEach(editor => {
+                let decorationParams = decorationParamsByUri.get(editor.document.uri);
+                if (decorationParams) {
+                    let decorationType = decorations.get(decorationParams.key);
+                    if (decorationType) {
+                        editor.setDecorations(decorationType, asRanges(decorationParams.ranges));
                     }
                 }
             });
-            handleLog(log, 'Language Client: Ready');
-            setClient[0](c);
-            commands.executeCommand('setContext', 'nbJavaLSReady', true);
-        
-            if (enableJava) {
-                // create project explorer:
-                //c.findTreeViewService().createView('foundProjects', 'Projects', { canSelectMany : false });
-                createProjectView(context, c);
+        });
+        context.subscriptions.push(disposableListener);
+        c.onNotification(TextEditorDecorationDisposeNotification.type, param => {
+            let decorationType = decorations.get(param);
+            if (decorationType) {
+                decorations.delete(param);
+                decorationType.dispose();
+                decorationParamsByUri.forEach((value, key, map) => {
+                    if (value.key == param) {
+                        map.delete(key);
+                    }
+                });
             }
+        });
+        c.onNotification(TelemetryEventNotification.type, (param) => {
+            const ls = listeners.get(param);
+            if (ls) {
+                for (const listener of ls) {
+                    commands.executeCommand(listener);
+                }
+            }
+        });
+        handleLog(log, 'Language Client: Ready');
+        setClient[0](c);
+        commands.executeCommand('setContext', 'nbJavaLSReady', true);
 
-            createDatabaseView(c);
-            if (enableJava) {
-                c.findTreeViewService().createView('cloud.resources', undefined, { canSelectMany : false });
-            }
-        }).catch(setClient[1]);
-    }).catch((reason) => {
-        activationPending = false;
-        handleLog(log, reason);
-        window.showErrorMessage('Error initializing ' + reason);
-    });
+        if (enableJava) {
+            // create project explorer:
+            //c.findTreeViewService().createView('foundProjects', 'Projects', { canSelectMany : false });
+            createProjectView(context, c);
+        }
+
+        createDatabaseView(c);
+        if (enableJava) {
+            c.findTreeViewService().createView('cloud.resources', undefined, { canSelectMany : false });
+        }
+    }).catch(setClient[1]);
 
     class Decorator implements TreeItemDecorator<Visualizer> {
         private provider : CustomizableTreeDataProvider<Visualizer>;

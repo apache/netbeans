@@ -26,9 +26,11 @@ public class CoreSettingsTest extends BasicTestForImport {
     public CoreSettingsTest(String testName) {
         super(testName, "org-netbeans-modules-xml-core-settings-CoreSettings.settings");
     }    
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/netbeans/modules/xml/core");
     }    
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {
             "preferedShortEmptyElement", "autoParsingDelay", "defaultAction"

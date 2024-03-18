@@ -19,9 +19,6 @@
 
 package org.netbeans.upgrade.systemoptions;
 
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * @author Radek Matous
  */
@@ -30,10 +27,9 @@ class NbClassPathProcessor extends PropertyProcessor {
         super("org.openide.execution.NbClassPath");//NOI18N
     }
 
+    @Override
     void processPropertyImpl(String propertyName, Object value) {
-        List l = ((SerParser.ObjectWrapper)value).data;
-        for (Iterator it = l.iterator(); it.hasNext();) {
-            Object elem = (Object) it.next();
+        for (Object elem : ((SerParser.ObjectWrapper)value).data) {
             if (elem instanceof SerParser.NameValue) {
                 SerParser.NameValue nv = (SerParser.NameValue)elem;
                 if (nv.value != null && nv.name != null) {

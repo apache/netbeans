@@ -27,10 +27,12 @@ public class I18nOptionsTest extends BasicTestForImport {
         super(testName, "org-netbeans-modules-i18n-I18nOptions.settings");
     }
     
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/netbeans/modules/i18n");
     }
     
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {
             "replaceResourceValue",

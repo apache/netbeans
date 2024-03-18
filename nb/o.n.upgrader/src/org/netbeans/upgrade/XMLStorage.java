@@ -114,16 +114,14 @@ public class XMLStorage {
         if (fo == null) throw new NullPointerException ();
         if (content == null) throw new NullPointerException ();
         requestProcessor.post (new Runnable () {
+            @Override
             public void run () {
                 try {
                     FileLock lock = fo.lock ();
                     try {
                         OutputStream os = fo.getOutputStream (lock);
-                        Writer writer = new OutputStreamWriter (os, StandardCharsets.UTF_8);
-                        try {
+                        try (Writer writer = new OutputStreamWriter (os, StandardCharsets.UTF_8)) {
                             writer.write (content);
-                        } finally {
-                            writer.close ();
                         } 
                     } finally {
                         lock.releaseLock ();

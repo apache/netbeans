@@ -42,6 +42,7 @@ public abstract class BasicTestForImport extends NbTestCase {
         this.fileName = fileName;
     }
     
+    @Override
     protected void setUp() throws Exception {
         URL u = getClass().getResource(getFileName());
         File ff = new File(u.getFile());//getDataDir(),getFileName()
@@ -72,8 +73,8 @@ public abstract class BasicTestForImport extends NbTestCase {
     }
 
     public void assertPropertyNames(final String[] propertyNames) throws IOException, ClassNotFoundException {
-        assertEquals(new TreeSet<String>(Arrays.asList(propertyNames)).toString(),
-                new TreeSet<String>(Arrays.asList(readSystemOption(false).getPropertyNames())).toString());
+        assertEquals(new TreeSet<>(Arrays.asList(propertyNames)).toString(),
+                     new TreeSet<>(Arrays.asList(readSystemOption(false).getPropertyNames())).toString());
     }
     
     public void assertProperty(final String propertyName, final String expected) throws IOException, ClassNotFoundException {
@@ -116,13 +117,13 @@ public abstract class BasicTestForImport extends NbTestCase {
         if (actual == null) {
             assertNull(expected);
         } else {
-            Class expectedClass = null;
+            Class<?> expectedClass = null;
             try {
                 expectedClass = Class.forName(expected);
             } catch (ClassNotFoundException ex) {
             }
             if (expectedClass != null) {
-                Class cls = Class.forName(actual);
+                Class<?> cls = Class.forName(actual);
                 assertTrue(expectedClass + " but : " + cls,expectedClass.isAssignableFrom(cls));
             } else {
                 assertEquals(expected, actual);

@@ -19,12 +19,6 @@
 
 package org.netbeans.upgrade.systemoptions;
 
-import java.rmi.UnexpectedException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author Radek Matous
  */
@@ -33,11 +27,10 @@ class HostPropertyProcessor extends PropertyProcessor {
         super("org.netbeans.modules.httpserver.HttpServerSettings.HostProperty");//NOI18N
     }
     
+    @Override
     void processPropertyImpl(String propertyName, Object value) {
         if ("hostProperty".equals(propertyName)) {//NOI18N
-            List l = ((SerParser.ObjectWrapper)value).data;
-            for (Iterator it = l.iterator(); it.hasNext();) {
-                Object elem = (Object) it.next();
+            for (Object elem : ((SerParser.ObjectWrapper)value).data) {
                 if (elem instanceof SerParser.NameValue) {
                     SerParser.NameValue nv = (SerParser.NameValue)elem;
                     if (nv.value != null && nv.name != null) {

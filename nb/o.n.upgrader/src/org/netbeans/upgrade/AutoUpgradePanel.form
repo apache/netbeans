@@ -42,7 +42,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="txtVersions" alignment="0" pref="583" max="32767" attributes="0"/>
+          <Component id="txtVersions" alignment="0" pref="254" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -54,11 +54,11 @@
   <SubComponents>
     <Component class="javax.swing.JTextArea" name="txtVersions">
       <Properties>
+        <Property name="editable" type="boolean" value="false"/>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection component="Form" name="background" type="property"/>
         </Property>
         <Property name="columns" type="int" value="50"/>
-        <Property name="editable" type="boolean" value="false"/>
         <Property name="font" postCode="txtVersions.setFont(new java.awt.Font(&quot;Dialog&quot;, 0, 12));"/>
         <Property name="lineWrap" type="boolean" value="true"/>
         <Property name="rows" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="if (source != null) {">

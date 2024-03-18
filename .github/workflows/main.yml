@@ -109,7 +109,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '21', '22-ea' ]
+        java: [ '17', '21', '22' ]
       fail-fast: false
     steps:
         
@@ -256,7 +256,7 @@ jobs:
           java-version: 11
           distribution: ${{ env.default_java_distribution }}
 
-      # fails on 17+
+      # TODO fails on 17+
       - name: platform/core.network
         if: matrix.java == 17 && success()
         run: ant $OPTS -f platform/core.network test
@@ -819,7 +819,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '21', '22-ea' ]
+        java: [ '17', '21', '22' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
@@ -901,13 +901,7 @@ jobs:
 #      - name: java/ant.grammar
 #        run: ant $OPTS -f java/ant.grammar test
 
-      - name: Set up JDK 17 for JDK 21 incompatible tests
-        if: ${{ matrix.java == '21' }}
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: ${{ env.default_java_distribution }}
-
+      # TODO next are JDK 21+ incompatibe steps
       - name: java/java.mx.project
         if: ${{ matrix.java == '17' }}
         run: .github/retry.sh ant $OPTS -f java/java.mx.project test
@@ -1086,7 +1080,7 @@ jobs:
 
       # TODO fix JDK 11 incompatibilities
       - name: platform/lib.uihandler
-        run: ant $OPTS -f platform/lib.uihandler test
+        run: .github/retry.sh ant $OPTS -f platform/lib.uihandler test
 
       - name: platform/openide.text
         run: .github/retry.sh ant $OPTS -f platform/openide.text test
@@ -1234,7 +1228,7 @@ jobs:
         run: ant $OPTS -f platform/templatesui test
 
       - name: platform/uihandler
-        run: ant $OPTS -f platform/uihandler test
+        run: .github/retry.sh ant $OPTS -f platform/uihandler test
 
       - name: platform/o.n.bootstrap
         run: ant $OPTS -f platform/o.n.bootstrap test
@@ -1581,10 +1575,10 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '22-ea' ]
+        java: [ '17', '22' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '22-ea' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '22' }}
       fail-fast: false
     steps:
 
@@ -1634,7 +1628,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '21', '22-ea' ]
+        java: [ '17', '21', '22' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
@@ -1669,7 +1663,7 @@ jobs:
         run: ant $OPTS -f java/debugger.jpda.js test
 
       - name: debugger.jpda.projects
-        run: ant $OPTS -f java/debugger.jpda.projects test
+        run: .github/retry.sh ant $OPTS -f java/debugger.jpda.projects test
 
       - name: debugger.jpda.projectsui
         run: ant $OPTS -f java/debugger.jpda.projectsui test
@@ -2071,6 +2065,7 @@ jobs:
       - name: glassfish.common
         run: ant $OPTS -f enterprise/glassfish.common test
 
+# TODO failing tests commented out
 # Fails
 #      - name: glassfish.javaee
 #        run: ant $OPTS -f enterprise/glassfish.javaee test
@@ -2419,6 +2414,8 @@ jobs:
       matrix:
         java: [ '17' ]
         os: [ 'windows-latest', 'ubuntu-latest' ]
+        exclude:
+          - os: ${{ (contains(github.event.pull_request.labels.*.name, 'PHP') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request') && 'nothing' || 'windows-latest' }}
       fail-fast: false
     steps:
 
@@ -2433,7 +2430,7 @@ jobs:
         if: contains(matrix.os, 'ubuntu')
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.3'
           tools: pecl
           extensions: xdebug
           ini-values: xdebug.mode=debug
@@ -2601,6 +2598,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
+        # TODO uses EOL GraalVM, needs JDK 17+ upgrade
         graal: [ '22.3.1' ]
       fail-fast: false
 
@@ -2618,7 +2616,7 @@ jobs:
       - name: Extract
         run: tar --zstd -xf build.tar.zst
 
-      - name: Setup GraalVM
+      - name: Setup GraalVM {{ matrix.graal }}
         run: |
           URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graal }}/graalvm-ce-java11-linux-amd64-${{ matrix.graal }}.tar.gz
           curl -L $URL | tar -xz
@@ -2744,22 +2742,15 @@ jobs:
     timeout-minutes: 60
     steps:
 
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          submodules: true
-          show-progress: false
-
       - name: Delete Workspace Artifact
-        uses: ./.github/actions/delete-artifact/
+        uses: geekyeggo/delete-artifact@v5
         with:
           name: build
-          failOnError: true
+          useGlob: false
 
       - name: Delete Dev Build Artifact
-        uses: ./.github/actions/delete-artifact/
+        uses: geekyeggo/delete-artifact@v5
         if: ${{ contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && cancelled() }}
         with:
           name: dev-build
-          failOnError: true
+          useGlob: false

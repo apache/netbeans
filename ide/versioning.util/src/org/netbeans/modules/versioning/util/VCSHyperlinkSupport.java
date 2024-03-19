@@ -240,6 +240,7 @@ public class VCSHyperlinkSupport {
             for (int i = 0; i < start.length; i++) {
                 if (bounds != null && bounds[i] != null && bounds[i].contains(p)) {
                     component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    component.setToolTipText(hp.getTooltip(text, start[i], end[i]));
                     return true;
                 }
             }

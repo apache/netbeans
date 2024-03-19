@@ -56,7 +56,6 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
-import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
@@ -73,6 +72,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +80,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -148,6 +149,7 @@ public class JavaFixUtilities {
         return rewriteFix(ctx.getInfo(), displayName, what, to, ctx.getVariables(), ctx.getMultiVariables(), ctx.getVariableNames(), ctx.getConstraints(), Collections.<String, String>emptyMap());
     }
 
+    @SuppressWarnings("AssignmentToMethodParameter")
     static Fix rewriteFix(CompilationInfo info, String displayName, TreePath what, final String to, Map<String, TreePath> parameters, Map<String, Collection<? extends TreePath>> parametersMulti, final Map<String, String> parameterNames, Map<String, TypeMirror> constraints, Map<String, String> options, String... imports) {
         final Map<String, TreePathHandle> params = new HashMap<>();
         final Map<String, Object> extraParamsData = new HashMap<>();
@@ -195,11 +197,22 @@ public class JavaFixUtilities {
             constraintsHandles.put(c.getKey(), TypeMirrorHandle.create(c.getValue()));
         }
 
+        Supplier<String> lazyNamer;
         if (displayName == null) {
-            displayName = defaultFixDisplayName(info, parameters, to);
+            lazyNamer = new Supplier<String>() {
+                private String dn = null;
+                @Override public String get() {
+                    if(dn == null) {
+                        dn = defaultFixDisplayName(parameters, parametersMulti, to);
+                    }
+                    return dn;
+                }
+            };
+        } else {
+            lazyNamer = () -> displayName;
         }
 
-        return new JavaFixRealImpl(info, what, options, displayName, to, params, extraParamsData, implicitThis, paramsMulti, parameterNames, constraintsHandles, Arrays.asList(imports)).toEditorFix();
+        return new JavaFixRealImpl(info, what, options, lazyNamer, to, params, extraParamsData, implicitThis, paramsMulti, parameterNames, constraintsHandles, Arrays.asList(imports)).toEditorFix();
     }
 
     private static Set<Tree> immediateChildren(Tree t) {
@@ -243,21 +256,32 @@ public class JavaFixUtilities {
         return RemoveFromParent.canSafelyRemove(ctx.getInfo(), what) ? new RemoveFromParent(displayName, ctx.getInfo(), what, true).toEditorFix() : null;
     }
 
-    private static String defaultFixDisplayName(CompilationInfo info, Map<String, TreePath> variables, String replaceTarget) {
-        Map<String, String> stringsForVariables = new HashMap<>();
+    @SuppressWarnings("AssignmentToMethodParameter")
+    private static String defaultFixDisplayName(Map<String, TreePath> variables, Map<String, Collection<? extends TreePath>> parametersMulti, String replaceTarget) {
+        Map<String, String> stringsForVariables = new LinkedHashMap<>();
 
-        for (Entry<String, TreePath> e : variables.entrySet()) {
-            Tree t = e.getValue().getLeaf();
-            SourcePositions sp = info.getTrees().getSourcePositions();
-            int startPos = (int) sp.getStartPosition(info.getCompilationUnit(), t);
-            int endPos = (int) sp.getEndPosition(info.getCompilationUnit(), t);
-
-            if (startPos >= 0 && endPos >= 0) {
-                stringsForVariables.put(e.getKey(), info.getText().substring(startPos, endPos));
-            } else {
+        // replace multi vars first
+        for (Entry<String, Collection<? extends TreePath>> e : parametersMulti.entrySet()) {
+            if (e.getKey().startsWith("$$")) {
+                continue;
+            }
+            if (e.getValue().isEmpty()) {
+                stringsForVariables.put(e.getKey()+";", "");    // could be a statement
+                stringsForVariables.put(", "+e.getKey(), "");   // or parameter
                 stringsForVariables.put(e.getKey(), "");
+            } else if (e.getValue().size() == 1) {
+                String text = treePathToString(e.getValue().iterator().next(), false, e.getKey());
+                stringsForVariables.put(e.getKey(), text);
+            } else {
+                // keep the variable in the text for more complex cases, but we have to escape it somehow
+                stringsForVariables.put(e.getKey(), e.getKey().replace("$", "♦"));
             }
         }
+
+        // regular vars next, longest first in case a var is a prefix of another var
+        variables.entrySet().stream()
+                            .sorted((e1, e2) -> e2.getKey().length() - e1.getKey().length())
+                            .forEach(e -> stringsForVariables.put(e.getKey(), treePathToString(e.getValue(), true, e.getKey())));
 
         if (!stringsForVariables.containsKey("$this")) {
             //XXX: is this correct?
@@ -265,12 +289,24 @@ public class JavaFixUtilities {
         }
 
         for (Entry<String, String> e : stringsForVariables.entrySet()) {
-            String quotedVariable = java.util.regex.Pattern.quote(e.getKey());
-            String quotedTarget = Matcher.quoteReplacement(e.getValue());
-            replaceTarget = replaceTarget.replaceAll(quotedVariable, quotedTarget);
+            replaceTarget = replaceTarget.replace(e.getKey(), e.getValue());
         }
 
-        return "Rewrite to " + replaceTarget;
+        // cleanup and escape java code for html renderer
+        return "Rewrite to " + replaceTarget.replace("♦", "$")
+                                            .replace(";;", ";")
+                                            .replace("\n", " ")
+                                            .replaceAll("\\s{2,}", " ")
+                                            .replace("<", "&lt;");
+    }
+
+    private static String treePathToString(TreePath tp, boolean preferVarName, String fallback) {
+        Tree leaf = tp.getLeaf();
+        if (preferVarName && leaf.getKind() == Kind.VARIABLE) {
+            return ((VariableTree) leaf).getName().toString();
+        }
+        String str = leaf.toString();
+        return str.equals("(ERROR)") ? fallback : str;
     }
 
     private static void checkDependency(CompilationInfo copy, Element e, boolean canShowUI) {
@@ -403,7 +439,7 @@ public class JavaFixUtilities {
     }
     
     private static class JavaFixRealImpl extends JavaFix {
-        private final String displayName;
+        private final Supplier<String> displayName;
         private final Map<String, TreePathHandle> params;
         private final Map<String, Object> extraParamsData;
         private final Map<String, ElementHandle<?>> implicitThis;
@@ -413,7 +449,7 @@ public class JavaFixUtilities {
         private final Iterable<? extends String> imports;
         private final String to;
 
-        public JavaFixRealImpl(CompilationInfo info, TreePath what, Map<String, String> options, String displayName, String to, Map<String, TreePathHandle> params, Map<String, Object> extraParamsData, Map<String, ElementHandle<?>> implicitThis, Map<String, Collection<TreePathHandle>> paramsMulti, final Map<String, String> parameterNames, Map<String, TypeMirrorHandle<?>> constraintsHandles, Iterable<? extends String> imports) {
+        public JavaFixRealImpl(CompilationInfo info, TreePath what, Map<String, String> options, Supplier<String> displayName, String to, Map<String, TreePathHandle> params, Map<String, Object> extraParamsData, Map<String, ElementHandle<?>> implicitThis, Map<String, Collection<TreePathHandle>> paramsMulti, final Map<String, String> parameterNames, Map<String, TypeMirrorHandle<?>> constraintsHandles, Iterable<? extends String> imports) {
             super(info, what, options);
 
             this.displayName = displayName;
@@ -429,10 +465,11 @@ public class JavaFixUtilities {
 
         @Override
         protected String getText() {
-            return displayName;
+            return displayName.get();
         }
 
         @Override
+        @SuppressWarnings("NestedAssignment")
         protected void performRewrite(TransformationContext ctx) {
             final WorkingCopy wc = ctx.getWorkingCopy();
             TreePath tp = ctx.getPath();

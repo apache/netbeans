@@ -25,6 +25,8 @@ import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,6 +57,7 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.gsf.testrunner.api.TestCreatorProvider;
 import org.netbeans.modules.gsf.testrunner.plugin.CommonTestUtilProvider;
 import org.netbeans.modules.gsf.testrunner.plugin.GuiUtilsProvider;
+import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileChangeAdapter;
@@ -62,7 +65,7 @@ import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.URLMapper;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -123,7 +126,7 @@ public final class TestClassGenerator extends CodeActionsProvider {
         for (Map.Entry<Object, List<String>> entrySet : validCombinations.entrySet()) {
             Object location = entrySet.getKey();
             for (String testingFramework : entrySet.getValue()) {
-                result.add((createCodeAction(client, Bundle.DN_GenerateTestClass(testingFramework, getLocationText(location)), CodeActionKind.Refactor, null, GENERATE_TEST_CLASS_COMMAND, Utils.toUri(fileObject), testingFramework, Utils.toUri(getTargetFolder(location)))));
+                result.add((createCodeAction(client, Bundle.DN_GenerateTestClass(testingFramework, getLocationText(location)), CodeActionKind.Refactor, null, GENERATE_TEST_CLASS_COMMAND, Utils.toUri(fileObject), testingFramework, getTargetFolderUri(location))));
             }
         }
 	return result;
@@ -145,7 +148,7 @@ public final class TestClassGenerator extends CodeActionsProvider {
                 }
                 String testingFramework = ((JsonPrimitive) arguments.get(1)).getAsString();
                 String targetUri = ((JsonPrimitive) arguments.get(2)).getAsString();
-                FileObject targetFolder = Utils.fromUri(targetUri);
+                FileObject targetFolder = getTargetFolder(targetUri);
                 if (targetFolder == null) {
                     throw new IllegalArgumentException(String.format("Cannot resolve target folder from uri: %s", targetUri));
                 }
@@ -264,18 +267,30 @@ public final class TestClassGenerator extends CodeActionsProvider {
 	return selectedFramework.equals(testngFramework) ? "NG" : "";
     }
 
-    private static FileObject getTargetFolder(Object selectedLocation) {
+    private static String getTargetFolderUri(Object selectedLocation) throws URISyntaxException {
 	if (selectedLocation == null) {
 	    return null;
 	}
 	if (selectedLocation instanceof SourceGroup) {
-	    return ((SourceGroup) selectedLocation).getRootFolder();
+	    return Utils.toUri(((SourceGroup) selectedLocation).getRootFolder());
 	}
         if (selectedLocation instanceof URL) {
-	    return URLMapper.findFileObject((URL) selectedLocation);
+	    return URITranslator.getDefault().uriToLSP(((URL) selectedLocation).toURI().toString());
 	}
 	assert selectedLocation instanceof FileObject;
-	return (FileObject) selectedLocation;
+	return Utils.toUri((FileObject) selectedLocation);
+    }
+
+    private static FileObject getTargetFolder(String uri) throws MalformedURLException {
+        FileObject targetFolder = Utils.fromUri(uri);
+        if (targetFolder == null) {
+            File file = BaseUtilities.toFile(URI.create(uri));
+            if (file != null && !file.exists()) {
+                file.mkdirs();
+            }
+            targetFolder = Utils.fromUri(uri);
+        }
+        return targetFolder != null && targetFolder.isFolder() ? targetFolder : null;
     }
 
     private static String getTargetFolderPath(Object selectedLocation) {

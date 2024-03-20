@@ -37,4 +37,37 @@
     <folder name="Editors">
       <attr name="currentFontColorProfile" stringvalue="FlatLaf Light" />
     </folder>
+
+    <folder name="Windows2">
+      <folder name="Background">
+        <attr name="backgroundImage" stringvalue="org/netbeans/modules/ide/branding/apache-netbeans.png" />
+        <folder name="Actions">
+          <file name="org-netbeans-modules-project-ui-NewProject.shadow">
+            <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-NewProject.instance"/>
+            <attr name="position" intvalue="100"/>
+          </file>
+          <file name="org-netbeans-modules-project-ui-OpenProject.shadow">
+            <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-OpenProject.instance"/>
+            <attr name="position" intvalue="200"/>
+          </file>
+          <file name="org-netbeans-modules-project-ui-NewFile.shadow">
+            <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-NewFile.instance"/>
+            <attr name="position" intvalue="300"/>
+          </file>
+          <file name="org-netbeans-modules-openfile-OpenFileAction.shadow">
+            <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-openfile-OpenFileAction.instance"/>
+            <attr name="position" intvalue="400"/>
+          </file>
+          <file name="org-netbeans-modules-jumpto-file-FileSearchAction.shadow">
+            <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-jumpto-file-FileSearchAction.instance"/>
+            <attr name="position" intvalue="500"/>
+          </file>
+          <file name="org-netbeans-modules-welcome-ShowWelcomeAction.shadow">
+            <attr name="originalFile" stringvalue="Actions/Help/org-netbeans-modules-welcome-ShowWelcomeAction.instance"/>
+            <attr name="position" intvalue="600"/>
+          </file>
+        </folder>
+      </folder>
+    </folder>
+
 </filesystem>

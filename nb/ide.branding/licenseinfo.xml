@@ -36,6 +36,7 @@
         <file>release/netbeans.icns</file>
         <file>release/shortcuts.pdf</file>
         <file>release/shortcuts_mac.pdf</file>
+        <file>src/org/netbeans/modules/ide/branding/apache-netbeans.png</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

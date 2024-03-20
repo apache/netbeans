@@ -230,6 +230,11 @@
 					"type": "string",
 					"default": "",
 					"description": "Working directory"
+				},
+				"netbeans.inlay.enabled": {
+					"type": "array",
+					"default": ["chained", "parameter", "var"],
+					"markdownDescription": "Enable or disable various inline hints. Possible values are:\n * chained: show return types of chained methods\n * parameter: show parameter names\n * var: show types of `var` variables\n"
 				}
 			}
 		},

@@ -64,6 +64,7 @@ import org.eclipse.lsp4j.ExecuteCommandOptions;
 import org.eclipse.lsp4j.FoldingRangeProviderOptions;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
+import org.eclipse.lsp4j.InlayHintRegistrationOptions;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
@@ -875,6 +876,7 @@ public final class Server {
                 capabilities.setRenameProvider(renOpt);
                 FoldingRangeProviderOptions foldingOptions = new FoldingRangeProviderOptions();
                 capabilities.setFoldingRangeProvider(foldingOptions);
+                capabilities.setInlayHintProvider(true);
                 textDocumentService.init(init.getCapabilities(), capabilities);
 
                 // register for workspace changess

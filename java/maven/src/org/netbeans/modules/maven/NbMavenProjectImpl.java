@@ -57,6 +57,7 @@ import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.cli.MavenCli;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.model.Resource;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingResult;
@@ -1148,7 +1149,6 @@ public final class NbMavenProjectImpl implements Project {
         private final WeakReference<NbMavenProject> watcherRef;
         private String packaging;
         private final Lookup general;
-        
         private volatile List<String> currentIds = new ArrayList<>();
 
         @SuppressWarnings("LeakingThisInConstructor")
@@ -1173,8 +1173,19 @@ public final class NbMavenProjectImpl implements Project {
          * @return 
          */
         private List<String> partialComponentsOrder(Collection<String> componentSet) {
+            return partialComponentsOrder(componentSet, null); // NOI18N
+        }
+        
+        private List<String> partialComponentsOrder(Collection<String> componentSet, String subdir) {
             List<FileObject> fos = new ArrayList<>();
-            FileObject root = FileUtil.getConfigFile("Projects/org-netbeans-modules-maven");
+            String r = "Projects/org-netbeans-modules-maven";
+            if (subdir != null) {
+                r = r + "/" + subdir;
+            }
+            FileObject root = FileUtil.getConfigFile(r);
+            if (root == null) {
+                return Collections.emptyList();
+            }
             for (String s : componentSet) {
                 FileObject f = root.getFileObject(s);
                 if (f != null) {
@@ -1185,6 +1196,11 @@ public final class NbMavenProjectImpl implements Project {
             List<String> origList = new ArrayList<>(componentSet);
             origList.removeAll(orderedNames);
             orderedNames.addAll(origList);
+            if (subdir != null) {
+                for (int i = 0; i < orderedNames.size(); i++) {
+                    orderedNames.set(i, subdir + "/" + orderedNames.get(i));
+                }
+            }
             return orderedNames;
         }
 
@@ -1203,16 +1219,29 @@ public final class NbMavenProjectImpl implements Project {
                 if (newPackaging == null) {
                     newPackaging = NbMavenProject.TYPE_JAR;
                 }
-                Set<Artifact> arts = watcher.getMavenProject().getPluginArtifacts();
+                MavenProject mprj = watcher.getMavenProject();
+                Set<Artifact> arts = mprj.getPluginArtifacts();
                 List<String> compNames = new ArrayList<>();
                 if (arts != null) {
                     for (Artifact a : arts) {
                         compNames.add(pluginDirectory(a));
                     }
                 }
+                List<String> configuredCompNames = new ArrayList<>();
+                if (mprj.getPluginManagement() != null) {
+                    for (Plugin p : mprj.getPluginManagement().getPlugins()) {
+                        String groupId = p.getGroupId();
+                        String artId = p.getArtifactId();
+
+                        String pn = groupId + ":" + artId;
+                        configuredCompNames.add(pn);
+                    }
+                }
+                
                 compNames.add(newPackaging);
                 
                 newComponents = partialComponentsOrder(compNames);
+                newComponents.addAll(partialComponentsOrder(configuredCompNames, "configuredPlugins")); // NOI18N
             } else {
                 newComponents.add(newPackaging);
             }

@@ -737,6 +737,9 @@ public class BinaryAnalyser {
                         final String encSimpleName = getInternalSimpleName(enclosingMethod.getClassName());
                         if (simpleName.startsWith(encSimpleName)) {
                             len -= encSimpleName.length() + 1;
+                            if (len < 0) {
+                                len = simpleName.length();
+                            }
                             found = true;
                         }
                     }

@@ -119,7 +119,8 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
             return getDisplayName(null);
         } catch (VersionNotSupportedException ex){return null;}
     }
-    public Map getAllDisplayNames() {
+    
+    public Map<String, String> getAllDisplayNames() {
         Map<String, String> map =new HashMap<>();
         for (int i=0;i<sizeDisplayName();i++) {
             String desc=getDisplayName(i);
@@ -242,7 +243,7 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
         }
         return null;
     }
-    public Map getAllIcons() {
+    public Map<String, String[]> getAllIcons() {
         Map<String, String[]> map =new HashMap<>();
         org.netbeans.modules.j2ee.dd.api.common.Icon[] icons = getIcon();
         for (int i=0;i<icons.length;i++) {

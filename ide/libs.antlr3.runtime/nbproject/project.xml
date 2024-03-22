@@ -32,8 +32,8 @@
                 <package>org.antlr.runtime.tree</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/antlr-runtime-3.5.2.jar</runtime-relative-path>
-                <binary-origin>external/antlr-runtime-3.5.2.jar</binary-origin>
+                <runtime-relative-path>ext/antlr-runtime-3.5.3.jar</runtime-relative-path>
+                <binary-origin>external/antlr-runtime-3.5.3.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

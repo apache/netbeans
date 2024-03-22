@@ -630,6 +630,11 @@
 				"command": "testing.runAll",
 				"title": "Run All Tests",
 				"category": "Test"
+			},
+			{
+			    "command": "nbls.goto.test",
+			    "title": "Go To Test/Tested class...",
+			    "category": "Java"
 			}
 		],
 		"keybindings": [
@@ -656,7 +661,12 @@
 				{
 					"command": "nbls.java.goto.super.implementation",
 					"when": "nbJavaLSReady && editorLangId == java && editorTextFocus && config.netbeans.javaSupport.enabled",
-					"group": "navigation@100"
+					"group": "navigation@99"
+				},
+				{
+				    "command": "nbls.goto.test",
+				    "when": "nbJavaLSReady && editorLangId == java",
+				    "group": "navigation@100"
 				}
 			],
 			"explorer/context": [
@@ -678,6 +688,10 @@
 				{
 					"command": "nbls.workspace.compile",
 					"when": "nbJavaLSReady && config.netbeans.javaSupport.enabled"
+				},
+				{
+					"command": "nbls.goto.test",
+					"when": "nbJavaLSReady && editorLangId == java"
 				},
 				{
 					"command": "nbls.java.goto.super.implementation",

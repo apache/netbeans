@@ -92,6 +92,8 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.api.gototest.TestOppositesLocator;
+import org.netbeans.api.gototest.TestOppositesLocator.LocatorResult;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;

@@ -176,6 +176,7 @@
             <friend-packages>
                 <friend>org.netbeans.modules.cnd.utils</friend>
                 <friend>org.netbeans.modules.dlight.remote.impl</friend>
+                <friend>org.netbeans.modules.ide.dashboard</friend>
                 <friend>org.netbeans.modules.utilities.project</friend>
                 <friend>org.netbeans.modules.visualweb.gravy</friend>
                 <friend>io.github.jeddict.jpa.modeler</friend>

@@ -62,8 +62,8 @@
             <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-jumpto-file-FileSearchAction.instance"/>
             <attr name="position" intvalue="500"/>
           </file>
-          <file name="org-netbeans-modules-welcome-ShowWelcomeAction.shadow">
-            <attr name="originalFile" stringvalue="Actions/Help/org-netbeans-modules-welcome-ShowWelcomeAction.instance"/>
+          <file name="org-netbeans-modules-dashboard-ShowDashboardAction.shadow">
+            <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-modules-dashboard-ShowDashboardAction.instance"/>
             <attr name="position" intvalue="600"/>
           </file>
         </folder>

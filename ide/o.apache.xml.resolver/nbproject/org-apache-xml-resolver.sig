@@ -47,6 +47,9 @@ meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
 
+CLSS public abstract interface javax.xml.transform.URIResolver
+meth public abstract javax.xml.transform.Source resolve(java.lang.String,java.lang.String) throws javax.xml.transform.TransformerException
+
 CLSS public org.apache.xml.resolver.Catalog
 cons public init()
 cons public init(org.apache.xml.resolver.CatalogManager)
@@ -256,5 +259,455 @@ meth public static java.lang.String getProduct()
 meth public static java.lang.String getVersion()
 meth public static java.lang.String getVersionNum()
 meth public static void main(java.lang.String[])
+supr java.lang.Object
+
+CLSS public org.apache.xml.resolver.apps.XParseError
+cons public init(boolean,boolean)
+intf org.xml.sax.ErrorHandler
+meth public int getErrorCount()
+meth public int getFatalCount()
+meth public int getMaxMessages()
+meth public int getWarningCount()
+meth public void error(org.xml.sax.SAXParseException)
+meth public void fatalError(org.xml.sax.SAXParseException)
+meth public void setMaxMessages(int)
+meth public void warning(org.xml.sax.SAXParseException)
+supr java.lang.Object
+hfds baseURI,errorCount,fatalCount,maxMessages,showErrors,showWarnings,warningCount
+
+CLSS public org.apache.xml.resolver.apps.resolver
+cons public init()
+meth public static void main(java.lang.String[]) throws java.io.IOException
+meth public static void usage()
+supr java.lang.Object
+hfds debug
+
+CLSS public org.apache.xml.resolver.apps.xparse
+cons public init()
+meth public static void main(java.lang.String[]) throws java.io.IOException
+supr java.lang.Object
+hfds debug
+
+CLSS public org.apache.xml.resolver.apps.xread
+cons public init()
+meth public static void main(java.lang.String[]) throws java.io.IOException
+supr java.lang.Object
+hfds debug
+
+CLSS public org.apache.xml.resolver.helpers.BootstrapResolver
+cons public init()
+fld public final static java.lang.String xCatalogPubId = "-//DTD XCatalog//EN"
+fld public final static java.lang.String xmlCatalogPubId = "-//OASIS//DTD XML Catalogs V1.0//EN"
+fld public final static java.lang.String xmlCatalogRNG = "http://www.oasis-open.org/committees/entity/release/1.0/catalog.rng"
+fld public final static java.lang.String xmlCatalogSysId = "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd"
+fld public final static java.lang.String xmlCatalogXSD = "http://www.oasis-open.org/committees/entity/release/1.0/catalog.xsd"
+intf javax.xml.transform.URIResolver
+intf org.xml.sax.EntityResolver
+meth public javax.xml.transform.Source resolve(java.lang.String,java.lang.String) throws javax.xml.transform.TransformerException
+meth public org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String)
+supr java.lang.Object
+hfds publicMap,systemMap,uriMap
+
+CLSS public org.apache.xml.resolver.helpers.Debug
+cons public init()
+fld protected int debug
+meth public int getDebug()
+meth public void message(int,java.lang.String)
+meth public void message(int,java.lang.String,java.lang.String)
+meth public void message(int,java.lang.String,java.lang.String,java.lang.String)
+meth public void setDebug(int)
+supr java.lang.Object
+
+CLSS public abstract org.apache.xml.resolver.helpers.FileURL
+cons protected init()
+meth public static java.net.URL makeURL(java.lang.String) throws java.net.MalformedURLException
+supr java.lang.Object
+
+CLSS public org.apache.xml.resolver.helpers.Namespaces
+cons public init()
+meth public static java.lang.String getLocalName(org.w3c.dom.Element)
+meth public static java.lang.String getNamespaceURI(org.w3c.dom.Element)
+meth public static java.lang.String getNamespaceURI(org.w3c.dom.Node,java.lang.String)
+meth public static java.lang.String getPrefix(org.w3c.dom.Element)
+supr java.lang.Object
+
+CLSS public abstract org.apache.xml.resolver.helpers.PublicId
+cons protected init()
+meth public static java.lang.String decodeURN(java.lang.String)
+meth public static java.lang.String encodeURN(java.lang.String)
+meth public static java.lang.String normalize(java.lang.String)
+supr java.lang.Object
+
+CLSS public abstract interface org.apache.xml.resolver.readers.CatalogReader
+meth public abstract void readCatalog(org.apache.xml.resolver.Catalog,java.io.InputStream) throws java.io.IOException,org.apache.xml.resolver.CatalogException
+meth public abstract void readCatalog(org.apache.xml.resolver.Catalog,java.lang.String) throws java.io.IOException,org.apache.xml.resolver.CatalogException
+
+CLSS public abstract interface org.apache.xml.resolver.readers.DOMCatalogParser
+meth public abstract void parseCatalogEntry(org.apache.xml.resolver.Catalog,org.w3c.dom.Node)
+
+CLSS public org.apache.xml.resolver.readers.DOMCatalogReader
+cons public init()
+fld protected java.util.Hashtable namespaceMap
+intf org.apache.xml.resolver.readers.CatalogReader
+meth public java.lang.String getCatalogParser(java.lang.String,java.lang.String)
+meth public void readCatalog(org.apache.xml.resolver.Catalog,java.io.InputStream) throws java.io.IOException,org.apache.xml.resolver.CatalogException
+meth public void readCatalog(org.apache.xml.resolver.Catalog,java.lang.String) throws java.io.IOException,org.apache.xml.resolver.CatalogException
+meth public void setCatalogParser(java.lang.String,java.lang.String,java.lang.String)
+supr java.lang.Object
+
+CLSS public org.apache.xml.resolver.readers.ExtendedXMLCatalogReader
+cons public init()
+fld public final static java.lang.String extendedNamespaceName = "http://nwalsh.com/xcatalog/1.0"
+meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
+supr org.apache.xml.resolver.readers.OASISXMLCatalogReader
+
+CLSS public org.apache.xml.resolver.readers.OASISXMLCatalogReader
+cons public init()
+cons public init(javax.xml.parsers.SAXParserFactory,org.apache.xml.resolver.Catalog)
+fld protected java.util.Stack baseURIStack
+fld protected java.util.Stack namespaceStack
+fld protected java.util.Stack overrideStack
+fld protected org.apache.xml.resolver.Catalog catalog
+fld public final static java.lang.String namespaceName = "urn:oasis:names:tc:entity:xmlns:xml:catalog"
+fld public final static java.lang.String tr9401NamespaceName = "urn:oasis:names:tc:entity:xmlns:tr9401:catalog"
+intf org.apache.xml.resolver.readers.SAXCatalogParser
+meth protected boolean inExtensionNamespace()
+meth public boolean checkAttributes(org.xml.sax.Attributes,java.lang.String)
+meth public boolean checkAttributes(org.xml.sax.Attributes,java.lang.String,java.lang.String)
+meth public org.apache.xml.resolver.Catalog getCatalog()
+meth public void characters(char[],int,int) throws org.xml.sax.SAXException
+meth public void endDocument() throws org.xml.sax.SAXException
+meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void endPrefixMapping(java.lang.String) throws org.xml.sax.SAXException
+meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
+meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void setCatalog(org.apache.xml.resolver.Catalog)
+meth public void setDocumentLocator(org.xml.sax.Locator)
+meth public void skippedEntity(java.lang.String) throws org.xml.sax.SAXException
+meth public void startDocument() throws org.xml.sax.SAXException
+meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
+meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+supr org.apache.xml.resolver.readers.SAXCatalogReader
+
+CLSS public abstract interface org.apache.xml.resolver.readers.SAXCatalogParser
+intf org.xml.sax.ContentHandler
+intf org.xml.sax.DocumentHandler
+meth public abstract void setCatalog(org.apache.xml.resolver.Catalog)
+
+CLSS public org.apache.xml.resolver.readers.SAXCatalogReader
+cons public init()
+cons public init(java.lang.String)
+cons public init(javax.xml.parsers.SAXParserFactory)
+fld protected java.lang.String parserClass
+fld protected java.util.Hashtable namespaceMap
+fld protected javax.xml.parsers.SAXParserFactory parserFactory
+fld protected org.apache.xml.resolver.helpers.Debug debug
+intf org.apache.xml.resolver.readers.CatalogReader
+intf org.xml.sax.ContentHandler
+intf org.xml.sax.DocumentHandler
+meth public java.lang.String getCatalogParser(java.lang.String,java.lang.String)
+meth public java.lang.String getParserClass()
+meth public javax.xml.parsers.SAXParserFactory getParserFactory()
+meth public void characters(char[],int,int) throws org.xml.sax.SAXException
+meth public void endDocument() throws org.xml.sax.SAXException
+meth public void endElement(java.lang.String) throws org.xml.sax.SAXException
+meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void endPrefixMapping(java.lang.String) throws org.xml.sax.SAXException
+meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
+meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void readCatalog(org.apache.xml.resolver.Catalog,java.io.InputStream) throws java.io.IOException,org.apache.xml.resolver.CatalogException
+meth public void readCatalog(org.apache.xml.resolver.Catalog,java.lang.String) throws java.io.IOException,org.apache.xml.resolver.CatalogException
+meth public void setCatalogParser(java.lang.String,java.lang.String,java.lang.String)
+meth public void setClassLoader(java.lang.ClassLoader)
+meth public void setDocumentLocator(org.xml.sax.Locator)
+meth public void setParserClass(java.lang.String)
+meth public void setParserFactory(javax.xml.parsers.SAXParserFactory)
+meth public void skippedEntity(java.lang.String) throws org.xml.sax.SAXException
+meth public void startDocument() throws org.xml.sax.SAXException
+meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
+meth public void startElement(java.lang.String,org.xml.sax.AttributeList) throws org.xml.sax.SAXException
+meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+supr java.lang.Object
+hfds abandonHope,catalog,loader,saxParser
+
+CLSS public org.apache.xml.resolver.readers.SAXParserHandler
+cons public init()
+meth public org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void characters(char[],int,int) throws org.xml.sax.SAXException
+meth public void endDocument() throws org.xml.sax.SAXException
+meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void endPrefixMapping(java.lang.String) throws org.xml.sax.SAXException
+meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
+meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void setContentHandler(org.xml.sax.ContentHandler)
+meth public void setDocumentLocator(org.xml.sax.Locator)
+meth public void setEntityResolver(org.xml.sax.EntityResolver)
+meth public void skippedEntity(java.lang.String) throws org.xml.sax.SAXException
+meth public void startDocument() throws org.xml.sax.SAXException
+meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
+meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+supr org.xml.sax.helpers.DefaultHandler
+hfds ch,er
+
+CLSS public org.apache.xml.resolver.readers.TR9401CatalogReader
+cons public init()
+meth public void readCatalog(org.apache.xml.resolver.Catalog,java.io.InputStream) throws java.io.IOException
+supr org.apache.xml.resolver.readers.TextCatalogReader
+
+CLSS public org.apache.xml.resolver.readers.TextCatalogReader
+cons public init()
+fld protected boolean caseSensitive
+fld protected int top
+fld protected int[] stack
+fld protected java.io.InputStream catfile
+fld protected java.util.Stack tokenStack
+intf org.apache.xml.resolver.readers.CatalogReader
+meth protected int nextChar() throws java.io.IOException
+meth protected java.lang.String nextToken() throws java.io.IOException,org.apache.xml.resolver.CatalogException
+meth protected void finalize()
+meth public boolean getCaseSensitive()
+meth public void readCatalog(org.apache.xml.resolver.Catalog,java.io.InputStream) throws java.io.IOException
+meth public void readCatalog(org.apache.xml.resolver.Catalog,java.lang.String) throws java.io.IOException
+meth public void setCaseSensitive(boolean)
+supr java.lang.Object
+
+CLSS public org.apache.xml.resolver.readers.XCatalogReader
+cons public init()
+cons public init(javax.xml.parsers.SAXParserFactory,org.apache.xml.resolver.Catalog)
+fld protected org.apache.xml.resolver.Catalog catalog
+intf org.apache.xml.resolver.readers.SAXCatalogParser
+meth public org.apache.xml.resolver.Catalog getCatalog()
+meth public void characters(char[],int,int) throws org.xml.sax.SAXException
+meth public void endDocument() throws org.xml.sax.SAXException
+meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void endPrefixMapping(java.lang.String) throws org.xml.sax.SAXException
+meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
+meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void setCatalog(org.apache.xml.resolver.Catalog)
+meth public void setDocumentLocator(org.xml.sax.Locator)
+meth public void skippedEntity(java.lang.String) throws org.xml.sax.SAXException
+meth public void startDocument() throws org.xml.sax.SAXException
+meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
+meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+supr org.apache.xml.resolver.readers.SAXCatalogReader
+
+CLSS public org.apache.xml.resolver.tools.CatalogResolver
+cons public init()
+cons public init(boolean)
+cons public init(org.apache.xml.resolver.CatalogManager)
+fld public boolean namespaceAware
+fld public boolean validating
+intf javax.xml.transform.URIResolver
+intf org.xml.sax.EntityResolver
+meth public java.lang.String getResolvedEntity(java.lang.String,java.lang.String)
+meth public javax.xml.transform.Source resolve(java.lang.String,java.lang.String) throws javax.xml.transform.TransformerException
+meth public org.apache.xml.resolver.Catalog getCatalog()
+meth public org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String)
+supr java.lang.Object
+hfds catalog,catalogManager
+
+CLSS public org.apache.xml.resolver.tools.NbCatalogResolver
+cons public init()
+cons public init(boolean)
+cons public init(org.apache.xml.resolver.NbCatalogManager)
+fld public boolean namespaceAware
+fld public boolean validating
+intf javax.xml.transform.URIResolver
+intf org.xml.sax.EntityResolver
+meth public java.lang.String getResolvedEntity(java.lang.String,java.lang.String)
+meth public javax.xml.transform.Source resolve(java.lang.String,java.lang.String) throws javax.xml.transform.TransformerException
+meth public org.apache.xml.resolver.Catalog getCatalog()
+meth public org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String)
+supr java.lang.Object
+hfds catalog,catalogManager
+
+CLSS public org.apache.xml.resolver.tools.ResolvingParser
+cons public init()
+cons public init(org.apache.xml.resolver.CatalogManager)
+fld public static boolean namespaceAware
+fld public static boolean suppressExplanation
+fld public static boolean validating
+intf org.xml.sax.DTDHandler
+intf org.xml.sax.DocumentHandler
+intf org.xml.sax.EntityResolver
+intf org.xml.sax.Parser
+meth public org.apache.xml.resolver.Catalog getCatalog()
+meth public org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String)
+meth public void characters(char[],int,int) throws org.xml.sax.SAXException
+meth public void endDocument() throws org.xml.sax.SAXException
+meth public void endElement(java.lang.String) throws org.xml.sax.SAXException
+meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
+meth public void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void parse(java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
+meth public void parse(org.xml.sax.InputSource) throws java.io.IOException,org.xml.sax.SAXException
+meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void setDTDHandler(org.xml.sax.DTDHandler)
+meth public void setDocumentHandler(org.xml.sax.DocumentHandler)
+meth public void setDocumentLocator(org.xml.sax.Locator)
+meth public void setEntityResolver(org.xml.sax.EntityResolver)
+meth public void setErrorHandler(org.xml.sax.ErrorHandler)
+meth public void setLocale(java.util.Locale) throws org.xml.sax.SAXException
+meth public void startDocument() throws org.xml.sax.SAXException
+meth public void startElement(java.lang.String,org.xml.sax.AttributeList) throws org.xml.sax.SAXException
+meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+supr java.lang.Object
+hfds allowXMLCatalogPI,baseURL,catalogManager,catalogResolver,documentHandler,dtdHandler,oasisXMLCatalogPI,parser,piCatalogResolver,saxParser
+
+CLSS public org.apache.xml.resolver.tools.ResolvingXMLFilter
+cons public init()
+cons public init(org.apache.xml.resolver.CatalogManager)
+cons public init(org.xml.sax.XMLReader)
+cons public init(org.xml.sax.XMLReader,org.apache.xml.resolver.CatalogManager)
+fld public static boolean suppressExplanation
+meth public org.apache.xml.resolver.Catalog getCatalog()
+meth public org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String)
+meth public void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void parse(java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
+meth public void parse(org.xml.sax.InputSource) throws java.io.IOException,org.xml.sax.SAXException
+meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
+meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+supr org.xml.sax.helpers.XMLFilterImpl
+hfds allowXMLCatalogPI,baseURL,catalogManager,catalogResolver,oasisXMLCatalogPI,piCatalogResolver
+
+CLSS public org.apache.xml.resolver.tools.ResolvingXMLReader
+cons public init()
+cons public init(org.apache.xml.resolver.CatalogManager)
+fld public static boolean namespaceAware
+fld public static boolean validating
+supr org.apache.xml.resolver.tools.ResolvingXMLFilter
+
+CLSS public abstract interface org.xml.sax.ContentHandler
+meth public abstract void characters(char[],int,int) throws org.xml.sax.SAXException
+meth public abstract void endDocument() throws org.xml.sax.SAXException
+meth public abstract void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public abstract void endPrefixMapping(java.lang.String) throws org.xml.sax.SAXException
+meth public abstract void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
+meth public abstract void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public abstract void setDocumentLocator(org.xml.sax.Locator)
+meth public abstract void skippedEntity(java.lang.String) throws org.xml.sax.SAXException
+meth public abstract void startDocument() throws org.xml.sax.SAXException
+meth public abstract void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
+meth public abstract void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+
+CLSS public abstract interface org.xml.sax.DTDHandler
+meth public abstract void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public abstract void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+
+CLSS public abstract interface org.xml.sax.DocumentHandler
+meth public abstract void characters(char[],int,int) throws org.xml.sax.SAXException
+meth public abstract void endDocument() throws org.xml.sax.SAXException
+meth public abstract void endElement(java.lang.String) throws org.xml.sax.SAXException
+meth public abstract void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
+meth public abstract void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public abstract void setDocumentLocator(org.xml.sax.Locator)
+meth public abstract void startDocument() throws org.xml.sax.SAXException
+meth public abstract void startElement(java.lang.String,org.xml.sax.AttributeList) throws org.xml.sax.SAXException
+
+CLSS public abstract interface org.xml.sax.EntityResolver
+meth public abstract org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
+
+CLSS public abstract interface org.xml.sax.ErrorHandler
+meth public abstract void error(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
+meth public abstract void fatalError(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
+meth public abstract void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
+
+CLSS public abstract interface org.xml.sax.Parser
+meth public abstract void parse(java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
+meth public abstract void parse(org.xml.sax.InputSource) throws java.io.IOException,org.xml.sax.SAXException
+meth public abstract void setDTDHandler(org.xml.sax.DTDHandler)
+meth public abstract void setDocumentHandler(org.xml.sax.DocumentHandler)
+meth public abstract void setEntityResolver(org.xml.sax.EntityResolver)
+meth public abstract void setErrorHandler(org.xml.sax.ErrorHandler)
+meth public abstract void setLocale(java.util.Locale) throws org.xml.sax.SAXException
+
+CLSS public abstract interface org.xml.sax.XMLFilter
+intf org.xml.sax.XMLReader
+meth public abstract org.xml.sax.XMLReader getParent()
+meth public abstract void setParent(org.xml.sax.XMLReader)
+
+CLSS public abstract interface org.xml.sax.XMLReader
+meth public abstract boolean getFeature(java.lang.String) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
+meth public abstract java.lang.Object getProperty(java.lang.String) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
+meth public abstract org.xml.sax.ContentHandler getContentHandler()
+meth public abstract org.xml.sax.DTDHandler getDTDHandler()
+meth public abstract org.xml.sax.EntityResolver getEntityResolver()
+meth public abstract org.xml.sax.ErrorHandler getErrorHandler()
+meth public abstract void parse(java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
+meth public abstract void parse(org.xml.sax.InputSource) throws java.io.IOException,org.xml.sax.SAXException
+meth public abstract void setContentHandler(org.xml.sax.ContentHandler)
+meth public abstract void setDTDHandler(org.xml.sax.DTDHandler)
+meth public abstract void setEntityResolver(org.xml.sax.EntityResolver)
+meth public abstract void setErrorHandler(org.xml.sax.ErrorHandler)
+meth public abstract void setFeature(java.lang.String,boolean) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
+meth public abstract void setProperty(java.lang.String,java.lang.Object) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
+
+CLSS public org.xml.sax.helpers.DefaultHandler
+cons public init()
+intf org.xml.sax.ContentHandler
+intf org.xml.sax.DTDHandler
+intf org.xml.sax.EntityResolver
+intf org.xml.sax.ErrorHandler
+meth public org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
+meth public void characters(char[],int,int) throws org.xml.sax.SAXException
+meth public void endDocument() throws org.xml.sax.SAXException
+meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void endPrefixMapping(java.lang.String) throws org.xml.sax.SAXException
+meth public void error(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
+meth public void fatalError(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
+meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
+meth public void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void setDocumentLocator(org.xml.sax.Locator)
+meth public void skippedEntity(java.lang.String) throws org.xml.sax.SAXException
+meth public void startDocument() throws org.xml.sax.SAXException
+meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
+meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
+supr java.lang.Object
+
+CLSS public org.xml.sax.helpers.XMLFilterImpl
+cons public init()
+cons public init(org.xml.sax.XMLReader)
+intf org.xml.sax.ContentHandler
+intf org.xml.sax.DTDHandler
+intf org.xml.sax.EntityResolver
+intf org.xml.sax.ErrorHandler
+intf org.xml.sax.XMLFilter
+meth public boolean getFeature(java.lang.String) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
+meth public java.lang.Object getProperty(java.lang.String) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
+meth public org.xml.sax.ContentHandler getContentHandler()
+meth public org.xml.sax.DTDHandler getDTDHandler()
+meth public org.xml.sax.EntityResolver getEntityResolver()
+meth public org.xml.sax.ErrorHandler getErrorHandler()
+meth public org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
+meth public org.xml.sax.XMLReader getParent()
+meth public void characters(char[],int,int) throws org.xml.sax.SAXException
+meth public void endDocument() throws org.xml.sax.SAXException
+meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void endPrefixMapping(java.lang.String) throws org.xml.sax.SAXException
+meth public void error(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
+meth public void fatalError(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
+meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
+meth public void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void parse(java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
+meth public void parse(org.xml.sax.InputSource) throws java.io.IOException,org.xml.sax.SAXException
+meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void setContentHandler(org.xml.sax.ContentHandler)
+meth public void setDTDHandler(org.xml.sax.DTDHandler)
+meth public void setDocumentLocator(org.xml.sax.Locator)
+meth public void setEntityResolver(org.xml.sax.EntityResolver)
+meth public void setErrorHandler(org.xml.sax.ErrorHandler)
+meth public void setFeature(java.lang.String,boolean) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
+meth public void setParent(org.xml.sax.XMLReader)
+meth public void setProperty(java.lang.String,java.lang.Object) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
+meth public void skippedEntity(java.lang.String) throws org.xml.sax.SAXException
+meth public void startDocument() throws org.xml.sax.SAXException
+meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
+meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
 supr java.lang.Object
 

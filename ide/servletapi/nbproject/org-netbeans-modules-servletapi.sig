@@ -38,6 +38,8 @@ CLSS public abstract interface java.io.Serializable
 CLSS public abstract interface java.lang.AutoCloseable
 meth public abstract void close() throws java.lang.Exception
 
+CLSS public abstract interface java.lang.Cloneable
+
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
 
@@ -114,6 +116,12 @@ meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> 
 meth public abstract java.lang.String toString()
 
 CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Inherited
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
@@ -700,4 +708,501 @@ CLSS public abstract interface javax.servlet.WriteListener
 intf java.util.EventListener
 meth public abstract void onError(java.lang.Throwable)
 meth public abstract void onWritePossible() throws java.io.IOException
+
+CLSS public abstract interface !annotation javax.servlet.annotation.HandlesTypes
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<?>[] value()
+
+CLSS public abstract interface !annotation javax.servlet.annotation.HttpConstraint
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String[] rolesAllowed()
+meth public abstract !hasdefault javax.servlet.annotation.ServletSecurity$EmptyRoleSemantic value()
+meth public abstract !hasdefault javax.servlet.annotation.ServletSecurity$TransportGuarantee transportGuarantee()
+
+CLSS public abstract interface !annotation javax.servlet.annotation.HttpMethodConstraint
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String[] rolesAllowed()
+meth public abstract !hasdefault javax.servlet.annotation.ServletSecurity$EmptyRoleSemantic emptyRoleSemantic()
+meth public abstract !hasdefault javax.servlet.annotation.ServletSecurity$TransportGuarantee transportGuarantee()
+meth public abstract java.lang.String value()
+
+CLSS public abstract interface !annotation javax.servlet.annotation.MultipartConfig
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault int fileSizeThreshold()
+meth public abstract !hasdefault java.lang.String location()
+meth public abstract !hasdefault long maxFileSize()
+meth public abstract !hasdefault long maxRequestSize()
+
+CLSS public abstract interface !annotation javax.servlet.annotation.ServletSecurity
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+innr public final static !enum EmptyRoleSemantic
+innr public final static !enum TransportGuarantee
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault javax.servlet.annotation.HttpConstraint value()
+meth public abstract !hasdefault javax.servlet.annotation.HttpMethodConstraint[] httpMethodConstraints()
+
+CLSS public final static !enum javax.servlet.annotation.ServletSecurity$EmptyRoleSemantic
+ outer javax.servlet.annotation.ServletSecurity
+fld public final static javax.servlet.annotation.ServletSecurity$EmptyRoleSemantic DENY
+fld public final static javax.servlet.annotation.ServletSecurity$EmptyRoleSemantic PERMIT
+meth public static javax.servlet.annotation.ServletSecurity$EmptyRoleSemantic valueOf(java.lang.String)
+meth public static javax.servlet.annotation.ServletSecurity$EmptyRoleSemantic[] values()
+supr java.lang.Enum<javax.servlet.annotation.ServletSecurity$EmptyRoleSemantic>
+
+CLSS public final static !enum javax.servlet.annotation.ServletSecurity$TransportGuarantee
+ outer javax.servlet.annotation.ServletSecurity
+fld public final static javax.servlet.annotation.ServletSecurity$TransportGuarantee CONFIDENTIAL
+fld public final static javax.servlet.annotation.ServletSecurity$TransportGuarantee NONE
+meth public static javax.servlet.annotation.ServletSecurity$TransportGuarantee valueOf(java.lang.String)
+meth public static javax.servlet.annotation.ServletSecurity$TransportGuarantee[] values()
+supr java.lang.Enum<javax.servlet.annotation.ServletSecurity$TransportGuarantee>
+
+CLSS public abstract interface !annotation javax.servlet.annotation.WebFilter
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean asyncSupported()
+meth public abstract !hasdefault java.lang.String description()
+meth public abstract !hasdefault java.lang.String displayName()
+meth public abstract !hasdefault java.lang.String filterName()
+meth public abstract !hasdefault java.lang.String largeIcon()
+meth public abstract !hasdefault java.lang.String smallIcon()
+meth public abstract !hasdefault java.lang.String[] servletNames()
+meth public abstract !hasdefault java.lang.String[] urlPatterns()
+meth public abstract !hasdefault java.lang.String[] value()
+meth public abstract !hasdefault javax.servlet.DispatcherType[] dispatcherTypes()
+meth public abstract !hasdefault javax.servlet.annotation.WebInitParam[] initParams()
+
+CLSS public abstract interface !annotation javax.servlet.annotation.WebInitParam
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String description()
+meth public abstract java.lang.String name()
+meth public abstract java.lang.String value()
+
+CLSS public abstract interface !annotation javax.servlet.annotation.WebListener
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String value()
+
+CLSS public abstract interface !annotation javax.servlet.annotation.WebServlet
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean asyncSupported()
+meth public abstract !hasdefault int loadOnStartup()
+meth public abstract !hasdefault java.lang.String description()
+meth public abstract !hasdefault java.lang.String displayName()
+meth public abstract !hasdefault java.lang.String largeIcon()
+meth public abstract !hasdefault java.lang.String name()
+meth public abstract !hasdefault java.lang.String smallIcon()
+meth public abstract !hasdefault java.lang.String[] urlPatterns()
+meth public abstract !hasdefault java.lang.String[] value()
+meth public abstract !hasdefault javax.servlet.annotation.WebInitParam[] initParams()
+
+CLSS public abstract interface javax.servlet.descriptor.JspConfigDescriptor
+meth public abstract java.util.Collection<javax.servlet.descriptor.JspPropertyGroupDescriptor> getJspPropertyGroups()
+meth public abstract java.util.Collection<javax.servlet.descriptor.TaglibDescriptor> getTaglibs()
+
+CLSS public abstract interface javax.servlet.descriptor.JspPropertyGroupDescriptor
+meth public abstract java.lang.String getBuffer()
+meth public abstract java.lang.String getDefaultContentType()
+meth public abstract java.lang.String getDeferredSyntaxAllowedAsLiteral()
+meth public abstract java.lang.String getElIgnored()
+meth public abstract java.lang.String getErrorOnUndeclaredNamespace()
+meth public abstract java.lang.String getIsXml()
+meth public abstract java.lang.String getPageEncoding()
+meth public abstract java.lang.String getScriptingInvalid()
+meth public abstract java.lang.String getTrimDirectiveWhitespaces()
+meth public abstract java.util.Collection<java.lang.String> getIncludeCodas()
+meth public abstract java.util.Collection<java.lang.String> getIncludePreludes()
+meth public abstract java.util.Collection<java.lang.String> getUrlPatterns()
+
+CLSS public abstract interface javax.servlet.descriptor.TaglibDescriptor
+meth public abstract java.lang.String getTaglibLocation()
+meth public abstract java.lang.String getTaglibURI()
+
+CLSS public javax.servlet.http.Cookie
+cons public init(java.lang.String,java.lang.String)
+intf java.io.Serializable
+intf java.lang.Cloneable
+meth public boolean getSecure()
+meth public boolean isHttpOnly()
+meth public int getMaxAge()
+meth public int getVersion()
+meth public java.lang.Object clone()
+meth public java.lang.String getComment()
+meth public java.lang.String getDomain()
+meth public java.lang.String getName()
+meth public java.lang.String getPath()
+meth public java.lang.String getValue()
+meth public void setComment(java.lang.String)
+meth public void setDomain(java.lang.String)
+meth public void setHttpOnly(boolean)
+meth public void setMaxAge(int)
+meth public void setPath(java.lang.String)
+meth public void setSecure(boolean)
+meth public void setValue(java.lang.String)
+meth public void setVersion(int)
+supr java.lang.Object
+hfds LSTRING_FILE,TSPECIALS,comment,domain,isHttpOnly,lStrings,maxAge,name,path,secure,serialVersionUID,value,version
+
+CLSS public abstract javax.servlet.http.HttpFilter
+cons public init()
+meth protected void doFilter(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse,javax.servlet.FilterChain) throws java.io.IOException,javax.servlet.ServletException
+meth public void doFilter(javax.servlet.ServletRequest,javax.servlet.ServletResponse,javax.servlet.FilterChain) throws java.io.IOException,javax.servlet.ServletException
+supr javax.servlet.GenericFilter
+hfds serialVersionUID
+
+CLSS public abstract javax.servlet.http.HttpServlet
+cons public init()
+meth protected long getLastModified(javax.servlet.http.HttpServletRequest)
+meth protected void doDelete(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
+meth protected void doGet(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
+meth protected void doHead(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
+meth protected void doOptions(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
+meth protected void doPost(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
+meth protected void doPut(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
+meth protected void doTrace(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
+meth protected void service(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
+meth public void service(javax.servlet.ServletRequest,javax.servlet.ServletResponse) throws java.io.IOException,javax.servlet.ServletException
+supr javax.servlet.GenericServlet
+hfds HEADER_IFMODSINCE,HEADER_LASTMOD,LSTRING_FILE,METHOD_DELETE,METHOD_GET,METHOD_HEAD,METHOD_OPTIONS,METHOD_POST,METHOD_PUT,METHOD_TRACE,lStrings,serialVersionUID
+
+CLSS public abstract interface javax.servlet.http.HttpServletMapping
+meth public abstract java.lang.String getMatchValue()
+meth public abstract java.lang.String getPattern()
+meth public abstract java.lang.String getServletName()
+meth public abstract javax.servlet.http.MappingMatch getMappingMatch()
+
+CLSS public abstract interface javax.servlet.http.HttpServletRequest
+fld public final static java.lang.String BASIC_AUTH = "BASIC"
+fld public final static java.lang.String CLIENT_CERT_AUTH = "CLIENT_CERT"
+fld public final static java.lang.String DIGEST_AUTH = "DIGEST"
+fld public final static java.lang.String FORM_AUTH = "FORM"
+intf javax.servlet.ServletRequest
+meth public abstract <%0 extends javax.servlet.http.HttpUpgradeHandler> {%%0} upgrade(java.lang.Class<{%%0}>) throws java.io.IOException,javax.servlet.ServletException
+meth public abstract boolean authenticate(javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
+meth public abstract boolean isRequestedSessionIdFromCookie()
+meth public abstract boolean isRequestedSessionIdFromURL()
+meth public abstract boolean isRequestedSessionIdFromUrl()
+ anno 0 java.lang.Deprecated()
+meth public abstract boolean isRequestedSessionIdValid()
+meth public abstract boolean isUserInRole(java.lang.String)
+meth public abstract int getIntHeader(java.lang.String)
+meth public abstract java.lang.String changeSessionId()
+meth public abstract java.lang.String getAuthType()
+meth public abstract java.lang.String getContextPath()
+meth public abstract java.lang.String getHeader(java.lang.String)
+meth public abstract java.lang.String getMethod()
+meth public abstract java.lang.String getPathInfo()
+meth public abstract java.lang.String getPathTranslated()
+meth public abstract java.lang.String getQueryString()
+meth public abstract java.lang.String getRemoteUser()
+meth public abstract java.lang.String getRequestURI()
+meth public abstract java.lang.String getRequestedSessionId()
+meth public abstract java.lang.String getServletPath()
+meth public abstract java.lang.StringBuffer getRequestURL()
+meth public abstract java.security.Principal getUserPrincipal()
+meth public abstract java.util.Collection<javax.servlet.http.Part> getParts() throws java.io.IOException,javax.servlet.ServletException
+meth public abstract java.util.Enumeration<java.lang.String> getHeaderNames()
+meth public abstract java.util.Enumeration<java.lang.String> getHeaders(java.lang.String)
+meth public abstract javax.servlet.http.Cookie[] getCookies()
+meth public abstract javax.servlet.http.HttpSession getSession()
+meth public abstract javax.servlet.http.HttpSession getSession(boolean)
+meth public abstract javax.servlet.http.Part getPart(java.lang.String) throws java.io.IOException,javax.servlet.ServletException
+meth public abstract long getDateHeader(java.lang.String)
+meth public abstract void login(java.lang.String,java.lang.String) throws javax.servlet.ServletException
+meth public abstract void logout() throws javax.servlet.ServletException
+meth public boolean isTrailerFieldsReady()
+meth public java.util.Map<java.lang.String,java.lang.String> getTrailerFields()
+meth public javax.servlet.http.HttpServletMapping getHttpServletMapping()
+meth public javax.servlet.http.PushBuilder newPushBuilder()
+
+CLSS public javax.servlet.http.HttpServletRequestWrapper
+cons public init(javax.servlet.http.HttpServletRequest)
+intf javax.servlet.http.HttpServletRequest
+meth public <%0 extends javax.servlet.http.HttpUpgradeHandler> {%%0} upgrade(java.lang.Class<{%%0}>) throws java.io.IOException,javax.servlet.ServletException
+meth public boolean authenticate(javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
+meth public boolean isRequestedSessionIdFromCookie()
+meth public boolean isRequestedSessionIdFromURL()
+meth public boolean isRequestedSessionIdFromUrl()
+ anno 0 java.lang.Deprecated()
+meth public boolean isRequestedSessionIdValid()
+meth public boolean isTrailerFieldsReady()
+meth public boolean isUserInRole(java.lang.String)
+meth public int getIntHeader(java.lang.String)
+meth public java.lang.String changeSessionId()
+meth public java.lang.String getAuthType()
+meth public java.lang.String getContextPath()
+meth public java.lang.String getHeader(java.lang.String)
+meth public java.lang.String getMethod()
+meth public java.lang.String getPathInfo()
+meth public java.lang.String getPathTranslated()
+meth public java.lang.String getQueryString()
+meth public java.lang.String getRemoteUser()
+meth public java.lang.String getRequestURI()
+meth public java.lang.String getRequestedSessionId()
+meth public java.lang.String getServletPath()
+meth public java.lang.StringBuffer getRequestURL()
+meth public java.security.Principal getUserPrincipal()
+meth public java.util.Collection<javax.servlet.http.Part> getParts() throws java.io.IOException,javax.servlet.ServletException
+meth public java.util.Enumeration<java.lang.String> getHeaderNames()
+meth public java.util.Enumeration<java.lang.String> getHeaders(java.lang.String)
+meth public java.util.Map<java.lang.String,java.lang.String> getTrailerFields()
+meth public javax.servlet.http.Cookie[] getCookies()
+meth public javax.servlet.http.HttpServletMapping getHttpServletMapping()
+meth public javax.servlet.http.HttpSession getSession()
+meth public javax.servlet.http.HttpSession getSession(boolean)
+meth public javax.servlet.http.Part getPart(java.lang.String) throws java.io.IOException,javax.servlet.ServletException
+meth public javax.servlet.http.PushBuilder newPushBuilder()
+meth public long getDateHeader(java.lang.String)
+meth public void login(java.lang.String,java.lang.String) throws javax.servlet.ServletException
+meth public void logout() throws javax.servlet.ServletException
+supr javax.servlet.ServletRequestWrapper
+
+CLSS public abstract interface javax.servlet.http.HttpServletResponse
+fld public final static int SC_ACCEPTED = 202
+fld public final static int SC_BAD_GATEWAY = 502
+fld public final static int SC_BAD_REQUEST = 400
+fld public final static int SC_CONFLICT = 409
+fld public final static int SC_CONTINUE = 100
+fld public final static int SC_CREATED = 201
+fld public final static int SC_EXPECTATION_FAILED = 417
+fld public final static int SC_FORBIDDEN = 403
+fld public final static int SC_FOUND = 302
+fld public final static int SC_GATEWAY_TIMEOUT = 504
+fld public final static int SC_GONE = 410
+fld public final static int SC_HTTP_VERSION_NOT_SUPPORTED = 505
+fld public final static int SC_INTERNAL_SERVER_ERROR = 500
+fld public final static int SC_LENGTH_REQUIRED = 411
+fld public final static int SC_METHOD_NOT_ALLOWED = 405
+fld public final static int SC_MOVED_PERMANENTLY = 301
+fld public final static int SC_MOVED_TEMPORARILY = 302
+fld public final static int SC_MULTIPLE_CHOICES = 300
+fld public final static int SC_NON_AUTHORITATIVE_INFORMATION = 203
+fld public final static int SC_NOT_ACCEPTABLE = 406
+fld public final static int SC_NOT_FOUND = 404
+fld public final static int SC_NOT_IMPLEMENTED = 501
+fld public final static int SC_NOT_MODIFIED = 304
+fld public final static int SC_NO_CONTENT = 204
+fld public final static int SC_OK = 200
+fld public final static int SC_PARTIAL_CONTENT = 206
+fld public final static int SC_PAYMENT_REQUIRED = 402
+fld public final static int SC_PRECONDITION_FAILED = 412
+fld public final static int SC_PROXY_AUTHENTICATION_REQUIRED = 407
+fld public final static int SC_REQUESTED_RANGE_NOT_SATISFIABLE = 416
+fld public final static int SC_REQUEST_ENTITY_TOO_LARGE = 413
+fld public final static int SC_REQUEST_TIMEOUT = 408
+fld public final static int SC_REQUEST_URI_TOO_LONG = 414
+fld public final static int SC_RESET_CONTENT = 205
+fld public final static int SC_SEE_OTHER = 303
+fld public final static int SC_SERVICE_UNAVAILABLE = 503
+fld public final static int SC_SWITCHING_PROTOCOLS = 101
+fld public final static int SC_TEMPORARY_REDIRECT = 307
+fld public final static int SC_UNAUTHORIZED = 401
+fld public final static int SC_UNSUPPORTED_MEDIA_TYPE = 415
+fld public final static int SC_USE_PROXY = 305
+intf javax.servlet.ServletResponse
+meth public abstract boolean containsHeader(java.lang.String)
+meth public abstract int getStatus()
+meth public abstract java.lang.String encodeRedirectURL(java.lang.String)
+meth public abstract java.lang.String encodeRedirectUrl(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public abstract java.lang.String encodeURL(java.lang.String)
+meth public abstract java.lang.String encodeUrl(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public abstract java.lang.String getHeader(java.lang.String)
+meth public abstract java.util.Collection<java.lang.String> getHeaderNames()
+meth public abstract java.util.Collection<java.lang.String> getHeaders(java.lang.String)
+meth public abstract void addCookie(javax.servlet.http.Cookie)
+meth public abstract void addDateHeader(java.lang.String,long)
+meth public abstract void addHeader(java.lang.String,java.lang.String)
+meth public abstract void addIntHeader(java.lang.String,int)
+meth public abstract void sendError(int) throws java.io.IOException
+meth public abstract void sendError(int,java.lang.String) throws java.io.IOException
+meth public abstract void sendRedirect(java.lang.String) throws java.io.IOException
+meth public abstract void setDateHeader(java.lang.String,long)
+meth public abstract void setHeader(java.lang.String,java.lang.String)
+meth public abstract void setIntHeader(java.lang.String,int)
+meth public abstract void setStatus(int)
+meth public abstract void setStatus(int,java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public java.util.function.Supplier<java.util.Map<java.lang.String,java.lang.String>> getTrailerFields()
+meth public void setTrailerFields(java.util.function.Supplier<java.util.Map<java.lang.String,java.lang.String>>)
+
+CLSS public javax.servlet.http.HttpServletResponseWrapper
+cons public init(javax.servlet.http.HttpServletResponse)
+intf javax.servlet.http.HttpServletResponse
+meth public boolean containsHeader(java.lang.String)
+meth public int getStatus()
+meth public java.lang.String encodeRedirectURL(java.lang.String)
+meth public java.lang.String encodeRedirectUrl(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String encodeURL(java.lang.String)
+meth public java.lang.String encodeUrl(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String getHeader(java.lang.String)
+meth public java.util.Collection<java.lang.String> getHeaderNames()
+meth public java.util.Collection<java.lang.String> getHeaders(java.lang.String)
+meth public java.util.function.Supplier<java.util.Map<java.lang.String,java.lang.String>> getTrailerFields()
+meth public void addCookie(javax.servlet.http.Cookie)
+meth public void addDateHeader(java.lang.String,long)
+meth public void addHeader(java.lang.String,java.lang.String)
+meth public void addIntHeader(java.lang.String,int)
+meth public void sendError(int) throws java.io.IOException
+meth public void sendError(int,java.lang.String) throws java.io.IOException
+meth public void sendRedirect(java.lang.String) throws java.io.IOException
+meth public void setDateHeader(java.lang.String,long)
+meth public void setHeader(java.lang.String,java.lang.String)
+meth public void setIntHeader(java.lang.String,int)
+meth public void setStatus(int)
+meth public void setStatus(int,java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public void setTrailerFields(java.util.function.Supplier<java.util.Map<java.lang.String,java.lang.String>>)
+supr javax.servlet.ServletResponseWrapper
+
+CLSS public abstract interface javax.servlet.http.HttpSession
+meth public abstract boolean isNew()
+meth public abstract int getMaxInactiveInterval()
+meth public abstract java.lang.Object getAttribute(java.lang.String)
+meth public abstract java.lang.Object getValue(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public abstract java.lang.String getId()
+meth public abstract java.lang.String[] getValueNames()
+ anno 0 java.lang.Deprecated()
+meth public abstract java.util.Enumeration<java.lang.String> getAttributeNames()
+meth public abstract javax.servlet.ServletContext getServletContext()
+meth public abstract javax.servlet.http.HttpSessionContext getSessionContext()
+ anno 0 java.lang.Deprecated()
+meth public abstract long getCreationTime()
+meth public abstract long getLastAccessedTime()
+meth public abstract void invalidate()
+meth public abstract void putValue(java.lang.String,java.lang.Object)
+ anno 0 java.lang.Deprecated()
+meth public abstract void removeAttribute(java.lang.String)
+meth public abstract void removeValue(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public abstract void setAttribute(java.lang.String,java.lang.Object)
+meth public abstract void setMaxInactiveInterval(int)
+
+CLSS public abstract interface javax.servlet.http.HttpSessionActivationListener
+intf java.util.EventListener
+meth public void sessionDidActivate(javax.servlet.http.HttpSessionEvent)
+meth public void sessionWillPassivate(javax.servlet.http.HttpSessionEvent)
+
+CLSS public abstract interface javax.servlet.http.HttpSessionAttributeListener
+intf java.util.EventListener
+meth public void attributeAdded(javax.servlet.http.HttpSessionBindingEvent)
+meth public void attributeRemoved(javax.servlet.http.HttpSessionBindingEvent)
+meth public void attributeReplaced(javax.servlet.http.HttpSessionBindingEvent)
+
+CLSS public javax.servlet.http.HttpSessionBindingEvent
+cons public init(javax.servlet.http.HttpSession,java.lang.String)
+cons public init(javax.servlet.http.HttpSession,java.lang.String,java.lang.Object)
+meth public java.lang.Object getValue()
+meth public java.lang.String getName()
+meth public javax.servlet.http.HttpSession getSession()
+supr javax.servlet.http.HttpSessionEvent
+hfds name,serialVersionUID,value
+
+CLSS public abstract interface javax.servlet.http.HttpSessionBindingListener
+intf java.util.EventListener
+meth public void valueBound(javax.servlet.http.HttpSessionBindingEvent)
+meth public void valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
+
+CLSS public abstract interface javax.servlet.http.HttpSessionContext
+ anno 0 java.lang.Deprecated()
+meth public abstract java.util.Enumeration<java.lang.String> getIds()
+ anno 0 java.lang.Deprecated()
+meth public abstract javax.servlet.http.HttpSession getSession(java.lang.String)
+ anno 0 java.lang.Deprecated()
+
+CLSS public javax.servlet.http.HttpSessionEvent
+cons public init(javax.servlet.http.HttpSession)
+meth public javax.servlet.http.HttpSession getSession()
+supr java.util.EventObject
+hfds serialVersionUID
+
+CLSS public abstract interface javax.servlet.http.HttpSessionIdListener
+intf java.util.EventListener
+meth public abstract void sessionIdChanged(javax.servlet.http.HttpSessionEvent,java.lang.String)
+
+CLSS public abstract interface javax.servlet.http.HttpSessionListener
+intf java.util.EventListener
+meth public void sessionCreated(javax.servlet.http.HttpSessionEvent)
+meth public void sessionDestroyed(javax.servlet.http.HttpSessionEvent)
+
+CLSS public abstract interface javax.servlet.http.HttpUpgradeHandler
+meth public abstract void destroy()
+meth public abstract void init(javax.servlet.http.WebConnection)
+
+CLSS public javax.servlet.http.HttpUtils
+ anno 0 java.lang.Deprecated()
+cons public init()
+meth public static java.lang.StringBuffer getRequestURL(javax.servlet.http.HttpServletRequest)
+meth public static java.util.Hashtable<java.lang.String,java.lang.String[]> parsePostData(int,javax.servlet.ServletInputStream)
+meth public static java.util.Hashtable<java.lang.String,java.lang.String[]> parseQueryString(java.lang.String)
+supr java.lang.Object
+hfds LSTRING_FILE,lStrings
+
+CLSS public final !enum javax.servlet.http.MappingMatch
+fld public final static javax.servlet.http.MappingMatch CONTEXT_ROOT
+fld public final static javax.servlet.http.MappingMatch DEFAULT
+fld public final static javax.servlet.http.MappingMatch EXACT
+fld public final static javax.servlet.http.MappingMatch EXTENSION
+fld public final static javax.servlet.http.MappingMatch PATH
+meth public static javax.servlet.http.MappingMatch valueOf(java.lang.String)
+meth public static javax.servlet.http.MappingMatch[] values()
+supr java.lang.Enum<javax.servlet.http.MappingMatch>
+
+CLSS public abstract interface javax.servlet.http.Part
+meth public abstract java.io.InputStream getInputStream() throws java.io.IOException
+meth public abstract java.lang.String getContentType()
+meth public abstract java.lang.String getHeader(java.lang.String)
+meth public abstract java.lang.String getName()
+meth public abstract java.lang.String getSubmittedFileName()
+meth public abstract java.util.Collection<java.lang.String> getHeaderNames()
+meth public abstract java.util.Collection<java.lang.String> getHeaders(java.lang.String)
+meth public abstract long getSize()
+meth public abstract void delete() throws java.io.IOException
+meth public abstract void write(java.lang.String) throws java.io.IOException
+
+CLSS public abstract interface javax.servlet.http.PushBuilder
+meth public abstract java.lang.String getHeader(java.lang.String)
+meth public abstract java.lang.String getMethod()
+meth public abstract java.lang.String getPath()
+meth public abstract java.lang.String getQueryString()
+meth public abstract java.lang.String getSessionId()
+meth public abstract java.util.Set<java.lang.String> getHeaderNames()
+meth public abstract javax.servlet.http.PushBuilder addHeader(java.lang.String,java.lang.String)
+meth public abstract javax.servlet.http.PushBuilder method(java.lang.String)
+meth public abstract javax.servlet.http.PushBuilder path(java.lang.String)
+meth public abstract javax.servlet.http.PushBuilder queryString(java.lang.String)
+meth public abstract javax.servlet.http.PushBuilder removeHeader(java.lang.String)
+meth public abstract javax.servlet.http.PushBuilder sessionId(java.lang.String)
+meth public abstract javax.servlet.http.PushBuilder setHeader(java.lang.String,java.lang.String)
+meth public abstract void push()
+
+CLSS public abstract interface javax.servlet.http.WebConnection
+intf java.lang.AutoCloseable
+meth public abstract javax.servlet.ServletInputStream getInputStream() throws java.io.IOException
+meth public abstract javax.servlet.ServletOutputStream getOutputStream() throws java.io.IOException
 

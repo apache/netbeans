@@ -706,7 +706,7 @@
         <property name="sigtest.public.packages" value="${public.packages}"/>
         <property name="sigtest.fail.on.error" value="true"/>
         <taskdef name="sigtest" classname="org.netbeans.nbbuild.Sigtest" classpath="${nbantext.jar}"/>
-        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/sigtest-maven-plugin-1.4.jar"/>
+        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/sigtest-maven-plugin-2.2.jar"/>
         <loadproperties srcFile="${manifest.mf}" prefix="mf.">
             <filterchain>
                 <replaceregex pattern="[\n\r]+ ([^ ][^\n\r]*)"
@@ -750,7 +750,7 @@
         <echo>sigtest check: ${module.name}; cnb: ${code.name.base.dashes}; email: ${sigtest.mail}; type: ${sigtest.check.type}</echo>
     </target>
 
-    <target name="gen-sigtest" depends="-sigtest-init">
+    <target name="gen-sigtest" depends="-sigtest-init" unless="${sigtest.skip.gen}">
         <property name="sigtest.gen.fail.on.error" value="${sigtest.fail.on.error}"/>
         <mkdir dir="${sigtest.output.dir}"/>
         <sigtest fileName="${sigtest.file}"

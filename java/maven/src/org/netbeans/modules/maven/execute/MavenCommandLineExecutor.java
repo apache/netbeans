@@ -21,14 +21,10 @@ package org.netbeans.modules.maven.execute;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,19 +40,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import javax.swing.AbstractAction;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
-import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.model.Prerequisites;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.api.extexecution.base.Processes;
@@ -68,7 +55,6 @@ import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
-import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.api.execute.ActiveJ2SEPlatformProvider;
 import org.netbeans.modules.maven.api.execute.ExecutionContext;
 import org.netbeans.modules.maven.api.execute.ExecutionResultChecker;
@@ -92,7 +78,6 @@ import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
-import org.openide.modules.Places;
 import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -100,7 +85,6 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
-import org.openide.util.TaskListener;
 import org.openide.util.Utilities;
 import org.openide.windows.IOColorLines;
 import org.openide.windows.IOColors;
@@ -183,26 +167,20 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             MavenExecutor exec = createCommandLineExecutor(config, io, tc);
             ExecutorTask task = ExecutionEngine.getDefault().execute(config.getTaskDisplayName(), exec, new ProxyNonSelectableInputOutput(exec.getInputOutput()));
             exec.setTask(task);
-            task.addTaskListener(new TaskListener() {
-                @Override
-                public void taskFinished(Task t) {
-                    MavenProject mp = config.getMavenProject();
-                    if (mp == null) {
-                        return;
-                    }
-                    final List<Artifact> arts = new ArrayList<Artifact>();
-                    Artifact main = mp.getArtifact();
-                    if (main != null) {
-                        arts.add(main);
-                    }
-                    arts.addAll(mp.getArtifacts());
-                    UPDATE_INDEX_RP.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            RepositoryIndexer.updateIndexWithArtifacts(RepositoryPreferences.getInstance().getLocalRepository(), arts);
-                        }
-                    });
+            task.addTaskListener((Task t) -> {
+                MavenProject mp = config.getMavenProject();
+                if (mp == null) {
+                    return;
                 }
+                final List<Artifact> arts = new ArrayList<>();
+                Artifact main = mp.getArtifact();
+                if (main != null) {
+                    arts.add(main);
+                }
+                arts.addAll(mp.getArtifacts());
+                UPDATE_INDEX_RP.post(() -> {
+                    RepositoryIndexer.updateIndexWithArtifacts(RepositoryPreferences.getInstance().getLocalRepository(), arts);
+                });
             });
             return task;
         }
@@ -271,17 +249,14 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                         ex.getLocalizedMessage(), null, NotificationDisplayer.Priority.NORMAL, NotificationDisplayer.Category.ERROR);
                 ioput.getErr().append(Bundle.ERR_CannotOverrideProxy(ex.getLocalizedMessage()));
                 // FIXME: log exception
-            } catch (ExecutionException ex) {
-                // FIXME: log exception
-            } catch (InterruptedException ex) {
-                // FIXME: log exception
+            } catch (ExecutionException | InterruptedException ex) {
+                LOGGER.log(Level.WARNING, "could not determine proxy settings", ex);
             } finally {
                 if (!ok) {
                     ioput.getOut().close();
                     ioput.getErr().close();
                     actionStatesAtFinish(null, null);
                     markFreeTab();
-                    return;
                 }
             }
         }
@@ -429,7 +404,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     }
     
     private void kill(Process prcs, String uuid) {
-        Map<String, String> env = new HashMap<String, String>();
+        Map<String, String> env = new HashMap<>();
         env.put(KEY_UUID, uuid);
         Processes.killTree(prcs, env);
     }
@@ -440,22 +415,19 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         preProcess = null;
         final Process pro = process;
         process = null;
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                if (pre != null) {
-                    kill(pre, preProcessUUID);
-                }
-                if (pro != null) {
-                    kill(pro, processUUID);
-                }
+        RP.post(() -> {
+            if (pre != null) {
+                kill(pre, preProcessUUID);
+            }
+            if (pro != null) {
+                kill(pro, processUUID);
             }
         });
         return true;
     }
 
     private static List<String> createMavenExecutionCommand(RunConfig config, Constructor base) {
-        List<String> toRet = new ArrayList<String>(base.construct());
+        List<String> toRet = new ArrayList<>(base.construct());
 
         if (Utilities.isUnix()) { // #198997 - defend against symlinks
             File basedir = config.getExecutionDirectory();
@@ -501,7 +473,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
         }
 
-        if (config.isOffline() != null && config.isOffline().booleanValue()) {
+        if (config.isOffline() != null && config.isOffline()) {
             toRet.add("--offline");//NOI18N
         }
         if (!config.isInteractive()) {
@@ -557,7 +529,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                         if (config.isInteractive() && (one.equals("--batch-mode") || one.equals("-B"))) {
                             continue;
                         }
-                        if ((config.isOffline() != null && !config.isOffline().booleanValue()) && (one.equals("--offline") || one.equals("-o"))) {
+                        if ((config.isOffline() != null && !config.isOffline()) && (one.equals("--offline") || one.equals("-o"))) {
                             continue;
                         }
                     }
@@ -636,7 +608,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     // tests only
     ProcessBuilder constructBuilder(final RunConfig clonedConfig, InputOutput ioput) {
         File javaHome = null;
-        Map<String, String> envMap = new LinkedHashMap<String, String>();
+        Map<String, String> envMap = new LinkedHashMap<>();
         for (Map.Entry<? extends String,? extends String> entry : clonedConfig.getProperties().entrySet()) {
             if (entry.getKey().startsWith(ENV_PREFIX)) {
                 String env = entry.getKey().substring(ENV_PREFIX.length());
@@ -697,12 +669,6 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             constructeur = new WrapperShellConstructor(wrapper);
         } else {
             mavenHome = EmbedderFactory.getEffectiveMavenHome();
-            if (MavenSettings.getDefault().isUseBestMaven()) {
-                File n = guessBestMaven(clonedConfig, ioput);
-                if (n != null) {
-                    mavenHome = n;
-                }
-            }
             constructeur = new ShellConstructor(mavenHome);
         }
         
@@ -779,13 +745,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         }
         else {
             //very hacky here.. have a way to remove
-            List<String> command = new ArrayList<String>(builder.command());
-            for (Iterator<String> it = command.iterator(); it.hasNext();) {
-                String s = it.next();
-                if (s.startsWith("-D" + CosChecker.MAVENEXTCLASSPATH + "=")) {
-                    it.remove();
-                }
-            }
+            List<String> command = new ArrayList<>(builder.command());
+            command.removeIf(s -> s.startsWith("-D" + CosChecker.MAVENEXTCLASSPATH + "="));
             display.append(Utilities.escapeParameters(command.toArray(new String[0])));
         }
 
@@ -832,12 +793,9 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
             ioput.getErr().println("  This message will show on the next start of the IDE again, to skip it, add -J-Dmaven.run.cmd=true to your etc/netbeans.conf file in your NetBeans installation."); //NOI18N - in maven output
             ioput.getErr().println("The detailed exception output is printed to the IDE's log file."); //NOI18N - in maven output
-            RP.post(new Runnable() {
-                @Override
-                public void run() {
-                    RunConfig newConfig = new BeanRunConfig(config);
-                    RunUtils.executeMaven(newConfig);
-                }
+            RP.post(() -> {
+                RunConfig newConfig = new BeanRunConfig(config);
+                RunUtils.executeMaven(newConfig);
             });
         } else {
             ioput.getErr().println(x.getMessage());
@@ -934,167 +892,6 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
         }
         return false;
-    }
-
-    private File guessBestMaven(RunConfig clonedConfig, InputOutput ioput) {
-        MavenProject mp = clonedConfig.getMavenProject();
-        if (mp != null) {
-            if (mp.getPrerequisites() != null) {
-                Prerequisites pp = mp.getPrerequisites();
-                String ver = pp.getMaven();
-                if (ver != null) {
-                    return checkAvailability(ver, null, ioput);
-                }
-            }
-            String value = PluginPropertyUtils.getPluginPropertyBuildable(clonedConfig.getMavenProject(), Constants.GROUP_APACHE_PLUGINS, "maven-enforcer-plugin", "enforce", new PluginPropertyUtils.ConfigurationBuilder<String>() {
-                @Override
-                public String build(Xpp3Dom configRoot, ExpressionEvaluator eval) {
-                    if(configRoot != null) {
-                        Xpp3Dom rules = configRoot.getChild("rules");
-                        if (rules != null) {
-                            Xpp3Dom rmv = rules.getChild("requireMavenVersion");
-                            if (rmv != null) {
-                                Xpp3Dom v = rmv.getChild("version");
-                                if (v != null) {
-                                    return v.getValue();
-                                }
-                            }
-                        }
-                    }
-                    return null;
-                }
-            });
-            if (value != null) {
-                if (value.contains("[") || value.contains("(")) {
-                    try {
-                        VersionRange vr = VersionRange.createFromVersionSpec(value);
-                        return checkAvailability(null, vr, ioput);
-                    } catch (InvalidVersionSpecificationException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                } else {
-                    return checkAvailability(value, null, ioput);
-                }
-            }
-        }
-        return null;
-    }
-
-    private File checkAvailability(String ver, VersionRange vr, InputOutput ioput) {
-        ArrayList<String> all = new ArrayList<>(MavenSettings.getDefault().getUserDefinedMavenRuntimes());
-        //TODO this could be slow? but is it slower than downloading stuff?
-        //is there a faster way? or can we somehow log the findings after first attempt?
-        DefaultArtifactVersion candidate = null;
-        File candidateFile = null;
-        for (String one : all) {
-            File f = FileUtil.normalizeFile(new File(one));
-            String oneVersion = MavenSettings.getCommandLineMavenVersion(f);
-            if(oneVersion == null) {
-                continue;
-            }
-            if (ver != null && ver.equals(oneVersion)) {
-                return f;
-            }
-            DefaultArtifactVersion dav = new DefaultArtifactVersion(oneVersion);
-            if (vr != null && vr.containsVersion(dav)) {
-                if (candidate != null) {
-                    if (candidate.compareTo(dav) < 0) {
-                        candidate = dav;
-                        candidateFile = f;
-                    }
-                } else {
-                    candidate = new DefaultArtifactVersion(oneVersion);
-                    candidateFile = f;
-                }
-            }
-        }
-        if (candidateFile != null) {
-            return candidateFile;
-        } else if (vr != null) {
-            ver = vr.getRecommendedVersion() != null ? vr.getRecommendedVersion().toString() : null;
-            if (ver == null) {
-                //TODO can we figure out which version to get without hardwiring a list of known versions?
-                ioput.getOut().println("NetBeans: No match and no recommended version for version range " + vr.toString());
-                return null;
-            }
-        }
-        if (ver == null) {
-            return null;
-        }
-
-        File f = getAltMavenLocation();
-        File child = FileUtil.normalizeFile(new File(f, "apache-maven-" + ver));
-        if (child.exists()) {
-            return child;
-        } else {
-            f.mkdirs();
-            ioput.getOut().println("NetBeans: Downloading and unzipping Maven version " + ver);
-            try {
-                //this url pattern works for all versions except the last one 3.2.3
-                //which is only under <mirror>/apache/maven/maven-3/3.2.3/binaries/
-                URL[] urls = new URL[] {new URL("http://archive.apache.org/dist/maven/binaries/apache-maven-" + ver + "-bin.zip"),
-                    new URL("http://archive.apache.org/dist/maven/maven-3/" + ver + "/binaries/apache-maven-" + ver + "-bin.zip")};
-                InputStream is = null;
-                for (URL u : urls) {
-                    try {
-                        is = u.openStream();
-                        break;
-                    } catch (FileNotFoundException e) {
-                        // try next url
-                    }
-                }
-                if(is == null) {
-                    LOGGER.log(Level.WARNING, "wasn''t able to download maven binaries, version {0}", ver);
-                    return null;
-                }
-                try (ZipInputStream str = new ZipInputStream(is)) {
-                    ZipEntry entry;
-                    while ((entry = str.getNextEntry()) != null) {
-                        //base it of f not child as the zip contains the maven base folder
-                        File fileOrDir = new File(f,  entry.getName());
-                        if (entry.isDirectory()) {
-                            fileOrDir.mkdirs();
-                        } else {
-                            Files.copy(str, fileOrDir.toPath());
-                            // correct way to set executable flag?
-                            if ("bin".equals(fileOrDir.getParentFile().getName()) && !fileOrDir.getName().endsWith(".conf")) {
-                                fileOrDir.setExecutable(true);
-                            }
-                        }
-                    }
-                }
-                if (!all.contains(child.getAbsolutePath())) {
-                    all.add(child.getAbsolutePath());
-                    MavenSettings.getDefault().setMavenRuntimes(all);
-                }
-                return child;
-            } catch (MalformedURLException ex) {
-                Exceptions.printStackTrace(ex);
-                try {
-                    FileUtils.deleteDirectory(child);
-                } catch (IOException ex1) {
-                    Exceptions.printStackTrace(ex1);
-                }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-                try {
-                    FileUtils.deleteDirectory(child);
-                } catch (IOException ex1) {
-                    Exceptions.printStackTrace(ex1);
-                }
-            }
-        }
-        return null;
-    }
-
-    private File getAltMavenLocation() {
-        if (MavenSettings.getDefault().isUseBestMavenAltLocation()) {
-            String s = MavenSettings.getDefault().getBestMavenAltLocation();
-            if (s != null && s.trim().length() > 0) {
-                return FileUtil.normalizeFile(new File(s));
-            }
-        }
-        return Places.getCacheSubdirectory("downloaded-mavens");
     }
     
     private File searchMavenWrapper(RunConfig config) {

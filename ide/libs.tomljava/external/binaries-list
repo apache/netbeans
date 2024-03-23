@@ -14,7 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-javac.source=1.8
-javac.target=1.8
-
-
+FC26667B60FE746EEA788957157FA280D8F456DF net.vieiro:toml-java:13.4.1

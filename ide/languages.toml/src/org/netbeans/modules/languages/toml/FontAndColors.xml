@@ -21,22 +21,21 @@
 -->
 <!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
 <fontscolors>
-    <fontcolor name="boolean" default="keyword"/>
+    <fontcolor name="boolean" default="number"/>
     <fontcolor name="comment" default="comment"/>
     <fontcolor name="date" default="number"/>
-    <fontcolor name="key" default="identifier">
-        <font style="bold" />
-    </fontcolor>
     <fontcolor name="number" default="number"/>
     <fontcolor name="operator" default="operator"/>
     <fontcolor name="separator" default="separator"/>
     <fontcolor name="string" default="string"/>
     <fontcolor name="string-quote" default="string"/>
-    <fontcolor name="string-escape" default="string">
-        <font style="bold" />
-    </fontcolor>
-    <fontcolor name="table-mark" default="identfier">
+    <fontcolor name="string-escape" default="identifier"/>
+    <fontcolor name="table-mark" default="identifier">
         <font style="bold" />
     </fontcolor>
     <fontcolor name="whitespace" default="whitespace"/>
+    <fontcolor name="key" default="keyword"/>
+    <fontcolor default="identifier" name="mod-global">
+        <font style="bold" />
+    </fontcolor>
 </fontscolors>

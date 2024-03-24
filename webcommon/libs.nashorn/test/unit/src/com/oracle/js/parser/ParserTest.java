@@ -21,6 +21,7 @@ package com.oracle.js.parser;
 
 import com.oracle.js.parser.ir.ClassNode;
 import com.oracle.js.parser.ir.FunctionNode;
+import com.oracle.js.parser.ir.IdentNode;
 import com.oracle.js.parser.ir.LexicalContext;
 import com.oracle.js.parser.ir.Node;
 import com.oracle.js.parser.ir.visitor.NodeVisitor;
@@ -309,6 +310,26 @@ public class ParserTest {
         definedConstructor = findNode(demoClass2Demo, functionNodeWithName("Demo2"), FunctionNode.class);
         assertNotNull(definedConstructor);
         assertTrue(definedConstructor.isGenerated());
+    }
+
+    @Test
+    public void testMetaProperties() {
+        // import.meta and new.target are declared meta properties provided by
+        // the runtime. The parser must be able to report them, even if they are
+        // based on keywords
+        assertParses("import.meta");
+        assertParses("function() { new.target }");
+
+        // Other variations should be rejected by the parser
+        assertParsesNot(Integer.MAX_VALUE, "import.dummy");
+        assertParsesNot(Integer.MAX_VALUE, "function() { new.dummy }");
+
+        FunctionNode programm1 = parse(Integer.MAX_VALUE, false, "import.meta");
+        FunctionNode programm2 = parse(Integer.MAX_VALUE, false, "function() { new.target }");
+        // The two special properties are reported as identifiers with an
+        // embedded period
+        assertNotNull(findNode(programm1, n -> n instanceof IdentNode && "import".equals(((IdentNode) n).getName()), IdentNode.class));
+        assertNotNull(findNode(programm2, n -> n instanceof IdentNode && "new".equals(((IdentNode) n).getName()), IdentNode.class));
     }
 
     private Predicate<Node> functionNodeWithName(String name) {

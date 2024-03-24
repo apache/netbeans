@@ -74,9 +74,6 @@ public final class MavenSettings  {
     private static final String PROP_COLLAPSE_FOLDS = "collapseSuccessFolds";
     private static final String PROP_OUTPUT_TAB_CONFIG = "showConfigInOutputTab";
     private static final String PROP_OUTPUT_TAB_NAME = "showOutputTabAs";
-    private static final String PROP_EXPERIMENTAL_USE_BEST_MAVEN = "useBestMaven";
-    private static final String PROP_EXPERIMENTAL_USE_ALTERNATE_LOCATION = "useBestMavenAltLocation";
-    private static final String PROP_EXPERIMENTAL_ALTERNATE_LOCATION = "bestMavenAltLocation";
     private static final String PROP_VM_OPTIONS_WRAP = "vmOptionsWrap";
     private static final String PROP_DEFAULT_JDK = "defaultJdk";
     private static final String PROP_PREFER_WRAPPER = "preferWrapper"; //NOI18N
@@ -358,32 +355,55 @@ public final class MavenSettings  {
         getPreferences().putBoolean(PROP_PREFER_WRAPPER, preferWrapper);
     }
 
+    /**
+     * Deprecated for removal - use mvnw instead.
+     * Returns false.
+     */
+    @Deprecated/*(forRemoval = true)*/
     public boolean isUseBestMaven() {
-        return getPreferences().getBoolean(PROP_EXPERIMENTAL_USE_BEST_MAVEN, false);
+        return false;
     }
     
+    /**
+     * Deprecated for removal - use mvnw instead.
+     * No-op.
+     */
+    @Deprecated/*(forRemoval = true)*/
     public void setUseBestMaven(boolean bestMaven) {
-        getPreferences().putBoolean(PROP_EXPERIMENTAL_USE_BEST_MAVEN, bestMaven);
     }
     
+    /**
+     * Deprecated for removal - use mvnw instead.
+     * Returns false.
+     */
+    @Deprecated/*(forRemoval = true)*/
     public boolean isUseBestMavenAltLocation() {
-        return getPreferences().getBoolean(PROP_EXPERIMENTAL_USE_ALTERNATE_LOCATION, false);
+        return false;
     }
     
+    /**
+     * Deprecated for removal - use mvnw instead.
+     * No-op.
+     */
+    @Deprecated/*(forRemoval = true)*/
     public void setUseBestMavenAltLocation(boolean bestMavenAltLocation) {
-        getPreferences().putBoolean(PROP_EXPERIMENTAL_USE_ALTERNATE_LOCATION, bestMavenAltLocation);
     }
     
+    /**
+     * Deprecated for removal - use mvnw instead.
+     * No-op.
+     */
+    @Deprecated/*(forRemoval = true)*/
     public void setBestMavenAltLocation(String location) {
-        if (null == location) {
-            getPreferences().remove(PROP_EXPERIMENTAL_ALTERNATE_LOCATION);
-        } else {
-            putProperty(PROP_EXPERIMENTAL_ALTERNATE_LOCATION, location);
-        }
     }
 
+    /**
+     * Deprecated for removal - use mvnw instead.
+     * Returns null.
+     */
+    @Deprecated/*(forRemoval = true)*/
     public String getBestMavenAltLocation() {
-        return getPreferences().get(PROP_EXPERIMENTAL_ALTERNATE_LOCATION, null); //NOI18N
+        return null;
     }
     
 

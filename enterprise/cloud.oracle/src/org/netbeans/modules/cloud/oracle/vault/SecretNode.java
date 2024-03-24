@@ -52,9 +52,9 @@ public class SecretNode extends OCINode {
      *
      * @@return Returns {@code ChildrenProvider} which fetches List of {@code SecretItem} for given {@code VaultItem}
      */
-    public static ChildrenProvider<VaultItem, SecretItem> getSecrets() {
-        return vault -> {
-            VaultsClient client = VaultsClient.builder().build(getDefault().getActiveProfile().getConfigProvider());
+    public static ChildrenProvider.SessionAware<VaultItem, SecretItem> getSecrets() {
+        return (vault, session) -> {
+            VaultsClient client = session.newClient(VaultsClient.class); 
             
             ListSecretsRequest listSecretsRequest = ListSecretsRequest.builder()
                     .compartmentId(vault.getCompartmentId())

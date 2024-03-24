@@ -515,6 +515,10 @@
 				"title": "Add JDBC Database Connection"
 			},
 			{
+				"command": "nbls.oci.setRegion",
+				"title": "Set Oracle Cloud Region"
+			},
+			{
 				"command": "nbls:Database:netbeans.db.explorer.action.Connect",
 				"title": "Connect to Database"
 			},

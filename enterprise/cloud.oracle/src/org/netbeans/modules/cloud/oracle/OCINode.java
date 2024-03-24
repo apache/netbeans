@@ -40,9 +40,9 @@ import org.openide.util.lookup.Lookups;
 public class OCINode extends AbstractNode {
     private RefreshListener refreshListener;
 
-    private final OCIItem item;
+    final OCIItem item;
     private final CloudChildFactory factory;
-    private final OCISessionInitiator session;
+    final OCISessionInitiator session;
 
     public OCINode(OCIItem item) {
         this(new CloudChildFactory(item), item, OCIManager.getDefault().getActiveSession(), Lookups.fixed(item));

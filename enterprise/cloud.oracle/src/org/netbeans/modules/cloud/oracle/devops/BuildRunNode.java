@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
-import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.OCINode;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.openide.nodes.Children;
@@ -69,9 +68,9 @@ public class BuildRunNode extends OCINode {
         );
     }
     
-    public static ChildrenProvider<BuildRunFolderItem, BuildRunItem> expandBuildRuns() {
-        return project -> {
-            try ( DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider())) {
+    public static ChildrenProvider.SessionAware<BuildRunFolderItem, BuildRunItem> expandBuildRuns() {
+        return (project, session) -> {
+            try (DevopsClient client = session.newClient(DevopsClient.class)) {
                 ListBuildRunsRequest request = ListBuildRunsRequest.builder()
                         .projectId(project.getKey().getValue())
                         .sortBy(ListBuildRunsRequest.SortBy.TimeCreated)
@@ -81,7 +80,7 @@ public class BuildRunNode extends OCINode {
                 List<BuildRunSummary> projects = response.getBuildRunSummaryCollection().getItems();
                 return projects.stream()
                                         .map(p -> new BuildRunItem(
-                                                OCID.of(p.getId(), "BuildRun"), 
+                                                OCID.of(p.getId(), "BuildRun"), // NOI18N
                                                 p.getDisplayName(),
                                                 p.getLifecycleState().getValue()
                                         ))

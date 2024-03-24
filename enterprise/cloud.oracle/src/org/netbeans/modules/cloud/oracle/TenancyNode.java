@@ -45,15 +45,41 @@ public class TenancyNode extends OCINode implements PropertyChangeListener {
         // home region will be set as a description
         setShortDescription(tenancy.getDescription());
         OCIManager.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(this, OCIManager.getDefault()));
+        if (session instanceof OCIProfile) {
+            ((OCIProfile) session).addPropertyChangeListener(this);
+        }
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent e) {
-        if (OCIManager.PROP_ACTIVE_PROFILE.equals(e.getPropertyName())) {
+        if (OCIManager.PROP_ACTIVE_PROFILE.equals(e.getPropertyName()) ||
+            OCIProfile.PROP_ACTIVE_REGION_CODE.equals(e.getPropertyName())    ) {
             fireDisplayNameChange(null, null);
         }
     }
 
+    @NbBundle.Messages({
+        "# {0} - tenancy ID",
+        "# {1} - profile ID",
+        "MSG_TenancyDesc={0} (profile: {1}, region: {2})",
+        "# {0} - tenancy ID",
+        "# {1} - profile ID",
+        "MSG_BrokenTenancy=Unavailable tenancy {0}",
+        "# {0} - profile ID",
+        "MSG_BrokenProfileNode=Broken profile {0}",
+    })
+    @Override
+    public String getDisplayName() {
+        OCIProfile profile = (OCIProfile) session;
+        if (item != null) {
+            return Bundle.MSG_TenancyDesc(item.getName(), profile.getId(), profile.getRegion());
+        } else if (profile.getTenantId() != null) {
+            return Bundle.MSG_BrokenTenancy(profile.getTenantId(), profile.getId());
+        } else {
+            return Bundle.MSG_BrokenProfileNode(profile.getId());
+        }
+    }
+    
     @NbBundle.Messages({
         "HTML_EmphasizeName=<b>{0}</b>"
     })

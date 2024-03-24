@@ -23,7 +23,6 @@ import java.awt.Dialog;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
 import javax.swing.JFileChooser;

@@ -51,6 +51,7 @@ import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.request.EventRequestManagerWrapper;
 import org.netbeans.modules.debugger.jpda.models.AbstractVariable;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
+import static org.netbeans.modules.debugger.jpda.truffle.TruffleDebugManager.configureTruffleBreakpoint;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleStrataProvider;
@@ -178,7 +179,7 @@ public class StepActionProvider extends JPDADebuggerActionProvider {
         MethodBreakpoint stepIntoJavaBreakpoint = MethodBreakpoint.create(STEP2JAVA_CLASS, STEP2JAVA_METHOD);
         stepIntoJavaBreakpoint.setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
         stepIntoJavaBreakpoint.setThreadFilters(debugger, new JPDAThread[]{currentThread});
-        stepIntoJavaBreakpoint.setHidden(true);
+        configureTruffleBreakpoint(stepIntoJavaBreakpoint);
         stepIntoJavaBreakpoint.addJPDABreakpointListener(new JPDABreakpointListener() {
             @Override
             public void breakpointReached(JPDABreakpointEvent event) {

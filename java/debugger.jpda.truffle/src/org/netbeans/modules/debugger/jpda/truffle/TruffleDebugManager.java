@@ -53,6 +53,7 @@ import org.netbeans.modules.debugger.jpda.truffle.actions.PauseInGraalScriptActi
 import org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint;
 import org.netbeans.spi.debugger.ActionsProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
+import org.openide.util.NbBundle;
 
 /**
  * Initiates guest language debugging, detects Engine in the JVM.
@@ -94,7 +95,7 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
         */
         debugManagerLoadBP = MethodBreakpoint.create(ENGINE_BUILDER_CLASS, "build");
         ((MethodBreakpoint) debugManagerLoadBP).setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
-        debugManagerLoadBP.setHidden(true);
+        configureTruffleBreakpoint(debugManagerLoadBP);
         
         LOG.log(Level.FINE, "TruffleDebugManager.initBreakpoints(): submitted BP {0}", debugManagerLoadBP);
         TruffleAccess.init();
@@ -155,7 +156,7 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
     private JPDABreakpoint addRemoteServiceInitBP(final JPDADebugger debugger) {
         MethodBreakpoint bp = MethodBreakpoint.create(REMOTE_SERVICES_TRIGGER_CLASS, REMOTE_SERVICES_TRIGGER_METHOD);
         bp.setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
-        bp.setHidden(true);
+        configureTruffleBreakpoint(bp);
         bp.setSession(debugger);
 
         JPDABreakpointListener bpl = new JPDABreakpointListener() {
@@ -227,11 +228,11 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
      */
     private void handleEngineBuilder(final JPDADebugger debugger, JPDABreakpointEvent entryEvent) {
         MethodBreakpoint builderExitBreakpoint = MethodBreakpoint.create(ENGINE_BUILDER_CLASS, "build");
-        builderExitBreakpoint.setBreakpointType(MethodBreakpoint.TYPE_METHOD_EXIT);
+        builderExitBreakpoint.setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
         builderExitBreakpoint.setThreadFilters(debugger, new JPDAThread[]{entryEvent.getThread()});
         builderExitBreakpoint.setSuspend(JPDABreakpoint.SUSPEND_EVENT_THREAD);
         builderExitBreakpoint.setSession(debugger);
-        builderExitBreakpoint.setHidden(true);
+        configureTruffleBreakpoint(builderExitBreakpoint);
         builderExitBreakpoint.addJPDABreakpointListener(exitEvent -> {
             try {
                 builderExitBreakpoint.disable();
@@ -252,7 +253,7 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
             haveExistingEnginesTrigger.put(debugger, Boolean.TRUE);
         }
         MethodBreakpoint execTrigger = MethodBreakpoint.create(EXISTING_ENGINES_TRIGGER, "*");
-        execTrigger.setHidden(true);
+        configureTruffleBreakpoint(execTrigger);
         execTrigger.setSession(debugger);
         execTrigger.addJPDABreakpointListener((event) -> {
             DebuggerManager.getDebuggerManager().removeBreakpoint(execTrigger);
@@ -349,4 +350,10 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
         }
     }
 
+    @NbBundle.Messages({
+        "CTL_BreakpointGroup=Truffle"
+    })
+    public static void configureTruffleBreakpoint(JPDABreakpoint b) {
+        b.setGroupName(Bundle.CTL_BreakpointGroup());
+    }
 }

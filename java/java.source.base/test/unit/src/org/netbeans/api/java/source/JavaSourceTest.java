@@ -165,6 +165,7 @@ public class JavaSourceTest extends NbTestCase {
         suite.addTest(new JavaSourceTest("testDocumentChanges"));
         suite.addTest(new JavaSourceTest("testMultipleFiles"));
         suite.addTest(new JavaSourceTest("testMultipleFilesSameJavac"));
+        suite.addTest(new JavaSourceTest("testMultipleFilesWithErrors"));
         /*
         suite.addTest(new JavaSourceTest("testParsingDelay"));
 //        suite.addTest(new JavaSourceTest("testJavaSourceIsReclaimable"));     fails in trunk
@@ -1988,6 +1989,33 @@ public class JavaSourceTest extends NbTestCase {
             },true);
     }
 
+    public void testMultipleFilesWithErrors() throws Exception {
+        final FileObject testFile1 = createTestFile("Test1",
+                                                    "public class Test1 extends Test2 {\n" +
+                                                    "     public int inv(Unknown u) {\n" +
+                                                    "         return this.doesNotExist(u);\n" +
+                                                    "     }\n" +
+                                                    "}\n");
+        final FileObject testFile2 = createTestFile("Test2",
+                                                    "public class Test2 {\n" +
+                                                    "     public int inv(Unknown u) {\n" +
+                                                    "         return this.doesNotExist(u);\n" +
+                                                    "     }\n" +
+                                                    "}\n");
+        final JavaSource js = JavaSource.create(ClasspathInfo.create(testFile1), testFile1, testFile2);
+        assertNotNull(js);
+        js.runUserActionTask(new Task<CompilationController>() {
+            public void run (final CompilationController c) throws IOException, BadLocationException {
+                c.toPhase(JavaSource.Phase.RESOLVED);
+            }
+        }, true);
+        js.runModificationTask(new Task<WorkingCopy>() {
+            public void run (final WorkingCopy c) throws IOException, BadLocationException {
+                c.toPhase(JavaSource.Phase.RESOLVED);
+            }
+        });
+    }
+
     private static class FindMethodRegionsVisitor extends SimpleTreeVisitor<Void,Void> {
 
         final Document doc;
@@ -2419,21 +2447,23 @@ public class JavaSourceTest extends NbTestCase {
 
     private FileObject createTestFile (String className) {
         try {
-            File workdir = this.getWorkDir();
-            File root = new File (workdir, "src");
-            root.mkdir();
-            File data = new File (root, className+".java");
-
-            PrintWriter out = new PrintWriter (new FileWriter (data));
-            try {
-                out.println(MessageFormat.format(TEST_FILE_CONTENT, new Object[] {className}));
-            } finally {
-                out.close ();
-            }
-            return FileUtil.toFileObject(data);
+            return createTestFile(className,
+                                  MessageFormat.format(TEST_FILE_CONTENT, new Object[] {className}) + System.getProperty("line.separator"));
         } catch (IOException ioe) {
             return null;
         }
+    }
+
+    private FileObject createTestFile (String className, String content) throws IOException {
+        File workdir = this.getWorkDir();
+        File root = new File (workdir, "src");
+        root.mkdir();
+        File data = new File (root, className+".java");
+
+        try (Writer w = new FileWriter (data)) {
+            w.write(content);
+        }
+        return FileUtil.toFileObject(data);
     }
 
     private ClassPath createBootPath () throws MalformedURLException {

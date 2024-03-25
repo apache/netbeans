@@ -598,9 +598,11 @@ public final class FavoritesNode extends FilterNode implements Index {
                     newArr.add(null);
                 }
                 //Do not add Delete action
-                if (!(arr1 instanceof DeleteAction)) {
-                    newArr.add(arr1);
+                if (arr1 instanceof DeleteAction ||
+                        (arr1 != null && "delete".equals(arr1.getValue("key")))) {
+                    continue;
                 }
+                newArr.add(arr1);
             }
             if (!added) {
                 added = true;
@@ -623,9 +625,11 @@ public final class FavoritesNode extends FilterNode implements Index {
                     newArr.add(null);
                 }
                 //Do not add Delete action
-                if (!(arr1 instanceof DeleteAction)) {
-                    newArr.add(arr1);
+                if (arr1 instanceof DeleteAction ||
+                        (arr1 != null && "delete".equals(arr1.getValue("key")))) {
+                    continue;
                 }
+                newArr.add(arr1);
             }
             if (!added) {
                 added = true;

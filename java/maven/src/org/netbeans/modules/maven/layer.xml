@@ -190,6 +190,9 @@
                     <attr name="goals" stringvalue="exec"/>
                 </file>
             </folder>
+            <folder name="configuredPlugins">
+                <!-- Placeholder -->
+            </folder>
         </folder>
     </folder>
     <folder name="OptionsExport">

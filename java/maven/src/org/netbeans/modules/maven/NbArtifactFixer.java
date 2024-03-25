@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -101,7 +102,7 @@ public class NbArtifactFixer implements ArtifactFixer {
         } else {
             LOG.log(Level.INFO, "Cycle in NbArtifactFixer resolution (issue #234586): {0}", Arrays.toString(gavSet.toArray()));
         }
-        
+        // NOTE: this catches metadata request for all artifacts not locally cached, but all will be repored as POMs.
         try {
             File f = createFallbackPOM(artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion());
             //instead of workarounds down the road, we set the artifact's file here.
@@ -109,7 +110,35 @@ public class NbArtifactFixer implements ArtifactFixer {
             artifact.setFile(f);
             Set<Artifact> s = CAPTURE_FAKE_ARTIFACTS.get();
             if (s != null) {
-                s.add(artifact);
+                String c = artifact.getProperty("nbResolvingArtifact.classifier", null);
+                String e = artifact.getProperty("nbResolvingArtifact.extension", null);
+
+                if ("".equals(c)) {
+                    c = null;
+                }
+                // If it really resolves a POM dependency, add to missing artifacts.
+                if ((c == null && e == null) ||
+                    (Objects.equals(c, artifact.getClassifier()) && Objects.equals(e, artifact.getExtension()))) {
+                    s.add(artifact);
+                } else {
+                    if (local.getLayout() != null) { // #189807: for unknown reasons, there is no layout when running inside MavenCommandLineExecutor.run
+
+                        //the special snapshot handling is important in case of SNAPSHOT or x-SNAPSHOT versions, for some reason aether has slightly different
+                        //handling of baseversion compared to maven artifact. we need to manually set the baseversion here..
+                        boolean isSnapshot = artifact.isSnapshot();
+                        DefaultArtifact art = new DefaultArtifact(artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion(), null, e, c, new DefaultArtifactHandler(e));
+                        if (isSnapshot) {
+                            art.setBaseVersion(artifact.getBaseVersion());
+                        }
+                        String path = local.pathOf(art);
+                        File af = new File(local.getBasedir(), path);
+                        art.setFile(af);
+                        org.eclipse.aether.artifact.DefaultArtifact da = new org.eclipse.aether.artifact.DefaultArtifact(
+                                art.getGroupId(), art.getArtifactId(), art.getClassifier(), art.getType(), 
+                                art.getVersion(), artifact.getProperties(), af);
+                        s.add(da);
+                    }
+                }
             }
             return f;
         } catch (IOException x) {

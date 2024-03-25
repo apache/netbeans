@@ -52,6 +52,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
@@ -644,13 +645,11 @@ public final class Server {
                 f.completeExceptionally(ex);
             }
         }
-
-        private void asyncOpenSelectedProjects1(CompletableFuture<Project[]> f, Project[] previouslyOpened, Project[] candidateMapping, List<Project> projects, boolean addToWorkspace) {
-            int id = this.openRequestId.getAndIncrement();
-
-            List<CompletableFuture> primingBuilds = new ArrayList<>();
+        
+        CompletableFuture<Void>[] primeProjects(Collection<Project> projects, int id, Map<Project, CompletableFuture<Void>> local) {
             List<Project> toOpen = new ArrayList<>();
-            Map<Project, CompletableFuture<Void>> local = new HashMap<>();
+            List<CompletableFuture<Void>> primingBuilds = new ArrayList<>();
+            
             synchronized (this) {
                 LOG.log(Level.FINER, "{0}: Opening project(s): {1}", new Object[]{ id, Arrays.asList(projects) });
                 for (Project p : projects) {
@@ -664,7 +663,7 @@ public final class Server {
                 }
                 beingOpened.putAll(local);
             }
-            long t = System.currentTimeMillis();
+
             LOG.log(Level.FINER, id + ": Opening projects: {0}", Arrays.asList(toOpen));
 
             // before the projects are officialy 'opened', try to prime the projects
@@ -698,9 +697,20 @@ public final class Server {
                     pap.invokeAction(ActionProvider.COMMAND_PRIME, Lookups.fixed(progress));
                 }
             }
+            return primingBuilds.toArray(new CompletableFuture[0]);
+        }
+        
+        private void asyncOpenSelectedProjects1(CompletableFuture<Project[]> f, Project[] previouslyOpened, Project[] candidateMapping, List<Project> initialProjects, boolean addToWorkspace) {
+            long t = System.currentTimeMillis();
+            int id = this.openRequestId.getAndIncrement();
+            Map<Project, CompletableFuture<Void>> local = new HashMap<>();
 
-            // Wait for all priming builds, even those already pending, to finish:
-            CompletableFuture.allOf(primingBuilds.toArray(new CompletableFuture[0])).thenRun(() -> {
+            CompletableFuture[] primingBuilds = primeProjects(initialProjects, id, local);
+            
+            AtomicReference<Consumer<Collection<Project>>> subprojectProcessor = new AtomicReference();
+            Set<Project> processedProjects = new HashSet<>();
+            AtomicInteger level = new AtomicInteger(1);
+            subprojectProcessor.set((projects) -> {
                 Set<Project> additionalProjects = new LinkedHashSet<>();
                 for (Project prj : projects) {
                     Set<Project> containedProjects = ProjectUtils.getContainedProjects(prj, true);
@@ -709,53 +719,75 @@ public final class Server {
                         additionalProjects.addAll(containedProjects);
                     }
                 }
-                projects.addAll(additionalProjects);
-                OpenProjects.getDefault().open(projects.toArray(new Project[0]), false);
-                try {
-                    LOG.log(Level.FINER, "{0}: Calling openProjects() for : {1}", new Object[]{id, Arrays.asList(projects)});
-                    OpenProjects.getDefault().openProjects().get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    throw new IllegalStateException(ex);
-                }
-                for (Project prj : projects) {
-                    //init source groups/FileOwnerQuery:
-                    ProjectUtils.getSources(prj).getSourceGroups(Sources.TYPE_GENERIC);
-                    final CompletableFuture<Void> prjF = local.get(prj);
-                    if (prjF != null) {
-                        prjF.complete(null);
+                additionalProjects.removeAll(processedProjects);
+                additionalProjects.removeAll(projects);
+                
+                processedProjects.addAll(projects);
+                
+                LOG.log(Level.FINE, "Processing subprojects, level {0}: {1}", new Object[] { level.getAndIncrement(), additionalProjects });
+                
+                if (additionalProjects.isEmpty()) {
+                    OpenProjects.getDefault().open(processedProjects.toArray(new Project[processedProjects.size()]), false);
+                    try {
+                        LOG.log(Level.FINER, "{0}: Calling openProjects() for : {1}", new Object[]{id, Arrays.asList(processedProjects)});
+                        OpenProjects.getDefault().openProjects().get();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        throw new IllegalStateException(ex);
                     }
-                }
-                Set<Project> projectSet = new HashSet<>(Arrays.asList(OpenProjects.getDefault().getOpenProjects()));
-                projectSet.retainAll(openedProjects);
-                projectSet.addAll(projects);
-
-                Project[] prjsRequested = projects.toArray(new Project[0]);
-                Project[] prjs = projects.toArray(new Project[0]);
-                LOG.log(Level.FINER, "{0}: Finished opening projects: {1}", new Object[]{id, Arrays.asList(projects)});
-                synchronized (this) {
-                    openedProjects = projectSet;
-                    if (addToWorkspace) {
-                        Set<Project> ns = new HashSet<>(projects);
-                        List<Project> current = Arrays.asList(workspaceProjects.getNow(new Project[0]));
-                        int s = current.size();
-                        ns.addAll(current);
-                        LOG.log(Level.FINER, "Current is: {0}, ns: {1}", new Object[] { current, ns });
-                        if (s != ns.size()) {
-                            prjs = ns.toArray(new Project[0]);
-                            workspaceProjects = CompletableFuture.completedFuture(prjs);
+                    for (Project prj : processedProjects) {
+                        //init source groups/FileOwnerQuery:
+                        ProjectUtils.getSources(prj).getSourceGroups(Sources.TYPE_GENERIC);
+                        final CompletableFuture<Void> prjF = local.get(prj);
+                        if (prjF != null) {
+                            prjF.complete(null);
                         }
                     }
-                    for (Project p : prjs) {
-                        // override flag in opening cache, no further questions asked.
-                        openingFileOwners.put(p, f.thenApply(unused -> p));
+                    Set<Project> projectSet = new HashSet<>(Arrays.asList(OpenProjects.getDefault().getOpenProjects()));
+                    projectSet.retainAll(openedProjects);
+                    projectSet.addAll(processedProjects);
+
+                    Project[] prjsRequested = projects.toArray(new Project[processedProjects.size()]);
+                    Project[] prjs = projects.toArray(new Project[processedProjects.size()]);
+                    LOG.log(Level.FINER, "{0}: Finished opening projects: {1}", new Object[]{id, Arrays.asList(processedProjects)});
+                    synchronized (this) {
+                        openedProjects = projectSet;
+                        if (addToWorkspace) {
+                            Set<Project> ns = new HashSet<>(processedProjects);
+                            List<Project> current = Arrays.asList(workspaceProjects.getNow(new Project[0]));
+                            int s = current.size();
+                            ns.addAll(current);
+                            LOG.log(Level.FINER, "Current is: {0}, ns: {1}", new Object[] { current, ns });
+                            if (s != ns.size()) {
+                                prjs = ns.toArray(new Project[ns.size()]);
+                                workspaceProjects = CompletableFuture.completedFuture(prjs);
+                            }
+                        }
+                        for (Project p : prjs) {
+                            // override flag in opening cache, no further questions asked.
+                            openingFileOwners.put(p, f.thenApply(unused -> p));
+                        }
                     }
+                    f.complete(candidateMapping);
+                    LOG.log(Level.INFO, "{0} projects opened in {1}ms", new Object[] { prjsRequested.length, (System.currentTimeMillis() - t) });
+                } else {
+                    LOG.log(Level.FINER, "{0}: Collecting projects to prime from: {1}", new Object[]{id, Arrays.asList(additionalProjects)});
+                    CompletableFuture[] nextPrimingBuilds = primeProjects(additionalProjects, id, local);
+                    CompletableFuture.allOf(nextPrimingBuilds).thenRun(() -> {
+                        subprojectProcessor.get().accept(additionalProjects);
+                    }).exceptionally(e -> {
+                        f.completeExceptionally(e);
+                        return null;
+                    }); 
                 }
-                f.complete(candidateMapping);
-                LOG.log(Level.INFO, "{0} projects opened in {1}ms", new Object[] { prjsRequested.length, (System.currentTimeMillis() - t) });
+            });
+
+            // Wait for all priming builds, even those already pending, to finish:
+            CompletableFuture.allOf(primingBuilds).thenRun(() -> {
+                subprojectProcessor.get().accept(initialProjects);
             }).exceptionally(e -> {
                 f.completeExceptionally(e);
                 return null;
-            });
+            }); 
         }
 
         private JavaSource checkJavaSupport() {

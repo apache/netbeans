@@ -100,6 +100,7 @@ import org.openide.util.BaseUtilities;
 import org.eclipse.aether.repository.Authentication;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.impl.VersionResolver;
 import org.eclipse.aether.internal.impl.EnhancedLocalRepositoryManagerFactory;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.NoLocalRepositoryManagerException;
@@ -107,6 +108,7 @@ import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.util.repository.DefaultAuthenticationSelector;
 import org.eclipse.aether.util.repository.DefaultMirrorSelector;
 import org.eclipse.aether.util.repository.DefaultProxySelector;
+import org.netbeans.modules.maven.embedder.impl.NbVersionResolver2;
 
 /**
  * Handle for the embedded Maven system, used to parse POMs and more.
@@ -123,6 +125,7 @@ public final class MavenEmbedder {
     private final SettingsBuilder settingsBuilder;
     private final EmbedderConfiguration embedderConfiguration;
     private final SettingsDecrypter settingsDecrypter;
+    private final NbVersionResolver2 versionResolver;
     private long settingsTimestamp;
     private static final Object lastLocalRepositoryLock = new Object();
     private static URI lastLocalRepository;
@@ -137,6 +140,13 @@ public final class MavenEmbedder {
         this.settingsBuilder = plexus.lookup(SettingsBuilder.class);
         this.populator = plexus.lookup(MavenExecutionRequestPopulator.class);
         settingsDecrypter = plexus.lookup(SettingsDecrypter.class);
+        
+        VersionResolver vr = plexus.lookup(VersionResolver.class);
+        if (vr instanceof NbVersionResolver2) {
+            versionResolver = (NbVersionResolver2)vr;
+        } else {
+            versionResolver = null;
+        }
     }
     
     public PlexusContainer getPlexus() {
@@ -235,7 +245,7 @@ public final class MavenEmbedder {
     
     public MavenExecutionResult readProjectWithDependencies(MavenExecutionRequest req, boolean useWorkspaceResolution) {
         if (useWorkspaceResolution) {
-            req.setWorkspaceReader(new NbWorkspaceReader());
+            req.setWorkspaceReader(new NbWorkspaceReader(versionResolver));
         }
         File pomFile = req.getPom();
         MavenExecutionResult result = new DefaultMavenExecutionResult();
@@ -258,7 +268,7 @@ public final class MavenEmbedder {
 
     public List<MavenExecutionResult> readProjectsWithDependencies(MavenExecutionRequest req, List<File> poms, boolean useWorkspaceResolution) {
         if (useWorkspaceResolution) {
-            req.setWorkspaceReader(new NbWorkspaceReader());
+            req.setWorkspaceReader(new NbWorkspaceReader(versionResolver));
         }
 //        File pomFile = req.getPom();
         

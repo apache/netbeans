@@ -797,7 +797,7 @@
 <h1>Introduction</h1>
 
 <p>This document lists changes made to the <a href="@TOP@/overview-summary.html">Visual Library API</a>.
-Please, ask on the users@graph.netbeans.org mailing list if you have any question about the details of a change,
+Please, ask on the users@netbeans.apache.org mailing list if you have any question about the details of a change,
 or are wondering how to convert existing code to be compatible.</p>
 
       <hr/>

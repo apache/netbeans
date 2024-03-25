@@ -20,19 +20,27 @@
 
 In January NetBeans has moved to Mercurial.
 The old project structure has been split into 3 places.
+The project has moved to Apache and Git.
+
+EXAMPLES and INTEGRATION EXAMPLES are hosted outside of the Apache repository
 
 The EXAMPLES for Visual Library are located in "visual.examples" directory
-in http://hg.netbeans.org/main/contrib repository - see online at:
-    http://hg.netbeans.org/main/contrib/file/
+in http://source.apidesign.org/hg/netbeans/contrib/ repository - see online at:
+    http://source.apidesign.org/hg/netbeans/contrib/file/
 
 The INTEGRATION example module is located in "visual.examples" directory
-in http://hg.netbeans.org/main/contrib Mercurial repository - see online at:
-    http://hg.netbeans.org/main/contrib/file/
+in http://source.apidesign.org/hg/netbeans/contrib/ Mercurial repository - see online at:
+    http://source.apidesign.org/hg/netbeans/contrib/file/
 
-The SOURCE CODE of the Visual Library is located in "api.visual" directory
-in http://hg.netbeans.org/main repository - see online at:
-    http://hg.netbeans.org/main/file/
 
-The WEB PAGES of http://graph.netbeans.org/ are located in "graph/www" directory
-in :pserver:anoncvs@cvs.netbeans.org (original CVS repository) - see online at:
-    http://graph.netbeans.org/source/browse/graph/www/
+SOURCE CODE is on main Apache NetBeans git repository
+
+The SOURCE CODE of the Visual Library is located in "platform/api.visual" directory
+in https://github.com/apache/netbeans/ repository - see online at:
+    https://github.com/apache/netbeans/tree/master/platform/api.visual
+
+SOURCE CODE is on Apache NetBeans Antora git repository
+
+The WEB PAGES of https://netbeans.apache.org/front/main/projects/graph/ are located in "modules/ROOT/pages/projects/graph" directory
+in git repository https://github.com/apache/netbeans-antora-site
+    https://github.com/apache/netbeans-antora-site/tree/main/modules/ROOT/pages/projects/graph

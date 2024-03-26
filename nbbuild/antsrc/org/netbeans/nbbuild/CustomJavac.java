@@ -69,7 +69,11 @@ public class CustomJavac extends Javac {
     @Override
     public void execute() throws BuildException {
         String release = getRelease();
-        if (release == null || release.isEmpty()) {
+        if (release != null && release.isEmpty()) {
+            setRelease(null); // unset property
+            release = null;
+        }
+        if (release == null) {
             String tgr = getTarget();
             if (tgr.matches("\\d+")) {
                 tgr = "1." + tgr;

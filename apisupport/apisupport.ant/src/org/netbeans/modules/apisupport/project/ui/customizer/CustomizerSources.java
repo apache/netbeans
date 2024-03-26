@@ -32,6 +32,9 @@ import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.apisupport.project.ui.customizer.SingleModuleProperties.JAVAC_RELEASE;
+import static org.netbeans.modules.apisupport.project.ui.customizer.SingleModuleProperties.JAVAC_SOURCE;
+
 /**
  * Represents <em>Sources</em> panel in Netbeans Module customizer.
  *
@@ -51,7 +54,7 @@ final class CustomizerSources extends NbPropertyPanel.Single {
                 if (srcLevelValueBeingUpdated) {
                     return;
                 }
-                final String oldLevel = getProperty(SingleModuleProperties.JAVAC_SOURCE);
+                final String oldLevel = getProperty(getJavacLanguageLevelKey());
                 final String newLevel = (String) srcLevelValue.getSelectedItem();
                 SpecificationVersion jdk5 = new SpecificationVersion("1.5"); // NOI18N
                 if (new SpecificationVersion(oldLevel).compareTo(jdk5) < 0 && new SpecificationVersion(newLevel).compareTo(jdk5) >= 0) {
@@ -80,6 +83,7 @@ final class CustomizerSources extends NbPropertyPanel.Single {
         });
     }
     
+    @Override
     protected void refresh() {
         if (getProperties().getSuiteDirectoryPath() == null) {
             moduleSuite.setVisible(false);
@@ -95,16 +99,20 @@ final class CustomizerSources extends NbPropertyPanel.Single {
             for (String level : levels) {
                 srcLevelValue.addItem(level);
             }
-            srcLevelValue.setSelectedItem(getProperty(SingleModuleProperties.JAVAC_SOURCE));
+            srcLevelValue.setSelectedItem(getProperty(getJavacLanguageLevelKey()));
         } finally {
             srcLevelValueBeingUpdated = false;
         }
         ApisupportAntUIUtils.setText(prjFolderValue, getProperties().getProjectDirectory());
     }
     
+    @Override
     public void store() {
-        setProperty(SingleModuleProperties.JAVAC_SOURCE,
-                (String) srcLevelValue.getSelectedItem());
+        setProperty(getJavacLanguageLevelKey(), (String) srcLevelValue.getSelectedItem());
+    }
+
+    private String getJavacLanguageLevelKey() {
+        return containsProperty(JAVAC_RELEASE) ? JAVAC_RELEASE : JAVAC_SOURCE;
     }
     
     /** This method is called from within the constructor to

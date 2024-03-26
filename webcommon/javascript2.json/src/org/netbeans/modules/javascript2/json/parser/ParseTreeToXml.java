@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  *
  * @author Tomas Zezula
  */
-public class ParseTreeToXml extends JsonBaseVisitor<Document> {
+public class ParseTreeToXml extends JsonParserBaseVisitor<Document> {
     private final JsonLexer lexer;
     private final JsonParser parser;
     private Document doc;

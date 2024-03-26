@@ -747,7 +747,11 @@
         </condition>
         <property name="sigtest.mail" value="${commit.mail}"/>
 
-        <echo>sigtest check: ${module.name}; cnb: ${code.name.base.dashes}; email: ${sigtest.mail}; type: ${sigtest.check.type}</echo>
+        <condition property="sigtest.release" value="${javac.target}" else="${javac.release}">
+            <equals arg1="${javac.release}" arg2=""/>
+        </condition>
+
+        <echo>sigtest check: ${module.name}; cnb: ${code.name.base.dashes}; release: ${sigtest.release}; email: ${sigtest.mail}; type: ${sigtest.check.type}</echo>
     </target>
 
     <target name="gen-sigtest" depends="-sigtest-init" unless="${sigtest.skip.gen}">
@@ -758,7 +762,7 @@
                  classpath="${sigtest.class.path}"
                  version="${mf.OpenIDE-Module-Specification-Version}"
                  action="generate"
-                 release="${javac.target}"
+                 release="${sigtest.release}"
                  packages="${sigtest.public.packages}"
                  report="${sigtest.output.dir}/generate-${code.name.base.dashes}.xml"
                  failonerror="${sigtest.gen.fail.on.error}"
@@ -771,7 +775,7 @@
                  sigtestJar="${sigtest.jar}"
                  classpath="${sigtest.class.path}"
                  version="${mf.OpenIDE-Module-Specification-Version}"
-                 release="${javac.target}"
+                 release="${sigtest.release}"
                  action="${sigtest.check.type}"
                  packages="${sigtest.public.packages}"
                  report="${sigtest.output.dir}/${code.name.base.dashes}.xml"

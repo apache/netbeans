@@ -68,6 +68,7 @@
         <property name="javac.source" value="1.7"/>
         <property name="javac.default.target" value="${javac.source}"/>
         <property name="javac.target" value="${javac.default.target}"/>
+        <property name="javac.release" value=""/>
         <property name="javac.compilerargs" value=""/>
         <property name="module.auto.deps.xml" location="module-auto-deps.xml"/>
         <condition property="has.module.auto.deps">
@@ -202,7 +203,7 @@
         </depend>
         <property name="javac.fork" value="false"/>
         <nb-javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="${build.compiler.debug}" debuglevel="${build.compiler.debuglevel}" encoding="UTF-8"
-                  deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="${javac.source}" target="${javac.target}" includeantruntime="false"
+                  deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="${javac.source}" target="${javac.target}" release="${javac.release}" includeantruntime="false"
                   fork="${javac.fork}"
         >
             <classpath refid="cp"/>
@@ -236,7 +237,7 @@
         </delete>
         <nb-javac srcdir="${src.dir}" destdir="${build.classes.dir}"
                   debug="${build.compiler.debug}" deprecation="${build.compiler.deprecation}" encoding="UTF-8"
-                  source="${javac.source}" target="${javac.target}" includes="${javac.includes}" optimize="${build.compiler.optimize}" includeantruntime="false">
+                  source="${javac.source}" target="${javac.target}" release="${javac.release}" includes="${javac.includes}" optimize="${build.compiler.optimize}" includeantruntime="false">
             <classpath refid="cp"/>
             <compilerarg line="${javac.compilerargs}"/>
             <processorpath refid="processor.cp"/>
@@ -635,7 +636,7 @@
             <property name="test.javac.excludes" value=""/> <!-- # 113770 -->
             <nb-javac srcdir="${test.@{test.type}.src.dir}" destdir="${build.test.@{test.type}.classes.dir}" excludes="${test.javac.excludes}"
                       debug="true" deprecation="${build.compiler.deprecation}" encoding="UTF-8"
-                      source="${javac.source}" target="${javac.target}" optimize="${build.compiler.optimize}" includeantruntime="false">
+                      source="${javac.source}" target="${javac.target}" release="${javac.release}" optimize="${build.compiler.optimize}" includeantruntime="false">
                 <classpath refid="test.@{test.type}.cp"/>
                 <compilerarg line="${javac.compilerargs}"/>
                 <processorpath refid="test.@{test.type}.cp"/>
@@ -677,7 +678,7 @@
                 </depend>
                 <nb-javac srcdir="${test.@{test.type}.src.dir}" destdir="${build.test.@{test.type}.classes.dir}"
                           debug="true" deprecation="${build.compiler.deprecation}" encoding="UTF-8"
-                          source="${javac.source}" target="${javac.target}" includeantruntime="false" optimize="${build.compiler.optimize}" includes="${javac.includes}">
+                          source="${javac.source}" target="${javac.target}" release="${javac.release}" includeantruntime="false" optimize="${build.compiler.optimize}" includes="${javac.includes}">
                     <classpath refid="test.@{test.type}.cp"/>
                     <compilerarg line="${javac.compilerargs}"/>
                     <processorpath refid="test.@{test.type}.cp"/>

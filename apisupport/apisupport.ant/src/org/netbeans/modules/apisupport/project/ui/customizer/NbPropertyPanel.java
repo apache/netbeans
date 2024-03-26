@@ -65,6 +65,11 @@ public abstract class NbPropertyPanel extends JPanel implements
         return props.getProperty(key);
     }
     
+    boolean containsProperty(String key) {
+        String prop = props.getProperty(key);
+        return prop != null && !prop.isEmpty();
+    }
+    
     void setProperty(String key, String property) {
         props.setProperty(key, property);
     }

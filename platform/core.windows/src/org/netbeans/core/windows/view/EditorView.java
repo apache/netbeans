@@ -30,8 +30,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import org.netbeans.core.windows.*;
 import org.netbeans.core.windows.view.dnd.*;
+import org.netbeans.core.windows.view.ui.MainWindow;
+import org.openide.awt.Actions;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.*;
 import org.openide.windows.*;
 
@@ -174,6 +180,7 @@ public class EditorView extends ViewElement {
     implements TopComponentDroppable {
         
         private final EditorView editorView;
+        private final JComponent backgroundComponent;
         
         // XXX PENDING
         private final WindowDnDManager windowDnDManager;
@@ -184,6 +191,7 @@ public class EditorView extends ViewElement {
         public EditorAreaComponent(EditorView editorView, WindowDnDManager windowDnDManager) {
             this.editorView = editorView;
             this.windowDnDManager = windowDnDManager;
+            this.backgroundComponent = initBackgroundComponent();
             
             init();
         }
@@ -197,20 +205,6 @@ public class EditorView extends ViewElement {
 //                setBackground((Color)UIManager.get("nb_workplace_fill"));
 //            }
             
-            // PENDING Adding image into empty area.
-            String imageSource = Constants.SWITCH_IMAGE_SOURCE; // NOI18N
-            if(imageSource != null) {
-                Image image = ImageUtilities.loadImage(imageSource);
-                if(image != null) {
-                    JLabel label = new JLabel(ImageUtilities.image2Icon(image));
-                    label.setMinimumSize(new Dimension(0, 0)); // XXX To be able shrink the area.
-                    add(label, BorderLayout.CENTER);
-                } else {
-                    Logger.getLogger(EditorView.class.getName()).log(Level.WARNING, null,
-                                      new java.lang.NullPointerException("Image not found at " +
-                                                                         imageSource)); // NOI18N
-                }
-            }
             //listen to files being dragged over the editor area
             DropTarget dropTarget = new DropTarget( this, new DropTargetListener() {
                 @Override
@@ -257,6 +251,64 @@ public class EditorView extends ViewElement {
                 setOpaque( false);
         }
 
+        private JComponent initBackgroundComponent() {
+            JComponent imageComponent = null;
+            String imageSource = Constants.SWITCH_IMAGE_SOURCE; // NOI18N
+            if (imageSource == null) {
+                FileObject config = FileUtil.getConfigFile("Windows2/Background");
+                if (config != null) {
+                    Object attr = config.getAttribute("backgroundImage");
+                    if (attr instanceof String) {
+                        imageSource = (String) attr;
+                    }
+                }
+            }
+            if (imageSource != null) {
+                Image image = ImageUtilities.loadImage(imageSource);
+                if (image != null) {
+                    JLabel label = new JLabel(ImageUtilities.image2Icon(image));
+                    label.setMinimumSize(new Dimension(0, 0)); // XXX To be able shrink the area.
+                    imageComponent = label;
+                } else {
+                    Logger.getLogger(EditorView.class.getName()).log(Level.WARNING, null,
+                            new NullPointerException("Image not found at "
+                                    + imageSource)); // NOI18N
+                }
+            }
+            JComponent actionsComponent = initBackgroundActions();
+            if (actionsComponent != null) {
+                JPanel panel = new JPanel(new GridBagLayout());
+                GridBagConstraints gbc = new GridBagConstraints();
+                gbc.ipadx = 50;
+                if (imageComponent != null) {
+                    panel.add(imageComponent, gbc);
+                }
+                panel.add(actionsComponent, gbc);
+                return panel;
+            } else {
+                return imageComponent;
+            }
+        }
+
+        private JComponent initBackgroundActions() {
+            java.util.List<? extends Action> actions
+                    = Utilities.actionsForPath("Windows2/Background/Actions");
+            if (actions.isEmpty()) {
+                return null;
+            }
+
+            JComponent panel = new JPanel(new GridLayout(0,1));
+            for (Action action : actions) {
+                if (action == null) {
+                    // ignore separators?
+                    continue;
+                }
+                BackgroundActionButton button = new BackgroundActionButton(action);
+                panel.add(button);
+            }
+            return panel;
+        }
+
         @Override
         public void updateUI() {
             super.updateUI();
@@ -270,24 +322,33 @@ public class EditorView extends ViewElement {
         }
         
         public void setAreaComponent(Component areaComponent) {
-            if(this.areaComponent == areaComponent) {
+            if (this.areaComponent == areaComponent) {
                 // XXX PENDING revise how to better manipulate with components
                 // so there don't happen unneeded removals.
-                if(areaComponent != null
-                && !Arrays.asList(getComponents()).contains(areaComponent)) {
+                if (areaComponent != null
+                        && !Arrays.asList(getComponents()).contains(areaComponent)) {
+                    if (backgroundComponent != null) {
+                        remove(backgroundComponent);
+                    }
                     add(areaComponent, BorderLayout.CENTER);
                 }
-                
+
                 return;
             }
-            
-            if(this.areaComponent != null) {
+
+            if (this.areaComponent != null) {
                 remove(this.areaComponent);
+                if (areaComponent == null && backgroundComponent != null) {
+                    add(backgroundComponent, BorderLayout.CENTER);
+                }
             }
-            
+
             this.areaComponent = areaComponent;
-            
-            if(this.areaComponent != null) {
+
+            if (this.areaComponent != null) {
+                if (backgroundComponent != null) {
+                    remove(backgroundComponent);
+                }
                 add(this.areaComponent, BorderLayout.CENTER);
             }
 
@@ -408,6 +469,85 @@ public class EditorView extends ViewElement {
         
     } // End of EditorAreaComponent class.
     
-    
-}
+    private static class BackgroundActionButton extends JButton {
 
+        private final TitledBorder shortcut;
+
+        private BackgroundActionButton(Action action) {
+            super();
+            setContentAreaFilled(false);
+            setRolloverEnabled(true);
+            setHorizontalAlignment(SwingConstants.LEFT);
+            Color textColor = UIManager.getColor("EditorTab.foreground");
+            if (textColor != null) {
+                setForeground(textColor);
+            }
+            shortcut = new TitledBorder(new EmptyBorder(2, 20, 2, 40), "",
+                    TitledBorder.LEFT, TitledBorder.ABOVE_BOTTOM);
+            Color shortcutColor = UIManager.getColor("EditorTab.underlineColor");
+            if (shortcutColor != null) {
+                shortcut.setTitleColor(shortcutColor);
+            }
+            Font font = getFont();
+            if (font != null) {
+                shortcut.setTitleFont(font.deriveFont(0.9f * font.getSize()));
+            }
+            setBorder(shortcut);
+            setAction(action);
+        }
+
+        @Override
+        protected void actionPropertyChanged(Action action, String propertyName) {
+            if (Action.NAME.equals(propertyName)) {
+                configureText(action);
+            } else if (Action.ACCELERATOR_KEY.equals(propertyName)) {
+                configureShortcut(action);
+            }
+            repaint();
+        }
+
+        @Override
+        protected void configurePropertiesFromAction(Action a) {
+            configureText(a);
+            configureShortcut(a);
+            setIcon(null);
+        }
+
+        @Override
+        public void paint(Graphics g) {
+            if (getModel().isRollover()) {
+                Color hoverColor = UIManager.getColor("EditorTab.hoverBackground");
+                if (hoverColor != null) {
+                    g.setColor(hoverColor);
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                }
+            }
+            super.paint(g);
+        }
+
+        private void configureShortcut(Action action) {
+            KeyStroke ks = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
+            if (ks != null) {
+                String shortcutText = Actions.keyStrokeToString(ks);
+                shortcut.setTitle(shortcutText);
+            } else {
+                // use bundle from core.windows.view.ui for future development
+                String noShortcut = NbBundle.getMessage(MainWindow.class, "LBL_NoShortcut");
+                if (noShortcut.isEmpty()) {
+                    noShortcut = " ";
+                }
+                shortcut.setTitle(noShortcut);
+            }
+        }
+
+        private void configureText(Action action) {
+            String raw = (String) action.getValue(Action.NAME);
+            if (raw == null) {
+                raw = "";
+            }
+            setText(Actions.cutAmpersand(raw));
+        }
+
+    }
+
+}

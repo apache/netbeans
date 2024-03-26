@@ -78,7 +78,7 @@ public class WelcomeOptions {
     }
 
     public boolean isShowOnStartup() {
-        return prefs().getBoolean(PROP_SHOW_ON_STARTUP, !Boolean.getBoolean("netbeans.full.hack"));
+        return prefs().getBoolean(PROP_SHOW_ON_STARTUP, false);
     }
 
     public void setLastActiveTab( int tabIndex ) {

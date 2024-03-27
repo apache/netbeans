@@ -52,7 +52,6 @@ import javax.swing.event.DocumentListener;
 import org.netbeans.modules.mercurial.HgModuleConfig;
 import org.netbeans.modules.mercurial.HgProgressSupport;
 import org.netbeans.modules.mercurial.Mercurial;
-import org.netbeans.modules.mercurial.kenai.HgKenaiAccessor;
 import org.netbeans.modules.mercurial.ui.diff.DiffSetupSource;
 import org.netbeans.modules.mercurial.ui.diff.Setup;
 import org.netbeans.modules.mercurial.ui.log.HgLogMessage.HgRevision;
@@ -61,7 +60,6 @@ import org.netbeans.modules.mercurial.util.HgUtils;
 import org.netbeans.modules.versioning.history.AbstractSummaryView.SummaryViewMaster.SearchHighlight;
 import org.netbeans.modules.versioning.history.AbstractSummaryView.SummaryViewMaster.SearchHighlight.Kind;
 import org.netbeans.modules.versioning.util.NoContentPanel;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor;
 import org.openide.awt.Mnemonics;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.Node;
@@ -94,7 +92,6 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
     private SearchHistoryTopComponent.DiffResultsViewFactory diffViewFactory;
     private String currentBranch;
     private int showingResults;
-    private Map<String, VCSKenaiAccessor.KenaiUser> kenaiUserMap;
     private List<HgLogEntry> logEntries;
     
     private static final Icon ICON_COLLAPSED = UIManager.getIcon("Tree.collapsedIcon"); //NOI18N
@@ -313,7 +310,7 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
             } else {
                 if (tbSummary.isSelected()) {
                     if (summaryView == null) {
-                        summaryView = new SummaryView(this, logEntries = createLogEntries(results), kenaiUserMap);
+                        summaryView = new SummaryView(this, logEntries = createLogEntries(results));
                     }
                     resultsPanel.add(summaryView.getComponent());
                     summaryView.requestFocusInWindow();
@@ -353,13 +350,12 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
         nextAction.setEnabled(!tbSummary.isSelected() && diffView != null && diffView.isNextEnabled());
         prevAction.setEnabled(!tbSummary.isSelected() && diffView != null && diffView.isPrevEnabled());
     }
-    public void setResults(List<RepositoryRevision> newResults, Map<String, VCSKenaiAccessor.KenaiUser> kenaiUserMap, int limit) {
-        setResults(newResults, kenaiUserMap, false, limit);
+    public void setResults(List<RepositoryRevision> newResults, int limit) {
+        setResults(newResults, false, limit);
     }
 
-    private void setResults(List<RepositoryRevision> newResults, Map<String, VCSKenaiAccessor.KenaiUser> kenaiUserMap, boolean searching, int limit) {
+    private void setResults(List<RepositoryRevision> newResults, boolean searching, int limit) {
         this.results = newResults;
-        this.kenaiUserMap = kenaiUserMap;
         this.searchInProgress = searching;
         showingResults = limit;
         if (newResults != null && newResults.size() < limit) {
@@ -381,7 +377,7 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
     private synchronized void search() {
         searchStarted = true;
         cancelBackgroundSearch();
-        setResults(null, null, true, -1);
+        setResults(null, true, -1);
         HgModuleConfig.getDefault().setShowHistoryMerges(criteria.isIncludeMerges());
         currentSearch = new SearchExecutor(this);
         currentSearch.start();
@@ -856,7 +852,6 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
         @Override
         protected void perform () {
             final List<RepositoryRevision> newResults = executor.search(count, this);
-            final Map<String, VCSKenaiAccessor.KenaiUser> additionalUsersMap = createKenaiUsersMap(newResults);
             if (!isCanceled()) {
                 EventQueue.invokeLater(new Runnable() {
                     @Override
@@ -883,7 +878,6 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
                                 showingResults = -1;
                             }
                             logEntries = createLogEntries(results);
-                            kenaiUserMap.putAll(additionalUsersMap);
                             if (diffView != null) {
                                 diffView.refreshResults(results);
                             }
@@ -895,32 +889,6 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
                 });
             }
         }
-    }
-
-    static Map<String, VCSKenaiAccessor.KenaiUser> createKenaiUsersMap (List<RepositoryRevision> results) {
-        Map<String, VCSKenaiAccessor.KenaiUser> kenaiUsersMap = new HashMap<String, VCSKenaiAccessor.KenaiUser>();
-        if(results.size() > 0) {
-            String url = HgUtils.getRemoteRepository(results.get(0).getRepositoryRoot());
-            boolean isKenaiRepository = url != null && HgKenaiAccessor.getInstance().isKenai(url);
-            if(isKenaiRepository) {
-                for (RepositoryRevision repositoryRevision : results) {
-                    String author = repositoryRevision.getLog().getAuthor();
-                    String username = repositoryRevision.getLog().getUsername();
-                    if(author != null && !author.equals("")) {
-                        if (username == null || username.isEmpty()) {
-                            username = author;
-                        }
-                        if(!kenaiUsersMap.containsKey(author)) {
-                            VCSKenaiAccessor.KenaiUser kenaiUser = HgKenaiAccessor.getInstance().forName(username, url);
-                            if(kenaiUser != null) {
-                                kenaiUsersMap.put(author, kenaiUser);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return kenaiUsersMap;
     }
 
     List<HgLogEntry> createLogEntries(List<RepositoryRevision> results) {

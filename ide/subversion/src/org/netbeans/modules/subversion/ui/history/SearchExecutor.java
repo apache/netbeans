@@ -273,7 +273,7 @@ class SearchExecutor extends SvnProgressSupport {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    master.setResults(results, SearchHistoryPanel.createKenaiUsersMap(results), limit);
+                    master.setResults(results, limit);
                 }
             });
         }

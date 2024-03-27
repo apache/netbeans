@@ -154,6 +154,9 @@ public final class JavaElementFoldVisitor<T> extends CancellableTreePathScanner<
                 int start = (int)sp.getStartPosition(cu, node);
                 int end   = (int)sp.getEndPosition(cu, node);
 
+                long lineNumber = cu.getLineMap().getLineNumber(end);
+                end = (int)cu.getLineMap().getStartPosition(lineNumber) - 1;
+
                 if (start != (-1) && start < end) {
                     addFold(creator.createCodeBlockFold(start, end), symStart);
                 }

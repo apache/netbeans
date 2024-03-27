@@ -113,7 +113,6 @@ import org.netbeans.modules.bugzilla.Bugzilla;
 import org.netbeans.modules.bugzilla.BugzillaConfig;
 import org.netbeans.modules.bugzilla.issue.BugzillaIssue.Attachment;
 import org.netbeans.modules.bugzilla.issue.BugzillaIssue.Comment;
-import org.netbeans.modules.bugzilla.kenai.KenaiRepository;
 import org.netbeans.modules.bugzilla.repository.BugzillaConfiguration;
 import org.netbeans.modules.bugzilla.repository.BugzillaRepository;
 import org.netbeans.modules.bugzilla.repository.CustomIssueField;
@@ -469,10 +468,7 @@ public class IssuePanel extends javax.swing.JPanel {
             }
         } else {
             BugzillaRepository repository = issue.getRepository();
-            if (repository instanceof KenaiRepository) {
-                String productName = ((KenaiRepository)repository).getProductName();
-                productCombo.setSelectedItem(productName);
-            } else if (BugzillaUtil.isNbRepository(repository)) {
+            if (BugzillaUtil.isNbRepository(repository)) {
                 // IssueProvider 181224
                 String defaultProduct = "ide"; // NOI18N
                 String defaultComponent = "Code"; // NOI18N
@@ -512,7 +508,7 @@ public class IssuePanel extends javax.swing.JPanel {
         clearHighlights();
 
         boolean isNew = issue.isNew();
-        boolean showProductCombo = isNew || !(issue.getRepository() instanceof KenaiRepository) || NBBugzillaUtils.isNbRepository(issue.getRepository().getUrl());
+        boolean showProductCombo = true;
         boolean hasTimeTracking = !isNew && issue.hasTimeTracking();
         GroupLayout layout = (GroupLayout) attributesSectionPanel.getLayout();
         if (showProductCombo) {
@@ -621,7 +617,6 @@ public class IssuePanel extends javax.swing.JPanel {
                 reloadField(addCommentArea, IssueField.COMMENT);
             }
 
-            boolean isKenaiRepository = (issue.getRepository() instanceof KenaiRepository);
             if (!isNew) {
                 // reported field
                 format = NbBundle.getMessage(IssuePanel.class, "IssuePanel.reportedLabel.format"); // NOI18N
@@ -633,17 +628,6 @@ public class IssuePanel extends javax.swing.JPanel {
                 String reportedTxt = MessageFormat.format(format, creationTxt, reporterTxt);
                 reportedField.setText(reportedTxt);
                 fixPrefSize(reportedField);
-                if (isKenaiRepository && (reportedStatusLabel.getIcon() == null)) {
-                    int index = reporter.indexOf('@');
-                    String userName = (index == -1) ? reporter : reporter.substring(0,index);
-                    String host = ((KenaiRepository) issue.getRepository()).getHost();
-                    JLabel label = TeamAccessorUtils.createUserWidget(issue.getRepository().getUrl(), userName, host, TeamAccessorUtils.getChatLink(issue.getID()));
-                    if (label != null) {
-                        label.setText(null);
-                        ((GroupLayout) attributesSectionPanel.getLayout()).replace(reportedStatusLabel, label);
-                        reportedStatusLabel = label;
-                    }
-                }
 
                 // modified field
                 Date modification = issue.getLastModifyDate();
@@ -686,18 +670,6 @@ public class IssuePanel extends javax.swing.JPanel {
 
             String assignee = issue.getFieldValue(IssueField.ASSIGNED_TO);
             String selectedAssignee = (assignedField.getParent() == null) ? assignedCombo.getSelectedItem().toString() : assignedField.getText();
-            if (isKenaiRepository && (assignee.trim().length() > 0) && (force || !selectedAssignee.equals(assignee))) {
-                int index = assignee.indexOf('@');
-                String userName = (index == -1) ? assignee : assignee.substring(0,index);
-                String host = ((KenaiRepository) issue.getRepository()).getHost();
-                JLabel label = TeamAccessorUtils.createUserWidget(issue.getRepository().getUrl(), userName, host, TeamAccessorUtils.getChatLink(issue.getID()));
-                if (label != null) {
-                    label.setText(null);
-                    ((GroupLayout) attributesSectionPanel.getLayout()).replace(assignedToStatusLabel, label);
-                    label.setVisible(assignedToStatusLabel.isVisible());
-                    assignedToStatusLabel = label;
-                }
-            }
             if (force) {
                 assignedToStatusLabel.setVisible(assignee.trim().length() > 0);
             }
@@ -3305,9 +3277,6 @@ public class IssuePanel extends javax.swing.JPanel {
         if (value instanceof RepositoryUser) {
             String assignee = ((RepositoryUser)value).getUserName();
             BugzillaRepository repository = issue.getRepository();
-            if (repository instanceof KenaiRepository) {
-                assignee += '@' + ((KenaiRepository)repository).getHost();
-            }
             assignedCombo.setSelectedItem(assignee);
         }
     }//GEN-LAST:event_assignedComboActionPerformed

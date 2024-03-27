@@ -67,7 +67,6 @@ import org.netbeans.modules.bugzilla.Bugzilla;
 import org.netbeans.modules.bugzilla.BugzillaConfig;
 import org.netbeans.modules.bugzilla.repository.BugzillaRepository;
 import org.netbeans.modules.bugzilla.issue.BugzillaIssue;
-import org.netbeans.modules.bugzilla.kenai.KenaiRepository;
 import org.netbeans.modules.bugzilla.query.QueryParameter.AllWordsTextFieldParameter;
 import org.netbeans.modules.bugzilla.util.BugzillaUtil;
 import org.netbeans.modules.bugzilla.query.QueryParameter.CheckBoxParameter;

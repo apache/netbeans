@@ -26,7 +26,6 @@ import org.netbeans.modules.bugtracking.commons.ListValuePicker;
 import java.util.logging.Level;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.eclipse.core.runtime.CoreException;
 import org.netbeans.modules.bugtracking.api.Repository;
@@ -37,7 +36,6 @@ import org.netbeans.modules.bugzilla.Bugzilla;
 import org.netbeans.modules.bugzilla.BugzillaConnector;
 import org.netbeans.modules.bugzilla.repository.BugzillaRepository;
 import org.netbeans.modules.bugzilla.issue.BugzillaIssue;
-import org.netbeans.modules.bugzilla.kenai.KenaiRepository;
 import org.netbeans.modules.bugzilla.query.BugzillaQuery;
 import org.netbeans.modules.bugzilla.repository.BugzillaConfiguration;
 import org.netbeans.modules.mylyn.util.commands.GetRepositoryTasksCommand;
@@ -156,11 +154,11 @@ public class BugzillaUtil {
     }
 
     public static boolean showQAContact(BugzillaRepository repo) {
-        return NBBugzillaUtils.isNbRepository(repo.getUrl()) || !(repo instanceof KenaiRepository);
+        return true;
     }
 
     public static boolean showStatusWhiteboard(BugzillaRepository repo) {
-        return NBBugzillaUtils.isNbRepository(repo.getUrl()) || !(repo instanceof KenaiRepository);
+        return true;
     }
 
     public static boolean showIssueType(BugzillaRepository repo) {

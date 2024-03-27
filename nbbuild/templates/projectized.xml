@@ -94,10 +94,34 @@
                 </fileset>
             </path>
         </pathconvert>
+        <taskdef name="setuplimitmodules" classname="org.netbeans.nbbuild.extlibs.SetupLimitModules" classpath="${nbantext.jar}"/>
+        <setuplimitmodules limitModulesProperty="nb.javac.limit.modules.nb"
+                           releaseVersion="${javac.source}"
+                           excludedModules="java.compiler,jdk.compiler"
+                           nbjdkHome="${nbjdk.home}"
+                           cacheFile="${nb_all}/nbbuild/build/limit-modules-cache.properties" />
     </target>
     <target name="-init-bootclasspath-prepend-compile" depends="-init-compile-bootclasspath-nb">
+        <condition property="javac.source.8" value="true" else="false">
+            <or>
+                <equals arg1="${javac.source}" arg2="1.6" />
+                <equals arg1="${javac.source}" arg2="1.7" />
+                <equals arg1="${javac.source}" arg2="1.8" />
+            </or>
+        </condition>
         <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
-            <istrue value="${requires.nb.javac}"/>
+            <and>
+                <istrue value="${requires.nb.javac}"/>
+                <istrue value="${javac.source.8}"/>
+            </and>
+        </condition>
+        <condition property="limit.modules.option.list" value="${nb.javac.limit.modules.nb}">
+            <and>
+                <istrue value="${requires.nb.javac}"/>
+                <not>
+                    <istrue value="${javac.source.8}"/>
+                </not>
+            </and>
         </condition>
     </target>
     <target name="-init-bootclasspath-prepend-run" depends="-init-bootclasspath-prepend-compile,-init-bootclasspath-prepend-run8,-init-bootclasspath-prepend-run9"/>
@@ -123,7 +147,12 @@
         </condition>
     </target>
     <target name="-init-bootclasspath-prepend-run9" depends="-init-bootclasspath-prepend-compile" if="have-jdk-1.9">
-        <condition property="test.bootclasspath.prepend.args" value="--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming,jdk.jdi,jdk.unsupported,java.sql">
+        <setuplimitmodules limitModulesProperty="run.nb.javac.limit.modules.nb"
+                           releaseVersion="last"
+                           excludedModules="java.compiler,jdk.compiler"
+                           nbjdkHome="${test.nbjdk.home}"
+                           cacheFile="${nb_all}/nbbuild/build/limit-modules-cache.properties" />
+        <condition property="test.bootclasspath.prepend.args" value="--limit-modules=${run.nb.javac.limit.modules.nb}">
             <and>
                 <istrue value="${requires.nb.javac}"/>
                 <not>

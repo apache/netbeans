@@ -14,5 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-9011FB189C5ED6D99E5F3322514848D1EC1E1416 org.antlr:antlr-runtime:3.5.3
-5225357E50CC4597AEE756DE5EB4D58FFDCA3E69 org.antlr:antlr-complete:3.5.3
+FC26667B60FE746EEA788957157FA280D8F456DF net.vieiro:toml-java:13.4.1

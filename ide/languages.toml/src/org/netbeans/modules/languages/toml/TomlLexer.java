@@ -18,11 +18,11 @@
  */
 package org.netbeans.modules.languages.toml;
 
-import org.antlr.v4.runtime.misc.IntegerStack;
+import java.util.logging.Logger;
+import net.vieiro.toml.antlr4.TOMLAntlrLexer;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 
-import static org.tomlj.internal.TomlLexer.*;
 import static org.netbeans.modules.languages.toml.TomlTokenId.*;
 import org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge;
 
@@ -30,104 +30,83 @@ import org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge;
  *
  * @author lkishalmi
  */
-public final class TomlLexer extends AbstractAntlrLexerBridge<org.tomlj.internal.TomlLexer, TomlTokenId> {
+public final class TomlLexer extends AbstractAntlrLexerBridge<TOMLAntlrLexer, TomlTokenId> {
+
+    private static final Logger LOG = Logger.getLogger(TomlLexer.class.getName());
 
     public TomlLexer(LexerRestartInfo<TomlTokenId> info) {
-        super(info, org.tomlj.internal.TomlLexer::new);
+        super(info, TOMLAntlrLexer::new);
     }
 
     @Override
     protected Token<TomlTokenId> mapToken(org.antlr.v4.runtime.Token antlrToken) {
         switch (antlrToken.getType()) {
-            case EOF:
+            case TOMLAntlrLexer.EOF:
                 return null;
 
-            case StringChar:
-                return groupToken(STRING, StringChar);
-
-            case TripleQuotationMark:
-            case TripleApostrophe:
-            case QuotationMark:
-            case Apostrophe:
+            // Strings
+            case TOMLAntlrLexer.BASIC_STRING:
+            case TOMLAntlrLexer.ML_BASIC_STRING:
+            case TOMLAntlrLexer.LITERAL_STRING:
+            case TOMLAntlrLexer.ML_LITERAL_STRING:
                 return token(STRING_QUOTE);
 
-            case Comma:
-            case ArrayStart:
-            case ArrayEnd:
-            case InlineTableStart:
-            case InlineTableEnd:
-
-            case Dot:
-                return token(DOT);
-
-            case Equals:
-                return token(EQUALS);
-
-            case TableKeyStart:
-            case TableKeyEnd:
-            case ArrayTableKeyStart:
-            case ArrayTableKeyEnd:
-                return token(TABLE_MARK);
-            case UnquotedKey:
-                return token(KEY);
-            case Comment:
-                return token(COMMENT);
-            case WS:
-            case NewLine:
-                return token(TomlTokenId.WHITESPACE);
-            case Error:
-                return token(ERROR);
-
-            case DecimalInteger:
-            case HexInteger:
-            case OctalInteger:
-            case BinaryInteger:
-            case FloatingPoint:
-            case FloatingPointInf:
-            case FloatingPointNaN:
-                return token(NUMBER);
-
-            case TrueBoolean:
-            case FalseBoolean:
+            // Booleans
+            case TOMLAntlrLexer.BOOLEAN:
                 return token(BOOLEAN);
 
-            case EscapeSequence:
-                return token(ESCAPE_SEQUENCE);
+            // Numbers
+            case TOMLAntlrLexer.DEC_INT:
+            case TOMLAntlrLexer.BIN_INT:
+            case TOMLAntlrLexer.OCT_INT:
+            case TOMLAntlrLexer.HEX_INT:
+            case TOMLAntlrLexer.FLOAT:
+            case TOMLAntlrLexer.INF:
+            case TOMLAntlrLexer.NAN:
+                return token(NUMBER);
 
-            case Dash:
-            case Plus:
-            case Colon:
-            case Z:
-            case TimeDelimiter:
-            case DateDigits:
+            // Dates
+            case TOMLAntlrLexer.LOCAL_DATE:
+            case TOMLAntlrLexer.LOCAL_DATE_TIME:
+            case TOMLAntlrLexer.LOCAL_TIME:
+            case TOMLAntlrLexer.OFFSET_DATE_TIME:
                 return token(DATE);
+
+            // Comments
+            case TOMLAntlrLexer.COMMENT:
+                return token(COMMENT);
+
+            // Punctuation
+            case TOMLAntlrLexer.COMMA:
+            case TOMLAntlrLexer.EQUALS:
+            case TOMLAntlrLexer.L_BRACE:
+            case TOMLAntlrLexer.L_BRACKET:
+            case TOMLAntlrLexer.R_BRACE:
+            case TOMLAntlrLexer.R_BRACKET:
+            case TOMLAntlrLexer.DOT:
+                return token(DOT);
+
+            case TOMLAntlrLexer.DOUBLE_L_BRACKET:
+            case TOMLAntlrLexer.DOUBLE_R_BRACKET:
+                return token(TABLE_MARK);
+
+            // Whitespace, NL
+            case TOMLAntlrLexer.WS:
+            case TOMLAntlrLexer.NL:
+                return token(WHITESPACE);
+
+            // Keys
+            case TOMLAntlrLexer.UNQUOTED_KEY:
+                return token(KEY);
+
+            // Invalid values
+            case TOMLAntlrLexer.INVALID_VALUE:
+                return token(ERROR);
+
             default:
+                LOG.info(String.format("Unexpected token type: %s", TOMLAntlrLexer.VOCABULARY.getSymbolicName(antlrToken.getType())));
                 return token(ERROR);
         }
     }
 
-    @Override
-    public Object state() {
-        return new LexerState(lexer);
-    }
-
-    private static class LexerState extends AbstractAntlrLexerBridge.LexerState<org.tomlj.internal.TomlLexer> {
-        final int arrayDepth;
-        final IntegerStack arrayDepthStack;
-
-        LexerState(org.tomlj.internal.TomlLexer lexer) {
-            super(lexer);
-
-            this.arrayDepth = lexer.arrayDepth;
-            this.arrayDepthStack = new IntegerStack(lexer.arrayDepthStack);
-        }
-
-        @Override
-        public void restore(org.tomlj.internal.TomlLexer lexer) {
-            super.restore(lexer);
-
-            lexer.arrayDepth = arrayDepth;
-            lexer.arrayDepthStack.addAll(arrayDepthStack);
-        }
-    }
 }

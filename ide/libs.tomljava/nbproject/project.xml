@@ -23,17 +23,25 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
-            <code-name-base>org.netbeans.libs.antlr3.runtime</code-name-base>
-            <module-dependencies/>
+            <code-name-base>org.netbeans.libs.tomljava</code-name-base>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.antlr4.runtime</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>1.25</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
             <public-packages>
-                <package>org.antlr.runtime</package>
-                <package>org.antlr.runtime.debug</package>
-                <package>org.antlr.runtime.misc</package>
-                <package>org.antlr.runtime.tree</package>
+                <package>net.vieiro.toml</package>
+                <package>net.vieiro.toml.antlr4</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/antlr-runtime-3.5.3.jar</runtime-relative-path>
-                <binary-origin>external/antlr-runtime-3.5.3.jar</binary-origin>
+                <runtime-relative-path>ext/toml-java-13.4.1.jar</runtime-relative-path>
+                <binary-origin>external/toml-java-13.4.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

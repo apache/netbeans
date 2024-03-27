@@ -20,7 +20,14 @@ package org.netbeans.modules.languages.toml;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
+import net.vieiro.toml.TOMLParser;
+import net.vieiro.toml.antlr4.TOMLAntlrLexer;
+import net.vieiro.toml.antlr4.TOMLAntlrParser;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -36,21 +43,24 @@ import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
+import org.openide.text.NbDocument;
 
 /**
  *
  * @author Laszlo Kishalmi
+ * @author Antonio Vieiro
  */
-public class TomlParser extends Parser{
+public class TomlParser extends Parser {
+
+    private static final Logger LOG = Logger.getLogger(Parser.class.getName());
 
     private Result lastResult;
 
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException {
-        org.tomlj.internal.TomlLexer lexer = new org.tomlj.internal.TomlLexer(CharStreams.fromString(String.valueOf(snapshot.getText())));
-        org.tomlj.internal.TomlParser parser = new org.tomlj.internal.TomlParser(new CommonTokenStream(lexer));
+
         final List<DefaultError> errors = new ArrayList<>();
-        parser.addErrorListener(new BaseErrorListener() {
+        BaseErrorListener errorListener = new BaseErrorListener() {
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
                 int errorBegin = 0;
@@ -59,13 +69,37 @@ public class TomlParser extends Parser{
                     Token token = (Token) offendingSymbol;
                     errorBegin = token.getStartIndex();
                     errorEnd = token.getStopIndex() + 1;
+                } else if (e != null && e.getOffendingToken() != null) {
+                    errorBegin = e.getOffendingToken().getStartIndex();
+                    errorEnd = e.getOffendingToken().getStopIndex() + 1;
+                } else if (snapshot.getSource() != null) {
+                    Document document = snapshot.getSource().getDocument(false);
+                    if (document != null && document instanceof StyledDocument) {
+                        StyledDocument sd = (StyledDocument) document;
+                        errorBegin = NbDocument.findLineOffset(sd, line - 1);
+                        errorEnd = errorBegin + charPositionInLine;
+                    }
                 }
-                errors.add(new DefaultError(null, msg, null, snapshot.getSource().getFileObject(), errorBegin, errorEnd, Severity.ERROR));
+                DefaultError error = new DefaultError(null, msg, null, snapshot.getSource().getFileObject(), errorBegin, errorEnd, Severity.ERROR);
+                errors.add(error);
             }
-            
-        });
-        parser.toml();
-        lastResult = new TomlParser.Result(snapshot, errors);
+
+        };
+
+        TOMLAntlrLexer lexer = new TOMLAntlrLexer(CharStreams.fromString(String.valueOf(snapshot.getText())));
+        TOMLAntlrParser parser = new TOMLAntlrParser(new CommonTokenStream(lexer));
+        parser.removeErrorListeners();
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(errorListener);
+        parser.addErrorListener(errorListener);
+        TOMLAntlrParser.DocumentContext document = null;
+        try {
+            document = parser.document();
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Error parsing TOML " + e.getMessage(), e);
+        }
+        lastResult = new TomlParserResult(snapshot, document, errors);
+
     }
 
     @Override
@@ -81,13 +115,15 @@ public class TomlParser extends Parser{
     public void removeChangeListener(ChangeListener changeListener) {
     }
 
-    public static class Result extends ParserResult {
+    public static class TomlParserResult extends ParserResult {
 
         private final List<? extends Error> errors;
+        private TOMLAntlrParser.DocumentContext document;
 
-        public Result(Snapshot snapshot, List<? extends Error> errors) {
+        public TomlParserResult (Snapshot snapshot, TOMLAntlrParser.DocumentContext document, List<DefaultError> errors) {
             super(snapshot);
             this.errors = errors;
+            this.document = document;
         }
 
         @Override
@@ -99,5 +135,10 @@ public class TomlParser extends Parser{
         protected void invalidate() {
         }
 
+        public TOMLAntlrParser.DocumentContext getDocument() {
+            return document;
+        }
+
     }
+
 }

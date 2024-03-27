@@ -23,7 +23,7 @@
     <description>Builds, tests, and runs the project org.netbeans.modules.javascript2.json</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <target name="generate-antlr-parser" description="Regenerate the JSON parser" depends="init">
+    <target name="generate-antlr-parser" description="Regenerate the JSON parser" depends="init" extensionOf="-pre-compile">
         <property name="antlr.outdir" location="${src.dir}/org/netbeans/modules/javascript2/json/parser"/>
         <path id="antlr4.tool">
             <fileset dir="../../ide/libs.antlr4.runtime/external" includes="*.jar"/>

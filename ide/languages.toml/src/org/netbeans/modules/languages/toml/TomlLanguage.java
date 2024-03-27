@@ -21,8 +21,12 @@ package org.netbeans.modules.languages.toml;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
+import org.netbeans.modules.csl.api.SemanticAnalyzer;
+import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
+import org.netbeans.modules.languages.toml.semantic.TomlSemanticAnalyzer;
+import org.netbeans.modules.languages.toml.structure.TomlStructureScanner;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -40,9 +44,9 @@ import org.openide.windows.TopComponent;
         "TOMLResolver=Toml File"
 )
 @MIMEResolver.ExtensionRegistration(displayName = "#TOMLResolver",
-    extension = "toml",
-    mimeType = TomlTokenId.TOML_MIME_TYPE,
-    position = 285
+        extension = "toml",
+        mimeType = TomlTokenId.TOML_MIME_TYPE,
+        position = 285
 )
 
 @ActionReferences({
@@ -103,7 +107,7 @@ import org.openide.windows.TopComponent;
     )
 })
 @LanguageRegistration(mimeType = TomlTokenId.TOML_MIME_TYPE, useMultiview = true)
-public class TomlLanguage  extends DefaultLanguageConfig {
+public class TomlLanguage extends DefaultLanguageConfig {
 
     @Override
     public Language getLexerLanguage() {
@@ -123,6 +127,21 @@ public class TomlLanguage  extends DefaultLanguageConfig {
     @Override
     public Parser getParser() {
         return new TomlParser();
+    }
+
+    @Override
+    public StructureScanner getStructureScanner() {
+        return new TomlStructureScanner();
+    }
+
+    @Override
+    public boolean hasStructureScanner() {
+        return true;
+    }
+
+    @Override
+    public SemanticAnalyzer<TomlParser.TomlParserResult> getSemanticAnalyzer() {
+        return new TomlSemanticAnalyzer();
     }
 
     @NbBundle.Messages("Source=&Source")

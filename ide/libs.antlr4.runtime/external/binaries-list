@@ -14,6 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-069214C1DE1960040729702EB58DEAC8827135E7 org.antlr:antlr4-runtime:4.11.1
-844C603E04AB201B769849EE9D3CCE67BA7A1337 org.antlr:antlr4:4.11.1
+17125BAE1D965624E265EF49552F6465A2BFA307 org.antlr:antlr4-runtime:4.13.1
+71B8E3E31B0821480A5DB1486012CAA89E673F41 org.antlr:antlr4:4.13.1
 BF68D049DD4E6E104055A79AC3BF9E6307D29258 org.antlr:ST4:4.3.4

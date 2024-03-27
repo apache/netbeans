@@ -1,12 +1,12 @@
 Name: Antlr
 Description: ANother Tool for Language Recognition, is a language tool that provides a framework for constructing recognizers, interpreters, compilers, and translators from grammatical descriptions.
-Version: 4.11.1
-License: BSD-antlr-runtime4-2
+Version: 4.13.1
+License: BSD-antlr-runtime4-3
 Origin: Antlr
 URL: https://www.antlr.org
-Files: antlr4-runtime-4.11.1.jar, antlr4-4.11.1.jar, ST4-4.3.4.jar
+Files: antlr4-runtime-4.13.1.jar, antlr4-4.13.1.jar, ST4-4.3.4.jar
 
-Use of Antlr version 4.11.1 is governed by the terms of the license below:
+Use of Antlr version 4.13.1 is governed by the terms of the license below:
 
  [The "BSD license"]
 Copyright (c) 2012-2022 The ANTLR Project. All rights reserved.

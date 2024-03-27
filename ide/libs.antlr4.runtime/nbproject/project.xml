@@ -33,8 +33,8 @@
                 <package>org.antlr.v4.runtime.tree</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/antlr4-runtime-4.11.1.jar</runtime-relative-path>
-                <binary-origin>external/antlr4-runtime-4.11.1.jar</binary-origin>
+                <runtime-relative-path>ext/antlr4-runtime-4.13.1.jar</runtime-relative-path>
+                <binary-origin>external/antlr4-runtime-4.13.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

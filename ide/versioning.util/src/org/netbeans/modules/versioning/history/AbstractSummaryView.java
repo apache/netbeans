@@ -523,13 +523,24 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
         }
     }
 
+    //TODO record
+    static final class MaxPathWidth {
+        public final int visiblePaths;
+        public final int maxPathWidth;
+        public MaxPathWidth(int visiblePaths, int maxPathWidth) {
+            this.visiblePaths = visiblePaths;
+            this.maxPathWidth = maxPathWidth;
+        }
+    }
+
     class RevisionItem extends Item<LogEntry> {
         private final LogEntry entry;
+        MaxPathWidth maxPathWidth = null;
         boolean messageExpanded;
         boolean revisionExpanded;
         private boolean viewEventsInitialized;
         private boolean initializingStarted;
-        private int showingFiles;
+        int showingFiles;
         private int nextFilesPaging = NEXT_FILES_INITIAL_PAGING;
 
         public RevisionItem (LogEntry entry) {
@@ -604,7 +615,11 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
             nextFilesPaging = NEXT_FILES_INITIAL_PAGING;
         }
 
-        private boolean isEventVisible (EventItem event) {
+        boolean isEventVisible(EventItem event) {
+            return isEventVisible(event.getUserData());
+        }
+
+        boolean isEventVisible(LogEntry.Event event) {
             if (!viewEventsInitialized || isAllEventsVisible()) {
                 return true;
             } else if (showingFiles == 0) {
@@ -617,24 +632,23 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
                 }
             }
             int visibleCount = 0;
-            boolean visible = false;
             // at first display visible by default
             // only then the rest
             for (boolean defaultVisible : new boolean[] { true, false }) {
                 for (LogEntry.Event e : entry.getEvents()) {
-                    if (visibleCount >= showingFiles || visible) {
+                    if (visibleCount >= showingFiles) {
                         // over the paging limit or ound as visible
                         break;
                     }
                     if (e.isVisibleByDefault() == defaultVisible) {
                         ++visibleCount;
-                        if (e == event.getUserData()) {
-                            visible = true;
+                        if (e == event) {
+                            return true;
                         }
                     }
                 }
             }
-            return visible;
+            return false;
         }
         
         private int getDefaultVisibleEventCount () {

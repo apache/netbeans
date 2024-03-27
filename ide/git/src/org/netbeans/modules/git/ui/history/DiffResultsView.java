@@ -38,6 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import org.netbeans.api.diff.DiffController;
 import org.netbeans.modules.git.client.GitProgressSupport;
 import org.netbeans.modules.git.ui.diff.DiffStreamSource;
@@ -67,7 +68,7 @@ class DiffResultsView implements AncestorListener, PropertyChangeListener {
     protected static final Logger LOG = Logger.getLogger(DiffResultsView.class.getName());
     private final PropertyChangeListener list;
     private Node[] selectedNodes;
-    private final Set<RepositoryRevision> revisionsToRefresh = new HashSet<RepositoryRevision>(2);
+    private final Set<RepositoryRevision> revisionsToRefresh = new HashSet<>(2);
     private int lastDividerLoc;
 
     public DiffResultsView (SearchHistoryPanel parent, List<RepositoryRevision> results) {
@@ -83,26 +84,27 @@ class DiffResultsView implements AncestorListener, PropertyChangeListener {
         list = WeakListeners.propertyChange(this, null);
     }
 
+    void switchLayout() {
+        diffView.setOrientation(
+            diffView.getOrientation() == JSplitPane.VERTICAL_SPLIT ? JSplitPane.HORIZONTAL_SPLIT : JSplitPane.VERTICAL_SPLIT
+        );
+        diffView.setDividerLocation(0.33);
+    }
+
     @Override
     public void ancestorAdded(AncestorEvent event) {
         ExplorerManager em = ExplorerManager.find(treeView);
         em.addPropertyChangeListener(this);
         if (dividerSet) {
             if (lastDividerLoc != 0) {
-                EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run () {
-                        diffView.setDividerLocation(lastDividerLoc);
-                    }
+                EventQueue.invokeLater(() -> {
+                    diffView.setDividerLocation(lastDividerLoc);
                 });
             }
         } else {
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    dividerSet = true;
-                    diffView.setDividerLocation(0.33);
-                }
+            EventQueue.invokeLater(() -> {
+                dividerSet = true;
+                diffView.setDividerLocation(0.33);
             });
         }
     }
@@ -139,13 +141,7 @@ class DiffResultsView implements AncestorListener, PropertyChangeListener {
             revisionsToRefresh.clear();
 
             // invoked asynchronously becase treeView.getSelection() may not be ready yet
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    showDiff();
-                }
-            };
-            EventQueue.invokeLater(runnable);
+            EventQueue.invokeLater(this::showDiff);
         } else if (RepositoryRevision.PROP_EVENTS_CHANGED.equals(evt.getPropertyName())) {
             if (evt.getSource() instanceof RepositoryRevision) {
                 RepositoryRevision revision = (RepositoryRevision) evt.getSource();
@@ -223,7 +219,6 @@ class DiffResultsView implements AncestorListener, PropertyChangeListener {
         }
         
         if (loading) {
-            showDiffError(NbBundle.getMessage(DiffResultsView.class, "MSG_DiffPanel_LoadingDiff")); //NOI18N
             parent.refreshComponents(false);
         } else if (error) {
             showDiffError(NbBundle.getMessage(DiffResultsView.class, "MSG_DiffPanel_IllegalSelection")); // NOI18N
@@ -233,17 +228,12 @@ class DiffResultsView implements AncestorListener, PropertyChangeListener {
         }
     }
 
-    protected void showDiffError (final String s) {
-        Runnable inAWT = new Runnable() {
-            @Override
-            public void run() {
-                setBottomComponent(new NoContentPanel(s));
-            }
-        };
+    protected void showDiffError(final String s) {
+        Runnable inEDT = () -> setBottomComponent(new NoContentPanel(s));
         if (EventQueue.isDispatchThread()) {
-            inAWT.run();
+            inEDT.run();
         } else {
-            EventQueue.invokeLater(inAWT);
+            EventQueue.invokeLater(inEDT);
         }
     }
 
@@ -408,7 +398,7 @@ class DiffResultsView implements AncestorListener, PropertyChangeListener {
         private File file1;
         private File baseFile1;
         private String revision1;
-        private boolean showLastDifference;
+        private final boolean showLastDifference;
         private final RepositoryRevision.Event event2;
         private DiffStreamSource s1;
         private DiffStreamSource s2;
@@ -425,7 +415,6 @@ class DiffResultsView implements AncestorListener, PropertyChangeListener {
 
         @Override
         public void perform () {
-            showDiffError(NbBundle.getMessage(DiffResultsView.class, "MSG_DiffPanel_LoadingDiff")); //NOI18N
             if (revision1 == null) {
                 try {
                     revision1 = event2.getLogInfoHeader().getAncestorCommit(event2.getOriginalFile(), getClient(), GitUtils.NULL_PROGRESS_MONITOR);
@@ -462,42 +451,66 @@ class DiffResultsView implements AncestorListener, PropertyChangeListener {
 
             if (currentTask != this) return;
 
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        if (isCanceled()) {
-                            showDiffError(NbBundle.getMessage(DiffResultsView.class, "MSG_DiffPanel_NoRevisions")); // NOI18N
-                            return;
+            EventQueue.invokeLater(() -> {
+                try {
+                    if (isCanceled()) {
+                        showDiffError(NbBundle.getMessage(DiffResultsView.class, "MSG_DiffPanel_NoRevisions")); // NOI18N
+                        return;
+                    }
+                    final DiffController newDiff = DiffController.createEnhanced(s1, s2);
+                    
+                    if (currentTask == ShowDiffTask.this) {
+                        if (currentDiff != null) {
+                            copyUIState(currentDiff, newDiff);
                         }
-                        final DiffController view = DiffController.createEnhanced(s1, s2);
-                        if (currentTask == ShowDiffTask.this) {
-                            currentDiff = view;
-                            setBottomComponent(currentDiff.getJComponent());
-                            final int dl = diffView.getDividerLocation();
-                            if (!setLocation(view)) {
-                                view.addPropertyChangeListener(new PropertyChangeListener() {
-                                    @Override
-                                    public void propertyChange(PropertyChangeEvent evt) {
-                                        view.removePropertyChangeListener(this);
-                                        setLocation(view);
-                                        parent.updateActions();
-                                    }
-                                });
-                            }
-                            parent.refreshComponents(false);
-                            EventQueue.invokeLater(new Runnable () {
+                        currentDiff = newDiff;
+                        setBottomComponent(currentDiff.getJComponent());
+                        if (!setLocation(newDiff)) {
+                            newDiff.addPropertyChangeListener(new PropertyChangeListener() {
                                 @Override
-                                public void run() {
-                                    diffView.setDividerLocation(dl);
+                                public void propertyChange(PropertyChangeEvent evt) {
+                                    newDiff.removePropertyChangeListener(this);
+                                    setLocation(newDiff);
+                                    parent.updateActions();
                                 }
                             });
                         }
-                    } catch (IOException e) {
-                        ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, e);
+                        parent.refreshComponents(false);
                     }
+                } catch (IOException e) {
+                    ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, e);
                 }
             });
+        }
+
+        private void copyUIState(DiffController oldView, DiffController newView) {
+            JTabbedPane oldTP = findComponent(oldView.getJComponent(), JTabbedPane.class, "diff-view-mode-switcher");
+            JTabbedPane newTP = findComponent(newView.getJComponent(), JTabbedPane.class, "diff-view-mode-switcher");
+            if (newTP != null && oldTP != null) {
+                newTP.setSelectedIndex(oldTP.getSelectedIndex());
+            }
+            JSplitPane oldSP = findComponent(oldView.getJComponent(), JSplitPane.class, "diff-view-mode-splitter");
+            JSplitPane newSP = findComponent(newView.getJComponent(), JSplitPane.class, "diff-view-mode-splitter");
+            if (newSP != null && oldSP != null) {
+                newSP.setDividerLocation(oldSP.getDividerLocation());
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        private <T extends JComponent> T findComponent(JComponent parent, Class<T> ofType, String withProp) {
+            if (ofType.isInstance(parent) && Boolean.TRUE.equals(parent.getClientProperty(withProp))) {
+                return (T) parent;
+            } else {
+                for (Component child : parent.getComponents()) {
+                    if (child instanceof JComponent) {
+                        T comp = findComponent((JComponent) child, ofType, withProp);
+                        if (comp != null) {
+                            return comp;
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
         @Override

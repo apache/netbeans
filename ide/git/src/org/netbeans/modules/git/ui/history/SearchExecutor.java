@@ -192,7 +192,7 @@ class SearchExecutor extends GitProgressSupport {
     }
 
     private List<RepositoryRevision> appendResults (GitRevisionInfo[] logMessages, Collection<GitBranch> allBranches, Collection<GitTag> allTags, ProgressMonitor monitor) {
-        List<RepositoryRevision> results = new ArrayList<RepositoryRevision>();
+        List<RepositoryRevision> results = new ArrayList<>();
         File dummyFile = null;
         String dummyFileRelativePath = null;
         if (master.getRoots().length == 1) {
@@ -206,8 +206,8 @@ class SearchExecutor extends GitProgressSupport {
                 continue;
             }
             RepositoryRevision rev;
-            Set<GitBranch> branches = new HashSet<GitBranch>();
-            Set<GitTag> tags = new HashSet<GitTag>();
+            Set<GitBranch> branches = new HashSet<>();
+            Set<GitTag> tags = new HashSet<>();
             for (GitBranch b : allBranches) {
                 if (b.getId().equals(logMessage.getRevision())) {
                     branches.add(b);
@@ -227,14 +227,11 @@ class SearchExecutor extends GitProgressSupport {
 
     private void setResults (final List<RepositoryRevision> results) {
         final Map<String, VCSKenaiAccessor.KenaiUser> kenaiUserMap = SearchHistoryPanel.createKenaiUsersMap(results);
-        EventQueue.invokeLater(new Runnable() {
-        @Override
-            public void run() {
-                if(results.isEmpty()) {
-                    master.setResults(null, kenaiUserMap, -1);
-                } else {
-                    master.setResults(results, kenaiUserMap, limitRevisions);
-                }
+        EventQueue.invokeLater(() -> {
+            if(results.isEmpty()) {
+                master.setResults(null, kenaiUserMap, -1);
+            } else {
+                master.setResults(results, kenaiUserMap, limitRevisions);
             }
         });
     }

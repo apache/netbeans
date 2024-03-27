@@ -218,8 +218,12 @@ public class JarWithModuleAttributes extends Jar {
                     added.addConfiguredAttribute(new Manifest.Attribute("OpenIDE-Module-Module-Dependencies", moduleDeps));
                 }
             }
-            String javaDep = getProject().getProperty("javac.target");
+            String javaDep = getProject().getProperty("javac.release");
+            if (javaDep == null || javaDep.trim().isEmpty()) {
+                javaDep = getProject().getProperty("javac.target");
+            }
             if (javaDep != null && javaDep.matches("[0-9]+(\\.[0-9]+)*")) {
+                log("Setting requires JDK " + javaDep, Project.MSG_DEBUG); // NOI18N
                 if (isOSGiMode) {
                     if (javaDep.matches("1\\.[0-5]")) {
                         added.addConfiguredAttribute(new Manifest.Attribute("Bundle-RequiredExecutionEnvironment", "J2SE-" + javaDep));

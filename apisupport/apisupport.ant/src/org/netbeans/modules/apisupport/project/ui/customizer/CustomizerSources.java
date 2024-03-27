@@ -51,7 +51,7 @@ final class CustomizerSources extends NbPropertyPanel.Single {
                 if (srcLevelValueBeingUpdated) {
                     return;
                 }
-                final String oldLevel = getProperty(SingleModuleProperties.JAVAC_SOURCE);
+                final String oldLevel = getProperty(activeJavacPropKey());
                 final String newLevel = (String) srcLevelValue.getSelectedItem();
                 SpecificationVersion jdk5 = new SpecificationVersion("1.5"); // NOI18N
                 if (new SpecificationVersion(oldLevel).compareTo(jdk5) < 0 && new SpecificationVersion(newLevel).compareTo(jdk5) >= 0) {
@@ -80,6 +80,7 @@ final class CustomizerSources extends NbPropertyPanel.Single {
         });
     }
     
+    @Override
     protected void refresh() {
         if (getProperties().getSuiteDirectoryPath() == null) {
             moduleSuite.setVisible(false);
@@ -95,16 +96,20 @@ final class CustomizerSources extends NbPropertyPanel.Single {
             for (String level : levels) {
                 srcLevelValue.addItem(level);
             }
-            srcLevelValue.setSelectedItem(getProperty(SingleModuleProperties.JAVAC_SOURCE));
+            srcLevelValue.setSelectedItem(getProperty(activeJavacPropKey()));
         } finally {
             srcLevelValueBeingUpdated = false;
         }
         ApisupportAntUIUtils.setText(prjFolderValue, getProperties().getProjectDirectory());
     }
     
+    @Override
     public void store() {
-        setProperty(SingleModuleProperties.JAVAC_SOURCE,
-                (String) srcLevelValue.getSelectedItem());
+        setProperty(activeJavacPropKey(), (String) srcLevelValue.getSelectedItem());
+    }
+
+    private String activeJavacPropKey() {
+        return containsProperty(SingleModuleProperties.JAVAC_RELEASE) ? SingleModuleProperties.JAVAC_RELEASE : SingleModuleProperties.JAVAC_SOURCE;
     }
     
     /** This method is called from within the constructor to

@@ -24,7 +24,6 @@ import org.netbeans.editor.*;
 import org.netbeans.editor.Utilities;
 import org.netbeans.api.editor.fold.*;
 import org.netbeans.api.diff.*;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor.KenaiUser;
 import org.netbeans.spi.diff.*;
 import org.netbeans.modules.subversion.ui.update.RevertModifications;
 import org.netbeans.modules.subversion.ui.update.RevertModificationsAction;
@@ -61,7 +60,6 @@ import org.netbeans.api.editor.settings.EditorStyleConstants;
 import org.netbeans.api.editor.settings.FontColorNames;
 import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.modules.subversion.client.SvnClient;
-import org.netbeans.modules.subversion.kenai.SvnKenaiAccessor;
 import org.netbeans.modules.subversion.client.SvnClientExceptionHandler;
 import org.tigris.subversion.svnclientadapter.ISVNInfo;
 import org.tigris.subversion.svnclientadapter.ISVNNotifyListener;
@@ -161,11 +159,6 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
      * Rendering hints for annotations sidebar inherited from editor settings.
      */
     private final Map renderingHints;
-
-    /**
-     * Holdes kenai users
-     */
-    private Map<String, KenaiUser> kenaiUsersMap = null;
 
     private File file;
     /**
@@ -325,30 +318,6 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
                 }
             }
         });
-
-        boolean isKenaiRepository = false;
-        SVNUrl url = null;
-        try {
-            url = SvnUtils.getRepositoryUrl(file);
-            isKenaiRepository = url != null && SvnKenaiAccessor.getInstance().isKenai(url.toString());
-            if(isKenaiRepository) {
-                kenaiUsersMap = new HashMap<String, KenaiUser>();
-                Iterator<AnnotateLine> it = lines.iterator();
-                while (it.hasNext()) {
-                    AnnotateLine line = it.next();
-                    String author = line.getAuthor();
-                    if(author != null && !author.equals("") && !kenaiUsersMap.containsKey(author)) {
-                        KenaiUser ku = SvnKenaiAccessor.getInstance().forName(author, url.toString());
-                        if(ku != null) {
-                            kenaiUsersMap.put(author, ku);
-                        }
-                    }
-                }
-            }
-        } catch (SVNClientException ex) {
-            Subversion.LOG.log(Level.WARNING, null, ex);
-        }
-        
                 
         // lazy listener registration
         caret = textComponent.getCaret();
@@ -569,23 +538,6 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
         });
         popupMenu.add(previousAnnotationsMenu);
         previousAnnotationsMenu.setVisible(false);
-
-        if(isKenai() && al != null) {
-            String author = al.getAuthor();
-            final int lineNr = al.getLineNum();
-            final KenaiUser ku = kenaiUsersMap.get(author);
-            if(ku != null) {
-                popupMenu.addSeparator();
-                JMenuItem chatMenu = new JMenuItem(NbBundle.getMessage(AnnotationBar.class, "CTL_MenuItem_Chat", author));
-                chatMenu.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        ku.startChat(KenaiUser.getChatLink(getCurrentFileObject(), lineNr));
-                    }
-                });
-                popupMenu.add(chatMenu);
-            }
-        }
 
         JMenuItem menu;
         menu = new JMenuItem(loc.getString("CTL_MenuItem_CloseAnnotations"));
@@ -889,7 +841,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
         Graphics g = getGraphics();
         if( g != null) {
             int w = g.getFontMetrics().charsWidth(data, 0,  data.length);
-            return w + 4 + (isKenai() ? 18 : 0);
+            return w + 4;
         } else {
             return 0;
         }
@@ -966,17 +918,6 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
         int texty = yBase + editorUI.getLineAscent();
         int textx = 2;
         g.drawString(annotation, textx, texty);        
-    }
-
-    boolean isKenai() {
-        return kenaiUsersMap != null && kenaiUsersMap.size() > 0;
-    }
-
-    KenaiUser getKenaiUser(String author) {
-        if(kenaiUsersMap == null) {
-            return null;
-        }
-        return kenaiUsersMap.get(author);
     }
 
     /**

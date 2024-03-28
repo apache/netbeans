@@ -65,7 +65,6 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.queries.FileEncodingQuery;
-import org.netbeans.api.queries.VersioningQuery;
 import org.netbeans.modules.versioning.core.api.VCSFileProxy;
 import org.netbeans.modules.versioning.spi.VersioningSystem;
 import org.openide.ErrorManager;
@@ -1169,24 +1168,12 @@ public final class Utils {
         repositoryUrl = repositoryUrl.toLowerCase();
         if (repositoryUrl.contains("github.com")) { //NOI18N
             return "GITHUB"; //NOI18N
-        } else if (repositoryUrl.contains("gitorious.org")) { //NOI18N
-            return "GITORIOUS"; //NOI18N
         } else if (repositoryUrl.contains("bitbucket.org")) { //NOI18N
             return "BITBUCKET"; //NOI18N
         } else if (repositoryUrl.contains("sourceforge.net")) { //NOI18N
             return "SOURCEFORGE"; //NOI18N
-        } else if (repositoryUrl.contains("googlecode.com") //NOI18N
-                || repositoryUrl.contains("code.google.com") //NOI18N
-                || repositoryUrl.contains("googlesource.com")) { //NOI18N
-            return "GOOGLECODE"; //NOI18N
-        } else if (repositoryUrl.contains("kenai.com")) { //NOI18N
-            return "KENAI"; //NOI18N
-        } else if (repositoryUrl.contains("java.net")) { //NOI18N
-            return "JAVANET"; //NOI18N
         } else if (repositoryUrl.contains("netbeans.org")) { //NOI18N
             return "NETBEANS"; //NOI18N
-        } else if (repositoryUrl.contains("codeplex.com")) { //NOI18N
-            return "CODEPLEX"; //NOI18N
         } else if (repositoryUrl.contains(".eclipse.org")) { //NOI18N
             return "ECLIPSE"; //NOI18N
         } else {
@@ -1436,45 +1423,19 @@ public final class Utils {
         }
     }
 
-    // -----
-    // Usages logging based on repository URL (for Kenai)
 
-    private static VCSKenaiAccessor kenaiAccessor;
-    private static final LinkedList<File> loggedRoots = new LinkedList<File>();
-    private static final List<File> foldersToCheck = new LinkedList<File>();
-    private static Runnable loggingTask = null;
-
-    public static void logVCSKenaiUsage(String vcs, String repositoryUrl) {
-        VCSKenaiAccessor kenaiSup = getKenaiAccessor();
-        if (kenaiSup != null) {
-            kenaiSup.logVcsUsage(vcs, repositoryUrl);
-        }
-    }
-
-    private static VCSKenaiAccessor getKenaiAccessor() {
-        if (kenaiAccessor == null) {
-            kenaiAccessor = Lookup.getDefault().lookup(VCSKenaiAccessor.class);
-        }
-        return kenaiAccessor;
-    }
-
-    /*
-     * Makes sure repository of given versioned folder is logged for usage
-     * (if on Kenai). Versioned folders are collected and a task invoked in 2s
-     * to process them. Roots are remembered so no subfolder is processed again
-     * (it's enough to log one usage per repository). Called from annotators so
-     * all user visible repositories are logged.
+    /**
+     * No-op.
      */
+    @Deprecated(forRemoval = true)
+    public static void logVCSKenaiUsage(String vcs, String repositoryUrl) {
+    }
+
+    /**
+     * No-op.
+     */
+    @Deprecated(forRemoval = true)
     public static void addFolderToLog(File folder) {
-        if (!checkFolderLogged(folder, false)) {
-            synchronized(foldersToCheck) {
-                foldersToCheck.add(folder);
-                if (loggingTask == null) {
-                    loggingTask = new LogTask();
-                    Utils.postParallel(loggingTask, 2000);
-                }
-            }
-        }
     }
 
     /**
@@ -1493,59 +1454,6 @@ public final class Utils {
             }
         }
         return (VersioningSystem[]) owners.toArray(new VersioningSystem[0]);
-    }
-
-    private static class LogTask implements Runnable {
-        @Override
-        public void run() {
-            File[] folders;
-            synchronized (foldersToCheck) {
-                folders = foldersToCheck.toArray(new File[0]);
-                foldersToCheck.clear();
-                loggingTask = null;
-            }
-            for (File f : folders) {
-                if (!checkFolderLogged(f, false)) { // if other task has not processed the root yet
-                    VersioningSystem vs = VersioningSupport.getOwner(f);
-                    if (vs != null) {
-                        File root = vs.getTopmostManagedAncestor(f);
-                        if (root != null) {
-                            checkFolderLogged(root, true); // remember the root
-                            FileObject rootFO = FileUtil.toFileObject(root);
-                            if (rootFO != null) {
-                                String url = VersioningQuery.getRemoteLocation(rootFO.toURI());
-                                if (url != null) {
-                                    Object name = vs.getProperty(VersioningSystem.PROP_DISPLAY_NAME);
-                                    if (!(name instanceof String)) {
-                                        name = vs.getClass().getSimpleName();
-                                    }
-                                    logVCSKenaiUsage(name.toString(), url);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private static boolean checkFolderLogged(File folder, boolean add) {
-        synchronized(loggedRoots) {
-            for (File f : loggedRoots) {
-                String ancestorPath = f.getPath();
-                String folderPath = folder.getPath();
-                if (folderPath.startsWith(ancestorPath)
-                        && (folderPath.length() == ancestorPath.length()
-                             || folderPath.charAt(ancestorPath.length()) == File.separatorChar)) {
-                    // folder is the same or subfolder of already logged one
-                    return true;
-                }
-            }
-            if (add) {
-                loggedRoots.add(folder);
-            }
-        }
-        return false;
     }
 
     /**

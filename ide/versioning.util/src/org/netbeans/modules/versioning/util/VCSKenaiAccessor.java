@@ -42,6 +42,7 @@ import org.openide.util.RequestProcessor;
  * 
  * @author Tomas Stupka
  */
+@Deprecated(forRemoval = true)
 public abstract class VCSKenaiAccessor {
 
     /**
@@ -54,6 +55,7 @@ public abstract class VCSKenaiAccessor {
     /**
      * A Kenai service
      */
+    @Deprecated(forRemoval = true)
     public enum Service {
         VCS_SVN,
         VCS_HG,
@@ -63,6 +65,7 @@ public abstract class VCSKenaiAccessor {
     /**
      * Kenai repository's access rights
      */
+    @Deprecated(forRemoval = true)
     public enum RepositoryActivity {
         READ,
         WRITE
@@ -167,6 +170,7 @@ public abstract class VCSKenaiAccessor {
     /**
      * Repesents a Kenai user
      */
+    @Deprecated(forRemoval = true)
     public abstract static class KenaiUser {
 
         /**
@@ -240,6 +244,7 @@ public abstract class VCSKenaiAccessor {
     /**
      * Represents a change in a kenai VCS repository
      */
+    @Deprecated(forRemoval = true)
     public abstract static class VCSKenaiNotification {
 
         /**
@@ -281,6 +286,7 @@ public abstract class VCSKenaiAccessor {
     /**
      * Represenst a modification in a Kenai VCS repository
      */
+    @Deprecated(forRemoval = true)
     public abstract static class VCSKenaiModification {
 
         /**
@@ -314,6 +320,7 @@ public abstract class VCSKenaiAccessor {
     /**
      * Hadles VCS notifications from kenai
      */
+    @Deprecated(forRemoval = true)
     public abstract static class KenaiNotificationListener extends VCSNotificationDisplayer implements PropertyChangeListener {
 
         protected static Logger LOG = VCSKenaiAccessor.LOG;

@@ -17,9 +17,8 @@
  * under the License.
  */
 
-package org.netbeans.modules.bugtracking.kenai;
+package org.netbeans.modules.bugtracking.team;
 
-import org.netbeans.modules.bugtracking.team.TeamRepositories;
 import java.util.Collection;
 import java.util.Collections;
 import org.netbeans.modules.bugtracking.RepositoryImpl;
@@ -29,7 +28,7 @@ import org.netbeans.modules.bugtracking.RepositoryImpl;
  *
  * @author Marian Petras
  */
-public class DummyKenaiRepositories extends TeamRepositories {
+public class DummyRepositories extends TeamRepositories {
 
     @Override
     public Collection<RepositoryImpl> getRepositories(boolean includeIDEProjects, boolean onlyDashboardOpenProjects) {

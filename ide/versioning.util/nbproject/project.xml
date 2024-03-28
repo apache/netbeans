@@ -373,7 +373,6 @@
                 <friend>org.netbeans.modules.subversion.remote</friend>
                 <friend>org.netbeans.modules.team.ide</friend>
                 <friend>org.netbeans.modules.versioning.indexingbridge</friend>
-                <friend>org.netbeans.modules.versioning.kenai</friend>
                 <friend>org.netbeans.modules.versioning.system.cvss</friend>
                 <friend>org.netbeans.modules.versioning.ui</friend>
                 <package>org.netbeans.modules.proxy</package>

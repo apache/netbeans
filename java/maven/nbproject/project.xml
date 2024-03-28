@@ -619,7 +619,6 @@
                 <friend>org.netbeans.modules.groovy.support</friend>
                 <friend>org.netbeans.modules.hudson.maven</friend>
                 <friend>org.netbeans.modules.jbi.fuji.support</friend>
-                <friend>org.netbeans.modules.kenai.maven</friend>
                 <friend>org.netbeans.api.maven</friend>
                 <friend>org.netbeans.modules.maven.apisupport</friend>
                 <friend>org.netbeans.modules.maven.checkstyle</friend>

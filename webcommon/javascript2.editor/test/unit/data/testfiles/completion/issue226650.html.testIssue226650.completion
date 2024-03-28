@@ -2,6 +2,8 @@ Code completion result for source line:
 <script>|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
+CLASS      import                          [PUBLIC]   <font color=#999999>metaproperties.js</font>
+CLASS      new                             [PUBLIC]   <font color=#999999>metaproperties.js</font>
 KEYWORD    async                                      ECMAScript 7 - 2016 (Experimental)
 KEYWORD    await                                      ECMAScript 7 - 2016 (Experimental)
 KEYWORD    break                                      null

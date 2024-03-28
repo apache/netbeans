@@ -3,6 +3,8 @@ var z = |test() * times;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CLASS      MyObject234381                  [PUBLIC]   issue234381.js
+CLASS      import                          [PUBLIC]   <font color=#999999>metaproperties.js</font>
+CLASS      new                             [PUBLIC]   <font color=#999999>metaproperties.js</font>
 METHOD     test(): Number                  [PROTECTE  issue234381.js
 FIELD      times: Number                   [PUBLIC]   issue234381.js
 VARIABLE   z: Number                       [PUBLIC]   issue234381.js

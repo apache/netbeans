@@ -4,6 +4,8 @@ Code completion result for source line:
 ------------------------------------
 CONSTRUCTO Player234373                    [PUBLIC]   issue234373.js
 CLASS      console                         [PUBLIC]   issue234373.js
+CLASS      import                          [PUBLIC]   <font color=#999999>metaproperties.js</font>
+CLASS      new                             [PUBLIC]   <font color=#999999>metaproperties.js</font>
 CLASS      window                          [PUBLIC]   issue234373.js
 METHOD     play(): undefined               [PROTECTE  issue234373.js
 FIELD      brand: String                   [PUBLIC]   issue234373.js

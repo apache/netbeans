@@ -57,9 +57,12 @@
               <isInitializedHere/>
             </IdentNode>
             <!-- VarNode Init -->
-            <IdentNode start='27' end='37'>
-              <name>new.target</name>
-            </IdentNode>
+            <AccessNode property='target' start='27' end='37'>
+              <!-- AccessNode Base -->
+              <IdentNode start='27' end='30'>
+                <name>new</name>
+              </IdentNode>
+            </AccessNode>
           </VarNode>
         </Block>
       </FunctionNode>

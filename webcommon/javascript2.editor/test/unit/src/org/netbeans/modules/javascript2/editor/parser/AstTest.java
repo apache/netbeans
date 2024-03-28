@@ -3102,7 +3102,19 @@ public class AstTest extends CslTestBase {
     public void testAwait() throws Exception {
         checkAstResult("testfiles/coloring/await.js");
     }
-    
+
+    public void testImportMetaUrl() throws Exception {
+        checkAstResult("testfiles/ecmascript6/parser/ES6/meta-property/import-meta-url.js");
+    }
+
+    public void testImportMetaResolve() throws Exception {
+        checkAstResult("testfiles/ecmascript6/parser/ES6/meta-property/import-meta-resolve.js");
+    }
+
+    public void testImportMetaResolveComment() throws Exception {
+        checkAstResult("testfiles/ecmascript6/parser/ES6/meta-property/import-meta-resolve-comment.js");
+    }
+
     private void checkAstResult(String relFilePath) throws Exception {
         FileObject testFO = getTestFile(relFilePath);
         if (testFO == null) {

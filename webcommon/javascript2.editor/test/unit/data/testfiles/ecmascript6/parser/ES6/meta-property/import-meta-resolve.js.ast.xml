@@ -19,42 +19,39 @@
 
 -->
 
-<FunctionNode name=':program' kind='SCRIPT' start='0' end='33'>
-  <hasDeclaredFunctions/>
+<FunctionNode name='import-meta-resolve.js' kind='MODULE' start='0' end='851'>
   <isProgram/>
   <!-- FunctionNode Parameters -->
   <!-- FunctionNode Body -->
-  <Block start='0' end='32'>
+  <Block start='0' end='850'>
     <isFunctionBody/>
     <isSynthetic/>
     <!-- Block Statements -->
-    <VarNode name='f' start='0' end='32'>
-      <hasInit/>
-      <isAssignment/>
-      <isFunctionDeclaration/>
-      <!-- VarNode Assignment Dest -->
-      <IdentNode start='9' end='10'>
-        <name>f</name>
-        <isInitializedHere/>
-      </IdentNode>
-      <!-- VarNode Init -->
-      <FunctionNode name='f' kind='NORMAL' start='0' end='32'>
-        <isDeclared/>
-        <!-- FunctionNode Parameters -->
-        <!-- FunctionNode Body -->
-        <Block start='13' end='30'>
-          <isFunctionBody/>
-          <!-- Block Statements -->
-          <ExpressionStatement start='19' end='30'>
-            <AccessNode property='target' start='19' end='29'>
+    <ExpressionStatement start='809' end='850'>
+      <CallNode start='809' end='849'>
+        <!-- CallNode Arguments -->
+        <CallNode start='821' end='848'>
+          <!-- CallNode Arguments -->
+          <StringLiteralNode value='demo' start='842' end='846'/>
+          <!-- CallNode Function -->
+          <AccessNode property='resolve' start='821' end='840'>
+            <!-- AccessNode Base -->
+            <AccessNode property='meta' start='821' end='832'>
               <!-- AccessNode Base -->
-              <IdentNode start='19' end='22'>
-                <name>new</name>
+              <IdentNode start='821' end='827'>
+                <name>import</name>
               </IdentNode>
             </AccessNode>
-          </ExpressionStatement>
-        </Block>
-      </FunctionNode>
-    </VarNode>
+          </AccessNode>
+        </CallNode>
+        <!-- CallNode Function -->
+        <AccessNode property='log' start='809' end='820'>
+          <!-- AccessNode Base -->
+          <IdentNode start='809' end='816'>
+            <name>console</name>
+          </IdentNode>
+        </AccessNode>
+      </CallNode>
+    </ExpressionStatement>
   </Block>
 </FunctionNode>

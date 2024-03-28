@@ -6,6 +6,8 @@ CONSTRUCTO Address                         [PUBLIC]   typeInferenceNew.js
 CONSTRUCTO Car                             [PUBLIC]   typeInferenceNew.js
 CLASS      Context                         [PUBLIC]   typeInferenceNew.js
 CLASS      formatter                       [PUBLIC]   typeInferenceNew.js
+CLASS      import                          [PUBLIC]   <font color=#999999>metaproperties.js</font>
+CLASS      new                             [PUBLIC]   <font color=#999999>metaproperties.js</font>
 VARIABLE   object: Address|Car             [PUBLIC]   typeInferenceNew.js
 KEYWORD    async                                      ECMAScript 7 - 2016 (Experimental)
 KEYWORD    await                                      ECMAScript 7 - 2016 (Experimental)

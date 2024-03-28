@@ -3,7 +3,9 @@ Code completion result for source line:
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CLASS      formatter                       [PUBLIC]   jQueryFragment01.js
+CLASS      import                          [PUBLIC]   <font color=#999999>metaproperties.js</font>
 CLASS      jQuery                          [PRIVATE]  jQueryFragment01.js
+CLASS      new                             [PUBLIC]   metaproperties.js
 METHOD     $()                             [PUBLIC]   <font color=#999999>jquery-api.xml</font>
 METHOD     jQuery()                        [PUBLIC]   <font color=#999999>jquery-api.xml</font>
 VARIABLE   arguments: Arguments            [PRIVATE]  jQueryFragment01.js

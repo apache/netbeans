@@ -4,6 +4,8 @@ Code completion result for source line:
 ------------------------------------
 CONSTRUCTO Test                            [PUBLIC]   issue232178.js
 CLASS      document                        [PUBLIC]   issue232178.js
+CLASS      import                          [PUBLIC]   <font color=#999999>metaproperties.js</font>
+CLASS      new                             [PUBLIC]   <font color=#999999>metaproperties.js</font>
 CLASS      synergy                         [PUBLIC]   issue232178.js
 CLASS      util                            [PUBLIC]   issue232178.js
 METHOD     Date                            [PUBLIC]   issue232178.js

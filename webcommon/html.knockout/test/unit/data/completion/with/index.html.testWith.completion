@@ -6,7 +6,9 @@ CONSTRUCTO Bulici                          [PUBLIC]   index.html
 CONSTRUCTO Clobrda                         [PUBLIC]   index.html
 CLASS      $context                        [PRIVATE]  <font color=#999999>index.html</font>
 CLASS      $parentContext                  [PRIVATE]  <font color=#999999>index.html</font>
+CLASS      import                          [PUBLIC]   <font color=#999999>metaproperties.js</font>
 CLASS      ko                              [PUBLIC]   <font color=#999999>Knockout</font>
+CLASS      new                             [PUBLIC]   <font color=#999999>metaproperties.js</font>
 METHOD     init(): undefined               [PUBLIC]   index.html
 FIELD      age: Number                     [PUBLIC]   index.html
 FIELD      jmeno                           [PUBLIC]   index.html

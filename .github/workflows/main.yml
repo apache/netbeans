@@ -50,10 +50,24 @@ env:
 
   # what to build and test, see nbbuild/cluster.properties
   CLUSTER_CONFIG: 'full'
+  
+  # default java distribution used by the setup-java action
+  # see https://github.com/actions/setup-java#supported-distributions
+  DEFAULT_JAVA_DISTRIBUTION: 'zulu'
 
-  # flags for conditional, long running steps or jobs configurable with labels. If this is not a PR, everything will run.
+  # labels are mapped to env vars for pipeline customization. If this is not a PR, (almost) everything will run, but with a reduced matrix.
+  # note: env vars don't work in the job's 'if' field but do work within jobs ( https://github.com/actions/runner/issues/1189 ), the whole expression must be duplicated
+
+  # labels for special commands:
+  # 'ci:all-tests' enables everything
+  # 'ci:no-build' disables the build job (and test jobs too)
+  # 'ci:dev-build' produces an artifact containing a runnable NetBeans zip distribution
+
   # 'Java' label
   test_java: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'JavaFX' label
+  test_javafx: ${{ contains(github.event.pull_request.labels.*.name, 'JavaFX') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
   # 'JavaDoc' or 'API Change' labels
   test_javadoc: ${{ contains(github.event.pull_request.labels.*.name, 'JavaDoc') || contains(github.event.pull_request.labels.*.name, 'API Change') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
@@ -73,11 +87,9 @@ env:
   # 'Platform' label
   test_platform: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
-  # 'tests' label for building all tests
-  test_tests: ${{ contains(github.event.pull_request.labels.*.name, 'tests') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
-
   # 'LSP' label for enabling Language Server Protocol tests
-  test_lsp: ${{ contains(github.event.pull_request.labels.*.name, 'LSP') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+  # 'Gradle' or 'Maven' will activate lsp tests too due to test dependencies on project API (ProjectViewTest, LspBrokenReferencesImplTest, ...)
+  test_lsp: ${{ contains(github.event.pull_request.labels.*.name, 'LSP') || contains(github.event.pull_request.labels.*.name, 'Gradle') || contains(github.event.pull_request.labels.*.name, 'Maven') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
   # 'GraalVM' label for tests requirering GraalVM
   test_graalvm: ${{ contains(github.event.pull_request.labels.*.name, 'GraalVM') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
@@ -85,17 +97,20 @@ env:
   # 'VSCode Extension' label for building and testing the VSCode Extension
   test_vscode_extension: ${{ contains(github.event.pull_request.labels.*.name, 'VSCode Extension') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
-  # 'Ant', 'Gradle', 'Maven' and 'MX' labels trigger build-tools job
-  # see job condition (env vars don't work for job conditions https://github.com/actions/runner/issues/1189 )
+  # 'Ant', 'Gradle', 'Maven' and 'MX' labels trigger the build-tools job
+  test_build_tools: ${{ contains(github.event.pull_request.labels.*.name, 'Ant') || contains(github.event.pull_request.labels.*.name, 'Gradle') || contains(github.event.pull_request.labels.*.name, 'Maven') || contains(github.event.pull_request.labels.*.name, 'MX') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
-  # special commands:
-  # 'ci:all-tests' enables everything
-  # 'ci:no-build' disables the build job (and test jobs too)
-  # 'ci:dev-build' produces an artifact containing a runnable NetBeans zip distribution
-  
-  # default java distribution used by the setup-java action
-  # see https://github.com/actions/setup-java#supported-distributions
-  default_java_distribution: 'zulu'
+  # 'git', 'subversion' and 'mercurial' labels trigger the versioning job
+  test_versioning: ${{ contains(github.event.pull_request.labels.*.name, 'git') || contains(github.event.pull_request.labels.*.name, 'subversion') || contains(github.event.pull_request.labels.*.name, 'mercurial') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'Java EE/Jakarta EE', 'Micronaut' and 'enterprise' labels trigger the enterprise job
+  test_enterprise: ${{ contains(github.event.pull_request.labels.*.name, 'Java EE/Jakarta EE') || contains(github.event.pull_request.labels.*.name, 'Micronaut') || contains(github.event.pull_request.labels.*.name, 'enterprise') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'JavaScript', 'TypeScript', 'HTML', 'CSS', 'CSL' and 'web' labels the trigger web job
+  test_web: ${{ contains(github.event.pull_request.labels.*.name, 'JavaScript') || contains(github.event.pull_request.labels.*.name, 'TypeScript') || contains(github.event.pull_request.labels.*.name, 'HTML') || contains(github.event.pull_request.labels.*.name, 'CSS') || contains(github.event.pull_request.labels.*.name, 'CSL') || contains(github.event.pull_request.labels.*.name, 'web') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'tests' label activates an extra step which builds all tests
+  test_tests: ${{ contains(github.event.pull_request.labels.*.name, 'tests') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
 
 jobs:
@@ -106,18 +121,20 @@ jobs:
     name: Build Clusters on JDK ${{ matrix.java }}
     if: contains(github.event.pull_request.labels.*.name, 'ci:no-build') == false
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 40
     strategy:
       matrix:
         java: [ '17', '21', '22' ]
+        exclude:
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
     steps:
-        
+
       - name: Set up JDK ${{ matrix.java }} 
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
           
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
         uses: actions/checkout@v4
@@ -181,7 +198,7 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-            distribution: ${{ env.default_java_distribution }}
+            distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
             java-version: 17
       - name: Caching dependencies
         uses: actions/cache/restore@v4
@@ -205,14 +222,14 @@ jobs:
     name: CV on ${{ matrix.os }}/JDK ${{ matrix.java }}
     needs: base-build
     runs-on: ${{ matrix.os }} 
-    timeout-minutes: 60
+    timeout-minutes: 40
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
         java: [ 17 ]
         include:
           - os: ubuntu-latest
-            java: 21
+            java: 22
       fail-fast: false
     steps:
 
@@ -220,7 +237,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         if: contains(matrix.os, 'ubuntu') && success()
@@ -264,7 +281,7 @@ jobs:
   paperwork:
     name: Check Paperwork on Linux/JDK ${{ matrix.java }}
     needs: base-build
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -274,11 +291,18 @@ jobs:
         java: [ '17' ]
     steps:
 
+      - name: Check PR labels
+        if: ${{ github.event_name == 'pull_request' && join(github.event.pull_request.labels.*.name) == '' }}
+        run: |
+          echo "::error::PRs must be labeled, see: https://cwiki.apache.org/confluence/display/NETBEANS/PRs+and+You+-+A+reviewer+Guide"
+          exit 1
+
       - name: Set up JDK ${{ matrix.java }} 
+        if: ${{ !cancelled() }}
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
         if: ${{ !cancelled() }}
@@ -330,10 +354,10 @@ jobs:
 
 
   build-system-test:
-    name: Build-System Test on Linux/JDK ${{ matrix.java }}
+    name: Build-System / Misc Tests on Linux/JDK ${{ matrix.java }}
     needs: base-build
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 100
     strategy:
       matrix:
         java: [ '17' ]
@@ -344,7 +368,12 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
         uses: actions/download-artifact@v4
@@ -356,44 +385,53 @@ jobs:
 
       - name: Test Netbeans Build System
         run: ant $OPTS -Dcluster.config=$CLUSTER_CONFIG localtest
+        
+      - name: harness/o.n.insane
+        run: ant $OPTS -f harness/o.n.insane test
 
-      - name: Build all Tests
-        # runs only in PRs if requested, nowhere else (~18 min)
-        if: env.test_tests == 'true' && github.event_name == 'pull_request' && success()
-        run: ant -quiet -Dcluster.config=$CLUSTER_CONFIG test -Dtest.includes=NoTestsJustBuild
+      - name: harness/apisupport.harness
+        run: ant $OPTS -f harness/apisupport.harness test
 
+      - name: harness/harness/nbjunit
+        run: ant $OPTS -f harness/nbjunit test
 
-  build-nbms:
-    name: Build NBMs and Javadoc on JDK ${{ matrix.java }}
-    needs: base-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    strategy:
-      matrix:
-        java: [ '17' ]
-      fail-fast: false
-    steps:
+      - name: harness/jellytools.platform
+        run: ant $OPTS -f harness/jellytools.platform test -Dtest.config=stable
 
-      - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+      - name: ergonomics/ide.ergonomics
+        run: ant $OPTS -f ergonomics/ide.ergonomics test -Dtest.config=commit
 
-      - name: Download Build
-        uses: actions/download-artifact@v4
-        with:
-          name: build
+      - name: nb/deadlock.detector
+        run: ant $OPTS -f nb/deadlock.detector test
 
-      - name: Extract
-        run: tar --zstd -xf build.tar.zst
+      - name: nb/ide.branding
+        run: ant $OPTS -f nb/ide.branding test
 
+      - name: nb/o.n.upgrader
+        run: ant $OPTS -f nb/o.n.upgrader test
+
+#      - name: nb/updatecenters
+#        run: ant $OPTS -f nb/updatecenters test
+
+      # 5-6 min
       - name: Build nbms
         run: ant $OPTS build-nbms
 
+      # 13-14 min
       - name: Build javadoc
         if: env.test_javadoc == 'true' && success()
         run: ant $OPTS build-javadoc
+
+      # runs only in PRs if requested; ~18 min
+      - name: Build all Tests
+        if: env.test_tests == 'true' && github.event_name == 'pull_request' && success()
+        run: ant -quiet -Dcluster.config=$CLUSTER_CONFIG test -Dtest.includes=NoTestsJustBuild
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   build-from-src-zip:
@@ -414,7 +452,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Download Build
         uses: actions/download-artifact@v4
@@ -473,7 +511,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -511,21 +549,6 @@ jobs:
 
       - name: ide/core.ide
         run: ant $OPTS -f ide/core.ide test
-
-      - name: ide/csl.api
-        run: ant $OPTS -f ide/csl.api test
-
-      - name: ide/csl.types
-        run: ant $OPTS -f ide/csl.types test
-
-      - name: ide/css.editor
-        run: ant $OPTS -f ide/css.editor test
-
-      - name: ide/css.lib
-        run: ant $OPTS -f ide/css.lib test
-
-      - name: ide/css.model
-        run: ant $OPTS -f ide/css.model test
 
       - name: ide/db
         run: .github/retry.sh ant $OPTS -f ide/db test
@@ -596,27 +619,6 @@ jobs:
       - name: ide/gsf.testrunner.ui
         run: ant $OPTS -f ide/gsf.testrunner.ui test
 
-      - name: ide/html
-        run: .github/retry.sh ant $OPTS -f ide/html test
-
-      - name: ide/html.custom
-        run: ant $OPTS -f ide/html.custom test
-
-      - name: ide/html.editor
-        run: ant $OPTS -f ide/html.editor test
-
-      - name: ide/html.editor
-        run: ant $OPTS -f ide/html.editor.lib test
-
-      - name: ide/html.lexer
-        run: ant $OPTS -f ide/html.lexer test
-
-      - name: ide/html.parser
-        run: ant $OPTS -f ide/html.parser test
-
-      - name: ide/html.validation
-        run: ant $OPTS -f ide/html.validation test
-
       - name: ide/httpserver
         run: ant $OPTS -f ide/httpserver test
 
@@ -670,9 +672,6 @@ jobs:
 
       - name: ide/libs.truffleapi
         run: ant $OPTS -f ide/libs.truffleapi test
-
-      - name: ide/lsp.client
-        run: ant $OPTS -f ide/lsp.client test
 
       - name: ide/notifications
         run: .github/retry.sh ant $OPTS -f ide/notifications test
@@ -807,7 +806,7 @@ jobs:
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Ant') || contains(github.event.pull_request.labels.*.name, 'Gradle') || contains(github.event.pull_request.labels.*.name, 'Maven') || contains(github.event.pull_request.labels.*.name, 'MX') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 50
     strategy:
       matrix:
         java: [ '17', '21', '22' ]
@@ -820,7 +819,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -937,7 +936,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -1042,9 +1041,6 @@ jobs:
       - name: platform/keyring.impl
         run: ant $OPTS -f platform/keyring.impl test
 
-      - name: platform/libs.javafx
-        run: ant $OPTS -f platform/libs.javafx test
-
       - name: platform/libs.junit4
         run: ant $OPTS -f platform/libs.junit4 test
 
@@ -1067,7 +1063,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 8
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       # TODO fix JDK 11 incompatibilities
       - name: platform/lib.uihandler
@@ -1116,7 +1112,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -1228,7 +1224,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 11
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       # TODO tests rely on javax.script.ScriptEngine / js which locks this to JDK 11
       - name: platform/templates
@@ -1247,77 +1243,10 @@ jobs:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
-  harness-modules-test:
-    name: Harness, NB and Ergonomics on Linux/JDK ${{ matrix.java }}
-    # equals env.test_platform == 'true'
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
-    needs: base-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    strategy:
-      matrix:
-        java: [ '17' ]
-      fail-fast: false
-    steps:
-
-      - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{ matrix.java }}
-          distribution: ${{ env.default_java_distribution }}
-
-      - name: Setup Xvfb
-        run: |
-          echo "DISPLAY=:99.0" >> $GITHUB_ENV
-          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-
-      - name: Download Build
-        uses: actions/download-artifact@v4
-        with:
-          name: build
-
-      - name: Extract
-        run: tar --zstd -xf build.tar.zst
-
-      - name: harness/o.n.insane
-        run: ant $OPTS -f harness/o.n.insane test
-
-      - name: harness/apisupport.harness
-        run: ant $OPTS -f harness/apisupport.harness test
-
-      - name: harness/harness/nbjunit
-        run: ant $OPTS -f harness/nbjunit test
-
-      - name: harness/jellytools.platform
-        run: ant $OPTS -f harness/jellytools.platform test -Dtest.config=stable
-
-      - name: ergonomics/ide.ergonomics
-        run: ant $OPTS -f ergonomics/ide.ergonomics test -Dtest.config=commit
-
-      - name: nb/deadlock.detector
-        run: ant $OPTS -f nb/deadlock.detector test
-
-      - name: nb/ide.branding
-        run: ant $OPTS -f nb/ide.branding test
-
-      - name: nb/o.n.upgrader
-        run: ant $OPTS -f nb/o.n.upgrader test
-
-#      - name: nb/updatecenters
-#        run: ant $OPTS -f nb/updatecenters test
-
-      - name: nb/welcome
-        run: ant $OPTS -f nb/welcome test
-        
-      - name: Create Test Summary
-        uses: test-summary/action@v2
-        if: failure()
-        with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
-
-
   java-modules-test:
     name: Java Modules on Linux/JDK ${{ matrix.java }}
+    # equals env.test_java == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 100
@@ -1331,7 +1260,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -1362,15 +1291,12 @@ jobs:
         run: ant $OPTS -f java/editor.htmlui test
 
       - name: java.completion
-        if: env.test_java == 'true' && success()
         run: ant $OPTS -f java/java.completion test
 
       - name: java.editor.base
-        if: env.test_java == 'true' && success()
         run: ant $OPTS -f java/java.editor.base test
 
       - name: java.editor
-        if: env.test_java == 'true' && success()
         run: .github/retry.sh ant $OPTS -f java/java.editor test-unit
 
       - name: java.freeform
@@ -1413,7 +1339,6 @@ jobs:
 #        run: ant $OPTS -f java/java.source.ant test
 
       - name: java.source.base
-        if: env.test_java == 'true' && success()
         run: ant $OPTS -f java/java.source.base test
 
       - name: java.source.compat8
@@ -1423,7 +1348,6 @@ jobs:
         run: ant $OPTS -f java/java.source.queriesimpl test
 
       - name: java.sourceui
-        if: env.test_java == 'true' && success()
         run: ant $OPTS -f java/java.sourceui test
 
       - name: java.testrunner
@@ -1465,9 +1389,6 @@ jobs:
       - name: spellchecker.bindings.java
         run: ant $OPTS -f java/spellchecker.bindings.java test
 
-      - name: spring.beans
-        run: ant $OPTS -f java/spring.beans test
-
       - name: testng
         run: ant $OPTS -f java/testng test
 
@@ -1487,15 +1408,12 @@ jobs:
         run: ant $OPTS -f java/java.lexer test
 
       - name: refactoring.java
-        if: env.test_java == 'true' && success()
         run: ant $OPTS -f java/refactoring.java test-unit
 
       - name: form
-        if: env.test_java == 'true' && success()
         run: ant $OPTS -f java/form test-unit
         
       - name: javadoc
-        if: env.test_javadoc == 'true' && success()
         run: ant $OPTS -f java/javadoc test
 
       - name: Create Test Summary
@@ -1505,6 +1423,7 @@ jobs:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
+  # TODO merge this job into other jobs once tests are fixed
   apisupport-modules-test:
     name: APISupport Modules on Linux/JDK ${{ matrix.java }}
     needs: base-build
@@ -1520,7 +1439,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -1577,7 +1496,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -1629,7 +1548,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -1674,6 +1593,8 @@ jobs:
 
   profiler-test:
     name: Profiler on Linux/JDK ${{ matrix.java }}
+    # equals env.test_java == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -1687,7 +1608,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -1717,7 +1638,9 @@ jobs:
 
 
   webcommon-test:
-    name: Webcommon Modules on Linux/JDK ${{ matrix.java }}
+    name: Web Modules on Linux/JDK ${{ matrix.java }}
+    # equals env.test_web == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'JavaScript') || contains(github.event.pull_request.labels.*.name, 'TypeScript') || contains(github.event.pull_request.labels.*.name, 'HTML') || contains(github.event.pull_request.labels.*.name, 'CSS') || contains(github.event.pull_request.labels.*.name, 'CSL') || contains(github.event.pull_request.labels.*.name, 'web') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -1731,7 +1654,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -1745,6 +1668,42 @@ jobs:
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
+
+      - name: ide/csl.api
+        run: ant $OPTS -f ide/csl.api test
+
+      - name: ide/csl.types
+        run: ant $OPTS -f ide/csl.types test
+
+      - name: ide/css.editor
+        run: ant $OPTS -f ide/css.editor test
+
+      - name: ide/css.lib
+        run: ant $OPTS -f ide/css.lib test
+
+      - name: ide/css.model
+        run: ant $OPTS -f ide/css.model test
+
+      - name: ide/html
+        run: .github/retry.sh ant $OPTS -f ide/html test
+
+      - name: ide/html.custom
+        run: ant $OPTS -f ide/html.custom test
+
+      - name: ide/html.editor
+        run: ant $OPTS -f ide/html.editor test
+
+      - name: ide/html.editor
+        run: ant $OPTS -f ide/html.editor.lib test
+
+      - name: ide/html.lexer
+        run: ant $OPTS -f ide/html.lexer test
+
+      - name: ide/html.parser
+        run: ant $OPTS -f ide/html.parser test
+
+      - name: ide/html.validation
+        run: ant $OPTS -f ide/html.validation test
 
 #      - name: webcommon/cordova
 #        run: ant $OPTS -f webcommon/cordova test
@@ -1847,7 +1806,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 11
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       # TODO: requires js script engine
       - name: webcommon/api.knockout
@@ -1862,6 +1821,8 @@ jobs:
 
   javafx-test:
     name: JavaFX on Linux/JDK ${{ matrix.java }}
+    # equals env.test_javafx == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'JavaFX') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -1875,7 +1836,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -1889,6 +1850,9 @@ jobs:
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
+
+      - name: platform/libs.javafx
+        run: ant $OPTS -f platform/libs.javafx test
 
       - name: javafx2.editor
         run: ant $OPTS -f javafx/javafx2.editor test -Dtest.config=stable
@@ -1920,7 +1884,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -1977,7 +1941,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -2010,6 +1974,8 @@ jobs:
 
   enterprise-test:
     name: Enterprise on Linux/JDK ${{ matrix.java }} (some on 8)
+    # equals env.test_enterprise == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Java EE/Jakarta EE') || contains(github.event.pull_request.labels.*.name, 'Micronaut') || contains(github.event.pull_request.labels.*.name, 'enterprise') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -2023,7 +1989,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -2145,6 +2111,9 @@ jobs:
       - name: spring.webmvc
         run: ant $OPTS -f enterprise/spring.webmvc test
 
+      - name: spring.beans
+        run: ant $OPTS -f java/spring.beans test
+
       - name: tomcat5
         run: ant $OPTS -f enterprise/tomcat5 test
 
@@ -2240,7 +2209,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 8
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: websvc.editor.hints
         run: ant $OPTS -f enterprise/websvc.editor.hints test
@@ -2257,6 +2226,8 @@ jobs:
 
   versioning-test:
     name: Versioning Modules on Linux/JDK ${{ matrix.java }}
+    # equals env.test_versioning == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'git') || contains(github.event.pull_request.labels.*.name, 'subversion') || contains(github.event.pull_request.labels.*.name, 'mercurial') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -2270,7 +2241,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -2338,6 +2309,8 @@ jobs:
 
   mysql-db-test:
     name: DB Tests with MySQL on Linux/JDK ${{ matrix.java }}
+    # equals env.test_enterprise == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Java EE/Jakarta EE') || contains(github.event.pull_request.labels.*.name, 'Micronaut') || contains(github.event.pull_request.labels.*.name, 'enterprise') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -2361,7 +2334,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -2396,6 +2369,8 @@ jobs:
 
   php:
     name: PHP on ${{ matrix.os }}/JDK ${{ matrix.java }}
+    # equals env.test_php == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'PHP') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ${{ matrix.os }}
     timeout-minutes: 120
@@ -2406,7 +2381,7 @@ jobs:
         java: [ '17' ]
         os: [ 'windows-latest', 'ubuntu-latest' ]
         exclude:
-          - os: ${{ (contains(github.event.pull_request.labels.*.name, 'PHP') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request') && 'nothing' || 'windows-latest' }}
+          - os: ${{ github.event_name == 'pull_request' && 'nothing' || 'windows-latest' }}
       fail-fast: false
     defaults:
       run:
@@ -2428,7 +2403,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       # linux specific setup
       - name: Setup PHP
@@ -2502,11 +2477,9 @@ jobs:
 
       # longest step (~40min)
       - name: php.editor
-        if: env.test_php == 'true' && success()
         run: ant $OPTS -Dtest.config=stable -f php/php.editor test
 
       - name: php.editor (unreliable tests)
-        if: env.test_php == 'true' && success()
         run: .github/retry.sh ant $OPTS -Dtest.config=unreliable -f php/php.editor test
 
       - name: php.latte
@@ -2555,7 +2528,7 @@ jobs:
   lsp-test:
     name: LSP tests on Linux/JDK ${{ matrix.java }}
     # equals env.test_lsp == 'true'
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'LSP') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'LSP') || contains(github.event.pull_request.labels.*.name, 'Gradle') || contains(github.event.pull_request.labels.*.name, 'Maven') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -2569,7 +2542,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Setup Xvfb
         run: |
@@ -2583,6 +2556,9 @@ jobs:
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
+
+      - name: ide/lsp.client
+        run: ant $OPTS -f ide/lsp.client test
 
       - name: java/java.lsp.server
         run: .github/retry.sh ant $OPTS -f java/java.lsp.server test
@@ -2603,7 +2579,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        # TODO uses EOL GraalVM, needs JDK 17+ upgrade
+        # TODO uses GraalVM 17 / 22.3.1 which is the last known release which offers all required language extensions
+        # GraalVM based on JDK 21+ doesn't support the 'gu' tool anymore - extensions are now regular application dependencies
         graal: [ '22.3.1' ]
       fail-fast: false
 
@@ -2621,14 +2598,14 @@ jobs:
       - name: Extract
         run: tar --zstd -xf build.tar.zst
 
-      - name: Setup GraalVM {{ matrix.graal }}
+      - name: Setup GraalVM ${{ matrix.graal }}
         run: |
           URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graal }}/graalvm-ce-java17-linux-amd64-${{ matrix.graal }}.tar.gz
           curl -L $URL | tar -xz
           GRAALVM=`pwd`/graalvm-ce-java17-${{ matrix.graal }}
           echo "JAVA_HOME=$GRAALVM" >> $GITHUB_ENV
 
-      - name: Setup GraalVM Languages
+      - name: Setup GraalVM Languages (python, R, ruby and js)
         run: $JAVA_HOME/bin/gu install --no-progress python R ruby js
 
       - name: platform/core.network
@@ -2676,7 +2653,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
-          distribution: ${{ env.default_java_distribution }}
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Set up node
         uses: actions/setup-node@v4
@@ -2715,12 +2692,10 @@ jobs:
       - commit-validation
       - paperwork
       - build-system-test
-      - build-nbms
       - build-from-src-zip
       - ide-modules-test
       - platform-modules-test1
       - platform-modules-test2
-      - harness-modules-test
       - java-modules-test
       - java-hints-test
       - java-debugger-test

@@ -21,7 +21,6 @@ package org.netbeans.modules.javascript.nodejs.exec;
 
 import java.awt.EventQueue;
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -29,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -44,7 +42,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.CheckForNull;
-import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.base.input.InputProcessor;
@@ -52,33 +49,33 @@ import org.netbeans.api.extexecution.base.input.InputProcessors;
 import org.netbeans.api.extexecution.base.input.LineProcessor;
 import org.netbeans.api.extexecution.print.ConvertedLine;
 import org.netbeans.api.extexecution.print.LineConvertor;
-import org.netbeans.api.extexecution.startup.StartupExtender;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.javascript.nodejs.api.DebuggerOptions;
 import org.netbeans.modules.javascript.nodejs.file.PackageJson;
 import org.netbeans.modules.javascript.nodejs.options.NodeJsOptions;
 import org.netbeans.modules.javascript.nodejs.options.NodeJsOptionsValidator;
 import org.netbeans.modules.javascript.nodejs.platform.NodeJsSupport;
 import org.netbeans.modules.javascript.nodejs.preferences.NodeJsPreferences;
 import org.netbeans.modules.javascript.nodejs.preferences.NodeJsPreferencesValidator;
+import org.netbeans.modules.javascript.nodejs.spi.DebuggerStartModifier;
+import org.netbeans.modules.javascript.nodejs.spi.DebuggerStartModifierFactory;
 import org.netbeans.modules.javascript.nodejs.ui.customizer.NodeJsCustomizerProvider;
 import org.netbeans.modules.javascript.nodejs.ui.options.NodeJsOptionsPanelController;
 import org.netbeans.modules.javascript.nodejs.util.FileUtils;
 import org.netbeans.modules.javascript.nodejs.util.NodeJsUtils;
 import org.netbeans.modules.javascript.nodejs.util.StringUtils;
 import org.netbeans.modules.javascript.nodejs.util.ValidationUtils;
-import org.netbeans.modules.javascript.v8debug.api.Connector;
-import org.netbeans.modules.javascript.v8debug.api.DebuggerOptions;
 import org.netbeans.modules.web.common.api.ValidationResult;
 import org.netbeans.modules.web.common.api.Version;
 import org.netbeans.modules.web.common.ui.api.ExternalExecutable;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
+import org.openide.util.lookup.Lookups;
 import org.openide.windows.InputOutput;
 import org.openide.windows.OutputEvent;
 import org.openide.windows.OutputListener;
@@ -93,8 +90,6 @@ public class NodeExecutable {
 
     private static final String IO_NAME;
 
-    private static final String DEBUG_BRK_COMMAND = "--debug-brk=%d"; // NOI18N
-    private static final String DEBUG_COMMAND = "--debug=%d"; // NOI18N
     private static final String VERSION_PARAM = "--version"; // NOI18N
 
     // versions of node executables
@@ -276,17 +271,87 @@ public class NodeExecutable {
         "NodeExecutable.debug=Node.js ({0})",
     })
     @CheckForNull
-    public AtomicReference<Future<Integer>> debug(int port, File script, String args) {
+    public AtomicReference<Future<Integer>> debug(File script, String args) {
         assert project != null;
         String projectName = NodeJsUtils.getProjectDisplayName(project);
+
+        List<File> sourceRoots = NodeJsUtils.getSourceRoots(project);
+        List<File> siteRoots = NodeJsUtils.getSiteRoots(project);
+        List<String> localPaths = new ArrayList<>(sourceRoots.size());
+        List<String> localPathsExclusionFilter = Collections.emptyList();
+        for (File src : sourceRoots) {
+            localPaths.add(src.getAbsolutePath());
+            for (File site : siteRoots) {
+                if (FileUtils.isSubdirectoryOf(src, site) && !src.equals(site)) {
+                    if (localPathsExclusionFilter.isEmpty()) {
+                        localPathsExclusionFilter = new ArrayList<>();
+                    }
+                    localPathsExclusionFilter.add(site.getAbsolutePath());
+                }
+            }
+        }
+
         AtomicReference<Future<Integer>> taskRef = new AtomicReference<>();
-        boolean[] useV8Debug = { false };
+        DebuggerStartModifierFactory dsmf = getDebuggerStartModifierFactory();
+        DebuggerStartModifier dsm;
+        if(dsmf != null) {
+            dsm = dsmf.create(project, localPaths, localPaths, localPathsExclusionFilter, taskRef);
+        } else {
+            dsm = null;
+        }
         final Future<Integer> task = getExecutable(Bundle.NodeExecutable_run(projectName))
-                .additionalParameters(getDebugParams(port, script, args, useV8Debug))
-                .run(getDescriptor(taskRef, useV8Debug[0] ? new DebugInfo(project, taskRef, port) : null));
+                .additionalParameters(getDebugParams(script, args, dsm))
+                .run(getDescriptor(taskRef, dsm));
         assert task != null : nodePath;
         taskRef.set(task);
         return taskRef;
+    }
+
+    private DebuggerStartModifierFactory getDebuggerStartModifierFactory() {
+        NodeJsPreferences prefs = NodeJsSupport.forProject(project).getPreferences();
+
+        if (!prefs.isDefaultNode()) {
+            String debugProtocol = prefs.getDebugProtocol();
+            if (debugProtocol != null
+                    && (!debugProtocol.trim().isEmpty())
+                    && FileUtil.getConfigFile("javascript/nodejs-debugger/" + debugProtocol) != null) {
+                return Lookups
+                        .forPath("javascript/nodejs-debugger/" + debugProtocol)
+                        .lookup(DebuggerStartModifierFactory.class);
+            }
+        }
+
+        {
+            String debugProtocol = DebuggerOptions.getInstance().getDebuggerProtocol();
+            if (debugProtocol != null
+                    && (!debugProtocol.trim().isEmpty())
+                    && FileUtil.getConfigFile("javascript/nodejs-debugger/" + debugProtocol) != null) {
+                return Lookups
+                        .forPath("javascript/nodejs-debugger/" + debugProtocol)
+                        .lookup(DebuggerStartModifierFactory.class);
+            }
+        }
+
+        FileObject[] children = FileUtil.getConfigRoot().getFileObject("javascript/nodejs-debugger").getChildren();
+        Arrays.sort(children, (a, b) -> {
+            Integer valA = (Integer) a.getAttribute("position");
+            Integer valB = (Integer) b.getAttribute("position");
+            if (valA == null) {
+                valA = 0;
+            }
+            if (valB == null) {
+                valB = 0;
+            }
+            return valA - valB;
+        });
+
+        if (children.length > 0) {
+            return Lookups
+                    .forPath(children[0].getPath())
+                    .lookup(DebuggerStartModifierFactory.class);
+        } else {
+            return null;
+        }
     }
 
     private ExternalExecutable getExecutable(String title) {
@@ -302,11 +367,11 @@ public class NodeExecutable {
         return getDescriptor(taskRef, null);
     }
 
-    private ExecutionDescriptor getDescriptor(final AtomicReference<Future<Integer>> taskRef, @NullAllowed final DebugInfo debugInfo) {
+    private ExecutionDescriptor getDescriptor(final AtomicReference<Future<Integer>> taskRef, @NullAllowed final DebuggerStartModifier debugStartModifier) {
         assert project != null;
         assert taskRef != null;
         List<URL> sourceRoots = NodeJsSupport.forProject(project).getSourceRoots();
-        final LineConvertorFactoryImpl lineConvertorFactory = new LineConvertorFactoryImpl(sourceRoots, debugInfo);
+        final LineConvertorFactoryImpl lineConvertorFactory = new LineConvertorFactoryImpl(sourceRoots, debugStartModifier);
         return ExternalExecutable.DEFAULT_EXECUTION_DESCRIPTOR
                 .frontWindowOnError(false)
                 .showSuspended(true)
@@ -355,25 +420,13 @@ public class NodeExecutable {
         return getParams(getScriptArgsParams(script, args));
     }
 
-    private List<String> getDebugParams(int port, File script, String args, boolean[] useV8Debug) {
+    private List<String> getDebugParams(File script, String args, DebuggerStartModifier dsm) {
         List<String> params = new ArrayList<>();
-        List<StartupExtender> extenders = StartupExtender.getExtenders(project.getLookup(), StartupExtender.StartMode.DEBUG);
-        for (StartupExtender e : extenders) {
-            params.addAll(e.getRawArguments());
-        }
-        if (params.isEmpty()) {
-            params.add(String.format(getDebugCommand(), port));
-            useV8Debug[0] = true;
+        if(dsm != null) {
+            params.addAll(dsm.getArguments(project.getLookup()));
         }
         params.addAll(getScriptArgsParams(script, args));
         return getParams(params);
-    }
-
-    private String getDebugCommand() {
-        if (DebuggerOptions.getInstance().isBreakAtFirstLine()) {
-            return DEBUG_BRK_COMMAND;
-        }
-        return DEBUG_COMMAND;
     }
 
     private List<String> getVersionParams() {
@@ -487,11 +540,11 @@ public class NodeExecutable {
         private LineConvertorImpl executionLineConvertor;
 
 
-        public LineConvertorFactoryImpl(List<URL> sourceRoots, @NullAllowed DebugInfo debugInfo) {
+        public LineConvertorFactoryImpl(List<URL> sourceRoots, @NullAllowed DebuggerStartModifier debugStartModifier) {
             assert sourceRoots != null;
             files = new CopyOnWriteArrayList<>(toFiles(sourceRoots));
             this.preExecution = () -> {
-                executionLineConvertor = new LineConvertorImpl(new FileLineParser(files), debugInfo);
+                executionLineConvertor = new LineConvertorImpl(new FileLineParser(files), debugStartModifier);
             };
             this.postExecution = () -> {
                 executionLineConvertor = null;
@@ -531,7 +584,7 @@ public class NodeExecutable {
 
         private final FileLineParser fileLineParser;
         @NullAllowed
-        private final DebugInfo debugInfo;
+        private final DebuggerStartModifier debugStartModifier;
         @NullAllowed
         final CountDownLatch debuggerCountDownLatch;
 
@@ -539,11 +592,11 @@ public class NodeExecutable {
         volatile boolean debugging = false;
 
 
-        public LineConvertorImpl(FileLineParser fileLineParser, @NullAllowed DebugInfo debugInfo) {
+        public LineConvertorImpl(FileLineParser fileLineParser, @NullAllowed DebuggerStartModifier debugStartModifier) {
             assert fileLineParser != null;
             this.fileLineParser = fileLineParser;
-            this.debugInfo = debugInfo;
-            if (debugInfo == null) {
+            this.debugStartModifier = debugStartModifier;
+            if (debugStartModifier == null) {
                 debuggerCountDownLatch = null;
             } else {
                 debuggerCountDownLatch = new CountDownLatch(1);
@@ -557,7 +610,6 @@ public class NodeExecutable {
                             if (!expected) {
                                 LOGGER.log(Level.INFO, "Connect node.js debugger timeout elapsed");
                             }
-                            connectDebugger();
                         } catch (InterruptedException ex) {
                             Thread.currentThread().interrupt();
                         }
@@ -569,9 +621,10 @@ public class NodeExecutable {
         @Override
         public List<ConvertedLine> convert(String line) {
             // debugger?
-            if (debugInfo != null
+            if (debugStartModifier != null
                     && !debugging) {
-                if (line.toLowerCase(Locale.US).startsWith("debugger listening on ")) { // NOI18N
+                debugStartModifier.processOutputLine(line);
+                if (debugStartModifier.startProcessingDone()) { // NOI18N
                     assert debuggerCountDownLatch != null;
                     debuggerCountDownLatch.countDown();
                 }
@@ -583,57 +636,6 @@ public class NodeExecutable {
                 outputListener = new FileOutputListener(fileLine.first(), fileLine.second());
             }
             return Collections.singletonList(ConvertedLine.forText(line, outputListener));
-        }
-
-        void connectDebugger() {
-            assert debugInfo != null;
-            Connector.Properties props = createConnectorProperties("localhost", debugInfo.port, debugInfo.project); // NOI18N
-            try {
-                Connector.connect(props, new Runnable() {
-                    @Override
-                    public void run() {
-                        debugging = false;
-                        assert debugInfo != null;
-                        assert debugInfo.project != null;
-                        assert debugInfo.taskRef != null;
-                        Future<Integer> task = debugInfo.taskRef.get();
-                        assert task != null : debugInfo.project.getProjectDirectory();
-                        task.cancel(true);
-                    }
-                });
-                debugging = true;
-            } catch (IOException ex) {
-                LOGGER.log(Level.INFO, "cannot run node.js debugger", ex);
-                warnCannotDebug(ex);
-            }
-        }
-
-        private static Connector.Properties createConnectorProperties(String host, int port, Project project) {
-            List<File> sourceRoots = NodeJsUtils.getSourceRoots(project);
-            List<File> siteRoots = NodeJsUtils.getSiteRoots(project);
-            List<String> localPaths = new ArrayList<>(sourceRoots.size());
-            List<String> localPathsExclusionFilter = Collections.emptyList();
-            for (File src : sourceRoots) {
-                localPaths.add(src.getAbsolutePath());
-                for (File site : siteRoots) {
-                    if (FileUtils.isSubdirectoryOf(src, site) && !src.equals(site)) {
-                        if (localPathsExclusionFilter.isEmpty()) {
-                            localPathsExclusionFilter = new ArrayList<>();
-                        }
-                        localPathsExclusionFilter.add(site.getAbsolutePath());
-                    }
-                }
-            }
-            return new Connector.Properties(host, port, localPaths, Collections.<String>emptyList(), localPathsExclusionFilter);
-        }
-
-        @NbBundle.Messages({
-            "# {0} - reason",
-            "LineConvertorImpl.warn.debug=Cannot run debugger. Reason:\n\n{0}",
-        })
-        protected void warnCannotDebug(IOException ex) {
-            NotifyDescriptor.Message descriptor = new NotifyDescriptor.Message(Bundle.LineConvertorImpl_warn_debug(ex), NotifyDescriptor.ERROR_MESSAGE);
-            DialogDisplayer.getDefault().notifyLater(descriptor);
         }
 
     }
@@ -717,25 +719,6 @@ public class NodeExecutable {
                 return null;
             }
             return Pair.of(matcher.group("FILE"), Integer.valueOf(matcher.group("LINE"))); // NOI18N
-        }
-
-    }
-
-    private static final class DebugInfo {
-
-        @NonNull
-        public final Project project;
-        @NonNull
-        public final AtomicReference<Future<Integer>> taskRef;
-        public final int port;
-
-
-        public DebugInfo(Project project, AtomicReference<Future<Integer>> taskRef, int port) {
-            assert project != null;
-            assert taskRef != null;
-            this.project = project;
-            this.taskRef = taskRef;
-            this.port = port;
         }
 
     }

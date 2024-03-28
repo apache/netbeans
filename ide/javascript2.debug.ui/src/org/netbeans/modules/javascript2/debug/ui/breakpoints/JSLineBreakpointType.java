@@ -20,7 +20,6 @@ package org.netbeans.modules.javascript2.debug.ui.breakpoints;
 
 import javax.swing.JComponent;
 import org.netbeans.modules.javascript2.debug.ui.JSUtils;
-import org.netbeans.modules.javascript2.debug.ui.breakpoints.JSLineBreakpointCustomizerPanel;
 import org.netbeans.spi.debugger.ui.BreakpointType;
 import org.netbeans.spi.debugger.ui.Controller;
 import org.netbeans.spi.debugger.ui.EditorContextDispatcher;
@@ -28,13 +27,15 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
 
-@NbBundle.Messages({"JavaScriptBreakpointTypeCategory=JavaScript",
-    "LineBreakpointTypeName=Line"})
+@NbBundle.Messages({
+    "JavaScriptBreakpointTypeCategory=JavaScript",
+    "LineBreakpointTypeName=Line"
+})
 @BreakpointType.Registration(displayName="#LineBreakpointTypeName")
 public class JSLineBreakpointType extends BreakpointType {
-    
+
     private JSLineBreakpointCustomizerPanel cust;
-    
+
     /* (non-Javadoc)
      * @see org.netbeans.spi.debugger.ui.BreakpointType#getCategoryDisplayName()
      */
@@ -59,7 +60,7 @@ public class JSLineBreakpointType extends BreakpointType {
         getCustomizer();
         return cust.getController();
     }
-    
+
     /* (non-Javadoc)
      * @see org.netbeans.spi.debugger.ui.BreakpointType#getTypeDisplayName()
      */
@@ -78,7 +79,7 @@ public class JSLineBreakpointType extends BreakpointType {
             return false;
         }
         String mimeType = mostRecentFile.getMIMEType();
-        return JSUtils.JS_MIME_TYPE.equals(mimeType);
+        return JSUtils.JS_MIME_TYPE.equals(mimeType) || JSUtils.TS_MIME_TYPE.equals(mimeType);
     }
 
 }

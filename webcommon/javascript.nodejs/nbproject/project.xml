@@ -122,15 +122,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.javascript.v8debug</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.7</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.modules.javascript2.nodejs</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -348,12 +339,15 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
+                <friend>org.netbeans.modules.debugger.jpda.trufflenode</friend>
+                <friend>org.netbeans.modules.javascript.cdtdebug</friend>
+                <friend>org.netbeans.modules.javascript.v8debug</friend>
                 <friend>org.netbeans.modules.selenium2.webclient.mocha</friend>
                 <friend>org.netbeans.modules.selenium2.webclient.protractor</friend>
-                <friend>org.netbeans.modules.web.client.kit</friend>
-                <friend>org.netbeans.modules.debugger.jpda.trufflenode</friend>
                 <friend>org.netbeans.modules.typescript.editor</friend>
+                <friend>org.netbeans.modules.web.client.kit</friend>
                 <package>org.netbeans.modules.javascript.nodejs.api</package>
+                <package>org.netbeans.modules.javascript.nodejs.spi</package>
             </friend-packages>
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">

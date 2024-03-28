@@ -22,6 +22,7 @@ package org.netbeans.modules.web.common.sourcemap;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +101,7 @@ final class SourceMapsTranslatorImpl implements SourceMapsTranslator {
             if (sourceMapFileName == null && sm == null) {
                 String lastLine = null;
                 try {
-                    List<String> lines = source.asLines();
+                    List<String> lines = source == null ? Collections.emptyList() : source.asLines();
                     if (!lines.isEmpty()) {
                         lastLine = lines.get(lines.size() - 1);
                     }

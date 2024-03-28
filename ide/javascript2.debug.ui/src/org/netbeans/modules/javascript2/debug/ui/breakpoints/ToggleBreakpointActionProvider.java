@@ -38,18 +38,23 @@ import org.openide.util.WeakListeners;
  *
  * @author Martin
  */
-@ActionsProvider.Registration(actions={"toggleBreakpoint"}, 
-        activateForMIMETypes={JSUtils.JS_MIME_TYPE})
+@ActionsProvider.Registration(
+        actions = {"toggleBreakpoint"},
+        activateForMIMETypes = {JSUtils.JS_MIME_TYPE, JSUtils.TS_MIME_TYPE}
+)
 public class ToggleBreakpointActionProvider extends ActionsProviderSupport
                                             implements PropertyChangeListener {
-    
+
     public ToggleBreakpointActionProvider() {
         setEnabled(ActionsManager.ACTION_TOGGLE_BREAKPOINT, false);
         EditorContextDispatcher.getDefault().addPropertyChangeListener(
                 JSUtils.JS_MIME_TYPE,
                 WeakListeners.propertyChange(this, EditorContextDispatcher.getDefault()));
+        EditorContextDispatcher.getDefault().addPropertyChangeListener(
+                JSUtils.TS_MIME_TYPE,
+                WeakListeners.propertyChange(this, EditorContextDispatcher.getDefault()));
     }
-    
+
     @Override
     public void doAction(Object action) {
         Line line = JSUtils.getCurrentLine();
@@ -61,7 +66,7 @@ public class ToggleBreakpointActionProvider extends ActionsProviderSupport
         for (Breakpoint breakpoint : d.getBreakpoints()) {
             if (breakpoint instanceof JSLineBreakpoint &&
                 JSUtils.getLine((JSLineBreakpoint) breakpoint).equals(line)) {
-                
+
                 d.removeBreakpoint(breakpoint);
                 add = false;
                 break;

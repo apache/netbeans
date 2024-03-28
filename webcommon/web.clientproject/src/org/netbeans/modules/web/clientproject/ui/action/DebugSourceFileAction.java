@@ -42,7 +42,7 @@ import org.openide.util.NbBundle;
         popupText = "#DebugSourceFileAction.name.short")
 @ActionReferences({
         @ActionReference(path = "Loaders/text/javascript/Actions", position = 255, separatorAfter = 260),
-        @ActionReference(path = "Editors/text/javascript/Popup", position = 810),
+        @ActionReference(path = "Loaders/application/x-typescript/Actions", position = 255, separatorAfter = 260),
 })
 public class DebugSourceFileAction extends AbstractAction implements ContextAwareAction {
 

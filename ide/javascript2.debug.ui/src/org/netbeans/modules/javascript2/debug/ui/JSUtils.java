@@ -49,13 +49,14 @@ public class JSUtils {
     private static final Logger LOG = Logger.getLogger(JSUtils.class.getName());
     
     public static final String JS_MIME_TYPE = "text/javascript";    // NOI18N
+    public static final String TS_MIME_TYPE = "application/x-typescript";    // NOI18N
     
     public static Line getCurrentLine() {
         FileObject fo = EditorContextDispatcher.getDefault().getCurrentFile();
         if (fo == null) {
             return null;
         }
-        if (!JS_MIME_TYPE.equalsIgnoreCase(fo.getMIMEType())) {
+        if (!JS_MIME_TYPE.equalsIgnoreCase(fo.getMIMEType()) && !TS_MIME_TYPE.equalsIgnoreCase(fo.getMIMEType())) {
             return null;
         }
         return EditorContextDispatcher.getDefault().getCurrentLine();

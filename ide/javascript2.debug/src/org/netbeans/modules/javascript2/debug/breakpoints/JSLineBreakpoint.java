@@ -22,6 +22,7 @@ package org.netbeans.modules.javascript2.debug.breakpoints;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
+import java.util.Objects;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.modules.javascript2.debug.EditorLineHandler;
@@ -56,9 +57,11 @@ public class JSLineBreakpoint extends Breakpoint {
      */
     public static final String PROP_FILE = "fileChanged";           // NOI18N
     public static final String PROP_CONDITION = "condition";
-    
+    public static final String PROP_ACTIVE = "active";
+
     private EditorLineHandler line;
     private boolean isEnabled = true;
+    private boolean active = false;
     private volatile String condition;
     private final FileRemoveListener myListener = new FileRemoveListener();
     private FileChangeListener myWeakListener;
@@ -166,7 +169,20 @@ public class JSLineBreakpoint extends Breakpoint {
     public boolean isEnabled() {
         return isEnabled;
     }
-    
+
+    final void setActive(boolean active) {
+        boolean oldActive = this.active;
+        if(Objects.equals(oldActive, active)) {
+            return;
+        }
+        this.active = active;
+        firePropertyChange(PROP_ACTIVE, oldActive, this.active);
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
     @Override
     protected void dispose() {
         super.dispose();

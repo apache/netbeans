@@ -190,6 +190,7 @@
             <friend-packages>
                 <friend>org.netbeans.modules.debugger.jpda.jsui</friend>
                 <friend>org.netbeans.modules.debugger.jpda.truffle</friend>
+                <friend>org.netbeans.modules.javascript.cdtdebug.ui</friend>
                 <friend>org.netbeans.modules.javascript.v8debug</friend>
                 <friend>org.netbeans.modules.javascript.v8debug.ui</friend>
                 <friend>org.netbeans.modules.web.javascript.debugger</friend>

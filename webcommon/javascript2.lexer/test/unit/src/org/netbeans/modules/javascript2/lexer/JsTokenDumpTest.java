@@ -107,4 +107,10 @@ public class JsTokenDumpTest extends NbTestCase {
         LexerTestUtilities.checkTokenDump(this, "testfiles/numbers.js",
                 JsTokenId.javascriptLanguage());
     }
+
+    @SuppressWarnings("unchecked")
+    public void testMetaProperties() throws Exception {
+        LexerTestUtilities.checkTokenDump(this, "testfiles/metaproperties.js",
+                JsTokenId.javascriptLanguage());
+    }
 }

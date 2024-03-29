@@ -1,0 +1,6 @@
+Code completion result for source line:
+impo|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      import                          [PUBLIC]   metaproperties.js
+KEYWORD    import                                     ECMAScript 6 - 2015

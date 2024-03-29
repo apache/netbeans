@@ -3807,6 +3807,7 @@ loop:
             TokenType t = T(k + lookAheadPos);
             switch (t) {
             case COMMENT:
+            case EOL:
                 continue;
             default:
                 if(t != PERIOD) {
@@ -3821,6 +3822,7 @@ loop:
             TokenType t = T(k + lookAheadPos);
             switch (t) {
             case COMMENT:
+            case EOL:
                 continue;
             default:
                 return t == IDENT && "meta".equals(getValue(getToken(k + lookAheadPos)));

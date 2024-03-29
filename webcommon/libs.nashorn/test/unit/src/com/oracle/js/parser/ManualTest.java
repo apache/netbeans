@@ -41,7 +41,7 @@ public class ManualTest {
 //        Source source = Source.sourceFor("dummy.js", "function a() {}; async function b() {}; class x { y(){} async z(){} }");
 //        Source source = Source.sourceFor("dummy.js", "const a = <table>{/* Test */ /* Test */ /* Test */}{ a = 3 }</table>");
 //        Source source = Source.sourceFor("dummy.js", "function dummy() {console.log(new.target);}");
-        Source source = Source.sourceFor("dummy.js", "console.log(import.meta.url);");
+        Source source = Source.sourceFor("dummy.js", "function demo() {console.log(import\n\n.meta.url)}");
         ScriptEnvironment.Builder builder = ScriptEnvironment.builder();
         Parser parser = new Parser(
                 builder.emptyStatements(true).ecmacriptEdition(13).jsx(true).dumpOnError(new PrintWriter(System.err)).build(),

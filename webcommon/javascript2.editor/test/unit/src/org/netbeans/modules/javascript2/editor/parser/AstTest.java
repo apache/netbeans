@@ -3115,6 +3115,10 @@ public class AstTest extends CslTestBase {
         checkAstResult("testfiles/ecmascript6/parser/ES6/meta-property/import-meta-resolve-comment.js");
     }
 
+    public void testImportMetaResolveMultiline() throws Exception {
+        checkAstResult("testfiles/ecmascript6/parser/ES6/meta-property/import-meta-resolve-multiline.js");
+    }
+
     private void checkAstResult(String relFilePath) throws Exception {
         FileObject testFO = getTestFile(relFilePath);
         if (testFO == null) {

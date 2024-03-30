@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.26
+#Version 1.28
 
 CLSS public java.lang.Object
 cons public init()
@@ -333,14 +333,6 @@ meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 supr java.lang.Object
 hfds delegates,listeners,listens,pcl
 
-CLSS public org.netbeans.modules.javascript2.json.parser.JsonBaseListener
-cons public init()
-supr org.netbeans.modules.javascript2.json.parser.JsonParserBaseListener
-
-CLSS public org.netbeans.modules.javascript2.json.parser.JsonBaseVisitor<%0 extends java.lang.Object>
-cons public init()
-supr org.netbeans.modules.javascript2.json.parser.JsonParserBaseVisitor<{org.netbeans.modules.javascript2.json.parser.JsonBaseVisitor%0}>
-
 CLSS public org.netbeans.modules.javascript2.json.parser.JsonLexer
 cons public init(org.antlr.v4.runtime.CharStream)
 cons public init(org.antlr.v4.runtime.CharStream,boolean)
@@ -401,9 +393,6 @@ meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 supr java.lang.Object
 hfds atnState
-
-CLSS public abstract interface org.netbeans.modules.javascript2.json.parser.JsonListener
-intf org.netbeans.modules.javascript2.json.parser.JsonParserListener
 
 CLSS public org.netbeans.modules.javascript2.json.parser.JsonParser
 cons public init(org.antlr.v4.runtime.TokenStream)
@@ -597,9 +586,6 @@ meth public abstract {org.netbeans.modules.javascript2.json.parser.JsonParserVis
 meth public abstract {org.netbeans.modules.javascript2.json.parser.JsonParserVisitor%0} visitPair(org.netbeans.modules.javascript2.json.parser.JsonParser$PairContext)
 meth public abstract {org.netbeans.modules.javascript2.json.parser.JsonParserVisitor%0} visitValue(org.netbeans.modules.javascript2.json.parser.JsonParser$ValueContext)
 
-CLSS public abstract interface org.netbeans.modules.javascript2.json.parser.JsonVisitor<%0 extends java.lang.Object>
-intf org.netbeans.modules.javascript2.json.parser.JsonParserVisitor<{org.netbeans.modules.javascript2.json.parser.JsonVisitor%0}>
-
 CLSS public org.netbeans.modules.javascript2.json.parser.ParseTreeToXml
 cons public init(org.netbeans.modules.javascript2.json.parser.JsonLexer,org.netbeans.modules.javascript2.json.parser.JsonParser)
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -614,7 +600,7 @@ meth public org.w3c.dom.Document visitValue(org.netbeans.modules.javascript2.jso
 meth public static java.lang.String stringify(org.w3c.dom.Document) throws java.io.IOException
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
-supr org.netbeans.modules.javascript2.json.parser.JsonBaseVisitor<org.w3c.dom.Document>
+supr org.netbeans.modules.javascript2.json.parser.JsonParserBaseVisitor<org.w3c.dom.Document>
 hfds currentNode,doc,lexer,parser
 
 CLSS public abstract interface org.netbeans.modules.javascript2.json.spi.JsonOptionsQueryImplementation

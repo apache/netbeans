@@ -113,5 +113,8 @@ derby.log
 /ide/go.lang/src/org/antlr/parser/golang/Go*.java
 /ide/languages.hcl/src/org/netbeans/modules/languages/hcl/grammar/*.java
 /java/languages.antlr/src/org/antlr/parser/*/ANTLR*.java
+
+/webcommon/javascript2.json/src/org/netbeans/modules/javascript2/json/parser/Json*.java
+
 # idea
 .idea

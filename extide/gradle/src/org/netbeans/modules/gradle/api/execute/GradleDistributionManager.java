@@ -103,7 +103,7 @@ public final class GradleDistributionManager {
         GradleVersion.version("8.5"), // JDK-21
     };
 
-    private static final GradleVersion LAST_KNOWN_GRADLE = GradleVersion.version("8.6"); //NOI18N
+    private static final GradleVersion LAST_KNOWN_GRADLE = GradleVersion.version("8.7"); //NOI18N
 
     final File gradleUserHome;
 

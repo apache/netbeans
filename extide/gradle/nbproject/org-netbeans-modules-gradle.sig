@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.38
+#Version 2.40
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1100,7 +1100,9 @@ hcls BaseOperationStep,ConfigureProjectStep,CopyFromFileTemplate,CopyFromTemplat
 CLSS public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation
  outer org.netbeans.modules.gradle.spi.newproject.TemplateOperation
 meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation basePackage(java.lang.String)
+meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation comments(java.lang.Boolean)
 meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation dsl(java.lang.String)
+meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation javaVersion(java.lang.String)
 meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation projectName(java.lang.String)
 meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation testFramework(java.lang.String)
 meth public final void add()

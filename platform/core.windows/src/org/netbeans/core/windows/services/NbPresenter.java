@@ -80,8 +80,6 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.basic.BasicLookAndFeel;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import org.netbeans.core.windows.Constants;
 import org.openide.DialogDescriptor;
 import org.openide.NotificationLineSupport;
@@ -103,8 +101,6 @@ import org.openide.util.Utilities;
  */
 class NbPresenter extends JDialog
 implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparator<Object> {
-
-    private static Boolean isJava17 = null;
 
     protected NotifyDescriptor descriptor;
 
@@ -458,7 +454,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
      */
     private JOptionPane createOptionPane() {
         Object msg = descriptor.getMessage();
-        boolean override = true;
+        boolean limitLineWidth = true;
         String strMsg = null, strMsgLower;
 
         if (msg instanceof String) {
@@ -469,22 +465,22 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
             //so that html text will be displayed correctly in JOptionPane
             strMsg = (String)msg;
             strMsgLower = strMsg.toLowerCase();
-            override = !strMsgLower.startsWith("<html>"); // NOI18N
+            limitLineWidth = !strMsgLower.startsWith("<html>"); // NOI18N
         }
         if (msg instanceof javax.accessibility.Accessible) {
             strMsg = ((javax.accessibility.Accessible)msg).getAccessibleContext().getAccessibleDescription();
         }
 
         JOptionPane optionPane;
-        if (override) {
+        if (limitLineWidth) {
             // initialize component (override max char count per line in a message)
             optionPane = new JOptionPane(
-            msg,
-            descriptor.getMessageType(),
-            0, // options type
-            null, // icon
-            new Object[0], // options
-            null // value
+                msg,
+                descriptor.getMessageType(),
+                0, // options type
+                null, // icon
+                new Object[0], // options
+                null // value
             ) {
                 @Override
                 public int getMaxCharactersPerLineCount() {
@@ -494,29 +490,23 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         } else {
             //Do not override JOptionPane.getMaxCharactersPerLineCount for html text
             optionPane = new JOptionPane(
-            msg,
-            descriptor.getMessageType(),
-            0, // options type
-            null, // icon
-            new Object[0], // options
-            null // value
+                msg,
+                descriptor.getMessageType(),
+                0, // options type
+                null, // icon
+                new Object[0], // options
+                null // value
             );
         }
 
-        if (UIManager.getLookAndFeel().getClass() == MetalLookAndFeel.class ||
-            UIManager.getLookAndFeel().getClass() == BasicLookAndFeel.class) {
-            optionPane.setUI(new javax.swing.plaf.basic.BasicOptionPaneUI() {
-                @Override
-                public Dimension getMinimumOptionPaneSize() {
-                    if (minimumSize == null) {
-                        //minimumSize = UIManager.getDimension("OptionPane.minimumSize");
-                        // this is called before defaults initialized?!!!
-                        return new Dimension(MinimumWidth, 50);
-                    }
-                    return new Dimension(minimumSize.width, 50);
-                }
-            });
+        // javax.swing.plaf.basic.BasicOptionPaneUI uses hardcoded min height of 90,
+        // if no other default is set. Min height should be about the size of the
+        // used icon, so that dialogs with single-line messages can size themself properly.
+        Dimension minSize = UIManager.getDimension("OptionPane.minimumSize");
+        if (minSize != null) {
+            minSize.setSize(minSize.getWidth(), 38);
         }
+
         optionPane.setWantsInput(false);
         optionPane.getAccessibleContext().setAccessibleDescription(strMsg);
         if( null != strMsg ) {

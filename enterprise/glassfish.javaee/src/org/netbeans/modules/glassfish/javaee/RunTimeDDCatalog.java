@@ -44,6 +44,7 @@ import org.netbeans.modules.xml.catalog.spi.CatalogDescriptor2;
 import org.netbeans.modules.xml.catalog.spi.CatalogListener;
 import org.netbeans.modules.xml.catalog.spi.CatalogReader;
 import org.netbeans.spi.server.ServerInstanceProvider;
+import org.openide.util.Utilities;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -58,7 +59,7 @@ import org.xml.sax.SAXException;
  */
 
 public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogReader, CatalogDescriptor2,org.xml.sax.EntityResolver  {
-    
+    private static final Logger LOGGER = Logger.getLogger("glassfish-javaee");
     private static final String XML_XSD="http://www.w3.org/2001/xml.xsd"; // NOI18N
     private static final String XML_XSD_DEF="<?xml version='1.0'?><xs:schema targetNamespace=\"http://www.w3.org/XML/1998/namespace\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xml:lang=\"en\"><xs:attribute name=\"lang\" type=\"xs:language\"><xs:annotation><xs:documentation>In due course, we should install the relevant ISO 2- and 3-letter codes as the enumerated possible values . . .</xs:documentation></xs:annotation></xs:attribute></xs:schema>"; // NOI18N
     private static final String TypeToURLMap[] = {
@@ -254,30 +255,30 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
         if (!platformRootDir.exists()) {
             return null;
         }
-        
-        String installRoot = platformRootDir.getAbsolutePath(); 
+
+        String installRoot = platformRootDir.getAbsolutePath();
         if (installRoot == null) {
             return null;
         }
-        
+
         List<String> list = new ArrayList<>();
-        for (int i=0;i<TypeToURLMap.length;i = i+2){
+        for (int i = 0; i < TypeToURLMap.length; i += 2) {
             list.add(TypeToURLMap[i]);
         }
         if (hasAdditionalMap) {
-            for (int i=0;i<JavaEE6TypeToURLMap.length;i = i+2){
+            for (int i = 0; i < JavaEE6TypeToURLMap.length; i += 2) {
                 list.add(JavaEE6TypeToURLMap[i]);
             }
         }
-        for (int i=0;i<SchemaToURLMap.length;i = i+2){
+        for (int i = 0; i < SchemaToURLMap.length; i += 2) {
             list.add(SchemaToURLMap[i]);
         }
         if (hasAdditionalMap) {
-            for (int i=0;i<JavaEE6SchemaToURLMap.length;i = i+2){
+            for (int i = 0; i < JavaEE6SchemaToURLMap.length; i += 2) {
                 list.add(JavaEE6SchemaToURLMap[i]);
             }
         }
-        
+
         return list.listIterator();
     }
 
@@ -305,7 +306,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                 try{
                     return file.toURI().toURL().toExternalForm();  
                 }catch(Exception e){
-                    Logger.getLogger("glassfish-javaee").log(Level.INFO, file.getAbsolutePath(), e); // NOI18N
+                    LOGGER.log(Level.INFO, file.getAbsolutePath(), e); // NOI18N
                     return "";
                 }
             }
@@ -317,7 +318,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                     try{
                         return file.toURI().toURL().toExternalForm();
                     }catch(Exception e){
-                        Logger.getLogger("glassfish-javaee").log(Level.INFO, file.getAbsolutePath(), e); // NOI18N
+                        LOGGER.log(Level.INFO, file.getAbsolutePath(), e); // NOI18N
                         return "";
                     }
                 }
@@ -330,7 +331,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                 try{
                     return file.toURI().toURL().toExternalForm();
                 }catch(Exception e){
-                    Logger.getLogger("glassfish-javaee").log(Level.INFO, file.getAbsolutePath(), e); // NOI18N
+                    LOGGER.log(Level.INFO, file.getAbsolutePath(), e); // NOI18N
                     return "";
                 }
             }
@@ -348,7 +349,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                     try{
                         return file.toURI().toURL().toExternalForm();
                     }catch(Exception e){
-                        Logger.getLogger("glassfish-javaee").log(Level.INFO, file.getAbsolutePath(), e); // NOI18N
+                        LOGGER.log(Level.INFO, file.getAbsolutePath(), e); // NOI18N
                         return "";
                     }
                 }
@@ -554,7 +555,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String WEBSERVICES_1_2_XSD="javaee_web_services_1_2.xsd"; // NOI18N
     private static final String WEBSERVICES_1_2= JAVAEE_NS+"/"+WEBSERVICES_1_2_XSD; // NOI18N
     public static final String WEBSERVICES_1_2_ID = "SCHEMA:"+WEBSERVICES_1_2; // NOI18N
-    
+
     private static final String WEBSERVICES_1_3_XSD="javaee_web_services_1_3.xsd"; // NOI18N
     private static final String WEBSERVICES_1_3= JAVAEE_NS+"/"+WEBSERVICES_1_3_XSD; // NOI18N
     public static final String WEBSERVICES_1_3_ID = "SCHEMA:"+WEBSERVICES_1_3; // NOI18N
@@ -570,7 +571,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String WEBSERVICES_CLIENT_1_2_XSD="javaee_web_services_client_1_2.xsd"; // NOI18N
     private static final String WEBSERVICES_CLIENT_1_2= JAVAEE_NS+"/"+WEBSERVICES_CLIENT_1_2_XSD; // NOI18N
     public static final String WEBSERVICES_CLIENT_1_2_ID = "SCHEMA:"+WEBSERVICES_CLIENT_1_2; // NOI18N
-    
+
     private static final String WEBSERVICES_CLIENT_1_3_XSD="javaee_web_services_client_1_3.xsd"; // NOI18N
     private static final String WEBSERVICES_CLIENT_1_3= JAVAEE_NS+"/"+WEBSERVICES_CLIENT_1_3_XSD; // NOI18N
     public static final String WEBSERVICES_CLIENT_1_3_ID = "SCHEMA:"+WEBSERVICES_CLIENT_1_3; // NOI18N
@@ -591,7 +592,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String WEBAPP_3_0_XSD="web-app_3_0.xsd"; // NOI18N
     private static final String WEBAPP_3_0 = JAVAEE_NS+"/"+WEBAPP_3_0_XSD; // NOI18N
     public static final String WEBAPP_3_0_ID = "SCHEMA:"+WEBAPP_3_0; // NOI18N
-    
+
     private static final String WEBCOMMON_3_0_XSD="web-common_3_0.xsd"; // NOI18N
     private static final String WEBCOMMON_3_0 = JAVAEE_NS+"/"+WEBCOMMON_3_0_XSD; // NOI18N
     public static final String WEBCOMMON_3_0_ID = "SCHEMA:"+WEBCOMMON_3_0; // NOI18N
@@ -599,11 +600,11 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String WEBFRAGMENT_3_0_XSD="web-fragment_3_0.xsd"; // NOI18N
     private static final String WEBFRAGMENT_3_0 = JAVAEE_NS+"/"+WEBFRAGMENT_3_0_XSD; // NOI18N
     public static final String WEBFRAGMENT_3_0_ID = "SCHEMA:"+WEBFRAGMENT_3_0; // NOI18N
-    
+
     private static final String WEBAPP_3_1_XSD="web-app_3_1.xsd"; // NOI18N
     private static final String WEBAPP_3_1 = NEW_JAVAEE_NS+"/"+WEBAPP_3_1_XSD; // NOI18N
     public static final String WEBAPP_3_1_ID = "SCHEMA:"+WEBAPP_3_1; // NOI18N
-    
+
     private static final String WEBCOMMON_3_1_XSD="web-common_3_1.xsd"; // NOI18N
     private static final String WEBCOMMON_3_1 = NEW_JAVAEE_NS+"/"+WEBCOMMON_3_1_XSD; // NOI18N
     public static final String WEBCOMMON_3_1_ID = "SCHEMA:"+WEBCOMMON_3_1; // NOI18N
@@ -665,7 +666,6 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     public static final String JAKARTA_PERSISTENCE_NS = "https://jakarta.ee/xml/ns/persistence"; // NOI18N
     
     private static final String PERSISTENCE_TAG="persistence"; //NOI18N
-    
     private static final String PERSISTENCE_XSD="persistence_1_0.xsd"; // NOI18N
     private static final String PERSISTENCE = PERSISTENCE_NS+"/"+PERSISTENCE_XSD; // NOI18N
     public static final String PERSISTENCE_ID = "SCHEMA:"+PERSISTENCE; // NOI18N    
@@ -684,22 +684,21 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     
     private static final String PERSISTENCE_3_0_XSD="persistence_3_0.xsd"; // NOI18N
     private static final String PERSISTENCE_3_0 = JAKARTA_PERSISTENCE_NS+"/"+PERSISTENCE_3_0_XSD; // NOI18N
-    public static final String PERSISTENCE_3_0_ID = "SCHEMA:"+PERSISTENCE_3_0; // NOI18N 
+    public static final String PERSISTENCE_3_0_ID = "SCHEMA:"+PERSISTENCE_3_0; // NOI18N
     
     private static final String PERSISTENCE_3_1_XSD="persistence_3_0.xsd"; // NOI18N
     private static final String PERSISTENCE_3_1 = JAKARTA_PERSISTENCE_NS+"/"+PERSISTENCE_3_1_XSD; // NOI18N
-    public static final String PERSISTENCE_3_1_ID = "SCHEMA:"+PERSISTENCE_3_1; // NOI18N 
+    public static final String PERSISTENCE_3_1_ID = "SCHEMA:"+PERSISTENCE_3_1; // NOI18N
     
     private static final String PERSISTENCE_3_2_XSD="persistence_3_2.xsd"; // NOI18N
     private static final String PERSISTENCE_3_2 = JAKARTA_PERSISTENCE_NS+"/"+PERSISTENCE_3_2_XSD; // NOI18N
-    public static final String PERSISTENCE_3_2_ID = "SCHEMA:"+PERSISTENCE_3_2; // NOI18N 
+    public static final String PERSISTENCE_3_2_ID = "SCHEMA:"+PERSISTENCE_3_2; // NOI18N
     
     public static final String PERSISTENCEORM_NS = "http://java.sun.com/xml/ns/persistence/orm"; // NOI18N
     public static final String NEW_PERSISTENCEORM_NS = "http://xmlns.jcp.org/xml/ns/persistence/orm"; // NOI18N
     public static final String JAKARTA_PERSISTENCEORM_NS = "https://jakarta.ee/xml/ns/persistence/orm"; // NOI18N
     
     private static final String PERSISTENCEORM_TAG="entity-mappings"; //NOI18N
-    
     private static final String PERSISTENCEORM_XSD="orm_1_0.xsd"; // NOI18N
     private static final String PERSISTENCEORM = PERSISTENCE_NS+"/"+PERSISTENCEORM_XSD; // NOI18N  yes not ORM NS!!!
     public static final String PERSISTENCEORM_ID = "SCHEMA:"+PERSISTENCEORM; // NOI18N
@@ -707,7 +706,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String PERSISTENCEORM_2_0_XSD="orm_2_0.xsd"; // NOI18N
     private static final String PERSISTENCEORM_2_0 = PERSISTENCE_NS+"/"+PERSISTENCEORM_2_0_XSD; // NOI18N  yes not ORM NS!!!
     public static final String PERSISTENCEORM_2_0_ID = "SCHEMA:"+PERSISTENCEORM_2_0; // NOI18N
-    
+
     private static final String PERSISTENCEORM_2_1_XSD="orm_2_1.xsd"; // NOI18N
     private static final String PERSISTENCEORM_2_1 = NEW_PERSISTENCEORM_NS+"/"+PERSISTENCEORM_2_1_XSD; // NOI18N  yes not ORM NS!!!
     public static final String PERSISTENCEORM_2_1_ID = "SCHEMA:"+PERSISTENCEORM_2_1; // NOI18N
@@ -727,13 +726,51 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String PERSISTENCEORM_3_2_XSD="orm_3_2.xsd"; // NOI18N
     private static final String PERSISTENCEORM_3_2 = JAKARTA_PERSISTENCEORM_NS+"/"+PERSISTENCEORM_3_2_XSD; // NOI18N  yes not ORM NS!!!
     public static final String PERSISTENCEORM_3_2_ID = "SCHEMA:"+PERSISTENCEORM_3_2; // NOI18N
-    
+
+    private static final String[] SUPPORTED_SCHEMAS = new String[]{
+        // ejb
+        EJBJAR_2_1_XSD, EJBJAR_3_0_XSD, EJBJAR_3_1_XSD, EJBJAR_3_2_XSD, EJBJAR_4_0_XSD,
+        // application & application-client
+        APP_1_4_XSD, APPCLIENT_1_4_XSD, APP_5_XSD, APPCLIENT_5_XSD,
+        APP_6_XSD, APPCLIENT_6_XSD, APP_7_XSD, APPCLIENT_7_XSD,
+        APP_8_XSD, APPCLIENT_8_XSD, APP_9_XSD, APPCLIENT_9_XSD,
+        APP_10_XSD, APPCLIENT_10_XSD, APP_11_XSD, APPCLIENT_11_XSD,
+        //web-app, web-common & web-fragment
+        WEBAPP_2_5_XSD,
+        WEBAPP_3_0_XSD, WEBFRAGMENT_3_0_XSD, WEBCOMMON_3_0_XSD,
+        WEBAPP_3_1_XSD, WEBFRAGMENT_3_1_XSD, WEBCOMMON_3_1_XSD,
+        WEBAPP_4_0_XSD, WEBFRAGMENT_4_0_XSD, WEBCOMMON_4_0_XSD,
+        WEBAPP_5_0_XSD, WEBFRAGMENT_5_0_XSD, WEBCOMMON_5_0_XSD,
+        WEBAPP_6_0_XSD, WEBFRAGMENT_6_0_XSD, WEBCOMMON_6_0_XSD,
+        WEBAPP_6_1_XSD, WEBFRAGMENT_6_1_XSD, WEBCOMMON_6_1_XSD,
+        //persistence & orm
+        PERSISTENCE_XSD, PERSISTENCEORM_XSD,
+        PERSISTENCE_2_0_XSD, PERSISTENCEORM_2_0_XSD,
+        PERSISTENCE_2_1_XSD, PERSISTENCEORM_2_1_XSD,
+        PERSISTENCE_2_2_XSD, PERSISTENCEORM_2_2_XSD,
+        PERSISTENCE_3_0_XSD, PERSISTENCEORM_3_0_XSD,
+        PERSISTENCE_3_1_XSD, PERSISTENCEORM_3_1_XSD,
+        PERSISTENCE_3_2_XSD, PERSISTENCEORM_3_2_XSD,
+        //webservice & webservice-client
+        WEBSERVICES_1_1_XSD, WEBSERVICES_CLIENT_1_1_XSD,
+        WEBSERVICES_1_2_XSD, WEBSERVICES_CLIENT_1_2_XSD,
+        WEBSERVICES_1_3_XSD, WEBSERVICES_CLIENT_1_3_XSD,
+        WEBSERVICES_1_4_XSD, WEBSERVICES_CLIENT_1_4_XSD,
+        WEBSERVICES_2_0_XSD, WEBSERVICES_CLIENT_2_0_XSD,
+        // weblogic
+        "weblogic-web-app.xsd", "weblogic-ejb-jar.xsd", //NOI18N
+        "weblogic-application.xsd", "weblogic-application-client.xsd", //NOI18N
+        "weblogic-connector.xsd", "weblogic-javaee.xsd", //NOI18N
+        "weblogic-jms.xsd", "weblogic-webservices.xsd", //NOI18N
+        "jdbc-data-source.xsd"
+    };
+
     public String getFullURLFromSystemId(String systemId){
         return null;
         
     }
     
-    private static String SCHEMASLOCATION=null;
+    private static File SCHEMASLOCATION=null;
     /**
      * Resolves schema definition file for deployment descriptor (spec.2_4)
      * @param publicId publicId for resolved entity (null in our case)
@@ -742,7 +779,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
      */
     @Override
     public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-        
+
         if (SCHEMASLOCATION == null) {
             if (platformRootDir == null) {
                 return null;
@@ -750,184 +787,38 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
             if (!platformRootDir.exists()) {
                 return null;
             }
-        
-            String  installRoot = platformRootDir.getAbsolutePath(); //System.getProperty("com.sun.aas.installRoot");
-            if (installRoot==null)
+
+            String installRoot = platformRootDir.getAbsolutePath(); //System.getProperty("com.sun.aas.installRoot");
+            if (installRoot == null) {
                 return null;
+            }
             File f = new File(installRoot);
-            if (f.exists()==false)
+            if (!f.exists()) {
                 return null;
-            File file = new File(installRoot+"/lib/schemas/");
-            SCHEMASLOCATION = "";
-            try{
-                SCHEMASLOCATION= file.toURI().toURL().toExternalForm();
-            }catch(Exception e){
-                Logger.getLogger("glassfish-javaee").log(Level.INFO, file.getAbsolutePath(), e); // NOI18N
-            }   
+            }
+            File f2 = new File(installRoot, "/lib/schemas/");
+            if (!f2.exists()) {
+                return null;
+            }
+            SCHEMASLOCATION = f2;
         }
-        
+
         if (systemId != null) {
-            // ejb
-            if ( systemId.endsWith(EJBJAR_2_1_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+EJBJAR_2_1_XSD);
-            } else if ( systemId.endsWith(EJBJAR_3_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+EJBJAR_3_0_XSD);
-            } else if ( systemId.endsWith(EJBJAR_3_1_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+EJBJAR_3_1_XSD);
-            } else if ( systemId.endsWith(EJBJAR_3_2_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+EJBJAR_3_2_XSD);
-            } else if ( systemId.endsWith(EJBJAR_4_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+EJBJAR_4_0_XSD);
+            for(String schema : SUPPORTED_SCHEMAS) {
+                if (systemId.endsWith(schema)) {
+                    File schemaFile = new File(SCHEMASLOCATION, schema);
+                    if(! schemaFile.exists()) {
+                        return null;
+                    } else {
+                        return new org.xml.sax.InputSource(Utilities.toURI(schemaFile).toURL().toExternalForm());
+                    }
+                }
             }
-            // application & application-client
-            else if ( systemId.endsWith(APP_1_4_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APP_1_4_XSD);
-            } else if ( systemId.endsWith(APPCLIENT_1_4_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APPCLIENT_1_4_XSD);
-            } else if ( systemId.endsWith(APP_5_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APP_5_XSD);
-            } else if ( systemId.endsWith(APPCLIENT_5_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APPCLIENT_5_XSD);
-            } else if ( systemId.endsWith(APP_6_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APP_6_XSD);
-            } else if ( systemId.endsWith(APPCLIENT_6_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APPCLIENT_6_XSD);
-            } else if ( systemId.endsWith(APP_7_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APP_7_XSD);
-            } else if ( systemId.endsWith(APPCLIENT_7_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APPCLIENT_7_XSD);
-            } else if ( systemId.endsWith(APP_8_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APP_8_XSD);
-            } else if ( systemId.endsWith(APPCLIENT_8_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APPCLIENT_8_XSD);
-            } else if ( systemId.endsWith(APP_9_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APP_9_XSD);
-            } else if ( systemId.endsWith(APPCLIENT_9_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APPCLIENT_9_XSD);
-            } else if ( systemId.endsWith(APP_10_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APP_10_XSD);
-            } else if ( systemId.endsWith(APPCLIENT_10_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APPCLIENT_10_XSD);
-            } else if ( systemId.endsWith(APP_11_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APP_11_XSD);
-            } else if ( systemId.endsWith(APPCLIENT_11_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+APPCLIENT_11_XSD);
-            }
-            //web-app, web-common & web-fragment
-            else if ( systemId.endsWith(WEBAPP_2_5_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBAPP_2_5_XSD);
-            } else if ( systemId.endsWith(WEBAPP_3_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBAPP_3_0_XSD);
-            } else if ( systemId.endsWith(WEBFRAGMENT_3_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBFRAGMENT_3_0_XSD);
-            } else if ( systemId.endsWith(WEBCOMMON_3_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBCOMMON_3_0_XSD);
-            } else if ( systemId.endsWith(WEBAPP_3_1_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBAPP_3_1_XSD);
-            } else if ( systemId.endsWith(WEBFRAGMENT_3_1_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBFRAGMENT_3_1_XSD);
-            } else if ( systemId.endsWith(WEBCOMMON_3_1_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBCOMMON_3_1_XSD);
-            } else if ( systemId.endsWith(WEBAPP_4_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBAPP_4_0_XSD);
-            } else if ( systemId.endsWith(WEBFRAGMENT_4_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBFRAGMENT_4_0_XSD);
-            } else if ( systemId.endsWith(WEBCOMMON_4_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBCOMMON_4_0_XSD);
-            } else if ( systemId.endsWith(WEBAPP_5_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBAPP_5_0_XSD);
-            } else if ( systemId.endsWith(WEBFRAGMENT_5_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBFRAGMENT_5_0_XSD);
-            } else if ( systemId.endsWith(WEBCOMMON_5_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBCOMMON_5_0_XSD);
-            } else if ( systemId.endsWith(WEBAPP_6_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBAPP_6_0_XSD);
-            } else if ( systemId.endsWith(WEBFRAGMENT_6_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBFRAGMENT_6_0_XSD);
-            } else if ( systemId.endsWith(WEBCOMMON_6_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBCOMMON_6_0_XSD);
-            } else if ( systemId.endsWith(WEBAPP_6_1_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBAPP_6_1_XSD);
-            } else if ( systemId.endsWith(WEBFRAGMENT_6_1_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBFRAGMENT_6_1_XSD);
-            } else if ( systemId.endsWith(WEBCOMMON_6_1_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBCOMMON_6_1_XSD);
-            }
-            //persistence & orm
-            else if ( systemId.endsWith(PERSISTENCEORM_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCEORM_XSD);
-            } else if ( systemId.endsWith(PERSISTENCE_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCE_XSD);
-            } else if ( systemId.endsWith(PERSISTENCEORM_2_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCEORM_2_0_XSD);
-            } else if ( systemId.endsWith(PERSISTENCE_2_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCE_2_0_XSD);
-            } else if ( systemId.endsWith(PERSISTENCEORM_2_1_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCEORM_2_1_XSD);
-            } else if ( systemId.endsWith(PERSISTENCE_2_1_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCE_2_1_XSD);
-            } else if ( systemId.endsWith(PERSISTENCEORM_2_2_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCEORM_2_2_XSD);
-            } else if ( systemId.endsWith(PERSISTENCE_2_2_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCE_2_2_XSD);
-            } else if ( systemId.endsWith(PERSISTENCEORM_3_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCEORM_3_0_XSD);
-            } else if ( systemId.endsWith(PERSISTENCEORM_3_1_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCEORM_3_1_XSD);
-            } else if ( systemId.endsWith(PERSISTENCE_3_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCE_3_0_XSD);
-            } else if ( systemId.endsWith(PERSISTENCEORM_3_2_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCEORM_3_2_XSD);
-            } else if ( systemId.endsWith(PERSISTENCEORM_3_2_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCEORM_3_2_XSD);
-            } else if ( systemId.endsWith(PERSISTENCE_3_2_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCE_3_2_XSD);
-            }
-            //webservice & webservice-client
-            else if ( systemId.endsWith(WEBSERVICES_1_1_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBSERVICES_1_1_XSD);
-            } else if ( systemId.endsWith(WEBSERVICES_1_2_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBSERVICES_1_2_XSD);
-            } else if ( systemId.endsWith(WEBSERVICES_1_3_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBSERVICES_1_3_XSD);
-            } else if ( systemId.endsWith(WEBSERVICES_1_4_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBSERVICES_1_4_XSD);
-            } else if ( systemId.endsWith(WEBSERVICES_2_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBSERVICES_2_0_XSD);
-            } else if ( systemId.endsWith(WEBSERVICES_CLIENT_1_1_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBSERVICES_CLIENT_1_1_XSD);
-            } else if ( systemId.endsWith(WEBSERVICES_CLIENT_1_2_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBSERVICES_CLIENT_1_2_XSD);
-            } else if ( systemId.endsWith(WEBSERVICES_CLIENT_1_3_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBSERVICES_CLIENT_1_3_XSD);
-            } else if ( systemId.endsWith(WEBSERVICES_CLIENT_1_4_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBSERVICES_CLIENT_1_4_XSD);
-            } else if ( systemId.endsWith(WEBSERVICES_CLIENT_2_0_XSD)) {
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBSERVICES_CLIENT_2_0_XSD);
-            }
-            // weblogic
-            else if ( systemId.endsWith("weblogic-web-app.xsd")) { //NOI18N
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+"weblogic-web-app.xsd");  //NOI18N
-            } else if ( systemId.endsWith("weblogic-ejb-jar.xsd")) {  //NOI18N
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+"weblogic-ejb-jar.xsd");  //NOI18N
-            } else if ( systemId.endsWith("weblogic-application.xsd")) {  //NOI18N
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+"weblogic-application.xsd");  //NOI18N
-            } else if ( systemId.endsWith("weblogic-application-client.xsd")) {  //NOI18N
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+"weblogic-application-client.xsd");  //NOI18N
-            } else if ( systemId.endsWith("weblogic-connector.xsd")) {  //NOI18N
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+"weblogic-connector.xsd"); //NOI18N
-            } else if ( systemId.endsWith("weblogic-javaee.xsd")) { //NOI18N
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+"weblogic-javaee.xsd"); //NOI18N
-            } else if ( systemId.endsWith("weblogic-jms.xsd")) { //NOI18N
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+"weblogic-jms.xsd"); //NOI18N
-            } else if ( systemId.endsWith("weblogic-webservices.xsd")) { //NOI18N
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+"weblogic-webservices.xsd"); //NOI18N
-            } else if ( systemId.endsWith("jdbc-data-source.xsd")) { //NOI18N
-                return new org.xml.sax.InputSource(SCHEMASLOCATION+"jdbc-data-source.xsd"); //NOI18N
-            } else if (XML_XSD.equals(systemId)) {
+            if (XML_XSD.equals(systemId)) {
                 return new org.xml.sax.InputSource(new java.io.StringReader(XML_XSD_DEF));
             }
         }
+
         return null;
     }
     
@@ -943,15 +834,15 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                 Element element = (Element) next;
                 String tag = element.getTagName();
                 String xmlns = element.getAttribute(XMLNS_ATTR);
-                if ( xmlns != null && ( EJB_JAR_TAG.equals(tag) || APP_TAG.equals(tag) 
-                        || WEBAPP_TAG.equals(tag) || APPCLIENT_TAG.equals(tag) 
-                        || PERSISTENCEORM_TAG.equals(tag) || PERSISTENCE_TAG.equals(tag) 
-                        || WEBSERVICES_TAG.equals(tag) ) ) {  // NOI18N
-                    
-                    if ( J2EE_NS.equals(xmlns) 
-                            || JAVAEE_NS.equals(xmlns) 
-                            || NEW_JAVAEE_NS.equals(xmlns) 
-                            || JAKARTAEE_NS.equals(xmlns) ) {  // NOI18N
+                if (xmlns != null && (EJB_JAR_TAG.equals(tag) || APP_TAG.equals(tag)
+                        || WEBAPP_TAG.equals(tag) || APPCLIENT_TAG.equals(tag)
+                        || PERSISTENCEORM_TAG.equals(tag) || PERSISTENCE_TAG.equals(tag)
+                        || WEBSERVICES_TAG.equals(tag))) {  // NOI18N
+
+                    if (J2EE_NS.equals(xmlns)
+                            || JAVAEE_NS.equals(xmlns)
+                            || NEW_JAVAEE_NS.equals(xmlns)
+                            || JAKARTAEE_NS.equals(xmlns)) {  // NOI18N
                         Vector<Node> v = new Vector<Node>();
                         v.add(next);
                         return v.elements();
@@ -1183,7 +1074,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
         try{
             prefix= file.toURI().toURL().toExternalForm();
         }catch(Exception e){
-            Logger.getLogger("glassfish-javaee").log(Level.INFO, file.getAbsolutePath(), e); // NOI18N
+            LOGGER.log(Level.INFO, file.getAbsolutePath(), e); // NOI18N
         }
         if (name.equals("http://java.sun.com/xml/ns/jax-rpc/ri/config")){
             return prefix +"jax-rpc-ri-config.xsd";
@@ -1199,6 +1090,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
         
         return null;
     }
+
     /**
      * Get registered URI for the given publicId or null if not registered.
      * @return null if not registered

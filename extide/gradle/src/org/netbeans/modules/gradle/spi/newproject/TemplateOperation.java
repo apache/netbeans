@@ -64,7 +64,8 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
- *
+ * Steps, that a New Gradle Project Wizard can perform.
+ * 
  * @author Laszlo Kishalmi
  */
 public final class TemplateOperation implements Runnable {
@@ -236,6 +237,21 @@ public final class TemplateOperation implements Runnable {
          * @since 2.20
          */
         public abstract InitOperation projectName(String name);
+
+        /** Specify the Java version the project would be compiled, tested,
+         * and executed with.
+         * @param version the Java version to be used
+         * @return this builder to chain the calls.
+         * @since 2.40
+         */
+        public abstract InitOperation javaVersion(String version);
+
+        /** Specify whether create comments in the generated files.
+         * @param comments set {@code false} to generate more compact project files.
+         * @return this builder to chain the calls.
+         * @since 2.40
+         */
+        public abstract InitOperation comments(Boolean comments);
     }
 
     private final class InitStep extends InitOperation implements OperationStep {
@@ -245,6 +261,8 @@ public final class TemplateOperation implements Runnable {
         private String testFramework;
         private String basePackage;
         private String projectName;
+        private String javaVersion;
+        private Boolean comments;
 
         InitStep(File target, String type) {
             this.target = target;
@@ -315,6 +333,20 @@ public final class TemplateOperation implements Runnable {
                     args.add(projectName);
                 }
 
+                // --java-version 21
+                if (javaVersion != null) {
+                    args.add("--java-version");
+                    args.add(javaVersion);
+                }
+
+                if (comments != null) {
+                    args.add(comments ? "--comments" : "--no-comments");
+                }
+
+                // gradle init is non-interactive inside the IDE
+                args.add("--use-defaults");
+
+
                 if (GradleSettings.getDefault().isOffline()) {
                     pconn.newBuild().withArguments("--offline").forTasks(args.toArray(new String[0])).run(); //NOI18N
                 } else {
@@ -325,6 +357,18 @@ public final class TemplateOperation implements Runnable {
             }
             gconn.disconnect();
             return Collections.singleton(FileUtil.toFileObject(target));
+        }
+
+        @Override
+        public InitOperation javaVersion(String version) {
+            this.javaVersion = version;
+            return this;
+        }
+
+        @Override
+        public InitOperation comments(Boolean comments) {
+            this.comments = comments;
+            return this;
         }
     }
 

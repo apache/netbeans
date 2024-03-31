@@ -83,6 +83,22 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="gradle-init-javaversion">
+            <api name="general"/>
+            <summary>Gradle InitOperation now Supports  --java-version and --comments flags</summary>
+            <version major="2" minor="40"/>
+            <date day="31" month="3" year="2024"/>
+            <author login="lkishalmi"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Added <code>comments(Boolean comments)</code> and <code>javaVersion(String version)</code> to
+                    <a href="@TOP@/org/netbeans/modules/gradle/spi/newproject/TemplateOperation.InitOperation.html">TemplateOperation.InitOperation</a>
+                    allowing more detailed project creation.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.gradle.spi.newproject" name="TemplateOperation"/>
+        </change>
         <change id="gradle-report-severity">
             <api name="general"/>
             <summary>Gradle project problems have severity and stacktraces</summary>

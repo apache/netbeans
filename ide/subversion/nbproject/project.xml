@@ -431,7 +431,6 @@
             </test-dependencies>
             <friend-packages>
                 <friend>org.netbeans.modules.bugtracking.bridge</friend>
-                <friend>org.netbeans.modules.kenai.ui</friend>
                 <friend>org.netbeans.modules.odcs.subversion</friend>
                 <package>org.netbeans.modules.subversion.api</package>
             </friend-packages>

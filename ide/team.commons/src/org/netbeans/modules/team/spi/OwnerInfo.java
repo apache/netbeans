@@ -25,18 +25,11 @@ import java.util.List;
  * Wrapper for a OwnerInfo instance returned by a Kenai Server
  * 
  * @author Tomas Stupka
- * @see org.netbeans.modules.kenai.ui.api.NbModuleOwnerSupport
  */
 public abstract class OwnerInfo {
 
-    /**
-     * @see org.netbeans.modules.kenai.ui.api.NbModuleOwnerSupport.OwnerInfo
-     */
     public abstract String getOwner();
 
-    /**
-     * @see org.netbeans.modules.kenai.ui.api.NbModuleOwnerSupport.OwnerInfo
-     */
     public abstract List<String> getExtraData();
 
 }

@@ -52,7 +52,6 @@ import org.netbeans.modules.versioning.history.AbstractSummaryView;
 import org.netbeans.modules.versioning.history.AbstractSummaryView.SummaryViewMaster.SearchHighlight;
 import org.netbeans.modules.versioning.spi.VCSContext;
 import org.netbeans.modules.versioning.util.Utils;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor.KenaiUser;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -289,12 +288,12 @@ class SummaryView extends AbstractSummaryView {
             return event.toString();
         }
     }
-    
-    public SummaryView (SearchHistoryPanel master, List<? extends LogEntry> results, Map<String, KenaiUser> kenaiUserMap) {
-        super(createViewSummaryMaster(master), results, kenaiUserMap);
+
+    public SummaryView(SearchHistoryPanel master, List<? extends LogEntry> results) {
+        super(createViewSummaryMaster(master), results);
         this.master = master;
     }
-    
+
     private static SummaryViewMaster createViewSummaryMaster (final SearchHistoryPanel master) {
         final Map<String, String> colors = Map.of(
             "A", GitUtils.getColorString(AnnotationColorProvider.getInstance().ADDED_FILE.getActualColor()),

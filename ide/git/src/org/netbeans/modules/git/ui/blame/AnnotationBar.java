@@ -59,7 +59,6 @@ import org.netbeans.modules.git.ui.diff.DiffAction;
 import org.netbeans.modules.git.ui.history.SearchHistoryAction;
 import org.netbeans.modules.git.ui.repository.Revision;
 import org.netbeans.modules.git.utils.GitUtils;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor.KenaiUser;
 import org.netbeans.spi.diff.DiffProvider;
 import org.openide.awt.Actions;
 import org.openide.util.actions.SystemAction;
@@ -159,11 +158,6 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
      * Repository root of annotated file
      */
     private File repositoryRoot;
-
-    /**
-     * Holdes kenai users
-     */
-    private Map<String, KenaiUser> kenaiUsersMap = null;
 
     /*
      * Holds parent/previous revisions for each line revision
@@ -288,7 +282,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
     public void annotationLines (File file, List<AnnotateLine> annotateLines) {
         // set repository root for popup menu, now should be the right time
         repositoryRoot = Git.getInstance().getRepositoryRoot(getCurrentFile());
-        final List<AnnotateLine> lines = new LinkedList<AnnotateLine>(annotateLines);
+        final List<AnnotateLine> lines = new LinkedList<>(annotateLines);
         int lineCount = lines.size();
         /** 0 based line numbers => 1 based line numbers*/
         final int ann2editorPermutation[] = new int[lineCount];
@@ -358,11 +352,9 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
             @Override
             public void run() {
                 StyledDocument sd = (StyledDocument) doc;
-                Iterator<AnnotateLine> it = lines.iterator();
-                previousRevisions = Collections.synchronizedMap(new HashMap<String, String>());
-                elementAnnotations = Collections.synchronizedMap(new HashMap<Element, AnnotateLine>(lines.size()));
-                while (it.hasNext()) {
-                    AnnotateLine line = it.next();
+                previousRevisions = Collections.synchronizedMap(new HashMap<>());
+                elementAnnotations = Collections.synchronizedMap(new HashMap<>(lines.size()));
+                for (AnnotateLine line : lines) {
                     int lineNum = ann2editorPermutation[line.getLineNum() -1];
                     try {
                         int lineOffset = NbDocument.findLineOffset(sd, lineNum -1);
@@ -374,24 +366,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
                 }
             }
         });
-
-//        final String url = HgUtils.getRemoteRepository(repositoryRoot);
-//        final boolean isKenaiRepository = url != null && HgKenaiAccessor.getInstance().isKenai(url);
-//        if(isKenaiRepository) {
-//            kenaiUsersMap = new HashMap<String, KenaiUser>();
-//            Iterator<AnnotateLine> it = lines.iterator();
-//            while (it.hasNext()) {
-//                AnnotateLine line = it.next();
-//                String author = line.getAuthor();
-//                if(author != null && !author.equals("") && !kenaiUsersMap.keySet().contains(author)) {
-//                    KenaiUser ku = HgKenaiAccessor.getInstance().forName(author, url);
-//                    if(ku != null) {
-//                        kenaiUsersMap.put(author, ku);
-//                    }
-//                }
-//            }
-//        }
-                
+               
         // lazy listener registration
         caret = textComponent.getCaret();
         if (caret != null) {
@@ -643,23 +618,6 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
             });
             popupMenu.add(previousAnnotationsMenu);
             previousAnnotationsMenu.setVisible(false);
-
-            if(isKenai() && al != null) {
-                String author = al.getAuthor().toString();
-                final int lineNr = al.getLineNum();
-                final KenaiUser ku = kenaiUsersMap.get(author);
-                if(ku != null) {
-                    popupMenu.addSeparator();
-                    JMenuItem chatMenu = new JMenuItem(NbBundle.getMessage(AnnotationBar.class, "CTL_MenuItem_Chat", author));
-                    chatMenu.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            ku.startChat(KenaiUser.getChatLink(getCurrentFileObject(), lineNr));
-                        }
-                    });
-                    popupMenu.add(chatMenu);
-                }
-            }
 
             JSeparator separator = new JPopupMenu.Separator();
             popupMenu.add(separator);
@@ -944,12 +902,12 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
             AnnotationMarkProvider amp = AnnotationMarkInstaller.getMarkProvider(textComponent);
             if (amp != null) {
             
-                List<AnnotationMark> marks = new ArrayList<AnnotationMark>(elementAnnotations.size());
+                List<AnnotationMark> marks = new ArrayList<>(elementAnnotations.size());
                 // I cannot affort to lock elementAnnotations for long time
                 // it's accessed from editor thread too
                 Iterator<Map.Entry<Element, AnnotateLine>> it2;
                 synchronized(elementAnnotations) {
-                    it2 = new HashSet<Map.Entry<Element, AnnotateLine>>(elementAnnotations.entrySet()).iterator();
+                    it2 = new HashSet<>(elementAnnotations.entrySet()).iterator();
                 }
                 while (it2.hasNext()) {
                     Map.Entry<Element, AnnotateLine> next = it2.next();                        
@@ -1026,9 +984,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
             longestString = elementAnnotationsSubstitute;
         } else {
             synchronized(elementAnnotations) {
-                Iterator<AnnotateLine> it = elementAnnotations.values().iterator();
-                while (it.hasNext()) {
-                    AnnotateLine line = it.next();
+                for (AnnotateLine line : elementAnnotations.values()) {
                     String displayName = getDisplayName(line); // NOI18N
                     if (displayName.length() > longestString.length()) {
                         longestString = displayName;
@@ -1038,7 +994,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
         }
         char[] data = longestString.toCharArray();
         int w = getGraphics().getFontMetrics(component.getFont()).charsWidth(data, 0,  data.length);
-        return w + 4 + (isKenai() ? 18 : 0);
+        return w + 4;
     }
 
     @NbBundle.Messages({
@@ -1120,17 +1076,6 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
         int textx = 2;
         g.setFont(component.getFont());
         g.drawString(annotation, textx, texty);
-    }
-
-    boolean isKenai() {
-        return kenaiUsersMap != null && kenaiUsersMap.size() > 0;
-    }
-
-    KenaiUser getKenaiUser(String author) {
-        if(kenaiUsersMap == null) {
-            return null;
-        }
-        return kenaiUsersMap.get(author);
     }
 
     /**
@@ -1438,7 +1383,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
 
     private Map<String, String> getPreviousRevisions () {
         Map<String, String> revisions = previousRevisions;
-        return revisions == null ? new HashMap<String, String>(0) : revisions;
+        return revisions == null ? new HashMap<>(0) : revisions;
     }
 
     /**

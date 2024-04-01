@@ -36,7 +36,6 @@ import org.netbeans.modules.git.ui.fetch.FetchUtils;
 import org.netbeans.modules.git.ui.repository.RepositoryInfo;
 import org.netbeans.modules.git.ui.repository.Revision;
 import org.netbeans.modules.git.utils.GitUtils;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor;
 import org.openide.util.NbBundle;
 
 /**
@@ -46,7 +45,7 @@ import org.openide.util.NbBundle;
  */
 class SearchExecutor extends GitProgressSupport {
     
-    private final SearchHistoryPanel    master;
+    private final SearchHistoryPanel master;
     private final int limitRevisions;
     private final boolean showMerges;
     private final String message;
@@ -226,12 +225,11 @@ class SearchExecutor extends GitProgressSupport {
     }
 
     private void setResults (final List<RepositoryRevision> results) {
-        final Map<String, VCSKenaiAccessor.KenaiUser> kenaiUserMap = SearchHistoryPanel.createKenaiUsersMap(results);
         EventQueue.invokeLater(() -> {
             if(results.isEmpty()) {
-                master.setResults(null, kenaiUserMap, -1);
+                master.setResults(null, -1);
             } else {
-                master.setResults(results, kenaiUserMap, limitRevisions);
+                master.setResults(results, limitRevisions);
             }
         });
     }

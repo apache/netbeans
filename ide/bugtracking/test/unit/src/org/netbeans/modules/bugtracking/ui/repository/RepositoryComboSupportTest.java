@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.bugtracking.ui.repository;
 
-import org.netbeans.modules.bugtracking.ui.repository.RepositoryComboSupport;
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +33,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.netbeans.modules.bugtracking.dummies.DummyBugtrackingConnector;
 import org.netbeans.modules.bugtracking.dummies.DummyBugtrackingOwnerSupport;
-import org.netbeans.modules.bugtracking.kenai.DummyKenaiRepositories;
+import org.netbeans.modules.bugtracking.dummies.DummyRepositories;
 import org.netbeans.modules.bugtracking.dummies.DummyNode;
 import org.netbeans.modules.bugtracking.dummies.DummyTopComponentRegistry;
 import org.netbeans.modules.bugtracking.dummies.DummyWindowManager;
@@ -71,7 +70,7 @@ public class RepositoryComboSupportTest {
     @BeforeClass
     public static void setLookup() {
         MockLookup.setLayersAndInstances(
-            new DummyKenaiRepositories(), 
+            new DummyRepositories(), 
             new DummyWindowManager(), 
             new DummyBugtrackingOwnerSupport(),
             new DummyProjectServices(),
@@ -559,7 +558,7 @@ public class RepositoryComboSupportTest {
         }
         private TestLookup(InstanceContent ic) {
             super(ic);
-            ic.add(new DummyKenaiRepositories());
+            ic.add(new DummyRepositories());
             ic.add(new DummyBugtrackingConnector());
             ic.add(new DummyWindowManager());
             ic.add(new DummyBugtrackingOwnerSupport());

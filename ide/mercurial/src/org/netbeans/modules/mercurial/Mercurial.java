@@ -39,7 +39,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.netbeans.modules.mercurial.util.HgCommand;
 import org.openide.util.NbBundle;
-import org.netbeans.modules.mercurial.kenai.HgKenaiAccessor;
 import org.netbeans.modules.mercurial.ui.log.HgLogMessage.HgRevision;
 import org.netbeans.modules.mercurial.ui.repository.HgURL;
 import org.netbeans.modules.mercurial.ui.shelve.ShelveChangesAction;
@@ -198,7 +197,6 @@ public class Mercurial {
         Runnable init = new Runnable() {
             @Override
             public void run() {
-                HgKenaiAccessor.getInstance().registerVCSNoficationListener();
                 synchronized(Mercurial.this) {
                     checkVersionIntern();
                 }

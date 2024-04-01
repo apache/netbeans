@@ -93,20 +93,28 @@ public class TemplateClientIterator implements TemplateWizard.Iterator {
 
                 Project project = Templates.getProject(wiz);
                 final JsfVersion jsfVersion = JsfVersionUtils.forProject(project);
-                String namespaceLocation = (jsfVersion != null && jsfVersion.isAtLeast(JsfVersion.JSF_2_2))
-                        ? NamespaceUtils.JCP_ORG_LOCATION : NamespaceUtils.SUN_COM_LOCATION;
                 HashMap args = new HashMap();
                 args.put("TEMPLATE", relativePath); //NOI18N
                 args.put("DEFINE_TAGS", definedTags);   //NOI18N
-                args.put("NS_LOCATION", namespaceLocation);   //NOI18N
-                
+
+                if (jsfVersion != null && jsfVersion.isAtLeast(JsfVersion.JSF_4_0)) {
+                    args.put("NS_LOCATION", NamespaceUtils.JAKARTA_ORG_LOCATION);
+                    args.put("NS_JSF_PREFIX", NamespaceUtils.JAKARTA_ORG_LOCATION + ".");
+                } else if (jsfVersion != null && jsfVersion.isAtLeast(JsfVersion.JSF_2_2)) {
+                    args.put("NS_LOCATION", NamespaceUtils.JCP_ORG_LOCATION);
+                    args.put("NS_JSF_PREFIX", NamespaceUtils.JCP_ORG_LOCATION + "/jsf/");
+                } else {
+                    args.put("NS_LOCATION", NamespaceUtils.SUN_COM_LOCATION);
+                    args.put("NS_JSF_PREFIX", NamespaceUtils.SUN_COM_LOCATION + "/jsf/");
+                }
+
                 MapFormat formater = new MapFormat(args);
                 formater.setLeftBrace("__");    //NOI18N
                 formater.setRightBrace("__");   //NOI18N
                 formater.setExactMatch(false);
-                
+
                 content = formater.format(content);
-                
+
                 JSFFrameworkProvider.createFile(target, content, ENCODING);
             }
             

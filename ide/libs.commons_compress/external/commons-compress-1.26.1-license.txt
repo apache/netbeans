@@ -1,5 +1,5 @@
 Name: Commons Compress
-Version: 1.25.0
+Version: 1.26.1
 Description: The Apache Commons Compress library defines an API for working with ar, cpio, Unix dump, tar, zip, gzip, XZ, Pack200, bzip2, 7z, arj, lzma, snappy, DEFLATE, lz4, Brotli, Zstandard, DEFLATE64 and Z files.
 Origin: https://commons.apache.org/proper/commons-compress/index.html
 License: Apache-2.0

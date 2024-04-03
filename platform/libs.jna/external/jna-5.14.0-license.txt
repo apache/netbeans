@@ -1,5 +1,5 @@
 Name: Java Native Access
-Version: 5.12.1
+Version: 5.14.0
 License: Apache-2.0
 Description: Dynamically access native libraries from Java without JNI.
 Origin: Java Native Access

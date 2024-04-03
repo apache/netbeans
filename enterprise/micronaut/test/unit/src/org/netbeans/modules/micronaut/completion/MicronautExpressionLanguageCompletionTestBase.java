@@ -30,7 +30,7 @@ import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.micronaut.NbSuiteTestBase;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.cookies.EditorCookie;
@@ -43,7 +43,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Dusan Balek
  */
-public class MicronautExpressionLanguageCompletionTestBase extends NbTestCase {
+public class MicronautExpressionLanguageCompletionTestBase extends NbSuiteTestBase {
 
     private Project project;
 
@@ -52,8 +52,8 @@ public class MicronautExpressionLanguageCompletionTestBase extends NbTestCase {
     }
 
     protected @Override void setUp() throws Exception {
+        super.setUp();
         clearWorkDir();
-        System.setProperty("test.reload.sync", "true");
         FileObject dataFO = FileUtil.toFileObject(getDataDir());
         FileObject testApp = dataFO.getFileObject("maven/micronaut4/simple");
         FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "mn4-cc");

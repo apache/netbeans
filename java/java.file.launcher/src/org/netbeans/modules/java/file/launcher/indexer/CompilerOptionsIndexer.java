@@ -50,7 +50,7 @@ public class CompilerOptionsIndexer extends CustomIndexer {
     }
 
 
-    @MimeRegistration(mimeType="text/x-java", service=CustomIndexerFactory.class, position=1_000)
+    @MimeRegistration(mimeType="text/x-java", service=CustomIndexerFactory.class, position=1_100)
     public static final class FactoryImpl extends CustomIndexerFactory {
 
         @Override

@@ -50,7 +50,7 @@ import org.openide.util.NbBundle;
 
 @ActionReferences(value = {
     @ActionReference(position = 251, path = "Loaders/text/x-maven-pom+xml/Actions"),
-    @ActionReference(position = 1800, path = "Projects/org-netbeans-modules-maven/Actions")
+    @ActionReference(position = 1850, path = "Projects/org-netbeans-modules-maven/Actions")
 })
 
 @NbBundle.Messages({

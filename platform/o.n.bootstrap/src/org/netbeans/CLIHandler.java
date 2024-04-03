@@ -60,7 +60,7 @@ import org.openide.util.Task;
  * @author Jaroslav Tulach
  * @since org.netbeans.core/1 1.18
  * @see "#32054"
- * @see <a href="https://netbeans.apache.org/projects/platform/openide/proposals/arch/cli.html">Specification</a>
+ * @see <a href="https://netbeans.apache.org/projects/platform/openide/proposals/arch/cli">Specification</a>
  */
 public abstract class CLIHandler extends Object {
     /** lenght of the key used for connecting */

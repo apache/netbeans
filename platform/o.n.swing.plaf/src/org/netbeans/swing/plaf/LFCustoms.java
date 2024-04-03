@@ -45,7 +45,7 @@ import javax.swing.text.AttributeSet;
  * &quot;Nb.[return value of the custom look and feel's getID() method]LFCustoms&quot;.
  * <p>
  * Given that all this class does is return some keys and values, in the future it may be replaced by an
- * XML file similar to <a href="https://netbeans.apache.org/projects/ui/themes/themes.html">theme files</a>.
+ * XML file similar to <a href="https://netbeans.apache.org/projects/ui/themes/themes">theme files</a>.
  * <p>
  * This class defines a number of relatively self-explanatory UIManager keys for things used in various parts
  * of NetBeans.

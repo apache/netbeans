@@ -63,7 +63,7 @@ frames, components.
         </question>
 -->
 <answer id="arch-overall">
-<a href="https://netbeans.apache.org/projects/platform/core/windowsystem/index.html">Redesign documents</a>.
+<a href="https://netbeans.apache.org/projects/platform/core/windowsystem">Redesign documents</a>.
 </answer>
 
 
@@ -109,7 +109,7 @@ November 15 2003.
     
 <usecase id="windowsystem-general" name="General Usecases">
 General usecases
-can be read in the <a href="https://netbeans.apache.org/projects/platform/core/windowsystem/changes.html#s4">design document</a>
+can be read in the <a href="https://netbeans.apache.org/projects/platform/core/windowsystem/changes#s4">design document</a>
 created before work on new window system design started. 
 </usecase>
 
@@ -126,7 +126,7 @@ and cleanup the serialdata section - replace it with proper  "&lt;instance class
 <usecase id="windowsystem-groups" name="How to make a TopComponentGroup?" >
 
 <p></p>
-    <b>Q:</b> I'm trying to make a TopComponentGroup.  I've just read https://netbeans.apache.org/projects/ui/ws/ws_spec.html#s39
+    <b>Q:</b> I'm trying to make a TopComponentGroup.  I've just read https://netbeans.apache.org/projects/ui/ws/ws_spec#s39
             I want to make a group that uses the first invocation strategy.  
             That is, I want the group to open/close when I activate a certain subclass of TopComponent.  
             Say, for example, I have a FooTopComponent, and when it's active, 
@@ -237,11 +237,11 @@ It follows JLF standard for the custom UI components provided by core implementa
 Yes. Module stores its own versioned settings as XML files. In addition
 components are stored in settings file format of core/settings module.
 For description of current (version 2.0) configuration data folders see
-<api group="layer" category="devel" name="NewConfigurationData" type="export" url="https://netbeans.apache.org/projects/platform/core/windowsystem/changes.html#s342" >
+<api group="layer" category="devel" name="NewConfigurationData" type="export" url="https://netbeans.apache.org/projects/platform/core/windowsystem/changes#s342" >
 new configuration data</api> here
 For description of old (version &lt; 2.0) configuration data folders and how they are imported
 to new desktop layout see 
-<api group="layer" category="deprecated" name="OldConfigurationData" type="export" url="https://netbeans.apache.org/projects/platform/core/windowsystem/changes.html#s346" >
+<api group="layer" category="deprecated" name="OldConfigurationData" type="export" url="https://netbeans.apache.org/projects/platform/core/windowsystem/changes#s346" >
 old configuration data </api>
 </answer>
 
@@ -1422,9 +1422,9 @@ No.
 -->
 <answer id="resources-read">
 Module reads its own configuration from its layer and eventualy from other module layers
-if provided. Data have following <a href="https://netbeans.apache.org/projects/platform/core/windowsystem/changes.html#s342">folder structure</a>.
-It contains <api group="layer" category="private" type="export" name="ModuleDataStructure" url="https://netbeans.apache.org/projects/platform/core/windowsystem/changes.html#s342">Module folder structure under Windows2 directory </api>
-and <api group="layer" category="private" type="export" name="LocalDataStructure" url="https://netbeans.apache.org/projects/platform/core/windowsystem/changes.html#s342">Local folder structure under Windows2Local directory</api>.
+if provided. Data have following <a href="https://netbeans.apache.org/projects/platform/core/windowsystem/changes#s342">folder structure</a>.
+It contains <api group="layer" category="private" type="export" name="ModuleDataStructure" url="https://netbeans.apache.org/projects/platform/core/windowsystem/changes#s342">Module folder structure under Windows2 directory </api>
+and <api group="layer" category="private" type="export" name="LocalDataStructure" url="https://netbeans.apache.org/projects/platform/core/windowsystem/changes#s342">Local folder structure under Windows2Local directory</api>.
 </answer>
 
 </api-answers>

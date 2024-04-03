@@ -836,7 +836,7 @@
      Provided implementation of new window system. It is a new major version of module core/windows.
      There also open API affected. There were added some new APIs, some older were deprecated
      and also some older APIs have adjusted their semantics. Look at the 
-     <a href="https://netbeans.apache.org/projects/platform/core/windowsystem/changes.html" shape="rect">changes document</a>
+     <a href="https://netbeans.apache.org/projects/platform/core/windowsystem/changes" shape="rect">changes document</a>
      which has the detailed information.
      </description>
      <class package="org.openide.windows" name="CloneableTopComponent"/>

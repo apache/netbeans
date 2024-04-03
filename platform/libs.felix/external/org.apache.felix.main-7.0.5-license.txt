@@ -1,8 +1,8 @@
 Name: Felix
-Version: 7.0.3
+Version: 7.0.5
 Description: Apache Felix OSGi container.
 License: Apache-2.0
-Files: org.apache.felix.main-7.0.3.jar
+Files: org.apache.felix.main-7.0.5.jar
 Origin: Apache Software Foundation
 URL: http://archive.apache.org/dist/felix/
 

@@ -14,6 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-F29E6318333D2303CE4965C9819CFAD08DE7D1E5 org.junit.jupiter:junit-jupiter-api:5.6.0
-B28E078D4E8424DE01DF02EC92410D225E5D6444 org.junit.jupiter:junit-jupiter-params:5.6.0
-83C9E737F6015D9E00029B9B1D51E952A884B8F9 org.junit.jupiter:junit-jupiter-engine:5.6.0
+FB55D6E2BCE173F35FD28422E7975539621055EF org.junit.jupiter:junit-jupiter-api:5.10.2
+359132C82A9D3FA87A325DB6EDD33B5FDC67A3D8 org.junit.jupiter:junit-jupiter-params:5.10.2
+F1F8FE97BD58E85569205F071274D459C2C4F8CD org.junit.jupiter:junit-jupiter-engine:5.10.2

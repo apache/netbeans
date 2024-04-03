@@ -30,6 +30,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
@@ -396,8 +397,9 @@ public class MicronautExpressionLanguageCompletion {
             }
             if (pkgPrefix != null) {
                 Set<String> seenPkgs = new HashSet<>();
+                ModuleElement module = info.getElements().getModuleOf(ctx.getScope().getEnclosingClass());
                 for (String pkgName : info.getClasspathInfo().getClassIndex().getPackageNames(pkgPrefix, false, EnumSet.allOf(ClassIndex.SearchScope.class))) {
-                    if (Utils.startsWith(pkgName, pkgPrefix + prefix)) {
+                    if (Utils.startsWith(pkgName, pkgPrefix + prefix) && (module != null ? info.getElements().getPackageElement(module, pkgName) : info.getElements().getPackageElement(pkgName)) != null) {
                         String name = pkgName.substring(pkgPrefix.length());
                         int idx = name.indexOf('.');
                         if (idx > 0) {

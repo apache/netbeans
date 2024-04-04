@@ -25,6 +25,8 @@
 [![Build Status](https://ci-builds.apache.org/job/Netbeans/view/vscode/job/netbeans-vscode/badge/icon)](https://ci-builds.apache.org/job/Netbeans/view/vscode/job/netbeans-vscode/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/apache/netbeans/blob/master/LICENSE)
 
+**Version 21.9.9 is 22.0 Early Access version.**
+
 This is [Apache NetBeans](http://netbeans.org) Language Server extension for VS Code. Use it to get all the _goodies of NetBeans_ via the VS Code user interface! Runs on __JDK11__ and all newer versions.
 
 Apache NetBeans Language Server brings full featured Java development (edit-compile-debug & test cycle) for Maven and Gradle projects to VSCode. As well as other features.

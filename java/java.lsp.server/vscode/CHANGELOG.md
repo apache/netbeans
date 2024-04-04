@@ -20,6 +20,18 @@
     under the License.
 
 -->
+
+## Version 21.9.9
+* This is Early Access of 22.0.0 version (this version used due to VSCode versioning)
+* Simplified LSP server startup
+* Project and priming build fixes
+* LSP: Do not compute text edits in source actions on `resolve` call
+* Micronaut:
+   * Micronaut PUT/POST Data Endpoints method generation
+   * Code completion for Repository finder methods enhanced
+   * Code completion for Java static members
+   * Plain and Data Controllers have separate templates
+
 ## Version 21.0.0
 * Improved vulnerability audit results and display 
 * Number of fixes in Maven projects processing 

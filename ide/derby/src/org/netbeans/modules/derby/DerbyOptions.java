@@ -27,6 +27,7 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.db.explorer.DatabaseException;
@@ -67,7 +68,9 @@ public class DerbyOptions {
     static final String INST_DIR = "db-derby-10.14.2.0"; // NOI18N
 
     public static final String DRIVER_CLASS_NET = "org.apache.derby.jdbc.ClientDriver"; // NOI18N
+    public static final String DRIVER_CLASS_NET_MODULAR = "org.apache.derby.client.ClientAutoloadedDriver"; // NOI18N
     public static final String DRIVER_CLASS_EMBEDDED = "org.apache.derby.jdbc.EmbeddedDriver"; // NOI18N
+    public static final String DRIVER_CLASS_EMBEDDED_MODULAR = "org.apache.derby.iapi.jdbc.AutoloadedDriver"; // NOI18N
 
     private static final String DRIVER_PATH_NET = "lib/derbyclient.jar"; // NOI18N
     private static final String DRIVER_PATH_EMBEDDED = "lib/derby.jar"; // NOI18N
@@ -252,8 +255,12 @@ public class DerbyOptions {
                 public void run() {
                     registerDriver(DRIVER_NAME_NET, DRIVER_DISP_NAME_NET, DRIVER_CLASS_NET,
                             new String[]{DRIVER_PATH_NET, DRIVER_PATH_EMBEDDED}, newLocation);
+                    registerDriver(DRIVER_NAME_NET, DRIVER_DISP_NAME_NET, DRIVER_CLASS_NET_MODULAR,
+                            new String[]{DRIVER_PATH_NET, DRIVER_PATH_EMBEDDED}, newLocation);
                     registerDriver(DRIVER_NAME_EMBEDDED, DRIVER_DISP_NAME_EMBEDDED,
                             DRIVER_CLASS_EMBEDDED, new String[]{DRIVER_PATH_EMBEDDED}, newLocation);
+                    registerDriver(DRIVER_NAME_EMBEDDED, DRIVER_DISP_NAME_EMBEDDED,
+                            DRIVER_CLASS_EMBEDDED_MODULAR, new String[]{DRIVER_PATH_EMBEDDED}, newLocation);
                 }
             });
         } catch (IOException e) {
@@ -315,21 +322,39 @@ public class DerbyOptions {
         if (newLocation != null && newLocation.length() >= 0) {
             URL[] driverFileUrls = new URL[driverRelativeFile.length];
             try {
+                boolean driverClassFound = false;
                 for (int i = 0; i < driverRelativeFile.length; i++) {
                     File drvFile = new File(newLocation, driverRelativeFile[i]);
+                    driverClassFound |= containsClass(drvFile, driverClass);
                     if (!drvFile.exists()) {
                         return;
                     }
                     driverFileUrls[i] = drvFile.toURI().toURL();
                 }
-                JDBCDriver newDriver = JDBCDriver.create(driverName, driverDisplayName, driverClass, driverFileUrls);
-                JDBCDriverManager.getDefault().addDriver(newDriver);
+                if (driverClassFound) {
+                    JDBCDriver newDriver = JDBCDriver.create(driverName, driverDisplayName, driverClass, driverFileUrls);
+                    JDBCDriverManager.getDefault().addDriver(newDriver);
+                }
             } catch (MalformedURLException e) {
                 LOGGER.log(Level.WARNING, null, e);
             } catch (DatabaseException e) {
                 LOGGER.log(Level.WARNING, null, e);
             }
         }
+    }
+
+    private static boolean containsClass(File file, String className) {
+        String relativePath = className.replace(".", "/") + ".class";
+        if(file.isFile()) {
+            try (JarFile jf = new JarFile(file)) {
+                return jf.getEntry(relativePath) != null;
+            } catch (IOException ex) {
+                // Ok, ignore
+            }
+        } else if (file.isDirectory()) {
+            return new File(file, relativePath).exists();
+        }
+        return false;
     }
 
     private void registerLibrary(final String newLocation) {

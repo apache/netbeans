@@ -282,7 +282,7 @@ public class ExecSupport {
 
         @Override
         public void run() {
-            while (loop) {
+            while (loop && child.isAlive()) {
                 if (isStringFound()) {
                     status = true;
                     break;

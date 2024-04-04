@@ -190,7 +190,7 @@
                         group="java.io.File" 
                         name="nbexec" 
                         type="export" 
-                        url="https://netbeans.apache.org/projects/platform/articles/installation.html#launcher"
+                        url="https://netbeans.apache.org/projects/platform/articles/installation#launcher"
                     /> launcher is fully featured and
                     supported. It should work on any Unix flavor. Implemented as
                     a shell script. 
@@ -215,7 +215,7 @@
                         group="java.io.File" 
                         name="nbexec.exe" 
                         type="export" 
-                        url="https://netbeans.apache.org/projects/platform/articles/installation.html#launcher"
+                        url="https://netbeans.apache.org/projects/platform/articles/installation#launcher"
                     />
                     launcher is fully featured and
                     supported. <!-- <samp>runidew.exe</samp> is similar but avoids
@@ -477,7 +477,7 @@
             <li>
                 <api type="export" group="systemproperty" name="netbeans.dirs" category="friend">
                     Additional secondary NetBeans installation directories as proposed in <a
-                    href="https://netbeans.apache.org/projects/platform/articles/installation.html">installation structure</a>
+                    href="https://netbeans.apache.org/projects/platform/articles/installation">installation structure</a>
                     design document.
                 </api>
             </li>
@@ -684,7 +684,7 @@
             <li>
                 <api type="export" group="cli" name="--fontsize" category="deprecated">
                     Specify base fontsize. Deprecated in favor of using <a
-                    href="https://netbeans.apache.org/projects/ui/themes/themes.html">themes</a>
+                    href="https://netbeans.apache.org/projects/ui/themes/themes">themes</a>
                     which is much more general. But this is a convenient quick
                     settings, handy for projection screens and so on.
                 </api>

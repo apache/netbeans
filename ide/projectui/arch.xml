@@ -139,7 +139,7 @@
  <answer id="arch-what">
   <p>
    General user interface implementation for the project system. <a
-   href="https://netbeans.apache.org/projects/buildsys/build-sys-ui-spec.html">UI
+   href="https://netbeans.apache.org/projects/buildsys/build-sys-ui-spec">UI
    Specification</a>
   </p>
  </answer>

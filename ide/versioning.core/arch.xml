@@ -118,7 +118,7 @@
  <answer id="arch-usecases">
   <p>
        Main and Popup Menu usecases come from the UI spec available here:         
-       <a href="https://netbeans.apache.org/projects/ui/versioningspecification/index.html">Versioning UI spec</a>
+       <a href="https://netbeans.apache.org/projects/ui/versioningspecification">Versioning UI spec</a>
         <usecase id="1" name="Main Menu Itegration">
         All installed SCM systems must cooperate while constructing popup and main menus, see UI spec.
         </usecase>

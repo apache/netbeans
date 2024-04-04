@@ -45,6 +45,7 @@
             <public-packages>
                 <package>com.formdev.flatlaf</package>
                 <package>com.formdev.flatlaf.themes</package>
+                <package>com.formdev.flatlaf.ui</package>
                 <package>com.formdev.flatlaf.util</package>
             </public-packages>
             <class-path-extension>

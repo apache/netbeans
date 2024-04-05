@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.23
+#Version 1.24
 
 CLSS public abstract com.oracle.js.parser.AbstractParser
 cons protected init(com.oracle.js.parser.Source,com.oracle.js.parser.ErrorManager,boolean,int)
@@ -19,7 +19,7 @@ fld protected int start
 fld protected long previousToken
 fld protected long token
 meth protected !varargs static java.lang.String message(java.lang.String,java.lang.String[])
-meth protected com.oracle.js.parser.ir.IdentNode createIdentNode(long,int,java.lang.String)
+meth protected com.oracle.js.parser.ir.IdentNode createIdentNode(long,int,com.oracle.truffle.api.strings.TruffleString)
 meth protected final boolean isIdentifierName()
 meth protected final boolean isIdentifierName(long)
 meth protected final boolean isNonStrictModeIdent()
@@ -42,10 +42,11 @@ meth protected final long getToken(int)
 meth protected final void expect(com.oracle.js.parser.TokenType)
 meth protected final void expectDontAdvance(com.oracle.js.parser.TokenType)
 meth protected final void warning(com.oracle.js.parser.JSErrorType,java.lang.String,long)
-meth protected java.util.function.Function<java.lang.Number,java.lang.String> getNumberToStringConverter()
+meth protected java.util.function.Function<java.lang.Number,com.oracle.truffle.api.strings.TruffleString> getNumberToStringConverter()
+meth protected static java.lang.String message(java.lang.String,com.oracle.js.parser.ir.IdentNode)
 meth protected void validateLexerToken(com.oracle.js.parser.Lexer$LexerToken)
 supr java.lang.Object
-hfds SOURCE_URL_PREFIX
+hfds MSG_EXPECTED,MSG_EXPECTED_STMT,MSG_PARSER_ERROR,SOURCE_URL_PREFIX
 
 CLSS public final com.oracle.js.parser.ECMAErrors
 meth public !varargs static java.lang.String getMessage(java.lang.String,java.lang.String[])
@@ -122,6 +123,7 @@ innr protected abstract interface static LineInfoReceiver
 innr public abstract static LexerToken
 innr public static RegexToken
 innr public static XMLToken
+intf com.oracle.js.parser.StringPool
 meth protected !varargs static java.lang.String message(java.lang.String,java.lang.String[])
 meth protected boolean isEOL(char)
 meth protected boolean isEscapeCharacter(char)
@@ -138,19 +140,21 @@ meth protected void scanString(boolean)
 meth public boolean canStartLiteral(com.oracle.js.parser.TokenType)
 meth public boolean checkIdentForKeyword(long,java.lang.String)
 meth public com.oracle.js.parser.Lexer$RegexToken valueOfPattern(int,int)
-meth public java.lang.String stringIntern(java.lang.String)
-meth public java.lang.String valueOfRawString(long)
+meth public com.oracle.truffle.api.strings.TruffleString stringIntern(com.oracle.truffle.api.strings.TruffleString)
+meth public com.oracle.truffle.api.strings.TruffleString stringIntern(java.lang.String)
+meth public com.oracle.truffle.api.strings.TruffleString valueOfRawString(long)
 meth public static boolean isJSEOL(char)
 meth public static boolean isJSWhitespace(char)
 meth public static boolean isStringLineTerminator(char)
 meth public void lexify()
 supr com.oracle.js.parser.Scanner
-hfds JAVASCRIPT_WHITESPACE_HIGH,JAVASCRIPT_WHITESPACE_HIGH_START,MESSAGE_INVALID_HEX,XML_LITERALS,allowBigInt,ecmaScriptVersion,internedStrings,isModule,last,linePosition,nested,pauseOnFunctionBody,pauseOnNextLeftBrace,pauseOnRightBrace,pendingLine,scripting,shebang,source,stream
+hfds JAVASCRIPT_WHITESPACE_HIGH_START,MSG_EDIT_STRING_MISSING_BRACE,MSG_HERE_MISSING_END_MARKER,MSG_HERE_NON_MATCHING_DELIMITER,MSG_ILLEGAL_IDENTIFIER_CHARACTER,MSG_INVALID_ESCAPE_CHAR,MSG_INVALID_HEX,MSG_LEXER_ERROR,MSG_MISSING_CLOSE_QUOTE,MSG_MISSING_SPACE_AFTER_NUMBER,MSG_NUMERIC_LITERAL_MULTIPLE_SEPARATORS,MSG_NUMERIC_LITERAL_TRAILING_SEPARATOR,MSG_STRICT_NO_NONOCTALDECIMAL,MSG_STRICT_NO_OCTAL,XML_LITERALS,allowBigInt,ecmaScriptVersion,internedStrings,isModule,last,linePosition,nested,pauseOnFunctionBody,pauseOnNextLeftBrace,pauseOnRightBrace,pendingLine,scripting,shebang,source,stream
 hcls EditStringLexer,State
 
 CLSS public abstract static com.oracle.js.parser.Lexer$LexerToken
  outer com.oracle.js.parser.Lexer
-cons protected init(java.lang.String)
+cons protected init(com.oracle.truffle.api.strings.TruffleString)
+meth public com.oracle.truffle.api.strings.TruffleString getExpressionTS()
 meth public java.lang.String getExpression()
 supr java.lang.Object
 hfds expression
@@ -161,7 +165,8 @@ meth public abstract void lineInfo(int,int)
 
 CLSS public static com.oracle.js.parser.Lexer$RegexToken
  outer com.oracle.js.parser.Lexer
-cons public init(java.lang.String,java.lang.String)
+cons public init(com.oracle.truffle.api.strings.TruffleString,com.oracle.truffle.api.strings.TruffleString)
+meth public com.oracle.truffle.api.strings.TruffleString getOptionsTS()
 meth public java.lang.String getOptions()
 meth public java.lang.String toString()
 supr com.oracle.js.parser.Lexer$LexerToken
@@ -169,38 +174,28 @@ hfds options
 
 CLSS public static com.oracle.js.parser.Lexer$XMLToken
  outer com.oracle.js.parser.Lexer
-cons public init(java.lang.String)
+cons public init(com.oracle.truffle.api.strings.TruffleString)
 supr com.oracle.js.parser.Lexer$LexerToken
-
-CLSS public com.oracle.js.parser.Namespace
-cons public init()
-cons public init(com.oracle.js.parser.Namespace)
-meth public com.oracle.js.parser.Namespace getParent()
-meth public java.lang.String toString()
-meth public java.lang.String uniqueName(java.lang.String)
-supr java.lang.Object
-hfds directory,parent
 
 CLSS public com.oracle.js.parser.Parser
 cons public init(com.oracle.js.parser.ScriptEnvironment,com.oracle.js.parser.Source,com.oracle.js.parser.ErrorManager)
 cons public init(com.oracle.js.parser.ScriptEnvironment,com.oracle.js.parser.Source,com.oracle.js.parser.ErrorManager,boolean)
 cons public init(com.oracle.js.parser.ScriptEnvironment,com.oracle.js.parser.Source,com.oracle.js.parser.ErrorManager,boolean,int)
 fld protected final com.oracle.js.parser.Lexer$LineInfoReceiver lineInfoReceiver
-fld public final static boolean PROFILE_PARSING
-fld public final static boolean PROFILE_PARSING_PRINT
 meth public com.oracle.js.parser.ir.Expression parseExpression()
 meth public com.oracle.js.parser.ir.FunctionNode parse()
-meth public com.oracle.js.parser.ir.FunctionNode parse(java.lang.String,int,int,int,com.oracle.js.parser.ir.Scope,java.lang.String[])
+meth public com.oracle.js.parser.ir.FunctionNode parse(com.oracle.truffle.api.strings.TruffleString,int,int,int,com.oracle.js.parser.ir.Scope,java.util.List<java.lang.String>)
 meth public com.oracle.js.parser.ir.FunctionNode parseEval(boolean,com.oracle.js.parser.ir.Scope)
 meth public com.oracle.js.parser.ir.FunctionNode parseFunctionBody(boolean,boolean)
 meth public com.oracle.js.parser.ir.FunctionNode parseModule(java.lang.String)
 meth public com.oracle.js.parser.ir.FunctionNode parseModule(java.lang.String,int,int)
-meth public com.oracle.js.parser.ir.FunctionNode parseWithArguments(java.lang.String[])
+meth public com.oracle.js.parser.ir.FunctionNode parseWithArguments(java.util.List<java.lang.String>)
 meth public java.lang.String toString()
+meth public java.util.List<com.oracle.js.parser.ir.Expression> decoratorList(boolean,boolean)
 meth public void parseFormalParameterList()
 meth public void setReparsedFunction(com.oracle.js.parser.RecompilableScriptFunctionData)
 supr com.oracle.js.parser.AbstractParser
-hfds ANONYMOUS_FUNCTION_NAME,APPLY_NAME,ARGUMENTS_NAME,ARROW_FUNCTION_NAME,ASSIGNMENT_TARGET_CONTEXT,CATCH_PARAMETER_CONTEXT,CLASS_NAME_CONTEXT,CONSTRUCTOR_NAME,ERROR_BINDING_NAME,ES2019_OPTIONAL_CATCH_BINDING,ES2020_CLASS_FIELDS,ES2021_TOP_LEVEL_AWAIT,ES6_ARROW_FUNCTION,ES6_CLASS,ES6_COMPUTED_PROPERTY_NAME,ES6_DEFAULT_PARAMETER,ES6_DESTRUCTURING,ES6_FOR_OF,ES6_GENERATOR_FUNCTION,ES6_NEW_TARGET,ES6_REST_PARAMETER,ES6_SPREAD_ARGUMENT,ES6_SPREAD_ARRAY,ES8_ASYNC_FUNCTION,ES8_FOR_AWAIT_OF,ES8_REST_SPREAD_PROPERTY,ES8_TRAILING_COMMA,EVAL_NAME,EXEC_NAME,FUNCTION_PARAMETER_CONTEXT,IMPORTED_BINDING_CONTEXT,IMPORT_META_NAME,INITIALIZER_FUNCTION_NAME,MESSAGE_ESCAPED_KEYWORD,MESSAGE_EXPECTED_OPERAND,MESSAGE_EXPECTED_STMT,MESSAGE_INVALID_ARROW_PARAMETER,MESSAGE_INVALID_LVALUE,MESSAGE_INVALID_PROPERTY_INITIALIZER,MESSAGE_PROPERTY_REDEFINITON,NEW_TARGET_NAME,PARSE_EVAL,PARSE_FUNCTION_CONTEXT_EVAL,PRIVATE_CONSTRUCTOR_NAME,PROGRAM_NAME,PROTOTYPE_NAME,PROTO_NAME,REPARSE_IS_METHOD,REPARSE_IS_PROPERTY_ACCESSOR,SWITCH_BINDING_NAME,VARIABLE_NAME_CONTEXT,allowBigInt,defaultNames,env,functionDeclarations,isModule,lc,namespace,reparsedFunction,scripting,shebang
+hfds ANONYMOUS_FUNCTION_NAME,APPLY_NAME,ARGS,ARGUMENTS_NAME,ARGUMENTS_NAME_TS,ARROW_FUNCTION_NAME,CONSTRUCTOR_NAME,CONSTRUCTOR_NAME_TS,CONTEXT_ASSIGNMENT_TARGET,CONTEXT_ASYNC_FUNCTION_DECLARATION,CONTEXT_CATCH_PARAMETER,CONTEXT_CLASS_DECLARATION,CONTEXT_CLASS_NAME,CONTEXT_CONST_DECLARATION,CONTEXT_FOR_IN_ITERATOR,CONTEXT_FOR_OF_ITERATOR,CONTEXT_FUNCTION_DECLARATION,CONTEXT_FUNCTION_NAME,CONTEXT_FUNCTION_PARAMETER,CONTEXT_GENERATOR_FUNCTION_DECLARATION,CONTEXT_IDENTIFIER_REFERENCE,CONTEXT_IMPORTED_BINDING,CONTEXT_IN,CONTEXT_LABEL_IDENTIFIER,CONTEXT_LET_DECLARATION,CONTEXT_OF,CONTEXT_OPERAND_FOR_DEC_OPERATOR,CONTEXT_OPERAND_FOR_INC_OPERATOR,CONTEXT_VARIABLE_NAME,ERROR_BINDING_NAME,ES2019_OPTIONAL_CATCH_BINDING,ES2020_CLASS_FIELDS,ES2022_TOP_LEVEL_AWAIT,ES6_ARROW_FUNCTION,ES6_CLASS,ES6_COMPUTED_PROPERTY_NAME,ES6_DEFAULT_PARAMETER,ES6_DESTRUCTURING,ES6_FOR_OF,ES6_GENERATOR_FUNCTION,ES6_NEW_TARGET,ES6_REST_PARAMETER,ES6_SPREAD_ARGUMENT,ES6_SPREAD_ARRAY,ES8_ASYNC_FUNCTION,ES8_FOR_AWAIT_OF,ES8_REST_SPREAD_PROPERTY,ES8_TRAILING_COMMA,EVAL_NAME,EXEC_NAME,GET_SPC,IMPORT_META_NAME,INITIALIZER_FUNCTION_NAME,META,MSG_ACCESSOR_CONSTRUCTOR,MSG_ARGUMENTS_IN_FIELD_INITIALIZER,MSG_ASYNC_CONSTRUCTOR,MSG_AUTO_ACCESSOR_NOT_FIELD,MSG_CONSTRUCTOR_FIELD,MSG_DECORATED_CONSTRUCTOR,MSG_DECORATED_STATIC_BLOCK,MSG_DUPLICATE_DEFAULT_IN_SWITCH,MSG_DUPLICATE_IMPORT_ASSERTION,MSG_DUPLICATE_LABEL,MSG_ESCAPED_KEYWORD,MSG_EXPECTED_ARROW_PARAMETER,MSG_EXPECTED_BINDING,MSG_EXPECTED_BINDING_IDENTIFIER,MSG_EXPECTED_COMMA,MSG_EXPECTED_IMPORT,MSG_EXPECTED_NAMED_IMPORT,MSG_EXPECTED_OPERAND,MSG_EXPECTED_PROPERTY_ID,MSG_EXPECTED_STMT,MSG_EXPECTED_TARGET,MSG_FOR_EACH_WITHOUT_IN,MSG_FOR_IN_LOOP_INITIALIZER,MSG_GENERATOR_CONSTRUCTOR,MSG_ILLEGAL_BREAK_STMT,MSG_ILLEGAL_CONTINUE_STMT,MSG_INVALID_ARROW_PARAMETER,MSG_INVALID_EXPORT,MSG_INVALID_FOR_AWAIT_OF,MSG_INVALID_LVALUE,MSG_INVALID_PRIVATE_IDENT,MSG_INVALID_PROPERTY_INITIALIZER,MSG_INVALID_RETURN,MSG_INVALID_SUPER,MSG_LET_LEXICAL_BINDING,MSG_MANY_VARS_IN_FOR_IN_LOOP,MSG_MISSING_CATCH_OR_FINALLY,MSG_MISSING_CONST_ASSIGNMENT,MSG_MISSING_DESTRUCTURING_ASSIGNMENT,MSG_MULTIPLE_CONSTRUCTORS,MSG_MULTIPLE_PROTO_KEY,MSG_NEW_TARGET_IN_FUNCTION,MSG_NOT_LVALUE_FOR_IN_LOOP,MSG_NO_FUNC_DECL_HERE,MSG_NO_FUNC_DECL_HERE_WARN,MSG_OPTIONAL_CHAIN_TEMPLATE,MSG_PRIVATE_CONSTRUCTOR_METHOD,MSG_PROPERTY_REDEFINITON,MSG_STATIC_PROTOTYPE_FIELD,MSG_STATIC_PROTOTYPE_METHOD,MSG_STRICT_CANT_DELETE_IDENT,MSG_STRICT_CANT_DELETE_PRIVATE,MSG_STRICT_NAME,MSG_STRICT_NO_FUNC_DECL_HERE,MSG_STRICT_NO_NONOCTALDECIMAL,MSG_STRICT_NO_OCTAL,MSG_STRICT_NO_WITH,MSG_STRICT_PARAM_REDEFINITION,MSG_SYNTAX_ERROR_REDECLARE_VARIABLE,MSG_UNDEFINED_LABEL,MSG_UNEXPECTED_IDENT,MSG_UNEXPECTED_IMPORT_META,MSG_UNEXPECTED_TOKEN,MSG_UNTERMINATED_TEMPLATE_EXPRESSION,MSG_USE_STRICT_NON_SIMPLE_PARAM,NEW_TARGET_NAME,NEW_TARGET_NAME_TS,PARSE_EVAL,PARSE_FUNCTION_CONTEXT_EVAL,PRIVATE_CONSTRUCTOR_NAME,PROFILE_PARSING,PROGRAM_NAME,PROTOTYPE_NAME,PROTO_NAME,REPARSE_IS_METHOD,REPARSE_IS_PROPERTY_ACCESSOR,SET_SPC,SWITCH_BINDING_NAME,TARGET,USE_STRICT,allowBigInt,coverArrowFunction,defaultNames,env,functionDeclarations,isModule,lc,reparsedFunction,scripting,shebang
 hcls ForVariableDeclarationListResult,ParserState,PropertyFunction,VerifyDestructuringPatternNodeVisitor
 
 CLSS public final com.oracle.js.parser.ParserException
@@ -221,6 +216,12 @@ meth public void setLineNumber(int)
 supr java.lang.RuntimeException
 hfds column,errorType,fileName,line,source,token
 
+CLSS public final com.oracle.js.parser.ParserStrings
+cons public init()
+meth public static com.oracle.truffle.api.strings.TruffleString constant(java.lang.String)
+meth public static com.oracle.truffle.api.strings.TruffleString fromJavaString(java.lang.String)
+supr java.lang.Object
+
 CLSS public abstract interface com.oracle.js.parser.RecompilableScriptFunctionData
 meth public abstract com.oracle.js.parser.RecompilableScriptFunctionData getScriptFunctionData(int)
 meth public abstract int getFunctionFlags()
@@ -228,13 +229,13 @@ meth public abstract int getFunctionNodeId()
 meth public abstract java.lang.Object getEndParserState()
 
 CLSS public com.oracle.js.parser.Scanner
-cons protected init(char[],int,int,int)
+cons protected init(java.lang.String,int,int,int)
 fld protected char ch0
 fld protected char ch1
 fld protected char ch2
 fld protected char ch3
-fld protected final char[] content
 fld protected final int limit
+fld protected final java.lang.String content
 fld protected int line
 fld protected int position
 meth protected final boolean atEOF()
@@ -250,7 +251,7 @@ innr public final static Builder
 meth public boolean isStrict()
 meth public static com.oracle.js.parser.ScriptEnvironment$Builder builder()
 supr java.lang.Object
-hfds allowBigInt,annexB,classFields,constAsVar,dumpOnError,ecmaScriptVersion,emptyStatements,err,functionStatement,namespace,scripting,shebang,strict,syntaxExtensions
+hfds allowBigInt,annexB,classFields,constAsVar,dumpOnError,ecmaScriptVersion,emptyStatements,err,functionStatement,importAssertions,privateFieldsIn,scripting,shebang,strict,syntaxExtensions,topLevelAwait,v8Intrinsics
 
 CLSS public final static com.oracle.js.parser.ScriptEnvironment$Builder
  outer com.oracle.js.parser.ScriptEnvironment
@@ -263,12 +264,16 @@ meth public com.oracle.js.parser.ScriptEnvironment$Builder dumpOnError(java.io.P
 meth public com.oracle.js.parser.ScriptEnvironment$Builder ecmaScriptVersion(int)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder emptyStatements(boolean)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder functionStatementBehavior(com.oracle.js.parser.ScriptEnvironment$FunctionStatementBehavior)
+meth public com.oracle.js.parser.ScriptEnvironment$Builder importAssertions(boolean)
+meth public com.oracle.js.parser.ScriptEnvironment$Builder privateFieldsIn(boolean)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder scripting(boolean)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder shebang(boolean)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder strict(boolean)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder syntaxExtensions(boolean)
+meth public com.oracle.js.parser.ScriptEnvironment$Builder topLevelAwait(boolean)
+meth public com.oracle.js.parser.ScriptEnvironment$Builder v8Intrinsics(boolean)
 supr java.lang.Object
-hfds allowBigInt,annexB,classFields,constAsVar,dumpOnError,ecmaScriptVersion,emptyStatements,functionStatementBehavior,scripting,shebang,strict,syntaxExtensions
+hfds allowBigInt,annexB,classFields,constAsVar,dumpOnError,ecmaScriptVersion,emptyStatements,functionStatementBehavior,importAssertions,privateFieldsIn,scripting,shebang,strict,syntaxExtensions,topLevelAwait,v8Intrinsics
 
 CLSS public final static !enum com.oracle.js.parser.ScriptEnvironment$FunctionStatementBehavior
  outer com.oracle.js.parser.ScriptEnvironment
@@ -286,13 +291,12 @@ meth public int getColumn(int)
 meth public int getLength()
 meth public int getLine(int)
 meth public int hashCode()
-meth public java.lang.CharSequence getContent()
-meth public java.lang.CharSequence getSourceLine(int)
 meth public java.lang.String getBase()
+meth public java.lang.String getContent()
 meth public java.lang.String getDigest()
 meth public java.lang.String getExplicitURL()
 meth public java.lang.String getName()
-meth public java.lang.String getString()
+meth public java.lang.String getSourceLine(int)
 meth public java.lang.String getString(int,int)
 meth public java.lang.String getString(long)
 meth public java.lang.String toString()
@@ -305,6 +309,9 @@ meth public void setExplicitURL(java.lang.String)
 supr java.lang.Object
 hfds BUF_SIZE,base,data,digest,explicitURL,hash,name
 hcls Data,RawData
+
+CLSS public abstract interface com.oracle.js.parser.StringPool
+meth public abstract com.oracle.truffle.api.strings.TruffleString stringIntern(com.oracle.truffle.api.strings.TruffleString)
 
 CLSS public final com.oracle.js.parser.Token
 fld public final static int LENGTH_MASK = 268435455
@@ -335,7 +342,7 @@ meth public static com.oracle.js.parser.TokenKind[] values()
 supr java.lang.Enum<com.oracle.js.parser.TokenKind>
 
 CLSS public final com.oracle.js.parser.TokenLookup
-meth public static com.oracle.js.parser.TokenType lookupKeyword(char[],int,int)
+meth public static com.oracle.js.parser.TokenType lookupKeyword(java.lang.String,int,int)
 meth public static com.oracle.js.parser.TokenType lookupOperator(char,char,char,char,int)
 supr java.lang.Object
 hfds table,tableBase,tableLength,tableLimit
@@ -353,11 +360,13 @@ supr java.lang.Object
 hfds INITIAL_SIZE,base,buffer,count,in,out
 
 CLSS public final !enum com.oracle.js.parser.TokenType
+fld public final static com.oracle.js.parser.TokenType ACCESSOR
 fld public final static com.oracle.js.parser.TokenType ADD
 fld public final static com.oracle.js.parser.TokenType AND
 fld public final static com.oracle.js.parser.TokenType ARRAY
 fld public final static com.oracle.js.parser.TokenType ARROW
 fld public final static com.oracle.js.parser.TokenType AS
+fld public final static com.oracle.js.parser.TokenType ASSERT
 fld public final static com.oracle.js.parser.TokenType ASSIGN
 fld public final static com.oracle.js.parser.TokenType ASSIGN_ADD
 fld public final static com.oracle.js.parser.TokenType ASSIGN_AND
@@ -376,6 +385,7 @@ fld public final static com.oracle.js.parser.TokenType ASSIGN_SHL
 fld public final static com.oracle.js.parser.TokenType ASSIGN_SHR
 fld public final static com.oracle.js.parser.TokenType ASSIGN_SUB
 fld public final static com.oracle.js.parser.TokenType ASYNC
+fld public final static com.oracle.js.parser.TokenType AT
 fld public final static com.oracle.js.parser.TokenType AWAIT
 fld public final static com.oracle.js.parser.TokenType BIGINT
 fld public final static com.oracle.js.parser.TokenType BINARY_NUMBER
@@ -442,6 +452,7 @@ fld public final static com.oracle.js.parser.TokenType LPAREN
 fld public final static com.oracle.js.parser.TokenType LT
 fld public final static com.oracle.js.parser.TokenType MOD
 fld public final static com.oracle.js.parser.TokenType MUL
+fld public final static com.oracle.js.parser.TokenType NAMEDEVALUATION
 fld public final static com.oracle.js.parser.TokenType NE
 fld public final static com.oracle.js.parser.TokenType NEW
 fld public final static com.oracle.js.parser.TokenType NE_STRICT
@@ -504,6 +515,7 @@ meth public boolean isOperator(boolean)
 meth public boolean needsParens(com.oracle.js.parser.TokenType,boolean)
 meth public com.oracle.js.parser.TokenKind getKind()
 meth public com.oracle.js.parser.TokenType getNext()
+meth public com.oracle.truffle.api.strings.TruffleString getNameTS()
 meth public int getECMAScriptVersion()
 meth public int getLength()
 meth public int getPrecedence()
@@ -513,15 +525,17 @@ meth public java.lang.String toString()
 meth public static com.oracle.js.parser.TokenType valueOf(java.lang.String)
 meth public static com.oracle.js.parser.TokenType[] values()
 supr java.lang.Enum<com.oracle.js.parser.TokenType>
-hfds ecmaScriptVersion,isLeftAssociative,kind,name,next,precedence,tokenValues
+hfds ecmaScriptVersion,isLeftAssociative,kind,name,nameTS,next,precedence,tokenValues
 
 CLSS public final com.oracle.js.parser.ir.AccessNode
-cons public init(long,int,com.oracle.js.parser.ir.Expression,java.lang.String)
-cons public init(long,int,com.oracle.js.parser.ir.Expression,java.lang.String,boolean,boolean,boolean,boolean)
+cons public init(long,int,com.oracle.js.parser.ir.Expression,com.oracle.truffle.api.strings.TruffleString)
+cons public init(long,int,com.oracle.js.parser.ir.Expression,com.oracle.truffle.api.strings.TruffleString,boolean,boolean,boolean,boolean)
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
 meth public boolean isPrivate()
 meth public com.oracle.js.parser.ir.AccessNode setIsSuper()
 meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
+meth public com.oracle.truffle.api.strings.TruffleString getPrivateNameTS()
+meth public com.oracle.truffle.api.strings.TruffleString getPropertyTS()
 meth public java.lang.String getPrivateName()
 meth public java.lang.String getProperty()
 meth public void toString(java.lang.StringBuilder,boolean)
@@ -571,7 +585,6 @@ supr com.oracle.js.parser.ir.Expression
 hfds lhs,rhs
 
 CLSS public com.oracle.js.parser.ir.Block
-cons public !varargs init(long,int,int,com.oracle.js.parser.ir.Scope,com.oracle.js.parser.ir.Statement[])
 cons public init(long,int,int,com.oracle.js.parser.ir.Scope,java.util.List<com.oracle.js.parser.ir.Statement>)
 fld protected final com.oracle.js.parser.ir.Scope scope
 fld protected final int flags
@@ -656,11 +669,13 @@ meth public abstract boolean isBreakableWithoutLabel()
 CLSS public final com.oracle.js.parser.ir.CallNode
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
 meth public boolean isApplyArguments()
+meth public boolean isDefaultDerivedConstructorSuperCall()
 meth public boolean isEval()
 meth public boolean isImport()
 meth public boolean isNew()
 meth public boolean isOptional()
 meth public boolean isOptionalChain()
+meth public boolean isTaggedTemplateLiteral()
 meth public com.oracle.js.parser.ir.CallNode setArgs(java.util.List<com.oracle.js.parser.ir.Expression>)
 meth public com.oracle.js.parser.ir.CallNode setFunction(com.oracle.js.parser.ir.Expression)
 meth public com.oracle.js.parser.ir.Expression getFunction()
@@ -669,12 +684,13 @@ meth public int getLineNumber()
 meth public java.util.List<com.oracle.js.parser.ir.Expression> getArgs()
 meth public static com.oracle.js.parser.ir.Expression forCall(int,long,int,int,com.oracle.js.parser.ir.Expression,java.util.List<com.oracle.js.parser.ir.Expression>)
 meth public static com.oracle.js.parser.ir.Expression forCall(int,long,int,int,com.oracle.js.parser.ir.Expression,java.util.List<com.oracle.js.parser.ir.Expression>,boolean,boolean)
-meth public static com.oracle.js.parser.ir.Expression forCall(int,long,int,int,com.oracle.js.parser.ir.Expression,java.util.List<com.oracle.js.parser.ir.Expression>,boolean,boolean,boolean,boolean)
+meth public static com.oracle.js.parser.ir.Expression forCall(int,long,int,int,com.oracle.js.parser.ir.Expression,java.util.List<com.oracle.js.parser.ir.Expression>,boolean,boolean,boolean,boolean,boolean)
 meth public static com.oracle.js.parser.ir.Expression forImport(int,long,int,int,com.oracle.js.parser.ir.IdentNode,java.util.List<com.oracle.js.parser.ir.Expression>)
 meth public static com.oracle.js.parser.ir.Expression forNew(int,long,int,int,com.oracle.js.parser.ir.Expression,java.util.List<com.oracle.js.parser.ir.Expression>)
+meth public static com.oracle.js.parser.ir.Expression forTaggedTemplateLiteral(int,long,int,int,com.oracle.js.parser.ir.Expression,java.util.List<com.oracle.js.parser.ir.Expression>)
 meth public void toString(java.lang.StringBuilder,boolean)
 supr com.oracle.js.parser.ir.OptionalExpression
-hfds IS_APPLY_ARGUMENTS,IS_EVAL,IS_IMPORT,IS_NEW,IS_OPTIONAL,IS_OPTIONAL_CHAIN,args,flags,function,lineNumber
+hfds IS_APPLY_ARGUMENTS,IS_DEFAULT_DERIVED_CONSTRUCTOR_SUPER_CALL,IS_EVAL,IS_IMPORT,IS_NEW,IS_OPTIONAL,IS_OPTIONAL_CHAIN,IS_TAGGED_TEMPLATE_LITERAL,args,flags,function,lineNumber
 
 CLSS public final com.oracle.js.parser.ir.CaseNode
 cons public init(long,int,com.oracle.js.parser.ir.Expression,java.util.List<com.oracle.js.parser.ir.Statement>)
@@ -708,32 +724,65 @@ meth public void toString(java.lang.StringBuilder,boolean)
 supr com.oracle.js.parser.ir.Statement
 hfds body,exception,exceptionCondition,isSyntheticRethrow,pattern
 
+CLSS public final com.oracle.js.parser.ir.ClassElement
+meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
+meth public boolean isAccessor()
+meth public boolean isAutoAccessor()
+meth public boolean isClassField()
+meth public boolean isClassFieldOrAutoAccessor()
+meth public boolean isClassStaticBlock()
+meth public boolean isMethod()
+meth public boolean isMethodOrAccessor()
+meth public boolean isPrivate()
+meth public boolean isStatic()
+meth public com.oracle.js.parser.ir.ClassElement setDecorators(java.util.List<com.oracle.js.parser.ir.Expression>)
+meth public com.oracle.js.parser.ir.ClassElement setGetter(com.oracle.js.parser.ir.FunctionNode)
+meth public com.oracle.js.parser.ir.ClassElement setKey(com.oracle.js.parser.ir.Expression)
+meth public com.oracle.js.parser.ir.ClassElement setSetter(com.oracle.js.parser.ir.FunctionNode)
+meth public com.oracle.js.parser.ir.ClassElement setValue(com.oracle.js.parser.ir.Expression)
+meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
+meth public java.util.List<com.oracle.js.parser.ir.Expression> getDecorators()
+meth public static com.oracle.js.parser.ir.ClassElement createAccessor(long,int,com.oracle.js.parser.ir.Expression,com.oracle.js.parser.ir.FunctionNode,com.oracle.js.parser.ir.FunctionNode,java.util.List<com.oracle.js.parser.ir.Expression>,boolean,boolean,boolean)
+meth public static com.oracle.js.parser.ir.ClassElement createAutoAccessor(long,int,com.oracle.js.parser.ir.Expression,com.oracle.js.parser.ir.FunctionNode,java.util.List<com.oracle.js.parser.ir.Expression>,boolean,boolean,boolean)
+meth public static com.oracle.js.parser.ir.ClassElement createDefaultConstructor(long,int,com.oracle.js.parser.ir.Expression,com.oracle.js.parser.ir.Expression)
+meth public static com.oracle.js.parser.ir.ClassElement createField(long,int,com.oracle.js.parser.ir.Expression,com.oracle.js.parser.ir.Expression,java.util.List<com.oracle.js.parser.ir.Expression>,boolean,boolean,boolean)
+meth public static com.oracle.js.parser.ir.ClassElement createMethod(long,int,com.oracle.js.parser.ir.Expression,com.oracle.js.parser.ir.Expression,java.util.List<com.oracle.js.parser.ir.Expression>,boolean,boolean)
+meth public static com.oracle.js.parser.ir.ClassElement createStaticInitializer(long,int,com.oracle.js.parser.ir.FunctionNode)
+meth public void toString(java.lang.StringBuilder,boolean)
+supr com.oracle.js.parser.ir.PropertyNode
+hfds KIND_ACCESSOR,KIND_AUTO_ACCESSOR,KIND_FIELD,KIND_METHOD,KIND_STATIC_INIT,decorators,kind
+
 CLSS public com.oracle.js.parser.ir.ClassNode
-cons public init(long,int,com.oracle.js.parser.ir.IdentNode,com.oracle.js.parser.ir.Expression,com.oracle.js.parser.ir.PropertyNode,java.util.List<com.oracle.js.parser.ir.PropertyNode>,com.oracle.js.parser.ir.Scope,int,int,boolean,boolean)
-fld public final static java.lang.String PRIVATE_CONSTRUCTOR_BINDING_NAME = "#constructor"
+cons public init(long,int,com.oracle.js.parser.ir.IdentNode,com.oracle.js.parser.ir.Expression,com.oracle.js.parser.ir.ClassElement,java.util.List<com.oracle.js.parser.ir.ClassElement>,java.util.List<com.oracle.js.parser.ir.Expression>,com.oracle.js.parser.ir.Scope,int,boolean,boolean,boolean,boolean)
+fld public final static com.oracle.truffle.api.strings.TruffleString PRIVATE_CONSTRUCTOR_BINDING_NAME
 intf com.oracle.js.parser.ir.LexicalContextNode
 intf com.oracle.js.parser.ir.LexicalContextScope
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.LexicalContext,com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
-meth public boolean hasInstanceFields()
+meth public boolean hasClassElementDecorators()
+meth public boolean hasInstanceFieldsOrAccessors()
 meth public boolean hasPrivateInstanceMethods()
 meth public boolean hasPrivateMethods()
-meth public boolean hasStaticFields()
+meth public boolean hasStaticElements()
 meth public boolean isAnonymous()
-meth public com.oracle.js.parser.ir.ClassNode setClassElements(java.util.List<com.oracle.js.parser.ir.PropertyNode>)
-meth public com.oracle.js.parser.ir.ClassNode setConstructor(com.oracle.js.parser.ir.PropertyNode)
+meth public boolean needsInitializeInstanceElements()
+meth public com.oracle.js.parser.ir.ClassElement getConstructor()
+meth public com.oracle.js.parser.ir.ClassNode setClassElements(java.util.List<com.oracle.js.parser.ir.ClassElement>)
+meth public com.oracle.js.parser.ir.ClassNode setConstructor(com.oracle.js.parser.ir.ClassElement)
+meth public com.oracle.js.parser.ir.ClassNode setDecorators(java.util.List<com.oracle.js.parser.ir.Expression>)
 meth public com.oracle.js.parser.ir.Expression getClassHeritage()
 meth public com.oracle.js.parser.ir.IdentNode getIdent()
 meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.LexicalContext,com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
-meth public com.oracle.js.parser.ir.PropertyNode getConstructor()
+meth public com.oracle.js.parser.ir.Scope getClassHeadScope()
 meth public com.oracle.js.parser.ir.Scope getScope()
 meth public final <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
 meth public final com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
-meth public int getInstanceFieldCount()
-meth public int getStaticFieldCount()
-meth public java.util.List<com.oracle.js.parser.ir.PropertyNode> getClassElements()
+meth public int getInstanceElementCount()
+meth public int getStaticElementCount()
+meth public java.util.List<com.oracle.js.parser.ir.ClassElement> getClassElements()
+meth public java.util.List<com.oracle.js.parser.ir.Expression> getDecorators()
 meth public void toString(java.lang.StringBuilder,boolean)
 supr com.oracle.js.parser.ir.Expression
-hfds classElements,classHeritage,constructor,hasPrivateInstanceMethods,hasPrivateMethods,ident,instanceFieldCount,scope,staticFieldCount
+hfds classDecorators,classElements,classHeritage,constructor,hasClassElementDecorators,hasInstanceFieldsOrAccessors,hasPrivateInstanceMethods,hasPrivateMethods,ident,scope,staticElementCount
 
 CLSS public com.oracle.js.parser.ir.ContinueNode
 cons public init(int,long,int,java.lang.String)
@@ -764,9 +813,9 @@ supr com.oracle.js.parser.ir.Expression
 
 CLSS public com.oracle.js.parser.ir.ExportNode
 cons public init(long,int,int,com.oracle.js.parser.ir.IdentNode,com.oracle.js.parser.ir.Expression,boolean)
-cons public init(long,int,int,com.oracle.js.parser.ir.IdentNode,com.oracle.js.parser.ir.FromNode)
+cons public init(long,int,int,com.oracle.js.parser.ir.IdentNode,com.oracle.js.parser.ir.FromNode,java.util.Map<com.oracle.truffle.api.strings.TruffleString,com.oracle.truffle.api.strings.TruffleString>)
 cons public init(long,int,int,com.oracle.js.parser.ir.IdentNode,com.oracle.js.parser.ir.VarNode)
-cons public init(long,int,int,com.oracle.js.parser.ir.NamedExportsNode,com.oracle.js.parser.ir.FromNode)
+cons public init(long,int,int,com.oracle.js.parser.ir.NamedExportsNode,com.oracle.js.parser.ir.FromNode,java.util.Map<com.oracle.truffle.api.strings.TruffleString,com.oracle.truffle.api.strings.TruffleString>)
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
 meth public boolean isDefault()
 meth public com.oracle.js.parser.ir.ExportNode setExportClause(com.oracle.js.parser.ir.NamedExportsNode)
@@ -777,9 +826,10 @@ meth public com.oracle.js.parser.ir.IdentNode getExportIdentifier()
 meth public com.oracle.js.parser.ir.NamedExportsNode getNamedExports()
 meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
 meth public com.oracle.js.parser.ir.VarNode getVar()
+meth public java.util.Map<com.oracle.truffle.api.strings.TruffleString,com.oracle.truffle.api.strings.TruffleString> getAssertions()
 meth public void toString(java.lang.StringBuilder,boolean)
 supr com.oracle.js.parser.ir.Node
-hfds exportIdent,expression,from,isDefault,namedExports,var
+hfds assertions,exportIdent,expression,from,isDefault,namedExports,var
 
 CLSS public com.oracle.js.parser.ir.ExportSpecifierNode
 cons public init(long,int,int,com.oracle.js.parser.ir.IdentNode,com.oracle.js.parser.ir.IdentNode)
@@ -864,10 +914,10 @@ supr com.oracle.js.parser.ir.LoopNode
 hfds flags,init,iterator,modify
 
 CLSS public com.oracle.js.parser.ir.FromNode
-cons public init(long,int,int,com.oracle.js.parser.ir.LiteralNode<java.lang.String>)
+cons public init(long,int,int,com.oracle.js.parser.ir.LiteralNode<com.oracle.truffle.api.strings.TruffleString>)
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
-meth public com.oracle.js.parser.ir.FromNode setModuleSpecifier(com.oracle.js.parser.ir.LiteralNode<java.lang.String>)
-meth public com.oracle.js.parser.ir.LiteralNode<java.lang.String> getModuleSpecifier()
+meth public com.oracle.js.parser.ir.FromNode setModuleSpecifier(com.oracle.js.parser.ir.LiteralNode<com.oracle.truffle.api.strings.TruffleString>)
+meth public com.oracle.js.parser.ir.LiteralNode<com.oracle.truffle.api.strings.TruffleString> getModuleSpecifier()
 meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
 meth public void toString(java.lang.StringBuilder,boolean)
 supr com.oracle.js.parser.ir.Node
@@ -877,10 +927,12 @@ CLSS public abstract interface com.oracle.js.parser.ir.FunctionCall
 meth public abstract boolean isFunction()
 
 CLSS public final com.oracle.js.parser.ir.FunctionNode
-cons public init(com.oracle.js.parser.Source,int,long,int,long,long,com.oracle.js.parser.ir.IdentNode,java.lang.String,int,int,java.util.List<com.oracle.js.parser.ir.IdentNode>,int,com.oracle.js.parser.ir.Block,java.lang.Object,com.oracle.js.parser.ir.Module,java.lang.String)
+cons public init(com.oracle.js.parser.Source,int,long,int,long,long,com.oracle.js.parser.ir.IdentNode,com.oracle.truffle.api.strings.TruffleString,int,int,java.util.List<com.oracle.js.parser.ir.IdentNode>,int,com.oracle.js.parser.ir.Block,java.lang.Object,com.oracle.js.parser.ir.Module,com.oracle.truffle.api.strings.TruffleString)
+fld public final static int ARROW_HEAD_FLAGS = 134791400
 fld public final static int DEFINES_ARGUMENTS = 256
 fld public final static int HAS_APPLY_ARGUMENTS_CALL = 536870912
 fld public final static int HAS_ARROW_EVAL = 134217728
+fld public final static int HAS_CLOSURES = 16384
 fld public final static int HAS_DIRECT_SUPER = 262144
 fld public final static int HAS_EVAL = 32
 fld public final static int HAS_FUNCTION_DECLARATIONS = 268435456
@@ -904,10 +956,10 @@ fld public final static int IS_SETTER = 4096
 fld public final static int IS_STATEMENT = 16
 fld public final static int IS_STRICT = 4
 fld public final static int NEEDS_PARENT_SCOPE = 8800
+fld public final static int NO_FUNCTION_SELF = 1056771
 fld public final static int USES_ANCESTOR_SCOPE = 512
 fld public final static int USES_ARGUMENTS = 8
 fld public final static int USES_NEW_TARGET = 8388608
-fld public final static int USES_SELF_SYMBOL = 16384
 fld public final static int USES_SUPER = 524288
 fld public final static int USES_THIS = 32768
 intf com.oracle.js.parser.ir.Flags<com.oracle.js.parser.ir.FunctionNode>
@@ -916,6 +968,7 @@ meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.L
 meth public boolean getFlag(int)
 meth public boolean hasApplyArgumentsCall()
 meth public boolean hasArrowEval()
+meth public boolean hasClosures()
 meth public boolean hasDirectSuper()
 meth public boolean hasEval()
 meth public boolean hasSimpleParameterList()
@@ -952,10 +1005,12 @@ meth public com.oracle.js.parser.ir.Block getVarDeclarationBlock()
 meth public com.oracle.js.parser.ir.FunctionNode setBody(com.oracle.js.parser.ir.LexicalContext,com.oracle.js.parser.ir.Block)
 meth public com.oracle.js.parser.ir.FunctionNode setFlag(com.oracle.js.parser.ir.LexicalContext,int)
 meth public com.oracle.js.parser.ir.FunctionNode setFlags(com.oracle.js.parser.ir.LexicalContext,int)
-meth public com.oracle.js.parser.ir.FunctionNode setName(com.oracle.js.parser.ir.LexicalContext,java.lang.String)
+meth public com.oracle.js.parser.ir.FunctionNode setName(com.oracle.js.parser.ir.LexicalContext,com.oracle.truffle.api.strings.TruffleString)
 meth public com.oracle.js.parser.ir.IdentNode getIdent()
 meth public com.oracle.js.parser.ir.Module getModule()
 meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.LexicalContext,com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
+meth public com.oracle.truffle.api.strings.TruffleString getInternalNameTS()
+meth public com.oracle.truffle.api.strings.TruffleString getNameTS()
 meth public final <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
 meth public final com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
 meth public int getFlags()
@@ -977,7 +1032,7 @@ supr com.oracle.js.parser.ir.Expression
 hfds HAS_DEEP_EVAL,MAYBE_NEEDS_ARGUMENTS,body,endParserState,firstToken,flags,ident,internalName,lastToken,length,lineNumber,module,name,numOfParams,parameters,source,usesAncestorScope
 
 CLSS public final com.oracle.js.parser.ir.IdentNode
-cons public init(long,int,java.lang.String)
+cons public init(long,int,com.oracle.truffle.api.strings.TruffleString)
 intf com.oracle.js.parser.ir.FunctionCall
 intf com.oracle.js.parser.ir.PropertyKey
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
@@ -987,12 +1042,14 @@ meth public boolean isCatchParameter()
 meth public boolean isDeclaredHere()
 meth public boolean isDirectSuper()
 meth public boolean isFunction()
+meth public boolean isIgnoredParameter()
 meth public boolean isImportMeta()
 meth public boolean isInitializedHere()
 meth public boolean isInternal()
 meth public boolean isMetaProperty()
 meth public boolean isNewTarget()
 meth public boolean isPrivate()
+meth public boolean isPrivateInCheck()
 meth public boolean isPropertyName()
 meth public boolean isRestParameter()
 meth public boolean isSuper()
@@ -1002,21 +1059,25 @@ meth public com.oracle.js.parser.ir.IdentNode setIsArguments()
 meth public com.oracle.js.parser.ir.IdentNode setIsCatchParameter()
 meth public com.oracle.js.parser.ir.IdentNode setIsDeclaredHere()
 meth public com.oracle.js.parser.ir.IdentNode setIsDirectSuper()
+meth public com.oracle.js.parser.ir.IdentNode setIsIgnoredParameter()
 meth public com.oracle.js.parser.ir.IdentNode setIsImportMeta()
 meth public com.oracle.js.parser.ir.IdentNode setIsInitializedHere()
 meth public com.oracle.js.parser.ir.IdentNode setIsNewTarget()
 meth public com.oracle.js.parser.ir.IdentNode setIsPrivate()
+meth public com.oracle.js.parser.ir.IdentNode setIsPrivateInCheck()
 meth public com.oracle.js.parser.ir.IdentNode setIsPropertyName()
 meth public com.oracle.js.parser.ir.IdentNode setIsRestParameter()
 meth public com.oracle.js.parser.ir.IdentNode setIsSuper()
 meth public com.oracle.js.parser.ir.IdentNode setIsThis()
 meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
 meth public com.oracle.js.parser.ir.Symbol getSymbol()
+meth public com.oracle.truffle.api.strings.TruffleString getNameTS()
+meth public com.oracle.truffle.api.strings.TruffleString getPropertyNameTS()
 meth public java.lang.String getName()
 meth public java.lang.String getPropertyName()
 meth public void toString(java.lang.StringBuilder,boolean)
 supr com.oracle.js.parser.ir.Expression
-hfds APPLY_ARGUMENTS,ARGUMENTS,CATCH_PARAMETER,DIRECT_SUPER,FUNCTION,IMPORT_META,INITIALIZED_HERE,IS_DECLARED_HERE,NEW_TARGET,PRIVATE_IDENT,PROPERTY_NAME,REST_PARAMETER,SUPER,THIS,flags,name,symbol
+hfds APPLY_ARGUMENTS,ARGUMENTS,CATCH_PARAMETER,DIRECT_SUPER,FUNCTION,IGNORED_PARAMETER,IMPORT_META,INITIALIZED_HERE,IS_DECLARED_HERE,NEW_TARGET,PRIVATE_IDENT,PRIVATE_IN_CHECK,PROPERTY_NAME,REST_PARAMETER,SUPER,THIS,flags,name,nameTS,symbol
 
 CLSS public final com.oracle.js.parser.ir.IfNode
 cons public init(int,long,int,com.oracle.js.parser.ir.Expression,com.oracle.js.parser.ir.Block,com.oracle.js.parser.ir.Block)
@@ -1052,14 +1113,14 @@ hfds defaultBinding,nameSpaceImport,namedImports
 
 CLSS public com.oracle.js.parser.ir.ImportNode
 cons public init(long,int,int,com.oracle.js.parser.ir.ImportClauseNode,com.oracle.js.parser.ir.FromNode)
-cons public init(long,int,int,com.oracle.js.parser.ir.LiteralNode<java.lang.String>)
+cons public init(long,int,int,com.oracle.js.parser.ir.LiteralNode<com.oracle.truffle.api.strings.TruffleString>)
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
 meth public com.oracle.js.parser.ir.FromNode getFrom()
 meth public com.oracle.js.parser.ir.ImportClauseNode getImportClause()
 meth public com.oracle.js.parser.ir.ImportNode setFrom(com.oracle.js.parser.ir.FromNode)
 meth public com.oracle.js.parser.ir.ImportNode setImportClause(com.oracle.js.parser.ir.ImportClauseNode)
-meth public com.oracle.js.parser.ir.ImportNode setModuleSpecifier(com.oracle.js.parser.ir.LiteralNode<java.lang.String>)
-meth public com.oracle.js.parser.ir.LiteralNode<java.lang.String> getModuleSpecifier()
+meth public com.oracle.js.parser.ir.ImportNode setModuleSpecifier(com.oracle.js.parser.ir.LiteralNode<com.oracle.truffle.api.strings.TruffleString>)
+meth public com.oracle.js.parser.ir.LiteralNode<com.oracle.truffle.api.strings.TruffleString> getModuleSpecifier()
 meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
 meth public void toString(java.lang.StringBuilder,boolean)
 supr com.oracle.js.parser.ir.Node
@@ -1174,12 +1235,12 @@ meth public java.util.List<com.oracle.js.parser.ir.Expression> getElementExpress
 meth public static com.oracle.js.parser.ir.LiteralNode<com.oracle.js.parser.Lexer$LexerToken> newInstance(long,int,com.oracle.js.parser.Lexer$LexerToken)
 meth public static com.oracle.js.parser.ir.LiteralNode<com.oracle.js.parser.ir.Expression[]> newInstance(long,int,com.oracle.js.parser.ir.Expression[])
 meth public static com.oracle.js.parser.ir.LiteralNode<com.oracle.js.parser.ir.Expression[]> newInstance(long,int,java.util.List<com.oracle.js.parser.ir.Expression>)
-meth public static com.oracle.js.parser.ir.LiteralNode<com.oracle.js.parser.ir.Expression[]> newInstance(long,int,java.util.List<com.oracle.js.parser.ir.Expression>,boolean,boolean,boolean)
+meth public static com.oracle.js.parser.ir.LiteralNode<com.oracle.js.parser.ir.Expression[]> newInstance(long,int,java.util.List<com.oracle.js.parser.ir.Expression>,boolean,boolean)
+meth public static com.oracle.js.parser.ir.LiteralNode<com.oracle.truffle.api.strings.TruffleString> newInstance(long,com.oracle.truffle.api.strings.TruffleString)
 meth public static com.oracle.js.parser.ir.LiteralNode<java.lang.Boolean> newInstance(long,int,boolean)
 meth public static com.oracle.js.parser.ir.LiteralNode<java.lang.Number> newInstance(long,int,java.lang.Number)
-meth public static com.oracle.js.parser.ir.LiteralNode<java.lang.Number> newInstance(long,int,java.lang.Number,java.util.function.Function<java.lang.Number,java.lang.String>)
+meth public static com.oracle.js.parser.ir.LiteralNode<java.lang.Number> newInstance(long,int,java.lang.Number,java.util.function.Function<java.lang.Number,com.oracle.truffle.api.strings.TruffleString>)
 meth public static com.oracle.js.parser.ir.LiteralNode<java.lang.Object> newInstance(long,int)
-meth public static com.oracle.js.parser.ir.LiteralNode<java.lang.String> newInstance(long,java.lang.String)
 meth public void toString(java.lang.StringBuilder,boolean)
 supr com.oracle.js.parser.ir.Expression
 hcls BooleanLiteralNode,LexerTokenLiteralNode,NullLiteralNode,NumberLiteralNode,StringLiteralNode
@@ -1187,11 +1248,10 @@ hcls BooleanLiteralNode,LexerTokenLiteralNode,NullLiteralNode,NumberLiteralNode,
 CLSS public final static com.oracle.js.parser.ir.LiteralNode$ArrayLiteralNode
  outer com.oracle.js.parser.ir.LiteralNode
 cons protected init(long,int,com.oracle.js.parser.ir.Expression[])
-cons protected init(long,int,com.oracle.js.parser.ir.Expression[],boolean,boolean,boolean)
+cons protected init(long,int,com.oracle.js.parser.ir.Expression[],boolean,boolean)
 intf com.oracle.js.parser.ir.LexicalContextNode
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.LexicalContext,com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
-meth public boolean hasCoverInitializedName()
 meth public boolean hasSpread()
 meth public boolean hasTrailingComma()
 meth public boolean isArray()
@@ -1200,11 +1260,12 @@ meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.
 meth public java.util.List<com.oracle.js.parser.ir.Expression> getElementExpressions()
 meth public void toString(java.lang.StringBuilder,boolean)
 supr com.oracle.js.parser.ir.LiteralNode<com.oracle.js.parser.ir.Expression[]>
-hfds hasCoverInitializedName,hasSpread,hasTrailingComma
+hfds hasSpread,hasTrailingComma
 
 CLSS public static com.oracle.js.parser.ir.LiteralNode$PrimitiveLiteralNode<%0 extends java.lang.Object>
  outer com.oracle.js.parser.ir.LiteralNode
 intf com.oracle.js.parser.ir.PropertyKey
+meth public com.oracle.truffle.api.strings.TruffleString getPropertyNameTS()
 meth public java.lang.String getPropertyName()
 supr com.oracle.js.parser.ir.LiteralNode<{com.oracle.js.parser.ir.LiteralNode$PrimitiveLiteralNode%0}>
 
@@ -1231,13 +1292,14 @@ meth public final com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.vi
 supr com.oracle.js.parser.ir.Statement
 
 CLSS public final com.oracle.js.parser.ir.Module
-cons public init(java.util.List<java.lang.String>,java.util.List<com.oracle.js.parser.ir.Module$ImportEntry>,java.util.List<com.oracle.js.parser.ir.Module$ExportEntry>,java.util.List<com.oracle.js.parser.ir.Module$ExportEntry>,java.util.List<com.oracle.js.parser.ir.Module$ExportEntry>,java.util.List<com.oracle.js.parser.ir.ImportNode>,java.util.List<com.oracle.js.parser.ir.ExportNode>)
-fld public final static java.lang.String DEFAULT_EXPORT_BINDING_NAME = "*default*"
-fld public final static java.lang.String DEFAULT_NAME = "default"
-fld public final static java.lang.String NAMESPACE_EXPORT_BINDING_NAME = "*namespace*"
-fld public final static java.lang.String STAR_NAME = "*"
+cons public init(java.util.List<com.oracle.js.parser.ir.Module$ModuleRequest>,java.util.List<com.oracle.js.parser.ir.Module$ImportEntry>,java.util.List<com.oracle.js.parser.ir.Module$ExportEntry>,java.util.List<com.oracle.js.parser.ir.Module$ExportEntry>,java.util.List<com.oracle.js.parser.ir.Module$ExportEntry>,java.util.List<com.oracle.js.parser.ir.ImportNode>,java.util.List<com.oracle.js.parser.ir.ExportNode>)
+fld public final static com.oracle.truffle.api.strings.TruffleString DEFAULT_EXPORT_BINDING_NAME
+fld public final static com.oracle.truffle.api.strings.TruffleString DEFAULT_NAME
+fld public final static com.oracle.truffle.api.strings.TruffleString NAMESPACE_EXPORT_BINDING_NAME
+fld public final static com.oracle.truffle.api.strings.TruffleString STAR_NAME
 innr public final static ExportEntry
 innr public final static ImportEntry
+innr public final static ModuleRequest
 meth public java.lang.String toString()
 meth public java.util.List<com.oracle.js.parser.ir.ExportNode> getExports()
 meth public java.util.List<com.oracle.js.parser.ir.ImportNode> getImports()
@@ -1245,41 +1307,51 @@ meth public java.util.List<com.oracle.js.parser.ir.Module$ExportEntry> getIndire
 meth public java.util.List<com.oracle.js.parser.ir.Module$ExportEntry> getLocalExportEntries()
 meth public java.util.List<com.oracle.js.parser.ir.Module$ExportEntry> getStarExportEntries()
 meth public java.util.List<com.oracle.js.parser.ir.Module$ImportEntry> getImportEntries()
-meth public java.util.List<java.lang.String> getRequestedModules()
+meth public java.util.List<com.oracle.js.parser.ir.Module$ModuleRequest> getRequestedModules()
 supr java.lang.Object
 hfds exports,importEntries,imports,indirectExportEntries,localExportEntries,requestedModules,starExportEntries
 
 CLSS public final static com.oracle.js.parser.ir.Module$ExportEntry
  outer com.oracle.js.parser.ir.Module
-meth public com.oracle.js.parser.ir.Module$ExportEntry withFrom(java.lang.String)
-meth public java.lang.String getExportName()
-meth public java.lang.String getImportName()
-meth public java.lang.String getLocalName()
-meth public java.lang.String getModuleRequest()
+meth public com.oracle.js.parser.ir.Module$ExportEntry withFrom(com.oracle.js.parser.ir.Module$ModuleRequest)
+meth public com.oracle.js.parser.ir.Module$ModuleRequest getModuleRequest()
+meth public com.oracle.truffle.api.strings.TruffleString getExportName()
+meth public com.oracle.truffle.api.strings.TruffleString getImportName()
+meth public com.oracle.truffle.api.strings.TruffleString getLocalName()
 meth public java.lang.String toString()
-meth public static com.oracle.js.parser.ir.Module$ExportEntry exportDefault()
-meth public static com.oracle.js.parser.ir.Module$ExportEntry exportDefault(java.lang.String)
-meth public static com.oracle.js.parser.ir.Module$ExportEntry exportIndirect(java.lang.String,java.lang.String,java.lang.String)
-meth public static com.oracle.js.parser.ir.Module$ExportEntry exportSpecifier(java.lang.String)
-meth public static com.oracle.js.parser.ir.Module$ExportEntry exportSpecifier(java.lang.String,java.lang.String)
-meth public static com.oracle.js.parser.ir.Module$ExportEntry exportStarAsNamespaceFrom(java.lang.String,java.lang.String)
-meth public static com.oracle.js.parser.ir.Module$ExportEntry exportStarFrom(java.lang.String)
+meth public static com.oracle.js.parser.ir.Module$ExportEntry exportDefault(com.oracle.truffle.api.strings.TruffleString)
+meth public static com.oracle.js.parser.ir.Module$ExportEntry exportIndirect(com.oracle.truffle.api.strings.TruffleString,com.oracle.js.parser.ir.Module$ModuleRequest,com.oracle.truffle.api.strings.TruffleString)
+meth public static com.oracle.js.parser.ir.Module$ExportEntry exportSpecifier(com.oracle.truffle.api.strings.TruffleString)
+meth public static com.oracle.js.parser.ir.Module$ExportEntry exportSpecifier(com.oracle.truffle.api.strings.TruffleString,com.oracle.truffle.api.strings.TruffleString)
+meth public static com.oracle.js.parser.ir.Module$ExportEntry exportStarAsNamespaceFrom(com.oracle.truffle.api.strings.TruffleString,com.oracle.js.parser.ir.Module$ModuleRequest)
+meth public static com.oracle.js.parser.ir.Module$ExportEntry exportStarFrom(com.oracle.js.parser.ir.Module$ModuleRequest)
 supr java.lang.Object
 hfds exportName,importName,localName,moduleRequest
 
 CLSS public final static com.oracle.js.parser.ir.Module$ImportEntry
  outer com.oracle.js.parser.ir.Module
-meth public com.oracle.js.parser.ir.Module$ImportEntry withFrom(java.lang.String)
-meth public java.lang.String getImportName()
-meth public java.lang.String getLocalName()
-meth public java.lang.String getModuleRequest()
+meth public com.oracle.js.parser.ir.Module$ImportEntry withFrom(com.oracle.js.parser.ir.Module$ModuleRequest)
+meth public com.oracle.js.parser.ir.Module$ModuleRequest getModuleRequest()
+meth public com.oracle.truffle.api.strings.TruffleString getImportName()
+meth public com.oracle.truffle.api.strings.TruffleString getLocalName()
 meth public java.lang.String toString()
-meth public static com.oracle.js.parser.ir.Module$ImportEntry importDefault(java.lang.String)
-meth public static com.oracle.js.parser.ir.Module$ImportEntry importSpecifier(java.lang.String)
-meth public static com.oracle.js.parser.ir.Module$ImportEntry importSpecifier(java.lang.String,java.lang.String)
-meth public static com.oracle.js.parser.ir.Module$ImportEntry importStarAsNameSpaceFrom(java.lang.String)
+meth public static com.oracle.js.parser.ir.Module$ImportEntry importDefault(com.oracle.truffle.api.strings.TruffleString)
+meth public static com.oracle.js.parser.ir.Module$ImportEntry importSpecifier(com.oracle.truffle.api.strings.TruffleString)
+meth public static com.oracle.js.parser.ir.Module$ImportEntry importSpecifier(com.oracle.truffle.api.strings.TruffleString,com.oracle.truffle.api.strings.TruffleString)
+meth public static com.oracle.js.parser.ir.Module$ImportEntry importStarAsNameSpaceFrom(com.oracle.truffle.api.strings.TruffleString)
 supr java.lang.Object
 hfds importName,localName,moduleRequest
+
+CLSS public final static com.oracle.js.parser.ir.Module$ModuleRequest
+ outer com.oracle.js.parser.ir.Module
+meth public com.oracle.truffle.api.strings.TruffleString getSpecifier()
+meth public java.util.Map<com.oracle.truffle.api.strings.TruffleString,com.oracle.truffle.api.strings.TruffleString> getAssertions()
+meth public static com.oracle.js.parser.ir.Module$ModuleRequest create(com.oracle.truffle.api.strings.TruffleString)
+meth public static com.oracle.js.parser.ir.Module$ModuleRequest create(com.oracle.truffle.api.strings.TruffleString,java.util.Map$Entry<com.oracle.truffle.api.strings.TruffleString,com.oracle.truffle.api.strings.TruffleString>[])
+meth public static com.oracle.js.parser.ir.Module$ModuleRequest create(com.oracle.truffle.api.strings.TruffleString,java.util.Map<com.oracle.truffle.api.strings.TruffleString,com.oracle.truffle.api.strings.TruffleString>)
+meth public void setAssertions(java.util.Map<com.oracle.truffle.api.strings.TruffleString,com.oracle.truffle.api.strings.TruffleString>)
+supr java.lang.Object
+hfds assertions,specifier
 
 CLSS public com.oracle.js.parser.ir.NameSpaceImportNode
 cons public init(long,int,int,com.oracle.js.parser.ir.IdentNode)
@@ -1339,14 +1411,13 @@ supr java.lang.Object
 hfds token
 
 CLSS public final com.oracle.js.parser.ir.ObjectNode
-cons public init(long,int,java.util.List<com.oracle.js.parser.ir.PropertyNode>,boolean)
+cons public init(long,int,java.util.List<com.oracle.js.parser.ir.PropertyNode>)
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
-meth public boolean hasCoverInitializedName()
 meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
 meth public java.util.List<com.oracle.js.parser.ir.PropertyNode> getElements()
 meth public void toString(java.lang.StringBuilder,boolean)
 supr com.oracle.js.parser.ir.Expression
-hfds elements,hasCoverInitializedName
+hfds elements
 
 CLSS public abstract com.oracle.js.parser.ir.OptionalExpression
 cons protected init(com.oracle.js.parser.ir.OptionalExpression)
@@ -1368,15 +1439,25 @@ supr com.oracle.js.parser.ir.Expression
 hfds index,rest
 
 CLSS public abstract interface com.oracle.js.parser.ir.PropertyKey
+meth public abstract com.oracle.truffle.api.strings.TruffleString getPropertyNameTS()
 meth public abstract java.lang.String getPropertyName()
 
-CLSS public final com.oracle.js.parser.ir.PropertyNode
+CLSS public com.oracle.js.parser.ir.PropertyNode
+cons protected init(long,int,com.oracle.js.parser.ir.Expression,com.oracle.js.parser.ir.Expression,com.oracle.js.parser.ir.FunctionNode,com.oracle.js.parser.ir.FunctionNode,boolean,boolean,boolean)
 cons public init(long,int,com.oracle.js.parser.ir.Expression,com.oracle.js.parser.ir.Expression,com.oracle.js.parser.ir.FunctionNode,com.oracle.js.parser.ir.FunctionNode,boolean,boolean,boolean,boolean)
 cons public init(long,int,com.oracle.js.parser.ir.Expression,com.oracle.js.parser.ir.Expression,com.oracle.js.parser.ir.FunctionNode,com.oracle.js.parser.ir.FunctionNode,boolean,boolean,boolean,boolean,boolean,boolean)
+fld protected final boolean computed
+fld protected final boolean isAnonymousFunctionDefinition
+fld protected final boolean isStatic
+fld protected final com.oracle.js.parser.ir.Expression key
+fld protected final com.oracle.js.parser.ir.Expression value
+fld protected final com.oracle.js.parser.ir.FunctionNode getter
+fld protected final com.oracle.js.parser.ir.FunctionNode setter
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
 meth public boolean isAccessor()
 meth public boolean isAnonymousFunctionDefinition()
 meth public boolean isClassField()
+meth public boolean isClassStaticBlock()
 meth public boolean isComputed()
 meth public boolean isCoverInitializedName()
 meth public boolean isPrivate()
@@ -1391,11 +1472,13 @@ meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.
 meth public com.oracle.js.parser.ir.PropertyNode setGetter(com.oracle.js.parser.ir.FunctionNode)
 meth public com.oracle.js.parser.ir.PropertyNode setSetter(com.oracle.js.parser.ir.FunctionNode)
 meth public com.oracle.js.parser.ir.PropertyNode setValue(com.oracle.js.parser.ir.Expression)
+meth public com.oracle.truffle.api.strings.TruffleString getKeyNameTS()
+meth public com.oracle.truffle.api.strings.TruffleString getPrivateNameTS()
 meth public java.lang.String getKeyName()
 meth public java.lang.String getPrivateName()
 meth public void toString(java.lang.StringBuilder,boolean)
 supr com.oracle.js.parser.ir.Node
-hfds classField,computed,coverInitializedName,getter,isAnonymousFunctionDefinition,isStatic,key,proto,setter,value
+hfds classField,coverInitializedName,proto
 
 CLSS public com.oracle.js.parser.ir.ReturnNode
 cons public init(int,long,int,com.oracle.js.parser.ir.Expression)
@@ -1411,49 +1494,28 @@ meth public void toString(java.lang.StringBuilder,boolean)
 supr com.oracle.js.parser.ir.Statement
 hfds expression,inTerminalPosition
 
-CLSS public com.oracle.js.parser.ir.RuntimeNode
-cons public !varargs init(long,int,com.oracle.js.parser.ir.RuntimeNode$Request,com.oracle.js.parser.ir.Expression[])
-cons public init(long,int,com.oracle.js.parser.ir.RuntimeNode$Request,java.util.List<com.oracle.js.parser.ir.Expression>)
-innr public final static !enum Request
-meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
-meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
-meth public com.oracle.js.parser.ir.RuntimeNode setArgs(java.util.List<com.oracle.js.parser.ir.Expression>)
-meth public com.oracle.js.parser.ir.RuntimeNode$Request getRequest()
-meth public java.util.List<com.oracle.js.parser.ir.Expression> getArgs()
-meth public void toString(java.lang.StringBuilder,boolean)
-supr com.oracle.js.parser.ir.Expression
-hfds args,request
-
-CLSS public final static !enum com.oracle.js.parser.ir.RuntimeNode$Request
- outer com.oracle.js.parser.ir.RuntimeNode
-fld public final static com.oracle.js.parser.ir.RuntimeNode$Request GET_TEMPLATE_OBJECT
-fld public final static com.oracle.js.parser.ir.RuntimeNode$Request REFERENCE_ERROR
-fld public final static com.oracle.js.parser.ir.RuntimeNode$Request TO_STRING
-meth public com.oracle.js.parser.TokenType getTokenType()
-meth public int getArity()
-meth public java.lang.Class<?> getReturnType()
-meth public static com.oracle.js.parser.ir.RuntimeNode$Request valueOf(java.lang.String)
-meth public static com.oracle.js.parser.ir.RuntimeNode$Request[] values()
-supr java.lang.Enum<com.oracle.js.parser.ir.RuntimeNode$Request>
-hfds arity,returnType,tokenType
-
 CLSS public final com.oracle.js.parser.ir.Scope
 fld protected final org.graalvm.collections.EconomicMap<java.lang.String,com.oracle.js.parser.ir.Symbol> symbols
-fld protected java.util.List<java.util.Map$Entry<com.oracle.js.parser.ir.VarNode,com.oracle.js.parser.ir.Scope>> hoistableBlockFunctionDeclarations
-fld protected java.util.List<java.util.Map$Entry<com.oracle.js.parser.ir.VarNode,com.oracle.js.parser.ir.Scope>> hoistedVarDeclarations
-meth public boolean addPrivateName(java.lang.String,int)
+fld protected org.graalvm.collections.EconomicMap<java.lang.String,com.oracle.js.parser.ir.Scope$UseInfo> uses
+meth public boolean addPrivateName(com.oracle.truffle.api.strings.TruffleString,int)
 meth public boolean findPrivateName(java.lang.String)
 meth public boolean hasBlockScopedOrRedeclaredSymbols()
+meth public boolean hasClosures()
 meth public boolean hasDeclarations()
-meth public boolean hasHoistedVarDeclarations()
+meth public boolean hasEval()
+meth public boolean hasNestedEval()
+meth public boolean hasPrivateNames()
 meth public boolean hasSymbol(java.lang.String)
 meth public boolean inClassFieldInitializer()
 meth public boolean inDerivedConstructor()
 meth public boolean inFunction()
 meth public boolean inMethod()
+meth public boolean isArrowFunctionParameterScope()
 meth public boolean isBlockScope()
 meth public boolean isCatchParameterScope()
-meth public boolean isClassScope()
+meth public boolean isClassBodyScope()
+meth public boolean isClassHeadScope()
+meth public boolean isClosed()
 meth public boolean isEvalScope()
 meth public boolean isFunctionBodyScope()
 meth public boolean isFunctionParameterScope()
@@ -1466,25 +1528,29 @@ meth public com.oracle.js.parser.ir.Scope getParent()
 meth public com.oracle.js.parser.ir.Symbol findBlockScopedSymbolInFunction(java.lang.String)
 meth public com.oracle.js.parser.ir.Symbol getExistingSymbol(java.lang.String)
 meth public com.oracle.js.parser.ir.Symbol putSymbol(com.oracle.js.parser.ir.Symbol)
-meth public com.oracle.js.parser.ir.VarNode verifyHoistedVarDeclarations()
 meth public int getSymbolCount()
 meth public java.lang.Iterable<com.oracle.js.parser.ir.Symbol> getSymbols()
 meth public java.lang.String toString()
 meth public static com.oracle.js.parser.ir.Scope createBlock(com.oracle.js.parser.ir.Scope)
-meth public static com.oracle.js.parser.ir.Scope createCatch(com.oracle.js.parser.ir.Scope)
-meth public static com.oracle.js.parser.ir.Scope createClass(com.oracle.js.parser.ir.Scope)
+meth public static com.oracle.js.parser.ir.Scope createCatchParameter(com.oracle.js.parser.ir.Scope)
+meth public static com.oracle.js.parser.ir.Scope createClassBody(com.oracle.js.parser.ir.Scope)
+meth public static com.oracle.js.parser.ir.Scope createClassHead(com.oracle.js.parser.ir.Scope)
 meth public static com.oracle.js.parser.ir.Scope createEval(com.oracle.js.parser.ir.Scope,boolean)
-meth public static com.oracle.js.parser.ir.Scope createFunctionBody(com.oracle.js.parser.ir.Scope,int)
+meth public static com.oracle.js.parser.ir.Scope createFunctionBody(com.oracle.js.parser.ir.Scope)
+meth public static com.oracle.js.parser.ir.Scope createFunctionBody(com.oracle.js.parser.ir.Scope,int,boolean)
+meth public static com.oracle.js.parser.ir.Scope createFunctionParameter(com.oracle.js.parser.ir.Scope,int)
 meth public static com.oracle.js.parser.ir.Scope createGlobal()
 meth public static com.oracle.js.parser.ir.Scope createModule()
-meth public static com.oracle.js.parser.ir.Scope createParameter(com.oracle.js.parser.ir.Scope,int)
 meth public static com.oracle.js.parser.ir.Scope createSwitchBlock(com.oracle.js.parser.ir.Scope)
+meth public void addIdentifierReference(java.lang.String)
 meth public void close()
-meth public void declareHoistedBlockFunctionDeclarations()
-meth public void recordHoistableBlockFunctionDeclaration(com.oracle.js.parser.ir.VarNode,com.oracle.js.parser.ir.Scope)
-meth public void recordHoistedVarDeclaration(com.oracle.js.parser.ir.VarNode,com.oracle.js.parser.ir.Scope)
+meth public void kill()
+meth public void resolveUses()
+meth public void setHasEval()
+meth public void setHasNestedEval()
 supr java.lang.Object
-hfds BLOCK_SCOPE,CATCH_PARAMETER_SCOPE,CLASS_SCOPE,EVAL_SCOPE,FUNCTION_BODY_SCOPE,FUNCTION_PARAMETER_SCOPE,FUNCTION_TOP_SCOPE,GLOBAL_SCOPE,IN_DERIVED_CONSTRUCTOR,IN_FUNCTION,IN_METHOD,IS_CLASS_FIELD_INITIALIZER,MODULE_SCOPE,SWITCH_BLOCK_SCOPE,blockScopedOrRedeclaredSymbols,closed,declaredNames,flags,parent,type
+hfds ARROW_FUNCTION_PARAMETER_SCOPE,BLOCK_SCOPE,CATCH_PARAMETER_SCOPE,CLASS_BODY_SCOPE,CLASS_HEAD_SCOPE,EVAL_SCOPE,FUNCTION_BODY_SCOPE,FUNCTION_PARAMETER_SCOPE,FUNCTION_TOP_SCOPE,GLOBAL_SCOPE,IN_DERIVED_CONSTRUCTOR,IN_FUNCTION,IN_METHOD,IS_CLASS_FIELD_INITIALIZER,MODULE_SCOPE,SWITCH_BLOCK_SCOPE,closed,flags,hasBlockScopedOrRedeclaredSymbols,hasClosures,hasEval,hasNestedEval,hasPrivateNames,parent,type
+hcls UseInfo
 
 CLSS public abstract com.oracle.js.parser.ir.Statement
 cons protected init(com.oracle.js.parser.ir.Statement)
@@ -1521,10 +1587,12 @@ supr com.oracle.js.parser.ir.Statement
 hfds cases,defaultCaseIndex,expression,tag
 
 CLSS public final com.oracle.js.parser.ir.Symbol
-cons public init(java.lang.String,int)
+cons public init(com.oracle.truffle.api.strings.TruffleString,int)
 fld public final static int HAS_BEEN_DECLARED = 1024
+fld public final static int IS_ARGUMENTS = 2097152
 fld public final static int IS_BLOCK_FUNCTION_DECLARATION = 65536
 fld public final static int IS_CATCH_PARAMETER = 32768
+fld public final static int IS_CLOSED_OVER = 8388608
 fld public final static int IS_CONST = 2
 fld public final static int IS_DECLARED_IN_SWITCH_BLOCK = 8192
 fld public final static int IS_FUNCTION_SELF = 128
@@ -1534,21 +1602,27 @@ fld public final static int IS_HOISTED_BLOCK_FUNCTION = 2048
 fld public final static int IS_IMPORT_BINDING = 16384
 fld public final static int IS_INTERNAL = 64
 fld public final static int IS_LET = 1
+fld public final static int IS_NEW_TARGET = 67108864
 fld public final static int IS_PARAM = 16
 fld public final static int IS_PRIVATE_NAME = 131072
 fld public final static int IS_PRIVATE_NAME_ACCESSOR = 1048576
 fld public final static int IS_PRIVATE_NAME_METHOD = 524288
 fld public final static int IS_PRIVATE_NAME_STATIC = 262144
 fld public final static int IS_PROGRAM_LEVEL = 512
+fld public final static int IS_SUPER = 33554432
 fld public final static int IS_THIS = 32
+fld public final static int IS_USED = 4194304
+fld public final static int IS_USED_IN_INNER_SCOPE = 16777216
 fld public final static int IS_VAR = 4
 fld public final static int IS_VAR_REDECLARED_HERE = 4096
 fld public final static int KINDMASK = 7
 intf java.lang.Comparable<com.oracle.js.parser.ir.Symbol>
 meth public boolean hasBeenDeclared()
+meth public boolean isArguments()
 meth public boolean isBlockFunctionDeclaration()
 meth public boolean isBlockScoped()
 meth public boolean isCatchParameter()
+meth public boolean isClosedOver()
 meth public boolean isConst()
 meth public boolean isDeclaredInSwitchBlock()
 meth public boolean isFunctionSelf()
@@ -1558,6 +1632,7 @@ meth public boolean isHoistedBlockFunctionDeclaration()
 meth public boolean isImportBinding()
 meth public boolean isInternal()
 meth public boolean isLet()
+meth public boolean isNewTarget()
 meth public boolean isParam()
 meth public boolean isPrivateAccessor()
 meth public boolean isPrivateField()
@@ -1565,19 +1640,54 @@ meth public boolean isPrivateMethod()
 meth public boolean isPrivateName()
 meth public boolean isPrivateNameStatic()
 meth public boolean isProgramLevel()
+meth public boolean isSuper()
 meth public boolean isThis()
+meth public boolean isUsed()
+meth public boolean isUsedInInnerScope()
 meth public boolean isVar()
 meth public boolean isVarRedeclaredHere()
+meth public com.oracle.truffle.api.strings.TruffleString getNameTS()
 meth public int compareTo(com.oracle.js.parser.ir.Symbol)
 meth public int getFlags()
-meth public int getUseCount()
 meth public java.lang.String getName()
 meth public java.lang.String toString()
-meth public void setHasBeenDeclared()
-meth public void setHasBeenDeclared(boolean)
+meth public void setClosedOver()
 meth public void setHoistedBlockFunctionDeclaration()
+meth public void setUsed()
+meth public void setUsedInInnerScope()
 supr java.lang.Object
-hfds flags,name,useCount
+hfds flags,name,nameTS
+
+CLSS public abstract com.oracle.js.parser.ir.TemplateLiteralNode
+cons protected init(com.oracle.js.parser.ir.TemplateLiteralNode)
+cons protected init(long,int)
+innr public static TaggedTemplateLiteralNode
+innr public static UntaggedTemplateLiteralNode
+meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
+meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
+meth public static com.oracle.js.parser.ir.TemplateLiteralNode newTagged(long,int,java.util.List<com.oracle.js.parser.ir.Expression>,java.util.List<com.oracle.js.parser.ir.Expression>)
+meth public static com.oracle.js.parser.ir.TemplateLiteralNode newUntagged(long,int,java.util.List<com.oracle.js.parser.ir.Expression>)
+supr com.oracle.js.parser.ir.Expression
+
+CLSS public static com.oracle.js.parser.ir.TemplateLiteralNode$TaggedTemplateLiteralNode
+ outer com.oracle.js.parser.ir.TemplateLiteralNode
+cons protected init(long,int,java.util.List<com.oracle.js.parser.ir.Expression>,java.util.List<com.oracle.js.parser.ir.Expression>)
+meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
+meth public java.util.List<com.oracle.js.parser.ir.Expression> getCookedStrings()
+meth public java.util.List<com.oracle.js.parser.ir.Expression> getRawStrings()
+meth public void toString(java.lang.StringBuilder,boolean)
+supr com.oracle.js.parser.ir.TemplateLiteralNode
+hfds cookedStrings,rawStrings
+
+CLSS public static com.oracle.js.parser.ir.TemplateLiteralNode$UntaggedTemplateLiteralNode
+ outer com.oracle.js.parser.ir.TemplateLiteralNode
+cons protected init(long,int,java.util.List<com.oracle.js.parser.ir.Expression>)
+cons public init(com.oracle.js.parser.ir.TemplateLiteralNode$UntaggedTemplateLiteralNode,java.util.List<com.oracle.js.parser.ir.Expression>)
+meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
+meth public java.util.List<com.oracle.js.parser.ir.Expression> getExpressions()
+meth public void toString(java.lang.StringBuilder,boolean)
+supr com.oracle.js.parser.ir.TemplateLiteralNode
+hfds expressions
 
 CLSS public abstract interface com.oracle.js.parser.ir.Terminal
 meth public abstract boolean isTerminal()
@@ -1648,6 +1758,7 @@ cons public init(int,long,int,com.oracle.js.parser.ir.IdentNode,com.oracle.js.pa
 cons public init(int,long,int,com.oracle.js.parser.ir.IdentNode,com.oracle.js.parser.ir.Expression,int)
 cons public init(int,long,int,int,com.oracle.js.parser.ir.IdentNode,com.oracle.js.parser.ir.Expression,int)
 cons public init(int,long,int,int,int,com.oracle.js.parser.ir.IdentNode,com.oracle.js.parser.ir.Expression,int)
+fld public final static int IS_ANNEXB_BLOCK_TO_FUNCTION_TRANSFER = 32
 fld public final static int IS_CONST = 2
 fld public final static int IS_DESTRUCTURING = 16
 fld public final static int IS_EXPORT = 8

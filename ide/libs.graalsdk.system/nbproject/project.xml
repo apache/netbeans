@@ -83,11 +83,11 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path></runtime-relative-path>
-                <binary-origin>external/graal-sdk-20.3.0.jar</binary-origin>
+                <binary-origin>external/graal-sdk-23.0.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path></runtime-relative-path>
-                <binary-origin>external/launcher-common-20.3.0.jar</binary-origin>
+                <binary-origin>external/launcher-common-23.0.3.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

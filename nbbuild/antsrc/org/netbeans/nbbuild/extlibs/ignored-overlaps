@@ -113,5 +113,5 @@ enterprise/servletjspapi/external/jakarta.servlet-api-4.0.4.jar enterprise/websv
 ide/servletapi/external/jakarta.servlet-api-4.0.4.jar enterprise/websvc.restlib/external/jakarta.servlet-api-4.0.4.jar
 
 # The library is used for compilation, but is not distributed, as graalsdk.system relies on JDK-provided packages at runtime
-ide/libs.graalsdk/external/graal-sdk-20.3.0.jar ide/libs.graalsdk.system/external/graal-sdk-20.3.0.jar
-ide/libs.graalsdk/external/launcher-common-20.3.0.jar ide/libs.graalsdk.system/external/launcher-common-20.3.0.jar
+ide/libs.graalsdk/external/graal-sdk-23.0.3.jar ide/libs.graalsdk.system/external/graal-sdk-23.0.3.jar
+ide/libs.graalsdk/external/launcher-common-23.0.3.jar ide/libs.graalsdk.system/external/launcher-common-23.0.3.jar

@@ -2,8 +2,8 @@ Name: icu4j
 Description: icu4j license
 License: MIT-icu4j-58
 Origin: http://site.icu-project.org/
-Version: 67.1
-Files: icu4j-67.1.jar
+Version: 72.1
+Files: icu4j-72.1.jar
 
 COPYRIGHT AND PERMISSION NOTICE (ICU 58 and later)
 

@@ -30,7 +30,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.11</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -38,7 +39,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.11</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.0</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
@@ -75,20 +77,20 @@
                 <package>com.oracle.js.parser.ir</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/js-20.3.0.jar</runtime-relative-path>
-                <binary-origin>external/js-20.3.0.jar</binary-origin>
+                <runtime-relative-path>ext/js-23.0.3.jar</runtime-relative-path>
+                <binary-origin>external/js-23.0.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/js-launcher-20.3.0.jar</runtime-relative-path>
-                <binary-origin>external/js-launcher-20.3.0.jar</binary-origin>
+                <runtime-relative-path>ext/js-launcher-23.0.3.jar</runtime-relative-path>
+                <binary-origin>external/js-launcher-23.0.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/regex-20.3.0.jar</runtime-relative-path>
-                <binary-origin>external/regex-20.3.0.jar</binary-origin>
+                <runtime-relative-path>ext/regex-23.0.3.jar</runtime-relative-path>
+                <binary-origin>external/regex-23.0.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/icu4j-67.1.jar</runtime-relative-path>
-                <binary-origin>external/icu4j-67.1.jar</binary-origin>
+                <runtime-relative-path>ext/icu4j-72.1.jar</runtime-relative-path>
+                <binary-origin>external/icu4j-72.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

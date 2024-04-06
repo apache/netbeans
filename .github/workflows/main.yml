@@ -249,18 +249,6 @@ jobs:
       - name: Commit Validation tests
         run: .github/retry.sh ant $OPTS -Dcluster.config=$CLUSTER_CONFIG commit-validation
 
-      - name: Set up JDK 11 for core.network
-        uses: actions/setup-java@v4
-        if: matrix.java == 17 && success()
-        with:
-          java-version: 11
-          distribution: ${{ env.default_java_distribution }}
-
-      # TODO fails on 17+
-      - name: platform/core.network
-        if: matrix.java == 17 && success()
-        run: ant $OPTS -f platform/core.network test
-
       - name: Create Test Summary
         uses: test-summary/action@v2
         if: failure()
@@ -1011,6 +999,9 @@ jobs:
 
       - name: platform/core.multiview
         run: ant $OPTS -f platform/core.multiview test
+
+      - name: platform/core.network
+        run: ant $OPTS -f platform/core.network test
 
       - name: platform/core.netigso
         run: ant $OPTS -f platform/core.netigso test

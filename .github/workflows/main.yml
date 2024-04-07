@@ -1388,6 +1388,9 @@ jobs:
       - name: java.navigation
         run: ant $OPTS -f java/java.navigation test
 
+      - name: java/nashorn.execution
+        run: ant $OPTS -f java/nashorn.execution test
+
       - name: java.openjdk.project
         run: ant $OPTS -f java/java.openjdk.project test
 
@@ -2579,72 +2582,6 @@ jobs:
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
 
-
-  graalvm-test:
-    name: GraalVM ${{ matrix.graal }} Tests
-    # equals env.test_graalvm == 'true'
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'GraalVM') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
-    needs: base-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    strategy:
-      matrix:
-        # TODO uses EOL GraalVM, needs JDK 17+ upgrade
-        graal: [ '22.3.1' ]
-      fail-fast: false
-
-    steps:
-      - name: Setup Xvfb
-        run: |
-          echo "DISPLAY=:99.0" >> $GITHUB_ENV
-          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-
-      - name: Download Build
-        uses: actions/download-artifact@v4
-        with:
-          name: build
-
-      - name: Extract
-        run: tar --zstd -xf build.tar.zst
-
-      - name: Setup GraalVM {{ matrix.graal }}
-        run: |
-          URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graal }}/graalvm-ce-java11-linux-amd64-${{ matrix.graal }}.tar.gz
-          curl -L $URL | tar -xz
-          GRAALVM=`pwd`/graalvm-ce-java11-${{ matrix.graal }}
-          echo "JAVA_HOME=$GRAALVM" >> $GITHUB_ENV
-
-      - name: Setup GraalVM Languages
-        run: $JAVA_HOME/bin/gu install --no-progress python R ruby js
-
-      - name: platform/core.network
-        run: ant $OPTS -f platform/core.network test
-
-      - name: platform/api.scripting
-        run: ant $OPTS -f platform/api.scripting test
-
-      - name: ide/libs.graalsdk
-        run: ant $OPTS -f ide/libs.graalsdk test
-
-      - name: webcommon/libs.graaljs
-        run: ant $OPTS -f webcommon/libs.graaljs test
-
-      - name: profiler/profiler.oql
-        run: ant $OPTS -f profiler/profiler.oql test
-
-      - name: java/nashorn.execution
-        run: ant $OPTS -f java/nashorn.execution test
-
-      - name: java/debugger.jpda.truffle
-        run: .github/retry.sh ant $OPTS -f java/debugger.jpda.truffle test
-
-      - name: Create Test Summary
-        uses: test-summary/action@v2
-        if: failure()
-        with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
-
-
   vscode-extension-test:
     name: VSCode Extension Tests on JDK ${{ matrix.java }}
     # equals env.test_vscode_extension == 'true'
@@ -2722,7 +2659,6 @@ jobs:
       - versioning-test
       - lsp-test
       - mysql-db-test
-      - graalvm-test
       - vscode-extension-test
 
     # cleanup if the primary build job succeeded and

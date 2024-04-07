@@ -559,7 +559,7 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
     }
 
     public void testDNFTypesMethodTag() throws Exception {
-        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "$this->methodT^ag($param1, $param2);", false, "");
+        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "$this->methodTa^g($param1, $param2);", false, "");
     }
 
     public void testDNFTypesStaticMethodTag() throws Exception {

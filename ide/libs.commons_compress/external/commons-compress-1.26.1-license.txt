@@ -1,10 +1,8 @@
-Name: Jackson
-Description: Jackson is a high-performance JSON processor for Java.
+Name: Commons Compress
+Version: 1.26.1
+Description: The Apache Commons Compress library defines an API for working with ar, cpio, Unix dump, tar, zip, gzip, XZ, Pack200, bzip2, 7z, arj, lzma, snappy, DEFLATE, lz4, Brotli, Zstandard, DEFLATE64 and Z files.
+Origin: https://commons.apache.org/proper/commons-compress/index.html
 License: Apache-2.0
-Origin: https://github.com/FasterXML/jackson
-Version: 2.16.1
-Files: jackson-annotations-2.16.1.jar, jackson-core-2.16.1.jar, jackson-databind-2.16.1.jar, jackson-dataformat-cbor-2.16.1.jar, jackson-datatype-jsr310-2.16.1.jar, jackson-module-jaxb-annotations-2.16.1.jar
-
 
                                  Apache License
                            Version 2.0, January 2004
@@ -207,4 +205,3 @@ Files: jackson-annotations-2.16.1.jar, jackson-core-2.16.1.jar, jackson-databind
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-

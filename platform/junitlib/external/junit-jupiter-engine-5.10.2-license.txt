@@ -1,10 +1,9 @@
-Name: JUnit Jupiter API
-Version: 5.6.0
+Name: JUnit Jupiter Engine
+Version: 5.10.2
 License: EPL-v20
-Description: JUnit Jupiter API
+Description: JUnit Jupiter Engine
 Origin: JUnit
-Files: junit-jupiter-api-5.6.0-sources.jar junit-jupiter-api-5.6.0-javadoc.jar
-
+Files: junit-jupiter-engine-5.10.2-sources.jar junit-jupiter-engine-5.10.2-javadoc.jar
 
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.

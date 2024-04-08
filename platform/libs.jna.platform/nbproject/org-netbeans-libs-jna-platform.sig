@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.18
+#Version 2.19
 
 CLSS public abstract interface com.sun.jna.AltCallingConvention
 
@@ -52,6 +52,7 @@ fld public final static java.lang.String OPTION_INVOCATION_MAPPER = "invocation-
 fld public final static java.lang.String OPTION_OPEN_FLAGS = "open-flags"
 fld public final static java.lang.String OPTION_STRING_ENCODING = "string-encoding"
 fld public final static java.lang.String OPTION_STRUCTURE_ALIGNMENT = "structure-alignment"
+fld public final static java.lang.String OPTION_SYMBOL_PROVIDER = "symbol-provider"
 fld public final static java.lang.String OPTION_TYPE_MAPPER = "type-mapper"
 innr public static Handler
 
@@ -593,10 +594,24 @@ fld public final static int EXDEV = 18
 fld public final static int EXFULL = 54
 
 CLSS public abstract interface com.sun.jna.platform.linux.Fcntl
+fld public final static int O_APPEND = 1024
+fld public final static int O_CLOEXEC = 524288
 fld public final static int O_CREAT = 64
+fld public final static int O_DIRECT = 16384
+fld public final static int O_DIRECTORY = 65536
+fld public final static int O_DSYNC = 4096
 fld public final static int O_EXCL = 128
+fld public final static int O_FASYNC = 8192
+fld public final static int O_LARGEFILE = 32768
+fld public final static int O_NDELAY = 2048
+fld public final static int O_NOATIME = 262144
+fld public final static int O_NOFOLLOW = 131072
+fld public final static int O_NONBLOCK = 2048
+fld public final static int O_PATH = 2097152
 fld public final static int O_RDONLY = 0
 fld public final static int O_RDWR = 2
+fld public final static int O_SYNC = 1052672
+fld public final static int O_TMPFILE = 4259840
 fld public final static int O_TRUNC = 512
 fld public final static int O_WRONLY = 1
 fld public final static int S_IRGRP = 32
@@ -614,6 +629,8 @@ fld public final static int S_IWUSR = 128
 fld public final static int S_IXGRP = 8
 fld public final static int S_IXOTH = 1
 fld public final static int S_IXUSR = 64
+fld public final static int __O_SYNC = 1048576
+fld public final static int __O_TMPFILE = 4194304
 
 CLSS public abstract interface com.sun.jna.platform.linux.LibC
 fld public final static com.sun.jna.platform.linux.LibC INSTANCE
@@ -1720,6 +1737,23 @@ fld public long xsu_avail
 fld public long xsu_total
 fld public long xsu_used
 supr com.sun.jna.Structure
+
+CLSS public abstract interface com.sun.jna.platform.mac.XAttr
+fld public final static com.sun.jna.platform.mac.XAttr INSTANCE
+fld public final static int XATTR_CREATE = 2
+fld public final static int XATTR_MAXNAMELEN = 127
+fld public final static int XATTR_NODEFAULT = 16
+fld public final static int XATTR_NOFOLLOW = 1
+fld public final static int XATTR_NOSECURITY = 8
+fld public final static int XATTR_REPLACE = 4
+fld public final static int XATTR_SHOWCOMPRESSION = 32
+fld public final static java.lang.String XATTR_FINDERINFO_NAME = "com.apple.FinderInfo"
+fld public final static java.lang.String XATTR_RESOURCEFORK_NAME = "com.apple.ResourceFork"
+intf com.sun.jna.Library
+meth public abstract int removexattr(java.lang.String,java.lang.String,int)
+meth public abstract int setxattr(java.lang.String,java.lang.String,com.sun.jna.Pointer,long,int,int)
+meth public abstract long getxattr(java.lang.String,java.lang.String,com.sun.jna.Pointer,long,int,int)
+meth public abstract long listxattr(java.lang.String,com.sun.jna.Pointer,long,int)
 
 CLSS public com.sun.jna.platform.mac.XAttrUtil
 cons public init()
@@ -3921,6 +3955,7 @@ innr public static EventLogRecord
 innr public static InfoKey
 innr public static Privilege
 meth public static boolean accessCheck(java.io.File,com.sun.jna.platform.win32.Advapi32Util$AccessCheckPermission)
+meth public static boolean isCurrentProcessElevated()
 meth public static boolean isWellKnownSid(byte[],int)
 meth public static boolean isWellKnownSid(java.lang.String,int)
 meth public static boolean registryCreateKey(com.sun.jna.platform.win32.WinReg$HKEY,java.lang.String)
@@ -5019,9 +5054,17 @@ fld public final static int CIM_UINT8 = 17
 fld public final static int WBEM_E_INVALID_CLASS = -2147217392
 fld public final static int WBEM_E_INVALID_NAMESPACE = -2147217394
 fld public final static int WBEM_E_INVALID_QUERY = -2147217385
+fld public final static int WBEM_FLAG_DIRECT_READ = 512
+fld public final static int WBEM_FLAG_ENSURE_LOCATABLE = 256
 fld public final static int WBEM_FLAG_FORWARD_ONLY = 32
+fld public final static int WBEM_FLAG_NO_ERROR_OBJECT = 64
 fld public final static int WBEM_FLAG_RETURN_IMMEDIATELY = 16
+fld public final static int WBEM_FLAG_RETURN_WBEM_COMPLETE = 0
+fld public final static int WBEM_FLAG_SEND_STATUS = 128
+fld public final static int WBEM_FLAG_STRONG_VALIDATION = 1048576
+fld public final static int WBEM_FLAG_USE_AMENDED_QUALIFIERS = 131072
 fld public final static int WBEM_INFINITE = -1
+fld public final static int WBEM_MASK_RESERVED_FLAGS = 126976
 fld public final static int WBEM_S_FALSE = 1
 fld public final static int WBEM_S_NO_ERROR = 0
 fld public final static int WBEM_S_NO_MORE_DATA = 262149
@@ -5031,6 +5074,7 @@ innr public static IEnumWbemClassObject
 innr public static IWbemClassObject
 innr public static IWbemContext
 innr public static IWbemLocator
+innr public static IWbemQualifierSet
 innr public static IWbemServices
 
 CLSS public static com.sun.jna.platform.win32.COM.Wbemcli$IEnumWbemClassObject
@@ -5045,17 +5089,35 @@ CLSS public static com.sun.jna.platform.win32.COM.Wbemcli$IWbemClassObject
  outer com.sun.jna.platform.win32.COM.Wbemcli
 cons public init()
 cons public init(com.sun.jna.Pointer)
+meth public com.sun.jna.platform.win32.COM.Wbemcli$IWbemClassObject GetMethod(java.lang.String)
+meth public com.sun.jna.platform.win32.COM.Wbemcli$IWbemClassObject SpawnInstance()
+meth public com.sun.jna.platform.win32.COM.Wbemcli$IWbemQualifierSet GetPropertyQualifierSet(java.lang.String)
+meth public com.sun.jna.platform.win32.COM.Wbemcli$IWbemQualifierSet GetQualifierSet()
 meth public com.sun.jna.platform.win32.WinNT$HRESULT Get(com.sun.jna.WString,int,com.sun.jna.platform.win32.Variant$VARIANT$ByReference,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.IntByReference)
 meth public com.sun.jna.platform.win32.WinNT$HRESULT Get(java.lang.String,int,com.sun.jna.platform.win32.Variant$VARIANT$ByReference,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.IntByReference)
+meth public com.sun.jna.platform.win32.WinNT$HRESULT GetMethod(com.sun.jna.WString,int,com.sun.jna.ptr.PointerByReference,com.sun.jna.ptr.PointerByReference)
+meth public com.sun.jna.platform.win32.WinNT$HRESULT GetMethod(java.lang.String,int,com.sun.jna.ptr.PointerByReference,com.sun.jna.ptr.PointerByReference)
 meth public com.sun.jna.platform.win32.WinNT$HRESULT GetNames(com.sun.jna.WString,int,com.sun.jna.platform.win32.Variant$VARIANT$ByReference,com.sun.jna.ptr.PointerByReference)
 meth public com.sun.jna.platform.win32.WinNT$HRESULT GetNames(java.lang.String,int,com.sun.jna.platform.win32.Variant$VARIANT$ByReference,com.sun.jna.ptr.PointerByReference)
+meth public com.sun.jna.platform.win32.WinNT$HRESULT GetPropertyQualifierSet(com.sun.jna.WString,com.sun.jna.ptr.PointerByReference)
+meth public com.sun.jna.platform.win32.WinNT$HRESULT GetQualifierSet(com.sun.jna.ptr.PointerByReference)
+meth public com.sun.jna.platform.win32.WinNT$HRESULT Put(com.sun.jna.WString,int,com.sun.jna.platform.win32.Variant$VARIANT,int)
+meth public com.sun.jna.platform.win32.WinNT$HRESULT Put(java.lang.String,int,com.sun.jna.platform.win32.Variant$VARIANT,int)
+meth public com.sun.jna.platform.win32.WinNT$HRESULT SpawnInstance(int,com.sun.jna.ptr.PointerByReference)
 meth public java.lang.String[] GetNames(java.lang.String,int,com.sun.jna.platform.win32.Variant$VARIANT$ByReference)
+meth public void Put(java.lang.String,java.lang.String)
 supr com.sun.jna.platform.win32.COM.Unknown
 
 CLSS public static com.sun.jna.platform.win32.COM.Wbemcli$IWbemContext
  outer com.sun.jna.platform.win32.COM.Wbemcli
 cons public init()
 cons public init(com.sun.jna.Pointer)
+fld public final static com.sun.jna.platform.win32.Guid$CLSID CLSID_WbemContext
+fld public final static com.sun.jna.platform.win32.Guid$GUID IID_IWbemContext
+meth public static com.sun.jna.platform.win32.COM.Wbemcli$IWbemContext create()
+meth public void SetValue(java.lang.String,int,boolean)
+meth public void SetValue(java.lang.String,int,com.sun.jna.platform.win32.Variant$VARIANT)
+meth public void SetValue(java.lang.String,int,java.lang.String)
 supr com.sun.jna.platform.win32.COM.Unknown
 
 CLSS public static com.sun.jna.platform.win32.COM.Wbemcli$IWbemLocator
@@ -5068,12 +5130,25 @@ meth public com.sun.jna.platform.win32.WinNT$HRESULT ConnectServer(com.sun.jna.p
 meth public static com.sun.jna.platform.win32.COM.Wbemcli$IWbemLocator create()
 supr com.sun.jna.platform.win32.COM.Unknown
 
+CLSS public static com.sun.jna.platform.win32.COM.Wbemcli$IWbemQualifierSet
+ outer com.sun.jna.platform.win32.COM.Wbemcli
+cons public init(com.sun.jna.Pointer)
+meth public com.sun.jna.platform.win32.WinNT$HRESULT Get(com.sun.jna.WString,int,com.sun.jna.platform.win32.Variant$VARIANT$ByReference,com.sun.jna.ptr.IntByReference)
+meth public com.sun.jna.platform.win32.WinNT$HRESULT GetNames(int,com.sun.jna.ptr.PointerByReference)
+meth public java.lang.String Get(java.lang.String)
+meth public java.lang.String[] GetNames()
+supr com.sun.jna.platform.win32.COM.Unknown
+
 CLSS public static com.sun.jna.platform.win32.COM.Wbemcli$IWbemServices
  outer com.sun.jna.platform.win32.COM.Wbemcli
 cons public init()
 cons public init(com.sun.jna.Pointer)
 meth public com.sun.jna.platform.win32.COM.Wbemcli$IEnumWbemClassObject ExecQuery(java.lang.String,java.lang.String,int,com.sun.jna.platform.win32.COM.Wbemcli$IWbemContext)
+meth public com.sun.jna.platform.win32.COM.Wbemcli$IWbemClassObject ExecMethod(java.lang.String,java.lang.String,int,com.sun.jna.platform.win32.COM.Wbemcli$IWbemContext,com.sun.jna.platform.win32.COM.Wbemcli$IWbemClassObject)
+meth public com.sun.jna.platform.win32.COM.Wbemcli$IWbemClassObject GetObject(java.lang.String,int,com.sun.jna.platform.win32.COM.Wbemcli$IWbemContext)
+meth public com.sun.jna.platform.win32.WinNT$HRESULT ExecMethod(com.sun.jna.platform.win32.WTypes$BSTR,com.sun.jna.platform.win32.WTypes$BSTR,int,com.sun.jna.platform.win32.COM.Wbemcli$IWbemContext,com.sun.jna.Pointer,com.sun.jna.ptr.PointerByReference,com.sun.jna.ptr.PointerByReference)
 meth public com.sun.jna.platform.win32.WinNT$HRESULT ExecQuery(com.sun.jna.platform.win32.WTypes$BSTR,com.sun.jna.platform.win32.WTypes$BSTR,int,com.sun.jna.platform.win32.COM.Wbemcli$IWbemContext,com.sun.jna.ptr.PointerByReference)
+meth public com.sun.jna.platform.win32.WinNT$HRESULT GetObject(com.sun.jna.platform.win32.WTypes$BSTR,int,com.sun.jna.platform.win32.COM.Wbemcli$IWbemContext,com.sun.jna.ptr.PointerByReference,com.sun.jna.ptr.PointerByReference)
 supr com.sun.jna.platform.win32.COM.Unknown
 
 CLSS public abstract interface static com.sun.jna.platform.win32.COM.Wbemcli$WBEM_CONDITION_FLAG_TYPE
@@ -7075,8 +7150,26 @@ fld public final static int UDP_TABLE_OWNER_PID = 1
 
 CLSS public abstract interface com.sun.jna.platform.win32.Kernel32
 fld public final static com.sun.jna.platform.win32.Kernel32 INSTANCE
+fld public final static com.sun.jna.platform.win32.WinDef$DWORD ABOVE_NORMAL_PRIORITY_CLASS
+fld public final static com.sun.jna.platform.win32.WinDef$DWORD BELOW_NORMAL_PRIORITY_CLASS
+fld public final static com.sun.jna.platform.win32.WinDef$DWORD HIGH_PRIORITY_CLASS
+fld public final static com.sun.jna.platform.win32.WinDef$DWORD IDLE_PRIORITY_CLASS
+fld public final static com.sun.jna.platform.win32.WinDef$DWORD NORMAL_PRIORITY_CLASS
+fld public final static com.sun.jna.platform.win32.WinDef$DWORD PROCESS_MODE_BACKGROUND_BEGIN
+fld public final static com.sun.jna.platform.win32.WinDef$DWORD PROCESS_MODE_BACKGROUND_END
+fld public final static com.sun.jna.platform.win32.WinDef$DWORD REALTIME_PRIORITY_CLASS
 fld public final static int LOAD_LIBRARY_AS_DATAFILE = 2
 fld public final static int MAX_PIPE_NAME_LENGTH = 256
+fld public final static int THREAD_MODE_BACKGROUND_BEGIN = 65536
+fld public final static int THREAD_MODE_BACKGROUND_END = 131072
+fld public final static int THREAD_PRIORITY_ABOVE_NORMAL = 1
+fld public final static int THREAD_PRIORITY_BELOW_NORMAL = -1
+fld public final static int THREAD_PRIORITY_ERROR_RETURN = 2147483647
+fld public final static int THREAD_PRIORITY_HIGHEST = 2
+fld public final static int THREAD_PRIORITY_IDLE = -15
+fld public final static int THREAD_PRIORITY_LOWEST = -2
+fld public final static int THREAD_PRIORITY_NORMAL = 0
+fld public final static int THREAD_PRIORITY_TIME_CRITICAL = 15
 intf com.sun.jna.platform.win32.WinNT
 intf com.sun.jna.platform.win32.Wincon
 intf com.sun.jna.win32.StdCallLibrary
@@ -7164,8 +7257,10 @@ meth public abstract boolean SetFileInformationByHandle(com.sun.jna.platform.win
 meth public abstract boolean SetHandleInformation(com.sun.jna.platform.win32.WinNT$HANDLE,int,int)
 meth public abstract boolean SetLocalTime(com.sun.jna.platform.win32.WinBase$SYSTEMTIME)
 meth public abstract boolean SetNamedPipeHandleState(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.IntByReference)
+meth public abstract boolean SetPriorityClass(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.platform.win32.WinDef$DWORD)
 meth public abstract boolean SetProcessAffinityMask(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.platform.win32.BaseTSD$ULONG_PTR)
 meth public abstract boolean SetSystemTime(com.sun.jna.platform.win32.WinBase$SYSTEMTIME)
+meth public abstract boolean SetThreadPriority(com.sun.jna.platform.win32.WinNT$HANDLE,int)
 meth public abstract boolean SetVolumeLabel(java.lang.String,java.lang.String)
 meth public abstract boolean SetVolumeMountPoint(java.lang.String,java.lang.String)
 meth public abstract boolean SystemTimeToFileTime(com.sun.jna.platform.win32.WinBase$SYSTEMTIME,com.sun.jna.platform.win32.WinBase$FILETIME)
@@ -7177,6 +7272,8 @@ meth public abstract boolean TransactNamedPipe(com.sun.jna.platform.win32.WinNT$
 meth public abstract boolean UnmapViewOfFile(com.sun.jna.Pointer)
 meth public abstract boolean VerifyVersionInfoW(com.sun.jna.platform.win32.WinNT$OSVERSIONINFOEX,int,long)
 meth public abstract boolean VirtualFreeEx(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.Pointer,com.sun.jna.platform.win32.BaseTSD$SIZE_T,int)
+meth public abstract boolean VirtualLock(com.sun.jna.Pointer,com.sun.jna.platform.win32.BaseTSD$SIZE_T)
+meth public abstract boolean VirtualUnlock(com.sun.jna.Pointer,com.sun.jna.platform.win32.BaseTSD$SIZE_T)
 meth public abstract boolean WaitNamedPipe(java.lang.String,int)
 meth public abstract boolean WriteFile(com.sun.jna.platform.win32.WinNT$HANDLE,byte[],int,com.sun.jna.ptr.IntByReference,com.sun.jna.platform.win32.WinBase$OVERLAPPED)
 meth public abstract boolean WritePrivateProfileSection(java.lang.String,java.lang.String,java.lang.String)
@@ -7192,6 +7289,7 @@ meth public abstract com.sun.jna.Pointer MapViewOfFile(com.sun.jna.platform.win3
 meth public abstract com.sun.jna.Pointer VirtualAllocEx(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.Pointer,com.sun.jna.platform.win32.BaseTSD$SIZE_T,int,int)
 meth public abstract com.sun.jna.platform.win32.BaseTSD$SIZE_T VirtualQueryEx(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.Pointer,com.sun.jna.platform.win32.WinNT$MEMORY_BASIC_INFORMATION,com.sun.jna.platform.win32.BaseTSD$SIZE_T)
 meth public abstract com.sun.jna.platform.win32.WinDef$DWORD GetLogicalDriveStrings(com.sun.jna.platform.win32.WinDef$DWORD,char[])
+meth public abstract com.sun.jna.platform.win32.WinDef$DWORD GetPriorityClass(com.sun.jna.platform.win32.WinNT$HANDLE)
 meth public abstract com.sun.jna.platform.win32.WinDef$DWORD GetPrivateProfileSection(java.lang.String,char[],com.sun.jna.platform.win32.WinDef$DWORD,java.lang.String)
 meth public abstract com.sun.jna.platform.win32.WinDef$DWORD GetPrivateProfileSectionNames(char[],com.sun.jna.platform.win32.WinDef$DWORD,java.lang.String)
 meth public abstract com.sun.jna.platform.win32.WinDef$DWORD GetPrivateProfileString(java.lang.String,java.lang.String,java.lang.String,char[],com.sun.jna.platform.win32.WinDef$DWORD,java.lang.String)
@@ -7240,6 +7338,7 @@ meth public abstract int GetPrivateProfileInt(java.lang.String,java.lang.String,
 meth public abstract int GetProcessId(com.sun.jna.platform.win32.WinNT$HANDLE)
 meth public abstract int GetProcessVersion(int)
 meth public abstract int GetShortPathName(java.lang.String,char[],int)
+meth public abstract int GetThreadPriority(com.sun.jna.platform.win32.WinNT$HANDLE)
 meth public abstract int GetTickCount()
 meth public abstract int QueryDosDevice(java.lang.String,char[],int)
 meth public abstract int SetErrorMode(int)
@@ -7277,18 +7376,28 @@ meth public final static java.util.List<java.lang.String> getVolumePathNamesForV
 meth public final static java.util.List<java.lang.String> queryDosDevice(java.lang.String,int)
 meth public final static void writePrivateProfileSection(java.lang.String,java.lang.String[],java.lang.String)
 meth public final static void writePrivateProfileString(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+meth public static boolean isValidPriorityClass(com.sun.jna.platform.win32.WinDef$DWORD)
+meth public static boolean isValidThreadPriority(int)
 meth public static boolean isWideCharEnvironmentStringBlock(com.sun.jna.Pointer,long)
 meth public static byte[] getResource(java.lang.String,java.lang.String,java.lang.String)
+meth public static com.sun.jna.platform.win32.WinDef$DWORD getCurrentProcessPriority()
+meth public static com.sun.jna.platform.win32.WinDef$DWORD getProcessPriority(int)
+meth public static int getCurrentThreadPriority()
 meth public static int getDriveType(java.lang.String)
 meth public static int getFileAttributes(java.lang.String)
 meth public static int getFileType(java.lang.String) throws java.io.FileNotFoundException
+meth public static int getThreadPriority(int)
 meth public static java.lang.String expandEnvironmentStrings(java.lang.String)
 meth public static java.lang.String formatMessage(com.sun.jna.platform.win32.WinNT$HRESULT)
+meth public static java.lang.String formatMessage(com.sun.jna.platform.win32.WinNT$HRESULT,int,int)
 meth public static java.lang.String formatMessage(int)
+meth public static java.lang.String formatMessage(int,int,int)
 meth public static java.lang.String formatMessageFromLastErrorCode(int)
+meth public static java.lang.String formatMessageFromLastErrorCode(int,int,int)
 meth public static java.lang.String getComputerName()
 meth public static java.lang.String getEnvironmentVariable(java.lang.String)
 meth public static java.lang.String getLastErrorMessage()
+meth public static java.lang.String getLastErrorMessage(int,int)
 meth public static java.lang.String getTempPath()
 meth public static java.lang.String readEnvironmentStringBlockEntry(com.sun.jna.Pointer,long,boolean)
 meth public static java.util.List<com.sun.jna.platform.win32.Tlhelp32$MODULEENTRY32W> getModules(int)
@@ -7302,6 +7411,12 @@ meth public static void closeHandleRef(com.sun.jna.platform.win32.WinNT$HANDLEBy
 meth public static void deleteFile(java.lang.String)
 meth public static void freeGlobalMemory(com.sun.jna.Pointer)
 meth public static void freeLocalMemory(com.sun.jna.Pointer)
+meth public static void setCurrentProcessBackgroundMode(boolean)
+meth public static void setCurrentProcessPriority(com.sun.jna.platform.win32.WinDef$DWORD)
+meth public static void setCurrentThreadBackgroundMode(boolean)
+meth public static void setCurrentThreadPriority(int)
+meth public static void setProcessPriority(int,com.sun.jna.platform.win32.WinDef$DWORD)
+meth public static void setThreadPriority(int,int)
 supr java.lang.Object
 hfds EMPTY_STRING_ARRAY
 
@@ -8556,7 +8671,7 @@ innr public static ByReference
 meth public java.util.Date getAsJavaDate()
 meth public void setFromJavaDate(java.util.Date)
 supr com.sun.jna.Structure
-hfds MICRO_SECONDS_PER_DAY
+hfds MILLISECONDS_PER_DAY
 
 CLSS public static com.sun.jna.platform.win32.OaIdl$DATE$ByReference
  outer com.sun.jna.platform.win32.OaIdl$DATE
@@ -9317,6 +9432,7 @@ meth public abstract com.sun.jna.platform.win32.WinNT$HRESULT VariantCopy(com.su
 meth public abstract int SysStringByteLen(com.sun.jna.platform.win32.WTypes$BSTR)
 meth public abstract int SysStringLen(com.sun.jna.platform.win32.WTypes$BSTR)
 meth public abstract int SystemTimeToVariantTime(com.sun.jna.platform.win32.WinBase$SYSTEMTIME,com.sun.jna.ptr.DoubleByReference)
+meth public abstract int VariantTimeToSystemTime(double,com.sun.jna.platform.win32.WinBase$SYSTEMTIME)
 meth public abstract void SysFreeString(com.sun.jna.platform.win32.WTypes$BSTR)
 meth public abstract void VariantInit(com.sun.jna.platform.win32.Variant$VARIANT$ByReference)
 meth public abstract void VariantInit(com.sun.jna.platform.win32.Variant$VARIANT)
@@ -9591,11 +9707,13 @@ CLSS public abstract interface com.sun.jna.platform.win32.Psapi
 fld public final static com.sun.jna.platform.win32.Psapi INSTANCE
 innr public static MODULEINFO
 innr public static PERFORMANCE_INFORMATION
+innr public static PSAPI_WORKING_SET_EX_INFORMATION
 intf com.sun.jna.win32.StdCallLibrary
 meth public abstract boolean EnumProcessModules(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.platform.win32.WinDef$HMODULE[],int,com.sun.jna.ptr.IntByReference)
 meth public abstract boolean EnumProcesses(int[],int,com.sun.jna.ptr.IntByReference)
 meth public abstract boolean GetModuleInformation(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.platform.win32.WinDef$HMODULE,com.sun.jna.platform.win32.Psapi$MODULEINFO,int)
 meth public abstract boolean GetPerformanceInfo(com.sun.jna.platform.win32.Psapi$PERFORMANCE_INFORMATION,int)
+meth public abstract boolean QueryWorkingSetEx(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.Pointer,int)
 meth public abstract int GetModuleFileNameEx(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.Pointer,int)
 meth public abstract int GetModuleFileNameExA(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.platform.win32.WinNT$HANDLE,byte[],int)
 meth public abstract int GetModuleFileNameExW(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.platform.win32.WinNT$HANDLE,char[],int)
@@ -9628,6 +9746,22 @@ fld public com.sun.jna.platform.win32.WinDef$DWORD HandleCount
 fld public com.sun.jna.platform.win32.WinDef$DWORD ProcessCount
 fld public com.sun.jna.platform.win32.WinDef$DWORD ThreadCount
 fld public com.sun.jna.platform.win32.WinDef$DWORD cb
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.win32.Psapi$PSAPI_WORKING_SET_EX_INFORMATION
+ outer com.sun.jna.platform.win32.Psapi
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["VirtualAddress", "VirtualAttributes"])
+cons public init()
+fld public com.sun.jna.Pointer VirtualAddress
+fld public com.sun.jna.platform.win32.BaseTSD$ULONG_PTR VirtualAttributes
+meth public boolean isBad()
+meth public boolean isLargePage()
+meth public boolean isLocked()
+meth public boolean isShared()
+meth public boolean isValid()
+meth public int getNode()
+meth public int getShareCount()
+meth public int getWin32Protection()
 supr com.sun.jna.Structure
 
 CLSS public abstract com.sun.jna.platform.win32.PsapiUtil
@@ -18779,6 +18913,7 @@ innr public static SYSTEM_POWER_CAPABILITIES
 innr public static SYSTEM_POWER_INFORMATION
 innr public static SYSTEM_POWER_LEVEL
 innr public static SYSTEM_POWER_POLICY
+innr public static TOKEN_ELEVATION
 innr public static TOKEN_GROUPS
 innr public static TOKEN_OWNER
 innr public static TOKEN_PRIMARY_GROUP
@@ -19524,6 +19659,13 @@ fld public final static int PowerSystemSleeping2 = 3
 fld public final static int PowerSystemSleeping3 = 4
 fld public final static int PowerSystemUnspecified = 0
 fld public final static int PowerSystemWorking = 1
+
+CLSS public static com.sun.jna.platform.win32.WinNT$TOKEN_ELEVATION
+ outer com.sun.jna.platform.win32.WinNT
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["TokenIsElevated"])
+cons public init()
+fld public int TokenIsElevated
+supr com.sun.jna.Structure
 
 CLSS public static com.sun.jna.platform.win32.WinNT$TOKEN_GROUPS
  outer com.sun.jna.platform.win32.WinNT
@@ -21796,6 +21938,15 @@ meth public abstract int gethostname(byte[],int)
 CLSS public abstract interface com.sun.jna.platform.win32.Winspool
 fld public final static com.sun.jna.platform.win32.Winspool INSTANCE
 fld public final static int CCHDEVICENAME = 32
+fld public final static int JOB_CONTROL_CANCEL = 3
+fld public final static int JOB_CONTROL_DELETE = 5
+fld public final static int JOB_CONTROL_LAST_PAGE_EJECTED = 7
+fld public final static int JOB_CONTROL_PAUSE = 1
+fld public final static int JOB_CONTROL_RELEASE = 9
+fld public final static int JOB_CONTROL_RESTART = 4
+fld public final static int JOB_CONTROL_RESUME = 2
+fld public final static int JOB_CONTROL_RETAIN = 8
+fld public final static int JOB_CONTROL_SENT_TO_PRINTER = 6
 fld public final static int JOB_NOTIFY_TYPE = 1
 fld public final static int PRINTER_ATTRIBUTE_DEFAULT = 4
 fld public final static int PRINTER_ATTRIBUTE_DIRECT = 2
@@ -21847,6 +21998,10 @@ fld public final static int PRINTER_CHANGE_SET_PRINTER = 2
 fld public final static int PRINTER_CHANGE_SET_PRINTER_DRIVER = 536870912
 fld public final static int PRINTER_CHANGE_TIMEOUT = -2147483648
 fld public final static int PRINTER_CHANGE_WRITE_JOB = 2048
+fld public final static int PRINTER_CONTROL_PAUSE = 1
+fld public final static int PRINTER_CONTROL_PURGE = 2
+fld public final static int PRINTER_CONTROL_RESUME = 3
+fld public final static int PRINTER_CONTROL_SET_STATUS = 4
 fld public final static int PRINTER_ENUM_CONNECTIONS = 4
 fld public final static int PRINTER_ENUM_CONTAINER = 32768
 fld public final static int PRINTER_ENUM_DEFAULT = 1
@@ -21973,6 +22128,8 @@ meth public abstract boolean FindNextPrinterChangeNotification(com.sun.jna.platf
 meth public abstract boolean FreePrinterNotifyInfo(com.sun.jna.Pointer)
 meth public abstract boolean GetPrinter(com.sun.jna.platform.win32.WinNT$HANDLE,int,com.sun.jna.Pointer,int,com.sun.jna.ptr.IntByReference)
 meth public abstract boolean OpenPrinter(java.lang.String,com.sun.jna.platform.win32.WinNT$HANDLEByReference,com.sun.jna.platform.win32.Winspool$LPPRINTER_DEFAULTS)
+meth public abstract boolean SetJob(com.sun.jna.platform.win32.WinNT$HANDLE,int,int,com.sun.jna.Pointer,int)
+meth public abstract boolean SetPrinter(com.sun.jna.platform.win32.WinNT$HANDLE,int,com.sun.jna.Pointer,int)
 meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE FindFirstPrinterChangeNotification(com.sun.jna.platform.win32.WinNT$HANDLE,int,int,com.sun.jna.platform.win32.WinDef$LPVOID)
  anno 0 java.lang.Deprecated()
 meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE FindFirstPrinterChangeNotification(com.sun.jna.platform.win32.WinNT$HANDLE,int,int,com.sun.jna.platform.win32.Winspool$PRINTER_NOTIFY_OPTIONS)
@@ -22704,6 +22861,8 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
+meth public java.awt.peer.ComponentPeer getPeer()
+ anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()

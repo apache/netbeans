@@ -15,9 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-FD441D574A71E7D10A4F73DE6609F881D8CDFEEC com.fasterxml.jackson.core:jackson-annotations:2.16.1
-9456BB3CDD0F79F91A5F730A1B1BB041A380C91F com.fasterxml.jackson.core:jackson-core:2.16.1
-02A16EFEB840C45AF1E2F31753DFE76795278B73 com.fasterxml.jackson.core:jackson-databind:2.16.1
-1BE7098DCCC079171464DCA7E386BD8DF623B031 com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.16.1
-36A418325C618E440E5CCB80B75C705D894F50BD com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1
-E9DF364A2695E66EB8D2803D6725424842760125 com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.16.1
+880A742337010DA4C851F843D8CAC150E22DFF9F com.fasterxml.jackson.core:jackson-annotations:2.17.0
+A6E5058EF9720623C517252D17162F845306FF3A com.fasterxml.jackson.core:jackson-core:2.17.0
+7173E9E1D4BC6D7CA03BC4EEEDCD548B8B580B34 com.fasterxml.jackson.core:jackson-databind:2.17.0
+6833C8573452D583E4AF650A7424D547606B2501 com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.17.0
+3FAB507BBA9D477E52ED2302DC3DDBD23CBAE339 com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.0
+E07032CE170277213AC4835169CA79FA0340C7B5 com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.17.0

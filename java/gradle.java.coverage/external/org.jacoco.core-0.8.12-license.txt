@@ -1,6 +1,6 @@
 Name: JaCoCo Core
 Description: Java Code Coverage for Eclipse
-Version: 0.8.7
+Version: 0.8.12
 License: EPL-v10
 Origin: EclEmma Project
 URL: https://www.jacoco.org/

@@ -1,10 +1,8 @@
-Name: Felix
-Version: 7.0.3
-Description: Apache Felix OSGi container.
+Name: Apache Commons Codec
+Description: General encoding/decoding algorithms (for example phonetic, base64, URL).
+Origin: https://commons.apache.org/proper/commons-codec/
+Version: 1.16.1
 License: Apache-2.0
-Files: org.apache.felix.main-7.0.3.jar
-Origin: Apache Software Foundation
-URL: http://archive.apache.org/dist/felix/
 
                                  Apache License
                            Version 2.0, January 2004

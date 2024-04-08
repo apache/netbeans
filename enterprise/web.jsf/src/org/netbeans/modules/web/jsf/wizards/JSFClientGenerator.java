@@ -166,7 +166,8 @@ public class JSFClientGenerator {
     
     public static void generateJSFPages(ProgressContributor progressContributor, ProgressPanel progressPanel, final Project project, final String entityClass, String jsfFolderBase, String jsfFolderName, final String controllerPackage, final String controllerClass, FileObject pkg, FileObject controllerFileObject, final EmbeddedPkSupport embeddedPkSupport, final List<String> entities, final boolean ajaxify, String jpaControllerPackage, FileObject jpaControllerFileObject, FileObject converterFileObject, final boolean genSessionBean, int progressIndex) throws IOException {
         final boolean isInjection = Util.isContainerManaged(project); //Util.isSupportedJavaEEVersion(project);
-        final boolean jakartaJsfPackages = JsfVersionUtils.forProject(project).isAtLeast(JsfVersion.JSF_3_0);
+        JsfVersion jsfVersion = JsfVersionUtils.forProject(project);
+        final boolean jakartaJsfPackages = jsfVersion != null && jsfVersion.isAtLeast(JsfVersion.JSF_3_0);
         
         String simpleControllerName = controllerFileObject.getName();
         

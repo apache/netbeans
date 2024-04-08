@@ -374,7 +374,8 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
         }
         try {
             //check web beans
-            if(JsfVersionUtils.forProject(project).isAtLeast(JsfVersion.JSF_3_0)) {
+            JsfVersion jsfVersion = JsfVersionUtils.forProject(project);
+            if(jsfVersion != null && jsfVersion.isAtLeast(JsfVersion.JSF_3_0)) {
                jakartaMetaModelSupport.getMetaModel().runReadAction(new MetadataModelAction<org.netbeans.modules.jakarta.web.beans.api.model.WebBeansModel, Void>() {
                 @Override
                 public Void run(org.netbeans.modules.jakarta.web.beans.api.model.WebBeansModel metadata) throws Exception {

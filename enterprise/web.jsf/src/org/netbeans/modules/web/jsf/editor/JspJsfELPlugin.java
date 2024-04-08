@@ -100,7 +100,8 @@ public class JspJsfELPlugin extends ELPlugin {
             return Collections.<ImplicitObject>emptyList();
         }
         final Project project = FileOwnerQuery.getOwner(file);
-        if (project == null || JsfVersionUtils.forProject(project).isAtLeast(JsfVersion.JSF_3_0)) {
+        final JsfVersion jsfVersion = JsfVersionUtils.forProject(project);
+        if (project == null || jsfVersion == null || jsfVersion.isAtLeast(JsfVersion.JSF_3_0)) {
             return getImplicitObjectsJakarta();
         } else {
             return getImplicitObjects();

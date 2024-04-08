@@ -14,5 +14,14 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-217D0FE550B86FEB3F0528E46D99856C587C3906 org.graalvm.sdk:graal-sdk:23.0.3
-0DE825CCBE62A965427FB7BC8048887A0506E795 org.graalvm.sdk:launcher-common:23.0.3
+8AA4ECE060629AAAED57215A5FD8C377EFF1A191 org.graalvm.sdk:graal-sdk:24.0.0
+06055903437576484DCC6545AF995FF67E0A3B55 org.graalvm.sdk:launcher-common:24.0.0
+335646EC205A3BCE0D518748D08A5C45900A9869 org.graalvm.shadowed:jline:24.0.0
+26F391313D8B7A4376B0778EA32A075422FB70DD org.graalvm.polyglot:polyglot:24.0.0
+E7FBA15F217232D59E2C7EBA0EE7480F8DBF32B7 org.graalvm.sdk:collections:24.0.0
+B6BD5F7B8A375832A64E7BEA9F2AEED08E7AA9D1 org.graalvm.sdk:nativeimage:24.0.0
+DEA1FD82AECD2B7776FDA84FE944C605B0A44339 org.graalvm.sdk:word:24.0.0
+206525F96C8D47633769F7DD96ADE4C9253E1FD7 org.graalvm.sdk:jniutils:24.0.0
+BC925B49DCE52653AFBA11F65100CF9D83171D40 org.graalvm.truffle:truffle-api:24.0.0
+2F3EE79085E59314C8B4AB9D40AC2A118E8CBA15 org.graalvm.truffle:truffle-runtime:24.0.0
+1DFB80E64DCD92460C2ACCAC4C90935FE6CDDF12 org.graalvm.truffle:truffle-compiler:24.0.0

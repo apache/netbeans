@@ -34,15 +34,6 @@
                         <specification-version>2.0</specification-version>
                     </run-dependency>
                 </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.libs.truffleapi</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>2.0</specification-version>
-                    </run-dependency>
-                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>
@@ -66,10 +57,6 @@
                         <compile-dependency/>
                         <test/>
                     </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.libs.graalsdk.system</code-name-base>
-                        <recursive/>
-                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <public-packages>
@@ -77,20 +64,20 @@
                 <package>com.oracle.js.parser.ir</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/js-23.0.3.jar</runtime-relative-path>
-                <binary-origin>external/js-23.0.3.jar</binary-origin>
+                <runtime-relative-path>ext/js-language-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/js-language-24.0.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/js-launcher-23.0.3.jar</runtime-relative-path>
-                <binary-origin>external/js-launcher-23.0.3.jar</binary-origin>
+                <runtime-relative-path>ext/js-scriptengine-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/js-scriptengine-24.0.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/regex-23.0.3.jar</runtime-relative-path>
-                <binary-origin>external/regex-23.0.3.jar</binary-origin>
+                <runtime-relative-path>ext/regex-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/regex-24.0.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/icu4j-72.1.jar</runtime-relative-path>
-                <binary-origin>external/icu4j-72.1.jar</binary-origin>
+                <runtime-relative-path>ext/icu4j-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/icu4j-24.0.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

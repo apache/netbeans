@@ -57,6 +57,14 @@
                         <specification-version>8.36</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.ui</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.33</specification-version>
+                    </run-dependency>
+                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>
@@ -79,31 +87,86 @@
                         <code-name-base>org.netbeans.libs.graaljs</code-name-base>
                         <recursive/>
                     </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.libs.graalsdk.system</code-name-base>
-                        <recursive/>
-                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <public-packages>
-                <package>org.graalvm.home</package>
-                <package>org.graalvm.options</package>
-                <package>org.graalvm.nativeimage</package>
+                <package>com.oracle.truffle.api</package>
+                <package>com.oracle.truffle.api.debug</package>
+                <package>com.oracle.truffle.api.dsl</package>
+                <package>com.oracle.truffle.api.exception</package>
+                <package>com.oracle.truffle.api.frame</package>
+                <package>com.oracle.truffle.api.instrumentation</package>
+                <package>com.oracle.truffle.api.interop</package>
+                <package>com.oracle.truffle.api.io</package>
+                <package>com.oracle.truffle.api.library</package>
+                <package>com.oracle.truffle.api.memory</package>
+                <package>com.oracle.truffle.api.nodes</package>
+                <package>com.oracle.truffle.api.object</package>
+                <package>com.oracle.truffle.api.profiles</package>
+                <package>com.oracle.truffle.api.provider</package>
+                <package>com.oracle.truffle.api.source</package>
+                <package>com.oracle.truffle.api.staticobject</package>
+                <package>com.oracle.truffle.api.strings</package>
+                <package>com.oracle.truffle.api.utilities</package>
+                <package>com.oracle.truffle.polyglot</package>
                 <package>org.graalvm.collections</package>
+                <package>org.graalvm.home</package>
+                <package>org.graalvm.nativeimage</package>
+                <package>org.graalvm.options</package>
                 <package>org.graalvm.polyglot</package>
+                <package>org.graalvm.polyglot.impl</package>
                 <package>org.graalvm.polyglot.io</package>
                 <package>org.graalvm.polyglot.management</package>
                 <package>org.graalvm.polyglot.proxy</package>
-                <package>org.graalvm.polyglot.impl</package>
                 <package>org.netbeans.libs.graalsdk</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/graal-sdk-23.0.3.jar</runtime-relative-path>
-                <binary-origin>external/graal-sdk-23.0.3.jar</binary-origin>
+                <runtime-relative-path>ext/graal-sdk-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/graal-sdk-24.0.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/launcher-common-23.0.3.jar</runtime-relative-path>
-                <binary-origin>external/launcher-common-23.0.3.jar</binary-origin>
+                <runtime-relative-path>ext/launcher-common-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/launcher-common-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jline-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/jline-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/collections-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/collections-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jniutils-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/jniutils-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/launcher-common-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/launcher-common-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/nativeimage-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/nativeimage-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/polyglot-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/polyglot-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/word-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/word-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/truffle-api-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/truffle-api-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/truffle-compiler-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/truffle-compiler-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/truffle-runtime-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/truffle-runtime-24.0.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -1,3 +1,0 @@
-# This directory should be left empty.
-# Non-empty directory triggers test build step in projectized.xml which will
-# produce a module JAR into nbbuild/build/testdist/.../tests.jar

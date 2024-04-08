@@ -2,8 +2,8 @@ Name: Graal SDK and Truffle API
 Description: Graal SDK and Truffle API
 License: UPL
 Origin: https://github.com/oracle/graal
-Version: 23.0.3
-Files: graal-sdk-23.0.3.jar launcher-common-23.0.3.jar
+Version: 24.0.0
+Files: graal-sdk-24.0.0.jar launcher-common-24.0.0.jar collections-24.0.0.jar jniutils-24.0.0.jar nativeimage-24.0.0.jar polyglot-24.0.0.jar truffle-compiler-24.0.0.jar truffle-runtime-24.0.0.jar truffle-api-24.0.0.jar word-24.0.0.jar
 
 Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
 

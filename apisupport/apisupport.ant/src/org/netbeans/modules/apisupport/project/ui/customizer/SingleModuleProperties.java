@@ -110,6 +110,7 @@ public final class SingleModuleProperties extends ModuleProperties {
     public static final String IS_AUTOLOAD = "is.autoload"; // NOI18N
     public static final String IS_EAGER = "is.eager"; // NOI18N
     public static final String JAVAC_SOURCE = "javac.source"; // NOI18N
+    public static final String JAVAC_RELEASE = "javac.release"; // NOI18N
     public static final String JAVADOC_TITLE = "javadoc.title"; // NOI18N
     public static final String LICENSE_FILE = "license.file"; // NOI18N
     public static final String NBM_HOMEPAGE = "nbm.homepage"; // NOI18N

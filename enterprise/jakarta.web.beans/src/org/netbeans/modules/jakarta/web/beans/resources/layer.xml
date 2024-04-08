@@ -40,7 +40,7 @@
             <folder name="x-java">
             	<folder name="CodeGenerators">
                     <file name="org-netbeans-modules-jakarta-web-beans-actions-InterceptorFactory.instance">
-                        <attr name="position" intvalue="1000"/>
+                        <attr name="position" intvalue="1100"/>
                     </file>
                 </folder> 
                 <folder name="GlyphGutterActions">
@@ -92,7 +92,7 @@
     <folder name="Templates">
         <folder name="CDI_JakartaEE">
             <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.jakarta.web.beans.resources.Bundle"/>
-            <attr name="position" intvalue="876"/>
+            <attr name="position" intvalue="874"/>
             <file name="beans.xml">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.jakarta.web.beans.resources.Bundle"/>
                 <attr name="position" intvalue="10"/>

@@ -349,7 +349,7 @@ public class DatabaseTablesPanel extends javax.swing.JPanel implements AncestorL
         String databaseUrl = datasource.getUrl();
         String user = datasource.getUsername();
         for (DatabaseConnection dbconn : ConnectionManager.getDefault().getConnections()) {
-            if (databaseUrl.equals(dbconn.getDatabaseURL())) {
+            if (Objects.equals(databaseUrl, dbconn.getDatabaseURL())) {
                 result.add(dbconn);
             }
         }

@@ -121,10 +121,6 @@
                 <package>org.netbeans.libs.graalsdk</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/graal-sdk-24.0.0.jar</runtime-relative-path>
-                <binary-origin>external/graal-sdk-24.0.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>ext/launcher-common-24.0.0.jar</runtime-relative-path>
                 <binary-origin>external/launcher-common-24.0.0.jar</binary-origin>
             </class-path-extension>

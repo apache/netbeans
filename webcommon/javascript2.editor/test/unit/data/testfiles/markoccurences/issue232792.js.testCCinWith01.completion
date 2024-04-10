@@ -5,6 +5,8 @@ Code completion result for source line:
 CLASS      A                               [PUBLIC]   issue232792.js
 CLASS      B                               [PUBLIC]   issue232792.js
 CLASS      console                         [PUBLIC]   issue232792.js
+CLASS      import                          [PUBLIC]   <font color=#999999>metaproperties.js</font>
+CLASS      new                             [PUBLIC]   <font color=#999999>metaproperties.js</font>
 METHOD     getGlobal(): undefined          [PUBLIC]   issue232792.js
 METHOD     getInfo(): undefined            [PUBLIC]   issue232792.js
 METHOD     getName(): undefined            [PUBLIC]   issue232792.js

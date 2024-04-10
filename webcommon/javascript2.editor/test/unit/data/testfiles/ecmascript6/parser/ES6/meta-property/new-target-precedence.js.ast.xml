@@ -55,9 +55,12 @@
                   <isNew/>
                   <!-- CallNode Arguments -->
                   <!-- CallNode Function -->
-                  <IdentNode start='23' end='33'>
-                    <name>new.target</name>
-                  </IdentNode>
+                  <AccessNode property='target' start='23' end='33'>
+                    <!-- AccessNode Base -->
+                    <IdentNode start='23' end='26'>
+                      <name>new</name>
+                    </IdentNode>
+                  </AccessNode>
                 </CallNode>
               </UnaryNode>
             </CallNode>

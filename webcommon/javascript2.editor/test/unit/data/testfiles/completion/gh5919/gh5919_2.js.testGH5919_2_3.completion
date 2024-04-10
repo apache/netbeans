@@ -1,0 +1,6 @@
+Code completion result for source line:
+import/*dummy*/.meta.|url;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     resolve(moduleName: String): S  [PUBLIC]   <font color=#999999>metaproperties.js</font>
+FIELD      url: null|String                [PUBLIC]   <font color=#999999>metaproperties.js</font>

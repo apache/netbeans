@@ -84,13 +84,26 @@ class DumpingVisitor extends NodeVisitor {
             System.out.println(indent() + node.getClass().getName() + " [" + ((BinaryNode) node).tokenType() + "]");
         } else if (node instanceof AccessNode) {
             AccessNode an = (AccessNode) node;
-            System.out.println(indent() + node.getClass().getName() + " [property=" + an.getProperty() + ", optional=" + an.isOptional() + "]");
+            System.out.printf("%s%s [property=%s, optional=%b]  [%d-%d]%n",
+                    indent(),
+                    node.getClass().getName(),
+                    an.getProperty(),
+                    an.isOptional(),
+                    an.getStart(),
+                    an.getFinish()
+            );
         } else if (node instanceof IndexNode) {
             IndexNode in = (IndexNode) node;
             System.out.println(indent() + node.getClass().getName() + " [" + in.isOptional() + "]");
         } else if (node instanceof CallNode) {
             CallNode cn = (CallNode) node;
-            System.out.println(indent() + node.getClass().getName() + " [" + cn.isOptional() + "]");
+            System.out.printf("%s%s [%b]  [%d-%d]%n",
+                    indent(),
+                    node.getClass().getName(),
+                    cn.isOptional(),
+                    cn.getStart(),
+                    cn.getFinish()
+            );
         } else if (node instanceof PropertyNode) {
             PropertyNode pn = (PropertyNode) node;
             System.out.printf("%s%s [%d-%d, static=%b]%n", indent(),

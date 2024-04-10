@@ -62,10 +62,15 @@
             <public-packages>
                 <package>com.oracle.js.parser</package>
                 <package>com.oracle.js.parser.ir</package>
+                <package>com.oracle.truffle.js.lang</package>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/js-language-24.0.0.jar</runtime-relative-path>
                 <binary-origin>external/js-language-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/js-launcher-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/js-launcher-24.0.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/js-scriptengine-24.0.0.jar</runtime-relative-path>

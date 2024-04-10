@@ -46,7 +46,7 @@ public class JSExecutorTest extends NbTestCase {
         find.setAccessible(true);
         final ClassPath cp = (ClassPath) find.invoke(null);
         final FileObject[] roots = cp.getRoots();
-        assertEquals("Seven roots", 7, roots.length);
+        assertEquals("Seven roots", 15, roots.length);
         for (FileObject fo : roots) {
             assertTrue("valid: " + fo, fo.isValid());
             assertTrue("folder: " + fo, fo.isFolder());

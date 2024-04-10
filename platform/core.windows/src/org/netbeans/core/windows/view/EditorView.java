@@ -487,6 +487,9 @@ public class EditorView extends ViewElement {
             Color shortcutColor = UIManager.getColor("EditorTab.underlineColor");
             if (shortcutColor != null) {
                 shortcut.setTitleColor(shortcutColor);
+            } else {
+                shortcutColor = new Color(0x164B7B);
+                shortcut.setTitleColor(shortcutColor);
             }
             Font font = getFont();
             if (font != null) {

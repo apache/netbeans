@@ -25,7 +25,10 @@ import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
+import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
+import org.openide.modules.ModuleInfo;
+import org.openide.util.Lookup;
 
 public class ProxyAutoConfigDirectTest extends NbTestCase {
     static {
@@ -33,6 +36,15 @@ public class ProxyAutoConfigDirectTest extends NbTestCase {
     }
     public ProxyAutoConfigDirectTest(String name) {
         super(name);
+    }
+    
+    public static final junit.framework.Test suite() {
+        NbModuleSuite.Configuration cfg = NbModuleSuite.emptyConfiguration().
+                honorAutoloadEager(true).
+                enableClasspathModules(false).
+                gui(false);
+        
+        return cfg.clusters("platform|webcommon|ide").addTest(ProxyAutoConfigDirectTest.class).suite();
     }
 
     public void testGetProxyAutoConfigWithLocalPAC() throws URISyntaxException {

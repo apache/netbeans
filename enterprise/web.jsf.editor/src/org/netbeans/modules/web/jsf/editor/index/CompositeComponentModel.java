@@ -64,6 +64,7 @@ public class CompositeComponentModel extends JsfPageModel {
     static final String HAS_IMPLEMENTATION_KEY = "has_implementation"; //NOI18N
     //other
     private static final String WEBAPP_RESOURCES_DIRECTORY = "javax.faces.WEBAPP_RESOURCES_DIRECTORY";
+    private static final String WEBAPP_RESOURCES_DIRECTORY_JAKARTA = "jakarta.faces.WEBAPP_RESOURCES_DIRECTORY";
     private static final String RESOURCES_FOLDER_NAME = "resources"; //NOI18N
     private static final char VALUES_SEPARATOR = ','; //NOI18N
     private static final char ATTRIBUTES_SEPARATOR = ';'; //NOI18N
@@ -231,7 +232,8 @@ public class CompositeComponentModel extends JsfPageModel {
                         if (ddRoot != null) {
                             InitParam[] parameters = ddRoot.getContextParam();
                             for (InitParam param: parameters) {
-                                if (param.getParamName().contains(WEBAPP_RESOURCES_DIRECTORY)) {
+                                if (param.getParamName().contains(WEBAPP_RESOURCES_DIRECTORY)
+                                        || param.getParamName().contains(WEBAPP_RESOURCES_DIRECTORY_JAKARTA)) {
                                     relPath = param.getParamValue().trim();
                                 }
                             }

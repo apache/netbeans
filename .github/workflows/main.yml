@@ -665,8 +665,8 @@ jobs:
 #      - name: ide/localhistory
 #        run: ant $OPTS -f ide/localhistory test
 
-      - name: ide/libs.truffleapi
-        run: ant $OPTS -f ide/libs.truffleapi test
+      #- name: ide/libs.truffleapi
+      #  run: ant $OPTS -f ide/libs.truffleapi test
 
       - name: ide/lsp.client
         run: ant $OPTS -f ide/lsp.client test

@@ -1,0 +1,1 @@
+--add-exports=org.graalvm.sdk/org.graalvm.polyglot.impl=ALL-UNNAMED

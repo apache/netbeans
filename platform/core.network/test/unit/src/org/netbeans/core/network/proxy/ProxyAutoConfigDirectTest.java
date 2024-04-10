@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
-import org.openide.modules.ModuleInfo;
-import org.openide.util.Lookup;
 
 public class ProxyAutoConfigDirectTest extends NbTestCase {
     static {

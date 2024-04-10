@@ -221,6 +221,14 @@
               <striplinebreaks/>
           </filterchain>
       </loadfile>
+      <loadfile property="jms-graalvm.flags" srcFile="${default.basedir}/jms-config/graalvm.flags">
+          <filterchain>
+              <tokenfilter>
+                  <replaceregex pattern="--" replace=" -J--" />
+              </tokenfilter>
+              <striplinebreaks/>
+          </filterchain>
+      </loadfile>
       <loadfile property="jms-base.flags.jvm" srcFile="${default.basedir}/jms-config/base.flags">
           <filterchain>
               <suffixlines suffix=" "/>
@@ -245,8 +253,14 @@
               <striplinebreaks/>
           </filterchain>
       </loadfile>
-      <property name="metabuild.jms-flags" value="${jms-base.flags}${jms-desktop.flags}${jms-compiler.flags}${jms-tools.flags}"/>
+      <loadfile property="jms-graalvm.flags.jvm" srcFile="${default.basedir}/jms-config/graalvm.flags">
+          <filterchain>
+              <suffixlines suffix=" "/>
+              <striplinebreaks/>
+          </filterchain>
+      </loadfile>
+      <property name="metabuild.jms-flags" value="${jms-base.flags}${jms-desktop.flags}${jms-compiler.flags}${jms-tools.flags}${jms-graalvm.flags}"/>
       <!-- Excluding jms-tools.flags, as nbjavac usually overlaps with tools dependencies -->
-      <property name="metabuild.jms-flags.jvm" value="${jms-base.flags.jvm}${jms-desktop.flags.jvm}${jms-compiler.flags.jvm}"/>
+      <property name="metabuild.jms-flags.jvm" value="${jms-base.flags.jvm}${jms-desktop.flags.jvm}${jms-compiler.flags.jvm}${jms-graalvm.flags.jvm}"/>
   </target>
 </project>

@@ -25,15 +25,19 @@
     <localizing-bundle>org.netbeans.libs.graaljs.Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/js-23.0.3.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/js-launcher-23.0.3.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/regex-23.0.3.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/icu4j-72.1.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/js-language-24.0.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/regex-24.0.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/icu4j-24.0.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/js-launcher-24.0.0.jar!/</resource>
 
-        <resource>jar:nbinst://org.netbeans.libs.graalsdk/modules/ext/graal-sdk-23.0.3.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.graalsdk/modules/ext/launcher-common-23.0.3.jar!/</resource>
-
-        <resource>jar:nbinst://org.netbeans.libs.truffleapi/modules/ext/truffle-api-23.0.3.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graalsdk/modules/ext/graal-sdk-24.0.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graalsdk/modules/ext/launcher-common-24.0.0.jar!/</resource>
+        
+        <resource>jar:nbinst://org.netbeans.libs.graalsdk/modules/ext/collections-24.0.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graalsdk/modules/ext/polyglot-24.0.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graalsdk/modules/ext/truffle-api-24.0.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graalsdk/modules/ext/truffle-runtime-24.0.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graalsdk/modules/ext/truffle-compiler-24.0.0.jar!/</resource>
     </volume>
     <volume>
         <type>src</type>

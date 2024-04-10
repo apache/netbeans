@@ -62,6 +62,7 @@
             <public-packages>
                 <package>com.oracle.js.parser</package>
                 <package>com.oracle.js.parser.ir</package>
+                <package>com.oracle.truffle.js.lang</package>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/js-language-24.0.0.jar</runtime-relative-path>

@@ -249,6 +249,9 @@ jobs:
       - name: Commit Validation tests
         run: .github/retry.sh ant $OPTS -Dcluster.config=$CLUSTER_CONFIG commit-validation
 
+      - name: platform/core.network
+        run: ant $OPTS -f platform/core.network test
+
       - name: Create Test Summary
         uses: test-summary/action@v2
         if: failure()
@@ -999,9 +1002,6 @@ jobs:
 
       - name: platform/core.multiview
         run: ant $OPTS -f platform/core.multiview test
-
-      - name: platform/core.network
-        run: ant $OPTS -f platform/core.network test
 
       - name: platform/core.netigso
         run: ant $OPTS -f platform/core.netigso test

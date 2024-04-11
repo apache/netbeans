@@ -118,8 +118,6 @@ public final class ModificationResult {
                     } finally {
                         WorkingCopy.instance = null;
                     }
-                    final JavacTaskImpl jt = copy.impl.getJavacTask();
-                    Log.instance(jt.getContext()).nerrors = 0;
                     final List<ModificationResult.Difference> diffs = copy.getChanges(result.tag2Span);
                     if (diffs != null && diffs.size() > 0)
                         result.diffs.put(copy.getFileObject(), diffs);

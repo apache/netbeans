@@ -21,6 +21,7 @@ package org.netbeans.modules.gradle.output;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.netbeans.modules.gradle.api.output.OutputDisplayerMock;
+import static org.netbeans.modules.gradle.output.GradleProcessorFactory.*;
 
 /**
  *
@@ -46,9 +47,8 @@ public class GradleProcessorFactoryTest {
 
     @Test
     public void testJavaCompilerProcessor1() {
-        GradleProcessorFactory.JavaCompilerProcessor jcp = new GradleProcessorFactory.JavaCompilerProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertTrue(jcp.processLine(od, JAVA_COMPILE_ERROR_1));
+        assertTrue(JAVAC_PROCESSOR.processLine(od, JAVA_COMPILE_ERROR_1));
         OutputDisplayerMock.OutputItem[] outputs = od.getOutputs();
         assertEquals("/home/netbeans/NetBeansProjects/gradleproject3/common/src/main/java/gradleproject3/common/NewClass1.java:1", outputs[0].text);
         assertEquals(": error: class, interface, or enum expected", outputs[1].text);
@@ -56,9 +56,8 @@ public class GradleProcessorFactoryTest {
 
     @Test
     public void testJavaCompilerProcessor2() {
-        GradleProcessorFactory.JavaCompilerProcessor jcp = new GradleProcessorFactory.JavaCompilerProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertTrue(jcp.processLine(od, JAVA_COMPILE_ERROR_2));
+        assertTrue(JAVAC_PROCESSOR.processLine(od, JAVA_COMPILE_ERROR_2));
         OutputDisplayerMock.OutputItem[] outputs = od.getOutputs();
         assertEquals("D:\\Users\\netbeans\\NetBeansProjects\\gradleproject3\\common\\src\\main\\java\\gradleproject3\\common\\NewClass1.java:1", outputs[0].text);
         assertEquals(": error: class, interface, or enum expected", outputs[1].text);
@@ -66,23 +65,20 @@ public class GradleProcessorFactoryTest {
 
     @Test
     public void testJavaCompilerProcessor3() {
-        GradleProcessorFactory.JavaCompilerProcessor jcp = new GradleProcessorFactory.JavaCompilerProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertFalse(jcp.processLine(od, GROOVY_COMPILE_ERROR_1));
+        assertFalse(JAVAC_PROCESSOR.processLine(od, GROOVY_COMPILE_ERROR_1));
     }
 
     @Test
     public void testJavaCompilerProcessor4() {
-        GradleProcessorFactory.JavaCompilerProcessor jcp = new GradleProcessorFactory.JavaCompilerProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertFalse(jcp.processLine(od, JAVA_8_STACKTRACE_1));
+        assertFalse(JAVAC_PROCESSOR.processLine(od, JAVA_8_STACKTRACE_1));
     }
 
     @Test
     public void testGroovyCompilerProcessor1() {
-        GradleProcessorFactory.GroovyCompilerProcessor gcp = new GradleProcessorFactory.GroovyCompilerProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertTrue(gcp.processLine(od, GROOVY_COMPILE_ERROR_1));
+        assertTrue(GROOVYC_PROCESSOR.processLine(od, GROOVY_COMPILE_ERROR_1));
         assertEquals(GROOVY_COMPILE_ERROR_1, od.getOutput());
         OutputDisplayerMock.OutputItem[] outputs = od.getOutputs();
         assertEquals("/home/netbeans/NetBeansProjects/netbeans/groovy/gradle/netbeans-gradle-tooling/src/main/groovy/org/netbeans/modules/gradle/tooling/NetBeansExplodedWarPlugin.groovy: 33", outputs[0].text);
@@ -92,9 +88,8 @@ public class GradleProcessorFactoryTest {
 
     @Test
     public void testGroovyCompilerProcessor2() {
-        GradleProcessorFactory.GroovyCompilerProcessor gcp = new GradleProcessorFactory.GroovyCompilerProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertTrue(gcp.processLine(od, GROOVY_COMPILE_ERROR_2));
+        assertTrue(GROOVYC_PROCESSOR.processLine(od, GROOVY_COMPILE_ERROR_2));
         assertEquals(GROOVY_COMPILE_ERROR_2, od.getOutput());
         OutputDisplayerMock.OutputItem[] outputs = od.getOutputs();
         assertEquals("/home/netbeans/NetBeansProjects/netbeans/groovy/gradle/netbeans-gradle-tooling/src/main/groovy/org/netbeans/modules/gradle/tooling/NetBeansExplodedWarPlugin.groovy: 43", outputs[0].text);
@@ -104,30 +99,26 @@ public class GradleProcessorFactoryTest {
 
     @Test
     public void testGroovyCompilerProcessor3() {
-        GradleProcessorFactory.GroovyCompilerProcessor gcp = new GradleProcessorFactory.GroovyCompilerProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertFalse(gcp.processLine(od, JAVA_COMPILE_ERROR_1));
+        assertFalse(GROOVYC_PROCESSOR.processLine(od, JAVA_COMPILE_ERROR_1));
     }
 
     @Test
     public void testURLOutputProcessor1() {
-        GradleProcessorFactory.URLOutputProcessor uop = new GradleProcessorFactory.URLOutputProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertFalse(uop.processLine(od, JAVA_8_STACKTRACE_1));
+        assertFalse(URL_PROCESSOR.processLine(od, JAVA_8_STACKTRACE_1));
     }
 
     @Test
     public void testURLOutputProcessor2() {
-        GradleProcessorFactory.URLOutputProcessor uop = new GradleProcessorFactory.URLOutputProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertFalse(uop.processLine(od, JAVA_COMPILE_ERROR_1));
+        assertFalse(URL_PROCESSOR.processLine(od, JAVA_COMPILE_ERROR_1));
     }
 
     @Test
     public void testURLOutputProcessor3() {
-        GradleProcessorFactory.URLOutputProcessor uop = new GradleProcessorFactory.URLOutputProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertTrue(uop.processLine(od, URL_PATTERN_1));
+        assertTrue(URL_PROCESSOR.processLine(od, URL_PATTERN_1));
         assertEquals(URL_PATTERN_1, od.getOutput());
         OutputDisplayerMock.OutputItem[] outputs = od.getOutputs();
         assertEquals(3, outputs.length);
@@ -136,9 +127,8 @@ public class GradleProcessorFactoryTest {
 
     @Test
     public void testURLOutputProcessor4() {
-        GradleProcessorFactory.URLOutputProcessor uop = new GradleProcessorFactory.URLOutputProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertTrue(uop.processLine(od, URL_PATTERN_2));
+        assertTrue(URL_PROCESSOR.processLine(od, URL_PATTERN_2));
         assertEquals(URL_PATTERN_2, od.getOutput());
         OutputDisplayerMock.OutputItem[] outputs = od.getOutputs();
         assertNotNull(outputs[1].action);
@@ -147,9 +137,8 @@ public class GradleProcessorFactoryTest {
 
     @Test
     public void testURLOutputProcessor5() {
-        GradleProcessorFactory.URLOutputProcessor uop = new GradleProcessorFactory.URLOutputProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertTrue(uop.processLine(od, URL_PATTERN_3));
+        assertTrue(URL_PROCESSOR.processLine(od, URL_PATTERN_3));
         assertEquals(URL_PATTERN_3, od.getOutput());
         OutputDisplayerMock.OutputItem[] outputs = od.getOutputs();
         assertEquals(5, outputs.length);
@@ -160,9 +149,8 @@ public class GradleProcessorFactoryTest {
 
     @Test
     public void testURLOutputProcessor6() {
-        GradleProcessorFactory.URLOutputProcessor uop = new GradleProcessorFactory.URLOutputProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertTrue(uop.processLine(od, URL_PATTERN_4));
+        assertTrue(URL_PROCESSOR.processLine(od, URL_PATTERN_4));
         assertEquals(URL_PATTERN_4, od.getOutput());
         OutputDisplayerMock.OutputItem[] outputs = od.getOutputs();
         assertEquals(7, outputs.length);
@@ -175,9 +163,8 @@ public class GradleProcessorFactoryTest {
 
     @Test
     public void testURLOutputProcessor7() {
-        GradleProcessorFactory.URLOutputProcessor uop = new GradleProcessorFactory.URLOutputProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertTrue(uop.processLine(od, URL_PATTERN_5));
+        assertTrue(URL_PROCESSOR.processLine(od, URL_PATTERN_5));
         assertEquals(URL_PATTERN_5, od.getOutput());
         OutputDisplayerMock.OutputItem[] outputs = od.getOutputs();
         assertEquals(7, outputs.length);
@@ -190,9 +177,8 @@ public class GradleProcessorFactoryTest {
 
     @Test
     public void testGradleOutputProcessor1() {
-        GradleProcessorFactory.GradleOutputProcessor uop = new GradleProcessorFactory.GradleOutputProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertTrue(uop.processLine(od, GRADLE_SCRIPT_ERROR_1));
+        assertTrue(GRADLE_PROCESSOR.processLine(od, GRADLE_SCRIPT_ERROR_1));
         assertEquals(GRADLE_SCRIPT_ERROR_1, od.getOutput());
         OutputDisplayerMock.OutputItem[] outputs = od.getOutputs();
         assertEquals(1, outputs.length);
@@ -201,15 +187,13 @@ public class GradleProcessorFactoryTest {
 
     @Test
     public void testGradleOutputProcessor2() {
-        GradleProcessorFactory.GradleOutputProcessor uop = new GradleProcessorFactory.GradleOutputProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertFalse(uop.processLine(od, JAVA_COMPILE_ERROR_1));
+        assertFalse(GRADLE_PROCESSOR.processLine(od, JAVA_COMPILE_ERROR_1));
     }
 
     @Test
     public void testGradleOutputProcessor3() {
-        GradleProcessorFactory.GradleOutputProcessor uop = new GradleProcessorFactory.GradleOutputProcessor();
         OutputDisplayerMock od = new OutputDisplayerMock();
-        assertFalse(uop.processLine(od, JAVA_8_STACKTRACE_1));
+        assertFalse(GRADLE_PROCESSOR.processLine(od, JAVA_8_STACKTRACE_1));
     }
 }

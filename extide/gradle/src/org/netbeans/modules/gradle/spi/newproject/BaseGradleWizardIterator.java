@@ -83,7 +83,8 @@ public abstract class BaseGradleWizardIterator implements WizardDescriptor.Progr
         index = 0;
         wizard.putProperty ("NewProjectWizard_Title", getTitle()); // NOI18N
 
-        data = wizard;
+        data = initData(wizard);
+
         panels = new ArrayList<>(createPanels());
         String[] steps = new String[panels.size()];
         for (int i = 0; i < panels.size(); i++) {
@@ -97,6 +98,10 @@ public abstract class BaseGradleWizardIterator implements WizardDescriptor.Progr
                 jc.putClientProperty("WizardPanel_contentData", steps); //NOI18N
             }
         }
+    }
+
+    protected WizardDescriptor initData(WizardDescriptor data) {
+        return data;
     }
 
     protected abstract List<? extends WizardDescriptor.Panel<WizardDescriptor>> createPanels();

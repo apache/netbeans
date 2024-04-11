@@ -51,17 +51,22 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.gradle.tooling.BuildLauncher;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.gradle.GradleProjectLoader;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
+import org.netbeans.modules.gradle.execute.EscapeProcessingOutputStream;
+import org.netbeans.modules.gradle.execute.GradlePlainEscapeProcessor;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.windows.IOProvider;
+import org.openide.windows.InputOutput;
 
 /**
  * Steps, that a New Gradle Project Wizard can perform.
@@ -305,6 +310,7 @@ public final class TemplateOperation implements Runnable {
         public Set<FileObject> execute() {
             GradleConnector gconn = GradleConnector.newConnector();
             target.mkdirs();
+            InputOutput io = IOProvider.getDefault().getIO(projectName + " (init)", true);
             try (ProjectConnection pconn = gconn.forProjectDirectory(target).connect()) {
                 List<String> args = new ArrayList<>();
                 args.add("init");
@@ -346,14 +352,25 @@ public final class TemplateOperation implements Runnable {
                 // gradle init is non-interactive inside the IDE
                 args.add("--use-defaults");
 
+                try (
+                        var out = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, false));
+                        var err = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, false))
+                ) {
+                    BuildLauncher gradleInit = pconn.newBuild().forTasks(args.toArray(new String[0]));
+                    if (GradleSettings.getDefault().isOffline()) {
+                        gradleInit = gradleInit.withArguments("--offline");
+                    }
+                    gradleInit.setStandardOutput(out);
+                    gradleInit.setStandardError(err);
+                    gradleInit.run();
 
-                if (GradleSettings.getDefault().isOffline()) {
-                    pconn.newBuild().withArguments("--offline").forTasks(args.toArray(new String[0])).run(); //NOI18N
-                } else {
-                    pconn.newBuild().forTasks(args.toArray(new String[0])).run();
+                } catch (IOException iox) {
                 }
             } catch (GradleConnectionException | IllegalStateException ex) {
                 Exceptions.printStackTrace(ex);
+            } finally {
+                if (io.getOut() != null) io.getOut().close();
+                if (io.getErr() != null) io.getErr().close();
             }
             gconn.disconnect();
             return Collections.singleton(FileUtil.toFileObject(target));
@@ -390,6 +407,10 @@ public final class TemplateOperation implements Runnable {
 
     public void addProjectPreload(File projectDir) {
         steps.add(new PreloadProject(projectDir));
+    }
+
+    public void addProjectPreload(File projectDir, List<String> important) {
+        steps.add(new PreloadProject(projectDir, important));
     }
 
     private abstract static class BaseOperationStep implements OperationStep {
@@ -464,9 +485,15 @@ public final class TemplateOperation implements Runnable {
     private static final class PreloadProject extends BaseOperationStep {
 
         final File dir;
+        final List<String> importantFiles;
 
         public PreloadProject(File dir) {
+            this(dir, List.of());
+        }
+
+        public PreloadProject(File dir, List<String> importantFiles) {
             this.dir = dir;
+            this.importantFiles = importantFiles;
         }
 
         @Override
@@ -501,7 +528,15 @@ public final class TemplateOperation implements Runnable {
                                 loader.loadProject(Quality.FULL_ONLINE, null, true, false);
                             }
                         }
-                        return Collections.singleton(projectDir);
+                        Set<FileObject> ret = new LinkedHashSet<>();
+                        ret.add(projectDir);
+                        for (String f : importantFiles) {
+                            FileObject fo = projectDir.getFileObject(f);
+                            if (fo != null) {
+                                ret.add(fo);
+                            }
+                        }
+                        return ret;
                     }
                 } catch (IOException | IllegalArgumentException ex) {
                 }

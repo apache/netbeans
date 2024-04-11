@@ -79,9 +79,6 @@ env:
   # 'LSP' label for enabling Language Server Protocol tests
   test_lsp: ${{ contains(github.event.pull_request.labels.*.name, 'LSP') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
-  # 'GraalVM' label for tests requirering GraalVM
-  test_graalvm: ${{ contains(github.event.pull_request.labels.*.name, 'GraalVM') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
-
   # 'VSCode Extension' label for building and testing the VSCode Extension
   test_vscode_extension: ${{ contains(github.event.pull_request.labels.*.name, 'VSCode Extension') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
@@ -667,9 +664,6 @@ jobs:
 
 #      - name: ide/localhistory
 #        run: ant $OPTS -f ide/localhistory test
-
-      - name: ide/libs.truffleapi
-        run: ant $OPTS -f ide/libs.truffleapi test
 
       - name: ide/lsp.client
         run: ant $OPTS -f ide/lsp.client test

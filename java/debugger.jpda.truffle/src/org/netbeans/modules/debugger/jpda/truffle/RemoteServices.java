@@ -83,7 +83,6 @@ import org.netbeans.modules.debugger.jpda.jdi.UnsupportedOperationExceptionWrapp
 import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.VirtualMachineWrapper;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
-import static org.netbeans.modules.debugger.jpda.truffle.TruffleDebugManager.configureTruffleBreakpoint;
 
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
@@ -331,7 +330,7 @@ public final class RemoteServices {
         
         mb.setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
         mb.setSuspend(MethodBreakpoint.SUSPEND_EVENT_THREAD);
-        configureTruffleBreakpoint(mb);
+        mb.setHidden(true);
         mb.setThreadFilters(dbg, new JPDAThread[] { awtThread });
         mb.addJPDABreakpointListener(new JPDABreakpointListener() {
             @Override

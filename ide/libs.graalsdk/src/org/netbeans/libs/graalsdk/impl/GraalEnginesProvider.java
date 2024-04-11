@@ -26,6 +26,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 import javax.script.Bindings;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
@@ -43,6 +45,8 @@ import org.openide.util.lookup.ServiceProvider;
 // libraries.
 @ServiceProvider(service = EngineProvider.class, position = 100000)
 public final class GraalEnginesProvider implements EngineProvider {
+
+    private static final Logger LOG = Logger.getLogger(GraalEnginesProvider.class.getName());
 
     private Throwable disable;
 
@@ -159,7 +163,7 @@ public final class GraalEnginesProvider implements EngineProvider {
                 }
                 return null;
             } catch (Throwable t) {
-                System.out.println(t);
+                LOG.log(Level.INFO, "Failed to initialize GraalEngines", t);
                 return null;
             }
         }, langLoader);

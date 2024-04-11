@@ -199,12 +199,10 @@ public class EditorView extends ViewElement {
         
         private void init() {
             setLayout(new BorderLayout());
-            // special background for XP style
-            String lfID = UIManager.getLookAndFeel().getID();
-//            if (lfID.equals("Windows")) {
-//                setBackground((Color)UIManager.get("nb_workplace_fill"));
-//            }
-            
+            if (backgroundComponent != null) {
+                add(backgroundComponent, BorderLayout.CENTER);
+            }
+
             //listen to files being dragged over the editor area
             DropTarget dropTarget = new DropTarget( this, new DropTargetListener() {
                 @Override
@@ -493,6 +491,7 @@ public class EditorView extends ViewElement {
                 shortcut.setTitleFont(font.deriveFont(0.9f * font.getSize()));
             }
             setBorder(shortcut);
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             setAction(action);
         }
 

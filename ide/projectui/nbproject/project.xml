@@ -301,6 +301,7 @@
                 <friend>com.oracle.tools.ide.welcome</friend>
                 <friend>com.sun.tools.swdev.sunstudio</friend>
                 <friend>org.netbeans.modules.apisupport.ant</friend>
+                <friend>org.netbeans.modules.ide.dashboard</friend>
                 <friend>org.netbeans.modules.java.j2seproject</friend>
                 <friend>org.netbeans.modules.maven</friend>
                 <friend>org.netbeans.modules.welcome</friend>

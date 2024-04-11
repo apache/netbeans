@@ -40,6 +40,22 @@
     </target>
 
     <target name="netbeans-extra" depends="nblib"/>
+
+    <target name="-compile-copyap" depends="projectized.init">
+        <mkdir dir="build/copyapclasses"/>
+        <nb-javac srcdir="copyapsrc" destdir="build/copyapclasses" source="${javac.source}" release="${javac.release}" debug="true" deprecation="true">
+            <classpath refid="cp"/>
+            <processorpath refid="processor.cp"/>
+        </nb-javac>
+        <copy todir="build/copyapclasses">
+            <fileset dir="copyapsrc" excludes="${jar-excludes}"/>
+        </copy>
+        <nb-ext-jar jarfile="build/copyap.jar" compress="false">
+            <fileset dir="build/copyapclasses"/>
+        </nb-ext-jar>
+    </target>
+
+    <target name="init" depends="projectized.init,-compile-copyap"/>
     
     <!-- Generate suite 3 platform -->
     <target name="test-preinit">

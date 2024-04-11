@@ -62,6 +62,7 @@ import org.netbeans.modules.apisupport.project.queries.AnnotationProcessingQuery
 import org.netbeans.modules.apisupport.project.queries.AntArtifactProviderImpl;
 import org.netbeans.modules.apisupport.project.queries.BinaryForSourceImpl;
 import org.netbeans.modules.apisupport.project.queries.ClassPathProviderImpl;
+import org.netbeans.modules.apisupport.project.queries.CompilerOptionsQueryImpl;
 import org.netbeans.modules.apisupport.project.queries.FileEncodingQueryImpl;
 import org.netbeans.modules.apisupport.project.queries.JavadocForBinaryImpl;
 import org.netbeans.modules.apisupport.project.queries.ModuleProjectClassPathExtender;
@@ -309,6 +310,7 @@ public final class NbModuleProject implements Project {
         ic.add(new FileEncodingQueryImpl());
         ic.add(new AnnotationProcessingQueryImpl(this));
         ic.add(new PlatformJarProviderImpl());
+        ic.add(new CompilerOptionsQueryImpl(this));
 
         if (getModuleType() == NbModuleType.SUITE_COMPONENT) {
             ic.add(new SuiteProviderImpl());

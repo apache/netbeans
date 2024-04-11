@@ -139,9 +139,22 @@
                 <compilerarg value="-Xbootclasspath/p:${bootclasspath.prepend}" />
             </custom-javac>
         </presetdef>
+        <property name="custom.javac.set" value="true" />
     </target>
 
-    <target name="-javac-init-no-bootclasspath-prepend" depends="build-init" unless="bootclasspath.prepend">
+    <target name="-javac-init-limit-modules" depends="build-init" if="limit.modules.option.list">
+        <presetdef name="nb-javac">
+            <custom-javac>
+                <bootclasspath>
+                    <path path="${nbjdk.bootclasspath}"/>
+                </bootclasspath>
+                <compilerarg value="--limit-modules=${limit.modules.option.list}" />
+            </custom-javac>
+        </presetdef>
+        <property name="custom.javac.set" value="true" />
+    </target>
+
+    <target name="-javac-init-no-bootclasspath-prepend" depends="build-init,-javac-init-bootclasspath-prepend,-javac-init-limit-modules" unless="custom.javac.set">
         <presetdef name="nb-javac">
             <custom-javac>
                 <bootclasspath>

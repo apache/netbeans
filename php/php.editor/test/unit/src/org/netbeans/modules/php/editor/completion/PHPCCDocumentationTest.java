@@ -642,6 +642,18 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/php81/enumCases.php", "BackeEnumCaseInt::CASE_C^;", false, "");
     }
 
+    public void testPhpDocAndMethodInDifferentBlocks() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/phpDocAndFunctionInDifferentBlocks.php", "$instance->method2^(1)", false, "");
+    }
+
+    public void testPhpDocAndFunctionInDifferentBlocks_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/phpDocAndFunctionInDifferentBlocks.php", "func1^(1)", false, "");
+    }
+
+    public void testPhpDocAndFunctionInDifferentBlocks_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/phpDocAndFunctionInDifferentBlocks.php", "func2^(1)", false, "");
+    }
+
     @Override
     protected String alterDocumentationForTest(String documentation) {
         int start = documentation.indexOf("file:");

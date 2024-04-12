@@ -69,7 +69,6 @@ import org.netbeans.modules.debugger.jpda.jdi.UnsupportedOperationExceptionWrapp
 import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 import org.netbeans.modules.debugger.jpda.truffle.PersistentValues;
-import static org.netbeans.modules.debugger.jpda.truffle.TruffleDebugManager.configureTruffleBreakpoint;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.source.Source;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourceBinaryTranslator;
@@ -125,7 +124,7 @@ public class TruffleBreakpointsHandler {
             if (this.breakpointResolvedHandler == null) {
                 MethodBreakpoint methodBreakpoint = MethodBreakpoint.create(accessorClass.name(), ACCESSOR_LINE_BREAKPOINT_RESOLVED);
                 methodBreakpoint.setSession(debugger);
-                configureTruffleBreakpoint(methodBreakpoint);
+                methodBreakpoint.setHidden(true);
                 methodBreakpoint.setSuspend(JPDABreakpoint.SUSPEND_EVENT_THREAD);
                 methodBreakpoint.addJPDABreakpointListener(new JPDABreakpointListener() {
                     @Override

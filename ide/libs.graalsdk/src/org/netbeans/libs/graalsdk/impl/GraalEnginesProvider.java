@@ -77,6 +77,13 @@ public final class GraalEnginesProvider implements EngineProvider {
     // @GuardedBy(this)
     private ClassLoader languagesLoader;
 
+    /**
+     * Build a classloader to load GraalVM languages. The classloader is build
+     * by finding all modules that directly or transitively depend on the
+     * "GraalVM SDK API" module and use that classloader to load the languages.
+     *
+     * @return
+     */
     private ClassLoader createGraalDependentClassLoader() {
         ClassLoader allLoader = Lookup.getDefault().lookup(ClassLoader.class);
         synchronized (this) {
@@ -113,7 +120,7 @@ public final class GraalEnginesProvider implements EngineProvider {
                     }
                 }
             }
-        } while (!added);
+        } while (added); // Loop if a new dependent module was found
 
         ClassLoader created;
         try {

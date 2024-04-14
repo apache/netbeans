@@ -249,16 +249,7 @@ jobs:
       - name: Commit Validation tests
         run: .github/retry.sh ant $OPTS -Dcluster.config=$CLUSTER_CONFIG commit-validation
 
-      - name: Set up JDK 11 for core.network
-        uses: actions/setup-java@v4
-        if: matrix.java == 17 && success()
-        with:
-          java-version: 11
-          distribution: ${{ env.default_java_distribution }}
-
-      # TODO fails on 17+
       - name: platform/core.network
-        if: matrix.java == 17 && success()
         run: ant $OPTS -f platform/core.network test
 
       - name: Create Test Summary
@@ -2632,9 +2623,9 @@ jobs:
 
       - name: Setup GraalVM {{ matrix.graal }}
         run: |
-          URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graal }}/graalvm-ce-java11-linux-amd64-${{ matrix.graal }}.tar.gz
+          URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graal }}/graalvm-ce-java17-linux-amd64-${{ matrix.graal }}.tar.gz
           curl -L $URL | tar -xz
-          GRAALVM=`pwd`/graalvm-ce-java11-${{ matrix.graal }}
+          GRAALVM=`pwd`/graalvm-ce-java17-${{ matrix.graal }}
           echo "JAVA_HOME=$GRAALVM" >> $GITHUB_ENV
 
       - name: Setup GraalVM Languages

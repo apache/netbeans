@@ -78,7 +78,7 @@ import java.util.List;]]></replacevalue>
                        replace="\1 grammar \2;${golang.additionalheader}"
                        flags="g"
         >
-            <fileset dir="${golang.outdir}" includes="GoParser.g4 GoLexer.g4" />
+            <fileset dir="${golang.outdir}/g4" includes="GoParser.g4 GoLexer.g4" />
         </replaceregexp>
     </target>
 

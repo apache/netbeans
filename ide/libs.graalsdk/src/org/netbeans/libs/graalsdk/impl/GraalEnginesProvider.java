@@ -117,7 +117,7 @@ public final class GraalEnginesProvider implements EngineProvider {
                     }
                 }
             }
-        } while (!added);
+        } while (added);
         
         ClassLoader created;
         try {

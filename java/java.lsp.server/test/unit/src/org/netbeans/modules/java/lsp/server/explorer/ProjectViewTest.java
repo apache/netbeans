@@ -324,7 +324,7 @@ public class ProjectViewTest extends NbTestCase {
     }
 
     private void createSimpleProject() throws IOException {
-        FileObject template = FileUtil.getConfigFile("Templates/Project/Gradle/org-netbeans-modules-gradle-java-newproject-SimpleApplicationProjectWizard");
+        FileObject template = FileUtil.getConfigFile("Templates/Project/Gradle/org-netbeans-modules-gradle-java-newproject-Wizards-createJavaApplication");
         FileObject from = FileUtil.toFileObject(getDataDir()).getFileObject("gradle-hello/app");
         FileObject dest = FileUtil.toFileObject(getWorkDir());
         FileBuilder b = new FileBuilder(template, dest).name("app").param("packageBase", "gradle.hello");

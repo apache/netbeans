@@ -2,8 +2,8 @@ Name: Graal SDK and Truffle API
 Description: Graal SDK and Truffle API
 License: UPL
 Origin: https://github.com/oracle/graal
-Version: 20.3.0
-Files: js-20.3.0.jar js-launcher-20.3.0.jar regex-20.3.0.jar
+Version: 24.0.0
+Files: js-language-24.0.0.jar js-scriptengine-24.0.0.jar regex-24.0.0.jar js-launcher-24.0.0.jar
 
 Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
 

@@ -83,11 +83,35 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path></runtime-relative-path>
-                <binary-origin>external/graal-sdk-20.3.0.jar</binary-origin>
+                <binary-origin>external/launcher-common-24.0.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path></runtime-relative-path>
-                <binary-origin>external/launcher-common-20.3.0.jar</binary-origin>
+                <binary-origin>external/jline-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path></runtime-relative-path>
+                <binary-origin>external/collections-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path></runtime-relative-path>
+                <binary-origin>external/jniutils-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path></runtime-relative-path>
+                <binary-origin>external/launcher-common-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path></runtime-relative-path>
+                <binary-origin>external/nativeimage-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path></runtime-relative-path>
+                <binary-origin>external/polyglot-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path></runtime-relative-path>
+                <binary-origin>external/word-24.0.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

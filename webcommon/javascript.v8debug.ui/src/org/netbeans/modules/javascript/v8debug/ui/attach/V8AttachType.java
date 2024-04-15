@@ -30,7 +30,7 @@ import org.openide.util.NbBundle;
  *
  * @author Martin Entlicher
  */
-@NbBundle.Messages("CTL_Connector_name=Node.js Server")
+@NbBundle.Messages("CTL_Connector_name=Node.js Server (V8 Protocol)")
 @AttachType.Registration(displayName="#CTL_Connector_name")
 public class V8AttachType extends AttachType {
     

@@ -22,10 +22,9 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.netbeans.api.extexecution.startup.StartupExtender;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.javascript.nodejs.api.NodeJsSupport;
-import org.netbeans.spi.extexecution.startup.StartupExtenderImplementation;
+import org.netbeans.modules.javascript.nodejs.spi.DebuggerStartModifier;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.BaseUtilities;
@@ -36,21 +35,17 @@ import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
 
 @NbBundle.Messages("DESC_DebugGraalNode=Debug GraalVM Node.js")
-@StartupExtenderImplementation.Registration(displayName = "#DESC_DebugGraalNode", startMode = StartupExtender.StartMode.DEBUG, position=500)
-public class GraalVmStartupExtender implements StartupExtenderImplementation {
+public class DebuggerStartModifierImpl implements DebuggerStartModifier {
 
     @NbBundle.Messages("CTL_DebugName=GraalVM node Debugger")
     @Override
-    public List<String> getArguments(Lookup context, StartupExtender.StartMode mode) {
+    public List<String> getArguments(Lookup context) {
         Project p = context.lookup(Project.class);
         if (p == null) {
             return Collections.emptyList();
         }
         NodeJsSupport s = NodeJsSupport.getInstance();
         if (!s.isEnabled(p)) {
-            return Collections.emptyList();
-        }
-        if (mode != StartupExtender.StartMode.DEBUG) {
             return Collections.emptyList();
         }
         final String node = s.getNode(p);
@@ -93,4 +88,12 @@ public class GraalVmStartupExtender implements StartupExtenderImplementation {
         return file != null;
     }
 
+    @Override
+    public void processOutputLine(String line) {
+    }
+
+    @Override
+    public boolean startProcessingDone() {
+        return true;
+    }
 }

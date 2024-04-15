@@ -115,6 +115,8 @@
                 <friend>org.netbeans.modules.debugger.jpda.js</friend>
                 <friend>org.netbeans.modules.debugger.jpda.truffle</friend>
                 <friend>org.netbeans.modules.java.lsp.server</friend>
+                <friend>org.netbeans.modules.javascript.cdtdebug</friend>
+                <friend>org.netbeans.modules.javascript.cdtdebug.ui</friend>
                 <friend>org.netbeans.modules.javascript.v8debug</friend>
                 <friend>org.netbeans.modules.javascript.v8debug.ui</friend>
                 <friend>org.netbeans.modules.javascript2.debug.ui</friend>

@@ -52,7 +52,14 @@ public class JSBreakpointStatus {
      */
     public static void setActive(JSLineBreakpoint lb) {
         synchronized (JSBreakpointStatus.class) {
+            JSLineBreakpoint oldBreakpoint = activeBPRef.get();
+            if(oldBreakpoint != null) {
+                oldBreakpoint.setActive(false);
+            }
             activeBPRef = new WeakReference<>(lb);
+            if(lb != null) {
+                lb.setActive(true);
+            }
         }
     }
     

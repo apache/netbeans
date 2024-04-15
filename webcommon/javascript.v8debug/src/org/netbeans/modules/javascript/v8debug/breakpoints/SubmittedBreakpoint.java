@@ -21,11 +21,11 @@ package org.netbeans.modules.javascript.v8debug.breakpoints;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.lib.v8debug.V8Breakpoint;
 import org.netbeans.lib.v8debug.V8Command;
-import org.netbeans.lib.v8debug.commands.ChangeBreakpoint;
 import org.netbeans.modules.javascript.v8debug.V8Debugger;
 import org.netbeans.modules.javascript2.debug.breakpoints.JSBreakpointStatus;
 import org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint;
@@ -42,22 +42,23 @@ public final class SubmittedBreakpoint {
     private static final Logger LOG = Logger.getLogger(SubmittedBreakpoint.class.getName());
     
     private final JSLineBreakpoint breakpoint;
-    private final long id;
-    private final Location bpLoc;
+    private final List<Long> ids;
+    private final List<Location> bpLocs;
     private final V8Debugger dbg;
     private final PropertyChangeListener bpChangeListener;
     private final PropertyChangeListener addedChangeListener;
     
-    SubmittedBreakpoint(JSLineBreakpoint breakpoint, long id,
-                        SourceMapsTranslator.Location bpLoc,
-                        V8Breakpoint.ActualLocation[] actualLocations,
+    SubmittedBreakpoint(JSLineBreakpoint breakpoint, 
+                        List<Long> ids,
+                        List<Location> bpLocs,
+                        List<V8Breakpoint.ActualLocation[]> actualLocations,
                         V8Debugger dbg) {
         this.breakpoint = breakpoint;
-        this.id = id;
-        this.bpLoc = bpLoc;
+        this.ids = ids;
+        this.bpLocs = bpLocs;
         this.dbg = dbg;
-        LOG.log(Level.FINE, "SubmittedBreakpoint({0}, {1})", new Object[]{breakpoint, id});
-        adjustLocation(actualLocations);
+        LOG.log(Level.FINE, "SubmittedBreakpoint({0}, {1})", new Object[]{breakpoint, ids});
+        adjustLocation(ids, actualLocations);
         LOG.log(Level.FINE, "  adjusted BP => {0}", breakpoint);
         bpChangeListener = new BPChangeListener();
         addedChangeListener = WeakListeners.propertyChange(bpChangeListener, breakpoint);
@@ -69,20 +70,25 @@ public final class SubmittedBreakpoint {
         return breakpoint;
     }
     
-    public long getId() {
-        return id;
+    public List<Long> getIds() {
+        return ids;
     }
     
-    private void adjustLocation(V8Breakpoint.ActualLocation[] actualLocations) {
-        if (actualLocations != null && actualLocations.length > 0) {
-            long line = actualLocations[0].getLine();
-            long column = actualLocations[0].getColumn();
-            updatePosition(line, column);
+    private void adjustLocation(List<Long> ids, List<V8Breakpoint.ActualLocation[]> actualLocationsList) {
+        for (int i = 0; i < ids.size(); i++) {
+            Long id = ids.get(i);
+            V8Breakpoint.ActualLocation[] actualLocations = actualLocationsList.get(i);
+            if (actualLocations != null && actualLocations.length > 0) {
+                long line = actualLocations[0].getLine();
+                long column = actualLocations[0].getColumn();
+                updatePosition(id, line, column);
+            }
         }
     }
     
-    void updatePosition(long line, long column) {
+    void updatePosition(long id, long line, long column) {
         SourceMapsTranslator smt = dbg.getScriptsHandler().getSourceMapsTranslator();
+        Location bpLoc = bpLocs.get(ids.indexOf(id));
         if (smt != null && bpLoc != null) {
             if (line == 0) {
                 column -= dbg.getScriptsHandler().getScriptFirstLineColumnShift(bpLoc.getFile());
@@ -93,7 +99,9 @@ public final class SubmittedBreakpoint {
                 line = l.getLine();
             }
         }
-        breakpoint.setLine((int) line + 1);
+        if(ids.indexOf(id) == 0) {
+            breakpoint.setLine((int) line + 1);
+        }
     }
 
     void notifyDestroyed() {
@@ -108,12 +116,11 @@ public final class SubmittedBreakpoint {
             switch (evt.getPropertyName()) {
                 case JSLineBreakpoint.PROP_ENABLED:
                 case JSLineBreakpoint.PROP_CONDITION:
-                    ChangeBreakpoint.Arguments cbargs = BreakpointsHandler.createChangeRequestArguments(
-                            SubmittedBreakpoint.this);
-                    dbg.sendCommandRequest(V8Command.Changebreakpoint, cbargs);
+                    BreakpointsHandler
+                            .createChangeRequestArguments(SubmittedBreakpoint.this)
+                            .stream()
+                            .forEach(cbargs -> dbg.sendCommandRequest(V8Command.Changebreakpoint, cbargs));
             }
         }
-        
     }
-    
 }

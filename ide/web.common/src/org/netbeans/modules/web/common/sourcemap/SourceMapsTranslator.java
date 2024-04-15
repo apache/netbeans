@@ -137,7 +137,7 @@ public interface SourceMapsTranslator {
         }
         
         public FileObject getFile() {
-            if (file == null) {
+            if (file == null && parentFolder != null && mapping != null) {
                 int sourceIndex = mapping.getSourceIndex();
                 String sourcePath = sourceMap.getSourcePath(sourceIndex);
                 file = getSourceFile(sourcePath, parentFolder);

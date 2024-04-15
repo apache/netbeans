@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 import org.antlr.v4.runtime.NoViableAltException;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.netbeans.modules.languages.hcl.grammar.HCLLexer;
 import static org.netbeans.modules.languages.hcl.grammar.HCLLexer.*;
 import org.netbeans.modules.languages.hcl.grammar.HCLParser;
@@ -175,16 +176,22 @@ public final class HCLExpressionFactory extends HCLElementFactory {
         if (ctx == null) {
             return null;
         }
-        List<HCLExpression> args = Collections.emptyList();
+        if (ctx.exception != null) {
+            return null;
+        }
+        List<HCLExpression> args = List.of();
         boolean expand = false;
         if (ctx.arguments() != null) {
-            args = new ArrayList<>(ctx.arguments().expression().size());
-            for (HCLParser.ExpressionContext ectx : ctx.arguments().expression()) {
-                args.add(expr(ectx));
-            }
+            args =  ctx.arguments().expression().stream()
+                    .map(this::expr)
+                    .toList();
             expand = ctx.arguments().ELLIPSIS() != null;
         }
-        return created(new HCLFunction(id(ctx.IDENTIFIER()), args, expand), ctx);
+        HCLIdentifier name = ctx.IDENTIFIER() != null
+                ? id(ctx.IDENTIFIER())
+                : id(ctx.scopedId());
+
+        return created(new HCLFunction(name, args, expand), ctx);
     }
 
     private static HCLArithmeticOperation.Operator binOp(int tokenType) {

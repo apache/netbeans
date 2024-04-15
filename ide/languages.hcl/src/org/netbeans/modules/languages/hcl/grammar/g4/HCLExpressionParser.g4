@@ -128,13 +128,19 @@ heredoc
     : HEREDOC_START heredocTemplate HEREDOC_END
     ;
 
+// This is not part of the HCL spec, though used in Terraform 1.8 for function calls
+scopedId
+    : target=IDENTIFIER SCOPE ref=IDENTIFIER
+    | scopedId SCOPE ref=IDENTIFIER
+    ;
+
 variableExpr
     : IDENTIFIER
     ;
 
 functionCall
-    : IDENTIFIER LPAREN arguments RPAREN
-    | IDENTIFIER LPAREN RPAREN
+    : (IDENTIFIER|scopedId) LPAREN arguments RPAREN
+    | (IDENTIFIER|scopedId) LPAREN RPAREN
     ;
 
 arguments

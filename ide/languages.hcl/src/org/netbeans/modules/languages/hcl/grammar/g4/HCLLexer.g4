@@ -86,6 +86,11 @@ QUESTION
    : Question
    ;
 
+// Used from Terraform 1.8 in provider exported function names
+SCOPE
+   : Colon Colon
+   ;
+
 COLON
    : Colon
    ;
@@ -123,8 +128,8 @@ ELLIPSIS
    ;
 
 LEGACY_INDEX
-    : Dot DecDigit+
-    ;
+   : Dot DecDigit+
+   ;
 
 DOT
    : Dot

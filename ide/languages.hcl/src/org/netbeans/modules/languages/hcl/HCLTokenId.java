@@ -56,6 +56,7 @@ public enum HCLTokenId implements TokenId {
     INTERPOLATION_START("${", "separator"),
     INTERPOLATION_END("}", "separator"),
     RARROW("=>", "separator"),
+    SCOPE("::", "separator"),
     TEMPLATE_START("%{", "separator"),
     TEMPLATE_END("}", "separator"),
 

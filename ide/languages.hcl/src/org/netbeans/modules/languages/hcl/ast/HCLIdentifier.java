@@ -36,4 +36,6 @@ public sealed interface HCLIdentifier extends HCLElement {
     public record SimpleId(String id) implements HCLIdentifier {}
 
     public record StringId(String id) implements HCLIdentifier {}
+
+    public record ScopedId(HCLIdentifier parent, String id) implements HCLIdentifier {}
 }

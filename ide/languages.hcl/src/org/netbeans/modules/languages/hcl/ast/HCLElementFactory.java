@@ -23,6 +23,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.netbeans.modules.languages.hcl.grammar.HCLLexer;
+import org.netbeans.modules.languages.hcl.grammar.HCLParser;
 
 /**
  *
@@ -39,6 +40,13 @@ public sealed abstract class HCLElementFactory permits HCLBlockFactory, HCLExpre
 
     protected final HCLIdentifier id(TerminalNode tn) {
         return tn != null ? id(tn.getSymbol()) : null;
+    }
+
+    protected final HCLIdentifier id(HCLParser.ScopedIdContext ctx) {
+        HCLIdentifier parent = ctx.target != null
+                ? id(ctx.target)
+                : id(ctx.scopedId());
+        return created(new HCLIdentifier.ScopedId(parent, ctx.ref.getText()), ctx);
     }
 
     protected final HCLIdentifier id(Token t) {

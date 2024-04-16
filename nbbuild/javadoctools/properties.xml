@@ -240,3 +240,4 @@
 <property name="javadoc.docs.org-netbeans-api-lsp" value="${javadoc.web.root}/org-netbeans-api-lsp"/>
 <property name="javadoc.docs.org-netbeans-modules-java-j2seplatform" value="${javadoc.web.root}/org-netbeans-modules-java-j2seplatform"/>
 <property name="javadoc.docs.org-netbeans-modules-xml-wsdl-model" value="${javadoc.web.root}/org-netbeans-modules-xml-wsdl-model"/>
+<property name="javadoc.docs.org-netbeans-api-dashboard" value="${javadoc.web.root}/org-netbeans-api-dashboard"/>

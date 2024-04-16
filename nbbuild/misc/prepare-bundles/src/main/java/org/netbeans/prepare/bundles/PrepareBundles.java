@@ -107,18 +107,16 @@ public class PrepareBundles {
                 if ("@types".equals(module.getFileName().toString())) continue;
                 if ("@esbuild".equals(module.getFileName().toString())) continue;
                 if ("@microsoft".equals(module.getFileName().toString())) continue;
-                if ("@vscode".equals(module.getFileName().toString())) {
-                    try (DirectoryStream<Path> sds = Files.newDirectoryStream(module)) {
-                        for (Path sModule : sds) {
-                            checkModule(sModule, sb, tokens2Projects, project2License, bundlesDir, targetDir, externalDir, binariesList);
-                        }
+                Path packageJson = module.resolve("package.json");
+                if (Files.isReadable(packageJson)) {
+                    checkModule(module, sb, tokens2Projects, project2License, bundlesDir, targetDir, externalDir, binariesList);
+                    continue;    
+                }
+                try (DirectoryStream<Path> sds = Files.newDirectoryStream(module)) {
+                    for (Path sModule : sds) {
+                        checkModule(sModule, sb, tokens2Projects, project2License, bundlesDir, targetDir, externalDir, binariesList);
                     }
-                    continue;
                 }
-                if ("@ungap".equals(module.getFileName().toString())) {
-                    module = module.resolve("promise-all-settled");
-                }
-                checkModule(module, sb, tokens2Projects, project2License, bundlesDir, targetDir, externalDir, binariesList);
             }
         }
         if (sb.length() > 0) {

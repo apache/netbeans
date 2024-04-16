@@ -25,7 +25,10 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceConfigurationError;
 import java.util.function.BiFunction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.script.Bindings;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
@@ -43,6 +46,8 @@ import org.openide.util.lookup.ServiceProvider;
 // libraries.
 @ServiceProvider(service = EngineProvider.class, position = 100000)
 public final class GraalEnginesProvider implements EngineProvider {
+    private static final Logger LOG = Logger.getLogger(GraalEnginesProvider.class.getName());
+    
     private Throwable disable;
 
     public GraalEnginesProvider() {
@@ -60,7 +65,11 @@ public final class GraalEnginesProvider implements EngineProvider {
             if (disable == null) {
                 enumerateLanguages(arr, m == null ? null : m.getBindings());
             }
-        } catch (IllegalStateException | LinkageError err) {
+        } catch (IllegalStateException | LinkageError | ServiceConfigurationError err) {
+            // See NETBEANS #7245: First-time initialization with broken implementation may produce ServiceConfigurationError, As this
+            // happens in class-initializer, subsequent attempts will throw LinkageErrors.
+            LOG.log(Level.WARNING, "Not enabling bundled GraalVM/polyglot infrastructure, unable to initialize languages: {0}", err.getMessage());
+            LOG.log(Level.WARNING, "Stacktrace: ", err);
             disable = err;
         }
         return arr;

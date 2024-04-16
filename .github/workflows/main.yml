@@ -1796,13 +1796,6 @@ jobs:
       - name: webcommon/web.inspect
         run: ant $OPTS -f webcommon/web.inspect test
 
-      - name: Set up JDK 11 for webcommon/api.knockout
-        uses: actions/setup-java@v4
-        with:
-          java-version: 11
-          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      # TODO: requires js script engine
       - name: webcommon/api.knockout
         run: ant $OPTS -f webcommon/api.knockout test
 

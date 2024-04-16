@@ -2093,7 +2093,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             String path = pathPrimitive.getAsString();
             Path p = Paths.get(path);
             FileObject preferencesFile = FileUtil.toFileObject(p);
-            if (preferencesFile != null && preferencesFile.isValid() && preferencesFile.canRead() && preferencesFile.getName().endsWith(".xml")) {
+            if (preferencesFile != null && preferencesFile.isValid() && preferencesFile.canRead() && preferencesFile.getExt().equals("xml")) {
                 this.hintsPrefsFile = preferencesFile;
             }
             else {

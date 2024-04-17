@@ -101,9 +101,9 @@ export class MultiStepInput {
 				input.items = items;
 				if (canSelectMany) {
 					input.canSelectMany = canSelectMany;
-				}
-				if (selectedItems) {
-					input.selectedItems = selectedItems;
+					if (selectedItems) {
+						input.selectedItems = selectedItems;
+					}
 				}
 				input.buttons = [
 					...(this.steps.length > 1 ? [vscode.QuickInputButtons.Back] : []),

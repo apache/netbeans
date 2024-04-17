@@ -1457,8 +1457,8 @@ public final class DefaultPlugin extends JUnitPlugin {
             }
 
             if (hasJUnit3 || hasJUnit4 || hasJUnit5) {
-                junitVer = hasJUnit3 ? JUnitVersion.JUNIT3
-                        : hasJUnit4 ? JUnitVersion.JUNIT4 : JUnitVersion.JUNIT5;
+                junitVer = hasJUnit5 ? JUnitVersion.JUNIT5
+                        : hasJUnit4 ? JUnitVersion.JUNIT4 : JUnitVersion.JUNIT3;
                 if (LOG_JUNIT_VER.isLoggable(FINEST)) {
                     LOG_JUNIT_VER.finest(" - detected version " + junitVer);//NOI18N
                 }

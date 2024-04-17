@@ -494,6 +494,60 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             throw `Client ${c} doesn't support new project`;
         }
     }));
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.open.test', async (ctx) => {
+        let c: LanguageClient = await client;
+        const commands = await vscode.commands.getCommands();
+        if (commands.includes(COMMAND_PREFIX + '.go.to.test')) {
+            try {
+                const res: any = await vscode.commands.executeCommand(COMMAND_PREFIX + '.go.to.test', contextUri(ctx)?.toString());
+                if("errorMessage" in res){
+                    throw new Error(res.errorMessage);
+                }
+                res?.providerErrors?.map((error: any) => {
+                    if(error?.message){
+                        vscode.window.showErrorMessage(error.message);
+                    }
+                });
+                if (res?.locations?.length) {
+                    if (res.locations.length === 1) {
+                        const { file, offset } = res.locations[0];
+                        const filePath = vscode.Uri.parse(file);
+                        const editor = await vscode.window.showTextDocument(filePath, { preview: false });
+                        if (offset != -1) {
+                            const pos: vscode.Position = editor.document.positionAt(offset);
+                            editor.selections = [new vscode.Selection(pos, pos)];
+                            const range = new vscode.Range(pos, pos);
+                            editor.revealRange(range);
+                        }
+
+                    } else {
+                        const namePathMapping: { [key: string]: string } = {}
+                        res.locations.forEach((fp:any) => {
+                            const fileName = path.basename(fp.file);
+                            namePathMapping[fileName] = fp.file
+                        });
+                        const selected = await window.showQuickPick(Object.keys(namePathMapping), {
+                            title: 'Select files to open',
+                            placeHolder: 'Test files or source files associated to each other',
+                            canPickMany: true
+                        });
+                        if (selected) {
+                            for await (const filePath of selected) {
+                                let file = vscode.Uri.parse(filePath);
+                                await vscode.window.showTextDocument(file, { preview: false });
+                            }
+                        } else {
+                            vscode.window.showInformationMessage("No file selected");
+                        }
+                    }
+                }
+            } catch (err:any) {
+                vscode.window.showInformationMessage(err?.message || "No Test or Tested class found");
+            }
+        } else {
+            throw `Client ${c} doesn't support go to test`;
+        }
+    }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.workspace.compile', () =>
         wrapCommandWithProgress(COMMAND_PREFIX + '.build.workspace', 'Compiling workspace...', log, true)
     ));

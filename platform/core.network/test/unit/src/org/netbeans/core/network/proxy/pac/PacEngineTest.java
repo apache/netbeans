@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.netbeans.core.network.proxy.pac.impl.NbPacScriptEvaluatorFactory;
+import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
 
 /**
@@ -56,6 +57,14 @@ public class PacEngineTest extends NbTestCase {
     }
 
    
+    public static final junit.framework.Test suite() {
+        NbModuleSuite.Configuration cfg = NbModuleSuite.emptyConfiguration().
+                honorAutoloadEager(true).
+                enableClasspathModules(false).
+                gui(false);
+        
+        return cfg.clusters("platform|webcommon|ide").addTest(PacEngineTest.class).suite();
+    }
    
 
     /**

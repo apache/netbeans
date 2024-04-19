@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.nashorn.execution/1
 Comment: OpenIDE-Module-Layer: org/netbeans/modules/nashorn/execution/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/nashorn/execution/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.30
+OpenIDE-Module-Specification-Version: 1.31
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module-Recommends: org.netbeans.libs.graaljs
 

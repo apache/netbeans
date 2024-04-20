@@ -384,7 +384,7 @@ public class RevertModifications implements PropertyChangeListener {
 
         private RevisionInterval getResortedRevisionInterval(SVNRevision revision1, SVNRevision revision2) {
             RevisionInterval ret; 
-            if(revision1.equals(SVNRevision.HEAD) && revision1.equals(SVNRevision.HEAD)) {
+            if (revision1.equals(SVNRevision.HEAD) && revision2.equals(SVNRevision.HEAD)) {
                 ret = new RevisionInterval (revision1, revision2);
             } else if (revision1.equals(SVNRevision.HEAD)) {
                 ret = new RevisionInterval (revision2, revision1);

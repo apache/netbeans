@@ -87,11 +87,7 @@ public final class ModulePathsProblemsProvider implements ProjectProblemsProvide
     public ModulePathsProblemsProvider(@NonNull final Lookup baseLkp) {
         this.project = baseLkp.lookup(J2SEProject.class);
         if (this.project == null) {
-            throw new IllegalArgumentException(String.format(
-                    "Unsupported project: %s of type: %s",  //NOI18N
-                    project,
-                    project.getClass()
-                    ));
+            throw new IllegalArgumentException("No project of type J2SEProject in lookup: "+baseLkp);
         }
         this.moduleInfoListeners = new HashSet<>();
         this.listeners = new PropertyChangeSupport(this);

@@ -2325,7 +2325,7 @@ public final class JPDAThreadImpl implements JPDAThread, Customizer, BeanContext
             if (logger.isLoggable(Level.FINER)) {
                 logger.finer("unsetStepSuspendedByBp("+threadReference+"): stepSuspendedByBreakpoint = "+stepSuspendedByBreakpoint);
             }
-            if (this.suspendedSteppingThreads == null) {
+            if (this.suspendedSteppingThreads != null) {
                 this.suspendedSteppingThreads.remove(thread);
                 if (this.suspendedSteppingThreads.isEmpty()) {
                     this.suspendedSteppingThreads = null;

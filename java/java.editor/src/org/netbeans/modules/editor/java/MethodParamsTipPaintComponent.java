@@ -43,7 +43,7 @@ public class MethodParamsTipPaintComponent extends JToolTip {
 
     private List<List<String>> params;
     private int idx;
-    private JTextComponent component;
+    private final JTextComponent component;
 
     public MethodParamsTipPaintComponent(JTextComponent component){
         super();
@@ -64,6 +64,7 @@ public class MethodParamsTipPaintComponent extends JToolTip {
         return params != null;
     }
     
+    @Override
     public void paintComponent(Graphics g) {
         GraphicsUtils.configureDefaultRenderingHints(g);
         // clear background
@@ -134,11 +135,7 @@ public class MethodParamsTipPaintComponent extends JToolTip {
         return getFontMetrics(font).stringWidth(s);
     }
 
-    protected int getHeight(String s, Font font) {
-        if (font == null) return fontMetrics.stringWidth(s);
-        return getFontMetrics(font).stringWidth(s);
-    }
-
+    @Override
     public void setFont(Font font) {
         super.setFont(font);
         fontMetrics = this.getFontMetrics(font);
@@ -152,6 +149,7 @@ public class MethodParamsTipPaintComponent extends JToolTip {
         return drawFont;
     }
 
+    @Override
     public Dimension getPreferredSize() {
         draw(null);
         Insets i = getInsets();

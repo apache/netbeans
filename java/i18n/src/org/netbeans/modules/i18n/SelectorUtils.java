@@ -404,7 +404,7 @@ public class SelectorUtils {
 
     /** Setter for <code>text</code>. */
     public void setText (String s) {
-      setText(s);
+      text.setText(s);
     }
   } // End of nested class ObjectNameInputPanel
     

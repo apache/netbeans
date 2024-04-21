@@ -34,6 +34,10 @@ public final class HCLBlock extends HCLContainer  {
 
     public HCLBlock(List<HCLIdentifier> declaration, List<HCLElement> elements) {
         super(elements);
+        Objects.requireNonNull(declaration, "declaration cannot be null");
+        if (declaration.isEmpty()) {
+            throw new IllegalArgumentException("declaration cannot be empty");
+        }
         this.declaration = List.copyOf(declaration);
         this.id = declaration.stream().map(d -> d.id()).collect(Collectors.joining("."));
     }

@@ -19,6 +19,8 @@
 package org.netbeans.modules.languages.hcl.ast;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  *
@@ -64,24 +66,26 @@ public sealed interface HCLArithmeticOperation extends HCLExpression {
     public record Binary(Operator op, HCLExpression left, HCLExpression right) implements HCLArithmeticOperation {
         @Override
         public String asString() {
-            return left.toString() + op.toString() + right.toString();
+            return HCLExpression.asString(left) + op.toString() + HCLExpression.asString(right);
         }
 
         @Override
         public List<? extends HCLExpression> elements() {
-            return List.of(left, right);
+            return Stream.of(left, right)
+                    .filter(Objects::nonNull)
+                    .toList();
         }
     } 
 
     public record Unary(Operator op, HCLExpression operand) implements HCLArithmeticOperation {
         @Override
         public String asString() {
-            return op.toString() + operand.toString();
+            return op.toString() + HCLExpression.asString(operand);
         }
 
         @Override
         public List<? extends HCLExpression> elements() {
-            return List.of(operand);
+            return operand != null ? List.of(operand) : List.of();
         }
     } 
 }

@@ -24,18 +24,36 @@ import java.util.List;
  *
  * @author Laszlo Kishalmi
  */
-public sealed interface HCLIdentifier extends HCLElement {
+public sealed interface HCLIdentifier extends HCLExpression {
 
     String id();
     
     @Override
-    default List<? extends HCLElement> elements() {
+    default List<? extends HCLExpression> elements() {
         return List.of();
     }
     
-    public record SimpleId(String id) implements HCLIdentifier {}
+    public record SimpleId(String id) implements HCLIdentifier {
 
-    public record StringId(String id) implements HCLIdentifier {}
+        @Override
+        public String asString() {
+            return id;
+        }
+    }
 
-    public record ScopedId(HCLIdentifier parent, String id) implements HCLIdentifier {}
+    public record StringId(String id) implements HCLIdentifier {
+
+        @Override
+        public String asString() {
+            return id;
+        }
+    }
+
+    public record ScopedId(HCLIdentifier parent, String id) implements HCLIdentifier {
+
+        @Override
+        public String asString() {
+            return HCLExpression.asString(parent) + "::" + id;
+        }
+    }
 }

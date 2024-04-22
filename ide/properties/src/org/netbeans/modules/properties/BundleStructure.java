@@ -419,8 +419,13 @@ public class BundleStructure {
         if (getEntryCount() > data.length/3) {
             for (int j=0; j < getEntryCount(); j++) {
                 PropertiesFileEntry pfe = getNthEntry(j);
+                if (pfe == null) {
+                    continue;
+                }
                 PropertiesStructure ps = pfe.getHandler().getStructure();
-                if (pfe == null || ps == null) continue;
+                if (ps == null) {
+                    continue;
+                }
 
                 boolean found = false;
                 for (int i=0; i < data.length; i+=3) {

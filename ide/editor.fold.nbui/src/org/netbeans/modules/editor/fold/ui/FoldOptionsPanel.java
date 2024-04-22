@@ -172,10 +172,10 @@ final class FoldOptionsPanel extends javax.swing.JPanel implements ActionListene
                 foldedSummary.setEnabled(enabled);
                 useDefaults.setEnabled(enabled);
             } 
-            if (k == null || FoldUtilitiesImpl.PREF_CONTENT_PREVIEW.equals(FoldUtilitiesImpl.PREF_CONTENT_PREVIEW)) {
+            if (k == null || k.equals(FoldUtilitiesImpl.PREF_CONTENT_PREVIEW)) {
                 contentPreview.setSelected(currentPreferences.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_PREVIEW, true));
             }
-            if (k == null || FoldUtilitiesImpl.PREF_CONTENT_SUMMARY.equals(FoldUtilitiesImpl.PREF_CONTENT_SUMMARY)) {
+            if (k == null || k.equals(FoldUtilitiesImpl.PREF_CONTENT_SUMMARY)) {
                 foldedSummary.setSelected(currentPreferences.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_SUMMARY, true));
             } 
             // must not replicate defaults over current settings if unspecified key arrives.

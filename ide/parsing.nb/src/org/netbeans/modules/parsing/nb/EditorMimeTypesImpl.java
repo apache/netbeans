@@ -68,6 +68,6 @@ public final class EditorMimeTypesImpl implements EditorMimeTypesImplementation 
     @Override
     public void removePropertyChangeListener(@NonNull final PropertyChangeListener listener) {
         Parameters.notNull("listener", listener);   //NOI18N
-        listeners.addPropertyChangeListener(listener);
+        listeners.removePropertyChangeListener(listener);
     }
 }

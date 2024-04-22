@@ -88,7 +88,7 @@ public class MicronautExpressionLanguageCompletion {
             if (tree == null) {
                 kws = ctx.getScope().getEnclosingMethod() != null ? Arrays.asList("true", "false", "null", "this", "empty", "not") : Arrays.asList("true", "false", "null", "empty", "not");
                 builtins = Arrays.asList("T", "()", "ctx", "[]", "env", "[]");
-                elements = ctx.getContextMethods();
+                elements = ctx.getContextElements();
                 anchorOffset = startOffset + offset;
             } else {
                 String tokenText = ts.token().text().subSequence(0, offset - ts.offset()).toString().trim();
@@ -105,7 +105,7 @@ public class MicronautExpressionLanguageCompletion {
                     if (offset <= tree.getStartPosition()) {
                         kws = ctx.getScope().getEnclosingMethod() != null ? Arrays.asList("true", "false", "null", "this", "empty", "not") : Arrays.asList("true", "false", "null", "empty", "not");
                         builtins = Arrays.asList("T", "()", "ctx", "[]", "env", "[]");
-                        elements = ctx.getContextMethods();
+                        elements = ctx.getContextElements();
                     } else {
                         ExpressionTree lastTree = tree;
                         if (tree.getKind() == ExpressionTree.Kind.ERRONEOUS) {
@@ -149,7 +149,7 @@ public class MicronautExpressionLanguageCompletion {
                             case NONE:
                                 String prev = prevNonWSTokenText(prefix);
                                 if ("#".equals(prev)) {
-                                    elements = ctx.getContextMethods();
+                                    elements = ctx.getContextElements();
                                 }
                                 break;
                         }
@@ -214,7 +214,7 @@ public class MicronautExpressionLanguageCompletion {
                                     kws = Arrays.asList("this");
                                 }
                                 builtins = Arrays.asList("T", "()", "ctx", "[]", "env", "[]");
-                                elements = ctx.getContextMethods();
+                                elements = ctx.getContextElements();
                             }
                             break;
                         case EQUAL_TO:
@@ -225,7 +225,7 @@ public class MicronautExpressionLanguageCompletion {
                             } else {
                                 kws = ctx.getScope().getEnclosingMethod() != null ? Arrays.asList("null", "this"): Arrays.asList("null");
                                 builtins = Arrays.asList("T", "()", "ctx", "[]", "env", "[]");
-                                elements = ctx.getContextMethods();
+                                elements = ctx.getContextElements();
                             }
                             break;
                         case AND:
@@ -238,11 +238,11 @@ public class MicronautExpressionLanguageCompletion {
                         case NOT:
                             kws = ctx.getScope().getEnclosingMethod() != null ? Arrays.asList("true", "false", "not", "empty", "this"): Arrays.asList("true", "false", "not", "empty");
                             builtins = Arrays.asList("T", "()", "ctx", "[]", "env", "[]");
-                            elements = ctx.getContextMethods();
+                            elements = ctx.getContextElements();
                             break;
                         case EMPTY:
                             builtins = Arrays.asList("T", "()", "ctx", "[]", "env", "[]");
-                            elements = ctx.getContextMethods();
+                            elements = ctx.getContextElements();
                             break;
                         case INSTANCE_OF:
                             ExpressionTree.InstanceOf instanceOf = (ExpressionTree.InstanceOf) path.getLeaf();
@@ -262,7 +262,7 @@ public class MicronautExpressionLanguageCompletion {
                                 if ("?". equals(prev) || ":".equals(prev)) {
                                     kws = ctx.getScope().getEnclosingMethod() != null ? Arrays.asList("true", "false", "null", "this", "empty", "not") : Arrays.asList("true", "false", "null", "empty", "not");
                                     builtins = Arrays.asList("T", "()", "ctx", "[]", "env", "[]");
-                                    elements = ctx.getContextMethods();
+                                    elements = ctx.getContextElements();
                                 }
                             }
                             break;
@@ -274,12 +274,12 @@ public class MicronautExpressionLanguageCompletion {
                                 if (callee != null) {
                                     TypeMirror pacTM = callee.getTypeMirror(ctx);
                                     if (pacTM.getKind() == TypeKind.DECLARED) {
-                                        elements = ElementFilter.methodsIn(((DeclaredType) pacTM).asElement().getEnclosedElements()).stream()
+                                        elements = ((DeclaredType) pacTM).asElement().getEnclosedElements().stream()
                                                 .filter(ee -> callee.getKind() != ExpressionTree.Kind.TYPE_REFERENCE || ee.getModifiers().contains(Modifier.STATIC))
                                                 .collect(Collectors.toList());
                                     }
                                 } else {
-                                    elements = ctx.getContextMethods();
+                                    elements = ctx.getContextElements();
                                 }
                             }
                             break;
@@ -296,12 +296,12 @@ public class MicronautExpressionLanguageCompletion {
                                                 .collect(Collectors.toList());
                                     }
                                 } else {
-                                    elements = ctx.getContextMethods();
+                                    elements = ctx.getContextElements();
                                 }
                             } else if ("(".equals(prev) || ",".equals(prev)) {
                                 kws = ctx.getScope().getEnclosingMethod() != null ? Arrays.asList("true", "false", "null", "this", "empty", "not") : Arrays.asList("true", "false", "null", "empty", "not");
                                 builtins = Arrays.asList("T", "()", "ctx", "[]", "env", "[]");
-                                elements = ctx.getContextMethods();
+                                elements = ctx.getContextElements();
                             }
                             break;
                     }
@@ -381,7 +381,16 @@ public class MicronautExpressionLanguageCompletion {
                                 items.add(factory.createBeanPropertyItem(propertyName, returnType, anchorOffset));
                             }
                         }
-                    } else {
+                    } else if (element.getKind() == ElementKind.RECORD_COMPONENT) {
+                        TypeMirror enclType = element.getEnclosingElement().asType();
+                        if (enclType.getKind() == TypeKind.DECLARED && Utils.startsWith(name, prefix) && info.getTrees().isAccessible(ctx.getScope(), element, (DeclaredType) enclType)) {
+                            items.add(factory.createJavaElementItem(info, element, anchorOffset));
+                        }
+                    } else if (element.getKind() == ElementKind.PARAMETER) {
+                        if (Utils.startsWith(name, prefix)) {
+                            items.add(factory.createJavaElementItem(info, element, anchorOffset));
+                        }
+                    } else if (element.getKind().isClass() || element.getKind().isInterface()) {
                         if (Utils.startsWith(name, prefix) && info.getTrees().isAccessible(ctx.getScope(), (TypeElement) element)) {
                             items.add(factory.createJavaElementItem(info, element, anchorOffset));
                         }

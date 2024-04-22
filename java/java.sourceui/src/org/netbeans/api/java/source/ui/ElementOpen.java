@@ -551,6 +551,11 @@ public final class ElementOpen {
 
                     v.scan(cu, null);
                     Tree elTree = v.declTree;
+
+                    if (elTree == null) {
+                        elTree = info.getTrees().getTree(el);
+                    }
+
                     if (elTree != null) {
                         result[1] = (int)info.getTrees().getSourcePositions().getStartPosition(cu, elTree);
                         result[2] = (int)info.getTrees().getSourcePositions().getEndPosition(cu, elTree);

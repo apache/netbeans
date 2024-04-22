@@ -107,12 +107,16 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
         private static final String RECORD_ICON = "org/netbeans/modules/editor/resources/completion/record.png";
         private static final String METHOD_PUBLIC = "org/netbeans/modules/editor/resources/completion/method_16.png"; //NOI18N
         private static final String METHOD_ST_PUBLIC = "org/netbeans/modules/editor/resources/completion/method_static_16.png";
+        private static final String FIELD_PUBLIC = "org/netbeans/modules/editor/resources/completion/field_16.png"; //NOI18N
+        private static final String LOCAL_VARIABLE = "org/netbeans/modules/editor/resources/completion/localVariable.gif"; //NOI18N
         private static final String ATTRIBUTE_VALUE = "org/netbeans/modules/java/editor/resources/attribute_value_16.png"; // NOI18N
         private static final String PROPERTY = "org/netbeans/modules/beans/resources/propertyRO.gif";
         private static final String KEYWORD_COLOR = getHTMLColor(64, 64, 217);
         private static final String PACKAGE_COLOR = getHTMLColor(64, 150, 64);
         private static final String CLASS_COLOR = getHTMLColor(150, 64, 64);
         private static final String INTERFACE_COLOR = getHTMLColor(128, 128, 128);
+        private static final String FIELD_COLOR = getHTMLColor(64, 198, 88);
+        private static final String PARAMETER_COLOR = getHTMLColor(64, 64, 188);
         private static final String PARAMETERS_COLOR = getHTMLColor(192, 192, 192);
         private static final String PARAMETER_NAME_COLOR = getHTMLColor(224, 160, 65);
         private static final String ATTRIBUTE_VALUE_COLOR = getHTMLColor(128, 128, 128);
@@ -496,6 +500,14 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                     }
                     CompletionUtilities.CompletionItemBuilder builder = CompletionUtilities.newCompletionItemBuilder(simpleName).startOffset(offset);
                     switch (element.getKind()) {
+                        case PARAMETER:
+                            builder.iconResource(LOCAL_VARIABLE).leftHtmlText(PARAMETER_COLOR + simpleName + COLOR_END).sortPriority(90)
+                                    .rightHtmlText(Utils.getTypeName(info, element.asType(), false, false).toString());
+                            break;
+                        case RECORD_COMPONENT:
+                            builder.iconResource(FIELD_PUBLIC).leftHtmlText(FIELD_COLOR + simpleName + COLOR_END).sortPriority(90)
+                                    .rightHtmlText(Utils.getTypeName(info, element.asType(), false, false).toString());
+                            break;
                         case ENUM:
                             builder.iconResource(ENUM_ICON).leftHtmlText(CLASS_COLOR + simpleName + COLOR_END).sortPriority(300);
                             break;

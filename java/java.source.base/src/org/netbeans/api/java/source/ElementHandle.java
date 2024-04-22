@@ -24,7 +24,6 @@ import com.sun.tools.javac.code.ModuleFinder;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.jvm.Target;
-import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Name;
 import java.util.Arrays;
@@ -232,6 +231,31 @@ public final class ElementHandle<T extends Element> {
                     return (T) new Symbol.VarSymbol(0, (Name) jt.getElements().getName(this.signatures[1]), Symtab.instance(jt.getContext()).unknownType, (Symbol)type);
                 } else 
                     log.log(Level.INFO, "Resolved type is null for kind = {0}", this.kind); // NOI18N
+                break;
+            }
+            case PARAMETER:
+            {
+                assert signatures.length == 3;
+                final Element type = getTypeElementByBinaryName (module, signatures[0], jt);
+                if (type instanceof TypeElement) {
+                    final List<? extends Element> members = type.getEnclosedElements();
+                    for (Element member : members) {
+                        if (member.getKind() == ElementKind.METHOD || member.getKind() == ElementKind.CONSTRUCTOR) {
+                            String[] desc = ClassFileUtil.createExecutableDescriptor((ExecutableElement)member);
+                            assert desc.length == 3;
+                            if (this.signatures[1].equals(desc[1]) && this.signatures[2].equals(desc[2])) {
+                                assert member instanceof ExecutableElement;
+                                List<? extends VariableElement> ves =((ExecutableElement)member).getParameters();
+                                for (VariableElement ve : ves) {
+                                    if (ve.getSimpleName().contentEquals(signatures[3])) {
+                                        return (T) ve;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else
+                    log.log(Level.INFO, "Resolved type is null for kind = {0} signatures.length = {1}", new Object[] {this.kind, signatures.length}); // NOI18N
                 break;
             }
             case TYPE_PARAMETER:
@@ -495,6 +519,21 @@ public final class ElementHandle<T extends Element> {
             case RECORD_COMPONENT:
                 assert element instanceof VariableElement;
                 signatures = ClassFileUtil.createFieldDescriptor((VariableElement)element);
+                break;
+            case PARAMETER:
+                assert element instanceof VariableElement;
+                Element ee = element.getEnclosingElement();
+                ElementKind eek = ee.getKind();
+                if (eek == ElementKind.METHOD || eek == ElementKind.CONSTRUCTOR) {
+                    assert ee instanceof ExecutableElement;
+                    String[] _sigs = ClassFileUtil.createExecutableDescriptor((ExecutableElement)ee);
+                    signatures = new String[_sigs.length + 1];
+                    System.arraycopy(_sigs, 0, signatures, 0, _sigs.length);
+                    signatures[_sigs.length] = element.getSimpleName().toString();
+                }
+                else {
+                    throw new IllegalArgumentException(eek.toString());
+                }
                 break;
             case TYPE_PARAMETER:
                 assert element instanceof TypeParameterElement;

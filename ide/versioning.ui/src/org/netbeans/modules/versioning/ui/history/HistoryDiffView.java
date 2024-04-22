@@ -127,7 +127,7 @@ public class HistoryDiffView implements PropertyChangeListener {
                 }
                 
                 if(entry1 != null && entry2 != null && file1 != null && file2 != null) {
-                    if(entry1.getDateTime().getTime() > entry1.getDateTime().getTime()) {
+                    if(entry1.getDateTime().getTime() > entry2.getDateTime().getTime()) {
                         refreshRevisionDiffPanel(entry1, entry2, file1, file2);
                     } else {
                         refreshRevisionDiffPanel(entry2, entry1, file2, file1);

@@ -762,11 +762,11 @@ public final class JFXProjectUtils {
                     FileUtil.copyFile(swingTemplateFO1, templatesFO, "FXSwingTemplate"); // NOI18N
                 }
                 FileObject swingTemplateFO2 = FileUtil.getConfigFile("Templates/JFX/FXSwingTemplateApplet.jnlp"); // NOI18N
-                if (swingTemplateFO1 != null) {
+                if (swingTemplateFO2 != null) {
                     FileUtil.copyFile(swingTemplateFO2, templatesFO, "FXSwingTemplateApplet"); // NOI18N
                 }
                 FileObject swingTemplateFO3 = FileUtil.getConfigFile("Templates/JFX/FXSwingTemplateApplication.jnlp"); // NOI18N
-                if (swingTemplateFO1 != null) {
+                if (swingTemplateFO3 != null) {
                     FileUtil.copyFile(swingTemplateFO3, templatesFO, "FXSwingTemplateApplication"); // NOI18N
                 }
             }

@@ -316,7 +316,7 @@ final class FilteredListModel implements ListModel, Runnable, ListDataListener {
         int myMinIndex = getExternal (minIndex) + 1; // one after the index of the first non-1 index
         int myMaxIndex = getExternal (maxIndex);
 
-        assert myMaxIndex >= myMaxIndex : "Must be greater"; // NOI18N
+        assert myMaxIndex >= myMinIndex : "Must be greater"; // NOI18N
         if (myMaxIndex != myMinIndex) {
             int myIndex = myMinIndex + (index - minIndex) - 1;
             if (myIndex >= myMaxIndex) {

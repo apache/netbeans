@@ -138,7 +138,7 @@ public final class SourceJavadocAttacherUtil {
                     return;
                 }
                 List<? extends URL> s = source ? d.getSources(root, this) : d.getJavadoc(root, this);
-                if (s != null || s.isEmpty()) {
+                if (!(s == null || s.isEmpty())) {
                     List<URI> r = new ArrayList<>();
                     for (URL u : s) {
                         try {

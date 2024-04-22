@@ -3657,7 +3657,7 @@ class LayoutFeeder implements LayoutConstants {
                 if (!compatibleInclusions(iDesc, best, dimension)) {
                     it.remove();
                 } else if (iDesc.parent == best.parent && iDesc.neighbor == best.neighbor
-                           && (iDesc.neighbor != null || iDesc.index == iDesc.index)) {
+                           && (iDesc.neighbor != null || iDesc.index == best.index)) {
                     it.remove(); // same inclusion twice (detect for better robustness)
                 } else if (iDesc.newSubGroup && LayoutUtils.contentOverlap(iDesc.parent, best.parent, dimension^1)) {
                     it.remove(); // don't try to solve what is already overlapping
@@ -3894,7 +3894,7 @@ class LayoutFeeder implements LayoutConstants {
                             && (anyResizingNeighbor[i^1] || preferredFixedSide == i)) {
                         operations.setIntervalResizing(gaps[i], false);
                         if (!LayoutInterval.canResize(gaps[i^1])) {
-                            operations.setIntervalResizing(gaps[i^i], true);
+                            operations.setIntervalResizing(gaps[i^1], true);
                         }
                         break;
                     }

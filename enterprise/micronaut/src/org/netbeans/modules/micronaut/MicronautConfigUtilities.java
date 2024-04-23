@@ -69,7 +69,7 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataSourc
  */
 public class MicronautConfigUtilities {
 
-    private static final Pattern REGEXP = Pattern.compile("^(application|bootstrap)(-\\w*)*\\.(yml|properties)$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern REGEXP = Pattern.compile("^(application|bootstrap)(-\\w*)*\\.(yml|yaml|properties)$", Pattern.CASE_INSENSITIVE);
 
     public static final String YAML_MIME = "text/x-yaml";
     public static final String PROPERTIES_MIME = "text/x-properties";

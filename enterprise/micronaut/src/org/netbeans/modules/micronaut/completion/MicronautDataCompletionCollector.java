@@ -309,6 +309,14 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                 }
                 Builder builder = CompletionCollector.newBuilder(simpleName);
                 switch (element.getKind()) {
+                    case PARAMETER:
+                        builder.kind(Completion.Kind.Variable).sortText(String.format("%04d%s", 90, simpleName))
+                                .labelDescription(Utils.getTypeName(info, element.asType(), false, false).toString());
+                        break;
+                    case RECORD_COMPONENT:
+                        builder.kind(Completion.Kind.Field).sortText(String.format("%04d%s", 90, simpleName))
+                                .labelDescription(Utils.getTypeName(info, element.asType(), false, false).toString());
+                        break;
                     case ENUM:
                         builder.kind(Completion.Kind.Enum).sortText(String.format("%04d%s", 300, simpleName));
                         break;

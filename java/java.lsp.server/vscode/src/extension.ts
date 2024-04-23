@@ -1036,7 +1036,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     const conf = workspace.getConfiguration();
     let documentSelectors : DocumentSelector = [
             { language: 'java' },
-            { language: 'yaml', pattern: '**/{application,bootstrap}*.yml' },
+            { language: 'yaml', pattern: '**/{application,bootstrap}*.{yml,yaml}' },
             { language: 'properties', pattern: '**/{application,bootstrap}*.properties' },
             { language: 'jackpot-hint' },
             { language: 'xml', pattern: '**/pom.xml' },

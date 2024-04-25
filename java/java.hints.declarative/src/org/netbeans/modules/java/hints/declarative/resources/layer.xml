@@ -203,8 +203,6 @@
             </folder>
          </folder>
     </folder>
-    
-
     <folder name="Editors">
         <folder name="text">
             <folder name="x-javahints">
@@ -235,6 +233,16 @@
                 <folder name="Actions">
                     <file name="toggle-debugging-action.instance">
                         <attr name="instanceCreate" newvalue="org.netbeans.modules.java.hints.declarative.debugging.ToggleDebuggingAction"/>
+                    </file>
+                </folder>
+                <folder name="Popup">
+                    <file name="org-netbeans-modules-project-ui-RunSingle.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunSingle.instance"/>
+                        <attr name="position" intvalue="1720"/>
+                    </file>
+                    <file name="org-netbeans-modules-project-ui-TestSingle.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestSingle.instance"/>
+                        <attr name="position" intvalue="1780"/>
                     </file>
                 </folder>
                 <folder name="Toolbars">

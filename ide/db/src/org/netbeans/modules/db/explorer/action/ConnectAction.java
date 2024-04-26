@@ -127,6 +127,7 @@ public class ConnectAction extends AbstractAction implements ContextAwareAction,
         // when using the progress bar.  The flag is set in the property
         // change listener when the status changes to "failed".          
         volatile boolean failed = false;
+        volatile SQLException sqlException = null;
 
         /** Shows notification if DatabaseConnection fails. */
         final ExceptionListener excListener = new ExceptionListener() {
@@ -140,13 +141,15 @@ public class ConnectAction extends AbstractAction implements ContextAwareAction,
                 }
 
                 String message = null;
+                sqlException = exc instanceof SQLException ? (SQLException)exc : null;
                 if (exc instanceof ClassNotFoundException) {
                     message = MessageFormat.format(NbBundle.getMessage(ConnectAction.class, "EXC_ClassNotFound"), exc.getMessage()); //NOI18N
                 } else {
                     StringBuilder buffer = new StringBuilder();
                     buffer.append(DbUtilities.formatError(NbBundle.getMessage(ConnectAction.class, "ERR_UnableToConnect"), exc.getMessage())); //NOI18N
                     if (exc instanceof DDLException && exc.getCause() instanceof SQLException) {
-                        SQLException sqlEx = ((SQLException) exc.getCause()).getNextException();
+                        sqlException = (SQLException) exc.getCause();
+                        SQLException sqlEx = sqlException.getNextException();
                         while (sqlEx != null) {
                             buffer.append("\n\n").append(sqlEx.getMessage()); // NOI18N
                             sqlEx = sqlEx.getNextException();
@@ -328,16 +331,18 @@ public class ConnectAction extends AbstractAction implements ContextAwareAction,
                 } catch (Exception exc) {
                     String message = MessageFormat.format(NbBundle.getMessage (ConnectAction.class, "ERR_UnableToConnect"), exc.getMessage()); // NOI18N
                     DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(message, NotifyDescriptor.ERROR_MESSAGE));
-                    
+                    sqlException = exc instanceof SQLException ? (SQLException)exc : null;
                     failed = true;
                 }
                 dbcon.removeExceptionListener(excListener);
-                if ( failed ) {
+                if (failed && sqlException != null) {
                     // If the connection fails with a progress bar only, then 
                     // display the full Connect dialog so the user can give it
                     // another shot after changing some values, like the username
                     // or password.
-                    showDialog(dbcon, true);
+                    Throwable cause = sqlException.getCause();
+                    if (cause == null || !(cause instanceof ClassNotFoundException))
+                        showDialog(dbcon, true);
                 }
             }
         }

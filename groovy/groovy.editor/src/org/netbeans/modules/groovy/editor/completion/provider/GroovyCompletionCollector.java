@@ -539,7 +539,7 @@ public class GroovyCompletionCollector implements CompletionCollector {
 
         @Override
         public boolean isCaseSensitive() {
-            return isCaseSensitive();
+            return GroovyCompletionCollector.isCaseSensitive();
         }
     }
 

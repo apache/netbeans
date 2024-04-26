@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.xml.axi.impl;
 
-import org.netbeans.modules.xml.axi.AXIComponent;
 import org.netbeans.modules.xml.axi.AXIModel;
 import org.netbeans.modules.xml.axi.SchemaReference;
 import org.netbeans.modules.xml.axi.visitor.AXIVisitor;
@@ -28,7 +27,7 @@ import org.netbeans.modules.xml.axi.visitor.AXIVisitor;
  * @author sdedic
  */
 public class SchemaReferenceProxy extends SchemaReference implements AXIComponentProxy {
-    public SchemaReferenceProxy(AXIModel model, AXIComponent sharedComponent) {
+    public SchemaReferenceProxy(AXIModel model, SchemaReference sharedComponent) {
         super(model, sharedComponent);
     }
 
@@ -38,7 +37,7 @@ public class SchemaReferenceProxy extends SchemaReference implements AXIComponen
     }
     
     private SchemaReference getShared() {
-        return (SchemaReference)getShared();
+        return (SchemaReference) getSharedComponent();
     }
 
     @Override

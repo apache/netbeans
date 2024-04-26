@@ -231,7 +231,7 @@ public class HudsonFailureDisplayer extends FailureDataDisplayerImpl {
                         OpenUrlAction.forOpenable(new OpenableInBrowser() {
                             public @Override
                             String getUrl() {
-                                return getUrl() + "testReport/"
+                                return job.getUrl() + "testReport/"
                                         + testcase.getClassName().replaceFirst("[.][^.]+$", "") + "/" + testcase.getClassName().replaceFirst(".+[.]", "") + "/" + testcase.getName() + "/"; //NOI18N
                             }
                         }),

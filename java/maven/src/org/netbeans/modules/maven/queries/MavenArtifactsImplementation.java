@@ -610,7 +610,7 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
 
             synchronized (this) {
                 artifacts = null;
-                if (listeners == null && listeners.isEmpty()) {
+                if (listeners == null || listeners.isEmpty()) {
                     return;
                 }
                 if (refreshTask != null) {

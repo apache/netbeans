@@ -24,8 +24,10 @@ import org.netbeans.modules.gradle.spi.nodes.AbstractGradleNodeList;
 import org.netbeans.modules.gradle.spi.nodes.NodeUtils;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -44,7 +46,6 @@ import org.netbeans.api.project.Sources;
 import org.netbeans.modules.gradle.java.api.GradleJavaProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType;
-import org.netbeans.modules.gradle.java.execute.JavaRunUtils;
 import org.netbeans.modules.gradle.java.spi.support.JavaToolchainSupport;
 import org.netbeans.spi.project.ui.PathFinder;
 import org.netbeans.spi.java.project.support.ui.PackageView;
@@ -130,8 +131,9 @@ public class BootCPNodeFactory implements NodeFactory {
 
     }
 
+    private record PlatformSourceSet(File javaHome, JavaPlatform platform, Set<GradleJavaSourceSet> sourceSets) {}
+
     // XXX PlatformNode and ActionFilterNode does some of what we want, but cannot be reused
-    private record PlatformSourceSet(JavaPlatform platform, Set<GradleJavaSourceSet> sourceSets) {}
     private static class BootCPChildren extends ChildFactory.Detachable<PlatformSourceSet> {
 
         private final Project project;
@@ -152,16 +154,17 @@ public class BootCPNodeFactory implements NodeFactory {
 
         @Override
         protected boolean createKeys(List<PlatformSourceSet> keys) {
-            var toolchains = JavaToolchainSupport.getDefault();
-            var pss = new HashMap<JavaPlatform, Set<GradleJavaSourceSet>>();
-            var ss = GradleJavaProject.get(project).getSourceSets().values();
-            for (GradleJavaSourceSet s : ss) {
-                var home = s.getCompilerJavaHome(SourceType.JAVA);
-                var platform = home != null ? toolchains.platformByHome(home) : JavaRunUtils.getActivePlatform(project).second();
-                var groups = pss.computeIfAbsent(platform, (k) -> new TreeSet<GradleJavaSourceSet>((s1, s2) -> s1.getName().compareTo(s2.getName())));
-                groups.add(s);
+            JavaToolchainSupport toolchains = JavaToolchainSupport.getDefault();
+
+            var pss = new HashMap<File, Set<GradleJavaSourceSet>>();
+            for (GradleJavaSourceSet s : GradleJavaProject.get(project).getSourceSets().values()) {
+                File home = s.getCompilerJavaHome(SourceType.JAVA);
+                if (home != null) {
+                    var groups = pss.computeIfAbsent(home, (k) -> new TreeSet<>(Comparator.comparing(GradleJavaSourceSet::getName)));
+                    groups.add(s);
+                }
             }
-            pss.forEach((platform, groups) -> keys.add(new PlatformSourceSet(platform, groups)));
+            pss.forEach((home, groups) -> keys.add(new PlatformSourceSet(home, toolchains.platformByHome(home), groups)));
             return true;
         }
 
@@ -195,19 +198,21 @@ public class BootCPNodeFactory implements NodeFactory {
 
         @Override
         public String getName() {
-            return pss.platform().getDisplayName();
+            return pss.platform() != null ? pss.platform().getDisplayName() : Bundle.FMT_BrokenPlatform(pss.javaHome());
         }
 
         @Override
         public String getDisplayName() {
-            String name = pss.platform.isValid() ? pss.platform.getDisplayName(): Bundle.FMT_BrokenPlatform(pss.platform.getDisplayName());
-            String groups = pss.sourceSets.stream().map(GradleJavaSourceSet::getName).collect(Collectors.joining(", ", "[", "]"));
-            return name + " " + groups;
+            String groups = pss.sourceSets.stream()
+                    .map(GradleJavaSourceSet::getName)
+                    .collect(Collectors.joining(", ", "[", "]"));
+            return getName() + " " + groups;
         }
 
         @Override
         public String getHtmlDisplayName() {
-            return null;
+            JavaPlatform platform = JavaToolchainSupport.getDefault().platformByHome(pss.javaHome());
+            return platform != null ? getDisplayName() : "<html><font color='!nb.errorForeground'>" + getDisplayName() + "</font>";  //NOI18N
         }
 
         @Override
@@ -222,14 +227,10 @@ public class BootCPNodeFactory implements NodeFactory {
                 "TOOLTIP_Platform=<html>Home: {0}<br/>Used in: {1}"
         })
         public String getShortDescription() {
-            if (pss.platform.isValid()) {
-                FileObject installFolder = pss.platform.getInstallFolders().iterator().next();
-                String groups = pss.sourceSets.stream().map(GradleJavaSourceSet::getName).collect(Collectors.joining(", "));
 
-                return Bundle.TOOLTIP_Platform(FileUtil.getFileDisplayName(installFolder), groups);
-            } else {
-                return super.getShortDescription();
-            }
+            String groups = pss.sourceSets.stream().map(GradleJavaSourceSet::getName).collect(Collectors.joining(", "));
+
+            return Bundle.TOOLTIP_Platform(pss.javaHome(), groups);
         }
     }
 
@@ -254,7 +255,11 @@ public class BootCPNodeFactory implements NodeFactory {
         }
 
         private List<SourceGroup> getKeys () {
-            final FileObject[] roots = ((JRENode)this.getNode()).pss.platform.getBootstrapLibraries().getRoots();
+            JavaPlatform platform = ((JRENode)this.getNode()).pss.platform();
+            if (platform == null) {
+                return List.of();
+            }
+            final FileObject[] roots = platform.getBootstrapLibraries().getRoots();
             final List<SourceGroup> result = new ArrayList<>(roots.length);
             for (FileObject root : roots) {
                 var protocol = root.toURL().getProtocol();
@@ -265,12 +270,11 @@ public class BootCPNodeFactory implements NodeFactory {
                         case "nbjrt" -> ImageUtilities.loadImageIcon(MODULE_ICON, false);
                         default -> null;
                     };
-                    result.add (new LibrariesSourceGroup(root,file.getNameExt(), icon, icon));
+                    result.add(new LibrariesSourceGroup(root, file.getNameExt(), icon, icon));
                 }
             }
             return result;
         }
-
     }
 
     private static Node jarNode(SourceGroup sg) {

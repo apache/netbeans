@@ -19,6 +19,8 @@
 package org.netbeans.modules.languages.hcl.ast;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  *
@@ -39,10 +41,10 @@ public sealed interface HCLForExpression extends HCLExpression {
             StringBuilder sb = new StringBuilder();
             sb.append("[for ");
             if (keyVar != null) {
-                sb.append(keyVar).append(',');
+                sb.append(keyVar.asString()).append(',');
             }
-            sb.append(valueVar).append(" in ").append(iterable.asString()).append(':');
-            sb.append(result.asString());
+            sb.append(HCLExpression.asString(valueVar)).append(" in ").append(HCLExpression.asString(iterable)).append(':');
+            sb.append(HCLExpression.asString(result));
             if (condition != null) { 
                 sb.append(" if ").append(condition.asString());
             }
@@ -52,7 +54,9 @@ public sealed interface HCLForExpression extends HCLExpression {
         
         @Override
         public List<? extends HCLExpression> elements() {
-            return List.of(iterable, result, condition);
+            return Stream.of(iterable, result, condition)
+                    .filter(Objects::nonNull)
+                    .toList();
         }
     }
     
@@ -62,10 +66,10 @@ public sealed interface HCLForExpression extends HCLExpression {
             StringBuilder sb = new StringBuilder();
             sb.append("{for ");
             if (keyVar != null) {
-                sb.append(keyVar).append(',');
+                sb.append(keyVar.asString()).append(',');
             }
-            sb.append(valueVar).append(" in ").append(iterable.asString()).append(':');
-            sb.append(resultKey.asString()).append("=>").append(resultValue.asString());
+            sb.append(HCLExpression.asString(valueVar)).append(" in ").append(HCLExpression.asString(iterable)).append(':');
+            sb.append(HCLExpression.asString(resultKey)).append("=>").append(HCLExpression.asString(resultValue));
             if (grouping) {
                 sb.append("...");
             }
@@ -78,7 +82,9 @@ public sealed interface HCLForExpression extends HCLExpression {
 
         @Override
         public List<? extends HCLExpression> elements() {
-            return List.of(iterable, resultKey, resultValue, condition);
+            return Stream.of(iterable, resultKey, resultValue, condition)
+                    .filter(Objects::nonNull)
+                    .toList();
         }
         
     }

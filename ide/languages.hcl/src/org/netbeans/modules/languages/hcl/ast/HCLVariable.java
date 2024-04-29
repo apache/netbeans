@@ -26,6 +26,6 @@ public record HCLVariable(HCLIdentifier name) implements HCLExpression {
 
     @Override
     public String asString() {
-        return name.id();
+        return HCLExpression.asString(name);
     }
 }

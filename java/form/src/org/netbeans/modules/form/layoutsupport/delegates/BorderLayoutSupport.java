@@ -260,7 +260,7 @@ public class BorderLayoutSupport extends AbstractLayoutSupport
         }
         if (y1 >= y2) {
             y1 = contInsets.top;
-            x2 = contSize.height - contInsets.bottom;
+            y2 = contSize.height - contInsets.bottom;
             if (y1 >= y2) return true; // container is too small
         }
 

@@ -19,6 +19,7 @@
 package org.netbeans.modules.languages.hcl.ast;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -26,25 +27,37 @@ import java.util.List;
  */
 public sealed interface HCLResolveOperation extends HCLExpression {
 
-
     HCLExpression base();
+
     default List<? extends HCLExpression> elements() {
             return List.of(base());
     }
 
     public record Attribute(HCLExpression base, HCLIdentifier attr) implements HCLResolveOperation {
+
+        public Attribute {
+            Objects.requireNonNull(base, "base cannot be null");
+        }
+
         @Override
         public String asString() {
-            return base.asString() + "." + attr;
+            return base.asString() + "." + HCLExpression.asString(attr);
         }
 
     }
 
     public record Index(HCLExpression base, HCLExpression index, boolean legacy) implements HCLResolveOperation {
+
+        public Index {
+            Objects.requireNonNull(base, "base cannot be null");
+            Objects.requireNonNull(index, "index cannot be null");
+        }
+
         @Override
         public String asString() {
-            return base.asString() + (legacy ? "." + index : "[" + index + "]");
+            return base.asString() + (legacy ? "." + index.asString() : "[" + index.asString() + "]");
         }
+
         @Override
         public List<? extends HCLExpression> elements() {
             return List.of(base, index);
@@ -52,6 +65,11 @@ public sealed interface HCLResolveOperation extends HCLExpression {
     }
     
     public record AttrSplat(HCLExpression base) implements HCLResolveOperation {
+
+        public AttrSplat {
+            Objects.requireNonNull(base, "base cannot be null");
+        }
+
         @Override
         public String asString() {
             return base.asString() + ".*";
@@ -59,6 +77,11 @@ public sealed interface HCLResolveOperation extends HCLExpression {
     }
 
     public record FullSplat(HCLExpression base) implements HCLResolveOperation {
+
+        public FullSplat {
+            Objects.requireNonNull(base, "base cannot be null");
+        }
+
         @Override
         public String asString() {
             return base.asString() + "[*]";

@@ -16,12 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-<!description="Sample Inspection">
-
-// see https://netbeans.apache.org/jackpot/HintsFileFormat
-
-"use System.out for Hello World":
-System.err.println("Hello World!");
-=>
-System.out.println("Hello World!");
-;;
+%%TestCase hint-test-case
+package test;
+public class TestClass {
+    private static void foo() {
+        System.err.println("Hello World!");
+    }
+}
+%%=>

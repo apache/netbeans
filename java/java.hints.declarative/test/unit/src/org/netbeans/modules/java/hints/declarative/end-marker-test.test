@@ -16,12 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-<!description="Sample Inspection">
+%%TestCase test-1
+package test;
+public class Test {
+    private void t() {
+        System.out.println("Hello");
+    }
+}
+%%=>
+package test;
+public class Test {
+    private void t() {
+        System.err.println("Hello");
+    }
+}
+%%
+// section after end-marker and before next test case
+// does not belong to any test
+%%TestCase test-2
+package test;
+public class Test {
+    private void t() {
+        System.out.println(1);
+    }
+}
+%%=>
+package test;
+public class Test {
+    private void t() {
+        System.err.println(1);
+    }
+}
+%%
 
-// see https://netbeans.apache.org/jackpot/HintsFileFormat
-
-"use System.out for Hello World":
-System.err.println("Hello World!");
-=>
-System.out.println("Hello World!");
-;;
+// same here

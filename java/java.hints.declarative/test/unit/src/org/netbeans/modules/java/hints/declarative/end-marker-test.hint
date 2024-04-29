@@ -16,12 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-<!description="Sample Inspection">
-
-// see https://netbeans.apache.org/jackpot/HintsFileFormat
-
-"use System.out for Hello World":
-System.err.println("Hello World!");
+System.out.println($obj);
 =>
-System.out.println("Hello World!");
+System.err.println($obj);
 ;;

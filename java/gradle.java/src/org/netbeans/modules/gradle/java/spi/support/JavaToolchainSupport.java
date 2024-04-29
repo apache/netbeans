@@ -67,7 +67,7 @@ public final class JavaToolchainSupport {
      * @return the {@linkplain JavaPlatform} representing the given directory.
      */
     public JavaPlatform platformByHome(File home) {
-        return platformCache.computeIfAbsent(home, this::detectPlatform);
+        return home.isDirectory() ? platformCache.computeIfAbsent(home, this::detectPlatform) : null;
     }
     
     private JavaPlatform detectPlatform(File home) {
@@ -93,7 +93,7 @@ public final class JavaToolchainSupport {
         }
         return null;
     }
-    
+
     private static final Pattern GRADLE_JDK_DIST = Pattern.compile("(\\w+)-(\\d+)-(\\w+)-(\\w+)");
     @NbBundle.Messages({
         "# {0} - JDK Vendor",

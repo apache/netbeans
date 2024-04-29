@@ -19,7 +19,9 @@
 package org.netbeans.modules.languages.hcl.ast;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.stream.Stream;
 
 /**
  *
@@ -37,7 +39,7 @@ public sealed interface HCLCollection<T> extends HCLExpression {
         public String asString() {
             StringJoiner sj = new StringJoiner(",", "[", "]");
             for (HCLExpression element : elements) {
-                sj.add(element.asString());
+                sj.add(HCLExpression.asString(element));
             }
             return sj.toString();
         }
@@ -47,12 +49,14 @@ public sealed interface HCLCollection<T> extends HCLExpression {
     public record ObjectElement(HCLExpression key, HCLExpression value) implements HCLExpression {
         @Override
         public String asString() {
-            return key.asString() + "=" + value.asString();
+            return HCLExpression.asString(key) + "=" + HCLExpression.asString(value);
         }
 
         @Override
         public List<? extends HCLExpression> elements() {
-            return List.of(key, value);
+            return Stream.of(key, value)
+                    .filter(Objects::nonNull)
+                    .toList();
         }
     }
     
@@ -66,7 +70,7 @@ public sealed interface HCLCollection<T> extends HCLExpression {
         public String asString() {
             StringJoiner sj = new StringJoiner(",", "{", "}");
             for (ObjectElement element : elements) {
-                sj.add(element.toString());
+                sj.add(HCLExpression.asString(element));
             }
             return sj.toString();
         }        

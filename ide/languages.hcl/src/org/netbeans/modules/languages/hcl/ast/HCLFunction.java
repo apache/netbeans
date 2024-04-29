@@ -19,6 +19,7 @@
 package org.netbeans.modules.languages.hcl.ast;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
@@ -28,14 +29,16 @@ import java.util.StringJoiner;
 public record HCLFunction(HCLIdentifier name, List<HCLExpression> args, boolean expand) implements HCLExpression {
 
     public HCLFunction {
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(args, "args can be empty, but cannot be null");
         args = List.copyOf(args);
     }
 
     @Override
     public String asString() {
         StringJoiner sargs = new StringJoiner(",", "(", expand ? "...)" : ")");
-        args.forEach((arg) -> sargs.add(arg.toString()));
-        return name + sargs.toString();
+        args.forEach((arg) -> sargs.add(arg.asString()));
+        return name.asString() + sargs.toString();
     }
 
     @Override

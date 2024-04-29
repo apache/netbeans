@@ -18,16 +18,14 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import org.antlr.v4.runtime.NoViableAltException;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.netbeans.modules.languages.hcl.grammar.HCLLexer;
 import static org.netbeans.modules.languages.hcl.grammar.HCLLexer.*;
 import org.netbeans.modules.languages.hcl.grammar.HCLParser;
@@ -150,7 +148,10 @@ public final class HCLExpressionFactory extends HCLElementFactory {
             HCLParser.TupleContext tuple = ctx.tuple();
             List<HCLExpression> elements = new LinkedList<>();
             for (HCLParser.ExpressionContext ec : tuple.expression()) {
-                elements.add(expr(ec));
+                HCLExpression e = expr(ec);
+                if (e != null) {
+                    elements.add(created(e, ec));
+                }
             }
             return new HCLCollection.Tuple(elements);
         }
@@ -184,6 +185,7 @@ public final class HCLExpressionFactory extends HCLElementFactory {
         if (ctx.arguments() != null) {
             args =  ctx.arguments().expression().stream()
                     .map(this::expr)
+                    .filter(Objects::nonNull)
                     .toList();
             expand = ctx.arguments().ELLIPSIS() != null;
         }

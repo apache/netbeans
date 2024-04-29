@@ -18,12 +18,26 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.List;
+import static org.netbeans.modules.languages.hcl.ast.HCLExpressionTestSupport.*;
+import org.junit.Test;
 
 /**
  *
- * @author Laszlo Kishalmi
+ * @author lkishalmi
  */
-public sealed interface HCLElement permits HCLExpression, HCLContainer, HCLAttribute {
-    List<? extends HCLElement> elements();
+public class HCLCollectionTest {
+
+    @Test
+    public void testTupleSelf() {
+        assertExpr("[]");
+        assertExpr("[a]");
+        assertExpr("[a,b]");
+    }
+
+    @Test
+    public void testObjectSelf() {
+        assertExpr("{}");
+        assertExpr("{a=b}");
+        assertExpr("{a=b,b=c}");
+    }
 }

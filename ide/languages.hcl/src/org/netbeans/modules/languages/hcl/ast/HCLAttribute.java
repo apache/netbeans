@@ -19,6 +19,7 @@
 package org.netbeans.modules.languages.hcl.ast;
 
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -26,6 +27,10 @@ import java.util.List;
  * @author Laszlo Kishalmi
  */
 public record HCLAttribute(HCLIdentifier name, HCLExpression value) implements HCLElement {
+
+    public HCLAttribute {
+        Objects.requireNonNull(name, "name cannot be null");
+    }
 
     public String id() {
         return name.id();

@@ -18,8 +18,9 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  *
@@ -29,12 +30,14 @@ public record HCLConditionalOperation(HCLExpression condition, HCLExpression tru
 
     @Override
     public String asString() {
-        return condition.toString() + "?" + trueValue.toString() + ":" + falseValue.toString();
+        return HCLExpression.asString(condition) + "?" + HCLExpression.asString(trueValue) + ":" + HCLExpression.asString(falseValue);
     }
 
     @Override
     public List<? extends HCLExpression> elements() {
-        return Arrays.asList(condition, trueValue, falseValue);
+        return Stream.of(condition, trueValue, falseValue)
+                .filter(Objects::nonNull)
+                .toList();
     }
         
     

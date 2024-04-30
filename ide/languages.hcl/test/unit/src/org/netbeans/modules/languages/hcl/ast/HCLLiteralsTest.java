@@ -21,7 +21,7 @@ package org.netbeans.modules.languages.hcl.ast;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import static org.netbeans.modules.languages.hcl.ast.HCLExpression.parse;
+import static org.netbeans.modules.languages.hcl.ast.HCLExpressionTestSupport.*;
 
 /**
  *

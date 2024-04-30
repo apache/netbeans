@@ -18,10 +18,10 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.Collections;
-import java.util.List;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.netbeans.modules.languages.hcl.grammar.HCLLexer;
 import org.netbeans.modules.languages.hcl.grammar.HCLParser;
 
@@ -29,29 +29,21 @@ import org.netbeans.modules.languages.hcl.grammar.HCLParser;
  *
  * @author lkishalmi
  */
-public sealed interface HCLExpression extends HCLElement permits
-        HCLArithmeticOperation,
-        HCLCollection,
-        HCLCollection.ObjectElement,
-        HCLConditionalOperation,
-        HCLForExpression,
-        HCLFunction,
-        HCLIdentifier,
-        HCLLiteral,
-        HCLResolveOperation,
-        HCLTemplate,
-        HCLVariable {
-
-
-    public static String asString(HCLExpression expr) {
-        return expr != null ? expr.asString() : "";
+public class HCLExpressionTestSupport {
+    private HCLExpressionTestSupport() {}
+    
+    public static HCLExpression parse(String expr) {
+        HCLLexer lexer = new HCLLexer(CharStreams.fromString(expr));
+        HCLParser parser = new HCLParser(new CommonTokenStream(lexer));
+        return new HCLExpressionFactory().process(parser.expression());
     }
 
-    @Override
-    default List<? extends HCLExpression> elements() {
-        return Collections.emptyList();
+    public static void assertExpr(String expected, HCLExpression expr) {
+        assertNotNull(expr);
+        assertEquals(expected, expr.asString());
     }
 
-    public abstract String asString();
-
+    public static void assertExpr(String expected) {
+        assertExpr(expected, parse(expected));
+    }
 }

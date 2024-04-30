@@ -96,6 +96,7 @@
                         <attr name="dataObjectClass" stringvalue="org.netbeans.modules.java.hints.declarative.HintDataObject"/>
                         <attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
                         <attr name="mimeType" stringvalue="text/x-javahints"/>
+                        <attr name="iconBase" stringvalue="org/netbeans/modules/java/hints/declarative/resources/duke.gif"/>
                     </file>
                 </folder>
             </folder>
@@ -163,29 +164,30 @@
                         <attr name="dataObjectClass" stringvalue="org.netbeans.modules.java.hints.declarative.test.DeclarativeHintsTestDataObject"/>
                         <attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
                         <attr name="mimeType" stringvalue="text/x-javahintstest"/>
+                        <attr name="iconBase" stringvalue="org/netbeans/modules/java/hints/declarative/resources/duke.gif"/>
                     </file>
                 </folder>
             </folder>
         </folder>
     </folder>
-    
-<!--    <folder name="Templates">
+    <folder name="Templates">
         <folder name="Other">
-            <file name="DeclarativeHintsTestTemplate.test" url="DeclarativeHintsTestTemplate.test">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.hints.declarative.resources.Bundle"/>
-                <attr name="template" boolvalue="true"/>
-            </file>
-            <file name="HintTemplate.hint" url="HintTemplate.hint">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.hints.declarative.resources.Bundle"/>
-                <attr name="template" boolvalue="true"/>
-                </file>
             <file name="HintSample.hint" url="HintSample.hint">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.hints.declarative.resources.Bundle"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.java.hints.declarative.resources.Bundle#Templates/Other/HintSample.hint"/>
+                <attr name="position" intvalue="1610"/>
                 <attr name="template" boolvalue="true"/>
-                </file>
-                
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/java/hints/declarative/resources/HintWizDesc.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/hints/declarative/resources/duke.gif"/>
+            </file>
+            <file name="HintSample.test" url="HintSample.test">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.java.hints.declarative.resources.Bundle#Templates/Other/HintSample.test"/>
+                <attr name="position" intvalue="1611"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/java/hints/declarative/resources/HintTestWizDesc.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/hints/declarative/resources/duke.gif"/>
+            </file>
         </folder>
-    </folder>-->
+    </folder>
     <folder name="org-netbeans-modules-java-hints">
         <folder name="templates">
             <file name="Inspection.hint" url="HintSample.hint">
@@ -201,8 +203,6 @@
             </folder>
          </folder>
     </folder>
-    
-
     <folder name="Editors">
         <folder name="text">
             <folder name="x-javahints">
@@ -233,6 +233,16 @@
                 <folder name="Actions">
                     <file name="toggle-debugging-action.instance">
                         <attr name="instanceCreate" newvalue="org.netbeans.modules.java.hints.declarative.debugging.ToggleDebuggingAction"/>
+                    </file>
+                </folder>
+                <folder name="Popup">
+                    <file name="org-netbeans-modules-project-ui-RunSingle.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunSingle.instance"/>
+                        <attr name="position" intvalue="1720"/>
+                    </file>
+                    <file name="org-netbeans-modules-project-ui-TestSingle.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestSingle.instance"/>
+                        <attr name="position" intvalue="1780"/>
                     </file>
                 </folder>
                 <folder name="Toolbars">

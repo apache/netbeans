@@ -16,14 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.languages.hcl.ast;
-
-import java.util.List;
-
-/**
- *
- * @author Laszlo Kishalmi
- */
-public sealed interface HCLElement permits HCLExpression, HCLContainer, HCLAttribute {
-    List<? extends HCLElement> elements();
-}
+System.out.println($obj);
+=>
+System.err.println($obj);
+;;

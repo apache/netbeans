@@ -18,12 +18,19 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.List;
+import static org.netbeans.modules.languages.hcl.ast.HCLExpressionTestSupport.*;
+import org.junit.Test;
 
 /**
  *
- * @author Laszlo Kishalmi
+ * @author lkishalmi
  */
-public sealed interface HCLElement permits HCLExpression, HCLContainer, HCLAttribute {
-    List<? extends HCLElement> elements();
+public class HCLFunctionTest {
+
+    @Test
+    public void testFunctionSelf() {
+        assertExpr("min()");
+        assertExpr("min([1,b]...)");
+        assertExpr("local::min()");
+    }
 }

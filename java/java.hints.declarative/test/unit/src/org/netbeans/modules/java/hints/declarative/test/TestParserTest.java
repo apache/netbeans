@@ -70,7 +70,7 @@ public class TestParserTest {
     }
 
     @Test
-    public void testSourceLevelOption() {
+    public void testSourceLevelOptionOld() {
         String code = "%%TestCase name source-level=1.4\ncode\n%%=>\nfixed1\n%%=>\nfixed2\n";
         TestCase[] tests = TestParser.parse(code);
         
@@ -78,5 +78,16 @@ public class TestParserTest {
 
         assertEquals(SourceVersion.RELEASE_4, tests[0].getSourceLevel());
         assertEquals("name:code\n:[fixed1\n, fixed2\n]:0:33:[43, 55]", tests[0].toString());
+    }
+
+    @Test
+    public void testSourceLevelOptionNew() {
+        String code = "%%TestCase name source-level=21\ncode\n%%=>\nfixed1\n%%=>\nfixed2\n";
+        TestCase[] tests = TestParser.parse(code);
+        
+        assertEquals(1, tests.length);
+
+        assertEquals(SourceVersion.RELEASE_21, tests[0].getSourceLevel());
+        assertEquals("name:code\n:[fixed1\n, fixed2\n]:0:32:[42, 54]", tests[0].toString());
     }
 }

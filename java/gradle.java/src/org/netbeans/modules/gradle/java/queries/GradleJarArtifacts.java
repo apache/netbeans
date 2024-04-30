@@ -423,7 +423,7 @@ public class GradleJarArtifacts implements ProjectArtifactsImplementation<Gradle
                 wasInitialized = artifacts != null;
                 List<ArtifactSpec> copy = this.artifacts;
                 artifacts = PENDING;
-                if (listeners == null && listeners.isEmpty()) {
+                if (listeners == null || listeners.isEmpty()) {
                     return;
                 }
                 if (refreshTask != null) {

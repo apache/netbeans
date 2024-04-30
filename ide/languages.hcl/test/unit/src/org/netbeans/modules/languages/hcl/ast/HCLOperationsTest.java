@@ -21,7 +21,7 @@ package org.netbeans.modules.languages.hcl.ast;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import static org.netbeans.modules.languages.hcl.ast.HCLExpression.parse;
+import static org.netbeans.modules.languages.hcl.ast.HCLExpressionTestSupport.*;
 
 /**
  *
@@ -35,6 +35,16 @@ public class HCLOperationsTest {
         assertTrue(exp instanceof HCLResolveOperation.Attribute);
         HCLResolveOperation.Attribute  resolve = (HCLResolveOperation.Attribute) exp;
         assertEquals("key", resolve.attr().id());
+        assertTrue(resolve.base() instanceof HCLVariable);
+        assertEquals("var", ((HCLVariable)resolve.base()).name().id());
+    }
+
+    @Test
+    public void testResolveIncomplete() throws Exception {
+        HCLExpression exp = parse("var.");
+        assertTrue(exp instanceof HCLResolveOperation.Attribute);
+        HCLResolveOperation.Attribute  resolve = (HCLResolveOperation.Attribute) exp;
+        assertNull(resolve.attr());
         assertTrue(resolve.base() instanceof HCLVariable);
         assertEquals("var", ((HCLVariable)resolve.base()).name().id());
     }
@@ -70,7 +80,36 @@ public class HCLOperationsTest {
         assertTrue(cond.condition() instanceof HCLArithmeticOperation.Binary);
         assertTrue(cond.trueValue() instanceof HCLLiteral.NumericLit);
         assertTrue(cond.falseValue() instanceof HCLVariable);
-        
-        
+    }
+
+    @Test
+    public void testConditionalSelf() throws Exception {
+        assertExpr("a?b:c");
+        assertExpr("a>b?1:0");
+    }
+
+    @Test
+    public void testBinaryOperationSelf() throws Exception {
+        assertExpr("a+b");
+        assertExpr("a-b");
+        assertExpr("a*b");
+        assertExpr("a/b");
+        assertExpr("a%b");
+
+        assertExpr("a||b");
+        assertExpr("a&&b");
+
+        assertExpr("a<b");
+        assertExpr("a>b");
+        assertExpr("a<=b");
+        assertExpr("a>=b");
+        assertExpr("a==b");
+        assertExpr("a!=b");
+    }
+
+    @Test
+    public void testUnaryOperationSelf() throws Exception {
+        assertExpr("!a");
+        assertExpr("-a");
     }
 }

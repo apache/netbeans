@@ -1049,9 +1049,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         if (fo != null && file.equals(FileUtil.toFile(fo))) {
             fo.delete();
         } else {
-            if (!file.delete()) {
-                throw new IOException();
-            }
+            Files.delete(file.toPath());
         }
     }    
 

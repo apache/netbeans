@@ -29,6 +29,7 @@ import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import javax.lang.model.element.Element;
@@ -92,10 +93,12 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
         this.vcsName = vcsName;
     }
 
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(AddPropertyCodeGenerator.class, "DN_AddProperty");
     }
 
+    @Override
     public void invoke() {
         Object o = component.getDocument().getProperty(Document.StreamDescriptionProperty);
 
@@ -216,6 +219,7 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
             r.lock();
             try {
                 NbDocument.runAtomicAsUser((StyledDocument) doc, new Runnable() {
+                    @Override
                     public void run() {
                         try {
                             GuardedSectionManager manager = GuardedSectionManager.getInstance((StyledDocument) doc);
@@ -256,6 +260,7 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
                 // code insertion to document passed
                 try {
                     JavaSource.forFileObject(file).runModificationTask(new Task<WorkingCopy>() {
+                        @Override
                         public void run(WorkingCopy workingCopy) throws Exception {
                             workingCopy.toPhase(Phase.RESOLVED);
 
@@ -352,11 +357,17 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
 
     public static final class Factory implements CodeGenerator.Factory {
 
+        private static final EnumSet<Tree.Kind> TREE_KINDS = EnumSet.copyOf(TreeUtilities.CLASS_TREE_KINDS);
+        static {
+            TREE_KINDS.remove(Tree.Kind.RECORD); // no fields in records
+        }
+
+        @Override
         public List<? extends CodeGenerator> create(Lookup context) {
             JTextComponent component = context.lookup(JTextComponent.class);
             CompilationController cc = context.lookup(CompilationController.class);
             TreePath path = context.lookup(TreePath.class);
-            while (path != null && !TreeUtilities.CLASS_TREE_KINDS.contains(path.getLeaf().getKind())) {
+            while (path != null && !TREE_KINDS.contains(path.getLeaf().getKind())) {
                 path = path.getParentPath();
             }
 

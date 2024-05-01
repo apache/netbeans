@@ -20,7 +20,7 @@ package org.netbeans.modules.java.editor.codegen;
 
 import java.awt.Dialog;
 import java.io.IOException;
-import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import javax.swing.JDialog;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
@@ -111,7 +111,7 @@ public class ToStringGeneratorTest extends NbTestCase {
             @Override
             public void run(CompilationController controller) throws Exception {
                 controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                Element typeElement = controller.getElements().getTypeElement("NewClass");
+                TypeElement typeElement = controller.getElements().getTypeElement("NewClass");
                 generator = ToStringGenerator.createToStringGenerator(component, controller, typeElement, false);
             }
 
@@ -178,7 +178,7 @@ public class ToStringGeneratorTest extends NbTestCase {
             @Override
             public void run(CompilationController controller) throws Exception {
                 controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                Element typeElement = controller.getElements().getTypeElement("NewClass");
+                TypeElement typeElement = controller.getElements().getTypeElement("NewClass");
                 generator = ToStringGenerator.createToStringGenerator(component, controller, typeElement, true);
             }
 
@@ -220,6 +220,48 @@ public class ToStringGeneratorTest extends NbTestCase {
                 + "\n"
                 + "}";
         assertEquals(expected, text);
+    }
+
+    public void testEnumToString() throws Exception {
+        String name = "NewEnum";
+        String code = ""
+                + "public enum NewEnum {\n"
+                + "    A, B;\n"
+                + "    private final String test1 = \"test\";\n"
+                + "|\n"
+                + "}";
+        String expected = ""
+                + "public enum NewEnum {\n"
+                + "    A, B;\n"
+                + "    private final String test1 = \"test\";\n"
+                + "\n"
+                + "    @Override\n"
+                + "    public String toString() {\n"
+                + "        return \"NewEnum{\" + \"ordinal=\" + ordinal() + \", name=\" + name() + \", test1=\" + test1 + '}';\n"
+                + "    }\n"
+                + "\n"
+                + "}";
+
+        runTest(name, code, expected);
+    }
+
+    public void testRecordToString() throws Exception {
+        String name = "NewRecord";
+        String code = ""
+                + "public record NewRecord(int x, int y) {\n"
+                + "|\n"
+                + "}";
+        String expected = ""
+                + "public record NewRecord(int x, int y) {\n"
+                + "\n"
+                + "    @Override\n"
+                + "    public String toString() {\n"
+                + "        return \"NewRecord{\" + \"x=\" + x + \", y=\" + y + '}';\n"
+                + "    }\n"
+                + "\n"
+                + "}";
+
+        runTest(name, code, expected);
     }
 
     public void testToStringExists() throws Exception {
@@ -264,7 +306,7 @@ public class ToStringGeneratorTest extends NbTestCase {
             @Override
             public void run(CompilationController controller) throws Exception {
                 controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                Element typeElement = controller.getElements().getTypeElement("NewClass");
+                TypeElement typeElement = controller.getElements().getTypeElement("NewClass");
                 generator = ToStringGenerator.createToStringGenerator(component, controller, typeElement, true);
             }
 
@@ -308,7 +350,7 @@ public class ToStringGeneratorTest extends NbTestCase {
             @Override
             public void run(CompilationController controller) throws Exception {
                 controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                Element typeElement = controller.getElements().getTypeElement("NewClass");
+                TypeElement typeElement = controller.getElements().getTypeElement("NewClass");
                 generator = ToStringGenerator.createToStringGenerator(component, controller, typeElement, true);
             }
 
@@ -342,6 +384,38 @@ public class ToStringGeneratorTest extends NbTestCase {
                 + "    }\n"
                 + "\n"
                 + "}";
+        assertEquals(expected, text);
+    }
+
+    private void runTest(String name, String code, String expected) throws Exception {
+        int caret = code.indexOf("|");
+        FileObject javaFile = FileUtil.createData(fo, name+".java");
+        GeneratorUtilsTest.writeIntoFile(javaFile, code.replace("|", ""));
+
+        JavaSource javaSource = JavaSource.forFileObject(javaFile);
+        assertNotNull("Created", javaSource);
+
+        Document doc = getDocuemnt(javaFile);
+
+        JTextArea component = new JTextArea(doc);
+        component.setCaretPosition(caret);
+
+        class Task implements org.netbeans.api.java.source.Task<CompilationController> {
+            private ToStringGenerator generator;
+            @Override
+            public void run(CompilationController controller) throws Exception {
+                controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                TypeElement typeElement = controller.getElements().getTypeElement(name);
+                generator = ToStringGenerator.createToStringGenerator(component, controller, typeElement, false);
+            }
+
+        }
+        Task task = new Task();
+        javaSource.runUserActionTask(task, false);
+        SwingUtilities.invokeAndWait(() -> task.generator.invoke());
+
+        Document document = component.getDocument();
+        String text = document.getText(0, document.getLength());
         assertEquals(expected, text);
     }
 

@@ -1022,6 +1022,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         if (err.getEndPosition().getOffset() < lineStartOffset || err.getStartPosition().getOffset() > lineEndOffset) {
                             continue;
                         }
+			int lineStart = NbDocument.findLineNumber(doc, startOffset);
+                        int errStartLine = NbDocument.findLineNumber(doc, err.getStartPosition().getOffset());
+                        if(errStartLine != lineStart){
+                            continue;
+                        }
                     }
                     Optional<Diagnostic> diag = diagnostics.stream().filter(d -> entry.getKey().equals(d.getCode().getLeft())).findFirst();
                     org.netbeans.api.lsp.Diagnostic.LazyCodeActions actions = err.getActions();

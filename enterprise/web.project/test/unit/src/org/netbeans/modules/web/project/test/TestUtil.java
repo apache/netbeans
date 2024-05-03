@@ -64,6 +64,7 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.test.MockLookup;
+import org.openide.util.test.TestFileUtils;
 import org.xml.sax.SAXException;
 
 /**
@@ -119,18 +120,7 @@ public final class TestUtil extends ProxyLookup {
      * Delete a file and all subfiles.
      */
     public static void deleteRec(File f) throws IOException {
-        if (f.isDirectory()) {
-            File[] kids = f.listFiles();
-            if (kids == null) {
-                throw new IOException("List " + f);
-            }
-            for (int i = 0; i < kids.length; i++) {
-                deleteRec(kids[i]);
-            }
-        }
-        if (!f.delete()) {
-            throw new IOException("Delete " + f);
-        }
+        TestFileUtils.deleteFile(f);
     }
     
     /**

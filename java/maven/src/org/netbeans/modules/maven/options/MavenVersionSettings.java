@@ -44,14 +44,14 @@ public final class MavenVersionSettings {
 
     static {
         // TODO update periodically - modifications might require unit test adjustments
-        String nb_version = "RELEASE200";
-        String nb_utilities_version = "14.0";
+        String nb_version = "RELEASE220";
+        String nb_utilities_version = "14.1";
         fallback = Map.ofEntries(
             entry(key("org.netbeans.api", "org-netbeans-modules-editor"), nb_version), // represents all other nb artifacts
-            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER), "3.11.0"),
+            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER), "3.13.0"),
             entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_RESOURCES), "3.3.1"),
-            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_FAILSAFE), "3.2.2"),
-            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE), "3.2.2"),
+            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_FAILSAFE), "3.2.5"),
+            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE), "3.2.5"),
             entry(key("org.apache.netbeans.utilities", "utilities-parent"), nb_utilities_version),
             entry(key("org.apache.netbeans.utilities", "nbm-maven-harness"), nb_utilities_version),
             entry(key("org.apache.netbeans.utilities", "nbm-shared"), nb_utilities_version),

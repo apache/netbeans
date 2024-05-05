@@ -289,6 +289,7 @@ public class TextDocumentSyncServerCapabilityHandler {
             }
 
             doc.putProperty(HyperlinkProviderImpl.class, true);
+            doc.putProperty(OccurrencesMarkProvider.class, true);
 
             String uri = Utils.toURI(file);
             String[] text = new String[1];

@@ -71,7 +71,7 @@ class MavenRefactoringPlugin implements RefactoringPlugin {
         if (query != null && !query.getBooleanValue(WhereUsedQuery.FIND_REFERENCES)) {
             return null;
         }
-        final AtomicReference<String> fqn = new AtomicReference<String>();
+        final AtomicReference<String> fqn = new AtomicReference<>();
         CancellableTask<CompilationController> info = new CancellableTask<CompilationController>() {
             @Override public void run(CompilationController info) throws Exception {
                 info.toPhase(JavaSource.Phase.RESOLVED);
@@ -98,7 +98,7 @@ class MavenRefactoringPlugin implements RefactoringPlugin {
             ModelOperation<POMModel> renameMainClassProp = (final POMModel model) -> {
                 Properties pr = model.getProject().getProperties();
                 ElementHandle e = handle.getElementHandle();
-                if (e != null) {
+                if (pr != null && e != null) {
                     String oldName = e.getBinaryName();
                     String newName = refactoring.getNewName();
 
@@ -131,7 +131,13 @@ class MavenRefactoringPlugin implements RefactoringPlugin {
             return null;
         }
 
-        JavaSource source = JavaSource.forFileObject(handle.getFileObject());
+        FileObject fo = handle.getFileObject();
+        JavaSource source;
+        if (fo != null) {
+            source = JavaSource.forFileObject(fo);
+        } else {
+            source = null;
+        }
         if (source != null) {
             try {
                 source.runUserActionTask(info, true);

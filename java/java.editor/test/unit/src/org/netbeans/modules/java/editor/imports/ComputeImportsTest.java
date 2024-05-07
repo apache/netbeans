@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -35,7 +34,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -303,6 +301,26 @@ public class ComputeImportsTest extends NbTestCase {
                                 "package mytest.test;\n"
                                 + "public record MyRecord() {\n"
                                 + "}\n")
+                ),
+                "",
+                "");
+    }
+
+    // https://github.com/apache/netbeans/issues/7073
+    public void testDontImportRootPackageMatchingMember() throws Exception {
+        doTest("test/Test",
+                "11",
+                Arrays.asList(
+                        new FileData("test/Test.java",
+                                "package test;\n" +
+                                "import java.util.List;\n" +
+                                "public class Test {\n" +
+                                "    public static class SomeClass {\n" +
+                                "        public static Object java(java.util.Map<String, String> value) {\n" +
+                                "            return value;\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "}")
                 ),
                 "",
                 "");

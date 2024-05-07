@@ -141,7 +141,7 @@ import org.openide.util.Exceptions;
  */
 public final class GeneratorUtilities {
 
-    private WorkingCopy copy;
+    private final WorkingCopy copy;
 
     private  GeneratorUtilities(WorkingCopy copy) {
         this.copy = copy;
@@ -1738,7 +1738,8 @@ public final class GeneratorUtilities {
         if (isImplement && clazz.getKind().isInterface()) {
             mt = make.addModifiersModifier(mt, Modifier.DEFAULT);                                
         }
-        boolean isAbstract = element.getModifiers().contains(Modifier.ABSTRACT);
+        boolean replaceable = copy.getTrees().getTree(clazz).getKind() == Kind.RECORD && copy.getElementUtilities().isSynthetic(element);
+        boolean isAbstract = element.getModifiers().contains(Modifier.ABSTRACT) || replaceable;
         if (isImplement || clazz.getKind().isClass() && (!isAbstract || !clazz.getModifiers().contains(Modifier.ABSTRACT))) {
             try {
                 bodyTemplate = "{" + readFromTemplate(isAbstract ? GENERATED_METHOD_BODY : OVERRIDDEN_METHOD_BODY, createBindings(clazz, element)) + "\n}"; //NOI18N
@@ -1938,6 +1939,7 @@ public final class GeneratorUtilities {
         if (clazz != null) {
             bindings.put(CLASS_NAME, clazz.getQualifiedName().toString());
             bindings.put(SIMPLE_CLASS_NAME, clazz.getSimpleName().toString());
+            bindings.put(CLASS_KIND, clazz.getKind().toString());
         }
         if (element != null) {
             bindings.put(METHOD_NAME, element.getSimpleName().toString());
@@ -1959,7 +1961,11 @@ public final class GeneratorUtilities {
                 default:
                     value = "null"; //NOI18N
             }
-            bindings.put(DEFAULT_RETURN_TYPE_VALUE, value);
+            if (clazz != null && clazz.getKind() == ElementKind.RECORD) {
+                bindings.put(DEFAULT_RETURN_TYPE_VALUE, element.getSimpleName());
+            } else {
+                bindings.put(DEFAULT_RETURN_TYPE_VALUE, value);
+            }
         }
         if (clazz != null && element != null) {
             StringBuilder sb = new StringBuilder();
@@ -2205,6 +2211,7 @@ public final class GeneratorUtilities {
     private static final String METHOD_NAME = "method_name"; //NOI18N
     private static final String CLASS_NAME = "class_name"; //NOI18N
     private static final String SIMPLE_CLASS_NAME = "simple_class_name"; //NOI18N
+    private static final String CLASS_KIND = "class_kind"; //NOI18N
     private static final String SCRIPT_ENGINE_ATTR = "javax.script.ScriptEngine"; //NOI18N    
     private static final String STRING_OUTPUT_MODE_ATTR = "com.sun.script.freemarker.stringOut"; //NOI18N
     private static ScriptEngineManager manager;
@@ -2214,20 +2221,14 @@ public final class GeneratorUtilities {
         Charset sourceEnc = FileEncodingQuery.getEncoding(template);
 
         ScriptEngine eng = engine(template);
-        Bindings bind = eng.getContext().getBindings(ScriptContext.ENGINE_SCOPE);
-        bind.putAll(values);
+        ScriptContext context = eng.getContext();
+        context.getBindings(ScriptContext.ENGINE_SCOPE).putAll(values);
+        context.setAttribute(FileObject.class.getName(), template, ScriptContext.ENGINE_SCOPE);
+        context.setAttribute(ScriptEngine.FILENAME, template.getNameExt(), ScriptContext.ENGINE_SCOPE);
+        context.setAttribute(STRING_OUTPUT_MODE_ATTR, true, ScriptContext.ENGINE_SCOPE);
 
-        Reader is = null;
-        try {
-            eng.getContext().setAttribute(FileObject.class.getName(), template, ScriptContext.ENGINE_SCOPE);
-            eng.getContext().setAttribute(ScriptEngine.FILENAME, template.getNameExt(), ScriptContext.ENGINE_SCOPE);
-            eng.getContext().setAttribute(STRING_OUTPUT_MODE_ATTR, true, ScriptContext.ENGINE_SCOPE);
-            is = new InputStreamReader(template.getInputStream(), sourceEnc);
+        try (Reader is = new InputStreamReader(template.getInputStream(), sourceEnc)) {
             return (String)eng.eval(is);
-        } finally {
-            if (is != null) {
-                is.close();
-            }
         }
     }
 

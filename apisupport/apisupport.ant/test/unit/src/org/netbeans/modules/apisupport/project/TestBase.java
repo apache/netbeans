@@ -437,7 +437,7 @@ import org.openide.util.test.TestFileUtils;
 
     @Deprecated
     public static void delete(File f) throws IOException {
-        TestUtil.delete(f);
+        TestFileUtils.deleteFile(f);
     }
     
     private static File getTestNBRoot() {

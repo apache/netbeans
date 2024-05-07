@@ -41,6 +41,10 @@ import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -991,20 +995,18 @@ public abstract class NbTestCase extends TestCase implements NbTest {
     
     // private method for deleting a file/directory (and all its subdirectories/files)
     private static void deleteFile(File file) throws IOException {
-        if (file.isDirectory() && file.equals(file.getCanonicalFile())) {
-            // file is a directory - delete sub files first
-            File files[] = file.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                deleteFile(files[i]);
+        Files.walkFileTree(file.toPath(), new SimpleFileVisitor<java.nio.file.Path>() {
+            @Override
+            public FileVisitResult visitFile(java.nio.file.Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
             }
-            
-        }
-        // file is a File :-)
-        boolean result = file.delete();
-        if (result == false ) {
-            // a problem has appeared
-            throw new IOException("Cannot delete file, file = "+file.getPath());
-        }
+            @Override
+            public FileVisitResult postVisitDirectory(java.nio.file.Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
     }
     
     // private method for deleting every subfiles/subdirectories of a file object

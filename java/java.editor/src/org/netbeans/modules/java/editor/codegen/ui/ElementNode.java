@@ -155,7 +155,7 @@ public class ElementNode extends AbstractNode {
         private List<Description> subs; 
         private String htmlHeader;
         private boolean isSelected;
-        private boolean isSelectable;
+        private final boolean isSelectable;
         
         public static Description create(List<Description> subs) {
             return new Description("<root>", null, null, subs, null, false, false); // NOI18N
@@ -168,6 +168,7 @@ public class ElementNode extends AbstractNode {
                 case ANNOTATION_TYPE:
                 case CLASS:
                 case ENUM:
+                case RECORD:
                 case INTERFACE:
                     htmlHeader = createHtmlHeader(deprecated, (TypeElement)element);
                     break;
@@ -462,6 +463,7 @@ public class ElementNode extends AbstractNode {
         
         private static class DescriptionComparator implements Comparator<Description> {
             
+            @Override
             public int compare(Description d1, Description d2) {
                 
                 if ( k2i(d1.elementHandle.getKind()) != k2i(d2.elementHandle.getKind()) ) {

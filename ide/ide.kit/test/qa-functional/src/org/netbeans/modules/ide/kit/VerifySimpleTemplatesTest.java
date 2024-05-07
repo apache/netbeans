@@ -21,7 +21,10 @@ package org.netbeans.modules.ide.kit;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.Test;
@@ -34,7 +37,11 @@ import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 
 public class VerifySimpleTemplatesTest extends NbTestCase {
-    private static Logger LOG = Logger.getLogger(VerifySimpleTemplatesTest.class.getName());
+    private static final Logger LOG = Logger.getLogger(VerifySimpleTemplatesTest.class.getName());
+
+    private static final Set<String> templateProblemList = new HashSet<>(Arrays.asList(
+            "Templates/Other/HintSample.test" // TODO degrades test stability "FSException: Cannot get shared access"
+    ));
 
     public VerifySimpleTemplatesTest(String name) {
         super(name);
@@ -69,6 +76,10 @@ public class VerifySimpleTemplatesTest extends NbTestCase {
 
             for (DataObject t : simpleTemplates) {
                 LOG.log(Level.WARNING, "Processing {0}", t.getPrimaryFile().getPath());
+                if (templateProblemList.contains(t.getPrimaryFile().getPath())) {
+                    LOG.log(Level.WARNING, "template in ignore set, skipping.");
+                    continue;
+                }
                 DataObject generated = t.createFromTemplate(scratch, "Test" + ++cnt);
                 Editable edit = generated.getLookup().lookup(Editable.class);
                 if (edit != null) {

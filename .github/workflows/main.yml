@@ -261,7 +261,7 @@ jobs:
 
       - name: platform/masterfs.macosx
         if: contains(matrix.os, 'macos') && success()
-        run: ant $OPTS -f platform/masterfs.macosx test
+        run: .github/retry.sh ant $OPTS -f platform/masterfs.macosx test
 
       - name: Commit Validation tests
         run: .github/retry.sh ant $OPTS -Dcluster.config=$CLUSTER_CONFIG commit-validation

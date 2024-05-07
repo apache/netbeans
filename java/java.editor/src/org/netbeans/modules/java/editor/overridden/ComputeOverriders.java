@@ -19,8 +19,6 @@
 
 package org.netbeans.modules.java.editor.overridden;
 
-import java.awt.Point;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
@@ -58,7 +56,6 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -553,22 +550,7 @@ public class ComputeOverriders {
             Method dependenciesMethod = clazz.getDeclaredMethod(method);
 
             return (Map<URL, List<URL>>) dependenciesMethod.invoke(instance);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(GoToImplementation.class.getName()).log(Level.FINE, null, ex);
-            return null;
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(GoToImplementation.class.getName()).log(Level.FINE, null, ex);
-            return null;
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(GoToImplementation.class.getName()).log(Level.FINE, null, ex);
-            return null;
-        } catch (NoSuchMethodException ex) {
-            Logger.getLogger(GoToImplementation.class.getName()).log(Level.FINE, null, ex);
-            return null;
-        } catch (SecurityException ex) {
-            Logger.getLogger(GoToImplementation.class.getName()).log(Level.FINE, null, ex);
-            return null;
-        } catch (ClassCastException ex) {
+        } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException | ClassCastException ex) {
             Logger.getLogger(GoToImplementation.class.getName()).log(Level.FINE, null, ex);
             return null;
         }
@@ -604,22 +586,7 @@ public class ComputeOverriders {
             Method peersMethod = clazz.getDeclaredMethod(method);
 
             return (Map<URL, List<URL>>) peersMethod.invoke(instance);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(GoToImplementation.class.getName()).log(Level.FINE, null, ex);
-            return null;
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(GoToImplementation.class.getName()).log(Level.FINE, null, ex);
-            return null;
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(GoToImplementation.class.getName()).log(Level.FINE, null, ex);
-            return null;
-        } catch (NoSuchMethodException ex) {
-            Logger.getLogger(GoToImplementation.class.getName()).log(Level.FINE, null, ex);
-            return null;
-        } catch (SecurityException ex) {
-            Logger.getLogger(GoToImplementation.class.getName()).log(Level.FINE, null, ex);
-            return null;
-        } catch (ClassCastException ex) {
+        } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException | ClassCastException ex) {
             Logger.getLogger(GoToImplementation.class.getName()).log(Level.FINE, null, ex);
             return null;
         }

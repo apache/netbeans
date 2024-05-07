@@ -20,6 +20,7 @@ package org.netbeans.api.java.source;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Scope;
+import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacScope;
@@ -169,7 +170,9 @@ public final class ElementUtilities {
      *  @return true if and only if the given element is synthetic, false otherwise
      */
     public boolean isSynthetic(Element element) {
-        return (((Symbol) element).flags() & Flags.SYNTHETIC) != 0 || (((Symbol) element).flags() & Flags.GENERATEDCONSTR) != 0;
+        return (((Symbol) element).flags() & Flags.SYNTHETIC) != 0
+            || (((Symbol) element).flags() & Flags.GENERATEDCONSTR) != 0 
+            || (((Symbol) element).flags() & Flags.GENERATED_MEMBER) != 0;
     }
     
     /**Returns true if the given module is open.
@@ -709,6 +712,8 @@ public final class ElementUtilities {
         DeclaredType dt = (DeclaredType)type.asType();
         Types types = JavacTypes.instance(ctx);
         Set<String> typeStrings = new HashSet<>();
+        Tree.Kind kind = info.getTrees().getTree(type).getKind();
+
         for (ExecutableElement ee : ElementFilter.methodsIn(info.getElements().getAllMembers(type))) {
             
             TypeMirror methodType = types.erasure(types.asMemberOf(dt, ee));
@@ -716,11 +721,14 @@ public final class ElementUtilities {
             if (typeStrings.contains(methodTypeString)) {
                 continue;
             }
+            // javac generated record members disappear if overridden
+            boolean replaceable = kind == Tree.Kind.RECORD && isSynthetic(ee);
+
             Set<Modifier> set = EnumSet.copyOf(notOverridable);                
-            set.removeAll(ee.getModifiers());                
+            set.removeAll(ee.getModifiers());
             if (set.size() == notOverridable.size()
                     && !overridesPackagePrivateOutsidePackage(ee, type) //do not offer package private methods in case they're from different package
-                    && !isOverridden(ee, type)) {
+                    && (replaceable || !isOverridden(ee, type))) {
                 overridable.add(ee);
                 if (ee.getModifiers().contains(Modifier.ABSTRACT)) {
                     typeStrings.add(methodTypeString);

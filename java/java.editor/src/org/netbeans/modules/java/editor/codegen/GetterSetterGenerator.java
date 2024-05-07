@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.editor.codegen;
 
+import com.sun.source.tree.Tree;
 import java.awt.Dialog;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -62,6 +63,11 @@ import org.openide.util.lookup.Lookups;
  */
 public class GetterSetterGenerator implements CodeGenerator {
 
+    private static final EnumSet<Tree.Kind> TREE_KINDS = EnumSet.copyOf(TreeUtilities.CLASS_TREE_KINDS);
+    static {
+        TREE_KINDS.remove(Tree.Kind.RECORD); // no getters/setters for records
+    }
+
     public static class Factory implements CodeGenerator.Factory {
         
         private static final String ERROR = "<error>"; //NOI18N
@@ -76,7 +82,7 @@ public class GetterSetterGenerator implements CodeGenerator {
             }
             CodeStyle codeStyle = CodeStyle.getDefault(component.getDocument());
             TreePath path = context.lookup(TreePath.class);
-            path = controller.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, path);
+            path = controller.getTreeUtilities().getPathElementOfKind(TREE_KINDS, path);
             if (path == null) {
                 return ret;
             }
@@ -214,7 +220,7 @@ public class GetterSetterGenerator implements CodeGenerator {
                                 copy.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                                 Element e = description.getElementHandle().resolve(copy);
                                 TreePath path = e != null ? copy.getTrees().getPath(e) : copy.getTreeUtilities().pathFor(caretOffset);
-                                path = copy.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, path);
+                                path = copy.getTreeUtilities().getPathElementOfKind(TREE_KINDS, path);
                                 if (path == null) {
                                     String message = NbBundle.getMessage(GetterSetterGenerator.class, "ERR_CannotFindOriginalClass"); //NOI18N
                                     org.netbeans.editor.Utilities.setStatusBoldText(component, message);

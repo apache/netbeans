@@ -67,12 +67,14 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
@@ -95,6 +97,7 @@ import org.openide.util.NbBundle;
 public class EqualsHashCodeGenerator implements CodeGenerator {
 
     private static final String ERROR = "<error>"; //NOI18N
+    private static final Set<ElementKind> TREE_KINDS = EnumSet.of(ElementKind.CLASS, ElementKind.RECORD);
 
     public static class Factory implements CodeGenerator.Factory {
         
@@ -152,7 +155,7 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
     }
     
     static EqualsHashCodeGenerator createEqualsHashCodeGenerator(JTextComponent component, CompilationController cc, Element el) throws IOException {
-        if (el.getKind() != ElementKind.CLASS) {
+        if (!TREE_KINDS.contains(el.getKind())) {
             return null;
         }
         //#125114: ignore anonymous innerclasses:
@@ -203,12 +206,15 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
                 return super.visitMemberSelect(sel, what);
             }
         }
+        Trees tree = cc.getTrees();
         for (ExecutableElement e : methods) {
             if (e == null) {
                 continue;
             }
-            Trees tree = cc.getTrees();
             TreePath path = tree.getPath(e);
+            if (path == null) {
+                continue;
+            }
             Used used = new Used();
             used.scan(path, field);
             if (used.found) {
@@ -232,7 +238,7 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
         if (el == null) {
             return ret;
         }
-        if (type == null || type.getKind() != ElementKind.CLASS) {
+        if (type == null || !TREE_KINDS.contains(type.getKind())) {
             return ret;
         }
 
@@ -266,6 +272,8 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
             return ret;
         }
         
+        Elements elements = compilationInfo.getElements();
+        ElementUtilities elementUtils = compilationInfo.getElementUtilities();
         TypeElement clazz = (TypeElement)type;
         for (Element ee : type.getEnclosedElements()) {
             if (stop != null && stop.isCanceled()) {
@@ -276,11 +284,11 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
             }
             ExecutableElement method = (ExecutableElement)ee;
             
-            if (compilationInfo.getElements().overrides(method, hashCode, clazz)) {
+            if (!elementUtils.isSynthetic(method) && elements.overrides(method, hashCode, clazz)) {
                 ret[1] = method;
             }
             
-            if (compilationInfo.getElements().overrides(method, equals, clazz)) {
+            if (!elementUtils.isSynthetic(method) && elements.overrides(method, equals, clazz)) {
                 ret[0] = method;
             }
         }
@@ -410,9 +418,7 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
                 if (!dt.getTypeArguments().isEmpty()) {
                     WildcardType wt = wc.getTypes().getWildcardType(null, null);
                     TypeMirror[] typeArgs = new TypeMirror[dt.getTypeArguments().size()];
-                    for (int i = 0; i < typeArgs.length; i++) {
-                        typeArgs[i] = wt;
-                    }
+                    Arrays.fill(typeArgs, wt);
                     dt = dt.getEnclosingType().getKind() == TypeKind.DECLARED
                             ? wc.getTypes().getDeclaredType((DeclaredType)dt.getEnclosingType(), te, typeArgs)
                             : wc.getTypes().getDeclaredType(te, typeArgs);

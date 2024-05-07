@@ -42,10 +42,12 @@ import java.util.List;
 import java.util.Set;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
+import javax.lang.model.util.ElementFilter;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.source.CompilationController;
@@ -111,16 +113,32 @@ public class ToStringGenerator implements CodeGenerator {
     private final boolean supportsStringBuilder;
 
     @CheckForNull
-    static ToStringGenerator createToStringGenerator(JTextComponent component, CompilationController controller, Element typeElement, boolean useStringBuilder) {
+    static ToStringGenerator createToStringGenerator(JTextComponent component, CompilationController controller, TypeElement typeElement, boolean useStringBuilder) {
         List<ElementNode.Description> descriptions = new ArrayList<>();
+
+        // add ordinal() and name() for enums
+        if (typeElement.getKind() == ElementKind.ENUM) {
+            Element enumElement = controller.getTypes().asElement(typeElement.getSuperclass());
+            for (Element element : ElementFilter.methodsIn(enumElement.getEnclosedElements())) {
+                Name name = element.getSimpleName();
+                if (name.contentEquals("ordinal")) { //NOI18N
+                    descriptions.add(0, ElementNode.Description.create(controller, element, null, true, true));
+                } else if (name.contentEquals("name")) { //NOI18N
+                    descriptions.add(ElementNode.Description.create(controller, element, null, true, true));
+                }
+            }
+        }
+
         for (Element element : typeElement.getEnclosedElements()) {
             switch (element.getKind()) {
                 case METHOD:
-                    if (element.getSimpleName().contentEquals("toString") && ((ExecutableElement) element).getParameters().isEmpty()) { //NOI18N
+                    if (element.getSimpleName().contentEquals("toString") && ((ExecutableElement) element).getParameters().isEmpty() //NOI18N
+                            && !controller.getElementUtilities().isSynthetic(element)) { // e.g record
                         return null;
                     }
                     break;
                 case FIELD:
+//                case RECORD_COMPONENT: // record components will show up as fields for some reason
                     if (!ERROR.contentEquals(element.getSimpleName()) && !element.getModifiers().contains(Modifier.STATIC)) {
                         descriptions.add(ElementNode.Description.create(controller, element, null, true, true));
                     }
@@ -189,9 +207,9 @@ public class ToStringGenerator implements CodeGenerator {
                             org.netbeans.editor.Utilities.setStatusBoldText(component, message);
                         } else {
                             ClassTree cls = (ClassTree) path.getLeaf();
-                            ArrayList<VariableElement> fields = new ArrayList<>();
+                            List<Element> fields = new ArrayList<>();
                             for (ElementHandle<? extends Element> elementHandle : panel.getVariables()) {
-                                VariableElement field = (VariableElement) elementHandle.resolve(copy);
+                                Element field = elementHandle.resolve(copy);
                                 if (field == null) {
                                     return;
                                 }
@@ -209,7 +227,7 @@ public class ToStringGenerator implements CodeGenerator {
         }
     }
 
-    public static MethodTree createToStringMethod(WorkingCopy wc, Iterable<? extends VariableElement> fields, String typeName, boolean useStringBuilder) {
+    public static MethodTree createToStringMethod(WorkingCopy wc, Iterable<? extends Element> fields, String typeName, boolean useStringBuilder) {
         TreeMaker make = wc.getTreeMaker();
         Set<Modifier> mods = EnumSet.of(Modifier.PUBLIC);
         List<AnnotationTree> annotations = new LinkedList<>();
@@ -224,7 +242,7 @@ public class ToStringGenerator implements CodeGenerator {
         return make.Method(modifiers, "toString", make.Identifier("String"), Collections.<TypeParameterTree>emptyList(), Collections.<VariableTree>emptyList(), Collections.<ExpressionTree>emptyList(), body, null); //NOI18N
     }
 
-    private static BlockTree createToStringMethodBody(TreeMaker make, String typeName, Iterable<? extends VariableElement> fields, boolean useStringBuilder) {
+    private static BlockTree createToStringMethodBody(TreeMaker make, String typeName, Iterable<? extends Element> fields, boolean useStringBuilder) {
         List<StatementTree> statements;
         if (useStringBuilder) {
             statements = createToStringMethodBodyWithStringBuilder(make, typeName, fields);
@@ -235,24 +253,24 @@ public class ToStringGenerator implements CodeGenerator {
         return body;
     }
 
-    private static List<StatementTree> createToStringMethodBodyWithPlusOperator(TreeMaker make, String typeName, Iterable<? extends VariableElement> fields) {
+    private static List<StatementTree> createToStringMethodBodyWithPlusOperator(TreeMaker make, String typeName, Iterable<? extends Element> fields) {
         ExpressionTree exp = make.Literal(typeName + '{');
         boolean first = true;
-        for (VariableElement variableElement : fields) {
+        for (Element variableElement : fields) {
             StringBuilder sb = new StringBuilder();
             if (!first) {
                 sb.append(", ");
             }
             sb.append(variableElement.getSimpleName().toString()).append('=');
             exp = make.Binary(Tree.Kind.PLUS, exp, make.Literal(sb.toString()));
-            exp = make.Binary(Tree.Kind.PLUS, exp, make.Identifier(variableElement.getSimpleName()));
+            exp = make.Binary(Tree.Kind.PLUS, exp, makeExpression(make, variableElement));
             first = false;
         }
         StatementTree stat = make.Return(make.Binary(Tree.Kind.PLUS, exp, make.Literal('}'))); //NOI18N
         return Collections.singletonList(stat);
     }
 
-    private static List<StatementTree> createToStringMethodBodyWithStringBuilder(TreeMaker make, String typeName, Iterable<? extends VariableElement> fields) {
+    private static List<StatementTree> createToStringMethodBodyWithStringBuilder(TreeMaker make, String typeName, Iterable<? extends Element> fields) {
         List<StatementTree> statements = new ArrayList<>();
         final ExpressionTree stringBuilder = make.QualIdent(StringBuilder.class.getName());
         NewClassTree newStringBuilder = make.NewClass(null, Collections.emptyList(), stringBuilder, Collections.emptyList(), null);
@@ -265,7 +283,7 @@ public class ToStringGenerator implements CodeGenerator {
                 Collections.singletonList(make.Literal(typeName + '{'))
         )));
         boolean first = true;
-        for (VariableElement variableElement : fields) {
+        for (Element variableElement : fields) {
             StringBuilder sb = new StringBuilder();
             if (!first) {
                 sb.append(", "); // NOI18N
@@ -278,7 +296,7 @@ public class ToStringGenerator implements CodeGenerator {
                             make,
                             varName,
                             Collections.singletonList(make.Literal(sb.toString()))),
-                    Collections.singletonList(make.Identifier(variableElement.getSimpleName())))
+                    Collections.singletonList(makeExpression(make, variableElement)))
             ));
             first = false;
         }
@@ -301,6 +319,12 @@ public class ToStringGenerator implements CodeGenerator {
                 make.MemberSelect(expression, "append"), // NOI18N
                 arguments
         );
+    }
+
+    private static ExpressionTree makeExpression(TreeMaker make, Element element) {
+        return element.getKind() == ElementKind.METHOD
+                ? make.MethodInvocation(Collections.emptyList(), make.Identifier(element.getSimpleName()), Collections.emptyList())
+                : make.Identifier(element.getSimpleName());
     }
 
 }

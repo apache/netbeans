@@ -23,6 +23,7 @@ import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
@@ -353,8 +354,8 @@ public final class TemplateOperation implements Runnable {
                 args.add("--use-defaults");
 
                 try (
-                        var out = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, false));
-                        var err = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, false))
+                        OutputStream out = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, false));
+                        OutputStream err = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, false))
                 ) {
                     BuildLauncher gradleInit = pconn.newBuild().forTasks(args.toArray(new String[0]));
                     if (GradleSettings.getDefault().isOffline()) {
@@ -488,7 +489,7 @@ public final class TemplateOperation implements Runnable {
         final List<String> importantFiles;
 
         public PreloadProject(File dir) {
-            this(dir, List.of());
+            this(dir, Collections.emptyList());
         }
 
         public PreloadProject(File dir, List<String> importantFiles) {

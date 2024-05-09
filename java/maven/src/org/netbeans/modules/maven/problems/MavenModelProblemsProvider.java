@@ -74,6 +74,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 import org.netbeans.modules.maven.InternalActionDelegate;
+import org.netbeans.modules.maven.problems.SanityBuildAction.SanityBuildNeededChecker;
 import org.openide.util.Pair;
 
 /**
@@ -85,9 +86,10 @@ import org.openide.util.Pair;
 @ProjectServiceProvider(service = { 
         ProjectProblemsProvider.class, 
         InternalActionDelegate.class,
+        SanityBuildNeededChecker.class,
     }, projectType = "org-netbeans-modules-maven"
 )
-public class MavenModelProblemsProvider implements ProjectProblemsProvider, InternalActionDelegate {
+public class MavenModelProblemsProvider implements ProjectProblemsProvider, InternalActionDelegate, SanityBuildNeededChecker {
     static final RequestProcessor RP  = new RequestProcessor(MavenModelProblemsProvider.class);
     private static final Logger LOG = Logger.getLogger(MavenModelProblemsProvider.class.getName());
     

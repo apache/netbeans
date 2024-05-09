@@ -59,16 +59,12 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.lsp.CodeAction;
 import org.netbeans.api.lsp.Command;
 import org.netbeans.api.lsp.Range;
-import org.netbeans.api.lsp.TextDocumentEdit;
-import org.netbeans.api.lsp.TextEdit;
-import org.netbeans.api.lsp.WorkspaceEdit;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.editor.codegen.CodeGenerator;
@@ -83,7 +79,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.Union2;
 import org.openide.util.lookup.ServiceProviders;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -212,7 +207,7 @@ public class MicronautDataEndpointGenerator implements CodeActionProvider, Comma
                     } else {
                         List<String> repositoryNames = Arrays.asList(gson.fromJson(data.get(REPOSITORIES), String[].class));
                         String controllerId = data.getAsJsonPrimitive(CONTROLLER_ID).getAsString();
-                        future.complete(modify2Edit(js, getTask(offset, repositoryNames, selected, controllerId)));
+                        future.complete(Utils.modify2Edit(js, getTask(offset, repositoryNames, selected, controllerId)));
                     }
                 }
             } catch (IOException ex) {
@@ -279,23 +274,6 @@ public class MicronautDataEndpointGenerator implements CodeActionProvider, Comma
                 }
             }
         };
-    }
-
-    private static WorkspaceEdit modify2Edit(JavaSource js, Task<WorkingCopy> task) throws IOException {
-        FileObject[] file = new FileObject[1];
-        ModificationResult changes = js.runModificationTask(wc -> {
-            task.run(wc);
-            file[0] = wc.getFileObject();
-        });
-        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(file[0]);
-        if (diffs != null) {
-            List<TextEdit> edits = new ArrayList<>();
-            for (ModificationResult.Difference diff : diffs) {
-                edits.add(new TextEdit(diff.getStartPosition().getOffset(), diff.getEndPosition().getOffset(), diff.getNewText()));
-            }
-            return new WorkspaceEdit(Collections.singletonList(Union2.createFirst(new TextDocumentEdit(file[0].toURI().toString(), edits))));
-        }
-        return null;
     }
 
     @NbBundle.Messages({

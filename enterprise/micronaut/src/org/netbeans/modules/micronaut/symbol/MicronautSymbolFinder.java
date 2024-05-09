@@ -256,7 +256,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
         return null;
     }
 
-    private static String getEndpointMethod(TypeElement te) {
+    public static String getEndpointMethod(TypeElement te) {
         for (AnnotationMirror ann : te.getAnnotationMirrors()) {
             Element el = ann.getAnnotationType().asElement();
             if ("io.micronaut.http.annotation.HttpMethodMapping".contentEquals(((TypeElement) el).getQualifiedName())) {
@@ -345,7 +345,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
         }
     }
 
-    private static class MthIterator implements Iterator<ExecutableElement> {
+    public static class MthIterator implements Iterator<ExecutableElement> {
 
         private final ExecutableElement ee;
         private final Elements elements;
@@ -353,7 +353,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
         private boolean createIt = false;
         private Iterator<ExecutableElement> it = null;
 
-        private MthIterator(Element e, Elements elements, Types types) {
+        public MthIterator(Element e, Elements elements, Types types) {
             this.ee = e != null && e.getKind() == ElementKind.METHOD ? (ExecutableElement) e : null;
             this.elements = elements;
             this.types = types;

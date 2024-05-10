@@ -24,6 +24,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -60,11 +61,19 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.ModificationResult;
+import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TypeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.api.lsp.TextDocumentEdit;
+import org.netbeans.api.lsp.TextEdit;
+import org.netbeans.api.lsp.WorkspaceEdit;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
+import org.openide.filesystems.FileObject;
+import org.openide.util.Union2;
 import org.openide.util.WeakListeners;
 
 /**
@@ -347,6 +356,23 @@ public final class Utils {
             options.add(TypeUtilities.TypeNameOptions.PRINT_AS_VARARG);
         }
         return info.getTypeUtilities().getTypeName(type, options.toArray(new TypeUtilities.TypeNameOptions[0]));
+    }
+
+    public static WorkspaceEdit modify2Edit(JavaSource js, Task<WorkingCopy> task) throws IOException {
+        FileObject[] file = new FileObject[1];
+        ModificationResult changes = js.runModificationTask(wc -> {
+            task.run(wc);
+            file[0] = wc.getFileObject();
+        });
+        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(file[0]);
+        if (diffs != null) {
+            List<TextEdit> edits = new ArrayList<>();
+            for (ModificationResult.Difference diff : diffs) {
+                edits.add(new TextEdit(diff.getStartPosition().getOffset(), diff.getEndPosition().getOffset(), diff.getNewText()));
+            }
+            return new WorkspaceEdit(Collections.singletonList(Union2.createFirst(new TextDocumentEdit(file[0].toURI().toString(), edits))));
+        }
+        return null;
     }
 
     private static ExecutableElement getEndpointMethodFor(CompilationInfo info, List<ExecutableElement> methods, DeclaredType repositoryType, ExecutableElement delegateMethod, String id) {

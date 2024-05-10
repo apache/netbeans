@@ -612,6 +612,10 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         if (edit) {
             const wsEdit = await (await client).protocol2CodeConverter.asWorkspaceEdit(edit as ls.WorkspaceEdit);
             await workspace.applyEdit(wsEdit);
+            for (const entry of wsEdit.entries()) {
+                const file = vscode.Uri.parse(entry[0].fsPath);
+                await vscode.window.showTextDocument(file, { preview: false });
+            }
             await commands.executeCommand('workbench.action.focusActiveEditorGroup');
         }
     }));

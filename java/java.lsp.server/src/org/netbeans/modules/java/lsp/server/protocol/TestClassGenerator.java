@@ -104,7 +104,7 @@ public final class TestClassGenerator extends CodeActionsProvider {
         if (info == null) {
             return Collections.emptyList();
         }
-        info.toPhase(JavaSource.Phase.RESOLVED);
+        info.toPhase(JavaSource.Phase.PARSED);
         int offset = getOffset(info, params.getRange().getStart());
         TreePath tp = info.getTreeUtilities().pathFor(offset);
         if (!TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {

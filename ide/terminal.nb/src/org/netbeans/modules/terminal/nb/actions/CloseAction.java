@@ -34,7 +34,6 @@ import org.openide.util.Lookup;
 @ActionRegistration(displayName = "#CTL_Close", lazy = true) //NOI18N
 @ActionReferences({
     @ActionReference(path = ActionFactory.ACTIONS_PATH, name = "CloseAction"), //NOI18N
-    @ActionReference(path = "Shortcuts", name = "CS-W")
 })
 public final class CloseAction extends TerminalAction {
 

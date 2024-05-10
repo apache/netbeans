@@ -710,6 +710,7 @@ public class AddDbConnectionToVault implements ActionListener {
                     put("Username", context.getUser()); //NOI18N
                     put("Password", item.password); //NOI18N
                     put("OCID", (String) context.getConnectionProperties().get("OCID")); //NOI18N
+                    put("CompartmentOCID", (String) context.getConnectionProperties().get("CompartmentOCID")); //NOI18N
                     put("wallet_Password", UUID.randomUUID().toString()); //NOI18N
                 }
             };
@@ -953,7 +954,7 @@ public class AddDbConnectionToVault implements ActionListener {
         private String flatName;
 
         private FlatCompartmentItem(Compartment ociComp) {
-            super(OCID.of(ociComp.getId(), "Compartment"), ociComp.getName()); // NOI18N
+            super(OCID.of(ociComp.getId(), "Compartment"), ociComp.getCompartmentId(), ociComp.getName()); // NOI18N
             setDescription(ociComp.getDescription());
             parentId = OCID.of(ociComp.getCompartmentId(), "Compartment"); // NOI18N
         }
@@ -991,6 +992,7 @@ public class AddDbConnectionToVault implements ActionListener {
             }
             return projects.stream()
                     .map(p -> new DevopsProjectItem(OCID.of(p.getId(), "DevopsProject"), // NOI18N
+                            compartmentId,
                     p.getName()))
                     .collect(Collectors.toMap(DevopsProjectItem::getName, Function.identity()));
         }

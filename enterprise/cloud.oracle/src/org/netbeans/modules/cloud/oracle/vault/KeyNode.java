@@ -58,16 +58,16 @@ public class KeyNode extends OCINode {
      *
      * @return Returns {@code ChildrenProvider} which fetches List of {@code KeyItem} for given {@code VaultItem}
      */
-    public static ChildrenProvider<VaultItem, KeyItem> getKeys() {
-        return vault -> {
+    public static ChildrenProvider.SessionAware<VaultItem, KeyItem> getKeys() {
+        return (vault, session) -> {
             Vault v = Vault.builder()
-                    .compartmentId(vault.compartmentId)
+                    .compartmentId(vault.getCompartmentId())
                     .id(vault.getKey().getValue())
                     .managementEndpoint(vault.managementEndpoint)
                     .build();
             KmsManagementClient client = KmsManagementClient.builder()
                     .vault(v)
-                    .build(OCIManager.getDefault().getActiveProfile().getConfigProvider());
+                    .build(session.getAuthenticationProvider());
             ListKeysRequest listKeysRequest = ListKeysRequest.builder()
                     .compartmentId(vault.getCompartmentId())
                     .limit(88)
@@ -78,8 +78,8 @@ public class KeyNode extends OCINode {
                     .stream()
                     .map(d -> new KeyItem(
                     OCID.of(d.getId(), "Vault/Key"), //NOI18N
-                    d.getDisplayName(),
-                    d.getCompartmentId())
+                            d.getCompartmentId(),
+                    d.getDisplayName())
                     )
                     .collect(Collectors.toList());
         };

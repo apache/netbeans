@@ -16,20 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.items;
+package org.netbeans.modules.cloud.oracle.compute;
+
+import org.netbeans.modules.cloud.oracle.items.OCID;
+import org.netbeans.modules.cloud.oracle.items.OCIItem;
 
 /**
  *
  * @author Jan Horvath
  */
-public class TenancyItem extends OCIItem {
+public class ComputeInstanceItem extends OCIItem {
 
-    public TenancyItem(OCID id, String name) {
-        super(id, null, name);
+    public ComputeInstanceItem(OCID id, String compartmentId, String name) {
+        super(id, compartmentId, name);
     }
-
-    public TenancyItem() {
-    }
-
+    
+    
     
 }

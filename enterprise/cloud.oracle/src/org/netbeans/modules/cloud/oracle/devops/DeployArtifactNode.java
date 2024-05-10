@@ -62,9 +62,10 @@ public class DeployArtifactNode extends OCINode {
                 List<DeployArtifactSummary> projects = response.getDeployArtifactCollection().getItems();
                 return Collections.singletonList(
                         new DeployArtifactItem.DeployArtifactFolder(OCID.of(project.getKey().getValue(), "DeployArtifactFolder"),
+                                project.getCompartmentId(),
                                 Bundle.DeployArtifacts(),
                                 projects.stream()
-                                        .map(p -> new DeployArtifactItem(OCID.of(p.getId(), "DeployArtifact"), p.getDisplayName()))
+                                        .map(p -> new DeployArtifactItem(OCID.of(p.getId(), "DeployArtifact"), project.getCompartmentId(), p.getDisplayName()))
                                         .collect(Collectors.toList()))
                 );
             }

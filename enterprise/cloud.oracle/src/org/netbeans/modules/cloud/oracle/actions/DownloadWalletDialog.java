@@ -92,7 +92,7 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
                 String dbUser = dlgPanel.dbUserField.getText();
                 char[] dbPasswd = dlgPanel.dbPasswordField.getPassword();
                 NbPreferences.forModule(DownloadWalletAction.class).put(LAST_USED_DIR, path); //NOI18N
-                return Optional.of(new WalletInfo(path, generatePassword(), dbUser, dbPasswd, db.getKey().getValue()));
+                return Optional.of(new WalletInfo(path, generatePassword(), dbUser, dbPasswd, db.getKey().getValue(), db.getCompartmentId()));
             }
         } else {
             try {
@@ -111,7 +111,7 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
                     return Optional.empty();
                 }
                 char[] password = inp.getInputText().toCharArray();
-                return Optional.of(new WalletInfo(walletsDir.getAbsolutePath(), generatePassword(), username, password, db.getKey().getValue()));
+                return Optional.of(new WalletInfo(walletsDir.getAbsolutePath(), generatePassword(), username, password, db.getKey().getValue(), db.getCompartmentId()));
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -302,18 +302,20 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
     }
     
     static class WalletInfo {
-        private String path;
-        private char[] walletPassword;
-        private String dbUser;
+        private final String path;
+        private final char[] walletPassword;
+        private final String dbUser;
         private char[] dbPassword;
-        private String ocid;
+        private final String ocid;
+        private final String comaprtmentId;
 
-        public WalletInfo(String path, char[] walletPassword, String dbUser, char[] dbPassword, String ocid) {
+        public WalletInfo(String path, char[] walletPassword, String dbUser, char[] dbPassword, String ocid, String comaprtmentOcid) {
             this.path = path;
             this.walletPassword = walletPassword;
             this.dbUser = dbUser;
             this.dbPassword = dbPassword;
             this.ocid = ocid;
+            this.comaprtmentId = comaprtmentOcid;
         }
 
         public String getPath() {
@@ -334,6 +336,10 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
 
         public String getOcid() {
             return ocid;
+        }
+
+        public String getComaprtmentId() {
+            return comaprtmentId;
         }
     }
 

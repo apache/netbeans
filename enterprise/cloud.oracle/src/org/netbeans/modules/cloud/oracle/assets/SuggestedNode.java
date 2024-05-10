@@ -16,20 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.items;
+package org.netbeans.modules.cloud.oracle.assets;
+
+import org.netbeans.modules.cloud.oracle.NodeProvider;
+import org.netbeans.modules.cloud.oracle.OCINode;
+import org.netbeans.modules.cloud.oracle.items.OCIItem;
 
 /**
  *
  * @author Jan Horvath
  */
-public class TenancyItem extends OCIItem {
-
-    public TenancyItem(OCID id, String name) {
-        super(id, null, name);
+public class SuggestedNode extends OCINode {
+    
+    private static final String SUGGEST_ICON = "org/netbeans/modules/cloud/oracle/resources/suggest.svg"; // NOI18N
+    
+    public SuggestedNode(OCIItem item) {
+        super(item);
+        setName(item.getName()); 
+        setDisplayName(item.getName());
+        setIconBaseWithExtension(SUGGEST_ICON);
+        setShortDescription(item.getDescription());
     }
-
-    public TenancyItem() {
+    
+     public static NodeProvider<OCIItem> createNode() {
+        return SuggestedNode::new;
     }
-
     
 }

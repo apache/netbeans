@@ -16,20 +16,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.items;
+package org.netbeans.modules.cloud.oracle.bucket;
+
+import org.netbeans.modules.cloud.oracle.items.OCID;
+import org.netbeans.modules.cloud.oracle.items.OCIItem;
 
 /**
  *
  * @author Jan Horvath
  */
-public class TenancyItem extends OCIItem {
+public final class BucketItem extends OCIItem {
 
-    public TenancyItem(OCID id, String name) {
-        super(id, null, name);
+    private String namespace;
+
+    public BucketItem(OCID id, String compartmentId, String name, String namespace) {
+        super(id, compartmentId, name);
+        this.namespace = namespace;
     }
 
-    public TenancyItem() {
+    public BucketItem() {
+        super();
     }
 
+    public String getNamespace() {
+        return namespace;
+    }
+
+    @Override
+    public int maxInProject() {
+        return Integer.MAX_VALUE;
+    }
     
 }

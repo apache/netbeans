@@ -16,20 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.items;
+package org.netbeans.modules.cloud.oracle.assets;
+
+import org.netbeans.modules.cloud.oracle.items.OCID;
+import org.netbeans.modules.cloud.oracle.items.OCIItem;
 
 /**
  *
  * @author Jan Horvath
  */
-public class TenancyItem extends OCIItem {
+public final class SuggestedItem extends OCIItem {
 
-    public TenancyItem(OCID id, String name) {
-        super(id, null, name);
+    private final String path;
+
+    public SuggestedItem(String path, String name) {
+        super(OCID.of("", "Suggested"), null, name); //NOI18N
+        this.path = path;
     }
 
-    public TenancyItem() {
+    public String getPath() {
+        return path;
     }
-
     
 }

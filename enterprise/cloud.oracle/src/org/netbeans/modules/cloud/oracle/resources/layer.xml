@@ -34,6 +34,20 @@
         </file>
         
         <folder name="Oracle">
+<!--            <folder name="Assets">
+                <file name="Assets.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.cloud.oracle.assets.RootNode.instance"/>
+                    <attr name="instanceClass" stringvalue="org.openide.nodes.Node"/>
+                     <attr name="instanceOf" stringvalue="org.openide.nodes.Node"/>
+                </file>
+            </folder>-->
+            <folder name="Suggested">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-SuggestedNode-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.assets.SuggestedNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
             <folder name="Compartment">
                 <folder name="Nodes">
                     <file name="org-netbeans-modules-cloud-oracle-adm-KnowledgeBaseNode-listKnowledgeBases.instance">
@@ -58,6 +72,15 @@
                     <file name="org-netbeans-modules-cloud-oracle-compartment-CompartmentNode-createNode.instance">
                         <!--org.netbeans.modules.cloud.oracle.compartment.CompartmentNode.createNode()-->
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.compartment.CompartmentNode.createNode" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-bucket-BucketNode-getBuckets.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.bucket.BucketNode.getBuckets" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-compute-ComputeInstanceNode-getComputeInstances.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.compute.ComputeInstanceNode.getComputeInstances" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-compute-ClusterNode-getClusters.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.compute.ClusterNode.getClusters" name="instanceCreate"/>
                     </file>
                 </folder>
             </folder>
@@ -162,6 +185,27 @@
                     <file name="org-netbeans-modules-cloud-oracle-database-DatabaseNode-createNode.instance">
                         <!--org.netbeans.modules.cloud.oracle.database.DatabaseNode.createNode()-->
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.database.DatabaseNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="Bucket">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-bucket-BucketNode-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.bucket.BucketNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="ComputeInstance">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-compute-ComputeInstanceNode-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.compute.ComputeInstanceNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="Cluster">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-compute-ClusterNode-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.compute.ClusterNode.createNode" name="instanceCreate"/>
                     </file>
                 </folder>
             </folder>

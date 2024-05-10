@@ -65,7 +65,7 @@ public class BuildRunNode extends OCINode {
 
     public static ChildrenProvider<DevopsProjectItem, BuildRunFolderItem> listBuildRuns() {
         return project -> Collections.singletonList(
-                new BuildRunFolderItem(OCID.of(project.getKey().getValue(), "BuildRunFolder"), Bundle.BuildRuns())
+                new BuildRunFolderItem(OCID.of(project.getKey().getValue(), "BuildRunFolder"), project.getCompartmentId(), Bundle.BuildRuns())
         );
     }
     
@@ -82,6 +82,7 @@ public class BuildRunNode extends OCINode {
                 return projects.stream()
                                         .map(p -> new BuildRunItem(
                                                 OCID.of(p.getId(), "BuildRun"), 
+                                                project.getCompartmentId(),
                                                 p.getDisplayName(),
                                                 p.getLifecycleState().getValue()
                                         ))

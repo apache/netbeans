@@ -27,8 +27,8 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
  */
 public class DevopsProjectItem extends OCIItem {
 
-    public DevopsProjectItem(OCID id, String name) {
-        super(id, name);
+    public DevopsProjectItem(OCID id, String compartmentId, String name) {
+        super(id, compartmentId, name);
     }
 
     @Override

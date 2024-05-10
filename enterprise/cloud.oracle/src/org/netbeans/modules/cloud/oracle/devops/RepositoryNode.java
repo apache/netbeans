@@ -63,9 +63,10 @@ public class RepositoryNode extends OCINode {
                 List<RepositorySummary> projects = response.getRepositoryCollection().getItems();
                 return Collections.singletonList(
                         new RepositoryFolder(OCID.of(project.getKey().getValue(), "RepositoryFolder"),
+                                project.getCompartmentId(),
                                 Bundle.Repositories(),
                                 projects.stream()
-                                        .map(p -> new RepositoryItem(OCID.of(p.getId(), "Repository"), p.getName()))
+                                        .map(p -> new RepositoryItem(OCID.of(p.getId(), "Repository"), project.getCompartmentId(), p.getName()))
                                         .collect(Collectors.toList()))
                 );
             }

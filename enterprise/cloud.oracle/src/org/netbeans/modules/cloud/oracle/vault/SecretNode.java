@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.cloud.oracle.vault;
 
+import com.oracle.bmc.keymanagement.KmsVaultClient;
 import com.oracle.bmc.vault.VaultsClient;
 import com.oracle.bmc.vault.requests.ListSecretsRequest;
 import java.util.stream.Collectors;
@@ -52,9 +53,9 @@ public class SecretNode extends OCINode {
      *
      * @@return Returns {@code ChildrenProvider} which fetches List of {@code SecretItem} for given {@code VaultItem}
      */
-    public static ChildrenProvider<VaultItem, SecretItem> getSecrets() {
-        return vault -> {
-            VaultsClient client = VaultsClient.builder().build(getDefault().getActiveProfile().getConfigProvider());
+    public static ChildrenProvider.SessionAware<VaultItem, SecretItem> getSecrets() {
+        return (vault, session) -> {
+            VaultsClient client = session.newClient(VaultsClient.class);
             
             ListSecretsRequest listSecretsRequest = ListSecretsRequest.builder()
                     .compartmentId(vault.getCompartmentId())
@@ -67,8 +68,8 @@ public class SecretNode extends OCINode {
                     .stream()
                     .map(d -> new SecretItem(
                                 OCID.of(d.getId(), "Vault/Secret"), //NOI18N
-                                d.getSecretName(),
-                                d.getCompartmentId())
+                                d.getCompartmentId(),
+                                d.getSecretName())
                     )
                     .collect(Collectors.toList());
         };

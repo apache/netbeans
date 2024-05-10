@@ -79,7 +79,7 @@ public class CompartmentNode extends OCINode {
                                         .page(nextPageToken)
                                         .build());
                 response.getItems().stream()
-                        .map(c -> new CompartmentItem(OCID.of(c.getId(), "Compartment"), c.getName())) // NOI18N
+                        .map(c -> new CompartmentItem(OCID.of(c.getId(), "Compartment"), parent.getKey().getValue(), c.getName())) // NOI18N
                         .collect(Collectors.toCollection(() -> compartments));
                 nextPageToken = response.getOpcNextPage();
             } while (nextPageToken != null);

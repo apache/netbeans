@@ -68,6 +68,7 @@ public class DevopsProjectNode extends OCINode {
                     
                 }
                 return projects.stream().map(p -> new DevopsProjectItem(OCID.of(p.getId(), "DevopsProject"), 
+                        compartmentId.getKey().getValue(),
                         p.getName())).collect(Collectors.toList());
             }
         };

@@ -83,6 +83,7 @@ import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.CompletionItemLabelDetails;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.ConfigurationItem;
 import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DefinitionParams;
@@ -106,6 +107,8 @@ import org.eclipse.lsp4j.HoverParams;
 import org.eclipse.lsp4j.ImplementationParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
+import org.eclipse.lsp4j.InlayHint;
+import org.eclipse.lsp4j.InlayHintParams;
 import org.eclipse.lsp4j.InsertTextFormat;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.MarkupContent;
@@ -5784,6 +5787,122 @@ public class ServerTest extends NbTestCase {
 
         assertEquals(1, mm3.size());
         assertEquals(1, mm4.size());
+    }
+
+    public void testInlayHints() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "import java.util.*;\n" +
+                      "public class Test {\n" +
+                      "    public String convert(String str) {\n" +
+                      "        var v = 0;\n" +
+                      "        return Arrays.asList(str)\n" +
+                      "                     .stream()\n" +
+                      "                     .map(s -> s.length())\n" +
+                      "                     .toArray();\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        file2SourceLevel.put(FileUtil.toFileObject(src.getParentFile()), "11");
+        FileUtil.refreshFor(getWorkDir());
+
+        String[] settings = new String[] {
+            "[\"chained\", \"parameter\", \"var\"]"
+        };
+
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<List<Object>> configuration(ConfigurationParams configurationParams) {
+                assertEquals(1, configurationParams.getItems().size());
+                ConfigurationItem item = configurationParams.getItems().get(0);
+                assertEquals("netbeans.inlay.enabled", item.getSection());
+                return CompletableFuture.completedFuture(Arrays.asList(JsonParser.parseString(settings[0])));
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        Function<List<InlayHint>, Set<String>> convertHints = hints ->
+                hints.stream()
+                .map(ih -> ih.getPosition().getLine() + ":" + ih.getPosition().getCharacter() + ":" + ih.getLabel().getLeft())
+                .collect(Collectors.toSet());
+        {
+            List<InlayHint> hints = server.getTextDocumentService().inlayHint(new InlayHintParams(id, new Range(new Position(0, 0), new Position(9, 1)))).get();
+            Set<String> expectedHints = new HashSet<>(Arrays.asList(
+                    "3:13: : int",
+                    "4:29:a:",
+                    "4:33:  List<String>",
+                    "5:30:  Stream<String>",
+                    "6:42:  Stream<Integer>",
+                    "7:32:  "));
+            assertEquals(expectedHints, convertHints.apply(hints));
+        }
+        {
+            List<InlayHint> hints = server.getTextDocumentService().inlayHint(new InlayHintParams(id, new Range(new Position(4, 0), new Position(5, 30)))).get();
+            Set<String> expectedHints = new HashSet<>(Arrays.asList(
+                    "4:29:a:",
+                    "4:33:  List<String>",
+                    "5:30:  Stream<String>"));
+            assertEquals(expectedHints, convertHints.apply(hints));
+        }
+        {
+            settings[0] = "[\"chained\"]";
+            List<InlayHint> hints = server.getTextDocumentService().inlayHint(new InlayHintParams(id, new Range(new Position(0, 0), new Position(9, 1)))).get();
+            Set<String> expectedHints = new HashSet<>(Arrays.asList(
+                    "4:33:  List<String>",
+                    "5:30:  Stream<String>",
+                    "6:42:  Stream<Integer>",
+                    "7:32:  "));
+            assertEquals(expectedHints, convertHints.apply(hints));
+        }
+        {
+            settings[0] = "[\"parameter\"]";
+            List<InlayHint> hints = server.getTextDocumentService().inlayHint(new InlayHintParams(id, new Range(new Position(0, 0), new Position(9, 1)))).get();
+            Set<String> expectedHints = new HashSet<>(Arrays.asList(
+                    "4:29:a:"));
+            assertEquals(expectedHints, convertHints.apply(hints));
+        }
+        {
+            settings[0] = "[\"var\"]";
+            List<InlayHint> hints = server.getTextDocumentService().inlayHint(new InlayHintParams(id, new Range(new Position(0, 0), new Position(9, 1)))).get();
+            Set<String> expectedHints = new HashSet<>(Arrays.asList(
+                    "3:13: : int"));
+            assertEquals(expectedHints, convertHints.apply(hints));
+        }
     }
 
     static {

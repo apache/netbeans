@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -32,7 +33,6 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URL;
@@ -104,7 +104,6 @@ import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
 import org.eclipse.lsp4j.ConfigurationItem;
 import org.eclipse.lsp4j.ConfigurationParams;
-import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
@@ -125,6 +124,8 @@ import org.eclipse.lsp4j.FoldingRangeRequestParams;
 import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.HoverParams;
 import org.eclipse.lsp4j.ImplementationParams;
+import org.eclipse.lsp4j.InlayHint;
+import org.eclipse.lsp4j.InlayHintParams;
 import org.eclipse.lsp4j.InsertTextFormat;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
@@ -261,8 +262,6 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
-import org.openide.util.Union2;
-import org.openide.util.Utilities;
 import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -277,6 +276,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     
     private static final String COMMAND_RUN_SINGLE = "nbls.run.single";         // NOI18N
     private static final String COMMAND_DEBUG_SINGLE = "nbls.debug.single";     // NOI18N
+    private static final String NETBEANS_INLAY_HINT = "inlay.enabled";   // NOI18N
     private static final String NETBEANS_JAVADOC_LOAD_TIMEOUT = "javadoc.load.timeout";// NOI18N
     private static final String NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS = "java.onSave.organizeImports";// NOI18N
     private static final String URL = "url";// NOI18N
@@ -2601,6 +2601,69 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         };
         return t.processRequest();
+    }
+
+    @Override
+    public CompletableFuture<List<InlayHint>> inlayHint(InlayHintParams params) {
+        String uri = params.getTextDocument().getUri();
+        JavaSource js = getJavaSource(uri);
+
+        if (js != null) {
+            ConfigurationItem conf = new ConfigurationItem();
+            conf.setScopeUri(uri);
+            conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_INLAY_HINT);
+            return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
+                Set<String> enabled = new HashSet<>();
+                if (c != null && !c.isEmpty()) {
+                    JsonArray actualSettings = ((JsonArray) c.get(0));
+                    for (JsonElement el : actualSettings) {
+                        enabled.add(((JsonPrimitive) el).getAsString());
+                    }
+                } else {
+                    enabled.addAll(Arrays.asList("chained", "parameter", "var"));
+                }
+                List<InlayHint> result = new ArrayList<>();
+                try {
+                    js.runUserActionTask(cc -> {
+                        cc.toPhase(JavaSource.Phase.RESOLVED);
+                        SemanticHighlighterBase.Settings settings =
+                                new SemanticHighlighterBase.Settings(enabled.contains("parameter"),
+                                                                     enabled.contains("chained"),
+                                                                     enabled.contains("var"));
+                        Document doc = cc.getSnapshot().getSource().getDocument(true);
+                        int start = Utils.getOffset((StyledDocument) doc, params.getRange().getStart());
+                        int end = Utils.getOffset((StyledDocument) doc, params.getRange().getEnd());
+                        new SemanticHighlighterBase() {
+                            @Override
+                            protected boolean process(CompilationInfo info, Document doc) {
+                                process(info, doc, settings, new ErrorDescriptionSetter() {
+                                    @Override
+                                    public void setHighlights(Document doc, Collection<Pair<int[], ColoringAttributes.Coloring>> highlights, Map<int[], String> preText) {
+                                        for (Entry<int[], String> e : preText.entrySet()) {
+                                            if (e.getKey()[0] >= start && e.getKey()[0] <= end) {
+                                                InlayHint hint = new InlayHint(Utils.createPosition(cc.getCompilationUnit(), e.getKey()[0]), Either.forLeft(e.getValue()));
+                                                result.add(hint);
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void setColorings(Document doc, Map<Token, ColoringAttributes.Coloring> colorings) {
+                                        //...nothing
+                                    }
+                                });
+                                return true;
+                            }
+                        }.process(cc, doc);
+                    }, true);
+                } catch (IOException ex) {
+                    //TODO: include stack trace:
+                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                }
+                return result;
+            });
+        }
+        return CompletableFuture.completedFuture(Collections.emptyList());
     }
 
 }

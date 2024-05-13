@@ -28,16 +28,16 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
  */
 public class RepositoryItem extends OCIItem {
 
-    public RepositoryItem(OCID id, String name) {
-        super(id, name);
+    public RepositoryItem(OCID id, String compartmentId, String name) {
+        super(id, compartmentId, name);
     }
     
     public static class RepositoryFolder extends OCIItem {
 
         private final List<RepositoryItem> repositories;
 
-        public RepositoryFolder(OCID project, String name, List<RepositoryItem> repositories) {
-            super(project, name);
+        public RepositoryFolder(OCID project, String compartmentId, String name, List<RepositoryItem> repositories) {
+            super(project, compartmentId, name);
             this.repositories = repositories;
         }
     

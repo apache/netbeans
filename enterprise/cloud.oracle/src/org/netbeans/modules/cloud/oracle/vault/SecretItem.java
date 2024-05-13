@@ -26,21 +26,15 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
  * @author Jan Horvath
  */
 public class SecretItem extends OCIItem {
-    String compartmentId;
 
-    public SecretItem(OCID id, String name, String compartmentId) {
-        super(id, name);
-        this.compartmentId = compartmentId;
+    public SecretItem(OCID id, String compartmentId, String name) {
+        super(id, compartmentId, name);
     }
 
     public SecretItem() {
         super();
     }
 
-    public String getCompartmentId() {
-        return compartmentId;
-    }
-    
     @Override
     public int maxInProject() {
         return Integer.MAX_VALUE;

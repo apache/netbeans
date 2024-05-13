@@ -19,6 +19,7 @@
 package org.netbeans.modules.cloud.oracle.adm;
 
 import com.oracle.bmc.adm.ApplicationDependencyManagementClient;
+import com.oracle.bmc.adm.model.KnowledgeBase;
 import com.oracle.bmc.adm.model.KnowledgeBaseSummary;
 import com.oracle.bmc.adm.requests.ListKnowledgeBasesRequest;
 import com.oracle.bmc.adm.responses.ListKnowledgeBasesResponse;
@@ -83,10 +84,13 @@ public class KnowledgeBaseNode extends OCINode {
                     = session.newClient(ApplicationDependencyManagementClient.class)) {
                 
                 ListKnowledgeBasesRequest request = ListKnowledgeBasesRequest.builder()
-                        .compartmentId(compartment.getKey().getValue()).build();
+                        .compartmentId(compartment.getKey().getValue())
+                        .lifecycleState(KnowledgeBase.LifecycleState.Active)
+                        .build();
                 ListKnowledgeBasesResponse response = client.listKnowledgeBases(request);
                 List<KnowledgeBaseSummary> projects = response.getKnowledgeBaseCollection().getItems();
-                return projects.stream().map(p -> new KnowledgeBaseItem(
+                return projects.stream()
+                        .map(p -> new KnowledgeBaseItem(
                         OCID.of(p.getId(), "KnowledgeBase"), // NOI18N 
                         p.getCompartmentId(),
                         p.getDisplayName(), p.getTimeUpdated())).collect(Collectors.toList());

@@ -208,7 +208,8 @@ public class AddADBAction implements ActionListener {
                         AbstractPasswordPanel.generatePassword(),
                         (String) result.get(USERNAME),
                         ((String) result.get(PASSWORD)).toCharArray(),
-                        selectedDatabase.getKey().getValue());
+                        selectedDatabase.getKey().getValue(),
+                        selectedDatabase.getCompartmentId());
                 action.addConnection(info);
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
@@ -269,9 +270,9 @@ public class AddADBAction implements ActionListener {
         private String flatName;
 
         private FlatCompartmentItem(Compartment ociComp) {
-            super(OCID.of(ociComp.getId(), "Compartment"), ociComp.getName());      // NOI18N
+            super(OCID.of(ociComp.getId(), "Compartment"), ociComp.getCompartmentId(), ociComp.getName()); // NOI18N
             setDescription(ociComp.getDescription());
-            parentId = OCID.of(ociComp.getCompartmentId(), "Compartment");          // NOI18N
+            parentId = OCID.of(ociComp.getCompartmentId(), "Compartment"); // NOI18N
         }
 
         public String getName() {

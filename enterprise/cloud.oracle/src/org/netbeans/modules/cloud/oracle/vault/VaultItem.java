@@ -26,21 +26,15 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
  * @author Jan Horvath
  */
 public class VaultItem extends OCIItem {
-    String compartmentId;
     String managementEndpoint;
 
-    public VaultItem(OCID id, String name, String compartmentId, String managementEndpoint) {
-        super(id, name);
-        this.compartmentId = compartmentId;
+    public VaultItem(OCID id, String compartment, String name, String managementEndpoint) {
+        super(id, compartment, name);
         this.managementEndpoint = managementEndpoint;
     }
 
     public VaultItem() {
         super();
-    }
-
-    public String getCompartmentId() {
-        return compartmentId;
     }
 
     public String getManagementEndpoint() {

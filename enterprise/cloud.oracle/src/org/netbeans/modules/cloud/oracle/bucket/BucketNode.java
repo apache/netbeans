@@ -16,13 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.vault;
+package org.netbeans.modules.cloud.oracle.bucket;
 
-import com.oracle.bmc.identity.Identity;
-import com.oracle.bmc.identity.IdentityClient;
-import com.oracle.bmc.keymanagement.KmsVaultClient;
-import com.oracle.bmc.keymanagement.model.VaultSummary;
-import com.oracle.bmc.keymanagement.requests.ListVaultsRequest;
+import com.oracle.bmc.objectstorage.ObjectStorageClient;
+import com.oracle.bmc.objectstorage.requests.ListBucketsRequest;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
@@ -37,46 +34,48 @@ import org.openide.util.NbBundle;
  * @author Jan Horvath
  */
 @NbBundle.Messages({
-    "OCIVault=OCI Vault: {0}"
+    "BcuketDesc=Bucket: {0}"
 })
-public class VaultNode extends OCINode {
-    private static final String VAULT_ICON = "org/netbeans/modules/cloud/oracle/resources/vault.svg"; // NOI18N
+public class BucketNode extends OCINode {
 
-    public VaultNode(VaultItem vault) {
-        super(vault);
-        setName(vault.getName());
-        setDisplayName(vault.getName());
-        setIconBaseWithExtension(VAULT_ICON);
-        setShortDescription(Bundle.OCIVault(vault.getName()));
+    private static final String BUCKET_ICON = "org/netbeans/modules/cloud/oracle/resources/bucket.svg"; // NOI18N
+
+    public BucketNode(BucketItem bucket) {
+        super(bucket);
+        setName(bucket.getName());
+        setDisplayName(bucket.getName());
+        setIconBaseWithExtension(BUCKET_ICON);
+        setShortDescription(Bundle.BcuketDesc(bucket.getName()));
     }
 
-    public static NodeProvider<VaultItem> createNode() {
-        return VaultNode::new;
+    public static NodeProvider<BucketItem> createNode() {
+        return BucketNode::new;
     }
 
     /**
      * Retrieves list of Vaults belonging to a given Compartment.
      *
-     * @return Returns {@code ChildrenProvider} which fetches List of {@code VaultItem} for given {@code CompartmentItem}
+     * @return Returns {@code ChildrenProvider} which fetches List of
+     * {@code BucketItem} for given {@code CompartmentItem}
      */
-    public static ChildrenProvider.SessionAware<CompartmentItem, VaultItem> getVaults() {
+    public static ChildrenProvider.SessionAware<CompartmentItem, BucketItem> getBuckets() {
         return (compartmentId, session) -> {
-            KmsVaultClient client = session.newClient(KmsVaultClient.class);
-            
-            ListVaultsRequest listVaultsRequest = ListVaultsRequest.builder()
+            ObjectStorageClient client = session.newClient(ObjectStorageClient.class);
+
+            ListBucketsRequest listBucketsRequest = ListBucketsRequest.builder()
                     .compartmentId(compartmentId.getKey().getValue())
+                    .namespaceName(session.getTenantId())
                     .limit(88)
                     .build();
-                    
-            return client.listVaults(listVaultsRequest)
+
+            return client.listBuckets(listBucketsRequest)
                     .getItems()
                     .stream()
-                    .filter(v -> v.getLifecycleState().equals(VaultSummary.LifecycleState.Active))
-                    .map(d -> new VaultItem(
-                                OCID.of(d.getId(), "Vault"), //NOI18N
-                                d.getCompartmentId(), //NOI18N
-                                d.getDisplayName(),
-                                d.getManagementEndpoint())
+                    .map(d -> new BucketItem(
+                        OCID.of(d.getName(), "Bucket"), //NOI18N
+                            compartmentId.getKey().getValue(),
+                        d.getName(),
+                    d.getNamespace())
                     )
                     .collect(Collectors.toList());
         };

@@ -30,6 +30,7 @@ import org.openide.util.ChangeSupport;
 public abstract class OCIItem {
     final OCID id;
     final String name;
+    final String compartmentId;
     String description;
     ChangeSupport changeSupport;
 
@@ -37,16 +38,18 @@ public abstract class OCIItem {
     * Construct a new {@code OCIItem}.
     * 
     * @param id OCID of the item
+    * @param compartmentId OCID of the compartmentId
     * @param name Name of the item
     */
-    public OCIItem(OCID id, String name) {
+    public OCIItem(OCID id, String compartmentId, String name) {
         this.id = id;
         this.name = name;
+        this.compartmentId = compartmentId;
         changeSupport = new ChangeSupport(this);
     }
 
     public OCIItem() {
-        this(null, null);
+        this(null, null, null);
     }
     
     /**
@@ -76,6 +79,15 @@ public abstract class OCIItem {
         return description;
     }
 
+    /**
+     * OCID of the compartmentId.
+     * 
+     * @return OCID of the compartmentId
+     */
+    public String getCompartmentId() {
+        return compartmentId;
+    }
+    
     /**
      * Short description of the item.
      * 

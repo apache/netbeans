@@ -29,8 +29,8 @@ public class DatabaseItem extends OCIItem {
     private final String serviceUrl;
     private final String connectionName;
 
-    public DatabaseItem(OCID id, String name, String serviceUrl, String connectionName) {
-        super(id, name);
+    public DatabaseItem(OCID id, String compartmentId, String name, String serviceUrl, String connectionName) {
+        super(id, compartmentId, name);
         this.serviceUrl = serviceUrl;
         this.connectionName = connectionName;
     }

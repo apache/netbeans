@@ -81,6 +81,7 @@ public class DatabaseNode extends OCINode {
                         List<DatabaseConnectionStringProfile> profiles = d.getConnectionStrings().getProfiles();
                         DatabaseItem item = new DatabaseItem(
                                 OCID.of(d.getId(), "Databases"), //NOI18N
+                                compartmentId.getKey().getValue(),
                                 d.getDbName(),
                                 d.getConnectionUrls().getOrdsUrl()+SERVICE_CONSOLE_SUFFIX,
                                 getConnectionName(profiles));

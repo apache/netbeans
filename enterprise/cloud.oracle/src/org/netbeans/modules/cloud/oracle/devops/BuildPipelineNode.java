@@ -60,9 +60,10 @@ public class BuildPipelineNode extends OCINode {
                 List<BuildPipelineSummary> projects = response.getBuildPipelineCollection().getItems();
                 return Collections.singletonList(
                         new BuildPipelineItem.BuildPipelineFolder(OCID.of(project.getKey().getValue(), "BuildPipelineFolder"),
+                                project.getCompartmentId(),
                                 Bundle.BuildPipelines(),
                                 projects.stream()
-                                        .map(p -> new BuildPipelineItem(OCID.of(p.getId(), "BuildPipeline"), p.getDisplayName())) // NOI18N
+                                        .map(p -> new BuildPipelineItem(OCID.of(p.getId(), "BuildPipeline"), project.getCompartmentId(), p.getDisplayName())) // NOI18N
                                         .collect(Collectors.toList()))
                 );
             }

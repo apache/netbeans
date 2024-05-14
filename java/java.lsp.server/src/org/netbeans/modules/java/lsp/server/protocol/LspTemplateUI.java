@@ -106,7 +106,7 @@ final class LspTemplateUI {
     }
 
     private CompletableFuture<Object> templateUI(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
-        CompletionStage<DataObject> findTemplate = findTemplate(templates, client);
+        CompletionStage<DataObject> findTemplate = findTemplate(templates, client, params);
         CompletionStage<DataFolder> findTargetFolder = findTargetForTemplate(findTemplate, client, params);
         return findTargetFolder.thenCombine(findTemplate, (target, source) -> {
             final FileObject templateFileObject = source.getPrimaryFile();
@@ -138,8 +138,8 @@ final class LspTemplateUI {
     }
 
     private CompletableFuture<Object> projectUI(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
-        CompletionStage<DataObject> findTemplate = findTemplate(templates, client);
-        CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndNameForProject(findTemplate, client, params);
+        CompletionStage<DataObject> findTemplate = findTemplate(templates, client, params);
+        CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndNameForProject(findTemplate, client);
         CompletionStage<Pair<DataObject, String>> findTemplateAndPackage = findTemplate.thenCombine(findPackage(findTargetFolderAndName, client), Pair::of);
         return findTargetFolderAndName.thenCombineAsync(findTemplateAndPackage, (targetAndName, templateAndPackage) -> {
             try {
@@ -200,7 +200,7 @@ final class LspTemplateUI {
         });
     }
 
-    private static CompletionStage<Pair<DataFolder, String>> findTargetAndNameForProject(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client, ExecuteCommandParams params) {
+    private static CompletionStage<Pair<DataFolder, String>> findTargetAndNameForProject(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client) {
         return findTemplate.thenCompose(__ -> client.workspaceFolders()).thenCompose(folders -> {
             class VerifyNonExistingFolder implements Function<String, CompletionStage<Pair<DataFolder,String>>> {
                 @Override
@@ -245,7 +245,22 @@ final class LspTemplateUI {
         return suggestion;
     }
 
-    private static CompletionStage<DataObject> findTemplate(DataFolder templates, NbCodeLanguageClient client) {
+    private static CompletionStage<DataObject> findTemplate(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
+        List<Object> args = params.getArguments();
+        if (!args.isEmpty()) {
+            Object arg = args.get(0);
+            String path = arg instanceof JsonPrimitive ? ((JsonPrimitive) arg).getAsString() : arg != null ? arg.toString() : null;
+            if (path != null) {
+                FileObject fo = templates.getPrimaryFile().getFileObject(path);
+                if (fo != null) {
+                    try {
+                        return CompletableFuture.completedStage(DataObject.find(fo));
+                    } catch (DataObjectNotFoundException ex) {
+                        throw raise(RuntimeException.class, ex);
+                    }
+                }
+            }
+        }
         final List<QuickPickItem> categories = quickPickTemplates(templates);
         final CompletionStage<List<QuickPickItem>> pickGroup = client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectGroup(), categories));
         final CompletionStage<DataFolder> group = pickGroup.thenApply((selectedGroups) -> {

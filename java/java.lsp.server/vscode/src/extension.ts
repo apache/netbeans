@@ -450,12 +450,17 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 	});
 
     // register commands
-    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.workspace.new', async (ctx) => {
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.workspace.new', async (ctx, template) => {
         let c : LanguageClient = await client;
         const commands = await vscode.commands.getCommands();
         if (commands.includes(COMMAND_PREFIX + '.new.from.template')) {
-            // first give the context, then the open-file hint in the case the context is not specific enough
-            const res = await vscode.commands.executeCommand(COMMAND_PREFIX + '.new.from.template', contextUri(ctx)?.toString(), vscode.window.activeTextEditor?.document?.uri?.toString());
+            // first give the template (if present), then the context, and then the open-file hint in the case the context is not specific enough
+            const params = [];
+            if (typeof template === 'string') {
+                params.push(template);
+            }
+            params.push(contextUri(ctx)?.toString(), vscode.window.activeTextEditor?.document?.uri?.toString());
+            const res = await vscode.commands.executeCommand(COMMAND_PREFIX + '.new.from.template', ...params);
 
             if (typeof res === 'string') {
                 let newFile = vscode.Uri.parse(res as string);

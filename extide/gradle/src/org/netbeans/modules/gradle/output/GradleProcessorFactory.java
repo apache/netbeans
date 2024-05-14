@@ -33,6 +33,9 @@ import org.netbeans.modules.gradle.api.output.OutputProcessorFactory;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,18 +59,18 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
 
     @Override
     public Set<? extends OutputProcessor> createOutputProcessors(RunConfig cfg) {
-        return Set.of(
+        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
                 GRADLE_PROCESSOR,
                 JAVAC_PROCESSOR,
                 GROOVYC_PROCESSOR,
                 new WarningModeAllProcessor(cfg)
-        );
+        )));
     }
 
+    private static final Pattern GRADLE_ERROR = Pattern.compile("(Build file|Script) '(.*)\\.gradle' line: ([0-9]+)");
 
     public static final OutputProcessor GRADLE_PROCESSOR = new OutputProcessor() {
 
-        private static final Pattern GRADLE_ERROR = Pattern.compile("(Build file|Script) '(.*)\\.gradle' line: ([0-9]+)");
 
         @Override
         public boolean processLine(OutputDisplayer out, String line) {
@@ -90,9 +93,9 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
         }
     };
 
-    public static final OutputProcessor JAVAC_PROCESSOR = new OutputProcessor() {
+    private static final Pattern JAVA_ERROR = Pattern.compile("(.*)\\.java\\:([0-9]+)\\: (error|warning)\\:(.*)");
 
-        private static final Pattern JAVA_ERROR = Pattern.compile("(.*)\\.java\\:([0-9]+)\\: (error|warning)\\:(.*)");
+    public static final OutputProcessor JAVAC_PROCESSOR = new OutputProcessor() {
 
         @Override
         public boolean processLine(OutputDisplayer out, String line) {
@@ -118,10 +121,10 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
         }
     };
 
-    public static final OutputProcessor GROOVYC_PROCESSOR = new OutputProcessor() {
+    private static final Pattern GROOVY_ERROR = Pattern.compile("(.*)\\.groovy\\: ([0-9]+)\\: (.+)");
+    private static final Pattern COLUMN_INFO = Pattern.compile(" @ line ([0-9]+), column ([0-9]+)\\.$");
 
-        private static final Pattern GROOVY_ERROR = Pattern.compile("(.*)\\.groovy\\: ([0-9]+)\\: (.+)");
-        private static final Pattern COLUMN_INFO = Pattern.compile(" @ line ([0-9]+), column ([0-9]+)\\.$");
+    public static final OutputProcessor GROOVYC_PROCESSOR = new OutputProcessor() {
 
         @Override
         public boolean processLine(OutputDisplayer out, String line) {
@@ -156,9 +159,9 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
 
     };
 
-    public static final OutputProcessor URL_PROCESSOR = new OutputProcessor() {
+    private static final Pattern URL_PATTERN = Pattern.compile("(((https?|ftp|file)://|file:/)[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])");
 
-        private static final Pattern URL_PATTERN = Pattern.compile("(((https?|ftp|file)://|file:/)[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])");
+    public static final OutputProcessor URL_PROCESSOR = new OutputProcessor() {
 
         @Override
         public boolean processLine(OutputDisplayer out, String line) {

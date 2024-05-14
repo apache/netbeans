@@ -117,6 +117,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class MicronautEndpointTestGenerator implements CodeActionProvider, CommandProvider {
 
     private static final String SOURCE = "source";
+    private static final Set<String> SUPPORTED_CODE_ACTION_KINDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(SOURCE)));
     private static final String GENERATE_MICRONAUT_ENDPOINT_TEST = "nbls.micronaut.generate.endpoint.test";
     private static final String CONTROLLER_ANNOTATION_NAME = "io.micronaut.http.annotation.Controller";
     private static final String MICRONAUT_TEST_ANNOTATION_NAME = "io.micronaut.test.extensions.junit5.annotation.MicronautTest";
@@ -147,6 +148,11 @@ public class MicronautEndpointTestGenerator implements CodeActionProvider, Comma
         String description = json.getAsJsonObject().get("description").getAsString();
         return new NotifyDescriptor.QuickPick.Item(label, description);
     }).create();
+
+    @Override
+    public Set<String> getSupportedCodeActionKinds() {
+        return SUPPORTED_CODE_ACTION_KINDS;
+    }
 
     @Override
     @NbBundle.Messages({

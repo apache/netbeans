@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -570,5 +571,11 @@ public class Utils {
             }
         }
         return new WorkspaceEdit(documentChanges);
+    }
+
+    public static Predicate<String> codeActionKindFilter(List<String> only) {
+        return k -> only == null ||
+                    only.stream()
+                        .anyMatch(o -> k.equals(o) || k.startsWith(o + "."));
     }
 }

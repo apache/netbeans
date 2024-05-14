@@ -19,7 +19,9 @@
 package org.netbeans.spi.lsp;
 
 import java.util.List;
+import java.util.Set;
 import javax.swing.text.Document;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.lsp.CodeAction;
 import org.netbeans.api.lsp.Range;
@@ -42,4 +44,15 @@ public interface CodeActionProvider {
      * @since 1.23
      */
     public List<CodeAction> getCodeActions(@NonNull Document doc, @NonNull Range range, @NonNull Lookup context);
+
+    /**
+     * Return the set of code action kinds produced by this provider. May return null
+     * if unknown/all kinds may be produced.
+     *
+     * @return the set of supported code action kinds, or {@code null}
+     * @since 1.27
+     */
+    public default @CheckForNull Set<String> getSupportedCodeActionKinds() {
+        return null;
+    }
 }

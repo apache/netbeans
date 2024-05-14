@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +94,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class MicronautDataEndpointGenerator implements CodeActionProvider, CommandProvider {
 
     private static final String SOURCE = "source";
+    private static final Set<String> SUPPORTED_CODE_ACTION_KINDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(SOURCE)));
     private static final String CONTROLLER_ANNOTATION_NAME = "io.micronaut.http.annotation.Controller";
     private static final String GENERATE_DATA_ENDPOINT = "nbls.micronaut.generate.data.endpoint";
     private static final String URI =  "uri";
@@ -106,6 +108,11 @@ public class MicronautDataEndpointGenerator implements CodeActionProvider, Comma
         String description = json.getAsJsonObject().get("description").getAsString();;
         return new NotifyDescriptor.QuickPick.Item(label, description);
     }).create();
+
+    @Override
+    public Set<String> getSupportedCodeActionKinds() {
+        return SUPPORTED_CODE_ACTION_KINDS;
+    }
 
     @Override
     @NbBundle.Messages({

@@ -51,6 +51,19 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="CodeActionProvider.getSupportedCodeActionKinds">
+        <api name="LSP_API"/>
+        <summary>Adding CodeActionProvider.getSupportedCodeActionKinds method</summary>
+        <version major="1" minor="27"/>
+        <date day="8" month="5" year="2024"/>
+        <author login="jlahoda"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no" />
+        <description>
+            A <code>CodeActionProvider.getSupportedCodeActionKinds</code> method is
+            introduced that allows to specify supported kinds of code actions.
+        </description>
+        <class package="org.netbeans.spi.lsp" name="CodeActionProvider"/>
+    </change>
     <change id="ErrorProvider.Context.getHintsConfigFile">
         <api name="LSP_API"/>
         <summary>Adding ErrorProvider.Context.getHintsConfigFile() method</summary>

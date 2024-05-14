@@ -67,6 +67,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -92,6 +93,7 @@ import org.eclipse.lsp4j.CallHierarchyPrepareParams;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
+import org.eclipse.lsp4j.CodeActionKindCapabilities;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.CodeLens;
 import org.eclipse.lsp4j.CodeLensParams;
@@ -991,7 +993,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         Range range = params.getRange();
         int startOffset = Utils.getOffset(doc, range.getStart());
         int endOffset = Utils.getOffset(doc, range.getEnd());
-        if (startOffset == endOffset || !params.getContext().getDiagnostics().isEmpty()) {
+        Predicate<String> codeActionKindPermitted = Utils.codeActionKindFilter(params.getContext().getOnly());
+        if ((startOffset == endOffset || !params.getContext().getDiagnostics().isEmpty()) &&
+            (codeActionKindPermitted.test(CodeActionKind.QuickFix) || codeActionKindPermitted.test(CodeActionKind.RefactorRewrite))) {
             final javax.swing.text.Element elem = NbDocument.findLineRootElement(doc);
             int lineStartOffset = elem.getStartOffset();
             int lineEndOffset = elem.getEndOffset();
@@ -1031,7 +1035,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             if (diag.isPresent()) {
                                 action.setDiagnostics(Collections.singletonList(diag.get()));
                             }
-                            action.setKind(kind(err.getSeverity()));
+                            String codeActionKind = kind(err.getSeverity());
+                            if (!codeActionKindPermitted.test(codeActionKind)) {
+                                continue;
+                            }
+                            action.setKind(codeActionKind);
                             if (inputAction.getCommand() != null) {
                                 List<Object> commandParams = new ArrayList<>();
 
@@ -1068,57 +1076,21 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     public void run(ResultIterator resultIterator) throws Exception {
                         //code generators:
                         for (CodeActionsProvider codeGenerator : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                            Set<String> supportedCodeActionKinds = codeGenerator.getSupportedCodeActionKinds();
+                            if (supportedCodeActionKinds != null &&
+                                supportedCodeActionKinds.stream()
+                                                        .noneMatch(kind -> codeActionKindPermitted.test(kind))) {
+                                continue;
+                            }
                             try {
                                 for (CodeAction codeAction : codeGenerator.getCodeActions(client, resultIterator, params)) {
+                                    if (!codeActionKindPermitted.test(codeAction.getKind())) {
+                                        continue;
+                                    }
                                     result.add(Either.forRight(codeAction));
                                 }
                             } catch (Exception ex) {
                                 client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-                            }
-                        }
-                        if (client.getNbCodeCapabilities().wantsJavaSupport()) {
-                            //introduce hints:
-                            CompilationController cc = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
-                            if (cc != null) {
-                                cc.toPhase(JavaSource.Phase.RESOLVED);
-                                if (!range.getStart().equals(range.getEnd())) {
-                                    for (ErrorDescription err : IntroduceHint.computeError(cc, startOffset, endOffset, new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
-                                        for (Fix fix : err.getFixes().getFixes()) {
-                                            if (fix instanceof IntroduceFixBase) {
-                                                try {
-                                                    ModificationResult changes = ((IntroduceFixBase) fix).getModificationResult();
-                                                    if (changes != null) {
-                                                        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                                                        Set<? extends FileObject> fos = changes.getModifiedFileObjects();
-                                                        if (fos.size() == 1) {
-                                                            FileObject fileObject = fos.iterator().next();
-                                                            List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
-                                                            if (diffs != null) {
-                                                                List<TextEdit> edits = new ArrayList<>();
-                                                                for (ModificationResult.Difference diff : diffs) {
-                                                                    String newText = diff.getNewText();
-                                                                    edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
-                                                                            Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
-                                                                            newText != null ? newText : ""));
-                                                                }
-                                                                documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
-                                                            }
-                                                            CodeAction codeAction = new CodeAction(fix.getText());
-                                                            codeAction.setKind(CodeActionKind.RefactorExtract);
-                                                            codeAction.setEdit(new WorkspaceEdit(documentChanges));
-                                                            int renameOffset = ((IntroduceFixBase) fix).getNameOffset(changes);
-                                                            if (renameOffset >= 0) {
-                                                                codeAction.setCommand(new Command("Rename", client.getNbCodeCapabilities().getCommandPrefix() + ".rename.element.at", Collections.singletonList(renameOffset)));
-                                                            }
-                                                            result.add(Either.forRight(codeAction));
-                                                        }
-                                                    }
-                                                } catch (GeneratorUtils.DuplicateMemberException dme) {
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
                             }
                         }
                     }

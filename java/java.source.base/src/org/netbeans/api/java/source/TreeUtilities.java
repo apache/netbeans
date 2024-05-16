@@ -358,12 +358,14 @@ public final class TreeUtilities {
             
             public Void scan(Tree tree, Void p) {
                 if (tree != null) {
+                    long startPos = sourcePositions.getStartPosition(getCurrentPath().getCompilationUnit(), tree);
                     long endPos = sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), tree);
                     if (endPos == (-1)) {
                         switch (tree.getKind()) {
                             case ASSIGNMENT:
                                 if (getCurrentPath().getLeaf().getKind() == Kind.ANNOTATION) {
                                     ExpressionTree value = ((AssignmentTree) tree).getExpression();
+                                    startPos = sourcePositions.getStartPosition(getCurrentPath().getCompilationUnit(), value);
                                     endPos = sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), value);
                                 }
                                 break;
@@ -376,7 +378,7 @@ public final class TreeUtilities {
                                 break;
                         }
                     }
-                    if (sourcePositions.getStartPosition(getCurrentPath().getCompilationUnit(), tree) < pos && endPos >= pos) {
+                    if (startPos < pos && endPos >= pos) {
                         if (tree.getKind() == Tree.Kind.ERRONEOUS) {
                             tree.accept(this, p);
                             throw new Result(getCurrentPath());

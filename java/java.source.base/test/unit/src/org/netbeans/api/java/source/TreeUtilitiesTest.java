@@ -420,6 +420,15 @@ public class TreeUtilitiesTest extends NbTestCase {
         assertEquals(Kind.MEMBER_SELECT, tp.getLeaf().getKind());
         assertEquals("Test.VALUE", tp.getLeaf().toString());
     }
+
+    public void testAnnotationSyntheticValue4() throws Exception {
+        prepareTest("Test", "package test; @Meta(String.class) public class Test { } @interface Meta { public Class value(); }");
+
+        TreePath tp = info.getTreeUtilities().pathFor(24);
+
+        assertEquals(Kind.IDENTIFIER, tp.getLeaf().getKind());
+        assertEquals("String", tp.getLeaf().toString());
+    }
     
     public void testAutoMapComments1() throws Exception {
         prepareTest("Test", "package test;\n" +

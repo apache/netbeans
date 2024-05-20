@@ -3899,7 +3899,7 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close 
 
 | T_DOUBLE_CAST:token expr:expr
 {:
-    RESULT = new CastExpression(tokenleft, exprright, expr , CastExpression.Type.REAL);
+    RESULT = new CastExpression(tokenleft, exprright, expr , CastExpression.Type.FLOAT);
 :}
 
 | T_STRING_CAST:token expr:expr
@@ -4460,7 +4460,7 @@ T_LNUMBER:scalar
 
 | T_DNUMBER:scalar
 {:
-    Scalar s = new Scalar(scalarleft, scalarright, scalar, Scalar.Type.REAL);
+    Scalar s = new Scalar(scalarleft, scalarright, scalar, Scalar.Type.FLOAT);
     RESULT = s;
 :}
 
@@ -5837,7 +5837,7 @@ string_st:string
 
 | T_NUM_STRING:num
 {:
-    Scalar scalar = new Scalar(numleft,numright, num, Scalar.Type.REAL);
+    Scalar scalar = new Scalar(numleft,numright, num, Scalar.Type.FLOAT);
     RESULT = scalar;
 :}
 

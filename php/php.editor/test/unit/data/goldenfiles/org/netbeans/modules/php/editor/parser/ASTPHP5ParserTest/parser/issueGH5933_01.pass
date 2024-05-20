@@ -449,7 +449,7 @@
                         </Variable>
                         <ClassName start='936' end='952'>
                             <ParenthesisExpression start='936' end='952'>
-                                <CastExpression start='937' end='951' castingType='REAL'>
+                                <CastExpression start='937' end='951' castingType='FLOAT'>
                                     <Variable start='946' end='951' isDollared='true'>
                                         <Identifier start='947' end='951' name='test'/>
                                     </Variable>

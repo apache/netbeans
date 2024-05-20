@@ -296,7 +296,7 @@
                     <Identifier start='873' end='882' name='CONSTANT1'/>
                 </Names>
                 <Initializers>
-                    <Scalar start='885' end='897' type='REAL' value='123456789.88'/>
+                    <Scalar start='885' end='897' type='FLOAT' value='123456789.88'/>
                 </Initializers>
             </GlobalConstantDeclaration>
             <GlobalConstantDeclaration start='899' end='932'>
@@ -304,7 +304,7 @@
                     <Identifier start='905' end='914' name='CONSTANT2'/>
                 </Names>
                 <Initializers>
-                    <Scalar start='917' end='931' type='REAL' value='123_456_789.88'/>
+                    <Scalar start='917' end='931' type='FLOAT' value='123_456_789.88'/>
                 </Initializers>
             </GlobalConstantDeclaration>
             <GlobalConstantDeclaration start='933' end='976'>
@@ -312,7 +312,7 @@
                     <Identifier start='939' end='948' name='CONSTANT1'/>
                 </Names>
                 <Initializers>
-                    <Scalar start='951' end='975' type='REAL' value='1_234_5678_9.88_888_8_88'/>
+                    <Scalar start='951' end='975' type='FLOAT' value='1_234_5678_9.88_888_8_88'/>
                 </Initializers>
             </GlobalConstantDeclaration>
             <ExpressionStatement start='978' end='994'>
@@ -332,34 +332,34 @@
                 </Assignment>
             </ExpressionStatement>
             <ExpressionStatement start='1014' end='1018'>
-                <Scalar start='1014' end='1017' type='REAL' value='.88'/>
+                <Scalar start='1014' end='1017' type='FLOAT' value='.88'/>
             </ExpressionStatement>
             <ExpressionStatement start='1019' end='1026'>
-                <Scalar start='1019' end='1025' type='REAL' value='.88_00'/>
+                <Scalar start='1019' end='1025' type='FLOAT' value='.88_00'/>
             </ExpressionStatement>
             <ExpressionStatement start='1027' end='1037'>
-                <Scalar start='1027' end='1036' type='REAL' value='.88_000_0'/>
+                <Scalar start='1027' end='1036' type='FLOAT' value='.88_000_0'/>
             </ExpressionStatement>
             <ExpressionStatement start='1038' end='1042'>
-                <Scalar start='1038' end='1041' type='REAL' value='33.'/>
+                <Scalar start='1038' end='1041' type='FLOAT' value='33.'/>
             </ExpressionStatement>
             <ExpressionStatement start='1043' end='1050'>
-                <Scalar start='1043' end='1049' type='REAL' value='33_44.'/>
+                <Scalar start='1043' end='1049' type='FLOAT' value='33_44.'/>
             </ExpressionStatement>
             <ExpressionStatement start='1051' end='1065'>
-                <Scalar start='1051' end='1064' type='REAL' value='33_44_5_6666.'/>
+                <Scalar start='1051' end='1064' type='FLOAT' value='33_44_5_6666.'/>
             </ExpressionStatement>
             <ExpressionStatement start='1067' end='1080'>
-                <Scalar start='1067' end='1079' type='REAL' value='1.234567e-11'/>
+                <Scalar start='1067' end='1079' type='FLOAT' value='1.234567e-11'/>
             </ExpressionStatement>
             <ExpressionStatement start='1090' end='1104'>
-                <Scalar start='1090' end='1103' type='REAL' value='1.234_567e-11'/>
+                <Scalar start='1090' end='1103' type='FLOAT' value='1.234_567e-11'/>
             </ExpressionStatement>
             <ExpressionStatement start='1114' end='1130'>
-                <Scalar start='1114' end='1129' type='REAL' value='1.2_34_567e-1_1'/>
+                <Scalar start='1114' end='1129' type='FLOAT' value='1.2_34_567e-1_1'/>
             </ExpressionStatement>
             <ExpressionStatement start='1140' end='1156'>
-                <Scalar start='1140' end='1155' type='REAL' value='1.2_3456_7E1_11'/>
+                <Scalar start='1140' end='1155' type='FLOAT' value='1.2_3456_7E1_11'/>
             </ExpressionStatement>
             <ExpressionStatement start='1167' end='1177'>
                 <Scalar start='1167' end='1176' type='INT' value='123456789'/>
@@ -371,22 +371,22 @@
                 <Scalar start='1213' end='1225' type='INT' value='12_3456_7_89'/>
             </ExpressionStatement>
             <ExpressionStatement start='1239' end='1250'>
-                <Scalar start='1239' end='1249' type='REAL' value='0x1234ABCD'/>
+                <Scalar start='1239' end='1249' type='FLOAT' value='0x1234ABCD'/>
             </ExpressionStatement>
             <ExpressionStatement start='1266' end='1278'>
-                <Scalar start='1266' end='1277' type='REAL' value='0x1234_ABCD'/>
+                <Scalar start='1266' end='1277' type='FLOAT' value='0x1234_ABCD'/>
             </ExpressionStatement>
             <ExpressionStatement start='1294' end='1308'>
-                <Scalar start='1294' end='1307' type='REAL' value='0x1_23_4ABC_D'/>
+                <Scalar start='1294' end='1307' type='FLOAT' value='0x1_23_4ABC_D'/>
             </ExpressionStatement>
             <ExpressionStatement start='1325' end='1336'>
-                <Scalar start='1325' end='1335' type='REAL' value='0b01011111'/>
+                <Scalar start='1325' end='1335' type='FLOAT' value='0b01011111'/>
             </ExpressionStatement>
             <ExpressionStatement start='1347' end='1359'>
-                <Scalar start='1347' end='1358' type='REAL' value='0b0101_1111'/>
+                <Scalar start='1347' end='1358' type='FLOAT' value='0b0101_1111'/>
             </ExpressionStatement>
             <ExpressionStatement start='1370' end='1384'>
-                <Scalar start='1370' end='1383' type='REAL' value='0b010_11_1_11'/>
+                <Scalar start='1370' end='1383' type='FLOAT' value='0b010_11_1_11'/>
             </ExpressionStatement>
             <ExpressionStatement start='1396' end='1404'>
                 <Scalar start='1396' end='1403' type='INT' value='0123456'/>

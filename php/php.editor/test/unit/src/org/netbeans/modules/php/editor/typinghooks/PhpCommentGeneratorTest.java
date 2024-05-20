@@ -846,6 +846,24 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                             "?>\n");
     }
 
+    public void testFunctionGuessingFloatReturnType() throws Exception {
+        insertBreak( "<?php\n" +
+                            "/**^\n" +
+                            "function foo() {\n" +
+                            "    return 1.2;\n" +
+                            "}\n" +
+                            "?>\n",
+                            "<?php\n" +
+                            "/**\n" +
+                            " * \n" +
+                            " * @return float^\n" +
+                            " */\n" +
+                            "function foo() {\n" +
+                            "    return 1.2;\n" +
+                            "}\n" +
+                            "?>\n");
+    }
+
     public void testFunctionGuessingNullReturnType() throws Exception {
         insertBreak( "<?php\n" +
                             "/**^\n" +

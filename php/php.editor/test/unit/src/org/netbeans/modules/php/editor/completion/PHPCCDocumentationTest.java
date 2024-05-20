@@ -654,6 +654,14 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/phpDocAndFunctionInDifferentBlocks.php", "func2^(1)", false, "");
     }
 
+    public void testFunctionGuessingFloatReturnType_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/functionGuessingFloatReturnType.php", "testFloatReturn^Type_01();", false, "");
+    }
+
+    public void testFunctionGuessingFloatReturnType_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/functionGuessingFloatReturnType.php", "testFloatReturnTypeWithUnion^Type_01();", false, "");
+    }
+
     @Override
     protected String alterDocumentationForTest(String documentation) {
         int start = documentation.indexOf("file:");

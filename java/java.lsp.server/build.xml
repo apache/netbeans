@@ -42,7 +42,7 @@
         <chmod file="${lsp.build.dir}/platform/lib/nbexec" perm="u+x"/>
         <chmod file="${lsp.build.dir}/java/maven/bin/mvn" perm="u+x" />
 
-        <property name="3rdparty.modules" value=".*externalcodeformatter.*"/>
+        <property name="3rdparty.modules" value=""/>
         <autoupdate todir="${lsp.build.dir}/extra" updatecenter="https://netbeans.apache.org/nb/plugins/17/catalog.xml.gz">
             <modules includes="${3rdparty.modules}"/>
         </autoupdate>

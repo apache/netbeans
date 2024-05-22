@@ -102,6 +102,7 @@ public class MicronautDataCompletionTask {
     private int anchorOffset;
 
     public static interface ItemFactory<T> extends MicronautExpressionLanguageCompletion.ItemFactory<T> {
+        T createControllerMethodItem(CompilationInfo info, String annName, String controllerId, int offset);
         T createControllerMethodItem(CompilationInfo info, VariableElement delegateRepository, ExecutableElement delegateMethod, String controllerId, String id, int offset);
         T createFinderMethodItem(String name, String returnType, int offset);
         T createFinderMethodNameItem(String prefix, String name, int offset);
@@ -265,7 +266,11 @@ public class MicronautDataCompletionTask {
         AnnotationMirror controllerAnn = Utils.getAnnotation(te.getAnnotationMirrors(), CONTROLLER_ANNOTATION_NAME);
         if (controllerAnn != null) {
             List<VariableElement> repositories = Utils.getRepositoriesFor(info, te);
-            if (!repositories.isEmpty()) {
+            if (repositories.isEmpty()) {
+                Utils.collectMissingEndpoints(info, te, (annName, controllerId) -> {
+                    consumer.accept(factory.createControllerMethodItem(info, annName, controllerId, anchorOffset));
+                });
+            } else {
                 Utils.collectMissingDataEndpoints(info, te, prefix, (repository, delegateMethod, controllerId, id) -> {
                     consumer.accept(factory.createControllerMethodItem(info, repository, delegateMethod, controllerId, id, anchorOffset));
                 });

@@ -19,15 +19,11 @@
 package org.netbeans.modules.micronaut.db;
 
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -38,6 +34,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -319,23 +316,25 @@ public class MicronautController implements TemplateWizard.Iterator {
                             TreeMaker tm = copy.getTreeMaker();
                             String controllerId = "/" + name.toLowerCase();
                             ClassTree cls = gu.addAnnotation((ClassTree) origTree, gu.createAnnotation("io.micronaut.http.annotation.Controller", List.of(tm.Literal(controllerId)))); //NOI18N
+                            Set<Element> toImport = new HashSet<>();
                             if (repositoryFQN != null) {
                                 String repositoryFieldName = name.substring(0, 1).toLowerCase() + name.substring(1) + "Repository"; //NOI18N
                                 VariableTree repositoryField = tm.Variable(tm.Modifiers(EnumSet.of(Modifier.PRIVATE, Modifier.FINAL)), repositoryFieldName, tm.QualIdent(repositoryFQN), null);
                                 cls = tm.addClassMember(cls, repositoryField);
                                 cls = tm.addClassMember(cls, GeneratorUtilities.get(copy).createConstructor(cls, Collections.singleton(repositoryField)));
                                 TypeElement te = copy.getElements().getTypeElement(repositoryFQN);
-                                MethodTree mt = te != null ? Utils.createControllerFindAllDataEndpointMethod(copy, te, repositoryFieldName, controllerId, null) : null;
+                                MethodTree mt = te != null ? Utils.createControllerFindAllDataEndpointMethod(copy, te, repositoryFieldName, controllerId, null, toImport) : null;
                                 if (mt != null) {
                                     cls = tm.addClassMember(cls, mt);
                                 }
                             } else {
-                                List<ExpressionTree> getAnnArgs = Arrays.asList(gu.createAnnotationArgument("uri", "/"), gu.createAnnotationArgument("produces", "text/plain")); //NOI18N
-                                ModifiersTree mods = tm.Modifiers(Collections.singleton(Modifier.PUBLIC), Collections.singletonList(gu.createAnnotation("io.micronaut.http.annotation.Get", getAnnArgs))); //NOI18N
-                                MethodTree indexMethod = tm.Method(mods, "index", tm.QualIdent("java.lang.String"), Collections.<TypeParameterTree>emptyList(), Collections.<VariableTree>emptyList(), Collections.<ExpressionTree>emptyList(), "{return \"Example Response\";}", null); //NOI18N
-                                cls = tm.addClassMember(cls, indexMethod);
+                                MethodTree mt = Utils.createControllerEndpointMethod(copy, "get", controllerId, toImport); //NOI18N
+                                if (mt != null) {
+                                    cls = tm.addClassMember(cls, mt);
+                                }
                             }
                             copy.rewrite(origTree, cls);
+                            copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), toImport));
                         }
                     }).commit();
                 }

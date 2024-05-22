@@ -668,7 +668,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 name: "Java Single Debug",
                 request: "launch"
             };
-            if (!methodName) {
+            if (methodName) {
                 debugConfig['methodName'] = methodName;
             }
             if (launchConfiguration == '') {

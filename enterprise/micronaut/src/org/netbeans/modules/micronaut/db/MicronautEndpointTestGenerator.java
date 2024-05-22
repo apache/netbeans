@@ -318,29 +318,25 @@ public class MicronautEndpointTestGenerator implements CodeActionProvider, Comma
                                 Set<Element> toImport = new HashSet<>();
                                 for (ExecutableElement ee : ElementFilter.methodsIn(te.getEnclosedElements())) {
                                     MicronautSymbolFinder.MthIterator it = new MicronautSymbolFinder.MthIterator(ee, copy.getElements(), copy.getTypes());
-                                    while(it.hasNext()) {
+                                    while (it.hasNext()) {
                                         ExecutableElement mth = it.next();
                                         for (AnnotationMirror ann : mth.getAnnotationMirrors()) {
                                             String method = getEndpointMethod((TypeElement) ann.getAnnotationType().asElement());
                                             if (method != null) {
                                                 List<String> ids = new ArrayList<>();
-                                                Map<? extends ExecutableElement, ? extends AnnotationValue> values = ann.getElementValues();
-                                                if (values.isEmpty()) {
-                                                    ids.add("/");
-                                                } else {
-                                                    for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : values.entrySet()) {
-                                                        if ("value".contentEquals(entry.getKey().getSimpleName()) || "uri".contentEquals(entry.getKey().getSimpleName())) {
-                                                            ids.add((String) entry.getValue().getValue());
-                                                        } else if ("uris".contentEquals(entry.getKey().getSimpleName())) {
-                                                            for (AnnotationValue av : (List<AnnotationValue>) entry.getValue().getValue()) {
-                                                                ids.add((String) av.getValue());
-                                                            }
+                                                for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : ann.getElementValues().entrySet()) {
+                                                    if ("value".contentEquals(entry.getKey().getSimpleName()) || "uri".contentEquals(entry.getKey().getSimpleName())) {
+                                                        ids.add((String) entry.getValue().getValue());
+                                                    } else if ("uris".contentEquals(entry.getKey().getSimpleName())) {
+                                                        for (AnnotationValue av : (List<AnnotationValue>) entry.getValue().getValue()) {
+                                                            ids.add((String) av.getValue());
                                                         }
                                                     }
                                                 }
-                                                if (!ids.isEmpty()) {
-                                                    members.add(createTestMethodFor(copy, ee, method, path, ids, toImport));
+                                                if (ids.isEmpty()) {
+                                                    ids.add("/");
                                                 }
+                                                members.add(createTestMethodFor(copy, ee, method, path, ids, toImport));
                                             }
                                         }
                                     }
@@ -407,6 +403,7 @@ public class MicronautEndpointTestGenerator implements CodeActionProvider, Comma
                     } else {
                         if (sb.isEmpty()) {
                             sb.append(",Map.of(");
+                            toImport.add(copy.getElements().getTypeElement(MAP_TYPE_NAME));
                         } else {
                             sb.append(',');
                         }
@@ -419,8 +416,6 @@ public class MicronautEndpointTestGenerator implements CodeActionProvider, Comma
                 }
                 if (sb.isEmpty()) {
                     sb.append(",null");
-                } else {
-                    toImport.add(copy.getElements().getTypeElement(MAP_TYPE_NAME));
                 }
             }
             if (i == 0) {

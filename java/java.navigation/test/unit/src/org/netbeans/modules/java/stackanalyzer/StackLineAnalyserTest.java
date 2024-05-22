@@ -48,6 +48,10 @@ public class StackLineAnalyserTest extends NbTestCase {
         assertTrue(StackLineAnalyser.matches("             [exec]     at org.openide.filesystems.FileUtil.normalizeFileOnMac(FileUtil.java:1714)"));
         assertTrue(StackLineAnalyser.matches("at java.base/java.lang.String.lastIndexOf(String.java:1627)"));
         assertTrue(StackLineAnalyser.matches(" at java.base/java.lang.String.lastIndexOf(String.java:1627)"));
+        // surefire + module info in src and test sources
+        assertTrue(StackLineAnalyser.matches("	at Mavenproject1/dev.mbien.mavenproject1.Mavenproject1.foo(Mavenproject1.java:15)"));
+        // surefire + module info in src but _no_ module info for test sources
+        assertTrue(StackLineAnalyser.matches("	at Mavenproject1@0.1-SNAPSHOT/dev.mbien.mavenproject1.Mavenproject1.foo(Mavenproject1.java:11)"));
         // some loggers (e.g. MavenSimpleLogger until MNG-7970/#1342 which is maven's default logger) seem to add a space before the '('
         assertTrue(StackLineAnalyser.matches("    at java.util.zip.ZipFile$CleanableResource.<init> (ZipFile.java:742)"));
     }

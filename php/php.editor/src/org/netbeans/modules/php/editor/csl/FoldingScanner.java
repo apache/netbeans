@@ -518,6 +518,10 @@ public final class FoldingScanner {
                 return;
             }
             super.visit(node);
+            if (node.getElements().isEmpty()) {
+                // GH-7187 don't fold an empty array
+                return;
+            }
             ArrayCreation.Type type = node.getType();
             if (type == ArrayCreation.Type.NEW) {
                 addFold(node, TYPE_ARRAY);

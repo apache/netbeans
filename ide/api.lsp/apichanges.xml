@@ -54,7 +54,7 @@
     <change id="CodeActionProvider.getSupportedCodeActionKinds">
         <api name="LSP_API"/>
         <summary>Adding CodeActionProvider.getSupportedCodeActionKinds method</summary>
-        <version major="1" minor="27"/>
+        <version major="1" minor="28"/>
         <date day="8" month="5" year="2024"/>
         <author login="jlahoda"/>
         <compatibility binary="compatible" source="compatible" addition="yes" deletion="no" />
@@ -63,6 +63,21 @@
             introduced that allows to specify supported kinds of code actions.
         </description>
         <class package="org.netbeans.spi.lsp" name="CodeActionProvider"/>
+    </change>
+    <change id="applyModifications-spi">
+        <api name="LSP_API"/>
+        <summary>API and SPI to request application of WorkspaceEdit</summary>
+        <version major="1" minor="27"/>
+        <date day="25" month="5" year="2024"/>
+        <author login="sdedic"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no" />
+        <description>
+            Added API to request that a <a href="@TOP@/org/netbeans/api/lsp/WorkspaceEdit.html#applyEdits-java.util.List-boolean-">WorkspaceEdit</a> is applied
+            to the resources with an optional save.
+        </description>
+        <class package="org.netbeans.api.lsp" name="WorkspaceEdit"/>
+        <class package="org.netbeans.api.lsp" name="ResourceModificationException"/>
+        <class package="org.netbeans.spi.lsp" name="ApplyEditsImplementation"/>
     </change>
     <change id="ErrorProvider.Context.getHintsConfigFile">
         <api name="LSP_API"/>

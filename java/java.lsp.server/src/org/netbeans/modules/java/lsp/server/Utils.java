@@ -27,11 +27,15 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -544,6 +548,7 @@ public class Utils {
     }
     
     public static WorkspaceEdit workspaceEditFromApi(org.netbeans.api.lsp.WorkspaceEdit edit, String uri, NbCodeLanguageClient client) {
+        Set<String> createdResources = new HashSet<>();
         List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
         for (Union2<org.netbeans.api.lsp.TextDocumentEdit, org.netbeans.api.lsp.ResourceOperation> parts : edit.getDocumentChanges()) {
             if (parts.hasFirst()) {
@@ -558,13 +563,23 @@ public class Utils {
                         List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), te.getNewText())).collect(Collectors.toList());
                         TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
                         documentChanges.add(Either.forLeft(tde));
+                    } else if (createdResources.contains(docUri)) {
+                        // PENDING: now accept just initial content. In theory, no edits can overlap, so for a new resource,
+                        // only inserts with 0 offset are permitted.
+                        List<TextEdit> edits = parts.first().getEdits().stream().filter(te -> te.getStartOffset() == 0 && te.getEndOffset() == 0).
+                                map(te -> new TextEdit(new Range(new Position(0, 0), new Position(0, 0)), te.getNewText())).
+                                collect(Collectors.toList());
+                        TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
+                        documentChanges.add(Either.forLeft(tde));
                     }
                 } catch (Exception ex) {
                     client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
                 }
             } else {
                 if (parts.second() instanceof org.netbeans.api.lsp.ResourceOperation.CreateFile) {
-                    documentChanges.add(Either.forRight(new CreateFile(((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile())));
+                    String res = ((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile();
+                    documentChanges.add(Either.forRight(new CreateFile(res)));
+                    createdResources.add(res);
                 } else {
                     throw new IllegalStateException(String.valueOf(parts.second()));
                 }

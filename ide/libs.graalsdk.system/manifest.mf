@@ -5,4 +5,3 @@ OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/graalsdk/system/Bundle.prope
 OpenIDE-Module-Specification-Version: 1.25
 OpenIDE-Module-Provides: org.netbeans.spi.scripting.EngineProvider
 OpenIDE-Module-Package-Dependencies: org.graalvm.polyglot[Engine]
-OpenIDE-Module-Java-Dependencies: Java > 17

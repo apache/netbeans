@@ -3,5 +3,4 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.libs.flexmark
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/flexmark/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.18
-OpenIDE-Module-Java-Dependencies: Java > 11
 

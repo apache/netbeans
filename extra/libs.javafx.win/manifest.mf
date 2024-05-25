@@ -4,6 +4,5 @@ OpenIDE-Module: org.netbeans.libs.javafx.win
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/javafx/win/Bundle.properties
 OpenIDE-Module-Fragment-Host: org.netbeans.libs.javafx
 OpenIDE-Module-Specification-Version: 17.14
-OpenIDE-Module-Java-Dependencies: Java > 11
 OpenIDE-Module-Requires: org.openide.modules.os.Windows, org.openide.modules.arch.amd64
 OpenIDE-Module-Provides: org.openide.modules.jre.JavaFX

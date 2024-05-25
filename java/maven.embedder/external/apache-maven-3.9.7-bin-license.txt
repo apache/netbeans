@@ -1,9 +1,9 @@
-Name: Guava - Failure Access Library
-Version: 1.0.1
+Name: Apache Maven Distribution
+Description: Apache Maven Distribution
+Version: 3.9.7
 License: Apache-2.0
-Origin: https://github.com/google/guava
-Description: A Guava subproject
-Files: apache-maven-3.9.6-bin.zip!/apache-maven-3.9.6/lib/failureaccess-1.0.1.jar
+Origin: Apache Software Foundation
+URL: https://maven.apache.org/
 
                                  Apache License
                            Version 2.0, January 2004

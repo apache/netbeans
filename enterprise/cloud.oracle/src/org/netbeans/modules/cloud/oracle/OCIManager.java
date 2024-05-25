@@ -360,7 +360,7 @@ public final class OCIManager {
     }
     
     public void addConnectedProfile(OCIProfile profile) {
-        if (profile.getTenantId() == null) {
+        if (!profile.getTenancy().isPresent()) {
             throw new IllegalArgumentException("Broken profiles are not supported.");
         }
         List<OCIProfile> current = getConnectedProfiles();

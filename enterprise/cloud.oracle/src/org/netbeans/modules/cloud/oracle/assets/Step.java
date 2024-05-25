@@ -16,23 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.compute;
+package org.netbeans.modules.cloud.oracle.assets;
 
-import org.netbeans.modules.cloud.oracle.items.OCID;
-import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import org.openide.NotifyDescriptor;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author Jan Horvath
  */
-public final class ClusterItem extends OCIItem {
+interface Step<T, U> {
 
-    public ClusterItem(OCID id, String compartmentId, String name) {
-        super(id, compartmentId, name);
-    }
+    Step<T, U> prepare(T item, Lookup lookup);
 
-    public ClusterItem() {
-        super();
-    }
+    NotifyDescriptor createInput();
+
+    boolean onlyOneChoice();
+
+    Step getNext();
+
+    void setValue(String selected);
+
+    U getValue();
     
 }

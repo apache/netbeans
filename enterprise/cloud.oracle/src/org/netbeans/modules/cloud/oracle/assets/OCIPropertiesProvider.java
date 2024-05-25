@@ -16,7 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.lsp.server.db;
+package org.netbeans.modules.cloud.oracle.assets;
+
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -50,6 +51,7 @@ import java.util.logging.Logger;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.spi.lsp.CommandProvider;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -57,8 +59,8 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Jan Horvath
  */
 @ServiceProvider(service = CommandProvider.class)
-public class DBConnectionProvider implements CommandProvider {
-    private static final Logger LOG = Logger.getLogger(DBConnectionProvider.class.getName());
+public class OCIPropertiesProvider implements CommandProvider {
+    private static final Logger LOG = Logger.getLogger(OCIPropertiesProvider.class.getName());
     private static final String  GET_DB_CONNECTION = "nbls.db.connection"; //NOI18N
 
     private static final boolean POSIX = FileSystems.getDefault().supportedFileAttributeViews().contains("posix");  // NOI18N
@@ -68,7 +70,7 @@ public class DBConnectionProvider implements CommandProvider {
     // temporary directory location
     private static final Path tmpdir = Path.of(System.getProperty("java.io.tmpdir"));       // NOI18N
 
-    public DBConnectionProvider() {
+    public OCIPropertiesProvider() {
         try {
             deleteOldFiles(generateDirPath());
         } catch (IOException ex) {
@@ -83,7 +85,19 @@ public class DBConnectionProvider implements CommandProvider {
         Properties dbProps = new Properties();
         DatabaseConnection conn = ConnectionManager.getDefault().getPreferredConnection(true);
 
-        if (conn != null) {
+        dbProps.putAll(PropertiesGenerator.getProperties(null));
+        // If cloud assets are empty, try to get properties for a preferred DB connection
+        if (conn != null && dbProps.isEmpty()) {
+            dbProps.put("datasources.default.url", conn.getDatabaseURL()); //NOI18N
+            dbProps.put("datasources.default.username", conn.getUser()); //NOI18N
+            dbProps.put("datasources.default.password", conn.getPassword()); //NOI18N
+            dbProps.put("datasources.default.driverClassName", conn.getDriverClass()); //NOI18N
+            String ocid = (String) conn.getConnectionProperties().get("OCID"); //NOI18N
+            if (ocid != null && !ocid.isEmpty()) {
+                dbProps.put("datasources.default.ocid", ocid); //NOI18N
+            }
+        }
+        if (!dbProps.isEmpty()) {
             Path temp = null;
             Path dir = generateDirPath();
 
@@ -93,7 +107,6 @@ public class DBConnectionProvider implements CommandProvider {
                 }
                 if (POSIX) {
                     FileAttribute<?> readWriteAttribs = PosixFilePermissions.asFileAttribute(readWritePosix);
-//                  FileAttribute<?> readWriteAttribs = PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-------"));
                     temp = Files.createTempFile(dir, "db-", ".properties", readWriteAttribs);       // NOI18N
                 } else {
                     temp = Files.createTempFile(dir, "db-", ".properties");                         // NOI18N
@@ -120,14 +133,6 @@ public class DBConnectionProvider implements CommandProvider {
             }
 
             try (Writer writer = new FileWriter(temp.toFile(), Charset.defaultCharset());) {
-                dbProps.put("datasources.default.url", conn.getDatabaseURL()); //NOI18N
-                dbProps.put("datasources.default.username", conn.getUser()); //NOI18N
-                dbProps.put("datasources.default.password", conn.getPassword()); //NOI18N
-                dbProps.put("datasources.default.driverClassName", conn.getDriverClass()); //NOI18N
-                String ocid = (String) conn.getConnectionProperties().get("OCID"); //NOI18N
-                if (ocid != null && !ocid.isEmpty()) {
-                    dbProps.put("datasources.default.ocid", ocid); //NOI18N
-                }
                 dbProps.store(writer, "");
                 if (POSIX) {
                     PosixFileAttributeView attribs = Files.getFileAttributeView(temp, PosixFileAttributeView.class);
@@ -207,4 +212,5 @@ public class DBConnectionProvider implements CommandProvider {
             }
         }
     }
+    
 }

@@ -18,17 +18,16 @@
  */
 package org.netbeans.modules.cloud.oracle.compute;
 
-import com.oracle.bmc.containerengine.ContainerEngineClient;
 import com.oracle.bmc.core.ComputeClient;
 import com.oracle.bmc.core.model.Instance;
 import com.oracle.bmc.core.requests.ListInstancesRequest;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
-import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.OCINode;
 import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
+import org.openide.nodes.Children;
 import org.openide.util.NbBundle;
 
 /**
@@ -42,7 +41,7 @@ public class ComputeInstanceNode extends OCINode {
     private static final String COMPUTE_INSTANCE_ICON = "org/netbeans/modules/cloud/oracle/resources/computeinstance.svg"; // NOI18N
 
     public ComputeInstanceNode(ComputeInstanceItem instance) {
-        super(instance);
+        super(instance, Children.LEAF);
         setName(instance.getName());
         setDisplayName(instance.getName());
         setIconBaseWithExtension(COMPUTE_INSTANCE_ICON);

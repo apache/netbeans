@@ -100,6 +100,10 @@ public class AddADBAction implements ActionListener {
     })
     @Override
     public void actionPerformed(ActionEvent e) {
+        addADB();
+    }
+    
+    public DatabaseItem addADB() {
         Map<String, Object> result = new HashMap<> ();
         
         NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddADB(), NUMBER_OF_INPUTS, new Callback() {
@@ -211,10 +215,12 @@ public class AddADBAction implements ActionListener {
                         selectedDatabase.getKey().getValue(),
                         selectedDatabase.getCompartmentId());
                 action.addConnection(info);
+                return selectedDatabase;
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
+        return null;
     }
     
     private <T extends OCIItem> NotifyDescriptor.QuickPick createQuickPick(Map<String, T> ociItems, String title) {

@@ -16,23 +16,43 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.compute;
+package org.netbeans.modules.cloud.oracle.assets;
 
-import org.netbeans.modules.cloud.oracle.items.OCID;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionRegistration;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author Jan Horvath
  */
-public final class ClusterItem extends OCIItem {
+@ActionID(
+        category = "Tools",
+        id = "org.netbeans.modules.cloud.oracle.actions.RemoveFromProject"
+)
+@ActionRegistration( 
+        displayName = "#RemoveFromProject", 
+        asynchronous = true
+)
 
-    public ClusterItem(OCID id, String compartmentId, String name) {
-        super(id, compartmentId, name);
+@NbBundle.Messages({
+    "RemoveFromProject=Remove From Assets"
+})
+public class RemoveFromProject implements ActionListener {
+    
+    private final OCIItem context;
+
+    public RemoveFromProject(OCIItem context) {
+        this.context = context;
     }
 
-    public ClusterItem() {
-        super();
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        CloudAssets.getDefault().removeItem(context);
     }
+
     
 }

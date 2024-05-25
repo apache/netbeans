@@ -16,23 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.compute;
+package org.netbeans.modules.cloud.oracle.assets;
 
-import org.netbeans.modules.cloud.oracle.items.OCID;
-import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import java.util.Set;
+import org.netbeans.api.project.Project;
 
 /**
  *
  * @author Jan Horvath
  */
-public final class ClusterItem extends OCIItem {
-
-    public ClusterItem(OCID id, String compartmentId, String name) {
-        super(id, compartmentId, name);
-    }
-
-    public ClusterItem() {
-        super();
-    }
+public interface SuggestionAnalyzer {
+    
+    Set<SuggestedItem> findSuggestions(Project[] projects);
     
 }

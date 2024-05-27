@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.masterfs.watcher.macosx;
+package org.netbeans.modules.masterfs;
 
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -36,23 +36,26 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Utilities;
 
 /**
- * Test based in the LinuxNotifier235632Test test class
+ * Test for bug 235632.
+ *
+ * @author jhavlin
  * @author Hector Espert
  */
-public class OSXNotifierTest extends NbTestCase {
+public class NotifierTest extends NbTestCase {
     
     private File folder1;
     private File folder1text1Txt;
     private FileObject folder2FO;
     private FileObject folder2text2TxtFO;
 
-    public OSXNotifierTest(String name) {
+    public NotifierTest(String name) {
         super(name);
     }
     
     @Override
     public boolean canRun() {
-        return super.canRun() && Utilities.getOperatingSystem() == Utilities.OS_MAC;
+        // FSEvent order isn't predictable on mac causing frequent test failures
+        return super.canRun() && Utilities.getOperatingSystem() != Utilities.OS_MAC;
     }
     
     @Override

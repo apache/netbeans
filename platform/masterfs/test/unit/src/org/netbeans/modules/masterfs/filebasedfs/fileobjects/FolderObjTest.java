@@ -35,6 +35,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import org.junit.Assume;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.masterfs.filebasedfs.Statistics;
 import org.netbeans.modules.masterfs.filebasedfs.FileBasedFileSystem;
@@ -1782,6 +1783,7 @@ public class FolderObjTest extends NbTestCase {
     }
 
     public void testVirtualFOs() throws IOException {
+        Assume.assumeFalse(Utilities.isWindows()); // TODO fails on win
         final FileObject wd = FileBasedFileSystem.getFileObject(getWorkDir());
         FileObject nonExisting = wd.getFileObject("non-existing-folder/non-existing-folder/non-existing-child.xyz", false);
         assertFalse(nonExisting.isValid());

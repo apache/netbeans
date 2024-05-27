@@ -912,6 +912,10 @@ jobs:
         if: ${{ matrix.java == '17' }}
         run: ant $OPTS -f extide/o.apache.tools.ant.module test
 
+      - name: apisupport.ant
+        if: ${{ matrix.java == '17' }}
+        run: ant $OPTS -f apisupport/apisupport.ant test
+
       - name: Create Test Summary
         uses: test-summary/action@v2
         if: failure()
@@ -1453,9 +1457,6 @@ jobs:
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
-
-      - name: apisupport.ant
-        run: ant $OPTS -f apisupport/apisupport.ant test
 
       - name: apisupport.project
         run: ant $OPTS -f apisupport/apisupport.project test

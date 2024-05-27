@@ -1241,6 +1241,8 @@ public class JavacParser extends Parser {
                 res.add(option);
             } else if (option.equals("-XDrawDiagnostics")) {     //NOI18N
                 res.add(option);
+            } else if (option.startsWith("-A")) {     //NOI18N
+                res.add(option);
             } else if ((
                     option.startsWith("--add-modules") ||   //NOI18N
                     option.startsWith("--limit-modules") || //NOI18N

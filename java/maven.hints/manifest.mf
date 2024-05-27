@@ -4,4 +4,3 @@ OpenIDE-Module-Specification-Version: 1.65
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/maven/hints/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/maven/hints/layer.xml
 AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Java-Dependencies: Java > 11

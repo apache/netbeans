@@ -5,4 +5,3 @@ OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/navigation/Bundle.pr
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Specification-Version: 1.65
 AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Java-Dependencies: Java > 11

@@ -4,6 +4,5 @@ OpenIDE-Module: org.netbeans.libs.truffleapi
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/truffle/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.26
 OpenIDE-Module-Provides: com.oracle.truffle.polyglot.PolyglotImpl
-OpenIDE-Module-Java-Dependencies: Java > 17
 OpenIDE-Module-Hide-Classpath-Packages: com.oracle.truffle.**,jdk.vm.ci.services.**, 
     org.graalvm.shadowed.org.jcodings.**

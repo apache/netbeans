@@ -4,5 +4,4 @@ OpenIDE-Module: org.netbeans.modules.jakartaee10.api
 OpenIDE-Module-Layer: org/netbeans/modules/jakartaee10/api/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/jakartaee10/api/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.24
-OpenIDE-Module-Java-Dependencies: Java > 11
 OpenIDE-Module-Provides: jakartaee10.api

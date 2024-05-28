@@ -128,6 +128,63 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
             MicronautDataCompletionTask task = new MicronautDataCompletionTask();
             resultSet.addAllItems(task.query(doc, caretOffset, new MicronautDataCompletionTask.ItemFactory<CompletionItem>() {
                 @Override
+                public CompletionItem createControllerMethodItem(CompilationInfo info, String annName, String controllerId, int offset) {
+                    String methodName = Utils.getControllerEndpointMethodName(annName);
+                    if (methodName != null) {
+                        StringBuilder label = new StringBuilder();
+                        StringBuilder sortParams = new StringBuilder();
+                        label.append("<b>").append(methodName).append("</b>(");
+                        sortParams.append('(');
+                        int cnt = 0;
+                        if ("io.micronaut.http.annotation.Put".equals(annName) || "io.micronaut.http.annotation.Post".equals(annName)) {
+                            label.append("String ").append(PARAMETER_NAME_COLOR).append("value").append(COLOR_END);
+                            sortParams.append("String");
+                            cnt++;
+                        }
+                        label.append(')');
+                        sortParams.append(')');
+                        TypeMirror returnType = Utils.getControllerEndpointReturnType(info, annName);
+                        return CompletionUtilities.newCompletionItemBuilder(methodName)
+                                .startOffset(offset)
+                                .iconResource(METHOD_PUBLIC)
+                                .leftHtmlText(label.toString())
+                                .rightHtmlText(Utils.getTypeName(info, returnType, false, false).toString())
+                                .sortPriority(100)
+                                .sortText(String.format("%s#%02d%s", methodName, cnt, sortParams.toString()))
+                                .onSelect(ctx -> {
+                                    final Document doc = ctx.getComponent().getDocument();
+                                    try {
+                                        doc.remove(offset, ctx.getComponent().getCaretPosition() - offset);
+                                    } catch (BadLocationException ex) {
+                                        Exceptions.printStackTrace(ex);
+                                    }
+                                    try {
+                                        ModificationResult mr = ModificationResult.runModificationTask(Collections.singletonList(Source.create(doc)), new UserTask() {
+                                            @Override
+                                            public void run(ResultIterator resultIterator) throws Exception {
+                                                WorkingCopy copy = WorkingCopy.get(resultIterator.getParserResult());
+                                                copy.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                                                TreePath tp = copy.getTreeUtilities().pathFor(offset);
+                                                TypeElement te = TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind()) ? (TypeElement) copy.getTrees().getElement(tp) : null;
+                                                if (te != null) {
+                                                    ClassTree clazz = (ClassTree) tp.getLeaf();
+                                                    Set<Element> toImport = new HashSet<>();
+                                                    MethodTree mt = Utils.createControllerEndpointMethod(copy, methodName, controllerId, toImport);
+                                                    copy.rewrite(clazz, GeneratorUtilities.get(copy).insertClassMember(clazz, mt, offset));
+                                                    copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), toImport));
+                                                }
+                                            }
+                                        });
+                                        mr.commit();
+                                    } catch (IOException | ParseException ex) {
+                                        Exceptions.printStackTrace(ex);
+                                    }
+                                }).build();
+                    }
+                    return null;
+                }
+
+                @Override
                 public CompletionItem createControllerMethodItem(CompilationInfo info, VariableElement delegateRepository, ExecutableElement delegateMethod, String controllerId, String id, int offset) {
                 String delegateMethodName = delegateMethod.getSimpleName().toString();
                     String methodName = Utils.getControllerDataEndpointMethodName(delegateMethodName, id);
@@ -190,8 +247,10 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                                                     if (repository != null && method != null) {
                                                         TypeMirror repositoryType = repository.asType();
                                                         if (repositoryType.getKind() == TypeKind.DECLARED) {
-                                                            MethodTree mt = Utils.createControllerDataEndpointMethod(copy, (DeclaredType) repositoryType, repository.getSimpleName().toString(), method, controllerId, id);
+                                                            Set<Element> toImport = new HashSet<>();
+                                                            MethodTree mt = Utils.createControllerDataEndpointMethod(copy, (DeclaredType) repositoryType, repository.getSimpleName().toString(), method, controllerId, id, toImport);
                                                             copy.rewrite(clazz, GeneratorUtilities.get(copy).insertClassMember(clazz, mt, offset));
+                                                            copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), toImport));
                                                         }
                                                     }
                                                 }

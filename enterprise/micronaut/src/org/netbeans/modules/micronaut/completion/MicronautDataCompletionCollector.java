@@ -68,6 +68,46 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
     public boolean collectCompletions(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) {
         new MicronautDataCompletionTask().query(doc, offset, new MicronautDataCompletionTask.ItemFactory<Completion>() {
             @Override
+            public Completion createControllerMethodItem(CompilationInfo info, String annName, String controllerId, int offset) {
+                String methodName = Utils.getControllerEndpointMethodName(annName);
+                if (methodName != null) {
+                    StringBuilder labelDetail = new StringBuilder();
+                    StringBuilder sortParams = new StringBuilder();
+                    labelDetail.append('(');
+                    sortParams.append('(');
+                    int cnt = 0;
+                    if ("io.micronaut.http.annotation.Put".equals(annName) || "io.micronaut.http.annotation.Post".equals(annName)) {
+                        labelDetail.append("String value");
+                        sortParams.append("String");
+                        cnt++;
+                    }
+                    sortParams.append(')');
+                    labelDetail.append(')');
+                    TypeMirror returnType = Utils.getControllerEndpointReturnType(info, annName);
+                    FileObject fo = info.getFileObject();
+                    return CompletionCollector.newBuilder(methodName)
+                            .kind(Completion.Kind.Method)
+                            .labelDetail(String.format("%s - generate", labelDetail.toString()))
+                            .labelDescription(Utils.getTypeName(info, returnType, false, false).toString())
+                            .sortText(String.format("%04d%s#%02d%s", 1500, methodName, cnt, sortParams.toString()))
+                            .insertTextFormat(Completion.TextFormat.PlainText)
+                            .textEdit(new TextEdit(offset, offset, ""))
+                            .additionalTextEdits(() -> modify2TextEdits(JavaSource.forFileObject(fo), wc -> {
+                                wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                                TreePath tp = wc.getTreeUtilities().pathFor(offset);
+                                TypeElement te = TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind()) ? (TypeElement) wc.getTrees().getElement(tp) : null;
+                                if (te != null) {
+                                    ClassTree clazz = (ClassTree) tp.getLeaf();
+                                    Set<Element> toImport = new HashSet<>();
+                                    MethodTree mt = Utils.createControllerEndpointMethod(wc, methodName, controllerId, toImport);
+                                    wc.rewrite(clazz, GeneratorUtilities.get(wc).insertClassMember(clazz, mt, offset));
+                                    wc.rewrite(wc.getCompilationUnit(), GeneratorUtilities.get(wc).addImports(wc.getCompilationUnit(), toImport));
+                                }
+                            })).build();
+                }
+                return null;
+            }
+            @Override
             public Completion createControllerMethodItem(CompilationInfo info, VariableElement delegateRepository, ExecutableElement delegateMethod, String controllerId, String id, int offset) {
                 String delegateMethodName = delegateMethod.getSimpleName().toString();
                 String methodName = Utils.getControllerDataEndpointMethodName(delegateMethodName, id);
@@ -78,10 +118,10 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                     Iterator<? extends TypeMirror> tIt = type.getParameterTypes().iterator();
                     StringBuilder labelDetail = new StringBuilder();
                     StringBuilder sortParams = new StringBuilder();
-                    labelDetail.append("(");
+                    labelDetail.append('(');
                     sortParams.append('(');
                     int cnt = 0;
-                    while(it.hasNext() && tIt.hasNext()) {
+                    while (it.hasNext() && tIt.hasNext()) {
                         TypeMirror tm = tIt.next();
                         if (tm == null) {
                             break;
@@ -120,8 +160,10 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                                     if (repository != null && method != null) {
                                         TypeMirror repositoryType = repository.asType();
                                         if (repositoryType.getKind() == TypeKind.DECLARED) {
-                                            MethodTree mt = Utils.createControllerDataEndpointMethod(wc, (DeclaredType) repositoryType, repository.getSimpleName().toString(), method, controllerId, id);
+                                            Set<Element> toImport = new HashSet<>();
+                                            MethodTree mt = Utils.createControllerDataEndpointMethod(wc, (DeclaredType) repositoryType, repository.getSimpleName().toString(), method, controllerId, id, toImport);
                                             wc.rewrite(clazz, GeneratorUtilities.get(wc).insertClassMember(clazz, mt, offset));
+                                            wc.rewrite(wc.getCompilationUnit(), GeneratorUtilities.get(wc).addImports(wc.getCompilationUnit(), toImport));
                                         }
                                     }
                                 }

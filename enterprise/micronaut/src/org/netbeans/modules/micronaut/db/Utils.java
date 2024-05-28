@@ -45,6 +45,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -55,12 +56,12 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
 
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.Task;
@@ -117,6 +118,33 @@ public final class Utils {
     private static String cachedPrefix = null;
     private static Pattern cachedCamelCasePattern = null;
     private static Pattern cachedSubwordsPattern = null;
+
+    public static void collectMissingEndpoints(CompilationInfo info, TypeElement te, EndpointConsumer consumer) {
+        AnnotationMirror controllerAnn = getAnnotation(te.getAnnotationMirrors(), CONTROLLER_ANNOTATION_NAME);
+        if (controllerAnn != null) {
+            List<VariableElement> repositories = getRepositoriesFor(info, te);
+            if (repositories.isEmpty()) {
+                String controllerId = null;
+                for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : controllerAnn.getElementValues().entrySet()) {
+                    if ("value".contentEquals(entry.getKey().getSimpleName()) || "uri".contentEquals(entry.getKey().getSimpleName())) { // NOI18N
+                        controllerId = (String) entry.getValue().getValue();
+                    }
+                }
+                ArrayList<String> annNames = new ArrayList(List.of(GET_ANNOTATION_NAME, PUT_ANNOTATION_NAME, POST_ANNOTATION_NAME, DELETE_ANNOTATION_NAME));
+                for (ExecutableElement method : ElementFilter.methodsIn(info.getElements().getAllMembers(te))) {
+                    List<? extends AnnotationMirror> am = method.getAnnotationMirrors();
+                    for (Iterator<String> it = annNames.iterator(); it.hasNext();) {
+                        if (getAnnotation(am, it.next()) != null) {
+                            it.remove();
+                        }
+                    }
+                }
+                for (String annName : annNames) {
+                    consumer.accept(annName, controllerId);
+                }
+            }
+        }
+    }
 
     public static List<VariableElement> collectMissingDataEndpoints(CompilationInfo info, TypeElement te, String prefix, DataEndpointConsumer consumer) {
         AnnotationMirror controllerAnn = getAnnotation(te.getAnnotationMirrors(), CONTROLLER_ANNOTATION_NAME);
@@ -200,7 +228,7 @@ public final class Utils {
         return repositories;
     }
 
-    public static MethodTree createControllerFindAllDataEndpointMethod(WorkingCopy copy, TypeElement repositoryTypeElement, String repositoryFieldName, String controllerId, String idProefix) {
+    public static MethodTree createControllerFindAllDataEndpointMethod(WorkingCopy copy, TypeElement repositoryTypeElement, String repositoryFieldName, String controllerId, String idProefix, Set<Element> toImport) {
         TypeMirror repositoryType = repositoryTypeElement.asType();
         if (repositoryType.getKind() == TypeKind.DECLARED) {
             TypeMirror pageableRepositoryType = copy.getTypes().erasure(copy.getElements().getTypeElement(PAGEABLE_REPOSITORY_TYPE_NAME).asType());
@@ -216,13 +244,58 @@ public final class Utils {
                 return method.getParameters().isEmpty();
             }).findFirst().orElse(null);
             if (delegateMethod != null) {
-                return createControllerDataEndpointMethod(copy, (DeclaredType) repositoryType, repositoryFieldName, delegateMethod, controllerId, idProefix);
+                return createControllerDataEndpointMethod(copy, (DeclaredType) repositoryType, repositoryFieldName, delegateMethod, controllerId, idProefix, toImport);
             }
         }
         return null;
     }
 
-    public static MethodTree createControllerDataEndpointMethod(WorkingCopy copy, DeclaredType repositoryType, String repositoryFieldName, ExecutableElement delegateMethod, String controllerId, String idPrefix) {
+    public static MethodTree createControllerEndpointMethod(WorkingCopy copy, String methodName, String idPrefix, Set<Element> toImport) {
+        Elements elements = copy.getElements();
+        TreeMaker tm = copy.getTreeMaker();
+        GenerationUtils gu = GenerationUtils.newInstance(copy);
+        List<AnnotationTree> annotations = new ArrayList<>();
+        String annotationTypeName = getControllerDataEndpointAnnotationTypeName(methodName);
+        if (annotationTypeName != null) {
+            if (GET_ANNOTATION_NAME.equals(annotationTypeName)) {
+                annotations.add(gu.createAnnotation(annotationTypeName, List.of(gu.createAnnotationArgument("produces", "text/plain")))); //NOI18N
+            } else {
+                annotations.add(gu.createAnnotation(annotationTypeName));
+            }
+            if (DELETE_ANNOTATION_NAME.equals(annotationTypeName)) {
+                annotations.add(gu.createAnnotation("io.micronaut.http.annotation.Status", List.of(tm.MemberSelect(tm.QualIdent("io.micronaut.http.HttpStatus"), "NO_CONTENT")))); //NOI18N
+            }
+        }
+        ModifiersTree mods = tm.Modifiers(Set.of(Modifier.PUBLIC), annotations);
+        TypeMirror returnType = getControllerEndpointReturnType(copy, annotationTypeName);
+        List<VariableTree> params = new ArrayList<>();
+        if (PUT_ANNOTATION_NAME.equals(annotationTypeName) || POST_ANNOTATION_NAME.equals(annotationTypeName)) {
+            params.add(tm.Variable(tm.Modifiers(0, List.of(gu.createAnnotation(BODY_ANNOTATION_NAME))), "value", tm.Type("java.lang.String"), null)); //NOI18N
+        }
+        StringBuilder body = new StringBuilder().append('{');
+        if (GET_ANNOTATION_NAME.equals(annotationTypeName)) {
+            body.append("return \"Example Response\");"); //NOI18N
+        } else if (PUT_ANNOTATION_NAME.equals(annotationTypeName)) {
+            toImport.add(elements.getTypeElement("java.net.URI")); //NOI18N
+            toImport.add(elements.getTypeElement("io.micronaut.http.HttpHeaders")); //NOI18N
+            body.append("return HttpResponse.noContent().header(HttpHeaders.LOCATION, URI.create(\""); //NOI18N
+            if (idPrefix != null) {
+                body.append(idPrefix);
+            }
+            body.append("/\").getPath());");
+        } else if (POST_ANNOTATION_NAME.equals(annotationTypeName)) {
+            toImport.add(elements.getTypeElement("java.net.URI")); //NOI18N
+            body.append("return HttpResponse.created(value).headers(headers -> headers.location(URI.create(\""); //NOI18N
+            if (idPrefix != null) {
+                body.append(idPrefix);
+            }
+            body.append("/\")));"); //NOI18N
+        }
+        body.append('}');
+        return tm.Method(mods, methodName, tm.Type(returnType), List.of(), params, List.of(), body.toString(), null);
+    }
+
+    public static MethodTree createControllerDataEndpointMethod(WorkingCopy copy, DeclaredType repositoryType, String repositoryFieldName, ExecutableElement delegateMethod, String controllerId, String idPrefix, Set<Element> toImport) {
         TreeMaker tm = copy.getTreeMaker();
         GenerationUtils gu = GenerationUtils.newInstance(copy);
         ExecutableType delegateMethodType = (ExecutableType) copy.getTypes().asMemberOf(repositoryType, delegateMethod);
@@ -242,8 +315,23 @@ public final class Utils {
             typeParams.add(tm.TypeParameter(tv.asElement().getSimpleName(), List.of((ExpressionTree) tm.Type(tv.getUpperBound()))));
         }
         List<? extends VariableTree> params = getControllerDataEndpointParams(copy, delegateMethod, delegateMethodType);
-        String body = getControllerDataEndpointBody(copy, repositoryFieldName, delegateMethod, delegateMethodType, controllerId, idPrefix);
+        String body = getControllerDataEndpointBody(copy, repositoryFieldName, delegateMethod, delegateMethodType, controllerId, idPrefix, toImport);
         return tm.Method(mods, methodName, tm.Type(returnType), typeParams, params, List.of(), body, null);
+    }
+
+    public static String getControllerEndpointMethodName(String annotationName) {
+        switch (annotationName) {
+            case GET_ANNOTATION_NAME:
+                return "get"; //NOI18N
+            case POST_ANNOTATION_NAME:
+                return "save"; //NOI18N
+            case PUT_ANNOTATION_NAME:
+                return "update";
+            case DELETE_ANNOTATION_NAME:
+                return "delete"; //NOI18N
+            default:
+                return null;
+        }
     }
 
     public static String getControllerDataEndpointMethodName(String delegateMethodName, String postfix) {
@@ -272,6 +360,16 @@ public final class Utils {
         return name;
     }
 
+    public static TypeMirror getControllerEndpointReturnType(CompilationInfo info, String annotationTypeName) {
+        if (GET_ANNOTATION_NAME.equals(annotationTypeName)) {
+            return info.getTypes().getDeclaredType(info.getElements().getTypeElement("java.lang.String")); //NOI18N
+        }
+        if (DELETE_ANNOTATION_NAME.equals(annotationTypeName)) {
+            return info.getTypes().getNoType(TypeKind.VOID);
+        }
+        return info.getTypes().getDeclaredType(info.getElements().getTypeElement(HTTP_RESPONSE_TYPE_NAME));
+    }
+
     public static TypeMirror getControllerDataEndpointReturnType(CompilationInfo info, String delegateMethodName, ExecutableType type) {
         TypeMirror returnType = type.getReturnType();
         if (delegateMethodName.startsWith("update")) { //NOI18N
@@ -289,7 +387,7 @@ public final class Utils {
     }
 
     public static String getControllerDataEndpointAnnotationTypeName(String delegateMethodName) {
-        if (delegateMethodName.startsWith("find")) { //NOI18N
+        if (delegateMethodName.startsWith("find") || delegateMethodName.startsWith("get")) { //NOI18N
             return GET_ANNOTATION_NAME;
         }
         if (delegateMethodName.startsWith("delete")) { //NOI18N
@@ -446,7 +544,7 @@ public final class Utils {
         return params;
     }
 
-    private static String getControllerDataEndpointBody(WorkingCopy copy, String repositoryFieldName, ExecutableElement delegateMethod, ExecutableType delegateMethodType, String controllerId, String idPrefix) {
+    private static String getControllerDataEndpointBody(WorkingCopy copy, String repositoryFieldName, ExecutableElement delegateMethod, ExecutableType delegateMethodType, String controllerId, String idPrefix, Set<Element> toImport) {
         String delegateMethodName = delegateMethod.getSimpleName().toString();
         StringBuilder delegateMethodCall = new StringBuilder();
         delegateMethodCall.append(repositoryFieldName).append('.').append(delegateMethodName).append('(');
@@ -468,7 +566,7 @@ public final class Utils {
             return "{" + delegateMethodCall.toString() + ";}"; //NOI18N
         }
         if (delegateMethodName.startsWith("save")) { //NOI18N
-            copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), Set.of(copy.getElements().getTypeElement("java.net.URI")))); //NOI18N
+            toImport.add(copy.getElements().getTypeElement("java.net.URI")); //NOI18N
             String idUri = getIdUri(delegateMethod, delegateMethodType, controllerId, idPrefix);
             CharSequence typeName = getTypeName(copy, delegateMethodType.getReturnType(), false, false);
             StringBuilder sb = new StringBuilder(typeName);
@@ -476,7 +574,8 @@ public final class Utils {
             return "{" + typeName + " " + sb.toString() + " = " + delegateMethodCall.toString() + "return HttpResponse.created(" + sb.toString() + ").headers(headers -> headers.location(" + idUri + "));}"; //NOI18N
         }
         if (delegateMethodName.startsWith("update")) { //NOI18N
-            copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), Set.of(copy.getElements().getTypeElement("java.net.URI"), copy.getElements().getTypeElement("io.micronaut.http.HttpHeaders")))); //NOI18N
+            toImport.add(copy.getElements().getTypeElement("java.net.URI")); //NOI18N
+            toImport.add(copy.getElements().getTypeElement("io.micronaut.http.HttpHeaders")); //NOI18N
             String idUri = getIdUri(delegateMethod, delegateMethodType, controllerId, idPrefix);
             return "{" + delegateMethodCall.toString() + ";return HttpResponse.noContent().header(HttpHeaders.LOCATION, " + idUri+ ".getPath());}"; //NOI18N
         }
@@ -663,6 +762,11 @@ public final class Utils {
             return false;
         }
         return compile.findResource(fqn.replace('.', '/') + ".class") != null; //NOI18N
+    }
+
+    @FunctionalInterface
+    public static interface EndpointConsumer {
+        public void accept(String annName, String controllerId);
     }
 
     @FunctionalInterface

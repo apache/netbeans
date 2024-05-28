@@ -43,6 +43,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -96,6 +97,7 @@ public class MicronautDataEndpointGenerator implements CodeActionProvider, Comma
     private static final String SOURCE = "source";
     private static final Set<String> SUPPORTED_CODE_ACTION_KINDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(SOURCE)));
     private static final String CONTROLLER_ANNOTATION_NAME = "io.micronaut.http.annotation.Controller";
+    private static final String GENERATE_ENDPOINT = "nbls.micronaut.generate.endpoint";
     private static final String GENERATE_DATA_ENDPOINT = "nbls.micronaut.generate.data.endpoint";
     private static final String URI =  "uri";
     private static final String OFFSET =  "offset";
@@ -116,6 +118,7 @@ public class MicronautDataEndpointGenerator implements CodeActionProvider, Comma
 
     @Override
     @NbBundle.Messages({
+        "DN_GenerateEndpoint=Generate Endpoint...",
         "DN_GenerateDataEndpoint=Generate Data Endpoint...",
         "DN_SelectEndpoints=Select endpoints to generate",
     })
@@ -145,12 +148,37 @@ public class MicronautDataEndpointGenerator implements CodeActionProvider, Comma
             if (controllerAnn == null) {
                 return Collections.emptyList();
             }
+            List<NotifyDescriptor.QuickPick.Item> endpoints = new ArrayList<>();
+            AtomicReference<String> controllerId = new AtomicReference<>();
             List<VariableElement> repositories = Utils.getRepositoriesFor(cc, te);
             if (repositories.isEmpty()) {
+                Utils.collectMissingEndpoints(cc, te, (annName, cId) -> {
+                    controllerId.set(cId);
+                    int idx = annName.lastIndexOf('.');
+                    String label = "/ -- " + (idx < 0 ? annName : annName.substring(idx + 1)).toUpperCase();
+                    String methodName = Utils.getControllerEndpointMethodName(annName);
+                    if (methodName != null) {
+                        StringBuilder sb = new StringBuilder(methodName).append('(');
+                        if ("io.micronaut.http.annotation.Put".equals(annName) || "io.micronaut.http.annotation.Post".equals(annName)) {
+                            sb.append("String value");
+                        }
+                        sb.append(')');
+                        endpoints.add(new NotifyDescriptor.QuickPick.Item(label, sb.toString()));
+                    }
+                });
+                if (!endpoints.isEmpty()) {
+                    endpoints.sort((item1, item2) -> {
+                        return item1.getDescription().compareTo(item2.getDescription());
+                    });
+                    Map<String, Object> data = new HashMap<>();
+                    data.put(URI, cc.getFileObject().toURI().toString());
+                    data.put(OFFSET, offset);
+                    data.put(CONTROLLER_ID, controllerId.get());
+                    data.put(ENDPOINTS, endpoints);
+                    return Collections.singletonList(new CodeAction(Bundle.DN_GenerateEndpoint(), SOURCE, new Command(Bundle.DN_GenerateEndpoint(), "nbls.generate.code", Arrays.asList(GENERATE_ENDPOINT, data)), null));
+                }
                 return Collections.emptyList();
             }
-            AtomicReference<String> controllerId = new AtomicReference<>();
-            List<NotifyDescriptor.QuickPick.Item> endpoints = new ArrayList<>();
             Utils.collectMissingDataEndpoints(cc, te, null, (repository, delegateMethod, cId, id) -> {
                 controllerId.set(cId);
                 ExecutableType delegateMethodType = (ExecutableType) cc.getTypes().asMemberOf((DeclaredType) repository.asType(), delegateMethod);
@@ -184,7 +212,7 @@ public class MicronautDataEndpointGenerator implements CodeActionProvider, Comma
 
     @Override
     public Set<String> getCommands() {
-        return Collections.singleton(GENERATE_DATA_ENDPOINT);
+        return Set.of(GENERATE_ENDPOINT, GENERATE_DATA_ENDPOINT);
     }
 
     @Override
@@ -211,10 +239,13 @@ public class MicronautDataEndpointGenerator implements CodeActionProvider, Comma
                     List<NotifyDescriptor.QuickPick.Item> selected = pick.getItems().stream().filter(item -> item.isSelected()).collect(Collectors.toList());
                     if (selected.isEmpty()) {
                         future.complete(null);
-                    } else {
+                    } else if (GENERATE_DATA_ENDPOINT.equals(command)) {
                         List<String> repositoryNames = Arrays.asList(gson.fromJson(data.get(REPOSITORIES), String[].class));
                         String controllerId = data.getAsJsonPrimitive(CONTROLLER_ID).getAsString();
                         future.complete(Utils.modify2Edit(js, getTask(offset, repositoryNames, selected, controllerId)));
+                    } else {
+                        String controllerId = data.getAsJsonPrimitive(CONTROLLER_ID).getAsString();
+                        future.complete(Utils.modify2Edit(js, getTask(offset, selected, controllerId)));
                     }
                 }
             } catch (IOException ex) {
@@ -239,6 +270,31 @@ public class MicronautDataEndpointGenerator implements CodeActionProvider, Comma
         return sb.append(')').toString();
     }
 
+    private static Task<WorkingCopy> getTask(int offset, List<NotifyDescriptor.QuickPick.Item> items, String controllerId) {
+        return copy -> {
+            copy.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+            TreePath tp = copy.getTreeUtilities().pathFor(offset);
+            tp = copy.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, tp);
+            if (tp != null) {
+                ClassTree clazz = (ClassTree) tp.getLeaf();
+                TypeElement te = (TypeElement) copy.getTrees().getElement(tp);
+                if (te != null) {
+                    Set<Element> toImport = new HashSet<>();
+                    List<Tree> members = new ArrayList<>();
+                    for (NotifyDescriptor.QuickPick.Item item : items) {
+                        String description = item.getDescription();
+                        int idx = description.indexOf('(');
+                        if (idx > 0) {
+                            members.add(Utils.createControllerEndpointMethod(copy, description.substring(0, idx), controllerId, toImport));
+                        }
+                    }
+                    copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), toImport));
+                    copy.rewrite(clazz, GeneratorUtilities.get(copy).insertClassMembers(clazz, members, offset));
+                }
+            }
+        };
+    }
+
     private static Task<WorkingCopy> getTask(int offset, List<String> repositoryNames, List<NotifyDescriptor.QuickPick.Item> items, String controllerId) {
         return copy -> {
             copy.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
@@ -249,6 +305,7 @@ public class MicronautDataEndpointGenerator implements CodeActionProvider, Comma
                 TypeElement te = (TypeElement) copy.getTrees().getElement(tp);
                 if (te != null) {
                     List<VariableElement> fields = ElementFilter.fieldsIn(te.getEnclosedElements());
+                    Set<Element> toImport = new HashSet<>();
                     List<Tree> members = new ArrayList<>();
                     for (String repositoryName : repositoryNames) {
                         VariableElement repository = fields.stream().filter(ve -> repositoryName.contentEquals(ve.getSimpleName())).findFirst().orElse(null);
@@ -270,13 +327,14 @@ public class MicronautDataEndpointGenerator implements CodeActionProvider, Comma
                                     String signature = item.getDescription().substring(idx);
                                     for (ExecutableElement method : repositoryMethods) {
                                         if (name.equals(Utils.getControllerDataEndpointMethodName(method.getSimpleName().toString(), id)) && signature.equals(getMethodSignature(copy, method, (ExecutableType) copy.getTypes().asMemberOf((DeclaredType) repositoryType, method), id))) {
-                                            members.add(Utils.createControllerDataEndpointMethod(copy, (DeclaredType) repositoryType, repository.getSimpleName().toString(), method, controllerId, id));
+                                            members.add(Utils.createControllerDataEndpointMethod(copy, (DeclaredType) repositoryType, repository.getSimpleName().toString(), method, controllerId, id, toImport));
                                         }
                                     }
                                 }
                             }
                         }
                     }
+                    copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), toImport));
                     copy.rewrite(clazz, GeneratorUtilities.get(copy).insertClassMembers(clazz, members, offset));
                 }
             }

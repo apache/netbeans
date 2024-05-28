@@ -165,19 +165,17 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
                             String method = getEndpointMethod((TypeElement) ann.getAnnotationType().asElement());
                             if (method != null) {
                                 List<String> ids = new ArrayList<>();
-                                Map<? extends ExecutableElement, ? extends AnnotationValue> values = ann.getElementValues();
-                                if (values.isEmpty()) {
-                                    ids.add("/");
-                                } else {
-                                    for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : values.entrySet()) {
-                                        if ("value".contentEquals(entry.getKey().getSimpleName()) || "uri".contentEquals(entry.getKey().getSimpleName())) {
-                                            ids.add((String) entry.getValue().getValue());
-                                        } else if ("uris".contentEquals(entry.getKey().getSimpleName())) {
-                                            for (AnnotationValue av : (List<AnnotationValue>) entry.getValue().getValue()) {
-                                                ids.add((String) av.getValue());
-                                            }
+                                for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : ann.getElementValues().entrySet()) {
+                                    if ("value".contentEquals(entry.getKey().getSimpleName()) || "uri".contentEquals(entry.getKey().getSimpleName())) {
+                                        ids.add((String) entry.getValue().getValue());
+                                    } else if ("uris".contentEquals(entry.getKey().getSimpleName())) {
+                                        for (AnnotationValue av : (List<AnnotationValue>) entry.getValue().getValue()) {
+                                            ids.add((String) av.getValue());
                                         }
                                     }
+                                }
+                                if (ids.isEmpty()) {
+                                    ids.add("/");
                                 }
                                 for (Object id : ids) {
                                     String name = '@' + path + id + " -- " + method;

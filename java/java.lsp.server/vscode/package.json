@@ -640,6 +640,11 @@
 				"command": "nbls.open.test",
 				"title": "Go To Test/Tested class...",
 				"category": "Java"
+			},
+			{
+				"command": "nbls.jdk.configuration",
+				"title": "JDK Configuration",
+				"category": "Java"
 			}
 		],
 		"keybindings": [
@@ -1154,6 +1159,7 @@
 	"dependencies": {
 		"@vscode/debugadapter": "1.55.1",
 		"@vscode/webview-ui-toolkit": "^1.2.2",
+		"jdk-utils": "^0.4.4",
 		"jsonc-parser": "3.0.0",
 		"vscode-languageclient": "8.0.1"
 	},

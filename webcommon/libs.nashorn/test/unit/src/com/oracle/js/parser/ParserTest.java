@@ -332,6 +332,20 @@ public class ParserTest {
         assertNotNull(findNode(programm2, n -> n instanceof IdentNode && "new".equals(((IdentNode) n).getName()), IdentNode.class));
     }
 
+    @Test
+    public void testTopLevelAwait() {
+        // Validate top-level await is support for ES13 modules
+        assertParses(13, true, false, "await Promise.resolve(1);");
+        // Validate top-level await is not support for ES12 modules
+        assertParses(12, true, true, "await Promise.resolve(1);");
+        // Validate top-level await is not supported for ES13 non-modules
+        assertParses(13, false, true, "await Promise.resolve(1);");
+        // Validate await in async function can still be parsed
+        assertParses(12, false, false, "async function dummy() {await Promise.resolve(1);}");
+        // Validate await in synchronous function fails to parse
+        assertParses(12, false, true, "function dummy() {await Promise.resolve(1);}");
+    }
+
     private Predicate<Node> functionNodeWithName(String name) {
         return n -> n instanceof FunctionNode && name.equals(((FunctionNode) n).getName());
     }

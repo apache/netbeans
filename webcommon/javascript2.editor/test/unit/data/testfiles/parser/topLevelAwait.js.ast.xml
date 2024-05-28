@@ -19,53 +19,46 @@
 
 -->
 
-<FunctionNode name='invalid_expression_await.js' kind='MODULE' start='0' end='31'>
+<FunctionNode name='topLevelAwait.js' kind='MODULE' start='0' end='888'>
   <isProgram/>
-  <ExportNode start='0' end='30'>
-    <VarNode name='answer' start='11' end='29'>
-      <hasInit/>
-      <isAssignment/>
-      <!-- VarNode Assignment Dest -->
-      <IdentNode start='11' end='17'>
-        <name>answer</name>
-        <isDeclaredHere/>
-        <isInitializedHere/>
+  <ImportNode start='826' end='856'>
+    <ImportClauseNode start='833' end='838'>
+      <IdentNode start='833' end='838'>
+        <name>dummy</name>
       </IdentNode>
-      <!-- VarNode Init -->
-      <BinaryNode type='ADD' start='20' end='29'>
-        <!-- BinaryNode lhs -->
-        <IdentNode start='20' end='25'>
-          <name>await</name>
-        </IdentNode>
-        <!-- BinaryNode rhs -->
-        <NumberLiteralNode value='1' start='28' end='29'/>
-      </BinaryNode>
-    </VarNode>
-  </ExportNode>
+    </ImportClauseNode>
+    <FromNode start='839' end='856'>
+      <StringLiteralNode value='./dummy.mjs' start='845' end='843'/>
+    </FromNode>
+  </ImportNode>
   <!-- FunctionNode Parameters -->
   <!-- FunctionNode Body -->
-  <Block start='0' end='30'>
+  <Block start='0' end='887'>
     <isFunctionBody/>
     <isSynthetic/>
     <!-- Block Statements -->
-    <VarNode name='answer' start='11' end='29'>
+    <VarNode name='demo' start='866' end='886'>
       <hasInit/>
       <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
       <!-- VarNode Assignment Dest -->
-      <IdentNode start='11' end='17'>
-        <name>answer</name>
+      <IdentNode start='866' end='870'>
+        <name>demo</name>
         <isDeclaredHere/>
         <isInitializedHere/>
       </IdentNode>
       <!-- VarNode Init -->
-      <BinaryNode type='ADD' start='20' end='29'>
-        <!-- BinaryNode lhs -->
-        <IdentNode start='20' end='25'>
-          <name>await</name>
-        </IdentNode>
-        <!-- BinaryNode rhs -->
-        <NumberLiteralNode value='1' start='28' end='29'/>
-      </BinaryNode>
+      <UnaryNode type='AWAIT' start='873' end='886'>
+        <!-- UnaryNode Expression -->
+        <CallNode start='879' end='886'>
+          <!-- CallNode Arguments -->
+          <!-- CallNode Function -->
+          <IdentNode start='879' end='884'>
+            <name>dummy</name>
+          </IdentNode>
+        </CallNode>
+      </UnaryNode>
     </VarNode>
   </Block>
 </FunctionNode>

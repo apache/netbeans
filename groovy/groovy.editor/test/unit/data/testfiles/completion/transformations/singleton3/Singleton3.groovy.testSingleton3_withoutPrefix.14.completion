@@ -5,6 +5,7 @@ Singleton3.|
 METHOD     addShutdownHook(Closure)                   void
 METHOD     any()                                      boolean
 METHOD     any(Closure)                               boolean
+METHOD     arrayType()                     [PUBLIC]   Class<?>
 METHOD     asBoolean()                                boolean
 METHOD     asSubclass(Class<U>)            [PUBLIC]   Class<? extends U>
 METHOD     asType(Class)                              Object
@@ -12,6 +13,9 @@ METHOD     cast(Object)                    [PUBLIC]   T
 METHOD     collect()                                  Collection
 METHOD     collect(Closure)                           List
 METHOD     collect(Collection, Closure)               Collection
+METHOD     componentType()                 [PUBLIC]   Class<?>
+METHOD     describeConstable()             [PUBLIC]   Optional<ClassDesc>
+METHOD     descriptorString()              [PUBLIC]   String
 METHOD     desiredAssertionStatus()        [PUBLIC]   boolean
 METHOD     dump()                                     String
 METHOD     each(Closure)                              Object
@@ -83,6 +87,7 @@ METHOD     getPackage()                    [PUBLIC]   Package
 METHOD     getPackageName()                [PUBLIC]   String
 METHOD     getProperties()                            Map
 METHOD     getProtectionDomain()           [PUBLIC]   ProtectionDomain
+METHOD     getRecordComponents()           [PUBLIC]   RecordComponent[]
 METHOD     getResource(String)             [PUBLIC]   URL
 METHOD     getResourceAsStream(String)     [PUBLIC]   InputStream
 METHOD     getSigners()                    [PUBLIC]   Object[]
@@ -113,6 +118,7 @@ METHOD     isLocalClass()                  [PUBLIC]   boolean
 METHOD     isMemberClass()                 [PUBLIC]   boolean
 METHOD     isNestmateOf(Class<?>)          [PUBLIC]   boolean
 METHOD     isPrimitive()                   [PUBLIC]   boolean
+METHOD     isRecord()                      [PUBLIC]   boolean
 METHOD     isSynthetic()                   [PUBLIC]   boolean
 METHOD     iterator()                                 Iterator
 METHOD     metaClass(Closure)                         MetaClass
@@ -194,6 +200,8 @@ FIELD      package                         [PUBLIC]   Package
 FIELD      packageName                     [PUBLIC]   String
 FIELD      primitive                       [PUBLIC]   boolean
 FIELD      protectionDomain                [PUBLIC]   ProtectionDomain
+FIELD      record                          [PUBLIC]   boolean
+FIELD      recordComponents                [PUBLIC]   RecordComponent[]
 FIELD      simpleName                      [PUBLIC]   String
 FIELD      superclass                      [PUBLIC]   Class
 FIELD      synthetic                       [PUBLIC]   boolean

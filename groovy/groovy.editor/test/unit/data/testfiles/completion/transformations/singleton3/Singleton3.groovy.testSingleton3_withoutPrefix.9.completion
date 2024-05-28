@@ -77,8 +77,6 @@ METHOD     getMethods()                    [PUBLIC]   Method[]
 METHOD     getModifiers()                  [PUBLIC]   int
 METHOD     getModule()                     [PUBLIC]   Module
 METHOD     getName()                       [PUBLIC]   String
-METHOD     getNestHost()                   [PUBLIC]   Class<?>
-METHOD     getNestMembers()                [PUBLIC]   Class<?>[]
 METHOD     getPackage()                    [PUBLIC]   Package
 METHOD     getPackageName()                [PUBLIC]   String
 METHOD     getProperties()                            Map
@@ -111,7 +109,6 @@ METHOD     isInstance(Object)              [PUBLIC]   boolean
 METHOD     isInterface()                   [PUBLIC]   boolean
 METHOD     isLocalClass()                  [PUBLIC]   boolean
 METHOD     isMemberClass()                 [PUBLIC]   boolean
-METHOD     isNestmateOf(Class<?>)          [PUBLIC]   boolean
 METHOD     isPrimitive()                   [PUBLIC]   boolean
 METHOD     isSynthetic()                   [PUBLIC]   boolean
 METHOD     iterator()                                 Iterator
@@ -188,8 +185,6 @@ FIELD      methods                         [PUBLIC]   Method[]
 FIELD      modifiers                       [PUBLIC]   int
 FIELD      module                          [PUBLIC]   Module
 FIELD      name                            [PUBLIC]   String
-FIELD      nestHost                        [PUBLIC]   Class
-FIELD      nestMembers                     [PUBLIC]   Class[]
 FIELD      package                         [PUBLIC]   Package
 FIELD      packageName                     [PUBLIC]   String
 FIELD      primitive                       [PUBLIC]   boolean

@@ -46,8 +46,6 @@ METHOD     findLastIndexOf(int, Closure)              int
 METHOD     findResult(Closure)                        Object
 METHOD     findResult(Object, Closure)                Object
 METHOD     floatValue()                    [PUBLIC]   float
-METHOD     formatUnsignedInt(int, int, by  [STATIC]   void
-METHOD     formatUnsignedInt(int, int, ch  [STATIC]   void
 METHOD     getAt(String)                              Object
 METHOD     getChars(int, int, byte[])      [STATIC]   int
 METHOD     getClass()                      [PUBLIC]   Class<?>

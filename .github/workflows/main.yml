@@ -1877,7 +1877,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '8' ]
+        java: [ '17' ]
       fail-fast: false
     steps:
 
@@ -1908,12 +1908,6 @@ jobs:
 
       - name: groovy/groovy.support
         run: ant $OPTS -f groovy/groovy.support test
-
-#      - name: groovy/groovy
-#        run: ant $OPTS -f groovy/groovy test
-
-#      - name: groovy/groovy.java
-#        run: ant $OPTS -f groovy/groovy.java test
 
 #      - name: groovy/groovy.kit
 #        run: ant $OPTS -f groovy/groovy.kit test

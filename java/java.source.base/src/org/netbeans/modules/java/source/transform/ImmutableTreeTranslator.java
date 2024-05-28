@@ -615,10 +615,6 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
         return rewriteChildren(tree);
     }
     @Override
-    public Tree visitStringTemplate(StringTemplateTree tree, Object p) {
-        return rewriteChildren(tree);
-    }
-    @Override
     public Tree visitAnyPattern(AnyPatternTree tree, Object p) {
         return rewriteChildren(tree);
     }
@@ -1540,19 +1536,6 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
             model.setType(n, model.getType(tree));
             copyCommentTo(tree, n);
             copyPosTo(tree, n);
-            tree = n;
-        }
-        return tree;
-    }
-
-    private StringTemplateTree rewriteChildren(StringTemplateTree tree) {
-        ExpressionTree newProcessor = (ExpressionTree) translate(tree.getProcessor());
-        List<? extends ExpressionTree> newExpressions = translate(tree.getExpressions());
-        if (newProcessor != tree.getProcessor()|| !Objects.equals(newExpressions, tree.getExpressions())) {
-            StringTemplateTree n = make.StringTemplate(newProcessor, tree.getFragments(), newExpressions);
-            model.setType(n, model.getType(tree));
-            copyCommentTo(tree,n);
-            copyPosTo(tree,n);
             tree = n;
         }
         return tree;

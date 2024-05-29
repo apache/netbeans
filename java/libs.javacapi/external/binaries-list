@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-02ADEF322E6664A5D9F2A0B7E163BDB6F0812F68 http://127.0.0.1:8000/nb-javac-dev-impl.jar nb-javac-jdk-dev.jar
-424E4B8DF686B06F3A6D9CC95ABDE642221301C3 http://127.0.0.1:8000/nb-javac-dev-api.jar nb-javac-jdk-dev-api.jar
+02ADEF322E6664A5D9F2A0B7E163BDB6F0812F68 http://lahoda.info/nb-javac/2edb6d98133d8bd6dc4527c7497c460283fdc53e/nb-javac-2edb6d98133d8bd6dc4527c7497c460283fdc53e-impl.jar nb-javac-jdk-dev.jar
+424E4B8DF686B06F3A6D9CC95ABDE642221301C3 http://lahoda.info/nb-javac/2edb6d98133d8bd6dc4527c7497c460283fdc53e/nb-javac-2edb6d98133d8bd6dc4527c7497c460283fdc53e-api.jar nb-javac-jdk-dev-api.jar

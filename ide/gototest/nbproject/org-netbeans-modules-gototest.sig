@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.56
+#Version 1.57
 
 CLSS public abstract interface java.io.Serializable
 
@@ -35,6 +35,34 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public final org.netbeans.api.gototest.TestOppositesLocator
+innr public final static Location
+innr public final static LocatorResult
+meth public java.util.concurrent.CompletableFuture<org.netbeans.api.gototest.TestOppositesLocator$LocatorResult> findOpposites(org.openide.filesystems.FileObject,int)
+meth public static org.netbeans.api.gototest.TestOppositesLocator getDefault()
+supr java.lang.Object
+hfds WORKER
+
+CLSS public final static org.netbeans.api.gototest.TestOppositesLocator$Location
+ outer org.netbeans.api.gototest.TestOppositesLocator
+cons public init(org.openide.filesystems.FileObject,int)
+meth public int getOffset()
+meth public java.lang.String getDisplayName()
+meth public org.openide.filesystems.FileObject getFileObject()
+supr java.lang.Object
+hfds file,offset
+
+CLSS public final static org.netbeans.api.gototest.TestOppositesLocator$LocatorResult
+ outer org.netbeans.api.gototest.TestOppositesLocator
+meth public java.lang.String getErrorMessage()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public java.util.Collection<? extends java.lang.String> getProviderErrors()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public java.util.Collection<? extends org.netbeans.api.gototest.TestOppositesLocator$Location> getLocations()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+supr java.lang.Object
+hfds errorMessage,locations,providerErrors
 
 CLSS public abstract interface org.netbeans.spi.gototest.TestLocator
 innr public abstract interface static LocationListener

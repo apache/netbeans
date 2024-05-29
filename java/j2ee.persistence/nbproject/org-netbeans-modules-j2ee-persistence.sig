@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.78.0
+#Version 1.79.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1131,6 +1131,7 @@ fld public final static java.lang.String VERSION_2_1 = "2.1"
 fld public final static java.lang.String VERSION_2_2 = "2.2"
 fld public final static java.lang.String VERSION_3_0 = "3.0"
 fld public final static java.lang.String VERSION_3_1 = "3.1"
+fld public final static java.lang.String VERSION_3_2 = "3.2"
 meth public abstract int addPersistenceUnit(org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit)
 meth public abstract int removePersistenceUnit(org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit)
 meth public abstract int sizePersistenceUnit()
@@ -1459,24 +1460,28 @@ fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider 
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DATANUCLEUS_PROVIDER2_2
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DATANUCLEUS_PROVIDER3_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DATANUCLEUS_PROVIDER3_1
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DATANUCLEUS_PROVIDER3_2
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER2_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER2_1
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER2_2
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER3_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER3_1
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider DEFAULT_PROVIDER3_2
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER1_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER2_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER2_1
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER2_2
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER3_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER3_1
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider ECLIPSELINK_PROVIDER3_2
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER1_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER2_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER2_1
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER2_2
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER3_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER3_1
+fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider HIBERNATE_PROVIDER3_2
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider KODO_PROVIDER
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider OPENJPA_PROVIDER1_0
 fld public final static org.netbeans.modules.j2ee.persistence.provider.Provider OPENJPA_PROVIDER2_0
@@ -1624,7 +1629,15 @@ meth protected java.lang.String computeMethodName()
 meth protected java.lang.String generateCallLines()
 meth protected java.lang.String generateCallLines(java.lang.String)
 meth protected java.lang.String getEmInitCode(org.netbeans.modules.j2ee.persistence.spi.entitymanagergenerator.EntityManagerGenerationStrategySupport$FieldInfo,org.netbeans.modules.j2ee.persistence.spi.entitymanagergenerator.EntityManagerGenerationStrategySupport$FieldInfo)
+meth protected java.lang.String getEntityManagerFactoryFqn()
+meth protected java.lang.String getEntityManagerFqn()
+meth protected java.lang.String getPersistenceContextFqn()
+meth protected java.lang.String getPersistenceUnitFqn()
 meth protected java.lang.String getPersistenceUnitName()
+meth protected java.lang.String getPostConstructFqn()
+meth protected java.lang.String getPreDestroyFqn()
+meth protected java.lang.String getResourceFqn()
+meth protected java.lang.String getUserTxFqn()
 meth protected java.util.List<com.sun.source.tree.VariableTree> getParameterList()
 meth protected javax.lang.model.element.Element getAnnotation(java.lang.String)
 meth protected org.netbeans.api.java.source.TreeMaker getTreeMaker()
@@ -1639,7 +1652,7 @@ meth public void setPersistenceUnit(org.netbeans.modules.j2ee.persistence.dd.com
 meth public void setTreeMaker(org.netbeans.api.java.source.TreeMaker)
 meth public void setWorkingCopy(org.netbeans.api.java.source.WorkingCopy)
 supr java.lang.Object
-hfds classTree,genUtils,generationOptions,persistenceUnit,treeMaker,workingCopy
+hfds ENTITY_MANAGER_FACTORY_JAKARTA_FQN,ENTITY_MANAGER_JAKARTA_FQN,PERSISTENCE_CONTEXT_JAKARTA_FQN,PERSISTENCE_UNIT_JAKARTA_FQN,POST_CONSTRUCT_JAKARTA_FQN,PRE_DESTROY_JAKARTA_FQN,RESOURCE_JAKARTA_FQN,USER_TX_JAKARTA_FQN,classTree,genUtils,generationOptions,persistenceUnit,treeMaker,workingCopy
 
 CLSS protected static org.netbeans.modules.j2ee.persistence.spi.entitymanagergenerator.EntityManagerGenerationStrategySupport$FieldInfo
  outer org.netbeans.modules.j2ee.persistence.spi.entitymanagergenerator.EntityManagerGenerationStrategySupport

@@ -1,7 +1,10 @@
 #Signature file v4.1
-#Version 1.58
+#Version 1.59
 
 CLSS public abstract interface java.io.Serializable
+
+CLSS public abstract interface java.lang.AutoCloseable
+meth public abstract void close() throws java.lang.Exception
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
@@ -34,6 +37,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -82,6 +86,7 @@ meth public boolean isActive()
 meth public boolean isRemote()
 meth public java.lang.String getId()
 meth public java.lang.String getName()
+meth public java.lang.String toString()
 meth public org.netbeans.libs.git.GitBranch getTrackedBranch()
 supr java.lang.Object
 hfds active,id,name,remote,trackedBranch
@@ -114,6 +119,7 @@ innr public final static !enum DiffMode
 innr public static !enum CherryPickOperation
 innr public static !enum RebaseOperationType
 innr public static !enum ResetType
+intf java.lang.AutoCloseable
 meth public boolean catFile(java.io.File,java.lang.String,java.io.OutputStream,org.netbeans.libs.git.progress.ProgressMonitor) throws org.netbeans.libs.git.GitException
 meth public boolean catIndexEntry(java.io.File,int,java.io.OutputStream,org.netbeans.libs.git.progress.ProgressMonitor) throws org.netbeans.libs.git.GitException
 meth public java.io.File[] ignore(java.io.File[],org.netbeans.libs.git.progress.ProgressMonitor) throws org.netbeans.libs.git.GitException
@@ -162,6 +168,7 @@ meth public void addNotificationListener(org.netbeans.libs.git.progress.Notifica
 meth public void checkout(java.io.File[],java.lang.String,boolean,org.netbeans.libs.git.progress.ProgressMonitor) throws org.netbeans.libs.git.GitException
 meth public void checkoutRevision(java.lang.String,boolean,org.netbeans.libs.git.progress.ProgressMonitor) throws org.netbeans.libs.git.GitException
 meth public void clean(java.io.File[],org.netbeans.libs.git.progress.ProgressMonitor) throws org.netbeans.libs.git.GitException
+meth public void close()
 meth public void copyAfter(java.io.File,java.io.File,org.netbeans.libs.git.progress.ProgressMonitor) throws org.netbeans.libs.git.GitException
 meth public void deleteBranch(java.lang.String,boolean,org.netbeans.libs.git.progress.ProgressMonitor) throws org.netbeans.libs.git.GitException
 meth public void deleteTag(java.lang.String,org.netbeans.libs.git.progress.ProgressMonitor) throws org.netbeans.libs.git.GitException

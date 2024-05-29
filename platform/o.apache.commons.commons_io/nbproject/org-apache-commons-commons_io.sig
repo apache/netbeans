@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.14
+#Version 2.15
 
 CLSS public java.io.BufferedReader
 cons public init(java.io.Reader)
@@ -519,6 +519,7 @@ hfds STANDARD_CHARSET_MAP
 CLSS public org.apache.commons.io.CopyUtils
  anno 0 java.lang.Deprecated()
 cons public init()
+ anno 0 java.lang.Deprecated()
 meth public static int copy(java.io.InputStream,java.io.OutputStream) throws java.io.IOException
 meth public static int copy(java.io.Reader,java.io.Writer) throws java.io.IOException
 meth public static void copy(byte[],java.io.OutputStream) throws java.io.IOException
@@ -569,6 +570,7 @@ hfds depth,file,serialVersionUID
 
 CLSS public org.apache.commons.io.EndianUtils
 cons public init()
+ anno 0 java.lang.Deprecated()
 meth public static double readSwappedDouble(byte[],int)
 meth public static double readSwappedDouble(java.io.InputStream) throws java.io.IOException
 meth public static double swapDouble(double)
@@ -681,6 +683,7 @@ hfds CURRENT,IS_OS_LINUX,IS_OS_MAC,IS_OS_WINDOWS,OS_NAME_WINDOWS_PREFIX,blockSiz
 CLSS public org.apache.commons.io.FileSystemUtils
  anno 0 java.lang.Deprecated()
 cons public init()
+ anno 0 java.lang.Deprecated()
 meth public static long freeSpace(java.lang.String) throws java.io.IOException
  anno 0 java.lang.Deprecated()
 meth public static long freeSpaceKb() throws java.io.IOException
@@ -740,7 +743,7 @@ meth public static boolean isFileNewer(java.io.File,java.time.chrono.ChronoLocal
 meth public static boolean isFileNewer(java.io.File,java.time.chrono.ChronoZonedDateTime<?>)
 meth public static boolean isFileNewer(java.io.File,java.util.Date)
 meth public static boolean isFileNewer(java.io.File,long)
-meth public static boolean isFileOlder(java.io.File,java.io.File)
+meth public static boolean isFileOlder(java.io.File,java.io.File) throws java.io.FileNotFoundException
 meth public static boolean isFileOlder(java.io.File,java.nio.file.attribute.FileTime) throws java.io.IOException
 meth public static boolean isFileOlder(java.io.File,java.time.Instant)
 meth public static boolean isFileOlder(java.io.File,java.time.OffsetDateTime)
@@ -856,6 +859,7 @@ supr java.lang.Object
 
 CLSS public org.apache.commons.io.FilenameUtils
 cons public init()
+ anno 0 java.lang.Deprecated()
 fld public final static char EXTENSION_SEPARATOR = '.'
 fld public final static java.lang.String EXTENSION_SEPARATOR_STR
 meth public !varargs static boolean isExtension(java.lang.String,java.lang.String[])
@@ -1173,6 +1177,7 @@ hfds mode
 
 CLSS public org.apache.commons.io.RandomAccessFiles
 cons public init()
+ anno 0 java.lang.Deprecated()
 meth public static boolean contentEquals(java.io.RandomAccessFile,java.io.RandomAccessFile) throws java.io.IOException
 meth public static byte[] read(java.io.RandomAccessFile,long,int) throws java.io.IOException
 meth public static java.io.RandomAccessFile reset(java.io.RandomAccessFile) throws java.io.IOException
@@ -1210,6 +1215,7 @@ hfds serialVersionUID,tag
 
 CLSS public final org.apache.commons.io.ThreadUtils
 cons public init()
+ anno 0 java.lang.Deprecated()
 meth public static void sleep(java.time.Duration) throws java.lang.InterruptedException
 supr java.lang.Object
 
@@ -1349,6 +1355,7 @@ meth protected int getBufferSize()
 meth protected int getBufferSizeDefault()
 meth protected java.io.InputStream getInputStream() throws java.io.IOException
 meth protected java.io.OutputStream getOutputStream() throws java.io.IOException
+meth protected java.io.Reader getReader() throws java.io.IOException
 meth protected java.io.Writer getWriter() throws java.io.IOException
 meth protected java.lang.CharSequence getCharSequence() throws java.io.IOException
 meth protected java.nio.charset.Charset getCharsetDefault()
@@ -1745,6 +1752,7 @@ meth public !varargs static org.apache.commons.io.file.Counters$PathCounters del
 meth public !varargs static org.apache.commons.io.file.Counters$PathCounters deleteDirectory(java.nio.file.Path,org.apache.commons.io.file.DeleteOption[]) throws java.io.IOException
 meth public !varargs static org.apache.commons.io.file.Counters$PathCounters deleteFile(java.nio.file.Path,java.nio.file.LinkOption[],org.apache.commons.io.file.DeleteOption[]) throws java.io.IOException
 meth public !varargs static org.apache.commons.io.file.Counters$PathCounters deleteFile(java.nio.file.Path,org.apache.commons.io.file.DeleteOption[]) throws java.io.IOException
+meth public static <%0 extends java.lang.Object> {%%0} getFileName(java.nio.file.Path,java.util.function.Function<java.nio.file.Path,{%%0}>)
 meth public static <%0 extends java.nio.file.FileVisitor<? super java.nio.file.Path>> {%%0} visitFileTree({%%0},java.net.URI) throws java.io.IOException
 meth public static <%0 extends java.nio.file.FileVisitor<? super java.nio.file.Path>> {%%0} visitFileTree({%%0},java.nio.file.Path) throws java.io.IOException
 meth public static <%0 extends java.nio.file.FileVisitor<? super java.nio.file.Path>> {%%0} visitFileTree({%%0},java.nio.file.Path,java.util.Set<java.nio.file.FileVisitOption>,int) throws java.io.IOException
@@ -1760,6 +1768,9 @@ meth public static boolean isEmptyFile(java.nio.file.Path) throws java.io.IOExce
 meth public static boolean isNewer(java.nio.file.Path,java.nio.file.Path) throws java.io.IOException
 meth public static boolean isOlder(java.nio.file.Path,java.nio.file.Path) throws java.io.IOException
 meth public static java.io.OutputStream newOutputStream(java.nio.file.Path,boolean) throws java.io.IOException
+meth public static java.lang.String getBaseName(java.nio.file.Path)
+meth public static java.lang.String getExtension(java.nio.file.Path)
+meth public static java.lang.String getFileNameString(java.nio.file.Path)
 meth public static java.lang.String readString(java.nio.file.Path,java.nio.charset.Charset) throws java.io.IOException
 meth public static java.math.BigInteger sizeOfAsBigInteger(java.nio.file.Path) throws java.io.IOException
 meth public static java.math.BigInteger sizeOfDirectoryAsBigInteger(java.nio.file.Path) throws java.io.IOException
@@ -1810,6 +1821,9 @@ supr java.lang.Enum<org.apache.commons.io.file.StandardDeleteOption>
 
 CLSS public final org.apache.commons.io.file.attribute.FileTimes
 fld public final static java.nio.file.attribute.FileTime EPOCH
+meth public static boolean isUnixTime(java.nio.file.attribute.FileTime)
+meth public static boolean isUnixTime(long)
+meth public static java.nio.file.attribute.FileTime fromUnixTime(long)
 meth public static java.nio.file.attribute.FileTime minusMillis(java.nio.file.attribute.FileTime,long)
 meth public static java.nio.file.attribute.FileTime minusNanos(java.nio.file.attribute.FileTime,long)
 meth public static java.nio.file.attribute.FileTime minusSeconds(java.nio.file.attribute.FileTime,long)
@@ -1823,6 +1837,8 @@ meth public static java.util.Date ntfsTimeToDate(long)
 meth public static java.util.Date toDate(java.nio.file.attribute.FileTime)
 meth public static long toNtfsTime(java.nio.file.attribute.FileTime)
 meth public static long toNtfsTime(java.util.Date)
+meth public static long toNtfsTime(long)
+meth public static long toUnixTime(java.nio.file.attribute.FileTime)
 meth public static void setLastModifiedTime(java.nio.file.Path) throws java.io.IOException
 supr java.lang.Object
 hfds HUNDRED_NANOS_PER_MILLISECOND,HUNDRED_NANOS_PER_SECOND,WINDOWS_EPOCH_OFFSET
@@ -2272,6 +2288,10 @@ hfds serialVersionUID,wildcards
 
 CLSS abstract interface org.apache.commons.io.filefilter.package-info
 
+CLSS public final org.apache.commons.io.function.Erase
+meth public static <%0 extends java.lang.Throwable> java.lang.RuntimeException rethrow(java.lang.Throwable) throws {%%0}
+supr java.lang.Object
+
 CLSS public abstract interface org.apache.commons.io.function.IOBaseStream<%0 extends java.lang.Object, %1 extends org.apache.commons.io.function.IOBaseStream<{org.apache.commons.io.function.IOBaseStream%0},{org.apache.commons.io.function.IOBaseStream%1},{org.apache.commons.io.function.IOBaseStream%2}>, %2 extends java.util.stream.BaseStream<{org.apache.commons.io.function.IOBaseStream%0},{org.apache.commons.io.function.IOBaseStream%2}>>
 intf java.io.Closeable
 meth public abstract {org.apache.commons.io.function.IOBaseStream%1} wrap({org.apache.commons.io.function.IOBaseStream%2})
@@ -2379,6 +2399,7 @@ CLSS public abstract interface org.apache.commons.io.function.IORunnable
  anno 0 java.lang.FunctionalInterface()
 meth public abstract void run() throws java.io.IOException
 meth public java.lang.Runnable asRunnable()
+meth public static org.apache.commons.io.function.IORunnable noop()
 
 CLSS public abstract interface org.apache.commons.io.function.IOSpliterator<%0 extends java.lang.Object>
 meth public abstract java.util.Spliterator<{org.apache.commons.io.function.IOSpliterator%0}> unwrap()
@@ -2542,7 +2563,11 @@ hfds DEFAULT,byteOrderMarks,include
 
 CLSS public org.apache.commons.io.input.BoundedInputStream
 cons public init(java.io.InputStream)
+ anno 0 java.lang.Deprecated()
 cons public init(java.io.InputStream,long)
+ anno 0 java.lang.Deprecated()
+innr public static Builder
+meth protected void afterRead(int) throws java.io.IOException
 meth protected void onMaxLength(long,long) throws java.io.IOException
 meth public boolean isPropagateClose()
 meth public boolean markSupported()
@@ -2552,14 +2577,29 @@ meth public int read(byte[]) throws java.io.IOException
 meth public int read(byte[],int,int) throws java.io.IOException
 meth public java.lang.String toString()
 meth public long getCount()
+meth public long getMaxCount()
 meth public long getMaxLength()
+ anno 0 java.lang.Deprecated()
+meth public long getRemaining()
 meth public long skip(long) throws java.io.IOException
+meth public static org.apache.commons.io.input.BoundedInputStream$Builder builder()
 meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
 meth public void setPropagateClose(boolean)
-supr java.io.FilterInputStream
-hfds count,mark,maxCount,propagateClose
+ anno 0 java.lang.Deprecated()
+supr org.apache.commons.io.input.ProxyInputStream
+hfds count,maxCount,propagateClose
+hcls AbstractBuilder
+
+CLSS public static org.apache.commons.io.input.BoundedInputStream$Builder
+ outer org.apache.commons.io.input.BoundedInputStream
+cons public init()
+meth public org.apache.commons.io.input.BoundedInputStream get() throws java.io.IOException
+meth public org.apache.commons.io.input.BoundedInputStream$Builder setCount(long)
+meth public org.apache.commons.io.input.BoundedInputStream$Builder setMaxCount(long)
+meth public org.apache.commons.io.input.BoundedInputStream$Builder setPropagateClose(boolean)
+supr org.apache.commons.io.build.AbstractStreamBuilder<org.apache.commons.io.input.BoundedInputStream$Builder>
 
 CLSS public org.apache.commons.io.input.BoundedReader
 cons public init(java.io.Reader,int)
@@ -2574,7 +2614,9 @@ hfds INVALID,charsRead,markedAt,maxCharsFromTargetReader,readAheadLimit,target
 CLSS public org.apache.commons.io.input.BrokenInputStream
 cons public init()
 cons public init(java.io.IOException)
-cons public init(java.util.function.Supplier<java.io.IOException>)
+ anno 0 java.lang.Deprecated()
+cons public init(java.lang.Throwable)
+cons public init(java.util.function.Supplier<java.lang.Throwable>)
 fld public final static org.apache.commons.io.input.BrokenInputStream INSTANCE
 meth public int available() throws java.io.IOException
 meth public int read() throws java.io.IOException
@@ -2587,7 +2629,9 @@ hfds exceptionSupplier
 CLSS public org.apache.commons.io.input.BrokenReader
 cons public init()
 cons public init(java.io.IOException)
-cons public init(java.util.function.Supplier<java.io.IOException>)
+ anno 0 java.lang.Deprecated()
+cons public init(java.lang.Throwable)
+cons public init(java.util.function.Supplier<java.lang.Throwable>)
 fld public final static org.apache.commons.io.input.BrokenReader INSTANCE
 meth public boolean ready() throws java.io.IOException
 meth public int read(char[],int,int) throws java.io.IOException
@@ -2682,6 +2726,24 @@ cons public !varargs init(java.io.Reader,java.lang.Integer[])
 cons public init(java.io.Reader,java.util.Set<java.lang.Integer>)
 supr org.apache.commons.io.input.AbstractCharacterFilterReader
 
+CLSS public final org.apache.commons.io.input.ChecksumInputStream
+innr public static Builder
+meth protected void afterRead(int) throws java.io.IOException
+meth public long getRemaining()
+meth public static org.apache.commons.io.input.ChecksumInputStream$Builder builder()
+supr org.apache.commons.io.input.CountingInputStream
+hfds countThreshold,expectedChecksumValue
+
+CLSS public static org.apache.commons.io.input.ChecksumInputStream$Builder
+ outer org.apache.commons.io.input.ChecksumInputStream
+cons public init()
+meth public org.apache.commons.io.input.ChecksumInputStream get() throws java.io.IOException
+meth public org.apache.commons.io.input.ChecksumInputStream$Builder setChecksum(java.util.zip.Checksum)
+meth public org.apache.commons.io.input.ChecksumInputStream$Builder setCountThreshold(long)
+meth public org.apache.commons.io.input.ChecksumInputStream$Builder setExpectedChecksumValue(long)
+supr org.apache.commons.io.build.AbstractStreamBuilder<org.apache.commons.io.input.ChecksumInputStream,org.apache.commons.io.input.ChecksumInputStream$Builder>
+hfds checksum,countThreshold,expectedChecksumValue
+
 CLSS public org.apache.commons.io.input.CircularInputStream
 cons public init(byte[],long)
 meth public int read()
@@ -2715,6 +2777,7 @@ fld public final static org.apache.commons.io.input.ClosedInputStream CLOSED_INP
  anno 0 java.lang.Deprecated()
 fld public final static org.apache.commons.io.input.ClosedInputStream INSTANCE
 meth public int read()
+meth public int read(byte[],int,int) throws java.io.IOException
 supr java.io.InputStream
 
 CLSS public org.apache.commons.io.input.ClosedReader
@@ -2727,10 +2790,13 @@ meth public void close() throws java.io.IOException
 supr java.io.Reader
 
 CLSS public org.apache.commons.io.input.CountingInputStream
+ anno 0 java.lang.Deprecated()
 cons public init(java.io.InputStream)
-meth protected void afterRead(int)
+meth protected void afterRead(int) throws java.io.IOException
 meth public int getCount()
+ anno 0 java.lang.Deprecated()
 meth public int resetCount()
+ anno 0 java.lang.Deprecated()
 meth public long getByteCount()
 meth public long resetByteCount()
 meth public long skip(long) throws java.io.IOException
@@ -2912,6 +2978,7 @@ meth public int available() throws java.io.IOException
 meth public int read() throws java.io.IOException
 meth public int read(byte[]) throws java.io.IOException
 meth public int read(byte[],int,int) throws java.io.IOException
+meth public java.io.InputStream unwrap()
 meth public long skip(long) throws java.io.IOException
 meth public void close() throws java.io.IOException
 meth public void mark(int)
@@ -3178,7 +3245,7 @@ meth public org.apache.commons.io.input.Tailer$Builder setTailFromEnd(boolean)
 meth public org.apache.commons.io.input.Tailer$Builder setTailable(org.apache.commons.io.input.Tailer$Tailable)
 meth public org.apache.commons.io.input.Tailer$Builder setTailerListener(org.apache.commons.io.input.TailerListener)
 supr org.apache.commons.io.build.AbstractStreamBuilder<org.apache.commons.io.input.Tailer,org.apache.commons.io.input.Tailer$Builder>
-hfds DEFAULT_DELAY_DURATION,delayDuration,end,executorService,reOpen,startThread,tailable,tailerListener
+hfds DEFAULT_DELAY_DURATION,delayDuration,executorService,reOpen,startThread,tailFromEnd,tailable,tailerListener
 
 CLSS public abstract interface static org.apache.commons.io.input.Tailer$RandomAccessResourceBridge
  outer org.apache.commons.io.input.Tailer
@@ -3232,6 +3299,22 @@ meth public int read(java.nio.CharBuffer) throws java.io.IOException
 meth public void close() throws java.io.IOException
 supr org.apache.commons.io.input.ProxyReader
 hfds branch,closeBranch
+
+CLSS public final org.apache.commons.io.input.ThrottledInputStream
+innr public static Builder
+meth protected void beforeRead(int) throws java.io.IOException
+meth public java.lang.String toString()
+meth public static org.apache.commons.io.input.ThrottledInputStream$Builder builder()
+supr org.apache.commons.io.input.CountingInputStream
+hfds maxBytesPerSecond,startTime,totalSleepDuration
+
+CLSS public static org.apache.commons.io.input.ThrottledInputStream$Builder
+ outer org.apache.commons.io.input.ThrottledInputStream
+cons public init()
+meth public org.apache.commons.io.input.ThrottledInputStream get() throws java.io.IOException
+meth public void setMaxBytesPerSecond(long)
+supr org.apache.commons.io.build.AbstractStreamBuilder<org.apache.commons.io.input.ThrottledInputStream,org.apache.commons.io.input.ThrottledInputStream$Builder>
+hfds maxBytesPerSecond
 
 CLSS public org.apache.commons.io.input.TimestampedObserver
 cons public init()
@@ -3634,7 +3717,9 @@ hfds appendable
 CLSS public org.apache.commons.io.output.BrokenOutputStream
 cons public init()
 cons public init(java.io.IOException)
-cons public init(java.util.function.Supplier<java.io.IOException>)
+ anno 0 java.lang.Deprecated()
+cons public init(java.lang.Throwable)
+cons public init(java.util.function.Supplier<java.lang.Throwable>)
 fld public final static org.apache.commons.io.output.BrokenOutputStream INSTANCE
 meth public void close() throws java.io.IOException
 meth public void flush() throws java.io.IOException
@@ -3645,7 +3730,9 @@ hfds exceptionSupplier
 CLSS public org.apache.commons.io.output.BrokenWriter
 cons public init()
 cons public init(java.io.IOException)
-cons public init(java.util.function.Supplier<java.io.IOException>)
+ anno 0 java.lang.Deprecated()
+cons public init(java.lang.Throwable)
+cons public init(java.util.function.Supplier<java.lang.Throwable>)
 fld public final static org.apache.commons.io.output.BrokenWriter INSTANCE
 meth public void close() throws java.io.IOException
 meth public void flush() throws java.io.IOException
@@ -3712,6 +3799,7 @@ fld public final static org.apache.commons.io.output.ClosedOutputStream CLOSED_O
  anno 0 java.lang.Deprecated()
 fld public final static org.apache.commons.io.output.ClosedOutputStream INSTANCE
 meth public void flush() throws java.io.IOException
+meth public void write(byte[],int,int) throws java.io.IOException
 meth public void write(int) throws java.io.IOException
 supr java.io.OutputStream
 

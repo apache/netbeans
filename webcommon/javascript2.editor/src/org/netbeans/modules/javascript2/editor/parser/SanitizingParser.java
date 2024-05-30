@@ -620,9 +620,20 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
 
         public boolean isModule() {
             if (isModule == null) {
-                isModule = isModule(snapshot, language);
+                if(isModuleFromExtension()) {
+                    isModule = true;
+                } else {
+                    isModule = isModule(snapshot, language);
+                }
             }
             return isModule;
+        }
+
+        private boolean isModuleFromExtension() {
+            FileObject fileObject = snapshot.getSource().getFileObject();
+            return language == JsTokenId.javascriptLanguage()
+                    && fileObject != null
+                    && "mjs".equals(fileObject.getExt());
         }
 
         private static boolean isModule(Snapshot snapshot, Language<JsTokenId> language) {

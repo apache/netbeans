@@ -60,6 +60,8 @@ import { initializeRunConfiguration, runConfigurationProvider, runConfigurationN
 import { dBConfigurationProvider, onDidTerminateSession } from './dbConfigurationProvider';
 import { InputStep, MultiStepInput } from './utils';
 import { PropertiesView } from './propertiesView/propertiesView';
+import * as configuration from './jdk/configuration';
+import * as jdk from './jdk/jdk';
 
 const API_VERSION : string = "1.0";
 export const COMMAND_PREFIX : string = "nbls";
@@ -780,6 +782,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(workspace.registerTextDocumentContentProvider('nbjrt', archiveFileProvider));
 
     launchConfigurations.updateLaunchConfig();
+
+    configuration.initialize(context);
+    jdk.initialize(context);
 
     // register completions:
     launchConfigurations.registerCompletion(context);

@@ -219,10 +219,13 @@ public final class Utils {
 
     public static List<VariableElement> getRepositoriesFor(CompilationInfo info, TypeElement te) {
         List<VariableElement> repositories = new ArrayList<>();
-        TypeMirror tm = info.getTypes().erasure(info.getElements().getTypeElement(CRUD_REPOSITORY_TYPE_NAME).asType());
-        for (VariableElement ve : ElementFilter.fieldsIn(te.getEnclosedElements())) {
-            if (ve.asType().getKind() == TypeKind.DECLARED && info.getTypes().isSubtype(info.getTypes().erasure(ve.asType()), tm)) {
-                repositories.add(ve);
+        TypeElement repoTE = info.getElements().getTypeElement(CRUD_REPOSITORY_TYPE_NAME);
+        if (repoTE != null) {
+            TypeMirror tm = info.getTypes().erasure(repoTE.asType());
+            for (VariableElement ve : ElementFilter.fieldsIn(te.getEnclosedElements())) {
+                if (ve.asType().getKind() == TypeKind.DECLARED && info.getTypes().isSubtype(info.getTypes().erasure(ve.asType()), tm)) {
+                    repositories.add(ve);
+                }
             }
         }
         return repositories;
@@ -273,6 +276,7 @@ public final class Utils {
             params.add(tm.Variable(tm.Modifiers(0, List.of(gu.createAnnotation(BODY_ANNOTATION_NAME))), "value", tm.Type("java.lang.String"), null)); //NOI18N
         }
         StringBuilder body = new StringBuilder().append('{');
+        body.append("\n// TODO: review the generated method skeleton and provide a meaningful implementation.\n");
         if (GET_ANNOTATION_NAME.equals(annotationTypeName)) {
             body.append("return \"Example Response\");"); //NOI18N
         } else if (PUT_ANNOTATION_NAME.equals(annotationTypeName)) {
@@ -501,7 +505,7 @@ public final class Utils {
         return null;
     }
 
-    private static VariableElement getIdElement(List<? extends VariableElement> elements) {
+    public static VariableElement getIdElement(List<? extends VariableElement> elements) {
         for (VariableElement element : elements) {
             for (AnnotationMirror annotation : element.getAnnotationMirrors()) {
                 TypeElement annotationElement = (TypeElement) annotation.getAnnotationType().asElement();

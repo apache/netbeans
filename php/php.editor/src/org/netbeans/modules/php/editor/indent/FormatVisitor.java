@@ -52,6 +52,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
 import org.netbeans.modules.php.editor.parser.astnodes.AttributeDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
+import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
 import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.CastExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
@@ -120,6 +121,8 @@ import org.openide.util.Exceptions;
 public class FormatVisitor extends DefaultVisitor {
 
     private static final Logger LOGGER = Logger.getLogger(FormatVisitor.class.getName());
+    private static final int SPACE_LENGTH = 1;
+    private static final int CONST_AND_SPACE_LENGTH = "const ".length(); // NOI18N
     private final BaseDocument document;
     private final List<FormatToken> formatTokens;
     private final TokenSequence<PHPTokenId> ts;
@@ -1097,7 +1100,9 @@ public class FormatVisitor extends DefaultVisitor {
                 }
                 if (ts.token().id() == PHPTokenId.PHP_TOKEN
                         || ts.token().id() == PHPTokenId.PHP_OPERATOR) {
-                    handleGroupAlignment(node.getNames().get(0));
+                    // GH-7190
+                    int nodeLength = computeConstNodeNameLength(node);
+                    handleGroupAlignment(nodeLength);
                     addFormatToken(formatTokens);
                 } else {
                     ts.movePrevious();
@@ -1134,6 +1139,21 @@ public class FormatVisitor extends DefaultVisitor {
                 formatTokens.add(new FormatToken.IndentToken(node.getEndOffset(), options.continualIndentSize * -1));
             }
         }
+    }
+
+    private int computeConstNodeNameLength(ConstantDeclaration node) {
+        int modifierLength = 0;
+        if (!Modifier.isImplicitPublic(node.getModifier())) {
+            modifierLength = node.getModifierString().length() + SPACE_LENGTH;
+        }
+        Expression constType = node.getConstType();
+        int constTypeLength = getTypeLength(constType);
+        if (constTypeLength != 0) {
+            constTypeLength += SPACE_LENGTH;
+        }
+        Identifier constName = node.getNames().get(0);
+        int constNameLength = constName.getEndOffset() - constName.getStartOffset();
+        return modifierLength + CONST_AND_SPACE_LENGTH + constTypeLength + constNameLength;
     }
 
     @Override
@@ -2175,7 +2195,12 @@ public class FormatVisitor extends DefaultVisitor {
                 assert (parent instanceof FieldsDeclaration);
                 FieldsDeclaration fieldsDeclaration = (FieldsDeclaration) path.get(1);
                 if (ts.token().id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals("=", ts.token().text())) { //NOI18N
-                    int realNodeLength = fieldsDeclaration.getModifierString().length() + " ".length() + name.getEndOffset() - name.getStartOffset(); //NOI18N
+                    // GH-7190
+                    int fieldTypeLength = getTypeLength(fieldType);
+                    if (fieldTypeLength != 0) {
+                        fieldTypeLength += SPACE_LENGTH;
+                    }
+                    int realNodeLength = fieldsDeclaration.getModifierString().length() + SPACE_LENGTH + fieldTypeLength + name.getEndOffset() - name.getStartOffset();
                     handleGroupAlignment(realNodeLength);
                     addFormatToken(formatTokens);
                 } else {
@@ -3327,6 +3352,23 @@ public class FormatVisitor extends DefaultVisitor {
             value = !(last.getId() == FormatToken.Kind.TEXT && last.getOffset() >= ts.offset());
         }
         return value;
+    }
+
+    private int getTypeLength(@NullAllowed Expression expression) {
+        int typeLength = 0;
+        if (expression != null) {
+            int start = expression.getStartOffset();
+            int end = expression.getEndOffset();
+            try {
+                String typeString = document.getText(start, end - start);
+                // e.g. `private array |   int | null $a  = 1;
+                typeLength = typeString.replace(" ", "").length(); // NOI18N
+            } catch (BadLocationException ex) {
+                LOGGER.log(Level.WARNING, "Invalid offset: {0}", ex.offsetRequested()); // NOI18N
+                typeLength = expression.getEndOffset() - expression.getStartOffset() + SPACE_LENGTH;
+            }
+        }
+        return typeLength;
     }
 
     /**

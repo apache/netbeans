@@ -746,7 +746,7 @@
         <property name="sigtest.public.packages" value="${public.packages}"/>
         <property name="sigtest.fail.on.error" value="true"/>
         <taskdef name="sigtest" classname="org.netbeans.nbbuild.Sigtest" classpath="${nbantext.jar}"/>
-        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/sigtest-maven-plugin-2.2.jar"/>
+        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/sigtest-maven-plugin-2.3.jar"/>
         <loadproperties srcFile="${manifest.mf}" prefix="mf.">
             <filterchain>
                 <replaceregex pattern="[\n\r]+ ([^ ][^\n\r]*)"

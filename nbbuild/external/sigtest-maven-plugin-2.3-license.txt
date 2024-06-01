@@ -1,7 +1,7 @@
 Name: API Signature Testing Tool
-Version: 2.2
+Version: 2.3
 License: GPL-2-CP
-Source: https://github.com/eclipse-ee4j/jakartaee-tck-tools/tree/sigtest-2.2/tools/sigtest
+Source: https://github.com/eclipse-ee4j/jakartaee-tck-tools/tree/sigtest-2.3/tools/sigtest
 Description: Signature test modified for NetBeans
 Origin: OpenJDK (modified by NetBeans)
 Type: compile-time

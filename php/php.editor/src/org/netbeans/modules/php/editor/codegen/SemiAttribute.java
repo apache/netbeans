@@ -531,37 +531,38 @@ public class SemiAttribute extends DefaultVisitor {
     public void visit(StaticConstantAccess node) {
         String clsName = CodeUtils.extractUnqualifiedClassName(node);
         ClassElementAttribute c = getCurrentClassElement();
-        switch (clsName) {
-            case "self": //NOI18N
-                if (c != null) {
-                    clsName = c.getName();
-                }
-                break;
-            case "parent": //NOI18N
-                if (c != null) {
-                    c = c.getSuperClass();
+        if (clsName != null) {
+            switch (clsName) {
+                case "self": //NOI18N
                     if (c != null) {
                         clsName = c.getName();
                     }
-                }
-                break;
-            default:
-                //no-op
-        }
-        Collection<AttributedElement> nn = getNamedGlobalElements(Kind.CLASS, clsName); //NOI18N
-        if (!nn.isEmpty()) {
-            for (AttributedElement ell : nn) {
-                ClassElementAttribute ce = (ClassElementAttribute) ell;
-                if (ce != null && ce.getName().equals(clsName)) {
-                    String name = CodeUtils.extractUnqualifiedClassName(node);
-                    AttributedElement thisEl = ce.lookup(name, Kind.CONST);
-                    node2Element.put(node.getDispatcher(), ce);
-                    node2Element.put(node, thisEl);
-                    node2Element.put(node.getConstant(), thisEl);
                     break;
+                case "parent": //NOI18N
+                    if (c != null) {
+                        c = c.getSuperClass();
+                        if (c != null) {
+                            clsName = c.getName();
+                        }
+                    }
+                    break;
+                default:
+                //no-op
+            }
+            Collection<AttributedElement> nn = getNamedGlobalElements(Kind.CLASS, clsName); //NOI18N
+            if (!nn.isEmpty()) {
+                for (AttributedElement ell : nn) {
+                    ClassElementAttribute ce = (ClassElementAttribute) ell;
+                    if (ce != null && ce.getName().equals(clsName)) {
+                        String name = CodeUtils.extractUnqualifiedClassName(node);
+                        AttributedElement thisEl = ce.lookup(name, Kind.CONST);
+                        node2Element.put(node.getDispatcher(), ce);
+                        node2Element.put(node, thisEl);
+                        node2Element.put(node.getConstant(), thisEl);
+                        break;
+                    }
                 }
             }
-
         }
         super.visit(node);
     }

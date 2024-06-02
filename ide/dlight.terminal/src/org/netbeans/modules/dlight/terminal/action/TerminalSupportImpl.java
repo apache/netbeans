@@ -22,6 +22,7 @@ import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
@@ -58,11 +59,11 @@ import org.netbeans.modules.terminal.support.TerminalPinSupport;
 import org.netbeans.modules.terminal.support.TerminalPinSupport.TerminalCreationDetails;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakListeners;
 import org.openide.windows.IOContainer;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
@@ -383,7 +384,7 @@ public final class TerminalSupportImpl {
             assert destroyed != null;
             this.destroyed = destroyed;
             this.processRef = new AtomicReference<>();
-            IONotifier.addPropertyChangeListener(io, WeakListeners.propertyChange(NativeProcessListener.this, io));
+            IONotifier.addPropertyChangeListener(io, new WeakPropertyChangeListener(NativeProcessListener.this, io));
         }
 
         @Override
@@ -427,4 +428,38 @@ public final class TerminalSupportImpl {
         public void outputLineCleared(OutputEvent ev) {
         }
     }
+
+    private static class WeakPropertyChangeListener extends WeakReference<PropertyChangeListener> implements PropertyChangeListener, Runnable {
+
+        private final WeakReference<InputOutput> ioRef;
+
+        @SuppressWarnings("LeakingThisInConstructor")
+        public WeakPropertyChangeListener(PropertyChangeListener delegate, InputOutput io) {
+            super(delegate, BaseUtilities.activeReferenceQueue());
+            this.ioRef = new WeakReference<>(io);
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent pce) {
+            PropertyChangeListener target = get();
+            if(target != null) {
+                target.propertyChange(pce);
+            } else {
+                unregisterPropertyChangeListener();
+            }
+        }
+
+        @Override
+        public void run() {
+            unregisterPropertyChangeListener();
+        }
+
+        private void unregisterPropertyChangeListener() {
+            InputOutput io = ioRef.get();
+            if(io != null) {
+                IONotifier.removePropertyChangeListener(io, this);
+            }
+        }
+    }
+
 }

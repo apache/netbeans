@@ -24,7 +24,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
-import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
+import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil.ParsedFileOptions;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ChangeSupport;
@@ -39,7 +39,7 @@ public class LauncherSourceLevelQueryImpl implements SourceLevelQueryImplementat
 
     @Override
     public Result getSourceLevel(FileObject javaFile) {
-        SingleFileOptionsQueryImplementation.Result delegate = SingleSourceFileUtil.getOptionsFor(javaFile);
+        ParsedFileOptions delegate = SingleSourceFileUtil.getOptionsFor(javaFile);
 
         if (delegate != null) {
             return new ResultImpl(delegate);
@@ -54,17 +54,17 @@ public class LauncherSourceLevelQueryImpl implements SourceLevelQueryImplementat
                 JavaPlatformManager.getDefault().getDefaultPlatform().getSpecification().getVersion().toString();
 
         private final ChangeSupport cs = new ChangeSupport(this);
-        private final SingleFileOptionsQueryImplementation.Result delegate;
+        private final ParsedFileOptions delegate;
         private String sourceLevel;
 
-        public ResultImpl(SingleFileOptionsQueryImplementation.Result delegate) {
+        public ResultImpl(ParsedFileOptions delegate) {
             this.delegate = delegate;
             this.delegate.addChangeListener(this);
             updateDelegate();
         }
 
         private void updateDelegate() {
-            List<String> parsed = SingleSourceFileUtil.parseLine(delegate.getOptions());
+            List<? extends String> parsed = delegate.getArguments();
             String sourceLevel = DEFAULT_SOURCE_LEVEL;
 
             for (int i = 0; i < parsed.size(); i++) {

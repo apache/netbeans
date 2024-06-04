@@ -20,23 +20,26 @@ package org.netbeans.modules.java.file.launcher;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.project.FileOwnerQuery;
-import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
-import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation.Result;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Lookup;
 
 /**
@@ -127,30 +130,31 @@ public final class SingleSourceFileUtil {
         return fo.getParent().getFileObject(fo.getName(), "class") != null;
     }
 
-    public static Result getOptionsFor(FileObject file) {
+    public static ParsedFileOptions getOptionsFor(FileObject file) {
         if (MultiSourceRootProvider.DISABLE_MULTI_SOURCE_ROOT) {
             return null;
         }
 
         for (SingleFileOptionsQueryImplementation  i : Lookup.getDefault().lookupAll(SingleFileOptionsQueryImplementation.class)) {
-            Result r = i.optionsFor(file);
+            SingleFileOptionsQueryImplementation.Result r = i.optionsFor(file);
 
             if (r != null) {
-                return r;
+                return new ParsedFileOptions(r);
             }
         }
+
         return null;
     }
 
-    public static List<String> parseLine(String line) {
-        return PARSER.doParse(line);
+    public static List<String> parseLine(String line, URI workingDirectory) {
+        return PARSER.doParse(line, workingDirectory);
     }
 
     private static final LineParser PARSER = new LineParser();
 
     private static class LineParser extends CompilerOptionsQueryImplementation.Result {
-        public List<String> doParse(String line) {
-            return parseLine(line);
+        public List<String> doParse(String line, URI workingDirectory) {
+            return parseLine(line, workingDirectory);
         }
 
         @Override
@@ -165,4 +169,69 @@ public final class SingleSourceFileUtil {
         public void removeChangeListener(ChangeListener listener) {}
     }
 
+    public static final class ParsedFileOptions extends CompilerOptionsQueryImplementation.Result implements ChangeListener {
+
+        private final ChangeSupport cs;
+        private final SingleFileOptionsQueryImplementation.Result delegate;
+        private final AtomicInteger updateCount = new AtomicInteger(0);
+        private List<? extends String> arguments;
+
+        private ParsedFileOptions(SingleFileOptionsQueryImplementation.Result delegate) {
+            this.cs = new ChangeSupport(this);
+            this.delegate = delegate;
+            this.delegate.addChangeListener(this);
+        }
+
+        @Override
+        public List<? extends String> getArguments() {
+            int update;
+            synchronized (this) {
+                if (arguments != null) {
+                    return arguments;
+                }
+
+                update = updateCount.get();
+            }
+
+            while (true) {
+                List<String> newArguments =
+                        Collections.unmodifiableList(parseLine(delegate.getOptions(),
+                                                               delegate.getWorkDirectory()));
+
+                synchronized (this) {
+                    if (update == updateCount.get()) {
+                        arguments = newArguments;
+                        return newArguments;
+                    }
+
+                    //changed in the mean time, try again:
+                    update = updateCount.get();
+                }
+            }
+        }
+
+        public URI getWorkDirectory() {
+            return delegate.getWorkDirectory();
+        }
+
+        @Override
+        public void addChangeListener(ChangeListener listener) {
+            cs.addChangeListener(listener);
+        }
+
+        @Override
+        public void removeChangeListener(ChangeListener listener) {
+            cs.removeChangeListener(listener);
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            synchronized (this) {
+                arguments = null;
+                updateCount.incrementAndGet();
+            }
+
+            cs.fireChange();
+        }
+    }
 }

@@ -59,7 +59,7 @@ public final class SourceLauncher {
         Map<String, String> joinedOptions = new HashMap<>();
 
         for (String value : inputLines) {
-            List<String> args = SingleSourceFileUtil.parseLine(value);
+            List<String> args = SingleSourceFileUtil.parseLine(value, null);
 
             for (int i = 0; i < args.size(); i++) {
                 switch (args.get(i)) {

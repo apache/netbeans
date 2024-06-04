@@ -283,7 +283,8 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
                 && inScope instanceof TypeScope) {
             TypeScope typeScope = (TypeScope) inScope;
             for (TypeScope callerType : callerTypes) {
-                if (callerType.isSubTypeOf(typeScope)) {
+                if (callerType.isSubTypeOf(typeScope)
+                        || (typeScope.isTrait() && callerType != typeScope)) { // GH-7192
                     cTypes.add(callerType);
                 } else {
                     cTypes.add(typeScope);

@@ -132,6 +132,14 @@ public class UsedNamesCollectorTest extends PHPTestBase {
         performTest("gh6162_01", "class Test ^{}");
     }
 
+    public void testGH7123_01() throws Exception {
+        performTest("gh7123_01", "class GH7123_01^{}");
+    }
+
+    public void testGH7123_02() throws Exception {
+        performTest("gh7123_02", "class GH7123_02^{");
+    }
+
     protected void performTest(String fileName, String caretLine) throws Exception {
         String exactFileName = "testfiles/actions/" + fileName + ".php";
         Map<String, List<UsedNamespaceName>> testResult = getTestResult(exactFileName, caretLine);

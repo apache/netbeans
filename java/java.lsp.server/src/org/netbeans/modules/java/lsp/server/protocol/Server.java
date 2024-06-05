@@ -769,7 +769,8 @@ public final class Server {
                         }
                     }
                     f.complete(candidateMapping);
-                    LSP_SERVER_TELEMETRY.sendWorkspaceInfo(openedProjects.toArray(new Project[openedProjects.size()]), System.currentTimeMillis() - t);                    
+                    List<FileObject> workspaceClientFolders = workspaceService.getClientWorkspaceFolders();
+                    LSP_SERVER_TELEMETRY.sendWorkspaceInfo(workspaceClientFolders, openedProjects, System.currentTimeMillis() - t);
                     LOG.log(Level.INFO, "{0} projects opened in {1}ms", new Object[] { prjsRequested.length, (System.currentTimeMillis() - t) });
                 } else {
                     LOG.log(Level.FINER, "{0}: Collecting projects to prime from: {1}", new Object[]{id, Arrays.asList(additionalProjects)});

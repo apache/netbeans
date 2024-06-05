@@ -120,7 +120,7 @@ public final class OutputUtils {
         return null;
     }
     
-    private static StacktraceAttributes matchStackTraceLine(String line) {
+    static StacktraceAttributes matchStackTraceLine(String line) {
         if (!line.endsWith(")")) {
             return null; // fast path -> not a stack trace
         }
@@ -137,10 +137,10 @@ public final class OutputUtils {
         return null;
     }
     
-    private static class StacktraceAttributes {
-        private final String method;
-        private final String file;
-        private final String lineNum;
+    static final class StacktraceAttributes {
+        final String method;
+        final String file;
+        final String lineNum;
         public StacktraceAttributes(String method, String file, String lineNum) {
             this.method = method;
             this.file = file;
@@ -152,7 +152,7 @@ public final class OutputUtils {
         
         protected abstract ClassPath getClassPath();
         
-        protected  StacktraceAttributes getStacktraceAttributes(String line) {
+        protected StacktraceAttributes getStacktraceAttributes(String line) {
             return matchStackTraceLine(line);
         }
 
@@ -181,7 +181,7 @@ public final class OutputUtils {
 
             // example: at java.base/java.io.FileReader.<init>(FileReader.java:60)
             int start = sa.method.indexOf('/') + 1;
-            int end = sa.method.indexOf(sa.file);
+            int end = sa.method.lastIndexOf(sa.file);
             String packageName = sa.method.substring(start, end).replace('.', '/'); //NOI18N
             String resourceName = packageName + sa.file + ".class"; //NOI18N
 
@@ -189,7 +189,7 @@ public final class OutputUtils {
             // SourceForBinaryQuery then fails to find the according java file ...            
             ClassPath classPath = getClassPath();
             List<FileObject> resources = classPath.findAllResources(resourceName);
-            if (resources != null) {
+            if (resources != null && !resources.isEmpty()) {
                 // find and open source file
                 for (FileObject resource : resources) {
                     FileObject root = classPath.findOwnerRoot(resource);
@@ -263,9 +263,12 @@ public final class OutputUtils {
             Project prj = ref.get();
             if(prj != null) {
                 ProjectSourcesClassPathProvider prov = prj.getLookup().lookup(ProjectSourcesClassPathProvider.class);
+                // appending compile cp probably doesn't hurt although everything should be in exec cp already
                 return createProxyClassPath(
-                    Stream.concat(Stream.of(prov.getProjectClassPaths(ClassPath.EXECUTE)),
-                                  Stream.of(prov.getProjectClassPaths(ClassPath.BOOT)))
+                    Stream.of(Stream.of(prov.getProjectClassPaths(ClassPath.EXECUTE)),
+                              Stream.of(prov.getProjectClassPaths(ClassPath.COMPILE)),
+                              Stream.of(prov.getProjectClassPaths(ClassPath.BOOT)))
+                          .flatMap(s -> s)
                 );
             }
             return null;
@@ -285,15 +288,14 @@ public final class OutputUtils {
             if(fileObject != null) {
                 return createProxyClassPath(
                     Stream.of(ClassPath.getClassPath(fileObject, ClassPath.EXECUTE),
+                              ClassPath.getClassPath(fileObject, ClassPath.COMPILE),
                               ClassPath.getClassPath(fileObject, ClassPath.BOOT)));
             }
             return null;
         }        
     }
     
-    /**
-     * Legacy
-     */
+    @Deprecated
     private static class ClassPathStacktraceOutputListener extends StacktraceOutputListener {
         private final ClassPath classPath;
         private final StacktraceAttributes sa;

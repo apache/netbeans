@@ -19,6 +19,8 @@
 package org.netbeans.modules.maven.api.output;
 
 import org.junit.Test;
+import org.netbeans.modules.maven.api.output.OutputUtils.StacktraceAttributes;
+
 import static org.junit.Assert.*;
 
 /**
@@ -28,14 +30,41 @@ import static org.junit.Assert.*;
 public class OutputUtilsTest {
 
     @Test
-    public void testStackTraceLinePattern() {
-        assertTrue(isStackTraceLine("\tat x.y.Test.z(Test.java:123)"));
-        assertTrue(isStackTraceLine("\tat x.y.Test.native(Native Method)"));
-        assertTrue(isStackTraceLine("[catch]\tat x.y.z.Test.z(Test.java:789)"));
-        assertFalse(isStackTraceLine("\tat some.other.line(Example)"));
+    public void testStackTraceLine1() {
+        checkStackTraceLineAttributes("\tat x.y.Test.z(Test.java:123)", "x.y.Test.z", "Test", "123");
     }
 
-    private boolean isStackTraceLine(String line) {
-        return OutputUtils.linePattern.matcher(line).find();
+    @Test
+    public void testStackTraceLine2() {
+        checkStackTraceLineAttributes("[catch]\tat x.y.z.Test.z(Test.java:789)", "x.y.z.Test.z", "Test", "789");
     }
+
+    @Test
+    public void testStackTraceLine3() {
+        checkStackTraceLineAttributes(" at Mavenproject1@0.1-SNAPSHOT/dev.mbien.mavenproject1.Mavenproject1.foo(Mavenproject1.java:11)",
+                "Mavenproject1@0.1-SNAPSHOT/dev.mbien.mavenproject1.Mavenproject1.foo", "Mavenproject1", "11");
+    }
+
+    @Test
+    public void testStackTraceLineWithNoLinkAttributes1() {
+        checkNoStackTraceLineAttributes("\tat some.other.line(Example)");
+    }
+
+    @Test
+    public void testStackTraceLineWithNoLinkAttributes2() {
+        checkNoStackTraceLineAttributes("\tat x.y.Test.native(Native Method)");
+    }
+
+    private static void checkStackTraceLineAttributes(String line, String method, String file, String lineNum) {
+        StacktraceAttributes attribs = OutputUtils.matchStackTraceLine(line);
+        assertNotNull(attribs);
+        assertEquals(method, attribs.method);
+        assertEquals(file, attribs.file);
+        assertEquals(lineNum, attribs.lineNum);
+    }
+    
+    private static void checkNoStackTraceLineAttributes(String line) {
+        assertNull(OutputUtils.matchStackTraceLine(line));
+    } 
+    
 }

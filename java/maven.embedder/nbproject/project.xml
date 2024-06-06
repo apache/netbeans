@@ -290,25 +290,25 @@
             </class-path-extension>
             <!-- zipinfo -1 .../apache-maven-*-bin.zip | sort | perl -n -e 'if (m!^apache-maven-.+/((lib|boot)/.+.jar)$!) {print "            <class-path-extension>\n                <runtime-relative-path>../maven/$1</runtime-relative-path>\n            </class-path-extension>\n"}' -->
             <class-path-extension>
-                <runtime-relative-path>../maven/boot/plexus-classworlds-2.7.0.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/boot/plexus-classworlds-2.8.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../maven/lib/aopalliance-1.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/commons-cli-1.5.0.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/commons-cli-1.7.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/commons-codec-1.16.0.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/commons-codec-1.16.1.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/commons-lang3-3.12.0.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/commons-lang3-3.14.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/failureaccess-1.0.1.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/failureaccess-1.0.2.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/guava-32.0.1-jre.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/guava-33.2.0-jre.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../maven/lib/guice-5.1.0.jar</runtime-relative-path>
@@ -324,7 +324,7 @@
             maven-slf4j-provider injects MavenSimpleLogger which decorates the output for terminal use
             this causes problems in log files, tests etc which don't expect or cant display them properly
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/jansi-2.4.0.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/jansi-2.4.1.jar</runtime-relative-path>
             </class-path-extension>
             -->
             <class-path-extension>
@@ -337,73 +337,73 @@
                 <runtime-relative-path>../maven/lib/jcl-over-slf4j-1.7.36.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-artifact-3.9.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-artifact-3.9.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-builder-support-3.9.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-builder-support-3.9.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-compat-3.9.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-compat-3.9.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-core-3.9.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-core-3.9.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-embedder-3.9.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-embedder-3.9.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-model-3.9.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-model-3.9.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-model-builder-3.9.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-model-builder-3.9.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-plugin-api-3.9.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-plugin-api-3.9.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-repository-metadata-3.9.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-repository-metadata-3.9.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-resolver-api-1.9.18.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-resolver-api-1.9.20.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-resolver-connector-basic-1.9.18.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-resolver-connector-basic-1.9.20.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-resolver-impl-1.9.18.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-resolver-impl-1.9.20.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-resolver-named-locks-1.9.18.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-resolver-named-locks-1.9.20.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-resolver-provider-3.9.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-resolver-provider-3.9.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-resolver-spi-1.9.18.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-resolver-spi-1.9.20.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-resolver-transport-file-1.9.18.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-resolver-transport-file-1.9.20.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-resolver-transport-http-1.9.18.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-resolver-transport-http-1.9.20.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-resolver-transport-wagon-1.9.18.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-resolver-transport-wagon-1.9.20.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-resolver-util-1.9.18.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-resolver-util-1.9.20.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-settings-3.9.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-settings-3.9.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-settings-builder-3.9.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-settings-builder-3.9.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-shared-utils-3.3.4.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-shared-utils-3.4.2.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/maven-slf4j-provider-3.9.6.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/maven-slf4j-provider-3.9.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../maven/lib/org.eclipse.sisu.inject-0.9.0.M2.jar</runtime-relative-path>
@@ -418,7 +418,7 @@
                 <runtime-relative-path>../maven/lib/plexus-component-annotations-2.1.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/plexus-interpolation-1.26.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/plexus-interpolation-1.27.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../maven/lib/plexus-sec-dispatcher-2.0.jar</runtime-relative-path>

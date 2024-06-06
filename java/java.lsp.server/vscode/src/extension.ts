@@ -1095,7 +1095,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 'netbeans.hints',
                 'netbeans.format',
                 'netbeans.java.imports',
-                'java+.runConfig.vmOptions'
+                'java+.runConfig.vmOptions',
+                'java+.runConfig.cwd'
             ],
             fileEvents: [
                 workspace.createFileSystemWatcher('**/*.java')

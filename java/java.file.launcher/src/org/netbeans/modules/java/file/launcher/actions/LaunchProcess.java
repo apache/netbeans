@@ -20,6 +20,7 @@ package org.netbeans.modules.java.file.launcher.actions;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +32,7 @@ import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.BaseUtilities;
+import org.openide.util.Utilities;
 
 final class LaunchProcess implements Callable<Process> {
 
@@ -69,12 +71,14 @@ final class LaunchProcess implements Callable<Process> {
             FileObject java = JavaPlatformManager.getDefault().getDefaultPlatform().findTool("java"); //NOI18N
             File javaFile = FileUtil.toFile(java);
             String javaPath = javaFile.getAbsolutePath();
+            URI cwd = SingleSourceFileUtil.getOptionsFor(fileObject).getWorkDirectory();
+            File workDir = Utilities.toFile(cwd);
 
             ExplicitProcessParameters paramsFromAttributes =
                     ExplicitProcessParameters.builder()
                                              .args(readArgumentsFromAttribute(fileObject, SingleSourceFileUtil.FILE_ARGUMENTS))
                                              .launcherArgs(readArgumentsFromAttribute(fileObject, SingleSourceFileUtil.FILE_VM_OPTIONS))
-                                             .workingDirectory(FileUtil.toFile(fileObject.getParent()))
+                                             .workingDirectory(workDir)
                                              .build();
 
             ExplicitProcessParameters realParameters =
@@ -97,7 +101,7 @@ final class LaunchProcess implements Callable<Process> {
                 commandsList.add(FileUtil.toFile(fileObject.getParent()).toString());
                 commandsList.add(fileObject.getName());
             } else {
-                commandsList.add(fileObject.getNameExt());
+                commandsList.add(FileUtil.toFile(fileObject).getAbsolutePath());
             }
 
             if (realParameters.getArguments() != null) {

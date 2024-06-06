@@ -1109,6 +1109,7 @@ public final class Server {
             sessionServices.add(new WorkspaceUIContext(client));
             sessionServices.add(treeService.getNodeRegistry());
             sessionServices.add(inputService.getRegistry());
+            sessionServices.add(workspaceService.getWorkspace());
             ((LanguageClientAware) getTextDocumentService()).connect(client);
             ((LanguageClientAware) getWorkspaceService()).connect(client);
             ((LanguageClientAware) treeService).connect(client);

@@ -20,6 +20,7 @@ package org.netbeans.modules.java.file.launcher.queries;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
-import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
+import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil.ParsedFileOptions;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
 
@@ -57,10 +58,16 @@ import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.FilteringPathResourceImplementation;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.openide.filesystems.FileChangeAdapter;
+import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.RequestProcessor;
+import org.openide.util.RequestProcessor.Task;
+import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.lookup.ServiceProviders;
 
@@ -70,9 +77,15 @@ import org.openide.util.lookup.ServiceProviders;
 })
 public class MultiSourceRootProvider implements ClassPathProvider {
 
+    private static final RequestProcessor WORKER = new RequestProcessor(MultiSourceRootProvider.class.getName(), 1, false, false);
     private static final Logger LOG = Logger.getLogger(MultiSourceRootProvider.class.getName());
 
     public static boolean DISABLE_MULTI_SOURCE_ROOT = Boolean.getBoolean("java.disable.multi.source.root");
+    public static boolean SYNCHRONOUS_UPDATES = false;
+
+    private static final Set<String> MODULAR_DIRECTORY_OPTIONS = new HashSet<>(Arrays.asList(
+        "--module-path", "-p"
+    ));
 
     //TODO: the cache will probably be never cleared, as the ClassPath/value refers to the key(?)
     private Map<FileObject, ClassPath> file2SourceCP = new WeakHashMap<>();
@@ -234,7 +247,7 @@ public class MultiSourceRootProvider implements ClassPathProvider {
 
         synchronized (this) {
         return file2ClassPath.computeIfAbsent(file, f -> {
-            SingleFileOptionsQueryImplementation.Result delegate = SingleSourceFileUtil.getOptionsFor(f);
+            ParsedFileOptions delegate = SingleSourceFileUtil.getOptionsFor(f);
 
             if (delegate == null) {
                 return null;
@@ -253,14 +266,16 @@ public class MultiSourceRootProvider implements ClassPathProvider {
         return "true".equals(Bundle.SETTING_AutoRegisterAsRoot());
     }
 
-    private static final class AttributeBasedClassPathImplementation implements ChangeListener, ClassPathImplementation {
+    private static final class AttributeBasedClassPathImplementation extends FileChangeAdapter implements ChangeListener, ClassPathImplementation {
         private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-        private final SingleFileOptionsQueryImplementation.Result delegate;
+        private final Task updateDelegatesTask = WORKER.create(this::doUpdateDelegates);
+        private final Set<String> directoriesWithListener = new HashSet<>();
+        private final ParsedFileOptions delegate;
         private final Set<String> optionKeys;
         private Set<URL> currentURLs;
         private List<? extends PathResourceImplementation> delegates = Collections.emptyList();
 
-        public AttributeBasedClassPathImplementation(SingleFileOptionsQueryImplementation.Result delegate, String... optionKeys) {
+        public AttributeBasedClassPathImplementation(ParsedFileOptions delegate, String... optionKeys) {
             this.delegate = delegate;
             this.optionKeys = new HashSet<>(Arrays.asList(optionKeys));
             delegate.addChangeListener(this);
@@ -273,21 +288,74 @@ public class MultiSourceRootProvider implements ClassPathProvider {
         }
 
         private void updateDelegates() {
+            if (SYNCHRONOUS_UPDATES) {
+                doUpdateDelegates();
+            } else {
+                updateDelegatesTask.schedule(0);
+            }
+        }
+
+        private void doUpdateDelegates() {
             Set<URL> newURLs = new HashSet<>();
             List<PathResourceImplementation> newDelegates = new ArrayList<>();
-            List<String> parsed = SingleSourceFileUtil.parseLine(delegate.getOptions());
+            List<? extends String> parsed = delegate.getArguments();
+            File workDirectory = Utilities.toFile(delegate.getWorkDirectory());
+            Set<String> toRemoveFSListeners = new HashSet<>();
+            Set<String> addedFSListeners = new HashSet<>();
 
-            for (int i = 0; i < parsed.size(); i++) {
-                if (optionKeys.contains(parsed.get(i)) && i + 1 < parsed.size()) {
-                    ClassPathSupport.createClassPath(parsed.get(i + 1))
-                        .entries()
-                        .stream()
-                        .map(e -> e.getURL())
-                        .forEach(u -> {
+            synchronized (this) {
+                toRemoveFSListeners.addAll(directoriesWithListener);
+            }
+
+            for (int i = 0; i < parsed.size() - 1; i++) {
+                String currentOption = parsed.get(i);
+
+                if (optionKeys.contains(currentOption)) {
+                    for (String piece : parsed.get(i + 1).split(File.pathSeparator)) {
+                        File pieceFile = new File(piece);
+
+                        if (!pieceFile.isAbsolute()) {
+                            pieceFile = new File(workDirectory, piece);
+                        }
+
+                        File f = FileUtil.normalizeFile(pieceFile);
+                        Iterable<File> expandedPaths;
+
+                        if (MODULAR_DIRECTORY_OPTIONS.contains(currentOption)) {
+                            if (!toRemoveFSListeners.remove(f.getAbsolutePath()) &&
+                                addedFSListeners.add(f.getAbsolutePath())) {
+                                FileUtil.addFileChangeListener(this, f);
+                            }
+                        }
+
+                        if (MODULAR_DIRECTORY_OPTIONS.contains(currentOption) &&
+                            f.isDirectory() &&
+                            !new File(f, "module-info.class").exists()) {
+                            File[] children = f.listFiles();
+
+                            if (children != null) {
+                                expandedPaths = Arrays.asList(children);
+                            } else {
+                                expandedPaths = Collections.emptyList();
+                            }
+                        } else {
+                            expandedPaths = Arrays.asList(f);
+                        }
+
+                        for (File expanded : expandedPaths) {
+                            URL u = FileUtil.urlForArchiveOrDir(expanded);
+                            if (u == null) {
+                                throw new IllegalArgumentException("Path entry looks to be invalid: " + piece); // NOI18N
+                            }
                             newURLs.add(u);
                             newDelegates.add(ClassPathSupport.createResource(u));
-                        });
+                        }
+                    }
                 }
+            }
+
+            for (String removeFSListener : toRemoveFSListeners) {
+                FileUtil.removeFileChangeListener(this, new File(removeFSListener));
             }
 
             synchronized (this) {
@@ -296,6 +364,8 @@ public class MultiSourceRootProvider implements ClassPathProvider {
                 }
                 this.currentURLs = newURLs;
                 this.delegates = newDelegates;
+                this.directoriesWithListener.removeAll(toRemoveFSListeners);
+                this.directoriesWithListener.addAll(addedFSListeners);
             }
 
             pcs.firePropertyChange(PROP_RESOURCES, null, null);
@@ -314,6 +384,26 @@ public class MultiSourceRootProvider implements ClassPathProvider {
         @Override
         public void removePropertyChangeListener(PropertyChangeListener listener) {
             pcs.removePropertyChangeListener(listener);
+        }
+
+        @Override
+        public void fileDataCreated(FileEvent fe) {
+            updateDelegates();
+        }
+
+        @Override
+        public void fileDeleted(FileEvent fe) {
+            updateDelegates();
+        }
+
+        @Override
+        public void fileFolderCreated(FileEvent fe) {
+            updateDelegates();
+        }
+
+        @Override
+        public void fileRenamed(FileRenameEvent fe) {
+            updateDelegates();
         }
 
     }

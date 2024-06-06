@@ -169,6 +169,12 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     private final Gson gson = new Gson();
     private final LspServerState server;
+    private final Workspace workspace = new Workspace() {
+        @Override
+        public List<FileObject> getClientWorkspaceFolders() {
+            return WorkspaceServiceImpl.this.getClientWorkspaceFolders();
+        }
+    };
     private NbCodeLanguageClient client;
 
     /**
@@ -1342,15 +1348,18 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         String altConfigPrefix = fullAltConfigPrefix.substring(0, fullAltConfigPrefix.length() - 1);
         boolean modified = false;
         String newVMOptions = "";
+        String newWorkingDirectory = null;
         JsonObject javaPlus = ((JsonObject) params.getSettings()).getAsJsonObject(altConfigPrefix);
         if (javaPlus != null) {
             JsonObject runConfig = javaPlus.getAsJsonObject("runConfig");
             if (runConfig != null) {
                 newVMOptions = runConfig.getAsJsonPrimitive("vmOptions").getAsString();
+                JsonPrimitive cwd = runConfig.getAsJsonPrimitive("cwd");
+                newWorkingDirectory = cwd != null ? cwd.getAsString() : null;
             }
         }
         for (SingleFileOptionsQueryImpl query : Lookup.getDefault().lookupAll(SingleFileOptionsQueryImpl.class)) {
-            modified |= query.setConfiguration(client, newVMOptions);
+            modified |= query.setConfiguration(workspace, newVMOptions, newWorkingDirectory);
         }
         if (modified) {
             ((TextDocumentServiceImpl)server.getTextDocumentService()).reRunDiagnostics();
@@ -1482,6 +1491,10 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     @Override
     public void connect(LanguageClient client) {
         this.client = (NbCodeLanguageClient)client;
+    }
+
+    public Workspace getWorkspace() {
+        return workspace;
     }
 
     private static final class CommandProgress extends ActionProgress {

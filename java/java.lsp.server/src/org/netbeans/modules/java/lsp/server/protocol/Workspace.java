@@ -16,23 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.file.launcher.spi;
+package org.netbeans.modules.java.lsp.server.protocol;
 
-import java.net.URI;
-import javax.swing.event.ChangeListener;
-import org.netbeans.api.annotations.common.NonNull;
+import java.util.List;
 import org.openide.filesystems.FileObject;
 
-public interface SingleFileOptionsQueryImplementation {
-
-    public Result optionsFor(FileObject file);
-
-    public interface Result {
-        public String getOptions();
-        public default @NonNull URI getWorkDirectory() {
-            throw new UnsupportedOperationException();
-        }
-        public void addChangeListener(ChangeListener l);
-        public void removeChangeListener(ChangeListener l);
-    }
+/**
+ * One workspace opened in the UI.
+ */
+public interface Workspace {
+    public List<FileObject> getClientWorkspaceFolders();
 }

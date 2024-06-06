@@ -26,6 +26,7 @@
             <folder name="x-java">
                 <folder name="AnnotationProcessors">
                     <file name="org-netbeans-modules-micronaut-completion-MicronautJavaConfigPropertiesCompletion.instance"/>
+                    <file name="org-netbeans-modules-micronaut-completion-MicronautJavaMappingPropertiesCompletion.instance"/>
                 </folder>
             </folder>
             <folder name="x-yaml">

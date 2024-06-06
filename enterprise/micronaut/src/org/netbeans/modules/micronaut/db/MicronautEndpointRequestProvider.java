@@ -179,7 +179,7 @@ public class MicronautEndpointRequestProvider implements CommandProvider {
             sb.append("  ");
         }
         if (name != null) {
-            sb.append('"').append(name).append("\":");
+            sb.append('"').append(name).append("\": ");
         }
         TypeMirror tm = ve.asType();
         if (tm.getKind() == TypeKind.TYPEVAR) {

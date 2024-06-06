@@ -5107,7 +5107,7 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 19), new Position(0, 19)), 0, "alue=\"\""))));
         completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, 25))).get();
         actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
-        assertTrue(actualItems.contains("Text:\"empty-statement\""));
+        assertTrue(actualItems.contains("Value:\"empty-statement\""));
     }
 
     interface Validator<T> {

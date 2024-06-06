@@ -630,7 +630,8 @@ public class JavaCompletionCollector implements CompletionCollector {
                 if (ts.moveNext() && ts.offset() <= offset) {
                     switch (ts.token().id()) {
                         case STRING_LITERAL:
-                            textEdit = new TextEdit(ts.offset(), offset, value);
+                            int end = ts.offset() + ts.token().length() == offset + 1 ? offset + 1 : offset;
+                            textEdit = new TextEdit(ts.offset(), end, value);
                             break;
                         case MULTILINE_STRING_LITERAL:
                             String[] tokenLines = ts.token().text().toString().split("\n");
@@ -651,7 +652,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                 }
             }
             Builder builder = CompletionCollector.newBuilder(label)
-                    .kind(Completion.Kind.Text)
+                    .kind(Completion.Kind.Value)
                     .sortText(value)
                     .insertTextFormat(Completion.TextFormat.PlainText)
                     .documentation(documentation);

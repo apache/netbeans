@@ -759,6 +759,7 @@ public final class Server {
                             LOG.log(Level.FINER, "Current is: {0}, ns: {1}", new Object[] { current, ns });
                             if (s != ns.size()) {
                                 prjs = ns.toArray(new Project[ns.size()]);
+                                workspaceProjects.complete(prjs);
                                 workspaceProjects = CompletableFuture.completedFuture(prjs);
                             }
                         }

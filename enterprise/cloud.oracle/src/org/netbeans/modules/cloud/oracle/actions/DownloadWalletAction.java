@@ -150,7 +150,7 @@ public class DownloadWalletAction extends AbstractAction implements ContextAware
                     }
                     Properties props = new Properties();
                     props.put("OCID", p.getOcid()); //NOI18N
-                    props.put("CompartmentOCID", p.getOcid()); //NOI18N
+                    props.put("CompartmentOCID", p.getComaprtmentId()); //NOI18N
                     String dbUrl = MessageFormat.format(URL_TEMPLATE, connectionName, BaseUtilities.escapeParameters(new String[] { walletPath.toString() }));
                     DatabaseConnection dbConn = DatabaseConnection.create(
                             drivers[0], 

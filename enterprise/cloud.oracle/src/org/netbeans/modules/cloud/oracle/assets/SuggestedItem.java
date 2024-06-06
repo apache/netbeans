@@ -18,24 +18,56 @@
  */
 package org.netbeans.modules.cloud.oracle.assets;
 
+import java.util.Collections;
+import java.util.Set;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author Jan Horvath
  */
+@NbBundle.Messages({
+    "SelectDatabases=Select Oracle Autonomous Database",
+    "SelectVault=Select OCI Vault",
+    "SelectBucket=Select Object Storage Bucket",
+    "SelectCluster=Select Oracle Container Engine",
+    "SelectCompute=Select Compute Instance"
+})
 public final class SuggestedItem extends OCIItem {
 
     private final String path;
+    private final Set<String> exclusivePaths;
 
-    public SuggestedItem(String path, String name) {
+    public SuggestedItem(String path, String name, Set<String> exclusivePaths) {
         super(OCID.of("", "Suggested"), null, name); //NOI18N
         this.path = path;
+        this.exclusivePaths = exclusivePaths;
     }
 
     public String getPath() {
         return path;
     }
-    
+
+    public Set<String> getExclusivePaths() {
+        return exclusivePaths;
+    }
+
+    public static SuggestedItem forPath(String path) {
+        switch (path) {
+            case "Databases": //NOI18N
+                return new SuggestedItem("Databases", Bundle.SelectDatabases(), Collections.emptySet()); //NOI18N
+            case "Vault": //NOI18N
+                return new SuggestedItem("Vault", Bundle.SelectVault(), Collections.emptySet()); //NOI18N
+            case "Bucket": //NOI18N
+                return new SuggestedItem("Bucket", Bundle.SelectBucket(), Collections.emptySet()); //NOI18N
+            case "Cluster": //NOI18N
+                return new SuggestedItem("Cluster", Bundle.SelectCluster(), Collections.singleton("ComputeInstance")); //NOI18N
+            case "ComputeInstance": //NOI18N
+                return new SuggestedItem("ComputeInstance", Bundle.SelectCompute(), Collections.singleton("Cluster")); //NOI18N
+            default:
+                throw new IllegalArgumentException("");
+        }
+    }
 }

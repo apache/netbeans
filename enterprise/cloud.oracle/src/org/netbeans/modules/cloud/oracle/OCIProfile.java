@@ -147,11 +147,6 @@ public final class OCIProfile implements OCISessionInitiator {
         return configProvider.getRegion();
     }
 
-    @Override
-    public String getTenantId() {
-        return configProvider == null ? null : configProvider.getTenantId();
-    }
-    
     public Tenancy getTenancyData() {
         if (configProvider == null) {
             return null;

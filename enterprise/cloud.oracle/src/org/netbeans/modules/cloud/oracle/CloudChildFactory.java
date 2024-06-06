@@ -78,13 +78,7 @@ public class CloudChildFactory extends ChildFactory<OCIItem> {
         NodeProvider nodeProvider = Lookups.forPath(
                 String.format("Cloud/Oracle/%s/Nodes", key.getKey().getPath()))
                 .lookup(NodeProvider.class);
-        if (nodeProvider instanceof NodeProvider.SessionAware) {
-            return new Node[]{((NodeProvider.SessionAware)nodeProvider).apply(key, session)};
-        } else {
-            return OCIManager.usingSession(session, () -> 
-                new Node[]{nodeProvider.apply(key)}
-            );
-        }
+        return new Node[]{nodeProvider.apply(key, session)};
     }
     
     public void refreshKeys() {

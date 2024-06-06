@@ -32,7 +32,7 @@ public abstract class OCIItem {
     final String name;
     final String compartmentId;
     String description;
-    ChangeSupport changeSupport;
+    transient ChangeSupport changeSupport;
 
     /**
     * Construct a new {@code OCIItem}.

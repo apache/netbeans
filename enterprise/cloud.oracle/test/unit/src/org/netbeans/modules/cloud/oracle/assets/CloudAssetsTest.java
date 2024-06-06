@@ -16,23 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.compute;
+package org.netbeans.modules.cloud.oracle.assets;
 
+import java.net.URISyntaxException;
+import org.junit.Test;
+import static org.junit.Assert.*;
+import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
+import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
-import org.netbeans.modules.cloud.oracle.items.OCIItem;
 
 /**
  *
  * @author Jan Horvath
  */
-public final class ClusterItem extends OCIItem {
+public class CloudAssetsTest {
 
-    public ClusterItem(OCID id, String compartmentId, String name) {
-        super(id, compartmentId, name);
+    @Test
+    public void testStoreLoad() throws URISyntaxException {
+        CloudAssets instance = new CloudAssets();
+        instance.addItem(new DatabaseItem(OCID.of("db-ocid", "Databases"), "db-comp-id", "DB1", "http://test", "DB1"));
+        instance.addItem(new ClusterItem(OCID.of("cluster-ocid", "Cluster"), "cluster-comp-id", "Cluster1"));
+        instance.storeAssets();
+        
+        CloudAssets instance1 = new CloudAssets();
+        instance1.loadAssets();
+        
+        assertEquals(instance.getItems(), instance1.getItems());
     }
 
-    public ClusterItem() {
-        super();
-    }
     
 }

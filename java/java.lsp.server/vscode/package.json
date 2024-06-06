@@ -77,6 +77,11 @@
 					"when": "nbJavaLSReady && config.netbeans.javaSupport.enabled"
 				},
 				{
+					"id": "cloud.assets",
+					"name": "Cloud Assets",
+					"when": "nbJavaLSReady"
+				},
+				{
 					"id": "database.connections",
 					"name": "Databases",
 					"when": "nbJavaLSReady"
@@ -544,7 +549,37 @@
 			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddToProject",
 				"title": "Add To Project",
-				"icon": "$(star-empty)"
+				"icon": "$(add)"
+			},
+			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.RemoveFromProject",
+				"title": "Remove From Project",
+				"icon": "$(remove)"
+			},
+			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddSuggestedItemAction",
+				"title": "Add To Project",
+				"icon": "$(add)"
+			},
+			{
+				"command": "nbls.cloud.assets.refresh",
+				"title": "Refresh Cloud Assets",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "cloud.assets.policy.create",
+				"title": "Create OCI Policies",
+				"icon": "$(key)"
+			},
+			{
+				"command": "cloud.assets.config.create",
+				"title": "Create External Config Properties",
+				"icon": "$(settings)"
+			},
+			{
+				"command": "nbls.cloud.assets.add.new",
+				"title": "Add New Cloud Resource",
+				"icon": "$(add)"
 			},
 			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CloudRefresh",
@@ -753,6 +788,14 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.RemoveFromProject",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddSuggestedItemAction",
+					"when": "false"
+				},
+				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CloudRefresh",
 					"when": "false"
 				},
@@ -823,6 +866,26 @@
 					"command": "nbls.db.add.all.connection",
 					"when": "view == database.connections",
 					"group": "navigation@3"
+				},
+				{
+					"command": "nbls.cloud.assets.refresh",
+					"when": "view == cloud.assets",
+					"group": "navigation@3"
+				},
+				{
+					"command": "cloud.assets.policy.create",
+					"when": "view == cloud.assets",
+					"group": "navigation@2"
+				},
+				{
+					"command": "cloud.assets.config.create",
+					"when": "view == cloud.assets",
+					"group": "navigation@1"
+				},
+				{
+					"command": "nbls.cloud.assets.add.new",
+					"when": "view == cloud.assets",
+					"group": "navigation@10"
 				}
 			],
 			"view/item/context": [
@@ -927,12 +990,22 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddToProject",
-					"when": "viewItem =~ /class:oracle/",
+					"when": "viewItem =~ /class:oracle/ && view != cloud.assets",
+					"group": "inline@14"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.RemoveFromProject",
+					"when": "viewItem =~ /^(?!.*Suggested).*/ && view == cloud.assets",
+					"group": "inline@17"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddSuggestedItemAction",
+					"when": "viewItem =~ /class:oracle.assets.SuggestedItem/",
 					"group": "inline@14"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CloudRefresh",
-					"when": "viewItem =~ /class:oracle/",
+					"when": "viewItem =~ /class:oracle/ && view != cloud.assets",
 					"group": "inline@13"
 				},
 				{
@@ -1011,11 +1084,27 @@
 			},
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/compartment.svg",
-				"codeicon": "archive"
+				"codeicon": "folder"
 			},
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/database.svg",
 				"codeicon": "database"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/suggest.svg",
+				"codeicon": "question"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/bucket.svg",
+				"codeicon": "archive"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/computeinstance.svg",
+				"codeicon": "server-environment"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/cluster.svg",
+				"codeicon": "compass"
 			},
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/vault.svg",

@@ -26,6 +26,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -75,7 +76,7 @@ final class GeneralAction {
     }
 
     public static <T> ContextAwareAction context(
-        ContextAction.Performer<? super T> perf,
+        Supplier<ContextAction.Performer<T>> perf,
         ContextSelection selectionType, 
         Lookup context, 
         Class<T> dataType
@@ -105,7 +106,6 @@ final class GeneralAction {
     
     private static <T> ContextAwareAction _context(Map map, Class<T> dataType, Lookup context, boolean instanceReady) {
         ContextSelection sel = readSelection(map.get("selectionType")); // NOI18N
-        Performer<T> perf = new Performer<T>(map);
         boolean survive = Boolean.TRUE.equals(map.get("surviveFocusChange")); // NOI18N
         StatefulMonitor enableMonitor = null;
         StatefulMonitor checkMonitor = null;
@@ -141,10 +141,10 @@ final class GeneralAction {
         
         if (checkMonitor == null) {
             a = new ContextAction<T>(
-                perf, sel, context, dataType, survive, enableMonitor
+                () -> new Performer<T>(map), sel, context, dataType, survive, enableMonitor
             );
         } else {
-            a = new StatefulAction<>(perf, sel, context, dataType, survive, enableMonitor, checkMonitor);
+            a = new StatefulAction<>(() -> new Performer<T>(map), sel, context, dataType, survive, enableMonitor, checkMonitor);
             LOG.log(Level.FINE, "Created stateful delegate for {0}, instance {1}, value monitor {2}", 
                     new Object[] { map, a, checkMonitor });
         }

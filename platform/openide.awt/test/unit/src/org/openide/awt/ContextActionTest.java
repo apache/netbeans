@@ -678,8 +678,7 @@ implements Lookup.Provider, ContextActionEnabler<ContextActionTest.Openable> {
     private static <T> ContextAwareAction context(
         ContextActionPerformer<T> a, ContextActionEnabler<T> e, ContextSelection s, Lookup lookupProxy, Class<T> c
     ) {
-        ContextAction.Performer<T> perf = new ContextAction.Performer<T>(a, e);
-        return GeneralAction.context(perf, s, lookupProxy, c);
+        return GeneralAction.context(() -> new ContextAction.Performer<T>(a, e), s, lookupProxy, c);
     }
     
     public static interface Openable {
@@ -923,5 +922,61 @@ implements Lookup.Provider, ContextActionEnabler<ContextActionTest.Openable> {
         assertTrue(listenerA.propChanges.isEmpty());
         
         assertTrue(listenerB.propChanges.contains(Action.SELECTED_KEY));
+    }
+
+
+    @ActionID(category = "test", id = "OutputTestAction")
+    @ActionRegistration(displayName = "Dummy", lazy = true) //NOI18N
+    public static class OutputTestAction extends AbstractAction implements ContextAwareAction {
+
+        // Record the result string from the last action invocation
+        public static String actionResult;
+
+        private Lookup ctx;
+
+        public OutputTestAction(String text) {
+            this.ctx = Lookups.fixed(text);
+        }
+
+        private OutputTestAction(Lookup ctx) {
+            this.ctx = ctx;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            System.out.println(this.ctx.lookup(String.class));
+            actionResult = this.ctx.lookup(String.class);
+        }
+
+        @Override
+        public Action createContextAwareInstance(Lookup actionContext) {
+            return new OutputTestAction(ctx);
+        }
+
+    }
+
+    public void testContextAwareInstanceInvokesWithCorrectContext() throws InterruptedException, InvocationTargetException {
+        ContextAwareAction baseCAA = (ContextAwareAction) Actions.forID("test", "OutputTestAction");
+
+        Lookup l1 = Lookups.fixed("Lookup 1");
+        Lookup l2 = Lookups.fixed("Lookup 2");
+
+        Action cai1 = baseCAA.createContextAwareInstance(l1);
+        Action cai2 = baseCAA.createContextAwareInstance(l2);
+
+        runOnEdt(() -> cai1.actionPerformed(new ActionEvent(new Object(), 1, "blah")));
+        assertEquals("Lookup 1", OutputTestAction.actionResult);
+        runOnEdt(() -> cai2.actionPerformed(new ActionEvent(new Object(), 2, "blah")));
+        assertEquals("Lookup 2", OutputTestAction.actionResult);
+        runOnEdt(() -> cai1.actionPerformed(new ActionEvent(new Object(), 3, "blah")));
+        assertEquals("Lookup 1", OutputTestAction.actionResult);
+    }
+
+    private void runOnEdt(Runnable runnable) throws InterruptedException, InvocationTargetException {
+        if(EventQueue.isDispatchThread()) {
+            runnable.run();
+        } else {
+            EventQueue.invokeAndWait(runnable);
+        }
     }
 }

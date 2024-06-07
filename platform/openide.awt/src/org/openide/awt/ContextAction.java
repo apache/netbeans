@@ -54,7 +54,9 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
     /** selection mode */
     final ContextSelection selectMode;
     /** performer to call */
-    final ContextAction.Performer<? super T> performer;
+    final ContextAction.Performer<T> performer;
+    /** performer factory to create copies of this action */
+    final Supplier<ContextAction.Performer<T>> performerSupplier;
 
     /** global lookup to work with */
     final ContextManager global;
@@ -72,18 +74,19 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
      * to right action.
      */
     public ContextAction(
-        ContextAction.Performer<? super T> performer,
+        Supplier<ContextAction.Performer<T>> performerSupplier,
         ContextSelection selectMode,
         Lookup actionContext,
         Class<T> type,
         boolean surviveFocusChange, StatefulMonitor enableMonitor
     ) {
-        if (performer == null) {
-            throw new NullPointerException("Has to provide a key!"); // NOI18N
+        if (performerSupplier == null) {
+            throw new NullPointerException("Has to performerSupplier a key!"); // NOI18N
         }
         this.type = type;
         this.selectMode = selectMode;
-        this.performer = performer;
+        this.performerSupplier = performerSupplier;
+        this.performer = performerSupplier.get();
         this.global = ContextManager.findManager(actionContext, surviveFocusChange);
         this.enableMonitor = enableMonitor;
         if (enableMonitor != null) {
@@ -272,7 +275,7 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
      */
     @Override
     public Action createContextAwareInstance(Lookup actionContext) {
-        return  new ContextAction<>(performer, selectMode, actionContext, type, global.isSurvive(),
+        return  new ContextAction<>(performerSupplier, selectMode, actionContext, type, global.isSurvive(),
             enableMonitor == null ? null : enableMonitor.createContextMonitor(actionContext));
     }
 

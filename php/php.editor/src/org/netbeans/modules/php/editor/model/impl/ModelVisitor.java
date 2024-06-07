@@ -1270,6 +1270,17 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         isLexicalVariable = true;
         scan(lexicalVariables);
         isLexicalVariable = false;
+        List<String> previousLexicalVariables = new ArrayList<>();
+        if (!currentLexicalVariables.isEmpty()) {
+            // GH-7348 keep lexical variables for nested lambda functions
+            // e.g.
+            // $closure = function() use ($lexical) {
+            //     $nestedClosure = function() {};
+            //     $lexical();
+            //     $nestedClosure();
+            // };
+            previousLexicalVariables.addAll(currentLexicalVariables);
+        }
         for (Expression expression : lexicalVariables) {
             Expression expr = expression;
             // #269672 also check the reference: &$variable
@@ -1288,10 +1299,19 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         isReturnType = true;
         scan(node.getReturnType());
         isReturnType = false;
+        Scope previousScopeHolder = null;
+        if (previousScope != null) {
+            // GH-7348 keep scope for nested lambda functions
+            previousScopeHolder = previousScope;
+        }
         previousScope = scope;
         scan(node.getBody());
-        previousScope = null;
+        previousScope = previousScopeHolder;
         currentLexicalVariables.clear();
+        if (!previousLexicalVariables.isEmpty()) {
+            // GH-7348 for nested lambda functions
+            currentLexicalVariables.addAll(previousLexicalVariables);
+        }
         modelBuilder.reset();
     }
 

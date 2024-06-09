@@ -2165,7 +2165,7 @@ public class FormatVisitor extends DefaultVisitor {
         }
 
         boolean addIndent = !isAnonymousClass(node.getExpression())
-                && !(path.size() > 2 && path.get(2) instanceof LambdaFunctionDeclaration) // #259111
+                && !(path.size() > 3 && path.get(2) instanceof LambdaFunctionDeclaration && !(path.get(3) instanceof FunctionInvocation)) // #259111 GH-7140
                 && !(node.getExpression() instanceof LambdaFunctionDeclaration) // NETBEANS-4970
                 && !(node.getExpression() instanceof MatchExpression);
 

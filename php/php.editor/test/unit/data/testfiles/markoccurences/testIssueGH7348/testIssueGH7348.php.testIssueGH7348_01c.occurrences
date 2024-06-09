@@ -1,0 +1,3 @@
+    $|>MARK_OCCURRENCES:lexical<| = function() {};
+    $closure = function() use ($|>MARK_OCCURRENCES:lexical<|) {
+        $|>MARK_OCCURRENCES:lexi^cal<|();

@@ -2659,7 +2659,16 @@ public class FormatVisitor extends DefaultVisitor {
                             }
                             tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_INDENT, newOffset, "\n" + ts.token().text().toString()));
                             if (ts.moveNext() && ts.token().id() == PHPTokenId.PHP_LINE_COMMENT) {
-                                tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_LINE_COMMENTS, ts.offset()));
+                                ASTNode parent = path.get(0);
+                                if (!(parent instanceof IfStatement) || isCurly) {
+                                    // GH-7185 don't add this to an "if" statement without curly braces
+                                    // e.g.
+                                    // if (true)
+                                    //     $example = 1; // comment1
+                                    //
+                                    // // comment2
+                                    tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_LINE_COMMENTS, ts.offset()));
+                                }
                             }
                             // #268710 for adding/checking the PHP_LINE_COMMENT token later
                             ts.movePrevious();

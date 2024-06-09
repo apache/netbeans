@@ -1139,4 +1139,29 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/php83/typedClassConstants_02.php", options, false, true);
     }
 
+    public void testGH7185_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/issueGH7185_01.php", options, false, false);
+    }
+
+    public void testGH7185_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/issueGH7185_02.php", options, false, false);
+    }
+
+    public void testGH7185_03() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/issueGH7185_03.php", options, false, false);
+    }
+
+    public void testGH7185_04() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/issueGH7185_04.php", options, false, false);
+    }
+
+    public void testGH7185_05() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/issueGH7185_05.php", options, false, false);
+    }
+
 }

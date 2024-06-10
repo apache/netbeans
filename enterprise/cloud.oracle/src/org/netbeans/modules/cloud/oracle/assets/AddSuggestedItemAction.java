@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
@@ -87,8 +86,8 @@ public class AddSuggestedItemAction implements ActionListener {
                 String ocid = connections[i].getConnectionProperties().getProperty("OCID"); //NOI18N
                 String compartmentId = connections[i].getConnectionProperties().getProperty("CompartmentOCID"); //NOI18N
                 if (ocid != null && compartmentId != null) {
-                    DatabaseItem dbItem = 
-                            new DatabaseItem(OCID.of(ocid, "Databases"), compartmentId, name, null, name); //NOI18N
+                    DatabaseItem dbItem
+                            = new DatabaseItem(OCID.of(ocid, "Databases"), compartmentId, name, null, name); //NOI18N
                     adbConnections.put(name, dbItem);
                 }
             }
@@ -103,34 +102,12 @@ public class AddSuggestedItemAction implements ActionListener {
             }
             return;
         }
-        Lookup lookup = Lookups.fixed(new SingleSuggestedContext(context.getPath()));
+        Steps.NextStepProvider nsProvider = Steps.NextStepProvider.builder()
+                .stepForClass(Steps.CompartmentStep.class, (s) -> new Steps.SuggestedStep(context.getPath()))
+                .build();
+        Lookup lookup = Lookups.fixed(nsProvider);
         Steps.getDefault().executeMultistep(new TenancyStep(), lookup)
                 .thenAccept(result -> CloudAssets.getDefault().addItem((OCIItem) result));
-    }
-    
-    private final class SingleSuggestedContext implements Steps.SuggestedContext {
-
-        private String itemType = null;
-
-        public SingleSuggestedContext(String itemType) {
-            this.itemType = itemType;
-        }
-
-        @Override
-        public String getItemType() {
-            return itemType;
-        }
-
-        @Override
-        public Step getNextStep() {
-            return null;
-        }
-
-        @Override
-        public void setItemType(String itemType) {
-            this.itemType = itemType;
-        }
-
     }
 
 }

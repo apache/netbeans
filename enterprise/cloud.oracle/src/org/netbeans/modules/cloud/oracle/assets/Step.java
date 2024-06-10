@@ -25,7 +25,7 @@ import org.openide.util.Lookup;
  *
  * @author Jan Horvath
  */
-interface Step<T, U> {
+public interface Step<T, U> {
 
     Step<T, U> prepare(T item, Lookup lookup);
 

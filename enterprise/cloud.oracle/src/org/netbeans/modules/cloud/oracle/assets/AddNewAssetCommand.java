@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.cloud.oracle.assets;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,24 +27,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.cloud.oracle.assets.Steps.ItemTypeStep;
-import org.netbeans.modules.cloud.oracle.assets.Steps.ProjectStep;
-import org.netbeans.modules.cloud.oracle.assets.Steps.SuggestedContext;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import org.netbeans.modules.project.dependency.ArtifactSpec;
-import org.netbeans.modules.project.dependency.Dependency;
-import org.netbeans.modules.project.dependency.DependencyChange;
-import org.netbeans.modules.project.dependency.DependencyChangeException;
-import org.netbeans.modules.project.dependency.ProjectDependencies;
-import org.netbeans.modules.project.dependency.ProjectOperationException;
-import org.netbeans.modules.refactoring.spi.ModificationResult;
-import org.netbeans.modules.project.dependency.Scope;
 import org.netbeans.spi.lsp.CommandProvider;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
-import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -81,69 +68,21 @@ public class AddNewAssetCommand implements CommandProvider {
     @Override
     public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
         CompletableFuture future = new CompletableFuture();
-        NewSuggestedContext context = new NewSuggestedContext(OpenProjectsFinder.getDefault().findTopLevelProjects());
-        Lookup lookup = Lookups.fixed(context);
         Steps.getDefault()
-                .executeMultistep(new ItemTypeStep(), lookup)
+                .executeMultistep(new ItemTypeStep(), Lookup.EMPTY)
                 .thenAccept(result -> {
                     Project project = ((Pair<Project, OCIItem>) result).first();
                     OCIItem item = ((Pair<Project, OCIItem>) result).second();
                     CloudAssets.getDefault().addItem(item);
-                    Project projectToModify = null;
-                    Set<Project> subProjects = ProjectUtils.getContainedProjects(project, false);
-                    for (Project subProject : subProjects) {
-                        if ("oci".equals(subProject.getProjectDirectory().getName())) { //NOI18N
-                            projectToModify = subProject;
-                            break;
-                        }
-                    }
-                    if (projectToModify == null) {
-                        projectToModify = project;
-                    }
-                    if (projectToModify != null) {
-                        String[] art = DEP_MAP.get(context.getItemType());
-                        ArtifactSpec spec = ArtifactSpec.make(art[0], art[1]);
-                        Dependency dep = Dependency.make(spec, Scope.named("implementation")); //NOI18N
-                        DependencyChange change = DependencyChange.add(Collections.singletonList(dep), DependencyChange.Options.skipConflicts);
-                        try {
-                            ModificationResult mod = ProjectDependencies.modifyDependencies(projectToModify, change);
-                            mod.commit();
-                        } catch (IOException ex) {
-                            future.completeExceptionally(ex);
-                        } catch (DependencyChangeException ex) {
-                            future.completeExceptionally(ex);
-                        } catch (ProjectOperationException ex) {
-                            future.completeExceptionally(ex);
-                        }
+                    String[] art = DEP_MAP.get(item.getKey().getPath());
+                    try {
+                        DependencyUtils.addDependency(project, art[0], art[1]);
+                    } catch (IllegalStateException e) {
+                        future.completeExceptionally(e);
                     }
                 });
         future.complete(null);
         return future;
-    }
-
-    private final class NewSuggestedContext implements SuggestedContext {
-
-        private final CompletableFuture<Project[]> projects;
-        private String itemType = null;
-
-        public NewSuggestedContext(CompletableFuture<Project[]> projects) {
-            this.projects = projects;
-        }
-
-        @Override
-        public String getItemType() {
-            return itemType;
-        }
-
-        @Override
-        public Step getNextStep() {
-            return new ProjectStep(projects);
-        }
-
-        @Override
-        public void setItemType(String itemType) {
-            this.itemType = itemType;
-        }
     }
 
 }

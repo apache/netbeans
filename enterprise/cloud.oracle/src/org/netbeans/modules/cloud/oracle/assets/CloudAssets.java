@@ -38,10 +38,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
+import org.netbeans.modules.cloud.oracle.OCIChildFactory;
 import org.netbeans.modules.cloud.oracle.bucket.BucketItem;
 import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
 import org.netbeans.modules.cloud.oracle.compute.ComputeInstanceItem;
@@ -54,12 +57,14 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
+import org.openide.util.Parameters;
 
 /**
  *
  * @author Jan Horvath
  */
 public final class CloudAssets {
+    private static final Logger LOG = Logger.getLogger(CloudAssets.class.getName());
 
     private static final String SUGGESTED = "Suggested"; //NOI18N
     private static final String CLOUD_ASSETS_PATH = "CloudAssets"; //NOI18N
@@ -111,6 +116,7 @@ public final class CloudAssets {
     }
 
     public void addItem(OCIItem newItem) {
+        Parameters.notNull("newItem cannot be null", newItem);
         items.add(newItem);
         update();
         storeAssets();
@@ -132,11 +138,6 @@ public final class CloudAssets {
     }
 
     private synchronized void setSuggestions(Set<SuggestedItem> newSuggested) {
-//        for (OCIItem item : new HashSet<OCIItem>(items)) {
-//            if (item.getKey().getPath().equals(SUGGESTED)) { //NOI18N
-//                items.remove(item);
-//            }
-//        }
         suggested.clear();
         Set<String> present = items.stream()
                 .map(i -> i.getKey().getPath())
@@ -147,7 +148,7 @@ public final class CloudAssets {
                 for (String exclusivePath : s.getExclusivePaths()) {
                     if (present.contains(exclusivePath)) {
                         add = false;
-                        continue;
+                        break;
                     }
                 }
                 if (add) {
@@ -161,15 +162,6 @@ public final class CloudAssets {
     public List<OCIItem> getItems() {
         List<OCIItem> list = new ArrayList<>(suggested);
         list.addAll(items);
-//        Collections.sort(list, (a, b) -> {
-//            if (SUGGESTED.equals(a.getKey().getPath())) {
-//                return Integer.MIN_VALUE;
-//            }
-//            if (SUGGESTED.equals(b.getKey().getPath())) {
-//                return Integer.MAX_VALUE;
-//            }
-//            return a.getKey().getPath().compareTo(b.getKey().getPath());
-//        });
         return list;
     }
 
@@ -229,7 +221,7 @@ public final class CloudAssets {
             }
             content = new String(file.asBytes());
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.INFO, "Unable to load assets", ex);
             return;
         } finally {
             assetsLoaded = true;
@@ -264,7 +256,7 @@ public final class CloudAssets {
             reader.endArray();
             items = loaded;
         } catch (JsonIOException | JsonSyntaxException | IOException e) {
-            Exceptions.printStackTrace(e);
+            LOG.log(Level.INFO, "Unable to load assets", e);
         } finally {
             assetsLoaded = true;
         }

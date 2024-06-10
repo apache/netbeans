@@ -37,9 +37,9 @@ import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
@@ -65,9 +65,12 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
- *
+ * An implementation of the {@link Step} interface used for multiple commands or actions.
+ * 
  * @author Jan Horvath
  */
 @NbBundle.Messages({
@@ -98,11 +101,83 @@ public final class Steps {
             if (DialogDescriptor.OK_OPTION == dd.notify(ci)) {
                 future.complete(multistep.getResult());
             } else {
-                future.complete(null);
+                future.cancel(true);
             }
         });
         return future;
     }
+    
+    /**
+     * Provider class that supplies the next {@link Step} for navigation from the current {@link Step}.
+     * 
+     */
+    public static class NextStepProvider {
+        private final Map<Class<? extends Step>, Function<Step, Step>> steps;
+        
+        /**
+         * Private constructor to initialize the NextStepProvider with a map of steps.
+         *
+         * @param steps a map associating classes with their corresponding {@link Step} instances
+         */
+        private NextStepProvider(Map<Class<? extends Step>, Function<Step, Step>> steps) {
+            this.steps = steps;
+        }
+        
+        /**
+         * Retrieves the next {@link Step} for the specified {@link Step}.
+         *
+         * @param currentStep the current step for which the next step is to be retrieved
+         * @return the {@link Step} associated with the specified class, or null if no step is found
+         */
+        public Step nextStepFor(Step currentStep) {
+            Function<Step, Step> nextStep = steps.get(currentStep.getClass());
+            return nextStep != null ? nextStep.apply(currentStep) : null;
+        }
+        
+        /**
+         * Creates a new Builder for constructing a NextStepProvider.
+         *
+         * @return a new Builder instance
+         */
+        public static Builder builder() {
+            return new Builder();
+        }
+        
+        /**
+         * Builder class for constructing a NextStepProvider.
+         */
+        public static class Builder {
+            private final Map<Class<? extends Step>, Function<Step, Step>> steps = new HashMap<> ();
+
+            /**
+             * Private constructor for the Builder.
+             */
+            private Builder() {
+            }
+            
+            /**
+             * Associates a {@link Step} function with a class in the builder.
+             *
+             * @param clazz the class to be associated with the step function
+             * @param stepFunction the function to be associated with the class
+             * @return the current Builder instance for method chaining
+             */
+            public Builder stepForClass(Class<? extends Step> clazz, Function<Step, Step> stepFunction) {
+                steps.put(clazz, stepFunction);
+                return this;
+            }
+            
+            /**
+             * Builds and returns a NextStepProvider with the configured steps.
+             *
+             * @return a new NextStepProvider instance
+             */
+            public NextStepProvider build() {
+                return new NextStepProvider(steps);
+            }
+        }
+    }
+
 
     private static class Multistep {
 
@@ -172,8 +247,7 @@ public final class Steps {
         }
     }
 
-    static final class TenancyStep implements Step<Object, TenancyItem> {
-
+    public static final class TenancyStep implements Step<Object, TenancyItem> {
         List<OCIProfile> profiles = new LinkedList<>();
         private AtomicReference<TenancyItem> selected = new AtomicReference<>();
         private Lookup lookup;
@@ -243,9 +317,8 @@ public final class Steps {
             return profiles.stream().filter(p -> p.getTenancy().isPresent()).count() == 1;
         }
     }
-
-    static final class CompartmentStep implements Step<TenancyItem, CompartmentItem> {
-
+    
+    public static final class CompartmentStep implements Step<TenancyItem, CompartmentItem> {
         private Map<String, OCIItem> compartments = null;
         private CompartmentItem selected;
         private Lookup lookup;
@@ -276,7 +349,14 @@ public final class Steps {
 
         @Override
         public Step getNext() {
-            return new SuggestedStep().prepare(getValue(), lookup);
+            NextStepProvider nsProvider = lookup.lookup(NextStepProvider.class);
+            if (nsProvider != null) {
+                Step ns = nsProvider.nextStepFor(this);
+                if (ns != null) {
+                    return ns.prepare(getValue(), lookup);
+                }
+            } 
+            return null;
         }
 
         @Override
@@ -299,18 +379,6 @@ public final class Steps {
     }
 
     /**
-     * Context of SuggestedStep. Determines next step.
-     */
-    public interface SuggestedContext {
-
-        String getItemType();
-
-        Step getNextStep();
-
-        public void setItemType(String selected);
-    }
-
-    /**
      * Show list of items for a suggested type.
      * 
      */
@@ -319,16 +387,19 @@ public final class Steps {
         private Map<String, OCIItem> items = new HashMap<>();
         private OCIItem selected;
         private Lookup lookup;
-        private SuggestedContext context = null;
+        private final String suggestedType;
 
+        public SuggestedStep(String suggestedType) {
+            this.suggestedType = suggestedType;
+        }
+        
         public SuggestedStep prepare(CompartmentItem compartment, Lookup lookup) {
             this.lookup = lookup;
-            context = lookup.lookup(SuggestedContext.class);
             ProgressHandle h = ProgressHandle.createHandle(Bundle.CollectingItems());
             h.start();
             h.progress(Bundle.CollectingItems_Text());
             try {
-                getItemsByPath(compartment, context.getItemType()).forEach((db) -> items.put(db.getName(), db));
+                getItemsByPath(compartment, suggestedType).forEach((db) -> items.put(db.getName(), db));
             } finally {
                 h.finish();
             }
@@ -336,7 +407,7 @@ public final class Steps {
         }
 
         private String getSuggestedItemName() {
-            switch (context.getItemType()) {
+            switch (suggestedType) {
                 case "Databases":
                     return Bundle.Databases();
                 case "Vault":
@@ -348,7 +419,7 @@ public final class Steps {
                 case "ComputeInstance":
                     return Bundle.Compute();
             }
-            throw new MissingResourceException("Missing OCI type", null, context.getItemType());
+            throw new MissingResourceException("Missing OCI type", null, suggestedType);
         }
 
         @Override
@@ -358,11 +429,14 @@ public final class Steps {
 
         @Override
         public Step getNext() {
-            Step next = context.getNextStep();
-            if (next != null) {
-                next.prepare(getValue(), lookup);
-            }
-            return next;
+            NextStepProvider nsProvider = lookup.lookup(NextStepProvider.class);
+            if (nsProvider != null) {
+                Step ns = nsProvider.nextStepFor(this);
+                if (ns != null) {
+                    return ns.prepare(getValue(), lookup);
+                }
+            } 
+            return null;
         }
 
         @Override
@@ -395,8 +469,6 @@ public final class Steps {
         }
         return new NotifyDescriptor.QuickPick(title, title, items, false);
     }
-    
-    
 
     /**
      * Retrieve all compartments from a tenancy.
@@ -487,11 +559,10 @@ public final class Steps {
         String[] types = {"Databases", "Vault", "Bucket"}; //NOI18N
 
         private Lookup lookup;
-        private SuggestedContext context;
+        private String selected;
 
         @Override
         public Step<Object, String> prepare(Object item, Lookup lookup) {
-            context = lookup.lookup(SuggestedContext.class);
             this.lookup = lookup;
             return this;
         }
@@ -512,17 +583,21 @@ public final class Steps {
 
         @Override
         public Step getNext() {
-            return new TenancyStep().prepare(null, lookup);
+            NextStepProvider nsProvider = NextStepProvider.builder()
+                    .stepForClass(CompartmentStep.class, (s) -> new SuggestedStep(getValue()))
+                    .stepForClass(SuggestedStep.class, (s) -> new ProjectStep())
+                    .build();
+            return new TenancyStep().prepare(null, new ProxyLookup(Lookups.fixed(nsProvider), lookup));
         }
 
         @Override
         public void setValue(String selected) {
-            context.setItemType(selected);
+            this.selected = selected;
         }
 
         @Override
         public String getValue() {
-            return context.getItemType();
+            return selected;
         }
 
     }
@@ -530,20 +605,20 @@ public final class Steps {
     /**
      * The purpose of this step is to select a project to update dependencies.
      */
-    static class ProjectStep implements Step<OCIItem, Object> {
+    public static class ProjectStep implements Step<Object, Object> {
 
         private final CompletableFuture<Project[]> projectsFuture;
         Map<String, Project> projects;
         private Project selectedProject;
-        private OCIItem item;
+        private Object item;
 
-        ProjectStep(CompletableFuture<Project[]> projectsFuture) {
-            this.projectsFuture = projectsFuture;
+        public ProjectStep() {
+            projectsFuture = OpenProjectsFinder.getDefault().findTopLevelProjects();
             this.projects = new HashMap<> ();
         }
 
         @Override
-        public Step<OCIItem, Object> prepare(OCIItem item, Lookup lookup) {
+        public Step<Object, Object> prepare(Object item, Lookup lookup) {
             this.item = item;
             try {
                 Project[] p = projectsFuture.get();

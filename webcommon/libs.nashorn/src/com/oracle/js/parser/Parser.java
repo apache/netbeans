@@ -2571,7 +2571,7 @@ loop:
     }
 
     private Expression awaitExpression() {
-        assert inAsyncFunction();
+        assert inAsyncFunction() || isModule;
         // Capture await token.
         long awaitToken = token;
         nextOrEOL();
@@ -4732,7 +4732,9 @@ loop:
             return verifyIncDecExpression(unaryToken, opType, lhs, false);
 
         default:
-            if (isAwait(token) && inAsyncFunction() && isAtLeastES7()) {
+            if (isAwait(token)
+                    && ((inAsyncFunction() && isAtLeastES7())
+                    || (isModule && isAtLeastES13()))) {
                 return awaitExpression();
             }
             break;
@@ -6157,6 +6159,15 @@ loop:
 
     private boolean inAsyncFunction() {
         return lc.getCurrentFunction().isAsync();
+    }
+
+    private boolean isToplevelFunction() {
+        Iterator<ParserContextFunctionNode> functionIterator = lc.getFunctions();
+        ParserContextFunctionNode functionNode = null;
+        while(functionIterator.hasNext()) {
+            functionNode = functionIterator.next();
+        }
+        return functionNode == lc.getCurrentFunction();
     }
 
     private boolean isAwait(long token) {

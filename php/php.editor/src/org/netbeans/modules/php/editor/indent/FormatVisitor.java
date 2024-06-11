@@ -1546,6 +1546,17 @@ public class FormatVisitor extends DefaultVisitor {
 
     @Override
     public void visit(LambdaFunctionDeclaration node) {
+        // GH-7454 keep isMethodInvocationShifted
+        // e.g.
+        // Example::staticMethod()
+        //    ->method(function() {
+        //        Example::staticMethod()
+        //            ->method();
+        //        });
+        boolean isMethodInvocationShiftedHolder = isMethodInvocationShifted;
+        if (isMethodInvocationShifted) {
+            isMethodInvocationShifted = false;
+        }
         boolean disableIndent = disableIndentForFunctionInvocation(node.getStartOffset());
         scan(node.getAttributes());
         List<FormalParameter> parameters = node.getFormalParameters();
@@ -1591,6 +1602,7 @@ public class FormatVisitor extends DefaultVisitor {
         if (disableIndent) {
             enableIndentForFunctionInvocation(node.getEndOffset());
         }
+        isMethodInvocationShifted = isMethodInvocationShiftedHolder;
     }
 
     private boolean disableIndentForFunctionInvocation(int offset) {

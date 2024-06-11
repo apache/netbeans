@@ -14,13 +14,13 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-C867D9AA6A9AB14F62D35FB689A789A6CB5AF62E org.apache.maven.indexer:indexer-core:7.1.2
-219D09C157DDFBD741642FEDC28931D3561984B6 org.apache.maven.indexer:search-api:7.1.2
-2625D44190FDB8E7B85C8FCF1803637390A20ACC org.apache.maven.indexer:search-backend-smo:7.1.2
-64E5624754D59386BE5D9159C68F81FF96298704 org.apache.lucene:lucene-core:9.10.0
-6570EBF974D07025AD4CD9FFAA9927546B534704 org.apache.lucene:lucene-backward-codecs:9.10.0
-2F21ADE4B4896F1ECE2B3A823E1640C762C9D0CF org.apache.lucene:lucene-highlighter:9.10.0
-C50F82D244EA5ADAC2D2D9295DE85DDCCC2D45CB org.apache.lucene:lucene-queryparser:9.10.0
-92E559808A23F61C818EF90A9CCAB3669A25CAA0 org.apache.lucene:lucene-analysis-common:9.10.0
+6B6780786C8FBF64FE4C809BBAC2CE4FD5D996C4 org.apache.maven.indexer:indexer-core:7.1.3
+7AB214FA5A675719E011F514939E52C010F049F6 org.apache.maven.indexer:search-api:7.1.3
+58A364CECD56F04A55D2F0C932DF879C7168C4C3 org.apache.maven.indexer:search-backend-smo:7.1.3
+2E487755A6814B2A1BC770C26569DCBA86873DCF org.apache.lucene:lucene-core:9.11.0
+DB385446BC3FD70E7C6A744276C0A157BD60EE0A org.apache.lucene:lucene-backward-codecs:9.11.0
+44ACCDC03C5482E602718F7BF91E5940BA4E4870 org.apache.lucene:lucene-highlighter:9.11.0
+E97FE1C0D102EDB8D6E1C01454992FD2B8D80AE0 org.apache.lucene:lucene-queryparser:9.11.0
+75A0A333CF1E043102743066C929E65FE51CBCDA org.apache.lucene:lucene-analysis-common:9.11.0
 934C04D3CFEF185A8008E7BF34331B79730A9D43 javax.annotation:javax.annotation-api:1.3.2
-B3ADD478D4382B78EA20B1671390A858002FEB6C com.google.code.gson:gson:2.10.1
+527175CA6D81050B53BDD4C457A6D6E017626B0E com.google.code.gson:gson:2.11.0

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,98 +19,63 @@
     under the License.
 
 -->
-<!-- Generator: Adobe Illustrator 23.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#FFFFFF;}
-	.st1{opacity:0.25;}
-	.st2{fill:#FAFAFA;}
-	.st3{opacity:0.33;}
-	.st4{fill:none;stroke:#474747;stroke-miterlimit:10;}
-	.st5{opacity:0.42;}
-	.st6{fill:#CAE3FF;}
-	.st7{opacity:0.2;}
-	.st8{opacity:0.03;}
-	.st9{opacity:0.1;}
-	.st10{opacity:0.15;}
-	.st11{opacity:0.45;}
-	.st12{fill:#FFE1B0;}
-	.st13{fill:#B3DBFF;}
-	.st14{fill:#FBDC7C;}
-	.st15{fill:#FFDB43;}
-	.st16{fill:#E79B00;}
-	.st17{fill:#3883CE;}
-	.st18{fill:none;stroke:#003399;stroke-width:1.375;stroke-miterlimit:10;}
-	.st19{fill:#E8513D;}
-	.st20{fill:#1E1E1E;}
-	.st21{fill:#FFC36D;}
-	.st22{fill:#9FCBFF;}
-	.st23{fill:#E9F7FF;}
-	.st24{fill:#62707C;}
-	.st25{fill:#7A8896;}
-	.st26{fill:#57BFFF;}
-	.st27{fill:#E69D35;}
-	.st28{fill:#9CFF73;}
-	.st29{fill:#4891CC;}
-	.st30{fill:#474747;}
-	.st31{fill:#CCA05E;}
-	.st32{opacity:0.67;}
-	.st33{opacity:0.3;}
-	.st34{fill:#EAEAEA;}
-	.st35{fill:#FFE945;}
-	.st36{fill:#FFCF8C;}
-	.st37{fill:#FF5252;}
-	.st38{opacity:0.12;}
-	.st39{fill:#45A5F4;}
-	.st40{fill:url(#SVGID_1_);}
-	.st41{fill:url(#SVGID_2_);}
-	.st42{opacity:0.05;}
-	.st43{fill:#3D81F5;}
-	.st44{fill:#CECECE;}
-	.st45{fill:#B5B5B5;}
-	.st46{opacity:0.4;}
-	.st47{fill:#595959;}
-	.st48{fill:#80FF80;}
-	.st49{fill:#C8FF80;}
-	.st50{fill:#FFEE80;}
-	.st51{fill:#FFA680;}
-	.st52{fill:#FF8080;}
-	.st53{fill:none;}
-	.st54{fill:#007AFF;}
-	.st55{fill:#EFFF78;}
-	.st56{fill:#FFDA00;}
-	.st57{fill:#3EADFF;}
-	.st58{opacity:0.67;fill:#FFFFFF;}
-	.st59{fill:#2E92FF;}
-	.st60{fill:#3AEA00;}
-	.st61{fill:#303030;}
-</style>
-<g>
-	<rect y="7" class="st44" width="16" height="7"/>
-	<g class="st3">
-		<path d="M15,8v5H1V8H15 M16,7H0v7h16V7L16,7z"/>
-	</g>
-</g>
-<g>
-	<rect x="2" y="4" class="st45" width="12" height="4"/>
-	<g class="st3">
-		<path d="M13,5v2H3V5H13 M14,4H2v4h12V4L14,4z"/>
-	</g>
-</g>
-<polygon class="st0" points="13,7 7.5,7 3,7 3,0 13,0 "/>
-<polygon class="st11" points="4,7 4,1 12,1 12,7 13,7 13,0 3,0 3,7 "/>
-<g>
-	<rect x="1" y="13" class="st44" width="4" height="3"/>
-	<g class="st3">
-		<path d="M4,14v1H2v-1H4 M5,13H1v3h4V13L5,13z"/>
-	</g>
-</g>
-<g>
-	<rect x="11" y="13" class="st44" width="4" height="3"/>
-	<g class="st3">
-		<path d="M14,14v1h-2v-1H14 M15,13h-4v3h4V13L15,13z"/>
-	</g>
-</g>
-<rect x="2" y="9" class="st3" width="3" height="1"/>
+<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        opacity: .45;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6 {
+        stroke-width: 0px;
+      }
+
+      .cls-1, .cls-2, .cls-4 {
+        fill: #000;
+      }
+
+      .cls-7, .cls-4 {
+        opacity: .33;
+      }
+
+      .cls-3 {
+        fill: #cecece;
+      }
+
+      .cls-5 {
+        fill: #b5b5b5;
+      }
+
+      .cls-6 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="cls-3" y="7" width="16" height="7"/>
+    <g class="cls-7">
+      <path class="cls-2" d="M15,8v5H1v-5h14M16,7H0v7h16v-7h0Z"/>
+    </g>
+  </g>
+  <g>
+    <rect class="cls-5" x="2" y="4" width="12" height="4"/>
+    <g class="cls-7">
+      <path class="cls-2" d="M13,5v2H3v-2h10M14,4H2v4h12v-4h0Z"/>
+    </g>
+  </g>
+  <polygon class="cls-6" points="13 7 7.5 7 3 7 3 0 13 0 13 7"/>
+  <polygon class="cls-1" points="4 7 4 1 12 1 12 7 13 7 13 0 3 0 3 7 4 7"/>
+  <g>
+    <rect class="cls-3" x="1" y="13" width="4" height="3"/>
+    <g class="cls-7">
+      <path class="cls-2" d="M4,14v1h-2v-1h2M5,13H1v3h4v-3h0Z"/>
+    </g>
+  </g>
+  <g>
+    <rect class="cls-3" x="11" y="13" width="4" height="3"/>
+    <g class="cls-7">
+      <path class="cls-2" d="M14,14v1h-2v-1h2M15,13h-4v3h4v-3h0Z"/>
+    </g>
+  </g>
+  <rect class="cls-4" x="2" y="9" width="3" height="1"/>
 </svg>

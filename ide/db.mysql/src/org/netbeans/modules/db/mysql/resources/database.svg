@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,78 +19,23 @@
     under the License.
 
 -->
-<!-- Generator: Adobe Illustrator 23.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#FFFFFF;}
-	.st1{opacity:0.25;}
-	.st2{fill:#FAFAFA;}
-	.st3{opacity:0.33;}
-	.st4{fill:none;stroke:#474747;stroke-miterlimit:10;}
-	.st5{opacity:0.42;}
-	.st6{fill:#CAE3FF;}
-	.st7{opacity:0.2;}
-	.st8{opacity:0.03;}
-	.st9{opacity:0.1;}
-	.st10{opacity:0.15;}
-	.st11{opacity:0.45;}
-	.st12{fill:#FFE1B0;}
-	.st13{fill:#B3DBFF;}
-	.st14{fill:#FBDC7C;}
-	.st15{fill:#FFDB43;}
-	.st16{fill:#E79B00;}
-	.st17{fill:#3883CE;}
-	.st18{fill:none;stroke:#003399;stroke-width:1.375;stroke-miterlimit:10;}
-	.st19{fill:#E8513D;}
-	.st20{fill:#1E1E1E;}
-	.st21{fill:#FFC36D;}
-	.st22{fill:#9FCBFF;}
-	.st23{fill:#E9F7FF;}
-	.st24{fill:#62707C;}
-	.st25{fill:#7A8896;}
-	.st26{fill:#57BFFF;}
-	.st27{fill:#E69D35;}
-	.st28{fill:#9CFF73;}
-	.st29{fill:#4891CC;}
-	.st30{fill:#474747;}
-	.st31{fill:#CCA05E;}
-	.st32{opacity:0.67;}
-	.st33{opacity:0.3;}
-	.st34{fill:#EAEAEA;}
-	.st35{fill:#FFE945;}
-	.st36{fill:#FFCF8C;}
-	.st37{fill:#FF5252;}
-	.st38{opacity:0.12;}
-	.st39{fill:#45A5F4;}
-	.st40{fill:url(#SVGID_1_);}
-	.st41{fill:url(#SVGID_2_);}
-	.st42{opacity:0.05;}
-	.st43{fill:#3D81F5;}
-	.st44{fill:#CECECE;}
-	.st45{fill:#B5B5B5;}
-	.st46{opacity:0.4;}
-	.st47{fill:#595959;}
-	.st48{fill:#80FF80;}
-	.st49{fill:#C8FF80;}
-	.st50{fill:#FFEE80;}
-	.st51{fill:#FFA680;}
-	.st52{fill:#FF8080;}
-	.st53{fill:none;}
-	.st54{fill:#007AFF;}
-	.st55{fill:#EFFF78;}
-	.st56{fill:#FFDA00;}
-	.st57{fill:#3EADFF;}
-	.st58{opacity:0.67;fill:#FFFFFF;}
-	.st59{fill:#2E92FF;}
-	.st60{fill:#3AEA00;}
-	.st61{fill:#303030;}
-</style>
-<path class="st34" d="M8,1C4.686,1,2,2.119,2,3.5v9C2,13.881,4.686,15,8,15c3.314,0,6-1.119,6-2.5v-9C14,2.119,11.314,1,8,1z"/>
-<path class="st3" d="M8,1C4.686,1,2,2.119,2,3.5v9C2,13.881,4.686,15,8,15c3.314,0,6-1.119,6-2.5v-9C14,2.119,11.314,1,8,1z
-	 M13,9.768C12.154,10.438,10.295,11,8,11c-2.294,0-4.154-0.563-5-1.232V7.381C4.075,8.055,5.912,8.5,8,8.5
-	c2.088,0,3.925-0.445,5-1.119V9.768z M13,6.768C12.154,7.438,10.295,8,8,8C5.706,8,3.846,7.438,3,6.768V4.356
-	C4.063,5.042,5.893,5.5,8,5.5c2.107,0,3.937-0.458,5-1.144V6.768z M8,2c3.281,0,5,1.115,5,1.5v0.245C12.176,4.425,10.322,5,8,5
-	C5.678,5,3.824,4.425,3,3.745V3.5C3,3.115,4.719,2,8,2z M8,14c-3.281,0-5-1.115-5-1.5v-2.119C4.075,11.055,5.912,11.5,8,11.5
-	c2.088,0,3.925-0.445,5-1.119V12.5C13,12.885,11.281,14,8,14z"/>
+<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #eaeaea;
+      }
+
+      .cls-1, .cls-2 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: #000;
+        opacity: .33;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M8,1c-3.314,0-6,1.119-6,2.5v9c0,1.381,2.686,2.5,6,2.5s6-1.119,6-2.5V3.5c0-1.381-2.686-2.5-6-2.5Z"/>
+  <path class="cls-2" d="M8,1c-3.314,0-6,1.119-6,2.5v9c0,1.381,2.686,2.5,6,2.5s6-1.119,6-2.5V3.5c0-1.381-2.686-2.5-6-2.5ZM13,9.768c-.846.67-2.706,1.232-5,1.232s-4.154-.562-5-1.232v-2.387c1.075.674,2.912,1.119,5,1.119s3.925-.445,5-1.119v2.387ZM13,6.768c-.846.67-2.706,1.232-5,1.232s-4.154-.562-5-1.232v-2.411c1.063.686,2.893,1.144,5,1.144s3.937-.458,5-1.144v2.411ZM8,2c3.281,0,5,1.114,5,1.5v.245c-.824.68-2.678,1.255-5,1.255s-4.176-.575-5-1.255v-.245c0-.386,1.719-1.5,5-1.5ZM8,14c-3.281,0-5-1.114-5-1.5v-2.119c1.075.674,2.912,1.119,5,1.119s3.925-.445,5-1.119v2.119c0,.386-1.719,1.5-5,1.5Z"/>
 </svg>

@@ -35,3 +35,4 @@
 
 # Define some file types explicitly as being binary.
 *.jar             binary
+*.ai              binary

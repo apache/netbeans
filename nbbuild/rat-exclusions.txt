@@ -94,6 +94,9 @@ ide/options.editor/src/org/netbeans/modules/options/colors/AllLanguagesExample
 ide/options.editor/src/org/netbeans/modules/options/colors/HighlightingExample
 ide/options.editor/src/org/netbeans/modules/options/indentation/indentationExample
 platform/templates/src/org/netbeans/modules/templates/resources/userprop.txt
+nbbuild/IconScripts/tables/ready-artboards.txt
+nbbuild/IconScripts/tables/mappings.tsv
+nbbuild/IconScripts/tables/icon-hashes.txt
 ### limited degreed of creativity
 ## the files do not reach a level of creativity
 java/maven.checkstyle/src/org/netbeans/modules/maven/format/checkstyle/config/configuration*.dtd

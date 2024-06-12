@@ -317,20 +317,6 @@ public class FaceletsLibrarySupport {
 	    
 	};
 
-        ClassLoader originalContextClassLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader(proxyLoader);
-
-            //do the parse
-            return parseLibraries();
-
-        } finally {
-            //reset the original loader
-            Thread.currentThread().setContextClassLoader(originalContextClassLoader);
-        }
-    }
-
-    private Map<String, Library> parseLibraries() {
         // initialize the resource providers for facelet-taglib documents
         List<ConfigurationResourceProvider> faceletTaglibProviders =
                 new ArrayList<>();
@@ -360,70 +346,78 @@ public class FaceletsLibrarySupport {
         JsfReferenceImplementationProvider jsfRIProvider = Lookup.getDefault().lookup(JsfReferenceImplementationProvider.class);
         Path jsfReferenceImplementation = jsfRIProvider.artifactPathFor(jsfVersion);
 
-        List<URL> jsfRIJars = new ArrayList<>();
+        ClassLoader originalContextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
-            if (jsfReferenceImplementation != null) {
-                DefaultFaceletLibraries jsfRIFaceletLibraries = new DefaultFaceletLibraries(jsfReferenceImplementation.toFile());
-                List<URI> jsfRIDescriptors = jsfRIFaceletLibraries.getLibrariesDescriptorsFiles().stream()
-                        .map(FileObject::toURI)
-                        .collect(Collectors.toList());
-                faceletTaglibProviders.add(sc -> jsfRIDescriptors);
+            Thread.currentThread().setContextClassLoader(proxyLoader);
 
-                jsfRIJars.add(jsfReferenceImplementation.toUri().toURL());
-            } else {
-                // if no reference implementation could be found fallback to bundled one
+            List<URL> jsfRIJars = new ArrayList<>();
 
-                //Add a facelet taglib provider which provides the libraries from
-                //netbeans jsf2.0 library
-                //
-                //This is needed for the standart JSF 2.0 libraries since it may
-                //happen that there is no javax-faces.jar with the .taglib.xml files
-                //on the compile classpath and we still want the features like code
-                //completion work. This happens for example in Maven web projects.
+            try {
+                if (jsfReferenceImplementation != null) {
+                    DefaultFaceletLibraries jsfRIFaceletLibraries = new DefaultFaceletLibraries(jsfReferenceImplementation.toFile());
+                    List<URI> jsfRIDescriptors = jsfRIFaceletLibraries.getLibrariesDescriptorsFiles().stream()
+                            .map(FileObject::toURI)
+                            .collect(Collectors.toList());
+                    faceletTaglibProviders.add(sc -> jsfRIDescriptors);
 
-                DefaultFaceletLibraries defaultFaceletLibraries = DefaultFaceletLibraries.getInstance();
-                Collection<FileObject> libraryDescriptorFiles = defaultFaceletLibraries.getLibrariesDescriptorsFiles();
-                final Collection<URI> libraryURIs = new ArrayList<>();
-                for (FileObject fo : libraryDescriptorFiles) {
-                    try {
-                        libraryURIs.add(fo.toURL().toURI());
-                    } catch (URISyntaxException ex) {
-                        LOGGER.log(Level.INFO, null, ex);
+                    jsfRIJars.add(jsfReferenceImplementation.toUri().toURL());
+                } else {
+                    // if no reference implementation could be found fallback to bundled one
+
+                    //Add a facelet taglib provider which provides the libraries from
+                    //netbeans jsf2.0 library
+                    //
+                    //This is needed for the standart JSF 2.0 libraries since it may
+                    //happen that there is no javax-faces.jar with the .taglib.xml files
+                    //on the compile classpath and we still want the features like code
+                    //completion work. This happens for example in Maven web projects.
+                    DefaultFaceletLibraries defaultFaceletLibraries = DefaultFaceletLibraries.getInstance();
+                    Collection<FileObject> libraryDescriptorFiles = defaultFaceletLibraries.getLibrariesDescriptorsFiles();
+                    final Collection<URI> libraryURIs = new ArrayList<>();
+                    for (FileObject fo : libraryDescriptorFiles) {
+                        try {
+                            libraryURIs.add(fo.toURL().toURI());
+                        } catch (URISyntaxException ex) {
+                            LOGGER.log(Level.INFO, null, ex);
+                        }
                     }
+                    faceletTaglibProviders.add(sc -> libraryURIs);
+
+                    jsfRIJars.add(defaultFaceletLibraries.getJsfImplJar().toURI().toURL());
                 }
-                faceletTaglibProviders.add(sc -> libraryURIs);
-
-                jsfRIJars.add(defaultFaceletLibraries.getJsfImplJar().toURI().toURL());
+            } catch (MalformedURLException ex) {
+                Exceptions.printStackTrace(ex);
             }
-        } catch (MalformedURLException ex) {
-            Exceptions.printStackTrace(ex);
+
+            URLClassLoader jsfRIClassLoader = new URLClassLoader(jsfRIJars.toArray(new URL[]{}));
+
+            //parse the libraries
+            ServletContext sc = new EmptyServletContext();
+            DocumentInfo[] documents = ConfigManager.getConfigDocuments(jsfRIClassLoader, sc, faceletTaglibProviders, null, true);
+            if (documents == null) {
+                return null; //error????
+            }
+
+            //process the found documents
+            FaceletsTaglibConfigProcessor processor = new FaceletsTaglibConfigProcessor(this);
+            processor.process(new EmptyServletContext(), documents);
+
+            Map<String, Library> libsMap = new HashMap<>();
+            for (Library lib : processor.compiler.libraries) {
+                lib.getValidNamespaces().forEach(namespace -> libsMap.put(namespace, lib));
+            }
+
+            //4. in case of JSF2.2 include pseudo-libraries (http://java.sun.com/jsf/passthrough, http://java.sun.com/jsf)
+            //This is only needed for JSF 2.2. as following versions contain the taglib xml descriptions
+            if (webModule != null && jsfVersion != null && jsfVersion == JsfVersion.JSF_2_2) {
+                libsMap.putAll(DefaultFaceletLibraries.getJsf22FaceletPseudoLibraries(this));
+            }
+
+            return libsMap;
+        } finally {
+            //reset the original loader
+            Thread.currentThread().setContextClassLoader(originalContextClassLoader);
         }
-
-        URLClassLoader jsfRIClassLoader = new URLClassLoader(jsfRIJars.toArray(new URL[]{}));
-
-        //parse the libraries
-        ServletContext sc = new EmptyServletContext();
-        DocumentInfo[] documents = ConfigManager.getConfigDocuments(jsfRIClassLoader, sc, faceletTaglibProviders, null, true);
-        if (documents == null) {
-            return null; //error????
-        }
-
-        //process the found documents
-        FaceletsTaglibConfigProcessor processor = new FaceletsTaglibConfigProcessor(this);
-        processor.process(new EmptyServletContext(), documents);
-        
-        Map<String, Library> libsMap = new HashMap<>();
-        for (Library lib : processor.compiler.libraries) {
-            lib.getValidNamespaces().forEach(namespace -> libsMap.put(namespace, lib));
-        }
-
-        //4. in case of JSF2.2 include pseudo-libraries (http://java.sun.com/jsf/passthrough, http://java.sun.com/jsf)
-        //This is only needed for JSF 2.2. as following versions contain the taglib xml descriptions
-        if (webModule != null && jsfVersion != null && jsfVersion == JsfVersion.JSF_2_2) {
-            libsMap.putAll(DefaultFaceletLibraries.getJsf22FaceletPseudoLibraries(this));
-        }
-
-        return libsMap;
     }
 
     private synchronized void refreshFacesComponentsCache(int timeToWait) {

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,89 +19,28 @@
     under the License.
 
 -->
-<!-- Generator: Adobe Illustrator 23.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
-	<!ENTITY Drop_x0020_Shadow "fill:none;">
-	<!ENTITY Outer_x0020_Glow_x0020_5_x0020_pt "fill:none;">
-	<!ENTITY Blue_x0020_Neon "fill:none;stroke:#8AACDA;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;">
-	<!ENTITY Chrome_x0020_Highlight "fill:url(#SVGID_1_);stroke:#FFFFFF;stroke-width:0.3629;stroke-miterlimit:1;">
-	<!ENTITY Jive_GS "fill:#FFDD00;">
-	<!ENTITY Alyssa_GS "fill:#A6D0E4;">
-	<!ENTITY st0 "fill:#FFFFFF;">
-	<!ENTITY st1 "opacity:0.25;">
-	<!ENTITY st2 "fill:#FAFAFA;">
-	<!ENTITY st3 "opacity:0.33;">
-	<!ENTITY st4 "fill:none;stroke:#474747;stroke-miterlimit:10;">
-	<!ENTITY st5 "opacity:0.42;">
-	<!ENTITY st6 "fill:#CAE3FF;">
-	<!ENTITY st7 "opacity:0.2;">
-	<!ENTITY st8 "opacity:0.03;">
-	<!ENTITY st9 "opacity:0.1;">
-	<!ENTITY st10 "opacity:0.15;">
-	<!ENTITY st11 "opacity:0.45;">
-	<!ENTITY st12 "fill:#FFE1B0;">
-	<!ENTITY st13 "fill:#B3DBFF;">
-	<!ENTITY st14 "fill:#FBDC7C;">
-	<!ENTITY st15 "fill:#FFDB43;">
-	<!ENTITY st16 "fill:#E79B00;">
-	<!ENTITY st17 "fill:#3883CE;">
-	<!ENTITY st18 "fill:none;stroke:#003399;stroke-width:1.375;stroke-miterlimit:10;">
-	<!ENTITY st19 "fill:#E8513D;">
-	<!ENTITY st20 "fill:#1E1E1E;">
-	<!ENTITY st21 "fill:#FFC36D;">
-	<!ENTITY st22 "fill:#9FCBFF;">
-	<!ENTITY st23 "fill:#E9F7FF;">
-	<!ENTITY st24 "fill:#62707C;">
-	<!ENTITY st25 "fill:#7A8896;">
-	<!ENTITY st26 "fill:#57BFFF;">
-	<!ENTITY st27 "fill:#E69D35;">
-	<!ENTITY st28 "fill:#9CFF73;">
-	<!ENTITY st29 "fill:#4891CC;">
-	<!ENTITY st30 "fill:#474747;">
-	<!ENTITY st31 "fill:#CCA05E;">
-	<!ENTITY st32 "opacity:0.67;">
-	<!ENTITY st33 "opacity:0.3;">
-	<!ENTITY st34 "fill:#EAEAEA;">
-	<!ENTITY st35 "fill:#FFE945;">
-	<!ENTITY st36 "fill:#FFCF8C;">
-	<!ENTITY st37 "fill:#FF5252;">
-	<!ENTITY st38 "opacity:0.12;">
-	<!ENTITY st39 "fill:#45A5F4;">
-	<!ENTITY st40 "fill:url(#SVGID_2_);">
-	<!ENTITY st41 "fill:url(#SVGID_3_);">
-	<!ENTITY st42 "opacity:0.05;">
-	<!ENTITY st43 "fill:#3D81F5;">
-	<!ENTITY st44 "fill:#CECECE;">
-	<!ENTITY st45 "fill:#B5B5B5;">
-	<!ENTITY st46 "opacity:0.4;">
-	<!ENTITY st47 "fill:#595959;">
-	<!ENTITY st48 "fill:#80FF80;">
-	<!ENTITY st49 "fill:#C8FF80;">
-	<!ENTITY st50 "fill:#FFEE80;">
-	<!ENTITY st51 "fill:#FFA680;">
-	<!ENTITY st52 "fill:#FF8080;">
-	<!ENTITY st53 "fill:none;">
-	<!ENTITY st54 "fill:#007AFF;">
-	<!ENTITY st55 "fill:#EFFF78;">
-	<!ENTITY st56 "fill:#FFDA00;">
-	<!ENTITY st57 "fill:#3EADFF;">
-	<!ENTITY st58 "opacity:0.67;fill:#FFFFFF;">
-	<!ENTITY st59 "fill:#2E92FF;">
-	<!ENTITY st60 "fill:#3AEA00;">
-	<!ENTITY st61 "fill:#303030;">
-]>
-<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-140" y1="-112" x2="-140" y2="-113">
-	<stop  offset="0" style="stop-color:#656565"/>
-	<stop  offset="0.618" style="stop-color:#1B1B1B"/>
-	<stop  offset="0.6292" style="stop-color:#545454"/>
-	<stop  offset="0.9831" style="stop-color:#3E3E3E"/>
-</linearGradient>
-<g>
-	<polygon style="&st21;" points="0,10 0,5 7,5 7,0 8.5,0 16,7.5 8.5,15 7,15 7,10 	"/>
-	<g style="&st3;">
-		<path d="M8.086,1l6.5,6.5l-6.5,6.5H8v-4V9H7H1V6h6h1V5V1H8.086 M8.5,0H7v5H0v5h7v5l1.5,0L16,7.5L8.5,0L8.5,0z"/>
-	</g>
-</g>
+<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #000;
+      }
+
+      .cls-1, .cls-2 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: #ffc36d;
+      }
+
+      .cls-3 {
+        opacity: .33;
+      }
+    </style>
+  </defs>
+  <polygon class="cls-2" points="0 10 0 5 7 5 7 0 8.5 0 16 7.5 8.5 15 7 15 7 10 0 10"/>
+  <g class="cls-3">
+    <path class="cls-1" d="M8.086,1l6.5,6.5-6.5,6.5h-.086v-5H1v-3h7V1h.086M8.5,0h-1.5v5H0v5h7v5h1.5l7.5-7.5L8.5,0h0Z"/>
+  </g>
 </svg>

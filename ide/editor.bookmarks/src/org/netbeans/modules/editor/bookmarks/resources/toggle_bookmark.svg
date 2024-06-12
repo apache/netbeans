@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,57 +19,48 @@
     under the License.
 
 -->
-<!-- Generator: Adobe Illustrator 25.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#E9F7FF;}
-	.st1{fill:#527C99;}
-	.st2{fill:#FFC36D;}
-	.st3{opacity:0.33;}
-	.st4{fill:#E79B00;}
-	.st5{fill:#CAE3FF;}
-	.st6{fill:#3883CE;}
-	.st7{fill:#FBDC7C;}
-	.st8{fill:#FFDB43;}
-	.st9{fill:none;stroke:#003399;stroke-width:1.375;stroke-miterlimit:10;}
-	.st10{fill:#E8513D;}
-	.st11{fill:#9FCBFF;}
-	.st12{fill:#62707C;}
-	.st13{fill:#7A8896;}
-	.st14{fill:#57BFFF;}
-	.st15{fill:#E69D35;}
-	.st16{fill:#9CFF73;}
-	.st17{fill:none;stroke:#000000;stroke-miterlimit:10;}
-	.st18{fill:#EAEAEA;}
-	.st19{fill:#E57067;}
-	.st20{fill:#94E0EF;}
-	.st21{fill:#4A4A4A;}
-	.st22{fill:#727272;}
-	.st23{fill:#EDEDED;}
-	.st24{fill:#5B5B5B;}
-	.st25{fill:#E9E9E9;}
-	.st26{opacity:0.4;}
-	.st27{opacity:0.15;}
-	.st28{fill:#C3E3FF;}
-	.st29{fill:#0084D3;}
-	.st30{opacity:0.5;fill:#E9F7FF;}
-	.st31{opacity:0.66;}
-</style>
-<g>
-	<polygon class="st20" points="6.933,0 0,0 0,7 6.958,6.958 9.94,3.479 	"/>
-	<g class="st3">
-		<path d="M6.476,1L8.62,3.482L6.495,5.961L1,5.994V1H6.476 M6.933,0H0v7l6.958-0.042L9.94,3.479L6.933,0L6.933,0z"/>
-	</g>
-</g>
-<g>
-	<polygon class="st18" points="13,8 6,8 6,15 13,15 16,11.647 	"/>
-	<g class="st3">
-		<path d="M12.528,9l2.155,2.62L12.553,14H7V9H12.528 M13,8H6v7h7l3-3.353L13,8L13,8z"/>
-	</g>
-</g>
-<rect x="2" y="8" class="st21" width="1" height="1"/>
-<rect x="3" y="10" class="st21" width="1" height="1"/>
-<rect x="4" y="12" class="st21" width="1" height="1"/>
-<rect x="10" y="6" class="st21" width="1" height="1"/>
+<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #000;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        stroke-width: 0px;
+      }
+
+      .cls-5 {
+        opacity: .33;
+      }
+
+      .cls-2 {
+        fill: #a4ddec;
+      }
+
+      .cls-3 {
+        fill: #4a4a4a;
+      }
+
+      .cls-4 {
+        fill: #e9e9e9;
+      }
+    </style>
+  </defs>
+  <g>
+    <polygon class="cls-2" points="6.933 0 0 0 0 7 6.958 6.958 9.94 3.479 6.933 0"/>
+    <g class="cls-5">
+      <path class="cls-1" d="M6.476,1l2.145,2.482-2.125,2.479-5.495.033V1h5.476M6.933,0H0v7l6.958-.042,2.982-3.479L6.933,0h0Z"/>
+    </g>
+  </g>
+  <g>
+    <polygon class="cls-4" points="13 8 6 8 6 15 13 15 16 11.647 13 8"/>
+    <g class="cls-5">
+      <path class="cls-1" d="M12.528,9l2.155,2.62-2.13,2.38h-5.553v-5h5.528M13,8h-7v7h7l3-3.353-3-3.647h0Z"/>
+    </g>
+  </g>
+  <rect class="cls-3" x="2" y="8" width="1" height="1"/>
+  <rect class="cls-3" x="3" y="10" width="1" height="1"/>
+  <rect class="cls-3" x="4" y="12" width="1" height="1"/>
+  <rect class="cls-3" x="10" y="6" width="1" height="1"/>
 </svg>

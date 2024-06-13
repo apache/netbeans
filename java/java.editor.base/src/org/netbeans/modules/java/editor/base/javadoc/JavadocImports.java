@@ -690,7 +690,9 @@ public final class JavadocImports {
         TokenSequence<JavadocTokenId> javadoc = null;
         TokenSequence<JavaTokenId> ts = SourceUtils.getJavaTokenSequence(javac.getTokenHierarchy(), start);
 
-        if (ts.moveNext() && ts.token().id() == JavaTokenId.JAVADOC_COMMENT) {
+        if (ts.moveNext() &&
+            (ts.token().id() == JavaTokenId.JAVADOC_COMMENT ||
+             ts.token().id() == JavaTokenId.JAVADOC_COMMENT_LINE_RUN)) {
             javadoc = ts.embedded(JavadocTokenId.language());
         }
         

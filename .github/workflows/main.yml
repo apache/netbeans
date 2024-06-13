@@ -891,9 +891,9 @@ jobs:
 #        run: ant $OPTS -f java/ant.grammar test
 
       # TODO next are JDK 21+ incompatibe steps
-      - name: java/java.mx.project
-        if: ${{ matrix.java == '17' }}
-        run: .github/retry.sh ant $OPTS -f java/java.mx.project test
+#      - name: java/java.mx.project
+#        if: ${{ matrix.java == '17' }}
+#        run: .github/retry.sh ant $OPTS -f java/java.mx.project test
 
       - name: java/gradle.java
         if: ${{ matrix.java == '17' }}

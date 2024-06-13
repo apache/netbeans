@@ -51,7 +51,7 @@ import org.netbeans.api.lexer.TokenSequence;
  */
 public final class JavadocCompletionUtils {
     
-    static final Pattern JAVADOC_LINE_BREAK = Pattern.compile("\\n[ \\t]*\\**[ \\t]*\\z"); // NOI18N
+    static final Pattern JAVADOC_LINE_BREAK = Pattern.compile("(\\n[ \\t]*\\**[ \\t]*\\z)|(\\n[ \\t]*///[ \\t]*\\z)"); // NOI18N
     static final Pattern JAVADOC_WHITE_SPACE = Pattern.compile("[^ \\t]"); // NOI18N
     /**
      * javadoc parser considers whatever number of spaces or standalone newline
@@ -62,7 +62,7 @@ public final class JavadocCompletionUtils {
     static final Pattern JAVADOC_EMPTY = Pattern.compile("(\\s*\\**\\s*\n)*\\s*\\**\\s*\\**"); // NOI18N
     static final Pattern JAVADOC_FIRST_WHITE_SPACE = Pattern.compile("[ \\t]*\\**[ \\t]*"); // NOI18N
     private static Set<JavaTokenId> IGNORE_TOKES = EnumSet.of(
-            JavaTokenId.WHITESPACE, JavaTokenId.BLOCK_COMMENT, JavaTokenId.LINE_COMMENT);
+            JavaTokenId.WHITESPACE, JavaTokenId.BLOCK_COMMENT, JavaTokenId.LINE_COMMENT, JavaTokenId.JAVADOC_COMMENT_LINE_RUN);
     private static final Logger LOGGER = Logger.getLogger(JavadocCompletionUtils.class.getName());
     
     /**
@@ -196,6 +196,7 @@ public final class JavadocCompletionUtils {
                         break;
                     }
                 case JAVADOC_COMMENT:
+                case JAVADOC_COMMENT_LINE_RUN:
                     if (token.partType() == PartType.COMPLETE) {
                         return javac.getElements().getDocComment(e) == null
                                 ? null : s.embedded(JavadocTokenId.language());
@@ -437,7 +438,8 @@ public final class JavadocCompletionUtils {
             return false;
         }
         
-        if (ts.token().id() != JavaTokenId.JAVADOC_COMMENT) {
+        if (ts.token().id() != JavaTokenId.JAVADOC_COMMENT &&
+            ts.token().id() != JavaTokenId.JAVADOC_COMMENT_LINE_RUN) {
             return false;
         }
         
@@ -455,6 +457,11 @@ public final class JavadocCompletionUtils {
             CharSequence text = token.text();
             // check special case /**|*/
             return offset == 3 && "/***/".contentEquals(text); //NOI18N
+        }
+        if (token != null && token.id() == JavaTokenId.JAVADOC_COMMENT_LINE_RUN) {
+            CharSequence text = token.text();
+            // check special case ///|\n
+            return offset == 3 && "///\n".contentEquals(text); //NOI18N
         }
         return false;
     }

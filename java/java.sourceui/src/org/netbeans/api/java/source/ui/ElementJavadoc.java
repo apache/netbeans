@@ -119,6 +119,8 @@ import javax.tools.SimpleJavaFileObject;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
 import javax.lang.model.element.RecordComponentElement;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.queries.SourceLevelQuery.Profile;
@@ -1275,7 +1277,7 @@ public class ElementJavadoc {
     private StringBuilder inlineTags(List<? extends DocTree> tags, TreePath docPath, DocCommentTree doc, DocTrees trees, CharSequence inherited) {
         StringBuilder sb = new StringBuilder();
         Integer snippetCount=0;
-        for (DocTree tag : tags) {
+        for (DocTree tag : resolveMarkdown(trees, tags)) {
             switch (tag.getKind()) {
                 case REFERENCE:
                     ReferenceTree refTag = (ReferenceTree)tag;
@@ -1393,6 +1395,42 @@ public class ElementJavadoc {
             }
         }
         return sb;
+    }
+
+    private static final char REPLACEMENT = '\uFFFD';
+    private List<? extends DocTree> resolveMarkdown(DocTrees trees, List<? extends DocTree> tags) {
+        if (tags.stream().noneMatch(t -> "MARKDOWN".equals(t.getKind().name()))) {
+            return tags;
+        }
+
+        StringBuilder markdownSource = new StringBuilder();
+        List<DocTree> replacements = new ArrayList<>();
+
+        for (DocTree t : tags) {
+            if ("MARKDOWN".equals(t.getKind().name())) {
+                markdownSource.append(t.toString()); //TODO: should avoid toString()
+            } else {
+                markdownSource.append(REPLACEMENT);
+                replacements.add(t);
+            }
+        }
+
+        String html = HtmlRenderer.builder().build().render(Parser.builder().build().parse(markdownSource.toString()));
+        if (html.startsWith("<p>")) {
+            html = html.substring("<p>".length());
+        }
+        html = html.replace("</p>", "");
+        List<DocTree> result = new ArrayList<>();
+        String[] parts = html.split(Pattern.quote("" + REPLACEMENT));
+
+        result.add(trees.getDocTreeFactory().newTextTree(parts[0]));
+
+        for (int i = 1; i < parts.length; i++) {
+            result.add(replacements.get(i - 1));
+            result.add(trees.getDocTreeFactory().newTextTree(parts[i]));
+        }
+
+        return result;
     }
 
     private void processDocSnippet(StringBuilder sb, SnippetTree javadocSnippet, Integer snippetCount, TreePath docPath,DocCommentTree doc, DocTrees trees) {

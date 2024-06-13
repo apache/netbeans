@@ -64,6 +64,7 @@ import javax.lang.model.util.Types;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.lexer.JavadocTokenId;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -84,6 +85,7 @@ import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.openide.util.Pair;
 
 public class JavadocCompletionTask<T> extends UserTask {
 
@@ -188,16 +190,20 @@ public class JavadocCompletionTask<T> extends UserTask {
             return;
         }
         jdts.move(this.caretOffset);
+        JavadocTokenId javadocId;
         if (!jdts.moveNext() && !jdts.movePrevious()) {
             // XXX solve /***/
             // provide block tags, inline tags, html
-            return;
+            // XXX: for Markdown, continuing
+            javadocId = JavadocTokenId.OTHER_TEXT;
+        } else {
+            if (this.caretOffset - jdts.offset() == 0) {
+                // if position in token == 0 resolve CC according to previous token
+                jdts.movePrevious();
+            }
+            javadocId = jdts.token().id();
         }
-        if (this.caretOffset - jdts.offset() == 0) {
-            // if position in token == 0 resolve CC according to previous token
-            jdts.movePrevious();
-        }
-        switch (jdts.token().id()) {
+        switch (javadocId) {
             case TAG:
                 resolveTagToken(jdctx);
                 break;
@@ -265,7 +271,9 @@ public class JavadocCompletionTask<T> extends UserTask {
 
     private int skipWhitespacesBackwards(final JavadocContext jdctx, final int offset) {
         if (jdctx.jdts.move(offset) == 0 || !jdctx.jdts.moveNext()) {
-            jdctx.jdts.movePrevious();
+            if (!jdctx.jdts.movePrevious()) {
+                return offset;
+            }
         }
         do {
             Token t = jdctx.jdts.token();
@@ -1226,11 +1234,10 @@ public class JavadocCompletionTask<T> extends UserTask {
 
     void resolveOtherText(JavadocContext jdctx, TokenSequence<JavadocTokenId> jdts) {
         Token<JavadocTokenId> token = jdts.token();
-        assert token != null;
-        assert token.id() == JavadocTokenId.OTHER_TEXT;
-        CharSequence text = token.text();
-        int pos = caretOffset - jdts.offset();
-        DocTreePath tag = getTag(jdctx, caretOffset);
+        assert token == null || token.id() == JavadocTokenId.OTHER_TEXT;
+        CharSequence text = token == null ? "" : token.text();
+        int pos = token == null ? 0 : caretOffset - jdts.offset();
+        DocTreePath tag = token == null ? null : getTag(jdctx, caretOffset);
 
         if (pos > 0 && pos <= text.length() && text.charAt(pos - 1) == '{') {
             if (tag != null && !JavadocCompletionUtils.isBlockTag(tag)) {
@@ -1336,6 +1343,7 @@ public class JavadocCompletionTask<T> extends UserTask {
         private DocCommentTree comment;
         private DocSourcePositions positions;
         private TokenSequence<JavadocTokenId> jdts;
+        private TokenSequence<JavaTokenId> javats;
         private Document doc;
         private ReferencesCount count;
         private TreePath javadocFor;

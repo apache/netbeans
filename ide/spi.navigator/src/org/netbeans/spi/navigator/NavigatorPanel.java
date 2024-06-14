@@ -28,8 +28,6 @@ import java.util.Collection;
 import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.annotations.common.NullAllowed;
-import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 
 /** Navigation related view description.

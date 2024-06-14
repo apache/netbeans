@@ -20,8 +20,6 @@ package org.netbeans.modules.lsp.client.bindings;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +44,6 @@ import org.netbeans.spi.navigator.NavigatorPanel;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.URLMapper;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -54,7 +51,6 @@ import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -63,7 +59,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, DocumentSymbol>> implements NavigatorPanel, BackgroundTask, LookupListener {
 
     private static final Logger LOG = Logger.getLogger(NavigatorPanelImpl.class.getName());
-    private static final NavigatorPanelImpl INSTANCE = new NavigatorPanelImpl();
+    static final NavigatorPanelImpl INSTANCE = new NavigatorPanelImpl();
 
     private final ExplorerManager manager;
     private View view;
@@ -255,23 +251,4 @@ public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, 
         }
     }
 
-    @ServiceProvider(service=DynamicRegistration.class)
-    public static final class DynamicRegistrationImpl implements DynamicRegistration {
-
-        @Override
-        public Collection<? extends NavigatorPanel> panelsFor(URI uri) {
-            try {
-                FileObject file = URLMapper.findFileObject(uri.toURL());
-                if (file != null) {
-                    return LSPBindings.getBindings(file) != null ? Collections.singletonList(INSTANCE) : Collections.emptyList();
-                } else {
-                    return Collections.emptyList();
-                }
-            } catch (MalformedURLException ex) {
-                //ignore
-                return Collections.emptyList();
-            }
-        }
-
-    }
 }

@@ -23,22 +23,30 @@ import java.awt.EventQueue;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.actions.Openable;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.navigator.NavigatorPanel;
+import org.openide.awt.Actions;
 import org.openide.cookies.EditorCookie;
+import org.openide.cookies.LineCookie;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.text.Line;
+import org.openide.text.NbDocument;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 
 @NbBundle.Messages(value = {
     "# {0} - name of the file",
@@ -88,7 +96,7 @@ final class LspStructureNavigatorPanel extends JPanel implements NavigatorPanel,
                 StyledDocument doc = ec.getDocument();
                 if (doc != null) {
                     for (StructureProvider sp : MimeLookup.getLookup(fo.getMIMEType()).lookupAll(StructureProvider.class)) {
-                        Children ch = StructureElementChildren.childrenFor(sp.getStructure(doc));
+                        Children ch = StructureElementChildren.childrenFor(sp.getStructure(doc), fo);
                         em.setRootContext(new AbstractNode(ch));
                         return;
                     }
@@ -117,11 +125,17 @@ final class LspStructureNavigatorPanel extends JPanel implements NavigatorPanel,
 
     private static final class StructureElementChildren extends Children.Keys<StructureElement> {
 
-        static Children childrenFor(Collection<? extends StructureElement> elements) {
+        private final FileObject fo;
+
+        StructureElementChildren(FileObject fo) {
+            this.fo = fo;
+        }
+
+        static Children childrenFor(Collection<? extends StructureElement> elements, FileObject fo) {
             if (elements == null) {
                 return Children.LEAF;
             } else {
-                StructureElementChildren ch = new StructureElementChildren();
+                StructureElementChildren ch = new StructureElementChildren(fo);
                 ch.setKeys(elements);
                 return ch;
             }
@@ -129,17 +143,46 @@ final class LspStructureNavigatorPanel extends JPanel implements NavigatorPanel,
 
         @Override
         protected Node[] createNodes(StructureElement key) {
-            return new Node[]{new StructureElementNode(key)};
+            return new Node[]{new StructureElementNode(key, fo)};
         }
     }
 
     private static final class StructureElementNode extends AbstractNode {
 
-        StructureElementNode(StructureElement e) {
-            super(StructureElementChildren.childrenFor(e.getChildren()));
+        private final FileObject fo;
+
+        StructureElementNode(StructureElement e, FileObject fo) {
+            this(e, fo, new InstanceContent());
+        }
+
+        private StructureElementNode(StructureElement e, FileObject fo, InstanceContent ic) {
+            super(StructureElementChildren.childrenFor(e.getChildren(), fo), new AbstractLookup(ic));
+            this.fo = fo;
             setName(e.getName());
             setShortDescription(e.getDetail());
             setIconBaseWithExtension(Icons.getSymbolIconBase(e.getKind()));
+            Openable open = () -> {
+                EditorCookie ec = fo.getLookup().lookup(EditorCookie.class);
+                if (ec != null) {
+                    StyledDocument doc = ec.getDocument();
+                    if (doc != null) {
+                        int lineNumber = NbDocument.findLineNumber(doc, e.getSelectionStartOffset());
+                        LineCookie lines = fo.getLookup().lookup(LineCookie.class);
+                        if (lines != null) {
+                            Line at = lines.getLineSet().getOriginal(lineNumber);
+                            if (at != null) {
+                                at.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FOCUS);
+                            }
+                        }
+                    }
+                }
+            };
+            ic.add(open);
+        }
+
+        @Override
+        public Action getPreferredAction() {
+            return Actions.forID("System", "org.openide.actions.OpenAction");
         }
     }
 

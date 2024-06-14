@@ -139,6 +139,7 @@ final class LspStructureNavigatorPanel extends JPanel implements NavigatorPanel,
             super(StructureElementChildren.childrenFor(e.getChildren()));
             setName(e.getName());
             setShortDescription(e.getDetail());
+            setIconBaseWithExtension(Icons.getSymbolIconBase(e.getKind()));
         }
     }
 

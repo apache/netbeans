@@ -60,7 +60,7 @@ public final class Icons {
         
     }
     
-    public static String getSymbolIconBase(SymbolKind symbolKind) {
+    public static String getSymbolIconBase(Enum<?> symbolKind) {
         if (symbolKind == null) {
             return ICON_BASE + "empty.png";
         }

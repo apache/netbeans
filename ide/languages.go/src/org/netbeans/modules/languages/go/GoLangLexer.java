@@ -108,6 +108,7 @@ public final class GoLangLexer extends AbstractAntlrLexerBridge<GoLexer, GoToken
             case STAR:
             case AMPERSAND:
             case RECEIVE:
+            case UNDERLYING:
                 return token(OPERATOR);
 
             case RAW_STRING_LIT:

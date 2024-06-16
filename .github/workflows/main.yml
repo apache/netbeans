@@ -1594,7 +1594,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
       fail-fast: false
     steps:
 
@@ -1620,7 +1620,6 @@ jobs:
       - name: profiler
         run: ant $OPTS -f profiler/profiler test-unit
 
-      # TODO OQL requires js script engine which locks this to JDK 11
       - name: profiler.oql
         run: ant $OPTS -f profiler/profiler.oql test
 

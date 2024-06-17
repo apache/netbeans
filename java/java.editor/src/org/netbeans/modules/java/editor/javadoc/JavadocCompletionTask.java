@@ -423,13 +423,13 @@ public class JavadocCompletionTask<T> extends UserTask {
             int pos = caretOffset - jdts.offset();
             CharSequence cs = jdts.token().text();
             cs = pos < cs.length() ? cs.subSequence(0, pos) : cs;
-            if (JavadocCompletionUtils.isWhiteSpace(cs) || JavadocCompletionUtils.isLineBreak(jdts.token(), pos)) {
+            if (JavadocCompletionUtils.isWhiteSpace(cs) || JavadocCompletionUtils.isLineBreak(jdts, pos)) {
                 noPrefix = true;
             } else {
                 // broken syntax
                 return;
             }
-        } else if (!(JavadocCompletionUtils.isWhiteSpace(jdts.token()) || JavadocCompletionUtils.isLineBreak(jdts.token()))) {
+        } else if (!(JavadocCompletionUtils.isWhiteSpace(jdts.token()) || JavadocCompletionUtils.isLineBreak(jdts))) {
             // not java reference
             return;
         } else if (jdts.moveNext()) {
@@ -527,7 +527,7 @@ public class JavadocCompletionTask<T> extends UserTask {
             int pos = caretOffset - jdts.offset();
             CharSequence cs = jdts.token().text();
             cs = pos < cs.length() ? cs.subSequence(0, pos) : cs;
-            if (JavadocCompletionUtils.isWhiteSpace(cs) || JavadocCompletionUtils.isLineBreak(jdts.token(), pos)) {
+            if (JavadocCompletionUtils.isWhiteSpace(cs) || JavadocCompletionUtils.isLineBreak(jdts, pos)) {
                 // none prefix
                 anchorOffset = caretOffset;
                 completeParamName(tag, "", caretOffset, jdctx); // NOI18N
@@ -1251,10 +1251,10 @@ public class JavadocCompletionTask<T> extends UserTask {
         }
         if (tag != null) {
             insideTag(tag, jdctx);
-            if (JavadocCompletionUtils.isBlockTag(tag) && JavadocCompletionUtils.isLineBreak(token, pos)) {
+            if (JavadocCompletionUtils.isBlockTag(tag) && JavadocCompletionUtils.isLineBreak(jdts, pos)) {
                 resolveBlockTag(null, jdctx);
             }
-        } else if (JavadocCompletionUtils.isLineBreak(token, pos)) {
+        } else if (JavadocCompletionUtils.isLineBreak(jdts, pos)) {
             resolveBlockTag(null, jdctx);
         }
     }

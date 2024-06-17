@@ -35,18 +35,18 @@
 	"main": "./out/extension.js",
 	"contributes": {
 		"languages": [
-      {
-        "id": "java",
-        "extensions": [
-          ".java",
-          ".jav"
-        ],
-        "aliases": [
-          "Java",
-          "java"
-        ],
-        "configuration": "./language-configuration.json"
-      },
+			{
+				"id": "java",
+				"extensions": [
+					".java",
+					".jav"
+				],
+				"aliases": [
+					"Java",
+					"java"
+				],
+				"configuration": "./language-configuration.json"
+			},
 			{
 				"id": "javascript",
 				"mimetypes": [

@@ -641,7 +641,7 @@ public final class JavadocImports {
                         }
                     case OTHER_TEXT:
                         isBeforeWS |= JavadocCompletionUtils.isWhiteSpace(jdt);
-                        isBeforeWS |= JavadocCompletionUtils.isLineBreak(jdt);
+                        isBeforeWS |= JavadocCompletionUtils.isLineBreak(jdts);
                         if (isBeforeWS) {
                             continue;
                         } else {
@@ -895,14 +895,14 @@ public final class JavadocImports {
             cs = pos < cs.length() ? cs.subSequence(0, pos) : cs;
 
             if (JavadocCompletionUtils.isWhiteSpace(cs)
-                    || JavadocCompletionUtils.isLineBreak(jdts.token(), pos)) {
+                    || JavadocCompletionUtils.isLineBreak(jdts, pos)) {
                 noPrefix = true;
             } else {
                 // broken syntax
                 return;
             }
         } else if (!(JavadocCompletionUtils.isWhiteSpace(jdts.token())
-                || JavadocCompletionUtils.isLineBreak(jdts.token()))) {
+                || JavadocCompletionUtils.isLineBreak(jdts))) {
             // not java reference
             return;
         } else if (jdts.moveNext()) {

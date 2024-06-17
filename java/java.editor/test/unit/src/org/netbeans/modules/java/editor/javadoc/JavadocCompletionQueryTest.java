@@ -716,6 +716,102 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
         performCompletionTest(code, "p1:", "p2:");
     }
 
+    public void testJavadocOldStart1() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**| */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+
+    public void testJavadocOldStart2() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**@s| */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "@see:", "@serialData:", "@since:");
+    }
+
+    public void testJavadocOldStart3() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**@param | */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "p1:", "p2:");
+    }
+
+    public void testJavadocOldStart4() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**@see | */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, null, "String", "Clazz");
+    }
+
+    public void testJavadocMarkdownStart1() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///|\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+
+    public void testJavadocMarkdownStart2() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///@s|\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "@see:", "@serialData:", "@since:");
+    }
+
+    public void testJavadocMarkdownStart3() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///@param |\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "p1:", "p2:");
+    }
+
+    public void testJavadocMarkdownStart4() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///@see |\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, null, "String", "Clazz");
+    }
+
     private static String stripHTML(String from) {
         StringBuilder result = new StringBuilder();
         boolean inHTMLTag = false;

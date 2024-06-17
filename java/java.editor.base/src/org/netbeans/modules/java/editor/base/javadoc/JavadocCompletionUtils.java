@@ -247,36 +247,39 @@ public final class JavadocCompletionUtils {
     
     /**
      * Is javadoc line break?
-     * @param token token to test
+     * @param ts a token sequence positioned to the token to test
      * @return {@code true} in case the token is something like {@code "\n\t*"}
      */
-    public static boolean isLineBreak(Token<JavadocTokenId> token) {
-        return isLineBreak(token, token.length());
+    public static boolean isLineBreak(TokenSequence<JavadocTokenId> ts) {
+        return isLineBreak(ts, ts.token().length());
     }
     
     /**
      * Tests if the token part before {@code pos} is a javadoc line break.
-     * @param token a token to test
+     * @param ts a token sequence positioned to the token to test
      * @param pos position in the token
      * @return {@code true} in case the token is something like {@code "\n\t* |\n\t*"}
      */
-    public static boolean isLineBreak(Token<JavadocTokenId> token, int pos) {
+    public static boolean isLineBreak(TokenSequence<JavadocTokenId> ts, int pos) {
+        Token<JavadocTokenId> token = ts.token();
+
         if (token == null || token.id() != JavadocTokenId.OTHER_TEXT) {
-            return false;
+            return ts.isEmpty() || ts.index() == 0;
         }
         try {
             CharSequence text = token.text();
             if (pos < token.length())
                 text = text.subSequence(0, pos);
-            boolean result = pos > 0
+            boolean result = (pos > 0
                     && JAVADOC_LINE_BREAK.matcher(text).find()
-                    && (pos == token.length() || !isInsideIndent(token, pos));
+                    && (pos == token.length() || !isInsideIndent(token, pos))
+                    ) || ts.index() == 0;
             return result;
         } catch (IndexOutOfBoundsException e) {
             throw (IndexOutOfBoundsException) new IndexOutOfBoundsException("pos: " + pos + ", token.length: " + token.length() + ", token text: " + token.text()).initCause(e);
         }
     }
-    
+
     public static boolean isWhiteSpace(CharSequence text) {
         return text != null && text.length() > 0 && !JAVADOC_WHITE_SPACE.matcher(text).find();
     }

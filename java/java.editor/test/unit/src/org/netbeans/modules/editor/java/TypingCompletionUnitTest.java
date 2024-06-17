@@ -1419,6 +1419,21 @@ public void testPositionInTextBlock() throws Exception {
         ctx.assertDocumentTextEquals("{");
     }
 
+    public void testJavadocLineRun() {
+        Context ctx = new Context(new JavaKit(),
+                "class Test {\n" +
+                "    ///|\n" +
+                "}\n"
+        );
+        ctx.typeChar('\n');
+        ctx.assertDocumentTextEquals(
+                "class Test {\n" +
+                "    ///\n" +
+                "    ///|\n" +
+                "}\n"
+        );
+    }
+
     private boolean isInsideString(String code) throws BadLocationException {
         int pos = code.indexOf('|');
 

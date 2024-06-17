@@ -1779,10 +1779,8 @@ public class FormatVisitor extends DefaultVisitor {
         }
         scan(node.getFunctionName());
         List<Expression> parameters = node.getParameters();
-        if (parameters != null && parameters.size() > 0) {
-            boolean addIndentation = !(path.get(1) instanceof ReturnStatement
-                    || path.get(1) instanceof Assignment
-                    || (path.size() > 2 && path.get(1) instanceof MethodInvocation && path.get(2) instanceof Assignment));
+        if (parameters != null && !parameters.isEmpty()) {
+            boolean addIndentation = addIndentToFunctionInvocation();
             FormatToken.IndentToken indentToken = new FormatToken.IndentToken(node.getFunctionName().getEndOffset(), options.continualIndentSize);
             if (addIndentation) {
                 formatTokens.add(indentToken);
@@ -1951,6 +1949,31 @@ public class FormatVisitor extends DefaultVisitor {
         return addIndent;
     }
 
+    private boolean addIndentToFunctionInvocation() {
+        boolean addIndentation = !(path.get(1) instanceof ReturnStatement
+                    || path.get(1) instanceof Assignment
+                    || (path.size() > 2 && path.get(1) instanceof MethodInvocation && path.get(2) instanceof Assignment));
+        if (!addIndentation && path.size() > 1 && path.get(1) instanceof MethodInvocation) {
+            // GH-7172
+            // e.g.
+            // $example = (new Ex())
+            //     ->method(
+            //         $param
+            //     );
+            MethodInvocation method = (MethodInvocation) path.get(1);
+            int start = method.getDispatcher().getEndOffset();
+            int end = method.getMethod().getStartOffset();
+            try {
+                if (document.getText(start, end - start).contains("\n")) { // NOI18N
+                    addIndentation = true;
+                }
+            } catch (BadLocationException ex) {
+                LOGGER.log(Level.WARNING, "Invalid offset: {0}", ex.offsetRequested()); // NOI18N
+            }
+        }
+        return addIndentation;
+    }
+
     @Override
     public void visit(InfixExpression node) {
         scan(node.getLeft());
@@ -2099,7 +2122,7 @@ public class FormatVisitor extends DefaultVisitor {
                 if (document.getText(startText, endText - startText).contains("\n")) {
                     shift = true;
                     addAllUntilOffset(node.getStartOffset());
-                    boolean addIndent = !(path.size() > 1 && (path.get(1) instanceof Assignment));
+                    boolean addIndent = addIndentToMethodInvocation();
 
                     // anonymous classes
                     if (options.wrapMethodCallArgs != CodeStyle.WrapStyle.WRAP_ALWAYS) {
@@ -2133,6 +2156,33 @@ public class FormatVisitor extends DefaultVisitor {
         if (!shift) {
             super.visit(node);
         }
+    }
+
+    private boolean addIndentToMethodInvocation() {
+        // GH-7172
+        // e.g.
+        // $example = (new Ex())
+        //     ->method(
+        //         param: $param
+        //     )
+        //     ->field;
+        boolean addIndent = false;
+        if (path.size() > 1) {
+            ASTNode parent = path.get(1);
+            if (parent instanceof FieldAccess) {
+                int index = 1;
+                while (index < path.size()) {
+                    index++;
+                    parent = path.get(index);
+                    if (parent instanceof FieldAccess) {
+                        continue;
+                    }
+                    break;
+                }
+            }
+            addIndent = !(parent instanceof Assignment);
+        }
+        return addIndent;
     }
 
     @Override

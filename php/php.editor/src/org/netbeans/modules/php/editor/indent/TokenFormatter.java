@@ -2025,12 +2025,23 @@ public class TokenFormatter {
                                 if (wasARule) {
                                     if ((!indentRule || newLines == -1) && indentLine) {
                                         boolean handlingSpecialCases = false;
+                                        boolean checkHandlingSpecialCases = true;
                                         if (FormatToken.Kind.TEXT == formatToken.getId()
                                                 && (")".equals(formatToken.getOldText()) || "]".equals(formatToken.getOldText()))) {
+                                            if (formatTokens.get(index - 1).getId() == FormatToken.Kind.WHITESPACE_WITHIN_METHOD_CALL_PARENS
+                                                    && formatTokens.get(index - 2).getId() == FormatToken.Kind.INDENT) {
+                                                // GH-7172
+                                                // e.g.
+                                                // $example = (new Ex())
+                                                //     ->method(
+                                                //         $param
+                                                //     );
+                                                checkHandlingSpecialCases = false;
+                                            }
                                             // tryin find out and handling cases when )) folows.
                                             int hIndex = index + 1;
                                             int hindent = indent;
-                                            if (hIndex < formatTokens.size()) {
+                                            if (hIndex < formatTokens.size() && checkHandlingSpecialCases) {
                                                 FormatToken token;
                                                 int lastIndent = 0;
                                                 boolean bracketsInLine = false;

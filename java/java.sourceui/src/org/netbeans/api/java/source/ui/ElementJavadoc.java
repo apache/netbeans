@@ -32,6 +32,7 @@ import com.sun.source.doctree.InheritDocTree;
 import com.sun.source.doctree.LinkTree;
 import com.sun.source.doctree.LiteralTree;
 import com.sun.source.doctree.ParamTree;
+import com.sun.source.doctree.RawTextTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.doctree.ReturnTree;
 import com.sun.source.doctree.SeeTree;
@@ -1399,7 +1400,7 @@ public class ElementJavadoc {
 
     private static final char REPLACEMENT = '\uFFFD';
     private List<? extends DocTree> resolveMarkdown(DocTrees trees, List<? extends DocTree> tags) {
-        if (tags.stream().noneMatch(t -> "MARKDOWN".equals(t.getKind().name()))) {
+        if (tags.stream().noneMatch(t -> t.getKind() == DocTree.Kind.MARKDOWN)) {
             return tags;
         }
 
@@ -1407,8 +1408,8 @@ public class ElementJavadoc {
         List<DocTree> replacements = new ArrayList<>();
 
         for (DocTree t : tags) {
-            if ("MARKDOWN".equals(t.getKind().name())) {
-                markdownSource.append(t.toString()); //TODO: should avoid toString()
+            if (t.getKind() == DocTree.Kind.MARKDOWN) {
+                markdownSource.append(((RawTextTree) t).getContent());
             } else {
                 markdownSource.append(REPLACEMENT);
                 replacements.add(t);

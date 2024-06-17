@@ -1217,21 +1217,11 @@ jobs:
       - name: platform/o.n.bootstrap
         run: ant $OPTS -f platform/o.n.bootstrap test
 
-      - name: Set up JDK 11 for platform/templates
-        uses: actions/setup-java@v4
-        with:
-          java-version: 11
-          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      # TODO tests rely on javax.script.ScriptEngine / js which locks this to JDK 11
       - name: platform/templates
         run: ant $OPTS -f platform/templates test
 
       - name: platform/api.templates
         run: ant $OPTS -f platform/api.templates test
-
-      - name: platform/openide.loaders TemplatesMimeTypeTest
-        run:  ant $OPTS -f platform/openide.loaders test -Dtest.config.default.includes=**/TemplatesMimeTypeTest.class -Dtest.config.default.excludes=""
 
       - name: Create Test Summary
         uses: test-summary/action@v2

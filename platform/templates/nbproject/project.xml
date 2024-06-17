@@ -134,6 +134,14 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.core.startup.base</code-name-base>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.libs.graaljs</code-name-base>
+                        <recursive/>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.libs.junit4</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
@@ -192,19 +200,16 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.openide.util.ui</code-name-base>
-                        <recursive/>
-                        <compile-dependency/>
-                        <test/>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.openide.util.lookup</code-name-base>
                         <recursive/>
                         <compile-dependency/>
                         <test/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.core.startup.base</code-name-base>
+                        <code-name-base>org.openide.util.ui</code-name-base>
+                        <recursive/>
+                        <compile-dependency/>
+                        <test/>
                     </test-dependency>
                 </test-type>
             </test-dependencies>

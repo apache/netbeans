@@ -61,6 +61,11 @@ import org.openide.util.Lookup;
 public class PropertiesProviderTest extends NbTestCase {
     static {
         System.setProperty("netbeans.full.hack", "true");
+        // Ensure polyglot can be loaded cleanly and executed. Normally set by
+        // org.netbeans.libs.graalsdk.impl.Installer, when loaded as a netbeans
+        // module
+        System.setProperty("polyglot.engine.WarnInterpreterOnly", "false");
+        System.setProperty("truffle.UseFallbackRuntime", "true");
     }
 
     public PropertiesProviderTest(String testName) {

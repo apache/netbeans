@@ -50,6 +50,12 @@ public class TemplatesPanelTest extends NbTestCase {
     
     @Override
     protected void setUp() throws Exception {
+        // Ensure polyglot can be loaded cleanly and executed. Normally set by
+        // org.netbeans.libs.graalsdk.impl.Installer, when loaded as a netbeans
+        // module
+        System.setProperty("polyglot.engine.WarnInterpreterOnly", "false");
+        System.setProperty("truffle.UseFallbackRuntime", "true");
+
         MockLookup.setInstances(new Repository(FileUtil.createMemoryFileSystem()));
         try {
             templateFolder = FileUtil.getConfigRoot ().createFolder ("TestTemplates");

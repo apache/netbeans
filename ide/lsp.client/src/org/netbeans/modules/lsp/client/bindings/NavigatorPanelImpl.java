@@ -56,82 +56,31 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author lahvac
  */
-public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, DocumentSymbol>> implements NavigatorPanel, BackgroundTask, LookupListener {
-
-    private static final Logger LOG = Logger.getLogger(NavigatorPanelImpl.class.getName());
+public class NavigatorPanelImpl extends AbstractNavigatorPanel<Either<SymbolInformation, DocumentSymbol>> implements BackgroundTask {
     static final NavigatorPanelImpl INSTANCE = new NavigatorPanelImpl();
 
-    private final ExplorerManager manager;
-    private View view;
-    private Lookup.Result<FileObject> result;
-    private FileObject file;
-
     public NavigatorPanelImpl() {
-        manager = new ExplorerManager();
-        manager.setRootContext(new AbstractNode(this));
     }
 
     @Override
-    @Messages("DN_Symbols=Symbols")
-    public String getDisplayName() {
-        return Bundle.DN_Symbols();
+    void addBackgroundTask(FileObject fo) {
+        LSPBindings.removeBackgroundTask(fo, this);
     }
 
     @Override
-    public String getDisplayHint() {
-        return "symbols";
-    }
-
-    @Override
-    public JComponent getComponent() {
-        if (view == null) {
-            view = new View();
-        }
-        return view;
-    }
-
-    @Override
-    public void panelActivated(Lookup context) {
-        result = context.lookupResult(FileObject.class);
-        result.addLookupListener(this);
-        updateFile();
-    }
-
-    @Override
-    public void panelDeactivated() {
-        result.removeLookupListener(this);
-        result = null;
-        updateFile();
-    }
-
-    private void updateFile() {
-        if (file != null) {
-            LSPBindings.removeBackgroundTask(file, this);
-            setKeys(Collections.emptyList());
-            file = null;
-        }
-        Collection<? extends FileObject> files = result != null ? result.allInstances() : Collections.emptyList();
-        file = files.isEmpty() ? null : files.iterator().next();
-        if (file != null) {
-            LSPBindings.addBackgroundTask(file, this);
-        }
-    }
-
-    @Override
-    public Lookup getLookup() {
-        return Lookup.EMPTY;
+    void removeBackgroundTask(FileObject fo) {
+        LSPBindings.addBackgroundTask(fo, this);
     }
 
     @Override
     public void run(LSPBindings bindings, FileObject file) {
-        if (file.equals(this.file)) {
+        if (isCurrentFile(file)) {
             try {
                 String uri = Utils.toURI(file);
                 List<Either<SymbolInformation, DocumentSymbol>> symbols = bindings.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(uri))).get();
 
                 setKeys(symbols);
-                
-                SwingUtilities.invokeLater(() -> view.expandAll());
+                expandAll();
             } catch (ExecutionException ex) {
                 LOG.log(Level.FINE, null, ex);
                 setKeys(Collections.emptyList());
@@ -145,13 +94,8 @@ public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, 
     }
 
     @Override
-    protected Node[] createNodes(Either<SymbolInformation, DocumentSymbol> sym) {
-        return new Node[] {new NodeImpl(Utils.toURI(file), sym)};
-    }
-
-    @Override
-    public void resultChanged(LookupEvent arg0) {
-        updateFile();
+    protected Node[] createNodes(FileObject currentFile, Either<SymbolInformation, DocumentSymbol> sym) {
+        return new Node[] {new NodeImpl(Utils.toURI(currentFile), sym)};
     }
 
     private static final class NodeImpl extends AbstractNode {
@@ -225,30 +169,4 @@ public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, 
         }
 
     }
-
-    private class View extends JPanel implements ExplorerManager.Provider {
-
-        private final BeanTreeView internalView;
-
-        public View() {
-            setLayout(new BorderLayout());
-            this.internalView = new BeanTreeView();
-            add(internalView, BorderLayout.CENTER);
-
-            internalView.setRootVisible(false);
-        }
-
-        @Override
-        public ExplorerManager getExplorerManager() {
-            return manager;
-        }
-
-        public void expandAll() {
-            boolean scrollsOnExpand = internalView.getScrollsOnExpand();
-            internalView.setScrollsOnExpand(false);
-            internalView.expandAll();
-            internalView.setScrollsOnExpand(scrollsOnExpand);
-        }
-    }
-
 }

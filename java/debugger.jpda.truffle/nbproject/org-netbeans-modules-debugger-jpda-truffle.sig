@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.20
+#Version 1.21
 
 CLSS public java.lang.Object
 cons public init()
@@ -187,11 +187,13 @@ meth public static org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariab
 
 CLSS public org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint
 cons public init(org.netbeans.modules.javascript2.debug.EditorLineHandler)
+fld public final static java.lang.String PROP_ACTIVE = "active"
 fld public final static java.lang.String PROP_CONDITION = "condition"
 fld public final static java.lang.String PROP_FILE = "fileChanged"
 fld public final static java.lang.String PROP_LINE_NUMBER = "lineNumber"
 fld public final static java.lang.String PROP_URL = "url"
 meth protected void dispose()
+meth public boolean isActive()
 meth public boolean isEnabled()
 meth public final boolean isConditional()
 meth public final java.lang.String getCondition()
@@ -206,7 +208,7 @@ meth public void enable()
 meth public void setLine(int)
 meth public void setLineHandler(org.netbeans.modules.javascript2.debug.EditorLineHandler)
 supr org.netbeans.api.debugger.Breakpoint
-hfds condition,isEnabled,line,lineChangesWeak,lineChangeslistener,myListener,myWeakListener
+hfds active,condition,isEnabled,line,lineChangesWeak,lineChangeslistener,myListener,myWeakListener
 hcls FileRemoveListener,LineChangesListener
 
 CLSS public abstract org.openide.filesystems.URLMapper

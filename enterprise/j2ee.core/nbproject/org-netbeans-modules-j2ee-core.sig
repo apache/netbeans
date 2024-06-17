@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.48
+#Version 1.49
 
 CLSS public abstract interface java.io.Serializable
 
@@ -42,6 +42,8 @@ fld public final static org.netbeans.api.j2ee.core.Profile J2EE_13
 fld public final static org.netbeans.api.j2ee.core.Profile J2EE_14
 fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_10_FULL
 fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_10_WEB
+fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_11_FULL
+fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_11_WEB
 fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_8_FULL
 fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_8_WEB
 fld public final static org.netbeans.api.j2ee.core.Profile JAKARTA_EE_9_1_FULL
@@ -57,6 +59,12 @@ fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_8_FULL
 fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_8_WEB
 meth public boolean isAtLeast(org.netbeans.api.j2ee.core.Profile)
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public boolean isAtMost(org.netbeans.api.j2ee.core.Profile)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public boolean isFullProfile()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public boolean isWebProfile()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public java.lang.String getDisplayName()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public java.lang.String toPropertiesString()

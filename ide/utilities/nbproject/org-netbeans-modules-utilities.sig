@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.84
+#Version 1.85
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -386,6 +386,9 @@ CLSS public abstract interface java.io.Serializable
 
 CLSS public abstract interface java.lang.Cloneable
 
+CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
+meth public abstract int compareTo({java.lang.Comparable%0})
+
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -756,12 +759,28 @@ hfds OFMSG_FILE_NOT_EXISTS,OFMSG_NO_RECENT_FILE,OFMSG_PATH_IS_NOT_DEFINED,PATH_P
 hcls UpdatingMenu
 
 CLSS public final org.netbeans.modules.openfile.RecentFiles
+innr public final static HistoryItem
 innr public final static NonPersistentDocumentsAdder
 meth public static boolean hasRecentFiles()
+meth public static java.util.List<org.netbeans.modules.openfile.RecentFiles$HistoryItem> getRecentFiles()
+meth public static void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public static void init()
+meth public static void removePropertyChangeListener(java.beans.PropertyChangeListener)
 supr java.lang.Object
 hfds HISTORY_LOCK,LOG,MAX_HISTORY_ITEMS,PCH_SUPPORT,PREFS_NODE,PROPERTY_RECENT_FILES,PROP_ICON_PREFIX,PROP_URL_PREFIX,RECENT_FILE_KEY,RP,history,historyProbablyValid,prefs,windowRegistryListener
-hcls HistoryItem,WindowRegistryL
+hcls WindowRegistryL
+
+CLSS public final static org.netbeans.modules.openfile.RecentFiles$HistoryItem
+ outer org.netbeans.modules.openfile.RecentFiles
+intf java.lang.Comparable<org.netbeans.modules.openfile.RecentFiles$HistoryItem>
+meth public boolean equals(java.lang.Object)
+meth public int compareTo(org.netbeans.modules.openfile.RecentFiles$HistoryItem)
+meth public int hashCode()
+meth public java.lang.String getFileName()
+meth public java.lang.String getPath()
+meth public javax.swing.Icon getIcon()
+supr java.lang.Object
+hfds fileName,icon,id,path
 
 CLSS public final static org.netbeans.modules.openfile.RecentFiles$NonPersistentDocumentsAdder
  outer org.netbeans.modules.openfile.RecentFiles

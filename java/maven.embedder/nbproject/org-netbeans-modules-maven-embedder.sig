@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.78
+#Version 2.79
 
 CLSS public abstract interface !annotation com.google.common.annotations.GwtCompatible
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -13273,7 +13273,7 @@ meth public void resolve(org.apache.maven.artifact.Artifact,java.util.List<org.a
 meth public void resolveArtifact(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.repository.ArtifactRepository) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
 meth public void setUpLegacySupport()
 supr java.lang.Object
-hfds LOG,embedderConfiguration,lastLocalRepository,lastLocalRepositoryLock,maven,plexus,populator,projectBuilder,repositorySystem,settings,settingsBuilder,settingsDecrypter,settingsTimestamp,testSettings,thisRepositorySession
+hfds LOG,embedderConfiguration,lastLocalRepository,lastLocalRepositoryLock,maven,plexus,populator,projectBuilder,repositorySystem,settings,settingsBuilder,settingsDecrypter,settingsTimestamp,testSettings,thisRepositorySession,versionResolver
 
 CLSS public abstract interface static org.netbeans.modules.maven.embedder.MavenEmbedder$ModelDescription
  outer org.netbeans.modules.maven.embedder.MavenEmbedder

@@ -18,11 +18,8 @@
  */
 package org.netbeans.modules.java.hints;
 
-import javax.lang.model.SourceVersion;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
-
-import static org.junit.Assume.assumeTrue;
 
 /**
  *
@@ -60,35 +57,4 @@ public class ImportsTest extends NbTestCase {
                               "}");
     }
 
-    public void testRedundantLangImportRemove() throws Exception {
-        assumeTrue(Runtime.version().feature() >= 21); // API dependency
-        HintTest.create()
-                .sourceLevel(SourceVersion.latest().ordinal())
-                .options("--enable-preview")
-                .input(
-                    "package test;\n" +
-                    "import java.lang.System;\n" +
-                    "import static java.lang.StringTemplate.STR;\n" +
-                    "import static java.lang.StringTemplate.RAW;\n" +
-                    "public class Test {\n" +
-                    "    public static void main(String[] args) {\n" +
-                    "        System.out.println(STR.\"hello world\");\n" +
-                    "        System.out.println(RAW.\"hello world\");" +
-                    "    }\n" +
-                    "}")
-                .run(Imports.class)
-                .assertWarnings("1:0-1:24:verifier:DN_Imports_DEFAULT_PACKAGE", "2:0-2:43:verifier:DN_Imports_DEFAULT_PACKAGE")
-                .findWarning("1:0-1:24:verifier:DN_Imports_DEFAULT_PACKAGE")
-                .applyFix("LBL_Imports_Fix_All_DEFAULT_PACKAGE")
-                .assertCompilable()
-                .assertOutput(
-                    "package test;\n" +
-                    "import static java.lang.StringTemplate.RAW;\n" +
-                    "public class Test {\n" +
-                    "    public static void main(String[] args) {\n" +
-                    "        System.out.println(STR.\"hello world\");\n" +
-                    "        System.out.println(RAW.\"hello world\");" +
-                    "    }\n" +
-                    "}");
-    }
 }

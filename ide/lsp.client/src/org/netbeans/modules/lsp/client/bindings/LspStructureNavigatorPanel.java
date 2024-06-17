@@ -45,6 +45,7 @@ import org.openide.text.Line;
 import org.openide.text.NbDocument;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
@@ -54,75 +55,42 @@ import org.openide.util.lookup.InstanceContent;
     "# {0} - mime type",
     "CTL_StructureForMimeType=Structure for {0}"
 })
-final class LspStructureNavigatorPanel extends JPanel implements NavigatorPanel, ExplorerManager.Provider {
-
-    private static final Logger LOG = Logger.getLogger(LspStructureNavigatorPanel.class.getName());
+final class LspStructureNavigatorPanel extends AbstractNavigatorPanel<StructureElement> {
     static final LspStructureNavigatorPanel INSTANCE = new LspStructureNavigatorPanel();
-    private final ExplorerManager em;
-    private FileObject fo;
+    private static final RequestProcessor BACKGROUND = new RequestProcessor(LspStructureNavigatorPanel.class);
+    private RequestProcessor.Task reparseTask;
 
-    private LspStructureNavigatorPanel() {
-        this.em = new ExplorerManager();
-        setLayout(new BorderLayout());
-        final BeanTreeView view = new BeanTreeView();
-        view.setRootVisible(false);
-        add(BorderLayout.CENTER, view);
+    @Override
+    void addBackgroundTask(FileObject fo) {
+        removeBackgroundTask(fo);
+        reparseTask = BACKGROUND.post(() -> refreshStructure(fo));
     }
 
     @Override
-    public String getDisplayName() {
-        return Bundle.CTL_StructureForFile(fo.getNameExt());
+    void removeBackgroundTask(FileObject fo) {
+        if (reparseTask != null) {
+            reparseTask.cancel();
+        }
     }
 
-    @Override
-    public String getDisplayHint() {
-        return Bundle.CTL_StructureForMimeType(fo.getMIMEType());
-    }
-
-    @Override
-    public JComponent getComponent() {
-        assert EventQueue.isDispatchThread();
-        return this;
-    }
-
-    @Override
-    public void panelActivated(Lookup context) {
-        assert EventQueue.isDispatchThread();
-        fo = context.lookup(FileObject.class);
-        if (fo != null) {
-            LOG.log(Level.INFO, "panelActivated: {0}", fo);
-            EditorCookie ec = context.lookup(EditorCookie.class);
-            if (ec != null) {
-                StyledDocument doc = ec.getDocument();
-                if (doc != null) {
-                    for (StructureProvider sp : MimeLookup.getLookup(fo.getMIMEType()).lookupAll(StructureProvider.class)) {
-                        Children ch = StructureElementChildren.childrenFor(sp.getStructure(doc), fo);
-                        em.setRootContext(new AbstractNode(ch));
-                        return;
-                    }
+    void refreshStructure(FileObject fo) {
+        LOG.log(Level.INFO, "panelActivated: {0}", fo);
+        EditorCookie ec = fo.getLookup().lookup(EditorCookie.class);
+        if (ec != null) {
+            StyledDocument doc = ec.getDocument();
+            if (doc != null) {
+                for (StructureProvider sp : MimeLookup.getLookup(fo.getMIMEType()).lookupAll(StructureProvider.class)) {
+                    setKeys(sp.getStructure(doc));
+                    return;
                 }
             }
         }
-        em.setRootContext(Node.EMPTY);
     }
 
     @Override
-    public void panelDeactivated() {
-        assert EventQueue.isDispatchThread();
-        LOG.log(Level.INFO, "panelDeactivated: {0}", fo);
-        fo = null;
+    Node[] createNodes(FileObject fo, StructureElement key) {
+        return new Node[]{new StructureElementNode(key, fo)};
     }
-
-    @Override
-    public Lookup getLookup() {
-        return null;
-    }
-
-    @Override
-    public ExplorerManager getExplorerManager() {
-        return em;
-    }
-
     private static final class StructureElementChildren extends Children.Keys<StructureElement> {
 
         private final FileObject fo;

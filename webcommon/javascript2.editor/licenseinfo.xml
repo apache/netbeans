@@ -290,7 +290,7 @@
         <file>test/unit/data/testfiles/ecmascript6/parser/ES6/identifier/estimated.js</file>
         <file>test/unit/data/testfiles/ecmascript6/parser/ES6/identifier/ethiopic_digits.js</file>
         <file>test/unit/data/testfiles/ecmascript6/parser/ES6/identifier/invalid_escaped_surrogate_pairs.js</file>
-        <file>test/unit/data/testfiles/ecmascript6/parser/ES6/identifier/invalid_expression_await.js</file>
+        <file>test/unit/data/testfiles/ecmascript6/parser/ES6/identifier/export_await.js</file>
         <file>test/unit/data/testfiles/ecmascript6/parser/ES6/identifier/invalid_function_wait.js</file>
         <file>test/unit/data/testfiles/ecmascript6/parser/ES6/identifier/invalid_id_smp.js</file>
         <file>test/unit/data/testfiles/ecmascript6/parser/ES6/identifier/invalid_lone_surrogate.source.js</file>

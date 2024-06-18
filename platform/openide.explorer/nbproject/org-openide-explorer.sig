@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.85
+#Version 6.86
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1371,7 +1371,7 @@ meth public void setModel(org.openide.explorer.propertysheet.PropertyModel)
 meth public void setPreferences(int)
 meth public void updateValue()
 supr javax.swing.JComponent
-hfds beans,changeImmediate,displayer,ignoreCommit,initializing,inner,isGtk,listener,model,preferences,prop,reusableEnv,reusableModel,settingModel
+hfds beans,changeImmediate,displayer,ignoreCommit,initializing,inner,listener,model,preferences,prop,reusableEnv,reusableModel,settingModel
 hcls AccessiblePropertyPanel,BridgeAccessor,CustomEditorProxyAction,Listener
 
 CLSS public org.openide.explorer.propertysheet.PropertySheet

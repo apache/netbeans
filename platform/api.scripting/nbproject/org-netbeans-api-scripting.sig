@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.20
+#Version 1.21
 
 CLSS public java.lang.Object
 cons public init()
@@ -21,7 +21,7 @@ meth public org.netbeans.api.scripting.Scripting allowAllAccess(boolean)
 meth public static javax.script.ScriptEngineManager createManager()
 meth public static org.netbeans.api.scripting.Scripting newBuilder()
 supr java.lang.Object
-hfds allowAllAccess
+hfds LOG,allowAllAccess
 hcls EngineManager
 
 CLSS abstract interface org.netbeans.api.scripting.package-info

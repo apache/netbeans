@@ -1,5 +1,11 @@
 #Signature file v4.1
-#Version 1.28
+#Version 1.27
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public java.lang.Object
 cons public init()
@@ -14,6 +20,32 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.annotation.Annotation
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Retention
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.RetentionPolicy value()
+
+CLSS public abstract interface !annotation java.lang.annotation.Target
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public abstract org.antlr.v4.runtime.Lexer
 cons public init()
@@ -332,6 +364,16 @@ meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
 hfds delegates,listeners,listens,pcl
+
+CLSS public org.netbeans.modules.javascript2.json.parser.JsonBaseListener
+ anno 0 java.lang.Deprecated()
+cons public init()
+supr org.netbeans.modules.javascript2.json.parser.JsonParserBaseListener
+
+CLSS public org.netbeans.modules.javascript2.json.parser.JsonBaseVisitor<%0 extends java.lang.Object>
+ anno 0 java.lang.Deprecated()
+cons public init()
+supr org.netbeans.modules.javascript2.json.parser.JsonParserBaseVisitor<{org.netbeans.modules.javascript2.json.parser.JsonBaseVisitor%0}>
 
 CLSS public org.netbeans.modules.javascript2.json.parser.JsonLexer
 cons public init(org.antlr.v4.runtime.CharStream)

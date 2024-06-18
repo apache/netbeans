@@ -179,7 +179,7 @@ FIELD      enumConstants                   [PUBLIC]   Object[]
 FIELD      fields                          [PUBLIC]   Field[]
 FIELD      genericInterfaces               [PUBLIC]   Type[]
 FIELD      genericSuperclass               [PUBLIC]   Type
-FIELD      instance                        [STATIC]   Singleton3
+FIELD      instance                        [STATIC,   Singleton3
 FIELD      interface                       [PUBLIC]   boolean
 FIELD      interfaces                      [PUBLIC]   Class[]
 FIELD      localClass                      [PUBLIC]   boolean

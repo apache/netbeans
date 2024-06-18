@@ -191,10 +191,20 @@ public class UsedNamesCollector {
 
         @Override
         public void visit(PHPDocTypeNode node) {
-            UsedNamespaceName usedName = new UsedNamespaceName(node);
+            UsedNamespaceName usedName = createUsedNameNamespaceName(node);
             if (isValidTypeName(usedName.getName()) && isValidAliasTypeName(usedName.getName())) {
                 processUsedName(usedName);
             }
+        }
+
+        private UsedNamespaceName createUsedNameNamespaceName(PHPDocTypeNode node) {
+            // GH-7123 ignore nullable type prefix
+            PHPDocTypeNode phpDocTypeNode = node;
+            if (CodeUtils.isNullableType(node.getValue())) {
+                phpDocTypeNode = new PHPDocTypeNode(node.getStartOffset() + CodeUtils.NULLABLE_TYPE_PREFIX.length(), node.getEndOffset(),
+                        CodeUtils.removeNullableTypePrefix(node.getValue()), node.isArray());
+            }
+            return new UsedNamespaceName(phpDocTypeNode);
         }
 
         private boolean isValidTypeName(final String typeName) {

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.9.0
+#Version 2.10.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -22,6 +22,12 @@ meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
 
+CLSS public abstract interface !annotation java.lang.FunctionalInterface
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
@@ -35,6 +41,32 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.annotation.Annotation
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Retention
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.RetentionPolicy value()
+
+CLSS public abstract interface !annotation java.lang.annotation.Target
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public final org.netbeans.modules.java.completion.JavaCompletionTask<%0 extends java.lang.Object>
 fld protected final int caretOffset
@@ -159,12 +191,16 @@ meth public static void exclude(java.lang.CharSequence)
 supr java.lang.Object
 hfds COMPLETION_CASE_SENSITIVE,COMPLETION_CASE_SENSITIVE_DEFAULT,EMPTY,ERROR,JAVA_COMPLETION_BLACKLIST,JAVA_COMPLETION_BLACKLIST_DEFAULT,JAVA_COMPLETION_EXCLUDER_METHODS,JAVA_COMPLETION_EXCLUDER_METHODS_DEFAULT,JAVA_COMPLETION_SUBWORDS,JAVA_COMPLETION_SUBWORDS_DEFAULT,JAVA_COMPLETION_WHITELIST,SHOW_DEPRECATED_MEMBERS,SHOW_DEPRECATED_MEMBERS_DEFAULT,cachedCamelCasePattern,cachedPrefix,cachedSubwordsPattern,caseSensitive,excludeRef,includeRef,inited,javaCompletionExcluderMethods,javaCompletionSubwords,preferences,preferencesTracker,showDeprecatedMembers
 
+CLSS public abstract interface org.netbeans.modules.parsing.api.ResultProcessor
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract void run(org.netbeans.modules.parsing.api.ResultIterator) throws java.lang.Exception
+
 CLSS public abstract org.netbeans.modules.parsing.api.Task
 cons public init()
 supr java.lang.Object
 
 CLSS public abstract org.netbeans.modules.parsing.api.UserTask
 cons public init()
-meth public abstract void run(org.netbeans.modules.parsing.api.ResultIterator) throws java.lang.Exception
+intf org.netbeans.modules.parsing.api.ResultProcessor
 supr org.netbeans.modules.parsing.api.Task
 

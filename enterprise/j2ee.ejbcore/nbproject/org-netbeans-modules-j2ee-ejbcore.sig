@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.74
+#Version 1.75
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -909,6 +909,7 @@ hfds CLASSNAME_LOCAL,CLASSNAME_REMOTE,changeSupport,createdFilesText,inProjectCo
 CLSS public final org.netbeans.modules.j2ee.ejbcore.ejb.wizard.jpa.dao.EjbFacadeWizardIterator
 cons public init()
 fld protected final static java.lang.String EJB_STATELESS = "javax.ejb.Stateless"
+fld protected final static java.lang.String EJB_STATELESS_JAKARTA = "jakarta.ejb.Stateless"
 intf org.openide.WizardDescriptor$ProgressInstantiatingIterator
 meth public boolean hasNext()
 meth public boolean hasPrevious()
@@ -926,7 +927,7 @@ meth public void previousPanel()
 meth public void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void uninitialize(org.openide.WizardDescriptor)
 supr java.lang.Object
-hfds EJB30_STATELESS_EJBCLASS,EJB_LOCAL,EJB_REMOTE,FACADE_ABSTRACT,FACADE_LOCAL_SUFFIX,FACADE_REMOTE_SUFFIX,FACADE_SUFFIX,LOGGER,WIZARD_PANEL_CONTENT_DATA,entityNames,index,panels,project,steps,stepsStartPos,wizard
+hfds EJB30_STATELESS_EJBCLASS,EJB_LOCAL,EJB_LOCAL_JAKARTA,EJB_REMOTE,EJB_REMOTE_JAKARTA,FACADE_ABSTRACT,FACADE_LOCAL_SUFFIX,FACADE_REMOTE_SUFFIX,FACADE_SUFFIX,LOGGER,WIZARD_PANEL_CONTENT_DATA,entityNames,index,panels,project,steps,stepsStartPos,wizard
 
 CLSS public org.netbeans.modules.j2ee.ejbcore.ejb.wizard.jpa.dao.EjbFacadeWizardPanel2
 cons public init(org.netbeans.api.project.Project,org.openide.WizardDescriptor)

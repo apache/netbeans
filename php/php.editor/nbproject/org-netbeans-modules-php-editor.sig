@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.36.0
+#Version 2.38.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -335,6 +335,7 @@ meth public abstract java.util.Set<org.netbeans.modules.php.editor.api.elements.
 meth public abstract java.util.Set<org.netbeans.modules.php.editor.api.elements.PhpElement> getTopLevelElements(org.netbeans.modules.php.editor.api.NameKind)
 meth public abstract java.util.Set<org.netbeans.modules.php.editor.api.elements.PhpElement> getTopLevelElements(org.netbeans.modules.php.editor.api.NameKind,java.util.Set<org.netbeans.modules.php.editor.api.AliasedName>,org.netbeans.modules.php.editor.api.elements.AliasedElement$Trait)
 meth public abstract java.util.Set<org.netbeans.modules.php.editor.api.elements.TraitElement> getTraits(org.netbeans.modules.php.editor.api.NameKind)
+meth public abstract java.util.Set<org.netbeans.modules.php.editor.api.elements.TraitElement> getTraits(org.netbeans.modules.php.editor.api.NameKind,java.util.Set<org.netbeans.modules.php.editor.api.AliasedName>,org.netbeans.modules.php.editor.api.elements.AliasedElement$Trait)
 meth public abstract java.util.Set<org.netbeans.modules.php.editor.api.elements.TypeConstantElement> getAccessibleMagicConstants(org.netbeans.modules.php.editor.api.elements.TypeElement)
 meth public abstract java.util.Set<org.netbeans.modules.php.editor.api.elements.TypeConstantElement> getAllTypeConstants(org.netbeans.modules.php.editor.api.NameKind$Exact,org.netbeans.modules.php.editor.api.NameKind)
 meth public abstract java.util.Set<org.netbeans.modules.php.editor.api.elements.TypeConstantElement> getAllTypeConstants(org.netbeans.modules.php.editor.api.elements.TypeElement)

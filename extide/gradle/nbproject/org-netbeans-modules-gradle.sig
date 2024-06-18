@@ -1045,6 +1045,7 @@ meth protected abstract void collectOperations(org.netbeans.modules.gradle.spi.n
 meth protected final java.io.File assumedRoot()
 meth protected final org.openide.WizardDescriptor getData()
 meth protected final static org.openide.WizardDescriptor$Panel<org.openide.WizardDescriptor> createProjectAttributesPanel(org.openide.WizardDescriptor$Panel<org.openide.WizardDescriptor>)
+meth protected org.openide.WizardDescriptor initData(org.openide.WizardDescriptor)
 meth public final boolean hasNext()
 meth public final boolean hasPrevious()
 meth public final java.util.Set instantiate() throws java.io.IOException
@@ -1059,6 +1060,52 @@ meth public void addChangeListener(javax.swing.event.ChangeListener)
 meth public void removeChangeListener(javax.swing.event.ChangeListener)
 supr java.lang.Object
 hfds data,index,panels
+
+CLSS public final org.netbeans.modules.gradle.spi.newproject.GradleInitWizard
+fld public final static java.lang.String PROP_COMMENTS = "comments"
+fld public final static java.lang.String PROP_DSL = "DSL"
+fld public final static java.lang.String PROP_JAVA_VERSION = "javaVersion"
+fld public final static java.lang.String PROP_JAVA_VERSIONS = "javaVersions"
+fld public final static java.lang.String PROP_TEST_FRAMEWORK = "testFramework"
+fld public final static java.lang.String PROP_TEST_FRAMEWORKS = "testFrameworks"
+innr public final static !enum GradleDSL
+innr public final static !enum TestFramework
+meth public org.netbeans.modules.gradle.spi.newproject.BaseGradleWizardIterator build()
+meth public org.netbeans.modules.gradle.spi.newproject.GradleInitWizard withImportantPaths(java.util.List<java.lang.String>)
+meth public org.netbeans.modules.gradle.spi.newproject.GradleInitWizard withJavaVersions(java.util.List<java.lang.Integer>)
+meth public org.netbeans.modules.gradle.spi.newproject.GradleInitWizard withPreferredJava(java.lang.Integer)
+meth public org.netbeans.modules.gradle.spi.newproject.GradleInitWizard withPreferredTestFramework(org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework)
+meth public org.netbeans.modules.gradle.spi.newproject.GradleInitWizard withTestframeworks(java.util.List<org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework>)
+meth public static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard create(java.lang.String,java.lang.String)
+supr java.lang.Object
+hfds important,javaVersions,preferredJavaVersion,preferredTestFramework,testFrameworks,title,type
+hcls GradleInitWizardIterator
+
+CLSS public final static !enum org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$GradleDSL
+ outer org.netbeans.modules.gradle.spi.newproject.GradleInitWizard
+fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$GradleDSL GROOVY
+fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$GradleDSL KOTLIN
+meth public java.lang.String toString()
+meth public static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$GradleDSL valueOf(java.lang.String)
+meth public static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$GradleDSL[] values()
+supr java.lang.Enum<org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$GradleDSL>
+
+CLSS public final static !enum org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework
+ outer org.netbeans.modules.gradle.spi.newproject.GradleInitWizard
+fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework CPP_TEST
+fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework JUNIT
+fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework JUNIT_5
+fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework KOTLIN_TEST
+fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework SCALA_TEST
+fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework SPOCK
+fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework TESTNG
+fld public final static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework XCTEST
+meth public java.lang.String getId()
+meth public java.lang.String toString()
+meth public static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework valueOf(java.lang.String)
+meth public static org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework[] values()
+supr java.lang.Enum<org.netbeans.modules.gradle.spi.newproject.GradleInitWizard$TestFramework>
+hfds id
 
 CLSS public org.netbeans.modules.gradle.spi.newproject.SimpleGradleWizardIterator
 cons public init(java.lang.String,java.lang.String,java.util.Map<java.lang.String,java.lang.Object>)
@@ -1084,6 +1131,7 @@ meth public java.util.Set<org.openide.filesystems.FileObject> getImportantFiles(
 meth public org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation createGradleInit(java.io.File,java.lang.String)
 meth public void addConfigureProject(java.io.File,org.netbeans.modules.gradle.spi.newproject.TemplateOperation$ProjectConfigurator)
 meth public void addProjectPreload(java.io.File)
+meth public void addProjectPreload(java.io.File,java.util.List<java.lang.String>)
 meth public void addWrapperInit(java.io.File)
 meth public void addWrapperInit(java.io.File,java.lang.String)
 meth public void copyFromFile(java.lang.String,java.io.File,java.util.Map<java.lang.String,?>)

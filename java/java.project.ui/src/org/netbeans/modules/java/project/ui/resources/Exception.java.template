@@ -33,7 +33,7 @@ import ${interface};
     </#list>
     <#assign implementation = "${implementation}"?remove_ending(", ")>
 </#if>
-public class ${name}<#if extension?? && extension != ""> extends ${extension}</#if><#if implementation?? && implementation != ""> implements ${implementation}</#if> {
+public class ${name}<#if extension?? && extension != ""> extends ${extension}<#else> extends Exception</#if><#if implementation?? && implementation != ""> implements ${implementation}</#if> {
 
     /**
      * Creates a new instance of <code>${name}</code> without detail message.

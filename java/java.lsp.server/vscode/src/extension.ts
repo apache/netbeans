@@ -60,6 +60,8 @@ import { initializeRunConfiguration, runConfigurationProvider, runConfigurationN
 import { dBConfigurationProvider, onDidTerminateSession } from './dbConfigurationProvider';
 import { InputStep, MultiStepInput } from './utils';
 import { PropertiesView } from './propertiesView/propertiesView';
+import * as configuration from './jdk/configuration';
+import * as jdk from './jdk/jdk';
 
 const API_VERSION : string = "1.0";
 export const COMMAND_PREFIX : string = "nbls";
@@ -346,6 +348,26 @@ function shouldEnableConflictingJavaSupport() : boolean | undefined {
 }
 
 export function activate(context: ExtensionContext): VSNetBeansAPI {
+    const provider = new StringContentProvider();
+    const scheme = 'in-memory';
+    const providerRegistration = vscode.workspace.registerTextDocumentContentProvider(scheme, provider);
+
+    context.subscriptions.push(vscode.commands.registerCommand('cloud.assets.policy.create', async function (viewItem) {
+            const content = await vscode.commands.executeCommand('nbls.cloud.assets.policy.create.local') as string;
+            const document = vscode.Uri.parse(`${scheme}:policies.txt?${encodeURIComponent(content)}`);
+            vscode.workspace.openTextDocument(document).then(doc => {
+                vscode.window.showTextDocument(doc, { preview: false });
+            });
+        })
+    );
+    context.subscriptions.push(vscode.commands.registerCommand('cloud.assets.config.create', async function (viewItem) {
+            const content = await vscode.commands.executeCommand('nbls.cloud.assets.config.create.local') as string;
+            const document = vscode.Uri.parse(`${scheme}:application.properties?${encodeURIComponent(content)}`);
+            vscode.workspace.openTextDocument(document).then(doc => {
+                vscode.window.showTextDocument(doc, { preview: false });
+            });
+        })
+    );
     let log = vscode.window.createOutputChannel("Apache NetBeans Language Server");
 
     var clientResolve : (x : NbLanguageClient) => void;
@@ -355,6 +377,10 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     client = new InitialPromise((resolve, reject) => {
         clientResolve = resolve;
         clientReject = reject;
+    });
+    // we need to call refresh here as @OnStart in NBLS is called before the workspace projects are opened.
+    client.then(() => {
+        vscode.commands.executeCommand('nbls.cloud.assets.refresh');
     });
 
     function checkConflict(): void {
@@ -781,6 +807,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     launchConfigurations.updateLaunchConfig();
 
+    configuration.initialize(context);
+    jdk.initialize(context);
+
     // register completions:
     launchConfigurations.registerCompletion(context);
     return Object.freeze({
@@ -1066,7 +1095,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 'netbeans.hints',
                 'netbeans.format',
                 'netbeans.java.imports',
-                'java+.runConfig.vmOptions'
+                'java+.runConfig.vmOptions',
+                'java+.runConfig.cwd'
             ],
             fileEvents: [
                 workspace.createFileSystemWatcher('**/*.java')
@@ -1248,6 +1278,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         if (enableJava) {
             c.findTreeViewService().createView('cloud.resources', undefined, { canSelectMany : false });
         }
+        c.findTreeViewService().createView('cloud.assets', undefined, { canSelectMany : false, showCollapseAll: false });
     }).catch(setClient[1]);
 
     class Decorator implements TreeItemDecorator<Visualizer> {
@@ -1671,3 +1702,24 @@ class NetBeansConfigurationNativeResolver implements vscode.DebugConfigurationPr
         return config;
     }
 }
+
+
+class StringContentProvider implements vscode.TextDocumentContentProvider {
+    private _onDidChange = new vscode.EventEmitter<vscode.Uri>(); // Properly declare and initialize
+
+    // Constructor is not necessary if only initializing _onDidChange
+
+    // This function must return a string as the content of the document
+    provideTextDocumentContent(uri: vscode.Uri): string {
+        // Return the content for the given URI
+        // Here, using the query part of the URI to store and retrieve the content
+        return uri.query;
+    }
+
+    // Allow listeners to subscribe to content changes
+    get onDidChange(): vscode.Event<vscode.Uri> {
+        return this._onDidChange.event;
+    }
+
+}
+

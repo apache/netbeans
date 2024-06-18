@@ -23,6 +23,7 @@ METHOD     collect(Closure)                           List
 METHOD     collect(Collection, Closure)               Collection
 METHOD     collectReplacements(Closure)               String
 METHOD     collectReplacements(List)                  String
+METHOD     compare(CharSequence, CharSequ  [STATIC,   int
 METHOD     compareTo(Object)               [PUBLIC]   int
 METHOD     compareTo(String)               [PUBLIC]   int
 METHOD     compareTo(T)                    [PUBLIC]   int
@@ -88,7 +89,7 @@ METHOD     findResult(Closure)                        Object
 METHOD     findResult(Object, Closure)                Object
 METHOD     format(Locale, String, Object.  [STATIC,   String
 METHOD     format(String, Object...)       [STATIC,   String
-METHOD     formatted(Object[])             [PUBLIC]   String
+METHOD     formatted(Object...)            [PUBLIC]   String
 METHOD     getAt(Collection)                          String
 METHOD     getAt(EmptyRange)                          String
 METHOD     getAt(IntRange)                            String
@@ -220,6 +221,7 @@ METHOD     startsWith(String, int)         [PUBLIC]   boolean
 METHOD     startsWithAny(CharSequence[])              boolean
 METHOD     startsWithIgnoreCase(CharSeque             boolean
 METHOD     stream()                                   Stream
+METHOD     strip()                         [PUBLIC]   String
 METHOD     stripIndent()                              String
 METHOD     stripIndent(boolean)                       String
 METHOD     stripIndent(int)                           String
@@ -295,6 +297,7 @@ FIELD      CASE_INSENSITIVE_ORDER          [STATIC,   Comparator<String>
 FIELD      EMPTY                           [STATIC,   GString
 FIELD      EMPTY_OBJECT_ARRAY              [STATIC,   Object[]
 FIELD      EMPTY_STRING_ARRAY              [STATIC,   String[]
+FIELD      blank                           [PUBLIC]   boolean
 FIELD      bytes                           [PUBLIC]   byte[]
 FIELD      class                           [PUBLIC]   Class
 FIELD      empty                           [PUBLIC]   boolean

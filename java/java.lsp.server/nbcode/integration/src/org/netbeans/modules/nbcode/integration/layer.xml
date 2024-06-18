@@ -59,6 +59,8 @@
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddToProject" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.CreateBuildRun" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddRepository" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddSuggestedItemAction" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.RemoveFromProject" stringvalue="Tools"/>
             </file>
         </folder>
         <folder name="AutoupdateType">
@@ -75,6 +77,9 @@
         </folder>
         <folder name="foundProjects">
             <file name="project-cookies.contextValues" url="project-cookies.contextValues"/>
+        </folder>
+        <folder name="cloud.assets">
+            <file name="cloud-cookies.contextValues" url="cloud-cookies.contextValues"/>
         </folder>
     </folder>
     <folder name="Debugger">

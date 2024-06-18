@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.18
+#Version 2.19
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1853,6 +1853,8 @@ fld public final static char TYPE_SEPARATOR = '-'
 fld public final static int length
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v10_0_0
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v10_0_0_web
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v11_0_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v11_0_0_web
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_2
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_3
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_4
@@ -1893,6 +1895,7 @@ hfds name
 CLSS public final static !enum org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version
  outer org.netbeans.modules.payara.tooling.server.config.JavaEEProfile
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v10_0_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v11_0_0
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_2
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_3
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_4
@@ -1932,12 +1935,13 @@ fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSE
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform v1_6
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform v1_7
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform v1_8
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform v21
 meth public java.lang.String toString()
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform toValue(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform valueOf(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform[] values()
 supr java.lang.Enum<org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform>
-hfds V11_STR,V17_STR,V1_1_STR,V1_2_STR,V1_3_STR,V1_4_STR,V1_5_STR,V1_6_STR,V1_7_STR,V1_8_STR,stringValuesMap
+hfds V11_STR,V17_STR,V1_1_STR,V1_2_STR,V1_3_STR,V1_4_STR,V1_5_STR,V1_6_STR,V1_7_STR,V1_8_STR,V21_STR,stringValuesMap
 
 CLSS public org.netbeans.modules.payara.tooling.server.config.JavaSESet
 cons public init(java.util.List<java.lang.String>,java.lang.String)

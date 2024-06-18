@@ -494,4 +494,54 @@ public class PHPFormatterAlignmentTest extends PHPFormatterTestBase {
         options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, false);
         reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_02.php"), options, false, true);
     }
+
+    // GH-7190
+    public void testGroupAlignmentAssignmentTypedFields01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.GROUP_ALIGNMENT_ASSIGNMENT, true);
+        reformatFileContents(getTestFilePath("groupAlignmentAssignmentTypedFields01.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentAssignmentTypedFields01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.GROUP_ALIGNMENT_ASSIGNMENT, false);
+        reformatFileContents(getTestFilePath("groupAlignmentAssignmentTypedFields01.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentAssignmentTypedFields02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.GROUP_ALIGNMENT_ASSIGNMENT, true);
+        reformatFileContents(getTestFilePath("groupAlignmentAssignmentTypedFields02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentAssignmentTypedFields02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.GROUP_ALIGNMENT_ASSIGNMENT, false);
+        reformatFileContents(getTestFilePath("groupAlignmentAssignmentTypedFields02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentAssignmentTypedConstants01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.GROUP_ALIGNMENT_ASSIGNMENT, true);
+        reformatFileContents(getTestFilePath("groupAlignmentAssignmentTypedConstants01.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentAssignmentTypedConstants01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.GROUP_ALIGNMENT_ASSIGNMENT, false);
+        reformatFileContents(getTestFilePath("groupAlignmentAssignmentTypedConstants01.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentAssignmentTypedConstants02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.GROUP_ALIGNMENT_ASSIGNMENT, true);
+        reformatFileContents(getTestFilePath("groupAlignmentAssignmentTypedConstants02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentAssignmentTypedConstants02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.GROUP_ALIGNMENT_ASSIGNMENT, false);
+        reformatFileContents(getTestFilePath("groupAlignmentAssignmentTypedConstants02.php"), options, false, true);
+    }
+
 }

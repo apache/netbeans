@@ -52,6 +52,21 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+        <change id="ParseLineArgFile">
+            <api name="queries"/>
+            <summary>Result.parseLine permits parsing of argfiles based on current working directory.</summary>
+            <version major="1" minor="92"/>
+            <date day="4" month="6" year="2024"/>
+            <author login="jlahoda"/>
+            <compatibility semantic="compatible" source="compatible" binary="compatible"/>
+            <description>
+                <p>
+                    CompilerOptionsQueryImplementation.Result.parseLine is enhanced with the ability to parse
+                    argfiles, based on a specified current working directory
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.queries" name="CompilerOptionsQueryImplementation"/>
+        </change>
         <change id="SourceAttacher.Definer2">
             <api name="queries"/>
             <summary>Allows <code>SourceJavadocAttacherImplementation.Definer</code> to reject a binary root.</summary>

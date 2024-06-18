@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.24
+#Version 1.25
 
 CLSS public abstract interface java.io.Serializable
 
@@ -576,15 +576,17 @@ meth public abstract java.util.List<? extends org.netbeans.api.lsp.Diagnostic> c
 CLSS public final static org.netbeans.spi.lsp.ErrorProvider$Context
  outer org.netbeans.spi.lsp.ErrorProvider
 cons public init(org.openide.filesystems.FileObject,int,org.netbeans.spi.lsp.ErrorProvider$Kind)
+cons public init(org.openide.filesystems.FileObject,int,org.netbeans.spi.lsp.ErrorProvider$Kind,org.openide.filesystems.FileObject)
 cons public init(org.openide.filesystems.FileObject,org.netbeans.spi.lsp.ErrorProvider$Kind)
 meth public boolean isCancelled()
 meth public int getOffset()
 meth public org.netbeans.spi.lsp.ErrorProvider$Kind errorKind()
 meth public org.openide.filesystems.FileObject file()
+meth public org.openide.filesystems.FileObject getHintsConfigFile()
 meth public void cancel()
 meth public void registerCancelCallback(java.lang.Runnable)
 supr java.lang.Object
-hfds cancel,cancelCallbacks,errorKind,file,offset
+hfds cancel,cancelCallbacks,errorKind,file,hintsConfigFile,offset
 
 CLSS public final static !enum org.netbeans.spi.lsp.ErrorProvider$Kind
  outer org.netbeans.spi.lsp.ErrorProvider

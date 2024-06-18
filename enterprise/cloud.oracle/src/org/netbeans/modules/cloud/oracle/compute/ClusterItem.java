@@ -30,6 +30,9 @@ public final class ClusterItem extends OCIItem {
     public ClusterItem(OCID id, String compartmentId, String name) {
         super(id, compartmentId, name);
     }
-    
+
+    public ClusterItem() {
+        super();
+    }
     
 }

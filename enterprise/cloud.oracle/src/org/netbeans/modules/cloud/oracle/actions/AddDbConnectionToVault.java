@@ -31,12 +31,6 @@ import com.oracle.bmc.devops.requests.UpdateDeployArtifactRequest;
 import com.oracle.bmc.devops.responses.GetDeployArtifactResponse;
 import com.oracle.bmc.devops.responses.ListDeployArtifactsResponse;
 import com.oracle.bmc.devops.responses.ListProjectsResponse;
-import com.oracle.bmc.identity.Identity;
-import com.oracle.bmc.identity.IdentityClient;
-import com.oracle.bmc.identity.model.Compartment;
-import com.oracle.bmc.identity.requests.ListCompartmentsRequest;
-import com.oracle.bmc.identity.responses.ListCompartmentsResponse;
-import com.oracle.bmc.identity.model.Tenancy;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import com.oracle.bmc.model.BmcException;
 import com.oracle.bmc.vault.VaultsClient;
@@ -60,16 +54,12 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,23 +67,26 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.cloud.oracle.OCIManager;
 import static org.netbeans.modules.cloud.oracle.OCIManager.getDefault;
-import org.netbeans.modules.cloud.oracle.OCIProfile;
-import org.netbeans.modules.cloud.oracle.OCISessionInitiator;
+import org.netbeans.modules.cloud.oracle.assets.DependencyUtils;
+import org.netbeans.modules.cloud.oracle.assets.Steps;
+import org.netbeans.modules.cloud.oracle.assets.Step;
+import org.netbeans.modules.cloud.oracle.assets.Steps.NextStepProvider;
+import org.netbeans.modules.cloud.oracle.assets.Steps.ProjectStep;
+import org.netbeans.modules.cloud.oracle.assets.Steps.TenancyStep;
 import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.netbeans.modules.cloud.oracle.devops.DevopsProjectItem;
 import org.netbeans.modules.cloud.oracle.devops.DevopsProjectService;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import org.netbeans.modules.cloud.oracle.items.TenancyItem;
 import org.netbeans.modules.cloud.oracle.vault.KeyItem;
 import org.netbeans.modules.cloud.oracle.vault.KeyNode;
 import org.netbeans.modules.cloud.oracle.vault.SecretItem;
 import org.netbeans.modules.cloud.oracle.vault.SecretNode;
 import org.netbeans.modules.cloud.oracle.vault.VaultItem;
 import org.netbeans.modules.cloud.oracle.vault.VaultNode;
-import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.NotifyDescriptor.QuickPick.Item;
@@ -101,8 +94,10 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -152,149 +147,14 @@ public class AddDbConnectionToVault implements ActionListener {
         this.context = context;
     }
 
-    static interface Step<T, U> {
-
-        Step<T, U> prepare(T item);
-
-        NotifyDescriptor createInput();
-
-        boolean onlyOneChoice();
-
-        Step getNext();
-
-        void setValue(String selected);
-
-        U getValue();
-    }
-
-    class TenancyStep implements Step<Object, TenancyItem> {
-
-        List<OCIProfile> profiles = new LinkedList<>();
-        private AtomicReference<TenancyItem> selected = new AtomicReference<>();
-
-        @Override
-        public NotifyDescriptor createInput() {
-            if (onlyOneChoice()) {
-                throw new IllegalStateException("No data to create input"); // NOI18N
-            }
-            String title = Bundle.SelectProfile();
-            List<NotifyDescriptor.QuickPick.Item> items = new ArrayList<>(profiles.size());
-            for (OCIProfile p : profiles) {
-                Tenancy t = p.getTenancyData();
-                if (t != null) {
-                    items.add(new NotifyDescriptor.QuickPick.Item(p.getId(), Bundle.SelectProfile_Description(t.getName(), t.getHomeRegionKey())));
-                }
-            }
-            if (profiles.stream().filter(p -> p.getTenancy().isPresent()).count() == 0) {
-                title = Bundle.NoProfile();
-            }
-            return new NotifyDescriptor.QuickPick(title, title, items, false);
-        }
-
-        @Override
-        public Step getNext() {
-            return new CompartmentStep().prepare(getValue());
-        }
-
-        public Step<Object, TenancyItem> prepare(Object i) {
-            ProgressHandle h = ProgressHandle.createHandle(Bundle.MSG_CollectingProfiles());
-            h.start();
-            h.progress(Bundle.MSG_CollectingProfiles_Text());
-            try {
-                profiles = OCIManager.getDefault().getConnectedProfiles();
-            } finally {
-                h.finish();
-            }
-            return this;
-        }
-
-        public void setValue(String value) {
-            for (OCIProfile profile : profiles) {
-                if (profile.getId().equals(value)) {
-                    profile.getTenancy().ifPresent(t -> this.selected.set(t));
-                    OCIManager.getDefault().setActiveProfile(profile);
-                    break;
-                }
-            }
-        }
-
-        @Override
-        public TenancyItem getValue() {
-            if (onlyOneChoice()) {
-                return profiles.stream()
-                        .map(p -> p.getTenancy())
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .findFirst()
-                        .get();
-            }
-            return selected.get();
-        }
-
-        @Override
-        public boolean onlyOneChoice() {
-            return profiles.stream().filter(p -> p.getTenancy().isPresent()).count() == 1;
-        }
-    }
-
-    class CompartmentStep implements Step<TenancyItem, CompartmentItem> {
-
-        private Map<String, OCIItem> compartments = null;
-        private CompartmentItem selected;
-
-        public Step<TenancyItem, CompartmentItem> prepare(TenancyItem tenancy) {
-            ProgressHandle h = ProgressHandle.createHandle(Bundle.MSG_CollectingItems());
-            h.start();
-            h.progress(Bundle.MSG_CollectingItems_Text());
-            try {
-                compartments = getFlatCompartment(tenancy);
-            } finally {
-                h.finish();
-            }
-            return this;
-        }
-
-        @Override
-        public NotifyDescriptor createInput() {
-            if (onlyOneChoice()) {
-                throw new IllegalStateException("Input shouldn't be displayed for one choice"); // NOI18N
-            }
-            if (compartments.isEmpty()) {
-                createQuickPick(compartments, Bundle.NoCompartment());
-            }
-            return createQuickPick(compartments, Bundle.SelectCompartment());
-        }
-
-        @Override
-        public Step getNext() {
-            return new VaultStep().prepare(getValue());
-        }
-
-        @Override
-        public void setValue(String selected) {
-            this.selected = (CompartmentItem) compartments.get(selected);
-        }
-
-        @Override
-        public CompartmentItem getValue() {
-            if (onlyOneChoice()) {
-                return (CompartmentItem) compartments.values().iterator().next();
-            }
-            return selected;
-        }
-
-        @Override
-        public boolean onlyOneChoice() {
-            return compartments.size() == 1;
-        }
-    }
-
     class VaultStep implements Step<CompartmentItem, VaultItem> {
 
         private Map<String, VaultItem> vaults = null;
         private VaultItem selected;
+        private Lookup lookup;
 
-        public Step<CompartmentItem, VaultItem> prepare(CompartmentItem compartment) {
+        public Step<CompartmentItem, VaultItem> prepare(CompartmentItem compartment, Lookup lookup) {
+            this.lookup = lookup;
             ProgressHandle h = ProgressHandle.createHandle(Bundle.MSG_CollectingItems());
             h.start();
             h.progress(Bundle.MSG_CollectingItems_Text());
@@ -313,7 +173,7 @@ public class AddDbConnectionToVault implements ActionListener {
 
         @Override
         public Step getNext() {
-            return new KeyStep().prepare(getValue());
+            return new KeyStep().prepare(getValue(), lookup);
         }
 
         @Override
@@ -340,9 +200,11 @@ public class AddDbConnectionToVault implements ActionListener {
         private Map<String, KeyItem> keys = null;
         private KeyItem selected;
         private VaultItem vault;
+        private Lookup lookup;
 
-        public Step<VaultItem, Pair<VaultItem, KeyItem>> prepare(VaultItem vault) {
+        public Step<VaultItem, Pair<VaultItem, KeyItem>> prepare(VaultItem vault, Lookup lookup) {
             this.vault = vault;
+            this.lookup = lookup;
             ProgressHandle h = ProgressHandle.createHandle(Bundle.MSG_CollectingItems());
             h.start();
             h.progress(Bundle.MSG_CollectingItems_Text());
@@ -373,7 +235,7 @@ public class AddDbConnectionToVault implements ActionListener {
 
         @Override
         public Step getNext() {
-            return new DatasourceNameStep().prepare(getValue());
+            return new DatasourceNameStep().prepare(getValue(), lookup);
         }
 
         @Override
@@ -394,9 +256,11 @@ public class AddDbConnectionToVault implements ActionListener {
     class DatasourceNameStep implements Step<Pair<VaultItem, KeyItem>, Result> {
 
         private Result result = new Result();
+        private Lookup lookup;
 
         @Override
-        public Step<Pair<VaultItem, KeyItem>, Result> prepare(Pair<VaultItem, KeyItem> item) {
+        public Step<Pair<VaultItem, KeyItem>, Result> prepare(Pair<VaultItem, KeyItem> item, Lookup lookup) {
+            this.lookup = lookup;
             result.vault = item.first();
             result.key = item.second();
             return this;
@@ -409,7 +273,7 @@ public class AddDbConnectionToVault implements ActionListener {
 
         @Override
         public Step getNext() {
-            return new OverwriteStep().prepare(result);
+            return new OverwriteStep().prepare(result, lookup);
         }
 
         @Override
@@ -434,9 +298,11 @@ public class AddDbConnectionToVault implements ActionListener {
         private Result result;
         private Set<String> dsNames;
         private String choice;
+        private Lookup lookup;
 
         @Override
-        public Step<Result, Result> prepare(Result result) {
+        public Step<Result, Result> prepare(Result result, Lookup lookup) {
+            this.lookup = lookup;
             this.result = result;
             if (result.datasourceName == null || result.datasourceName.isEmpty()) {
                 return this;
@@ -462,7 +328,7 @@ public class AddDbConnectionToVault implements ActionListener {
 
         @Override
         public Step getNext() {
-            return new PasswordStep().prepare(result);
+            return new PasswordStep().prepare(result, lookup);
         }
 
         @Override
@@ -487,12 +353,13 @@ public class AddDbConnectionToVault implements ActionListener {
     }
 
     class PasswordStep implements Step<Result, Result> {
-
         private Result item;
         private boolean ask;
+        private Lookup lookup;
 
         @Override
-        public Step<Result, Result> prepare(Result item) {
+        public Step<Result, Result> prepare(Result item, Lookup lookup) {
+            this.lookup = lookup;
             item.password = context.getPassword();
             ask = item.password == null || item.password.isEmpty();
             this.item = item;
@@ -511,7 +378,7 @@ public class AddDbConnectionToVault implements ActionListener {
 
         @Override
         public Step getNext() {
-            return new DevopsStep().prepare(item);
+            return new DevopsStep().prepare(item, lookup);
         }
 
         @Override
@@ -526,13 +393,14 @@ public class AddDbConnectionToVault implements ActionListener {
     }
 
     class DevopsStep implements Step<Result, Result> {
-
         private Result item;
         private Map<String, DevopsProjectItem> devopsProjects;
+        private Lookup lookup;
 
         @Override
-        public Step<Result, Result> prepare(Result item) {
+        public Step<Result, Result> prepare(Result item, Lookup lookup) {
             this.item = item;
+            this.lookup = lookup;
             ProgressHandle h = ProgressHandle.createHandle(Bundle.MSG_CollectingItems());
             h.start();
             h.progress(Bundle.MSG_CollectingItems_Text());
@@ -578,6 +446,13 @@ public class AddDbConnectionToVault implements ActionListener {
 
         @Override
         public Step getNext() {
+            NextStepProvider nsProvider = lookup.lookup(NextStepProvider.class);
+            if (nsProvider != null) {
+                Step ns = nsProvider.nextStepFor(this);
+                if (ns != null) {
+                    return ns.prepare(getValue(), lookup);
+                }
+            } 
             return null;
         }
 
@@ -592,7 +467,7 @@ public class AddDbConnectionToVault implements ActionListener {
         }
     }
 
-    static class Result {
+    static final class Result {
         VaultItem vault;
         KeyItem key;
         String datasourceName;
@@ -600,93 +475,27 @@ public class AddDbConnectionToVault implements ActionListener {
         DevopsProjectItem project;
         private boolean update;
     }
-
-    static class Multistep {
-
-        private final LinkedList<Step> steps = new LinkedList<>();
-
-        Multistep(Step firstStep) {
-            steps.add(firstStep);
-        }
-
-        NotifyDescriptor.ComposedInput.Callback createInput() {
-            return new NotifyDescriptor.ComposedInput.Callback() {
-                private int lastNumber = 0;
-
-                private void readValue(Step step, NotifyDescriptor desc) {
-                    String selected = null;
-                    if (!step.onlyOneChoice()) {
-                        if (desc instanceof NotifyDescriptor.QuickPick) {
-                            for (NotifyDescriptor.QuickPick.Item item : ((NotifyDescriptor.QuickPick) desc).getItems()) {
-                                if (item.isSelected()) {
-                                    selected = item.getLabel();
-                                    break;
-                                }
-                            }
-                        } else if (desc instanceof NotifyDescriptor.InputLine) {
-                            selected = ((NotifyDescriptor.InputLine) desc).getInputText();
-                        }
-                        step.setValue(selected);
-                    }
-                }
-
-                @Override
-                public NotifyDescriptor createInput(NotifyDescriptor.ComposedInput input, int number) {
-                    if (number == 1) {
-                        while (steps.size() > 1) {
-                            steps.removeLast();
-                        }
-                        steps.getLast().prepare(null);
-                    } else if (lastNumber > number) {
-                        steps.removeLast();
-                        while(steps.getLast().onlyOneChoice() && steps.size() > 1) {
-                            steps.removeLast();
-                        }
-                        lastNumber = number;
-                        return steps.getLast().createInput();
-                    } else {
-                        readValue(steps.getLast(), input.getInputs()[number - 2]);
-                        steps.add(steps.getLast().getNext());
-                    }
-                    lastNumber = number;
-                    
-                    while(steps.getLast() != null && steps.getLast().onlyOneChoice()) {
-                        steps.add(steps.getLast().getNext());
-                    }
-                    if (steps.getLast() == null) {
-                        steps.removeLast();
-                        return null;
-                    }
-                    return steps.getLast().createInput();
-                }
-            };
-        }
-
-        Object getResult() {
-            return steps.getLast().getValue();
-        }
-    }
-
+    
     @Override
     public void actionPerformed(ActionEvent e) {
-        Multistep multistep = new Multistep(new TenancyStep());
-
-        NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddADBToVault(), 3, multistep.createInput());
-        if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(ci)) {
-            if (multistep.getResult() != null) {
-                Result result = (Result) multistep.getResult();
-                if (result.datasourceName == null || result.datasourceName.isEmpty()) {
+        NextStepProvider nsProvider = NextStepProvider.builder()
+                .stepForClass(Steps.CompartmentStep.class, (s) -> new VaultStep())
+                .stepForClass(DevopsStep.class, (s) -> new ProjectStep())
+                .build();
+        Lookup lookup = Lookups.fixed(nsProvider);
+        Steps.getDefault().executeMultistep(new TenancyStep(), lookup).thenAccept(r -> {
+            Result result = ((Pair<Project, Result>) r).second();
+            Project project = ((Pair<Project, Result>) r).first();
+            if (result.datasourceName == null || result.datasourceName.isEmpty()) {
                     NotifyDescriptor.Message msg = new NotifyDescriptor.Message(Bundle.DatasourceEmpty());
                     DialogDisplayer.getDefault().notify(msg);
                     return;
                 }
-                addDbConnectionToVault(result);
-            }
-        }
-
+                addDbConnectionToVault(result, project);
+        });
     }
 
-    private void addDbConnectionToVault(Result item) {
+    private void addDbConnectionToVault(Result item, Project project) {
         ProgressHandle h = ProgressHandle.createHandle(Bundle.UpdatingVault(item.vault.getName()));
         h.start();
         h.progress(Bundle.ReadingSecrets());
@@ -755,7 +564,14 @@ public class AddDbConnectionToVault implements ActionListener {
                     client.createSecret(request);
                 }
             }
-
+            
+            // Add Vault dependency to the project
+            try {
+                DependencyUtils.addDependency(project, "io.micronaut.oraclecloud", "micronaut-oraclecloud-vault");
+            } catch (IllegalStateException e) {
+                LOG.log(Level.INFO, "Unable to add Vault dependency", e);
+            }
+            
             // Add Vault to the ConfigMap artifact
             DevopsClient devopsClient = DevopsClient.builder().build(OCIManager.getDefault().getActiveProfile().getConfigProvider());
             ListDeployArtifactsRequest request = ListDeployArtifactsRequest.builder()
@@ -906,78 +722,6 @@ public class AddDbConnectionToVault implements ActionListener {
                 .map(entry -> new NotifyDescriptor.QuickPick.Item(entry.getKey(), entry.getValue().getDescription()))
                 .collect(Collectors.toList());
         return new NotifyDescriptor.QuickPick(title, title, items, false);
-    }
-
-    private static Map<String, OCIItem> getFlatCompartment(TenancyItem tenancy) {
-        Map<OCID, FlatCompartmentItem> compartments = new HashMap<>();
-        OCISessionInitiator session = OCIManager.getDefault().getActiveSession();
-        Identity identityClient = session.newClient(IdentityClient.class);
-        String nextPageToken = null;
-
-        do {
-            ListCompartmentsResponse response
-                    = identityClient.listCompartments(
-                            ListCompartmentsRequest.builder()
-                                    .compartmentId(tenancy.getKey().getValue())
-                                    .compartmentIdInSubtree(true)
-                                    .lifecycleState(Compartment.LifecycleState.Active)
-                                    .accessLevel(ListCompartmentsRequest.AccessLevel.Accessible)
-                                    .limit(1000)
-                                    .page(nextPageToken)
-                                    .build());
-            for (Compartment comp : response.getItems()) {
-                FlatCompartmentItem ci = new FlatCompartmentItem(comp) {
-                    FlatCompartmentItem getItem(OCID compId) {
-                        return compartments.get(compId);
-                    }
-                };
-                compartments.put(ci.getKey(), ci);
-            }
-            nextPageToken = response.getOpcNextPage();
-        } while (nextPageToken != null);
-        Map<String, OCIItem> pickItems = computeFlatNames(compartments);
-        pickItems.put(tenancy.getName() + " (root)", tenancy); // NOI18N
-        return pickItems;
-    }
-
-    private static Map<String, OCIItem> computeFlatNames(Map<OCID, FlatCompartmentItem> compartments) {
-        Map<String, OCIItem> pickItems = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        for (FlatCompartmentItem comp : compartments.values()) {
-            pickItems.put(comp.getName(), comp);
-        }
-        return pickItems;
-    }
-
-    private static abstract class FlatCompartmentItem extends CompartmentItem {
-
-        private final OCID parentId;
-        private String flatName;
-
-        private FlatCompartmentItem(Compartment ociComp) {
-            super(OCID.of(ociComp.getId(), "Compartment"), ociComp.getCompartmentId(), ociComp.getName()); // NOI18N
-            setDescription(ociComp.getDescription());
-            parentId = OCID.of(ociComp.getCompartmentId(), "Compartment"); // NOI18N
-        }
-
-        public String getName() {
-            if (parentId.getValue() == null) {
-                return "";
-            }
-            if (flatName == null) {
-                String parentFlatName = "";
-                FlatCompartmentItem parentComp = getItem(parentId);
-                if (parentComp != null) {
-                    parentFlatName = parentComp.getName();
-                }
-                flatName = super.getName();
-                if (!parentFlatName.isEmpty()) {
-                    flatName = parentFlatName + "/" + flatName; // NOI18N
-                }
-            }
-            return flatName;
-        }
-
-        abstract FlatCompartmentItem getItem(OCID compId);
     }
 
     protected static Map<String, DevopsProjectItem> getDevopsProjects(String compartmentId) {

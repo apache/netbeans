@@ -25,12 +25,14 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
  *
  * @author Jan Horvath
  */
-public class ComputeInstanceItem extends OCIItem {
+public final class ComputeInstanceItem extends OCIItem {
 
     public ComputeInstanceItem(OCID id, String compartmentId, String name) {
         super(id, compartmentId, name);
     }
-    
-    
+
+    public ComputeInstanceItem() {
+        super();
+    }
     
 }

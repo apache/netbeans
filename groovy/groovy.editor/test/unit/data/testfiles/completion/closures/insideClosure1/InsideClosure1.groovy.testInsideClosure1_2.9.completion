@@ -50,6 +50,14 @@ CLASS      InvalidObjectException                     null
 CLASS      InvalidPropertiesFormatExcepti             null
 CLASS      Iterable                                   null
 CLASS      Iterator                                   null
+METHOD     identity(Closure)                          Object
+METHOD     inject(Closure)                            Object
+METHOD     inject(Object, Closure)                    Object
+METHOD     inspect()                                  String
+METHOD     invokeMethod(String, Object)               Object
+METHOD     is(Object)                                 boolean
+METHOD     isCase(Object)                             boolean
+METHOD     iterator()                                 Iterator
 VARIABLE   it                                         Object
 KEYWORD    if                                         null
 KEYWORD    in                                         null

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.2
+#Version 2.3
 
 CLSS public abstract interface java.io.Serializable
 
@@ -165,7 +165,10 @@ fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_2_2
 fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_2_3
 fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_3_0
 fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_4_0
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_4_1
 meth public boolean isAtLeast(org.netbeans.modules.web.jsfapi.api.JsfVersion)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public boolean isAtMost(org.netbeans.modules.web.jsfapi.api.JsfVersion)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public java.lang.String getShortName()
 meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion latest()
@@ -213,8 +216,10 @@ supr java.lang.Enum<org.netbeans.modules.web.jsfapi.api.LibraryType>
 
 CLSS public final org.netbeans.modules.web.jsfapi.api.NamespaceUtils
 cons public init()
+fld public final static java.lang.String JAKARTA_ORG_LOCATION = "jakarta.faces"
 fld public final static java.lang.String JCP_ORG_LOCATION = "http://xmlns.jcp.org"
 fld public final static java.lang.String SUN_COM_LOCATION = "http://java.sun.com"
+fld public final static java.util.Map<java.lang.String,java.lang.String> JAKARTA_NS_MAPPING
 fld public final static java.util.Map<java.lang.String,java.lang.String> NS_MAPPING
 meth public static <%0 extends java.lang.Object> {%%0} getForNs(java.util.Map<java.lang.String,{%%0}>,java.lang.String)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()

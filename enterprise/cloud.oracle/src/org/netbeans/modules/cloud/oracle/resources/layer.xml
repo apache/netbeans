@@ -34,13 +34,13 @@
         </file>
         
         <folder name="Oracle">
-<!--            <folder name="Assets">
+            <folder name="Assets">
                 <file name="Assets.instance">
                     <attr name="instanceCreate" methodvalue="org.netbeans.modules.cloud.oracle.assets.RootNode.instance"/>
                     <attr name="instanceClass" stringvalue="org.openide.nodes.Node"/>
                      <attr name="instanceOf" stringvalue="org.openide.nodes.Node"/>
                 </file>
-            </folder>-->
+            </folder>
             <folder name="Suggested">
                 <folder name="Nodes">
                     <file name="org-netbeans-modules-cloud-oracle-SuggestedNode-createNode.instance">

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 5.26
+#Version 5.27
 
 CLSS public abstract interface java.io.Serializable
 
@@ -563,6 +563,7 @@ fld public final static int V1_8 = 52
 fld public final static int V20 = 64
 fld public final static int V21 = 65
 fld public final static int V22 = 66
+fld public final static int V23 = 67
 fld public final static int V9 = 53
 fld public final static int V_PREVIEW = -65536
 fld public final static java.lang.Integer DOUBLE

@@ -20,13 +20,14 @@ package org.netbeans.modules.cloud.oracle.bucket;
 
 import com.oracle.bmc.objectstorage.ObjectStorageClient;
 import com.oracle.bmc.objectstorage.requests.ListBucketsRequest;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
-import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.OCINode;
 import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
+import org.openide.nodes.Children;
 import org.openide.util.NbBundle;
 
 /**
@@ -41,7 +42,7 @@ public class BucketNode extends OCINode {
     private static final String BUCKET_ICON = "org/netbeans/modules/cloud/oracle/resources/bucket.svg"; // NOI18N
 
     public BucketNode(BucketItem bucket) {
-        super(bucket);
+        super(bucket, Children.LEAF);
         setName(bucket.getName());
         setDisplayName(bucket.getName());
         setIconBaseWithExtension(BUCKET_ICON);
@@ -64,20 +65,21 @@ public class BucketNode extends OCINode {
 
             ListBucketsRequest listBucketsRequest = ListBucketsRequest.builder()
                     .compartmentId(compartmentId.getKey().getValue())
-                    .namespaceName(session.getTenantId())
+                    .namespaceName(session.getTenancy().get().getName())
                     .limit(88)
                     .build();
 
-            return client.listBuckets(listBucketsRequest)
+            List<BucketItem> x = client.listBuckets(listBucketsRequest)
                     .getItems()
                     .stream()
                     .map(d -> new BucketItem(
-                        OCID.of(d.getName(), "Bucket"), //NOI18N
+                            OCID.of(d.getName(), "Bucket"), //NOI18N
                             compartmentId.getKey().getValue(),
-                        d.getName(),
-                    d.getNamespace())
+                            d.getName(),
+                            d.getNamespace())
                     )
                     .collect(Collectors.toList());
+            return x;
         };
     }
 

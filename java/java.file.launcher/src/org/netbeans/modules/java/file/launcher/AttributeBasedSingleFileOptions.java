@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.file.launcher;
 
+import java.net.URI;
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
@@ -92,6 +93,11 @@ public class AttributeBasedSingleFileOptions implements SingleFileOptionsQueryIm
             vmOptionsObj = root != null ? root.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS) : null;
 
             return vmOptionsObj != null ? (String) vmOptionsObj : "";
+        }
+
+        @Override
+        public URI getWorkDirectory() {
+            return root != null ? root.toURI() : source.getParent().toURI();
         }
 
         @Override

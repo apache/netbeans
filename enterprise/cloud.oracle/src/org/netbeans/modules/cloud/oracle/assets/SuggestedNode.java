@@ -21,6 +21,7 @@ package org.netbeans.modules.cloud.oracle.assets;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
 import org.netbeans.modules.cloud.oracle.OCINode;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import org.openide.nodes.Children;
 
 /**
  *
@@ -31,7 +32,7 @@ public class SuggestedNode extends OCINode {
     private static final String SUGGEST_ICON = "org/netbeans/modules/cloud/oracle/resources/suggest.svg"; // NOI18N
     
     public SuggestedNode(OCIItem item) {
-        super(item);
+        super(item, Children.LEAF);
         setName(item.getName()); 
         setDisplayName(item.getName());
         setIconBaseWithExtension(SUGGEST_ICON);

@@ -156,10 +156,16 @@ public class StatFilesTest extends NbTestCase {
         monitor.reset();
         final FileLock lock = fobj.lock();
         try {
+            // TODO fragile
             int expectedCount = 0;
             if (Utilities.isUnix()) {
                 // called File.toURI() from FileUtil.normalizeFile()
-                expectedCount = 1;
+                expectedCount++;
+                // sun.awt.PlatformGraphicsInfo.getDefaultHeadlessProperty probes a .so or .dylib
+                // Runtime.version().feature() > 18
+                if (Integer.parseInt(System.getProperty("java.version").split("\\.")[0]) > 18) {
+                    expectedCount++;
+                }
             }
             // we check canWrite once
             monitor.getResults().assertResult(1, StatFiles.WRITE);

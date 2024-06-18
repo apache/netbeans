@@ -1139,4 +1139,65 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/php83/typedClassConstants_02.php", options, false, true);
     }
 
+    public void testGH7185_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/issueGH7185_01.php", options, false, false);
+    }
+
+    public void testGH7185_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/issueGH7185_02.php", options, false, false);
+    }
+
+    public void testGH7185_03() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/issueGH7185_03.php", options, false, false);
+    }
+
+    public void testGH7185_04() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/issueGH7185_04.php", options, false, false);
+    }
+
+    public void testGH7185_05() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/issueGH7185_05.php", options, false, false);
+    }
+
+    public void testGH7140_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        reformatFileContents("testfiles/formatting/issueGH7140.php", options, false, true);
+    }
+
+    public void testGH7140_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 8);
+        reformatFileContents("testfiles/formatting/issueGH7140.php", options, false, true);
+    }
+
+    public void testGH7454_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        reformatFileContents("testfiles/formatting/issueGH7454.php", options, false, true);
+    }
+
+    public void testGH7454_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 8);
+        reformatFileContents("testfiles/formatting/issueGH7454.php", options, false, true);
+    }
+
+    public void testGH7172_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        reformatFileContents("testfiles/formatting/issueGH7172.php", options, false, true);
+    }
+
+    public void testGH7172_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 8);
+        reformatFileContents("testfiles/formatting/issueGH7172.php", options, false, true);
+    }
+
 }

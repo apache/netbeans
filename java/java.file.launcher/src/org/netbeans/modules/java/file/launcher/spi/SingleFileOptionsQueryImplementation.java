@@ -18,7 +18,9 @@
  */
 package org.netbeans.modules.java.file.launcher.spi;
 
+import java.net.URI;
 import javax.swing.event.ChangeListener;
+import org.netbeans.api.annotations.common.NonNull;
 import org.openide.filesystems.FileObject;
 
 public interface SingleFileOptionsQueryImplementation {
@@ -27,6 +29,9 @@ public interface SingleFileOptionsQueryImplementation {
 
     public interface Result {
         public String getOptions();
+        public default @NonNull URI getWorkDirectory() {
+            throw new UnsupportedOperationException();
+        }
         public void addChangeListener(ChangeListener l);
         public void removeChangeListener(ChangeListener l);
     }

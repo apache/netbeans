@@ -52,6 +52,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
 import org.netbeans.modules.php.editor.parser.astnodes.AttributeDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
+import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
 import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.CastExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
@@ -120,6 +121,8 @@ import org.openide.util.Exceptions;
 public class FormatVisitor extends DefaultVisitor {
 
     private static final Logger LOGGER = Logger.getLogger(FormatVisitor.class.getName());
+    private static final int SPACE_LENGTH = 1;
+    private static final int CONST_AND_SPACE_LENGTH = "const ".length(); // NOI18N
     private final BaseDocument document;
     private final List<FormatToken> formatTokens;
     private final TokenSequence<PHPTokenId> ts;
@@ -1097,7 +1100,9 @@ public class FormatVisitor extends DefaultVisitor {
                 }
                 if (ts.token().id() == PHPTokenId.PHP_TOKEN
                         || ts.token().id() == PHPTokenId.PHP_OPERATOR) {
-                    handleGroupAlignment(node.getNames().get(0));
+                    // GH-7190
+                    int nodeLength = computeConstNodeNameLength(node);
+                    handleGroupAlignment(nodeLength);
                     addFormatToken(formatTokens);
                 } else {
                     ts.movePrevious();
@@ -1134,6 +1139,21 @@ public class FormatVisitor extends DefaultVisitor {
                 formatTokens.add(new FormatToken.IndentToken(node.getEndOffset(), options.continualIndentSize * -1));
             }
         }
+    }
+
+    private int computeConstNodeNameLength(ConstantDeclaration node) {
+        int modifierLength = 0;
+        if (!Modifier.isImplicitPublic(node.getModifier())) {
+            modifierLength = node.getModifierString().length() + SPACE_LENGTH;
+        }
+        Expression constType = node.getConstType();
+        int constTypeLength = getTypeLength(constType);
+        if (constTypeLength != 0) {
+            constTypeLength += SPACE_LENGTH;
+        }
+        Identifier constName = node.getNames().get(0);
+        int constNameLength = constName.getEndOffset() - constName.getStartOffset();
+        return modifierLength + CONST_AND_SPACE_LENGTH + constTypeLength + constNameLength;
     }
 
     @Override
@@ -1526,6 +1546,17 @@ public class FormatVisitor extends DefaultVisitor {
 
     @Override
     public void visit(LambdaFunctionDeclaration node) {
+        // GH-7454 keep isMethodInvocationShifted
+        // e.g.
+        // Example::staticMethod()
+        //    ->method(function() {
+        //        Example::staticMethod()
+        //            ->method();
+        //        });
+        boolean isMethodInvocationShiftedHolder = isMethodInvocationShifted;
+        if (isMethodInvocationShifted) {
+            isMethodInvocationShifted = false;
+        }
         boolean disableIndent = disableIndentForFunctionInvocation(node.getStartOffset());
         scan(node.getAttributes());
         List<FormalParameter> parameters = node.getFormalParameters();
@@ -1571,6 +1602,7 @@ public class FormatVisitor extends DefaultVisitor {
         if (disableIndent) {
             enableIndentForFunctionInvocation(node.getEndOffset());
         }
+        isMethodInvocationShifted = isMethodInvocationShiftedHolder;
     }
 
     private boolean disableIndentForFunctionInvocation(int offset) {
@@ -1747,10 +1779,8 @@ public class FormatVisitor extends DefaultVisitor {
         }
         scan(node.getFunctionName());
         List<Expression> parameters = node.getParameters();
-        if (parameters != null && parameters.size() > 0) {
-            boolean addIndentation = !(path.get(1) instanceof ReturnStatement
-                    || path.get(1) instanceof Assignment
-                    || (path.size() > 2 && path.get(1) instanceof MethodInvocation && path.get(2) instanceof Assignment));
+        if (parameters != null && !parameters.isEmpty()) {
+            boolean addIndentation = addIndentToFunctionInvocation();
             FormatToken.IndentToken indentToken = new FormatToken.IndentToken(node.getFunctionName().getEndOffset(), options.continualIndentSize);
             if (addIndentation) {
                 formatTokens.add(indentToken);
@@ -1919,6 +1949,31 @@ public class FormatVisitor extends DefaultVisitor {
         return addIndent;
     }
 
+    private boolean addIndentToFunctionInvocation() {
+        boolean addIndentation = !(path.get(1) instanceof ReturnStatement
+                    || path.get(1) instanceof Assignment
+                    || (path.size() > 2 && path.get(1) instanceof MethodInvocation && path.get(2) instanceof Assignment));
+        if (!addIndentation && path.size() > 1 && path.get(1) instanceof MethodInvocation) {
+            // GH-7172
+            // e.g.
+            // $example = (new Ex())
+            //     ->method(
+            //         $param
+            //     );
+            MethodInvocation method = (MethodInvocation) path.get(1);
+            int start = method.getDispatcher().getEndOffset();
+            int end = method.getMethod().getStartOffset();
+            try {
+                if (document.getText(start, end - start).contains("\n")) { // NOI18N
+                    addIndentation = true;
+                }
+            } catch (BadLocationException ex) {
+                LOGGER.log(Level.WARNING, "Invalid offset: {0}", ex.offsetRequested()); // NOI18N
+            }
+        }
+        return addIndentation;
+    }
+
     @Override
     public void visit(InfixExpression node) {
         scan(node.getLeft());
@@ -2067,7 +2122,7 @@ public class FormatVisitor extends DefaultVisitor {
                 if (document.getText(startText, endText - startText).contains("\n")) {
                     shift = true;
                     addAllUntilOffset(node.getStartOffset());
-                    boolean addIndent = !(path.size() > 1 && (path.get(1) instanceof Assignment));
+                    boolean addIndent = addIndentToMethodInvocation();
 
                     // anonymous classes
                     if (options.wrapMethodCallArgs != CodeStyle.WrapStyle.WRAP_ALWAYS) {
@@ -2101,6 +2156,33 @@ public class FormatVisitor extends DefaultVisitor {
         if (!shift) {
             super.visit(node);
         }
+    }
+
+    private boolean addIndentToMethodInvocation() {
+        // GH-7172
+        // e.g.
+        // $example = (new Ex())
+        //     ->method(
+        //         param: $param
+        //     )
+        //     ->field;
+        boolean addIndent = false;
+        if (path.size() > 1) {
+            ASTNode parent = path.get(1);
+            if (parent instanceof FieldAccess) {
+                int index = 1;
+                while (index < path.size()) {
+                    index++;
+                    parent = path.get(index);
+                    if (parent instanceof FieldAccess) {
+                        continue;
+                    }
+                    break;
+                }
+            }
+            addIndent = !(parent instanceof Assignment);
+        }
+        return addIndent;
     }
 
     @Override
@@ -2145,7 +2227,7 @@ public class FormatVisitor extends DefaultVisitor {
         }
 
         boolean addIndent = !isAnonymousClass(node.getExpression())
-                && !(path.size() > 2 && path.get(2) instanceof LambdaFunctionDeclaration) // #259111
+                && !(path.size() > 3 && path.get(2) instanceof LambdaFunctionDeclaration && !(path.get(3) instanceof FunctionInvocation)) // #259111 GH-7140
                 && !(node.getExpression() instanceof LambdaFunctionDeclaration) // NETBEANS-4970
                 && !(node.getExpression() instanceof MatchExpression);
 
@@ -2175,7 +2257,12 @@ public class FormatVisitor extends DefaultVisitor {
                 assert (parent instanceof FieldsDeclaration);
                 FieldsDeclaration fieldsDeclaration = (FieldsDeclaration) path.get(1);
                 if (ts.token().id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals("=", ts.token().text())) { //NOI18N
-                    int realNodeLength = fieldsDeclaration.getModifierString().length() + " ".length() + name.getEndOffset() - name.getStartOffset(); //NOI18N
+                    // GH-7190
+                    int fieldTypeLength = getTypeLength(fieldType);
+                    if (fieldTypeLength != 0) {
+                        fieldTypeLength += SPACE_LENGTH;
+                    }
+                    int realNodeLength = fieldsDeclaration.getModifierString().length() + SPACE_LENGTH + fieldTypeLength + name.getEndOffset() - name.getStartOffset();
                     handleGroupAlignment(realNodeLength);
                     addFormatToken(formatTokens);
                 } else {
@@ -2634,7 +2721,16 @@ public class FormatVisitor extends DefaultVisitor {
                             }
                             tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_INDENT, newOffset, "\n" + ts.token().text().toString()));
                             if (ts.moveNext() && ts.token().id() == PHPTokenId.PHP_LINE_COMMENT) {
-                                tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_LINE_COMMENTS, ts.offset()));
+                                ASTNode parent = path.get(0);
+                                if (!(parent instanceof IfStatement) || isCurly) {
+                                    // GH-7185 don't add this to an "if" statement without curly braces
+                                    // e.g.
+                                    // if (true)
+                                    //     $example = 1; // comment1
+                                    //
+                                    // // comment2
+                                    tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_LINE_COMMENTS, ts.offset()));
+                                }
                             }
                             // #268710 for adding/checking the PHP_LINE_COMMENT token later
                             ts.movePrevious();
@@ -3327,6 +3423,23 @@ public class FormatVisitor extends DefaultVisitor {
             value = !(last.getId() == FormatToken.Kind.TEXT && last.getOffset() >= ts.offset());
         }
         return value;
+    }
+
+    private int getTypeLength(@NullAllowed Expression expression) {
+        int typeLength = 0;
+        if (expression != null) {
+            int start = expression.getStartOffset();
+            int end = expression.getEndOffset();
+            try {
+                String typeString = document.getText(start, end - start);
+                // e.g. `private array |   int | null $a  = 1;
+                typeLength = typeString.replace(" ", "").length(); // NOI18N
+            } catch (BadLocationException ex) {
+                LOGGER.log(Level.WARNING, "Invalid offset: {0}", ex.offsetRequested()); // NOI18N
+                typeLength = expression.getEndOffset() - expression.getStartOffset() + SPACE_LENGTH;
+            }
+        }
+        return typeLength;
     }
 
     /**

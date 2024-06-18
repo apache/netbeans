@@ -23,6 +23,7 @@ METHOD     collect(Closure)                           List
 METHOD     collect(Collection, Closure)               Collection
 METHOD     collectReplacements(Closure)               String
 METHOD     collectReplacements(List)                  String
+METHOD     compare(CharSequence, CharSequ  [STATIC,   int
 METHOD     compareTo(Object)               [PUBLIC]   int
 METHOD     compareTo(String)               [PUBLIC]   int
 METHOD     compareTo(T)                    [PUBLIC]   int
@@ -294,6 +295,7 @@ FIELD      CASE_INSENSITIVE_ORDER          [STATIC,   Comparator<String>
 FIELD      EMPTY                           [STATIC,   GString
 FIELD      EMPTY_OBJECT_ARRAY              [STATIC,   Object[]
 FIELD      EMPTY_STRING_ARRAY              [STATIC,   String[]
+FIELD      blank                           [PUBLIC]   boolean
 FIELD      bytes                           [PUBLIC]   byte[]
 FIELD      class                           [PUBLIC]   Class
 FIELD      empty                           [PUBLIC]   boolean

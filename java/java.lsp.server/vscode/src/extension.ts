@@ -767,7 +767,11 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     }));
     context.subscriptions.push(commands.registerCommand('nbls.workspace.symbols', async (query) => {
         const c = await client;
-        return (await c.sendRequest<SymbolInformation[]>("workspace/symbol", { "query": query })) ?? [];
+        return (await c.sendRequest<SymbolInformation[]>('workspace/symbol', { 'query': query })) ?? [];
+    }));
+    context.subscriptions.push(commands.registerCommand('nbls.workspace.symbol.resolve', async (symbol) => {
+        const c = await client;
+        return (await c.sendRequest<SymbolInformation>('workspaceSymbol/resolve', symbol)) ?? null;
     }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.java.complete.abstract.methods', async () => {
         const active = vscode.window.activeTextEditor;

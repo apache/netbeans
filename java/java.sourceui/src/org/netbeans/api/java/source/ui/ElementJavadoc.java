@@ -120,8 +120,11 @@ import javax.tools.SimpleJavaFileObject;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
+import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 import javax.lang.model.element.RecordComponentElement;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.queries.SourceLevelQuery.Profile;
@@ -1416,7 +1419,18 @@ public class ElementJavadoc {
             }
         }
 
-        String html = HtmlRenderer.builder().build().render(Parser.builder().build().parse(markdownSource.toString()));
+        TablesExtension tablesExtension = TablesExtension.create();
+
+        Parser.Builder parserBuilder = Parser.builder();
+        tablesExtension.extend(parserBuilder);
+
+        HtmlRenderer.Builder rendererBuilder = HtmlRenderer.builder();
+        tablesExtension.extend(rendererBuilder, "HTML");
+
+        String html = rendererBuilder.build()
+                                     .render(parserBuilder.build()
+                                                          .parse(markdownSource.toString()));
+
         if (html.startsWith("<p>")) {
             html = html.substring("<p>".length());
         }

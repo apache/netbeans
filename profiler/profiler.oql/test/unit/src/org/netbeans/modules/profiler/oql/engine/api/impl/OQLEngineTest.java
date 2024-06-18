@@ -37,7 +37,6 @@ import org.netbeans.lib.profiler.heap.JavaClass;
 import org.netbeans.modules.profiler.oql.engine.api.OQLEngine;
 import org.netbeans.modules.profiler.oql.engine.api.OQLEngine.ObjectVisitor;
 import static org.junit.Assert.*;
-import org.netbeans.lib.profiler.heap.GCRoot;
 
 /**
  *
@@ -51,6 +50,12 @@ public class OQLEngineTest {
 
     @Before
     public void setUp() throws IOException, URISyntaxException {
+        // Ensure polyglot can be loaded cleanly and executed. Normally set by
+        // org.netbeans.libs.graalsdk.impl.Installer, when loaded as a netbeans
+        // module
+        System.setProperty("polyglot.engine.WarnInterpreterOnly", "false");
+        System.setProperty("truffle.UseFallbackRuntime", "true");
+
         URL url = getClass().getResource("small_heap.bin");
         instance = new OQLEngine(HeapFactory.createHeap(new File(url.toURI())));
     }

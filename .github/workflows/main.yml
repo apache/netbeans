@@ -1217,21 +1217,11 @@ jobs:
       - name: platform/o.n.bootstrap
         run: ant $OPTS -f platform/o.n.bootstrap test
 
-      - name: Set up JDK 11 for platform/templates
-        uses: actions/setup-java@v4
-        with:
-          java-version: 11
-          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      # TODO tests rely on javax.script.ScriptEngine / js which locks this to JDK 11
       - name: platform/templates
         run: ant $OPTS -f platform/templates test
 
       - name: platform/api.templates
         run: ant $OPTS -f platform/api.templates test
-
-      - name: platform/openide.loaders TemplatesMimeTypeTest
-        run:  ant $OPTS -f platform/openide.loaders test -Dtest.config.default.includes=**/TemplatesMimeTypeTest.class -Dtest.config.default.excludes=""
 
       - name: Create Test Summary
         uses: test-summary/action@v2
@@ -1594,7 +1584,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
       fail-fast: false
     steps:
 
@@ -1620,7 +1610,6 @@ jobs:
       - name: profiler
         run: ant $OPTS -f profiler/profiler test-unit
 
-      # TODO OQL requires js script engine which locks this to JDK 11
       - name: profiler.oql
         run: ant $OPTS -f profiler/profiler.oql test
 
@@ -1796,13 +1785,6 @@ jobs:
       - name: webcommon/web.inspect
         run: ant $OPTS -f webcommon/web.inspect test
 
-      - name: Set up JDK 11 for webcommon/api.knockout
-        uses: actions/setup-java@v4
-        with:
-          java-version: 11
-          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      # TODO: requires js script engine
       - name: webcommon/api.knockout
         run: ant $OPTS -f webcommon/api.knockout test
 

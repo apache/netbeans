@@ -34,6 +34,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.junit.RandomlyFails;
 import org.openide.util.Utilities;
 import org.openide.util.test.TestFileUtils;
 import org.w3c.dom.CDATASection;
@@ -49,9 +50,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class XMLUtilTest extends NbTestCase {
+public class XMLUtil2Test extends NbTestCase {
     
-    public XMLUtilTest(String testName) {
+    public XMLUtil2Test(String testName) {
         super(testName);
     }
     
@@ -316,7 +317,7 @@ public class XMLUtilTest extends NbTestCase {
         // While the Mantis serializer inserts a useless line break in the middle...
         // so we don't check formatting on that part.
         // Also serializers may arbitrarily reorder the doctype, so don't even look at it (just make sure it is there).
-        String doctype = "<!DOCTYPE p PUBLIC \"random DTD\" \"" + XMLUtilTest.class.getResource("random.dtd") + "\">\n";
+        String doctype = "<!DOCTYPE p PUBLIC \"random DTD\" \"" + XMLUtil2Test.class.getResource("random.dtd") + "\">\n";
         String data =
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 doctype +
@@ -358,19 +359,6 @@ public class XMLUtilTest extends NbTestCase {
         String regexp = "\\Q" + fuzzy.replaceAll("\\s+", "\\\\E\\\\s+\\\\Q") + "\\E";
         //System.err.println("regexp='" + regexp + "' text='" + text + "' fuzzy='" + fuzzy + "' result='" + text.replaceFirst(regexp, "") + "'");
         return text.replaceFirst(regexp, "");
-    }
-    
-    public void testSignificantWhitespace() throws Exception {
-        String data =
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<r>\n" +
-                "    <p>This is <em>not</em> a test!</p>\n" +
-                "</r>\n";
-        Document doc = XMLUtil.parse(new InputSource(new StringReader(data)), false, false, null, null);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        XMLUtil.write(doc, baos, "UTF-8");
-        String data2 = baos.toString().replace("\r\n", "\n");
-        assertEquals("identity replacement should not mess up significant whitespace", data, data2);
     }
     
     public void testDocumentLeak() throws Exception {

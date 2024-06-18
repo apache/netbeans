@@ -1059,6 +1059,12 @@ jobs:
       - name: platform/openide.text
         run: .github/retry.sh ant $OPTS -f platform/openide.text test
 
+      - name: platform/openide.text
+        run: .github/retry.sh ant $OPTS -f platform/openide.text test
+
+      - name: platform/openide.util.ui
+        run: ant $OPTS -f platform/openide.util.ui test
+
       - name: Set up JDK 8 for incompatibe tests
         uses: actions/setup-java@v4
         with:
@@ -1068,9 +1074,6 @@ jobs:
       # TODO fix JDK 11 incompatibilities
       - name: platform/lib.uihandler
         run: .github/retry.sh ant $OPTS -f platform/lib.uihandler test
-
-      - name: platform/openide.util.ui
-        run: ant $OPTS -f platform/openide.util.ui test
 
       # isolation required by netbinox tests
       - name: isolate platform build

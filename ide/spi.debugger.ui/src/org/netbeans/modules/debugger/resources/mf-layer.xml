@@ -330,6 +330,11 @@
         </folder>
 
         <folder name="Modes">
+            <folder name="navigator">
+                <file name="breakpointsView.wstcref" url="modes/navigator/breakpoints.wstcref">
+                    <attr name="position" intvalue="400"/>
+                </file>
+            </folder>
             <folder name="output">
                 <file name="sources.wstcref" url="modes/output/sources.wstcref">
                     <attr name="position" intvalue="600"/>
@@ -345,9 +350,6 @@
                 </file>
                 <file name="callstackView.wstcref" url="modes/output/callstack.wstcref">
                     <attr name="position" intvalue="300"/>
-                </file>
-                <file name="breakpointsView.wstcref" url="modes/output/breakpoints.wstcref">
-                    <attr name="position" intvalue="400"/>
                 </file>
                 <file name="sessionsView.wstcref" url="modes/output/sessions.wstcref">
                     <attr name="position" intvalue="700"/>

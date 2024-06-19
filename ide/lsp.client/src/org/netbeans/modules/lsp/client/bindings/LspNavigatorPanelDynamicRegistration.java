@@ -27,6 +27,7 @@ import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.navigator.NavigatorPanel;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -42,8 +43,18 @@ public final class LspNavigatorPanelDynamicRegistration implements NavigatorPane
                 if (bindings != null) {
                     return Collections.singletonList(NavigatorPanelImpl.INSTANCE);
                 } else {
-                    for (StructureProvider sp : MimeLookup.getLookup(file.getMIMEType()).lookupAll(StructureProvider.class)) {
+                    String mime = file.getMIMEType();
+                    for (StructureProvider sp : MimeLookup.getLookup(mime).lookupAll(StructureProvider.class)) {
                         if (sp != null) {
+                            FileObject navigators = FileUtil.getConfigFile("Navigator/Panels");
+                            if (navigators != null) {
+                                FileObject mimeFolder = navigators.getFileObject(mime);
+                                if (mimeFolder != null && mimeFolder.getChildren().length > 0) {
+                                    // don't use StructureProvider when there is normal
+                                    // NavigatorPanel registration for the MIME type
+                                    return Collections.emptyList();
+                                }
+                            }
                             return Collections.singletonList(LspStructureNavigatorPanel.INSTANCE);
                         }
                     }

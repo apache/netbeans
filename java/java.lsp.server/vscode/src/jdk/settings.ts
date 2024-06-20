@@ -242,18 +242,39 @@ class JavaEnvArrSetting extends JavaEnvSetting {
 
 }
 
-class ProjectJavaSettings extends Setting {
+interface NamedJDK {
+    name : string;
+    path: string;
+}
 
-    constructor(name: string, property: string) {
-        super(name, property);
+class ProjectJavaSettings extends Setting {
+    readonly namedProperty : string;
+
+    constructor(name: string, namedProperty: string, simpleProperty : string) {
+        super(name, simpleProperty);
+        this.namedProperty = namedProperty;
     }
 
     getSetting(): string {
         return this.property;
     }
 
-    private getDefinitions(): { name: string, path: string }[] | undefined {
-        return vscode.workspace.getConfiguration().get<any>(this.property);
+    private getNamedDefinitions() : NamedJDK[] | undefined {
+        return vscode.extensions.getExtension(JDTLS_EXTENSION_ID) ?
+            vscode.workspace.getConfiguration().get<any>(this.namedProperty) : undefined;
+    }
+
+    private getDefinitions(): NamedJDK[] {
+        let ret : NamedJDK[] = [];
+        let named : NamedJDK[] | undefined  =  this.getNamedDefinitions();
+        let simple = vscode.workspace.getConfiguration().get<any>(this.property);
+        if (named) {
+            ret.push(...named);
+        }
+        if (!named || (simple && !named.find(j => j.path === simple))) {
+            ret.push({ name: "", path: simple});
+        }
+        return ret;
     }
 
     getCurrent(): string | undefined {
@@ -262,7 +283,7 @@ class ProjectJavaSettings extends Setting {
         if (Array.isArray(definitions)) {
             for (const definition of definitions) {
                 if (definition.name?.length && definition.path?.length) {
-                    current.push(`${definition.name}: ${definition.path}`);
+                    current.push(`${definition.name ? `${definition.name}: ` : ""}${definition.path}`);
                 }
             }
         }
@@ -291,25 +312,27 @@ class ProjectJavaSettings extends Setting {
         if (details?.major) {
             const major = `${details.major <= 8 ? '1.' : ''}${details.major}`;
             const version = `JavaSE-${major}`;
-            const definitions = this.getDefinitions() || []; // NOTE: merges User & Workspace definitions
-            if (Array.isArray(definitions)) {
-                let updated = false;
-                for (const definition of definitions) {
-                    if (definition.name === version) {
-                        definition.path = jdk.javaHome;
-                        updated = true;
-                        break;
-                    }
-                }
-                if (!updated) {
-                    definitions.push({
-                        name: version,
-                        path: jdk.javaHome
-                    });
+
+            const definitions = this.getNamedDefinitions() || []; // NOTE: merges User & Workspace definitions
+            let updated = false;
+            for (const definition of definitions) {
+                if (definition.name === version) {
+                    definition.path = jdk.javaHome;
+                    updated = true;
+                    break;
                 }
             }
+            if (!updated) {
+                definitions.push({
+                    name: version,
+                    path: jdk.javaHome
+                });
+            }
             try {
-                await vscode.workspace.getConfiguration().update(this.property, definitions, scope);
+                if (vscode.extensions.getExtension(JDTLS_EXTENSION_ID)) {
+                    await vscode.workspace.getConfiguration().update(this.namedProperty, definitions, scope);
+                }
+                await vscode.workspace.getConfiguration().update(this.property, jdk.javaHome, scope);
                 return true;
             } catch (err) {
                 vscode.window.showErrorMessage(`Failed to update property ${this.getSetting()}: ${err}`);
@@ -335,9 +358,10 @@ function jdtlsSetting(): Setting {
 }
 
 const PROJECTS_SETTINGS_NAME = 'Java Runtime for Projects';
-const PROJECTS_SETTINGS_PROPERTY = 'java.configuration.runtimes';
+const PROJECTS_SETTINGS_PROPERTY_NAMED = 'java.configuration.runtimes';
+const PROJECTS_SETTINGS_PROPERTY = 'netbeans.project.jdkhome';
 export function projectsSettings(): Setting {
-    return new ProjectJavaSettings(PROJECTS_SETTINGS_NAME, PROJECTS_SETTINGS_PROPERTY);
+    return new ProjectJavaSettings(PROJECTS_SETTINGS_NAME, PROJECTS_SETTINGS_PROPERTY_NAMED, PROJECTS_SETTINGS_PROPERTY);
 }
 
 const TERMINAL_JAVAHOME_SETTINGS_NAME = 'Integrated Terminal JAVA_HOME';
@@ -368,8 +392,9 @@ export function getAvailable(): Setting[] {
 
     if (vscode.extensions.getExtension(JDTLS_EXTENSION_ID)) {
         settings.push(jdtlsSetting());
-        settings.push(projectsSettings());
     }
+
+    settings.push(projectsSettings());
 
     settings.push(terminalJavaHomeSetting());
     settings.push(terminalPathSetting());

@@ -154,6 +154,7 @@
                           <Component id="cbGroupFields" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="betweenUseTypesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="endOfFileCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="emptyFunctionBodyCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -267,7 +268,9 @@
                           <Component id="maxPreservedBlankLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxPreservedBlankField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="emptyFunctionBodyCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                       <Component id="endOfFileCheckBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="cbGroupFields" min="-2" max="-2" attributes="0"/>
@@ -829,6 +832,13 @@
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="org/netbeans/modules/php/editor/indent/ui/Bundle.properties" key="FmtBlankLines.afterUseTraitTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="emptyFunctionBodyCheckBox">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/php/editor/indent/ui/Bundle.properties" key="FmtBlankLines.emptyFunctionBodyCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>

@@ -1065,13 +1065,6 @@ jobs:
       - name: platform/openide.util.ui
         run: ant $OPTS -f platform/openide.util.ui test
 
-      # TODO fix JDK 11 incompatibilities
-      - name: Set up JDK 8 for incompatibe tests
-        uses: actions/setup-java@v4
-        with:
-          java-version: 8
-          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
       # isolation required by netbinox tests
       - name: isolate platform build
         run: |

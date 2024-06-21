@@ -32,6 +32,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -1069,15 +1070,21 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                                                 descriptors = provider.getSymbols(project, queryFin, Utils.searchType2QueryKind(searchType), null);
                                                 for (IndexSearcher.Descriptor desc : descriptors) {
                                                     FileObject fo = desc.getFileObject();
-                                                    org.netbeans.modules.csl.api.ElementHandle element = desc.getElement();
                                                     if (fo != null) {
-                                                        Position pos = Utils.createPosition(fo, desc.getOffset());
-                                                        WorkspaceSymbol symbol = new WorkspaceSymbol(
+                                                        org.netbeans.modules.csl.api.ElementHandle element = desc.getElement();
+                                                        Position pos = desc.getOffset() > 0 ? Utils.createPosition(fo, desc.getOffset()) : new Position(0, 0);
+                                                        String uri = null;
+                                                        if (element instanceof org.netbeans.modules.csl.api.ElementHandle.UrlHandle) {
+                                                            uri = ((org.netbeans.modules.csl.api.ElementHandle.UrlHandle) element).getUrl();
+                                                        }
+                                                        if (uri == null) {
+                                                            uri = Utils.toUri(fo);
+                                                        }
+                                                        symbols.add(new WorkspaceSymbol(
                                                                 desc.getSimpleName(),
                                                                 Utils.cslElementKind2SymbolKind(element.getKind()),
-                                                                Either.forLeft(new Location(Utils.toUri(fo), new Range(pos, pos))),
-                                                                desc.getContextName());
-                                                        symbols.add(symbol);
+                                                                Either.forLeft(new Location(uri, new Range(pos, pos))),
+                                                                desc.getContextName()));
                                                     }
                                                 }
                                             }
@@ -1244,8 +1251,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 if (root == null) {
                     throw new IllegalStateException("Unable to find root: " + rootUri);
                 }
-                ElementHandle typeHandle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(sourceUri.substring(qIdx + 1, hIdx)), sourceUri.substring(hIdx + 1));
-                CompletableFuture<ElementOpen.Location> location = ElementOpen.getLocation(ClasspathInfo.create(root), typeHandle, typeHandle.getQualifiedName().replace('.', '/') + ".class");
+                String[] signatures = URLDecoder.decode(sourceUri.substring(hIdx + 1)).split(":");
+                ElementHandle<?> handle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(sourceUri.substring(qIdx + 1, hIdx)), signatures);
+                CompletableFuture<ElementOpen.Location> location = ElementOpen.getLocation(ClasspathInfo.create(root), handle, signatures[0].replace('.', '/') + ".class");
                 location.exceptionally(ex -> {
                     result.completeExceptionally(ex);
                     return null;
@@ -1254,15 +1262,16 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                         ShowDocumentParams sdp = new ShowDocumentParams(Utils.toUri(loc.getFileObject()));
                         Position position = Utils.createPosition(loc.getFileObject(), loc.getStartOffset());
                         sdp.setSelection(new Range(position, position));
+                        sdp.setTakeFocus(true);
                         client.showDocument(sdp).thenAccept(res -> {
                             if (res.isSuccess()) {
                                 result.complete(null);
                             } else {
-                                result.completeExceptionally(new IllegalStateException("Cannot open source for: " + typeHandle.getQualifiedName()));
+                                result.completeExceptionally(new IllegalStateException("Cannot open source for: " + workspaceSymbol.getName()));
                             }
                         });
                     } else if (!result.isCompletedExceptionally()) {
-                        result.completeExceptionally(new IllegalStateException("Cannot find source for: " + typeHandle.getQualifiedName()));
+                        result.completeExceptionally(new IllegalStateException("Cannot find source for: " + workspaceSymbol.getName()));
                     }
                 });
             }

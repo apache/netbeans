@@ -43,7 +43,8 @@ public class MicronautStructureProvider implements StructureProvider {
         JavaSource js = JavaSource.forDocument(doc);
         if (js != null) {
             ClassPath cp = js.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
-            if (cp.findResource("io/micronaut/http/annotation/HttpMethodMapping.class") != null) {
+            if (cp.findResource("io/micronaut/http/annotation/HttpMethodMapping.class") != null
+                    || cp.findResource("io/micronaut/management/endpoint/annotation/Endpoint.class") != null) {
                 try {
                     List<StructureElement> elements = new ArrayList<>();
                     js.runUserActionTask(cc -> {

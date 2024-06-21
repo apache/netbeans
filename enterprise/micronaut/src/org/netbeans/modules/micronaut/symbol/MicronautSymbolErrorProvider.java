@@ -65,8 +65,8 @@ public final class MicronautSymbolErrorProvider implements ErrorProvider {
         "ERR_Duplicated_URI_path=Duplicated endpoint URI path: {0}"
     })
     private Diagnostic desc2diag(MicronautSymbolSearcher.SymbolDescriptor descriptor) {
-        OffsetRange offsetRange = descriptor.getOffsetRange(null);
-        return Diagnostic.Builder.create(() -> offsetRange.getStart(), () -> offsetRange.getEnd(), Bundle.ERR_Duplicated_URI_path(descriptor.getName()))
+        OffsetRange offsetRange = descriptor.getElement().getOffsetRange(null);
+        return Diagnostic.Builder.create(() -> offsetRange.getStart(), () -> offsetRange.getEnd(), Bundle.ERR_Duplicated_URI_path(descriptor.getElement().getName()))
                 .setCode("WARN_Duplicated_MN_Data_Endpoint_Path " + offsetRange.getStart() + " - " + offsetRange.getEnd())
                 .setSeverity(Diagnostic.Severity.Warning)
                 .build();

@@ -2071,4 +2071,46 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/blankLines/issueGH6980_03.php", options, false, true);
     }
 
+    // GH-6716 PER
+    public void testEmptyFunctionBody_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_FUNCTION_BODY, false);
+        reformatFileContents("testfiles/formatting/blankLines/PER/EmptyFunctionBody.php", options, false, true);
+    }
+
+    public void testEmptyFunctionBody_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_FUNCTION_BODY, true);
+        reformatFileContents("testfiles/formatting/blankLines/PER/EmptyFunctionBody.php", options, false, true);
+    }
+
+    public void testEmptyFunctionBody_03() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_FUNCTION_BODY, false);
+        options.put(FmtOptions.METHOD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/PER/EmptyFunctionBody.php", options, false, true);
+    }
+
+    public void testEmptyFunctionBody_04() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_FUNCTION_BODY, true);
+        options.put(FmtOptions.METHOD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/PER/EmptyFunctionBody.php", options, false, true);
+    }
+
+    public void testEmptyFunctionBody_05() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_FUNCTION_BODY, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        options.put(FmtOptions.METHOD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/PER/EmptyFunctionBody.php", options, false, true);
+    }
+
+    public void testEmptyFunctionBody_06() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_FUNCTION_BODY, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, false);
+        options.put(FmtOptions.METHOD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/blankLines/PER/EmptyFunctionBody.php", options, false, true);
+    }
 }

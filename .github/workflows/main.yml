@@ -1418,7 +1418,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '8' ]
+        java: [ '17' ]
       fail-fast: false
     steps:
 
@@ -1451,7 +1451,7 @@ jobs:
         run: ant $OPTS -f apisupport/apisupport.wizards test
 
       - name: timers
-        run: ant $OPTS -f apisupport/timers test -Dtest.config=stable
+        run: ant $OPTS -f apisupport/timers test
 
       - name: Create Test Summary
         uses: test-summary/action@v2

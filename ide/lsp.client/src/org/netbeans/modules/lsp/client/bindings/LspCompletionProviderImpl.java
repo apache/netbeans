@@ -110,6 +110,17 @@ public class LspCompletionProviderImpl implements CompletionProvider {
                     return;
                 }
                 final String mime = file.getMIMEType();
+                for (CompletionProvider cp : MimeLookup.getLookup(mime).lookupAll(CompletionProvider.class)) {
+                    if (cp instanceof LspCompletionProviderImpl) {
+                        continue;
+                    }
+                    if (cp instanceof CompletionProviderImpl) {
+                        continue;
+                    }
+                    // found real CompletionProvider - don't bridge LSP API
+                    resultSet.finish();
+                    return;
+                }
                 Consumer<org.netbeans.api.lsp.Completion> consumer = (i) -> {
                     String insert = i.getInsertText() != null ? i.getInsertText() : i.getLabel();
                     String leftLabel = encode(i.getLabel());

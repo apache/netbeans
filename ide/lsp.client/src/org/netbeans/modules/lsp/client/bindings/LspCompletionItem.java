@@ -55,17 +55,19 @@ final class LspCompletionItem extends AbstractCompletionItem<Either<TextEdit, In
     }
 
     @Override
-    Either<TextEdit, InsertReplaceEdit> findEdit() {
+    Either<TextEdit, InsertReplaceEdit> findEdit(boolean[] hideImmediately) {
         Either<TextEdit, InsertReplaceEdit> edit = i.getTextEdit();
         if (edit != null && edit.isRight()) {
+            //TODO: the NetBeans client does not currently support InsertReplaceEdits, should not happen
+            hideImmediately[0] = true;
             return null;
         }
         return edit;
     }
 
     @Override
-    boolean isTextEdit(Either<TextEdit, InsertReplaceEdit> te) {
-        return te.getLeft() != null;
+    boolean isTextEdit(Either<TextEdit, InsertReplaceEdit> edit) {
+        return edit != null && edit.getLeft() != null;
     }
 
     @Override

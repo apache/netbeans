@@ -66,7 +66,7 @@ abstract class AbstractCompletionItem<Edit> implements CompletionItem {
         this.insert = insert;
     }
 
-    abstract Edit findEdit();
+    abstract Edit findEdit(boolean[] hideImmediately);
     abstract int findStart(Document doc, Edit te);
     abstract int findEnd(Document doc, Edit te);
     abstract String findNewText(Edit te);
@@ -83,9 +83,9 @@ abstract class AbstractCompletionItem<Edit> implements CompletionItem {
     }
 
     private void commit(String appendText) {
-        Edit te = findEdit();
-        if (te == null) {
-            //TODO: the NetBeans client does not current support InsertReplaceEdits, should not happen
+        boolean[] hideNow = { false };
+        Edit te = findEdit(hideNow);
+        if (hideNow[0]) {
             Completion.get().hideDocumentation();
             Completion.get().hideCompletion();
             return;

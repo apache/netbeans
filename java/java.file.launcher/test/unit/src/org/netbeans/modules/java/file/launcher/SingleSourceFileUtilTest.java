@@ -82,4 +82,38 @@ public class SingleSourceFileUtilTest {
             }
         }
     }
+
+    @Test
+    public void testSsSingleSourceFile() throws IOException {
+        File vcsDemoDir = null;
+        File supportedFile = null;
+        File unsupportedFile = null;
+        File unsupportedFile2 = null;
+        try {
+            vcsDemoDir = Files.createTempDirectory("vcs-dummy").toFile();
+            supportedFile = Files.createTempFile("dummy", ".java").toFile();
+            unsupportedFile = new File(vcsDemoDir, "dummy.java");
+            unsupportedFile2 = Files.createTempFile("dummy", ".non-java").toFile();;
+            FileUtil.createData(unsupportedFile);
+
+            assertTrue(SingleSourceFileUtil.isSingleSourceFile(FileUtil.createData(supportedFile)));
+            assertFalse(SingleSourceFileUtil.isSingleSourceFile(FileUtil.createData(unsupportedFile)));
+            assertFalse(SingleSourceFileUtil.isSingleSourceFile(FileUtil.createData(unsupportedFile2)));
+
+        } finally {
+            if(supportedFile != null && supportedFile.exists()) {
+                supportedFile.delete();
+            }
+            if(unsupportedFile != null && unsupportedFile.exists()) {
+                unsupportedFile.delete();
+            }
+            if(unsupportedFile2 != null && unsupportedFile2.exists()) {
+                unsupportedFile2.delete();
+            }
+            if(vcsDemoDir != null && vcsDemoDir.exists()) {
+                vcsDemoDir.delete();
+            }
+        }
+    }
+
 }

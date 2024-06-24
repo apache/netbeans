@@ -35,6 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.JLabel;
@@ -43,6 +44,11 @@ import javax.swing.ListCellRenderer;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.plaf.UIResource;
+import javax.xml.namespace.QName;
+import org.apache.maven.model.InputLocation;
+import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.platform.PlatformsCustomizer;
@@ -60,6 +66,8 @@ import org.netbeans.modules.maven.classpath.BootClassPathImpl;
 import org.netbeans.modules.maven.model.ModelOperation;
 import org.netbeans.modules.maven.model.pom.Build;
 import org.netbeans.modules.maven.model.pom.Configuration;
+import org.netbeans.modules.maven.model.pom.POMComponent;
+import org.netbeans.modules.maven.model.pom.POMExtensibilityElement;
 import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.maven.model.pom.Plugin;
 import org.netbeans.modules.maven.model.pom.Properties;
@@ -92,7 +100,6 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
     private final Project project;
     private static boolean warningShown = false;
     
-    /** Creates new form CompilePanel */
     public CompilePanel(ModelHandle2 handle, Project prj, MavenProjectPropertiesUiSupport uiSupport) {
         initComponents();
         this.handle = handle;
@@ -228,33 +235,65 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
             }
         };
 
-        new CheckBoxUpdater(cbDeprecate) {
-            private static final String PARAM_DEPRECATION = "showDeprecation";
-            @Override
-            public Boolean getValue() {
-                String val = getCompilerParam(handle, PARAM_DEPRECATION);
-                if (val != null && Boolean.parseBoolean(val) != getDefaultValue()) {
-                    return Boolean.valueOf(val);
+        new CheckBoxUpdater(cbLint) {
+            private final boolean currentlyEnabled;
+            private final boolean notInParentPom;
+            private ModelOperation<POMModel> operation;
+            {
+                CompilerArgsQueryResult result = CompilerArgsQuery.getCompilerArgs(handle);
+                if (result != null && isLintEnabled(result.args)) { 
+                    currentlyEnabled = true;
+                    notInParentPom = getModelIdWithoutPackaging(handle).equals(result.modelId);
+                } else {
+                    currentlyEnabled = false;
+                    notInParentPom = false;
                 }
-                return null;
             }
 
             @Override
-            public void setValue(Boolean value) {
-                String text;
-                if (value == null) {
-                    //TODO we should attempt to remove the configuration
-                    // from pom if this parameter is the only one defined.
-                    text = String.valueOf(getDefaultValue());
-                } else {
-                    text = value.toString();
-                }
-                modifyCompilerParamOperation(handle, PARAM_DEPRECATION, text, String.valueOf(getDefaultValue()));
+            public Boolean getValue() {
+                return currentlyEnabled && notInParentPom ? true : null;
             }
 
             @Override
             public boolean getDefaultValue() {
+                return currentlyEnabled;
+            }
+
+            private static String getModelIdWithoutPackaging(ModelHandle2 handle) {
+                MavenProject project = handle.getProject();
+                String modelId = project.getModel().getId();
+                String packaging = project.getModel().getPackaging();
+                if (packaging != null && !packaging.isEmpty()) {
+                    modelId = modelId.replace(":"+packaging+":", ":");
+                }
+                return modelId;
+            }
+
+            // returns true when all or most lint categories are enabled
+            private static boolean isLintEnabled(List<String> args) {
+                // -Xlint and -Xlint:all are equivalent as of JDK 23 (Lint.java)
+                if (args.contains("-Xlint")) {
+                    return true;
+                }
+                for (String arg : args) {
+                    if (arg.startsWith("-Xlint:") && List.of(arg.substring(7).split(",")).contains("all")) {
+                        return true;
+                    }
+                }
                 return false;
+            }
+
+            @Override
+            public void setValue(Boolean value) {
+                if (operation != null) {
+                    handle.removePOMModification(operation);
+                }
+                if (value == null) {
+                    return;
+                }
+                operation = new CompilerLintArgOperation(value);
+                handle.addPOMModification(operation);
             }
         };
 
@@ -351,7 +390,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
         lblHint2 = new javax.swing.JLabel();
         javax.swing.JPanel compilerPanel = new javax.swing.JPanel();
         cbDebug = new javax.swing.JCheckBox();
-        cbDeprecate = new javax.swing.JCheckBox();
+        cbLint = new javax.swing.JCheckBox();
         javax.swing.JPanel jdkPanel = new javax.swing.JPanel();
         lblJavaPlatform = new javax.swing.JLabel();
         lblJavaPlatform1 = new javax.swing.JLabel();
@@ -379,7 +418,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, idePanelLayout.createSequentialGroup()
                         .addComponent(cbCompileOnSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(66, 66, 66))
-                    .addComponent(lblHint2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblHint2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(idePanelLayout.createSequentialGroup()
                         .addComponent(lblHint1)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -400,7 +439,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
 
         org.openide.awt.Mnemonics.setLocalizedText(cbDebug, org.openide.util.NbBundle.getMessage(CompilePanel.class, "CompilePanel.cbDebug.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbDeprecate, org.openide.util.NbBundle.getMessage(CompilePanel.class, "CompilePanel.cbDeprecate.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbLint, org.openide.util.NbBundle.getMessage(CompilePanel.class, "CompilePanel.cbLint.text")); // NOI18N
 
         javax.swing.GroupLayout compilerPanelLayout = new javax.swing.GroupLayout(compilerPanel);
         compilerPanel.setLayout(compilerPanelLayout);
@@ -410,7 +449,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
                 .addContainerGap()
                 .addGroup(compilerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cbDebug)
-                    .addComponent(cbDeprecate))
+                    .addComponent(cbLint))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         compilerPanelLayout.setVerticalGroup(
@@ -419,7 +458,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
                 .addContainerGap()
                 .addComponent(cbDebug)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbDeprecate)
+                .addComponent(cbLint)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -498,7 +537,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
     private javax.swing.JButton btnMngPlatform;
     private javax.swing.JCheckBox cbCompileOnSave;
     private javax.swing.JCheckBox cbDebug;
-    private javax.swing.JCheckBox cbDeprecate;
+    private javax.swing.JCheckBox cbLint;
     private javax.swing.JComboBox comJavaPlatform;
     private javax.swing.JComboBox<String> comSourceLevel;
     private javax.swing.JLabel lblHint1;
@@ -630,33 +669,11 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
         operations.put(param, added);
         handle.addPOMModification(added);
     }
-    
+
     private record CompilerParamOperation(String param, String value) implements ModelOperation<POMModel> {
         @Override
         public void performOperation(POMModel model) {
-            Plugin old = null;
-            Plugin plugin;
-            Build bld = model.getProject().getBuild();
-            if (bld != null) {
-                old = bld.findPluginById(GROUP_APACHE_PLUGINS, PLUGIN_COMPILER);
-            } else {
-                bld = model.getFactory().createBuild();
-                model.getProject().setBuild(bld);
-            }
-            if (old != null) {
-                plugin = old;
-            } else {
-                plugin = model.getFactory().createPlugin();
-                plugin.setGroupId(GROUP_APACHE_PLUGINS);
-                plugin.setArtifactId(PLUGIN_COMPILER);
-                plugin.setVersion(MavenVersionSettings.getDefault().getVersion(GROUP_APACHE_PLUGINS, PLUGIN_COMPILER));
-                bld.addPlugin(plugin);
-            }
-            Configuration config = plugin.getConfiguration();
-            if (config == null) {
-                config = model.getFactory().createConfiguration();
-                plugin.setConfiguration(config);
-            }
+            Configuration config = getOrCreateCompilerConfig(model);
             config.setSimpleParameter(param, value);
         }
     }
@@ -734,15 +751,161 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
                 prop.setProperty("maven.compiler.target", sourceLevel);
             }
         }
-    };
+    }
+
+    /**
+     * Sets or unsets -Xlint in the compilerArgs list.
+     */
+    private record CompilerLintArgOperation(boolean add) implements ModelOperation<POMModel> {
+        @Override
+        public void performOperation(POMModel model) {
+            Configuration config = getOrCreateCompilerConfig(model);
+            POMExtensibilityElement args = getOrCreateElement(model, config, "compilerArgs", null);
+            
+            boolean updated = false;
+            for (POMExtensibilityElement arg : args.getExtensibilityElements()) {
+                String text = arg.getElementText();
+                if (arg.getQName().getLocalPart().equals("arg") && text != null) {
+                    if (text.equals("-Xlint")) {
+                        if (!add) {
+                            updated |= true;
+                            args.removeExtensibilityElement(arg);
+                        }
+                    } else if (text.startsWith("-Xlint:")) {
+                        if (add) {
+                            updated |= removeOption("none", arg);
+                        } else {
+                            updated |= removeOption("all", arg);
+                        }
+                    }
+                }
+            }
+            
+            if (!updated) {
+                if (add) {
+                    createElement(model, args, "arg", "-Xlint");
+                } else {
+                    createElement(model, args, "arg", "-Xlint:none");
+                }
+            }
+            
+            if (args.getExtensibilityElements().isEmpty()) {
+                config.removeExtensibilityElement(args);
+            }
+            if (config.getExtensibilityElements().isEmpty()) {
+                ((Plugin)config.getParent()).setConfiguration(null);
+            }
+        }
+
+        private static boolean removeOption(String option, POMExtensibilityElement arg) {
+            String text = arg.getElementText();
+            if (text.equals("-Xlint:" + option)) {
+                arg.getParent().removeExtensibilityElement(arg);
+                return true;
+            } else if (text.contains(option + ",")) {
+                arg.setElementText(text.replace(option + ",", ""));
+                return true;
+            } else if (text.endsWith("," + option)) {
+                arg.setElementText(text.substring(0, text.length() - (option.length() + 1)));
+                return true;
+            }
+            return false;
+        }
+    }
+
+    record CompilerArgsQueryResult(List<String> args, String modelId) {}
+
+    private static class CompilerArgsQuery implements PluginPropertyUtils.ConfigurationBuilder<CompilerArgsQueryResult> {
+
+        private static CompilerArgsQueryResult getCompilerArgs(ModelHandle2 handle) {
+            return PluginPropertyUtils.getPluginPropertyBuildable(
+                    handle.getProject(), GROUP_APACHE_PLUGINS, PLUGIN_COMPILER, "compile", new CompilerArgsQuery());
+        }
+
+        @Override
+        public CompilerArgsQueryResult build(Xpp3Dom config, ExpressionEvaluator eval) {
+            if (config != null) {
+                Xpp3Dom container = config.getChild("compilerArgs");
+                if (container != null) {
+                    Xpp3Dom[] args = container.getChildren("arg");
+                    if (args != null) {
+                        if (container.getInputLocation() instanceof InputLocation location) {
+                            return new CompilerArgsQueryResult(
+                                Stream.of(args).map(a -> a.getValue()).toList(),
+                                location.getSource().getModelId()
+                            );
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+    }
 
     String getCompilerParam(ModelHandle2 handle, String param) {
-        CompilerParamOperation oper = operations.get(param);
+        CompilerParamOperation oper = (CompilerParamOperation) operations.get(param);
         if (oper != null) {
             return oper.value;
         }
         return PluginPropertyUtils.getPluginProperty(
             handle.getProject(), GROUP_APACHE_PLUGINS, PLUGIN_COMPILER, param, "compile", null); //NOI18N
+    }
+
+    // TODO could be moved to utilities at some point
+    private static Configuration getOrCreateCompilerConfig(POMModel model) {
+        Plugin old = null;
+        Build build = model.getProject().getBuild();
+        if (build != null) {
+            old = build.findPluginById(GROUP_APACHE_PLUGINS, PLUGIN_COMPILER);
+            if (old == null && build.getPluginManagement() != null) {
+                old = build.getPluginManagement().findPluginById(GROUP_APACHE_PLUGINS, PLUGIN_COMPILER);
+            }
+        } else {
+            build = model.getFactory().createBuild();
+            model.getProject().setBuild(build);
+        }
+        Plugin plugin;
+        if (old != null) {
+            plugin = old;
+        } else {
+            plugin = model.getFactory().createPlugin();
+            plugin.setGroupId(GROUP_APACHE_PLUGINS);
+            plugin.setArtifactId(PLUGIN_COMPILER);
+            plugin.setVersion(MavenVersionSettings.getDefault().getVersion(GROUP_APACHE_PLUGINS, PLUGIN_COMPILER));
+            build.addPlugin(plugin);
+        }
+        Configuration config = plugin.getConfiguration();
+        if (config == null) {
+            config = model.getFactory().createConfiguration();
+            plugin.setConfiguration(config);
+        }
+        return config;
+    }
+
+    private static POMExtensibilityElement getOrCreateElement(POMModel model, POMComponent parent, String name, String text) {
+        POMExtensibilityElement elem = getElement(parent, name, text);
+        if (elem != null) {
+            return elem;
+        }
+        return createElement(model, parent, name, text);
+    }
+
+    private static POMExtensibilityElement createElement(POMModel model, POMComponent parent, String name, String text) {
+        POMExtensibilityElement elem = model.getFactory().createPOMExtensibilityElement(QName.valueOf(name));
+        if (text != null) {
+            elem.setElementText(text);
+        }
+        parent.addExtensibilityElement(elem);
+        return elem;
+    }
+
+    private static POMExtensibilityElement getElement(POMComponent parent, String name, String text) {
+        for (POMExtensibilityElement element : parent.getExtensibilityElements()) {
+            if (element.getQName().getLocalPart().equals(name) && (text == null || text.equals(element.getElementText()))) {
+                return element;
+            }
+        }
+        return null;
     }
 
     static class PlatformsModel extends AbstractListModel implements ComboBoxModel, PropertyChangeListener {

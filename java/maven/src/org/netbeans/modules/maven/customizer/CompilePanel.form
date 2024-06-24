@@ -155,7 +155,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="cbDebug" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbDeprecate" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbLint" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -167,7 +167,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="cbDebug" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="cbDeprecate" min="-2" max="-2" attributes="0"/>
+                  <Component id="cbLint" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -181,10 +181,10 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="cbDeprecate">
+        <Component class="javax.swing.JCheckBox" name="cbLint">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/netbeans/modules/maven/customizer/Bundle.properties" key="CompilePanel.cbDeprecate.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="org/netbeans/modules/maven/customizer/Bundle.properties" key="CompilePanel.cbLint.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>

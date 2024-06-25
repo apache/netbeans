@@ -18,52 +18,21 @@
  */
 package org.netbeans.modules.cloud.oracle.assets;
 
-import com.oracle.bmc.identity.Identity;
-import com.oracle.bmc.identity.IdentityClient;
-import com.oracle.bmc.identity.model.Compartment;
-import com.oracle.bmc.identity.model.Tenancy;
-import com.oracle.bmc.identity.requests.ListCompartmentsRequest;
-import com.oracle.bmc.identity.responses.ListCompartmentsResponse;
-import com.oracle.bmc.model.BmcException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.Optional;
-import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectInformation;
-import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.modules.cloud.oracle.OCIManager;
-import org.netbeans.modules.cloud.oracle.OCIProfile;
-import org.netbeans.modules.cloud.oracle.OCISessionInitiator;
-import org.netbeans.modules.cloud.oracle.bucket.BucketNode;
-import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
-import org.netbeans.modules.cloud.oracle.compute.ClusterNode;
-import org.netbeans.modules.cloud.oracle.compute.ComputeInstanceNode;
-import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
-import org.netbeans.modules.cloud.oracle.database.DatabaseNode;
-import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import org.netbeans.modules.cloud.oracle.items.TenancyItem;
-import org.netbeans.modules.cloud.oracle.vault.VaultNode;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -74,11 +43,10 @@ import org.openide.util.lookup.ProxyLookup;
  * @author Jan Horvath
  */
 @NbBundle.Messages({
-    "Databases=Oracle Autonomous Database",
-    "Vault=OCI Vault",
-    "Bucket=Object Storage Bucket",
-    "Cluster=Oracle Container Engine",
-    "Compute=Compute Instance"
+    "MSG_CollectingItems=Loading OCI contents",
+    "FetchingDevopsProjects=Fetching DevOps projects",
+    "SelectItem=Select {0}",
+    "LoadingItems=Loading items for the next step"
 })
 public final class Steps {
     private static final Logger LOG = Logger.getLogger(Steps.class.getName());
@@ -92,16 +60,23 @@ public final class Steps {
         return instance;
     }
 
-    public CompletableFuture<Object> executeMultistep(Step firstStep, Lookup lookup) {
+    public CompletableFuture<Values> executeMultistep(AbstractStep firstStep, Lookup lookup) {
         DialogDisplayer dd = DialogDisplayer.getDefault();
         CompletableFuture future = new CompletableFuture();
         RP.post(() -> {
-            Multistep multistep = new Multistep(firstStep, lookup);
-            NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddSuggestedItem(), 3, multistep.createInput());
-            if (DialogDescriptor.OK_OPTION == dd.notify(ci)) {
-                future.complete(multistep.getResult());
-            } else {
-                future.cancel(true);
+            try {
+                Multistep multistep = new Multistep(firstStep, lookup);
+                NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddSuggestedItem(), 3, multistep.createInput());
+                dd.notifyFuture(ci).handle((result, exception) -> {
+                    if (exception != null) {
+                        future.completeExceptionally(exception);
+                    } else {
+                        future.complete(multistep.getResult());
+                    }
+                    return null;
+                });
+            } catch (Throwable t) {
+                future.completeExceptionally(t);
             }
         });
         return future;
@@ -112,14 +87,14 @@ public final class Steps {
      * 
      */
     public static class NextStepProvider {
-        private final Map<Class<? extends Step>, Function<Step, Step>> steps;
+        private final Map<Class<? extends AbstractStep>, Function<AbstractStep, AbstractStep>> steps;
         
         /**
          * Private constructor to initialize the NextStepProvider with a map of steps.
          *
          * @param steps a map associating classes with their corresponding {@link Step} instances
          */
-        private NextStepProvider(Map<Class<? extends Step>, Function<Step, Step>> steps) {
+        private NextStepProvider(Map<Class<? extends AbstractStep>, Function<AbstractStep, AbstractStep>> steps) {
             this.steps = steps;
         }
         
@@ -129,8 +104,8 @@ public final class Steps {
          * @param currentStep the current step for which the next step is to be retrieved
          * @return the {@link Step} associated with the specified class, or null if no step is found
          */
-        public Step nextStepFor(Step currentStep) {
-            Function<Step, Step> nextStep = steps.get(currentStep.getClass());
+        public AbstractStep nextStepFor(AbstractStep currentStep) {
+            Function<AbstractStep, AbstractStep> nextStep = steps.get(currentStep.getClass());
             return nextStep != null ? nextStep.apply(currentStep) : null;
         }
         
@@ -147,7 +122,7 @@ public final class Steps {
          * Builder class for constructing a NextStepProvider.
          */
         public static class Builder {
-            private final Map<Class<? extends Step>, Function<Step, Step>> steps = new HashMap<> ();
+            private final Map<Class<? extends AbstractStep>, Function<AbstractStep, AbstractStep>> steps = new HashMap<> ();
 
             /**
              * Private constructor for the Builder.
@@ -162,7 +137,7 @@ public final class Steps {
              * @param stepFunction the function to be associated with the class
              * @return the current Builder instance for method chaining
              */
-            public Builder stepForClass(Class<? extends Step> clazz, Function<Step, Step> stepFunction) {
+            public Builder stepForClass(Class<? extends AbstractStep> clazz, Function<AbstractStep, AbstractStep> stepFunction) {
                 steps.put(clazz, stepFunction);
                 return this;
             }
@@ -177,23 +152,38 @@ public final class Steps {
             }
         }
     }
-
+    
+    /**
+     * Provides values for steps in the multi step dialog.
+     * 
+     */
+    public interface Values {
+        
+        /**
+         * Returns a value for a given {@link Step}.
+         * @param step
+         * @return 
+         */
+        public <T> T getValueForStep(Class<? extends AbstractStep<T>> step);
+    }
 
     private static class Multistep {
 
-        private final LinkedList<Step> steps = new LinkedList<>();
+        private final LinkedList<AbstractStep> steps = new LinkedList<>();
         private final Lookup lookup;
+        private final Values values;
 
-        Multistep(Step firstStep, Lookup lookup) {
+        Multistep(AbstractStep firstStep, Lookup lookup) {
             steps.add(firstStep);
-            this.lookup = lookup;
+            values = new MultistepValues(steps);
+            this.lookup = new ProxyLookup(Lookups.fixed(values), lookup);
         }
 
         NotifyDescriptor.ComposedInput.Callback createInput() {
             return new NotifyDescriptor.ComposedInput.Callback() {
                 private int lastNumber = 0;
 
-                private void readValue(Step step, NotifyDescriptor desc) {
+                private void readValue(AbstractStep step, NotifyDescriptor desc) {
                     String selected = null;
                     if (!step.onlyOneChoice()) {
                         if (desc instanceof NotifyDescriptor.QuickPick) {
@@ -216,7 +206,7 @@ public final class Steps {
                         while (steps.size() > 1) {
                             steps.removeLast();
                         }
-                        steps.getLast().prepare(null, lookup);
+                        prepare(steps.getLast());
                     } else if (lastNumber > number) {
                         steps.removeLast();
                         while (steps.getLast().onlyOneChoice() && steps.size() > 1) {
@@ -226,12 +216,12 @@ public final class Steps {
                         return steps.getLast().createInput();
                     } else {
                         readValue(steps.getLast(), input.getInputs()[number - 2]);
-                        steps.add(steps.getLast().getNext());
+                        steps.add(getNextFor(steps.getLast()));
                     }
                     lastNumber = number;
 
                     while (steps.getLast() != null && steps.getLast().onlyOneChoice()) {
-                        steps.add(steps.getLast().getNext());
+                        steps.add(getNextFor(steps.getLast()));
                     }
                     if (steps.getLast() == null) {
                         steps.removeLast();
@@ -239,226 +229,56 @@ public final class Steps {
                     }
                     return steps.getLast().createInput();
                 }
+                
+                private void prepare(AbstractStep step) {
+                    ProgressHandle h = ProgressHandle.createHandle(Bundle.LoadingItems());
+                    h.start();
+                    try {
+                        h.progress(Bundle.LoadingItems());
+                        step.prepare(h, values);
+                    } finally {
+                        h.finish();
+                    }
+                }
+                
+                private AbstractStep getNextFor(AbstractStep step) {
+                    Steps.NextStepProvider nsProvider = lookup.lookup(Steps.NextStepProvider.class);
+                    if (nsProvider != null) {
+                        AbstractStep ns = nsProvider.nextStepFor(step);
+                        if (ns != null) {
+                            prepare(ns);
+                            return ns;
+                        }
+                    } 
+                    return null;
+                }
             };
         }
 
-        public Object getResult() {
-            return steps.getLast().getValue();
-        }
-    }
-
-    public static final class TenancyStep implements Step<Object, TenancyItem> {
-        List<OCIProfile> profiles = new LinkedList<>();
-        private AtomicReference<TenancyItem> selected = new AtomicReference<>();
-        private Lookup lookup;
-
-        @Override
-        public NotifyDescriptor createInput() {
-            if (onlyOneChoice()) {
-                throw new IllegalStateException("No data to create input"); // NOI18N
-            }
-            String title = Bundle.SelectProfile();
-            List<NotifyDescriptor.QuickPick.Item> items = new ArrayList<>(profiles.size());
-            for (OCIProfile p : profiles) {
-                Tenancy t = p.getTenancyData();
-                if (t != null) {
-                    items.add(new NotifyDescriptor.QuickPick.Item(p.getId(), Bundle.SelectProfile_Description(t.getName(), t.getHomeRegionKey())));
-                }
-            }
-            if (profiles.stream().filter(p -> p.getTenancy().isPresent()).count() == 0) {
-                title = Bundle.NoProfile();
-            }
-            return new NotifyDescriptor.QuickPick(title, title, items, false);
-        }
-
-        @Override
-        public Step getNext() {
-            return new CompartmentStep().prepare(getValue(), lookup);
-        }
-
-        @Override
-        public Step<Object, TenancyItem> prepare(Object i, Lookup lookup) {
-            this.lookup = lookup;
-            ProgressHandle h = ProgressHandle.createHandle(Bundle.CollectingProfiles());
-            h.start();
-            h.progress(Bundle.CollectingProfiles_Text());
-            try {
-                profiles = OCIManager.getDefault().getConnectedProfiles();
-            } finally {
-                h.finish();
-            }
-            return this;
-        }
-
-        public void setValue(String value) {
-            for (OCIProfile profile : profiles) {
-                if (profile.getId().equals(value)) {
-                    profile.getTenancy().ifPresent(t -> this.selected.set(t));
-                    break;
-                }
-            }
-        }
-
-        @Override
-        public TenancyItem getValue() {
-            if (onlyOneChoice()) {
-                return profiles.stream()
-                        .map(p -> p.getTenancy())
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .findFirst()
-                        .get();
-            }
-            return selected.get();
-        }
-
-        @Override
-        public boolean onlyOneChoice() {
-            return profiles.stream().filter(p -> p.getTenancy().isPresent()).count() == 1;
-        }
-    }
-    
-    public static final class CompartmentStep implements Step<TenancyItem, CompartmentItem> {
-        private Map<String, OCIItem> compartments = null;
-        private CompartmentItem selected;
-        private Lookup lookup;
-
-        public Step<TenancyItem, CompartmentItem> prepare(TenancyItem tenancy, Lookup lookup) {
-            this.lookup = lookup;
-            ProgressHandle h = ProgressHandle.createHandle(Bundle.CollectingItems());
-            h.start();
-            h.progress(Bundle.CollectingItems_Text());
-            try {
-                compartments = getFlatCompartment(tenancy);
-            } finally {
-                h.finish();
-            }
-            return this;
-        }
-
-        @Override
-        public NotifyDescriptor createInput() {
-            if (onlyOneChoice()) {
-                throw new IllegalStateException("Input shouldn't be displayed for one choice"); // NOI18N
-            }
-            if (compartments.isEmpty()) {
-                return createQuickPick(compartments, Bundle.NoCompartment());
-            }
-            return createQuickPick(compartments, Bundle.SelectCompartment());
-        }
-
-        @Override
-        public Step getNext() {
-            NextStepProvider nsProvider = lookup.lookup(NextStepProvider.class);
-            if (nsProvider != null) {
-                Step ns = nsProvider.nextStepFor(this);
-                if (ns != null) {
-                    return ns.prepare(getValue(), lookup);
-                }
-            } 
-            return null;
-        }
-
-        @Override
-        public void setValue(String selected) {
-            this.selected = (CompartmentItem) compartments.get(selected);
-        }
-
-        @Override
-        public CompartmentItem getValue() {
-            if (onlyOneChoice()) {
-                return (CompartmentItem) compartments.values().iterator().next();
-            }
-            return selected;
-        }
-
-        @Override
-        public boolean onlyOneChoice() {
-            return compartments.size() == 1;
-        }
-    }
-
-    /**
-     * Show list of items for a suggested type.
-     * 
-     */
-    static class SuggestedStep implements Step<CompartmentItem, OCIItem> {
-
-        private Map<String, OCIItem> items = new HashMap<>();
-        private OCIItem selected;
-        private Lookup lookup;
-        private final String suggestedType;
-
-        public SuggestedStep(String suggestedType) {
-            this.suggestedType = suggestedType;
+        public Values getResult() {
+            return values;
         }
         
-        public SuggestedStep prepare(CompartmentItem compartment, Lookup lookup) {
-            this.lookup = lookup;
-            ProgressHandle h = ProgressHandle.createHandle(Bundle.CollectingItems());
-            h.start();
-            h.progress(Bundle.CollectingItems_Text());
-            try {
-                getItemsByPath(compartment, suggestedType).forEach((db) -> items.put(db.getName(), db));
-            } finally {
-                h.finish();
+        private static class MultistepValues implements Values {
+            private final List<AbstractStep> steps;
+
+            public MultistepValues(List<AbstractStep> steps) {
+                this.steps = steps;
             }
-            return this;
-        }
-
-        private String getSuggestedItemName() {
-            switch (suggestedType) {
-                case "Databases":
-                    return Bundle.Databases();
-                case "Vault":
-                    return Bundle.Vault();
-                case "Bucket":
-                    return Bundle.Bucket();
-                case "Cluster":
-                    return Bundle.Cluster();
-                case "ComputeInstance":
-                    return Bundle.Compute();
-            }
-            throw new MissingResourceException("Missing OCI type", null, suggestedType);
-        }
-
-        @Override
-        public NotifyDescriptor createInput() {
-            return createQuickPick(items, Bundle.SelectItem(getSuggestedItemName()));
-        }
-
-        @Override
-        public Step getNext() {
-            NextStepProvider nsProvider = lookup.lookup(NextStepProvider.class);
-            if (nsProvider != null) {
-                Step ns = nsProvider.nextStepFor(this);
-                if (ns != null) {
-                    return ns.prepare(getValue(), lookup);
+            
+            @Override
+            public <T> T getValueForStep(Class<? extends AbstractStep<T>> forStep) {
+                for (AbstractStep step : steps) {
+                    if (step.getClass().equals(forStep)) {
+                        return (T) step.getValue();
+                    }
                 }
-            } 
-            return null;
-        }
-
-        @Override
-        public void setValue(String selected) {
-            this.selected = items.get(selected);
-        }
-
-        @Override
-        public OCIItem getValue() {
-            if (onlyOneChoice()) {
-                selected = items.values().iterator().next();
+                return null;
             }
-            return selected;
-        }
-
-        @Override
-        public boolean onlyOneChoice() {
-            return false;
         }
     }
 
-    private static <T extends OCIItem> NotifyDescriptor.QuickPick createQuickPick(Map<String, T> ociItems, String title) {
+    public static <T extends OCIItem> NotifyDescriptor.QuickPick createQuickPick(Map<String, T> ociItems, String title) {
         List<NotifyDescriptor.QuickPick.Item> items = new ArrayList<> ();
         for (Map.Entry<String, T> entry : ociItems.entrySet()) {
             String description = entry.getValue().getDescription();
@@ -468,284 +288,6 @@ public final class Steps {
             items.add(new NotifyDescriptor.QuickPick.Item(entry.getKey(), description));
         }
         return new NotifyDescriptor.QuickPick(title, title, items, false);
-    }
-
-    /**
-     * Retrieve all compartments from a tenancy.
-     * 
-     * @param tenancy
-     * @return 
-     */
-    static private Map<String, OCIItem> getFlatCompartment(TenancyItem tenancy) {
-        Map<OCID, FlatCompartmentItem> compartments = new HashMap<>();
-        OCISessionInitiator session = OCIManager.getDefault().getActiveSession();
-        Identity identityClient = session.newClient(IdentityClient.class);
-        String nextPageToken = null;
-
-        do {
-            ListCompartmentsResponse response
-                    = identityClient.listCompartments(
-                            ListCompartmentsRequest.builder()
-                                    .compartmentId(tenancy.getKey().getValue())
-                                    .compartmentIdInSubtree(true)
-                                    .lifecycleState(Compartment.LifecycleState.Active)
-                                    .accessLevel(ListCompartmentsRequest.AccessLevel.Accessible)
-                                    .limit(1000)
-                                    .page(nextPageToken)
-                                    .build());
-            for (Compartment comp : response.getItems()) {
-                FlatCompartmentItem ci = new FlatCompartmentItem(comp) {
-                    FlatCompartmentItem getItem(OCID compId) {
-                        return compartments.get(compId);
-                    }
-                };
-                compartments.put(ci.getKey(), ci);
-            }
-            nextPageToken = response.getOpcNextPage();
-        } while (nextPageToken != null);
-        Map<String, OCIItem> pickItems = computeFlatNames(compartments);
-        pickItems.put(tenancy.getName() + " (root)", tenancy);        // NOI18N
-        return pickItems;
-    }
-    
-    static private Map<String, OCIItem> computeFlatNames(Map<OCID, FlatCompartmentItem> compartments) {
-        Map<String, OCIItem> pickItems = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        for (FlatCompartmentItem comp : compartments.values()) {
-            pickItems.put(comp.getName(), comp);
-        }
-        return pickItems;
-    }
-
-    /**
-     * This class represents compartments in a flat structure. Individual levels are separated by slashes.
-     * 
-     */
-    static private abstract class FlatCompartmentItem extends CompartmentItem {
-
-        private final OCID parentId;
-        private String flatName;
-
-        private FlatCompartmentItem(Compartment ociComp) {
-            super(OCID.of(ociComp.getId(), "Compartment"), ociComp.getCompartmentId(), ociComp.getName());      // NOI18N
-            setDescription(ociComp.getDescription());
-            parentId = OCID.of(ociComp.getCompartmentId(), "Compartment"); // NOI18N
-        }
-
-        public String getName() {
-            if (parentId.getValue() == null) {
-                return "";
-            }
-            if (flatName == null) {
-                String parentFlatName = "";
-                FlatCompartmentItem parentComp = getItem(parentId);
-                if (parentComp != null) {
-                    parentFlatName = parentComp.getName();
-                }
-                flatName = super.getName();
-                if (!parentFlatName.isEmpty()) {
-                    flatName = parentFlatName + "/" + flatName;  // NOI18N
-                }
-            }
-            return flatName;
-        }
-
-        abstract FlatCompartmentItem getItem(OCID compId);
-    }
-    
-    /**
-     *  This step allows the user to select which type of resource will be added.
-     */
-    static class ItemTypeStep implements Step<Object, String> {
-        String[] types = {"Databases", "Vault", "Bucket"}; //NOI18N
-
-        private Lookup lookup;
-        private String selected;
-
-        @Override
-        public Step<Object, String> prepare(Object item, Lookup lookup) {
-            this.lookup = lookup;
-            return this;
-        }
-
-        @Override
-        public NotifyDescriptor createInput() {
-            List<NotifyDescriptor.QuickPick.Item> items = new ArrayList<>(types.length);
-            for (String itemType : types) {
-                items.add(new NotifyDescriptor.QuickPick.Item(itemType, itemType));
-            }
-            return new NotifyDescriptor.QuickPick(Bundle.SelectResourceType(), Bundle.SelectResourceType(), items, false);
-        }
-
-        @Override
-        public boolean onlyOneChoice() {
-            return false;
-        }
-
-        @Override
-        public Step getNext() {
-            NextStepProvider nsProvider = NextStepProvider.builder()
-                    .stepForClass(CompartmentStep.class, (s) -> new SuggestedStep(getValue()))
-                    .stepForClass(SuggestedStep.class, (s) -> new ProjectStep())
-                    .build();
-            return new TenancyStep().prepare(null, new ProxyLookup(Lookups.fixed(nsProvider), lookup));
-        }
-
-        @Override
-        public void setValue(String selected) {
-            this.selected = selected;
-        }
-
-        @Override
-        public String getValue() {
-            return selected;
-        }
-
-    }
-
-    /**
-     * The purpose of this step is to select a project to update dependencies.
-     */
-    public static class ProjectStep implements Step<Object, Object> {
-
-        private final CompletableFuture<Project[]> projectsFuture;
-        Map<String, Project> projects;
-        private Project selectedProject;
-        private Object item;
-
-        public ProjectStep() {
-            projectsFuture = OpenProjectsFinder.getDefault().findTopLevelProjects();
-            this.projects = new HashMap<> ();
-        }
-
-        @Override
-        public Step<Object, Object> prepare(Object item, Lookup lookup) {
-            this.item = item;
-            try {
-                Project[] p = projectsFuture.get();
-                for (int i = 0; i < p.length; i++) {
-                    ProjectInformation pi = ProjectUtils.getInformation(p[i]);
-                    projects.put(pi.getDisplayName(), p[i]);
-                }
-            } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (ExecutionException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            return this;
-        }
-
-        @Override
-        public NotifyDescriptor createInput() {
-            List<NotifyDescriptor.QuickPick.Item> items = new ArrayList<>(projects.size());
-            for (Map.Entry<String, Project> entry : projects.entrySet()) {
-                
-                items.add(new NotifyDescriptor.QuickPick.Item(
-                        entry.getKey(),
-                        entry.getValue().getProjectDirectory().getName()));
-            }
-            String title = Bundle.SelectProject();
-            if (projects.size() == 0) {
-                title = Bundle.NoProjects();
-            }
-            return new NotifyDescriptor.QuickPick(title, title, items, false);
-        }
-
-        @Override
-        public boolean onlyOneChoice() {
-            return projects.size() == 1;
-        }
-
-        @Override
-        public Step getNext() {
-            return null;
-        }
-
-        @Override
-        public void setValue(String selected) {
-            selectedProject = projects.get(selected);
-        }
-
-        @Override
-        public Object getValue() {
-            if (projects.size() == 1) {
-                selectedProject = (Project) projects.values().toArray()[0];
-            }
-            return Pair.of(selectedProject, item);
-        }
-
-    }
-    
-    /**
-     * Retrieve items of a given type from a specified compartment.
-     * @param parent Compartment to search for items
-     * @param path Type of the items
-     * @return  List of items found
-     */
-    protected static List<? extends OCIItem> getItemsByPath(CompartmentItem parent, String path) {
-        Map<String, OCIItem> items = new HashMap<>();
-        try {
-            switch (path) {
-                case "Databases": //NOI18N
-                    return DatabaseNode.getDatabases().apply(parent);
-                case "Vault": //NOI18N
-                    return VaultNode.getVaults().apply(parent);
-                case "Bucket": //NOI18N
-                    return BucketNode.getBuckets().apply(parent);
-                case "Cluster": //NOI18N
-                    return ClusterNode.getClusters().apply(parent);
-                case "ComputeInstance": //NOI18N
-                    return ComputeInstanceNode.getComputeInstances().apply(parent);
-                default:
-                    return Collections.emptyList();
-            }
-        } catch (BmcException e) {
-            LOG.log(Level.SEVERE, "Unable to load vault list", e); //NOI18N
-        }
-        return Collections.emptyList();
-    }
- 
-    /**
-     * Step to select an existing database connection from the Database Explorer.
-     * 
-     */
-    static final class DatabaseConnectionStep implements Step<Object, DatabaseItem> {
-
-        private final Map<String, DatabaseItem> adbConnections;
-        private DatabaseItem selected;
-
-        public DatabaseConnectionStep(Map<String, DatabaseItem> adbConnections) {
-            this.adbConnections = adbConnections;
-        }
-
-        @Override
-        public Step<Object, DatabaseItem> prepare(Object empty, Lookup lookup) {
-            return this;
-        }
-
-        @Override
-        public NotifyDescriptor createInput() {
-            return createQuickPick(adbConnections, Bundle.SelectDBConnection());
-        }
-
-        @Override
-        public Step getNext() {
-            return null;
-        }
-
-        @Override
-        public void setValue(String selected) {
-            this.selected = (DatabaseItem) adbConnections.get(selected);
-        }
-
-        @Override
-        public DatabaseItem getValue() {
-            return selected;
-        }
-
-        @Override
-        public boolean onlyOneChoice() {
-            return false;
-        }
     }
 
 }

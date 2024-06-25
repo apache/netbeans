@@ -29,14 +29,21 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,7 +51,6 @@ import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
-import org.netbeans.modules.cloud.oracle.OCIChildFactory;
 import org.netbeans.modules.cloud.oracle.bucket.BucketItem;
 import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
 import org.netbeans.modules.cloud.oracle.compute.ComputeInstanceItem;
@@ -60,10 +66,13 @@ import org.openide.util.Exceptions;
 import org.openide.util.Parameters;
 
 /**
+ * Maintains a set of OCI resources that are either assigned or recommended for
+ * assignment to a workspace.
  *
  * @author Jan Horvath
  */
 public final class CloudAssets {
+
     private static final Logger LOG = Logger.getLogger(CloudAssets.class.getName());
 
     private static final String SUGGESTED = "Suggested"; //NOI18N
@@ -73,7 +82,9 @@ public final class CloudAssets {
 
     private boolean assetsLoaded = false;
     private Set<OCIItem> items = new HashSet<>();
-    private Set<SuggestedItem> suggested = new HashSet<>();
+    private final Set<SuggestedItem> suggested = new HashSet<>();
+
+    private final Map<OCIItem, String> refNames = new HashMap<>();
 
     private final ChangeSupport changeSupport;
     private final Gson gson;
@@ -90,7 +101,7 @@ public final class CloudAssets {
             for (int i = 0; i < connections.length; i++) {
                 String ocid = (String) connections[i].getConnectionProperties().get("OCID"); //NOI18N
                 if (ocid != null) {
-                    ocids.add(ocid); 
+                    ocids.add(ocid);
                 }
             }
             boolean update = false;
@@ -115,25 +126,36 @@ public final class CloudAssets {
         return instance;
     }
 
-    public void addItem(OCIItem newItem) {
+    public synchronized void addItem(OCIItem newItem) {
         Parameters.notNull("newItem cannot be null", newItem);
-        items.add(newItem);
-        update();
-        storeAssets();
-    }
-
-    void removeItem(OCIItem item) {
-        if (items.remove(item)) {
+        long presentCount = items.stream()
+                .filter(i -> i.getKey().getPath().equals(newItem.getKey().getPath()))
+                .count();
+        if (newItem.maxInProject() > presentCount) {
+            items.add(newItem);
             update();
             storeAssets();
         }
     }
 
-    public void update() {
+    synchronized void removeItem(OCIItem item) {
+        boolean update = false;
+        if (refNames.remove(item) != null) {
+            update = true;
+        }
+        if (items.remove(item)) {
+            update = true;
+        }
+        if (update) {
+            storeAssets();
+            update();
+        }
+    }
+
+    void update() {
         OpenProjectsFinder.getDefault().findOpenProjects().thenAccept(projects -> {
             SuggestionAnalyzer analyzer = new DependenciesAnalyzer();
-            Set<SuggestedItem> suggested = analyzer.findSuggestions(projects);
-            setSuggestions(suggested);
+            setSuggestions(analyzer.findSuggestions(projects));
         });
     }
 
@@ -159,10 +181,58 @@ public final class CloudAssets {
         changeSupport.fireChange();
     }
 
-    public List<OCIItem> getItems() {
+    /**
+     * Returns a <code>Collection</code> of all items, including suggested
+     * items.
+     *
+     * @return {@link Collection} of {@link OCIItem}
+     */
+    public Collection<OCIItem> getItems() {
         List<OCIItem> list = new ArrayList<>(suggested);
         list.addAll(items);
         return list;
+    }
+
+    /**
+     * Returns a <code>Collection</code> of items assigned by user. This doesn't
+     * include suggested items.
+     *
+     * @return {@link Collection} of {@link OCIItem}
+     */
+    public Collection<OCIItem> getAssignedItems() {
+        return Collections.unmodifiableCollection(items);
+    }
+
+    public boolean setReferenceName(OCIItem item, String refName) {
+        Parameters.notNull("refName", refName); //NOI18N
+        Parameters.notNull("OCIItem", item); //NOI18N
+        for (Entry<OCIItem, String> refEntry : refNames.entrySet()) {
+            if (refEntry.getKey().getKey().getPath().equals(item.getKey().getPath())
+                    && refName.equals(refEntry.getValue())) {
+                return false;
+            }
+        }
+        String oldRefName = refNames.get(item);
+        refNames.put(item, refName);
+        storeAssets();
+        item.fireRefNameChanged(oldRefName, refName);
+//        item.fireRefNameChanged(null, refName);
+        return true;
+    }
+
+    public String getReferenceName(OCIItem item) {
+        return refNames.get(item);
+    }
+
+    private void setReferenceName(String ocid, String refName) {
+        for (OCIItem item : items) {
+            if (item.getKey().getValue().equals(ocid)) {
+                refNames.put(item, refName);
+                storeAssets();
+                item.fireRefNameChanged(null, refName);
+                return;
+            }
+        }
     }
 
     /**
@@ -187,9 +257,6 @@ public final class CloudAssets {
         if (!assetsLoaded) {
             return;
         }
-        Set<OCIItem> toStore = items.stream()
-                .filter(i -> !SUGGESTED.equals(i.getKey().getPath())) //NOI18N
-                .collect(Collectors.toSet());
         FileObject file = null;
         try {
             FileObject fo = FileUtil.createFolder(FileUtil.getConfigRoot(), CLOUD_ASSETS_PATH);
@@ -202,9 +269,25 @@ public final class CloudAssets {
         }
         if (file != null) {
             try (FileLock lock = file.lock()) {
-                    OutputStream os = file.getOutputStream(lock);
-                    os.write(gson.toJson(toStore).getBytes());
-                    os.close();
+                OutputStream os = file.getOutputStream(lock);
+                JsonWriter jsonWriter = gson.newJsonWriter(new OutputStreamWriter(os));
+                jsonWriter.beginObject();
+                jsonWriter.name("items").beginArray(); //NOI18N
+                for (OCIItem item : items) {
+                    gson.toJson(item, item.getClass(), jsonWriter);
+                }
+                jsonWriter.endArray();
+                jsonWriter.name("referenceNames").beginArray(); //NOI18N
+                for (Entry<OCIItem, String> entry : refNames.entrySet()) {
+                    jsonWriter.beginObject();
+                    jsonWriter.name("ocid").value(entry.getKey().getKey().getValue()); //NOI18N
+                    jsonWriter.name("referenceName").value(entry.getValue()); //NOI18N
+                    jsonWriter.endObject();
+                }
+                jsonWriter.endArray();
+                jsonWriter.endObject();
+                jsonWriter.close();
+                os.close();
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -229,32 +312,73 @@ public final class CloudAssets {
 
         try (JsonReader reader = new JsonReader(new StringReader(content))) {
             Set<OCIItem> loaded = new HashSet<>();
-            reader.beginArray();
+            Map<String, String> loadingRefNames = new HashMap<>();
+            reader.beginObject();
             while (reader.hasNext()) {
-                JsonElement element = JsonParser.parseReader(reader);
-                String path = element.getAsJsonObject()
-                        .get("id").getAsJsonObject() //NOI18N
-                        .get("path").getAsString(); //NOI18N
-                switch (path) {
-                    case "Databases": //NOI18N
-                        loaded.add(gson.fromJson(element, DatabaseItem.class)); 
+                String rootObjName = reader.nextName();
+                switch (rootObjName) {
+                    case "items": //NOI18N
+                        reader.beginArray();
+                        while (reader.hasNext()) {
+                            JsonElement element = JsonParser.parseReader(reader);
+                            String path = element.getAsJsonObject()
+                                    .get("id").getAsJsonObject() //NOI18N
+                                    .get("path").getAsString(); //NOI18N
+                            switch (path) {
+                                case "Databases": //NOI18N
+                                    loaded.add(gson.fromJson(element, DatabaseItem.class));
+                                    break;
+                                case "Bucket": //NOI18N
+                                    loaded.add(gson.fromJson(element, BucketItem.class));
+                                    break;
+                                case "Cluster": //NOI18N
+                                    loaded.add(gson.fromJson(element, ClusterItem.class));
+                                    break;
+                                case "ComputeInstance": //NOI18N
+                                    loaded.add(gson.fromJson(element, ComputeInstanceItem.class));
+                                    break;
+                                case "Vault": //NOI18N
+                                    loaded.add(gson.fromJson(element, VaultItem.class));
+                                    break;
+                            }
+                        }
+                        reader.endArray();
                         break;
-                    case "Bucket": //NOI18N
-                        loaded.add(gson.fromJson(element, BucketItem.class)); 
-                        break;
-                    case "Cluster": //NOI18N
-                        loaded.add(gson.fromJson(element, ClusterItem.class)); 
-                        break;
-                    case "ComputeInstance": //NOI18N
-                        loaded.add(gson.fromJson(element, ComputeInstanceItem.class)); 
-                        break;
-                    case "Vault": //NOI18N
-                        loaded.add(gson.fromJson(element, VaultItem.class)); 
+                    case "referenceNames": //NOI18N
+                        reader.beginArray();
+                        while (reader.hasNext()) {
+                            reader.beginObject();
+                            String refOcid = null;
+                            String refName = null;
+                            while (reader.hasNext()) {
+                                String name = reader.nextName();
+                                switch (name) {
+                                    case "ocid":
+                                        refOcid = reader.nextString();
+                                        break;
+                                    case "referenceName":
+                                        refName = reader.nextString();
+                                        break;
+                                    default:
+                                        reader.skipValue();
+                                        break;
+                                }
+                                if (refOcid != null && refName != null) {
+                                    loadingRefNames.put(refOcid, refName);
+                                }
+                            }
+                            reader.endObject();
+                        }
+                        reader.endArray();
                         break;
                 }
             }
-            reader.endArray();
+            reader.endObject();
             items = loaded;
+            for (Entry<String, String> entry : loadingRefNames.entrySet()) {
+                setReferenceName(entry.getKey(), entry.getValue());
+            }
+
         } catch (JsonIOException | JsonSyntaxException | IOException e) {
             LOG.log(Level.INFO, "Unable to load assets", e);
         } finally {
@@ -263,7 +387,6 @@ public final class CloudAssets {
     }
 
     private static final class OCIDDeserializer implements JsonDeserializer<OCID> {
-
         @Override
         public OCID deserialize(JsonElement json, Type type, JsonDeserializationContext jdc) throws JsonParseException {
             JsonObject jsonObject = json.getAsJsonObject();

@@ -31,27 +31,28 @@ import org.openide.util.NbBundle;
  */
 @ActionID(
         category = "Tools",
-        id = "org.netbeans.modules.cloud.oracle.actions.RemoveFromProject"
+        id = "org.netbeans.modules.cloud.oracle.actions.AddToProject"
 )
 @ActionRegistration( 
-        displayName = "#RemoveFromProject", 
+        displayName = "#AddToProject", 
         asynchronous = true
 )
 
 @NbBundle.Messages({
-    "RemoveFromProject=Remove From Oracle Cloud Assets"
+    "AddToProject=Add to Oracle Cloud Assets"
 })
-public class RemoveFromProject implements ActionListener {
+public class AddToProject implements ActionListener {
     
     private final OCIItem context;
 
-    public RemoveFromProject(OCIItem context) {
+    public AddToProject(OCIItem context) {
         this.context = context;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        CloudAssets.getDefault().removeItem(context);
+        CloudAssets.getDefault().addItem(context);
     }
 
+    
 }

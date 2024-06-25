@@ -18,17 +18,18 @@
  */
 package org.netbeans.modules.cloud.oracle.policy;
 
-import java.util.List;
+import java.util.Collection;
 import org.netbeans.modules.cloud.oracle.assets.SuggestedItem;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 
 /**
- *
+ * Creates application.properties, bootstrap.properties and OCI Vault secrets from current contents of the {@link CloudAssets}.
+ * 
  * @author Jan Horvath
  */
 public class PolicyGenerator {
 
-    public static String createPolicies(List<OCIItem> items) {
+    public static String createPolicies(Collection<OCIItem> items) {
         OCIItem execution = null;
         String principalType;
         for (OCIItem item : items) {

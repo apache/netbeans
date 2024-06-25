@@ -18,40 +18,23 @@
  */
 package org.netbeans.modules.cloud.oracle.assets;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import org.openide.awt.ActionID;
-import org.openide.awt.ActionRegistration;
-import org.openide.util.NbBundle;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.modules.cloud.oracle.assets.Steps.Values;
+import org.openide.NotifyDescriptor;
 
 /**
  *
  * @author Jan Horvath
  */
-@ActionID(
-        category = "Tools",
-        id = "org.netbeans.modules.cloud.oracle.actions.RemoveFromProject"
-)
-@ActionRegistration( 
-        displayName = "#RemoveFromProject", 
-        asynchronous = true
-)
-
-@NbBundle.Messages({
-    "RemoveFromProject=Remove From Oracle Cloud Assets"
-})
-public class RemoveFromProject implements ActionListener {
+public abstract class AbstractStep<U> { //implements Step<U> {
     
-    private final OCIItem context;
+    public void prepare(ProgressHandle handle, Values values) { }
 
-    public RemoveFromProject(OCIItem context) {
-        this.context = context;
-    }
+    public abstract NotifyDescriptor createInput();
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        CloudAssets.getDefault().removeItem(context);
-    }
+    public abstract boolean onlyOneChoice();
 
+    public abstract void setValue(String selected);
+
+    public abstract U getValue();
 }

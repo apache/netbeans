@@ -23,4 +23,6 @@ org.netbeans.modules.cloud.oracle.devops.BuildPipelineItem
 org.netbeans.modules.cloud.oracle.devops.DevopsProjectItem
 org.netbeans.modules.cloud.oracle.assets.SuggestedItem
 org.netbeans.modules.cloud.oracle.compute.ClusterItem
-org.netbeans.modules.cloud.oracle.compute.ComputeInstance
+org.netbeans.modules.cloud.oracle.compute.ComputeInstanceItem
+org.netbeans.modules.cloud.oracle.bucket.BucketItem
+org.netbeans.modules.cloud.oracle.vault.VaultItem

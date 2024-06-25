@@ -4,7 +4,7 @@
 	"description": "Apache NetBeans Language Server Extension for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
-	"version": "0.1.0",
+	"version": "99.99.9",
 	"preview": false,
 	"repository": {
 		"type": "git",
@@ -78,7 +78,7 @@
 				},
 				{
 					"id": "cloud.assets",
-					"name": "Cloud Assets",
+					"name": "Oracle Cloud Assets",
 					"when": "nbJavaLSReady"
 				},
 				{
@@ -548,22 +548,27 @@
 			},
 			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddToProject",
-				"title": "Add To Project",
+				"title": "Add to Oracle Cloud Assets",
 				"icon": "$(add)"
 			},
 			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.SetReferenceName",
+				"title": "Set a Reference Name",
+				"icon": "$(edit)"
+			},
+			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.RemoveFromProject",
-				"title": "Remove From Project",
+				"title": "Remove from Oracle Cloud Assets",
 				"icon": "$(remove)"
 			},
 			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddSuggestedItemAction",
-				"title": "Add To Project",
+				"title": "Add Suggested to Oracle Cloud Assets",
 				"icon": "$(add)"
 			},
 			{
 				"command": "nbls.cloud.assets.refresh",
-				"title": "Refresh Cloud Assets",
+				"title": "Refresh Oracle Cloud Assets",
 				"icon": "$(refresh)"
 			},
 			{
@@ -579,6 +584,11 @@
 			{
 				"command": "nbls.cloud.assets.add.new",
 				"title": "Add New Cloud Resource",
+				"icon": "$(add)"
+			},
+			{
+				"command": "nbls.cloud.assets.configmap.upload",
+				"title": "Add Cloud Assets to ConfigMap",
 				"icon": "$(add)"
 			},
 			{
@@ -788,6 +798,10 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.SetReferenceName",
+					"when": "false"
+				},
+				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.RemoveFromProject",
 					"when": "false"
 				},
@@ -975,7 +989,7 @@
 				},
 				{
 					"command": "nbls.cloud.ocid.copy",
-					"when": "viewItem =~ /class:oracle.items.OCIItem/",
+					"when": "viewItem =~ /class:oracle.items.OCIItem/ && viewItem =~ /^(?!.*Suggested).*/",
 					"group": "oci@1000"
 				},
 				{
@@ -990,7 +1004,12 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddToProject",
-					"when": "viewItem =~ /class:oracle/ && view != cloud.assets",
+					"when": "viewItem =~ /(ComputeInstanceItem|ClusterItem|BucketItem|DatabaseItem|VaultItem)/ && view != cloud.assets",
+					"group": "inline@14"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.SetReferenceName",
+					"when": "viewItem =~ /cap:refName/ && view == cloud.assets",
 					"group": "inline@14"
 				},
 				{

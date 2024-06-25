@@ -18,18 +18,15 @@
  */
 package org.netbeans.modules.cloud.oracle.assets;
 
+import org.netbeans.modules.cloud.oracle.steps.SuggestedStep;
+import org.netbeans.modules.cloud.oracle.steps.CompartmentStep;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
-import org.netbeans.api.db.explorer.ConnectionManager;
-import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.modules.cloud.oracle.actions.AddADBAction;
-import org.netbeans.modules.cloud.oracle.assets.Steps.DatabaseConnectionStep;
-import org.netbeans.modules.cloud.oracle.assets.Steps.TenancyStep;
+import org.netbeans.modules.cloud.oracle.steps.DatabaseConnectionStep;
+import org.netbeans.modules.cloud.oracle.steps.TenancyStep;
 import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
-import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
@@ -52,20 +49,11 @@ import org.openide.util.lookup.Lookups;
 
 @NbBundle.Messages({
     "AddSuggestedItem=Add Suggested Oracle Cloud Resource",
-    "SelectProfile=Select OCI Profile",
     "# {0} - tenancy name",
     "# {1} - region id",
-    "SelectProfile_Description={0} (region: {1})",
-    "SelectCompartment=Select Compartment",
-    "NoProfile=There is not any OCI profile in the config",
     "NoCompartment=There are no compartments in the Tenancy",
     "CollectingProfiles=Searching for OCI Profiles",
-    "CollectingProfiles_Text=Loading OCI Profiles",
-    "CollectingItems=Loading OCI contents",
-    "CollectingItems_Text=Listing compartments and databases",
-    "SelectItem=Select {0}",
-    "SelectDBConnection=Select Database Connection"
-})
+    "CollectingItems=Loading OCI contents",})
 public class AddSuggestedItemAction implements ActionListener {
 
     private static final Logger LOG = Logger.getLogger(AddADBAction.class.getName());
@@ -79,35 +67,26 @@ public class AddSuggestedItemAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if ("Databases".equals(context.getPath())) { //NOI18N
-            Map<String, DatabaseItem> adbConnections = new HashMap<>();
-            DatabaseConnection[] connections = ConnectionManager.getDefault().getConnections();
-            for (int i = 0; i < connections.length; i++) {
-                String name = connections[i].getDisplayName();
-                String ocid = connections[i].getConnectionProperties().getProperty("OCID"); //NOI18N
-                String compartmentId = connections[i].getConnectionProperties().getProperty("CompartmentOCID"); //NOI18N
-                if (ocid != null && compartmentId != null) {
-                    DatabaseItem dbItem
-                            = new DatabaseItem(OCID.of(ocid, "Databases"), compartmentId, name, null, name); //NOI18N
-                    adbConnections.put(name, dbItem);
-                }
-            }
-            if (adbConnections.isEmpty()) {
-                DatabaseItem db = new AddADBAction().addADB();
-                if (db != null) {
-                    CloudAssets.getDefault().addItem(db);
-                }
-            } else {
-                Steps.getDefault().executeMultistep(new DatabaseConnectionStep(adbConnections), Lookup.EMPTY)
-                        .thenAccept(result -> CloudAssets.getDefault().addItem((OCIItem) result));
-            }
+            Steps.getDefault().executeMultistep(new DatabaseConnectionStep(), Lookup.EMPTY)
+                    .thenAccept(values -> {
+                        DatabaseItem db = values.getValueForStep(DatabaseConnectionStep.class);
+                        if (db == null) {
+                            db = new AddADBAction().addADB();
+                        }
+                        CloudAssets.getDefault().addItem(db);
+                    });
             return;
         }
         Steps.NextStepProvider nsProvider = Steps.NextStepProvider.builder()
-                .stepForClass(Steps.CompartmentStep.class, (s) -> new Steps.SuggestedStep(context.getPath()))
+                .stepForClass(TenancyStep.class, (s) -> new CompartmentStep())
+                .stepForClass(CompartmentStep.class, (s) -> new SuggestedStep(context.getPath()))
                 .build();
         Lookup lookup = Lookups.fixed(nsProvider);
         Steps.getDefault().executeMultistep(new TenancyStep(), lookup)
-                .thenAccept(result -> CloudAssets.getDefault().addItem((OCIItem) result));
+                .thenAccept(values -> {
+                    OCIItem item = values.getValueForStep(SuggestedStep.class);
+                    CloudAssets.getDefault().addItem(item);
+                });
     }
 
 }

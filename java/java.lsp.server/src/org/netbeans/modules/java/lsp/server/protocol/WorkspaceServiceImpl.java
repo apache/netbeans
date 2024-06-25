@@ -1058,7 +1058,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                         js.runWhenScanFinished(cc -> {
                             WORKER.post(() -> {
                                 try {
-                                    List<WorkspaceSymbol> symbols = new ArrayList<>();
+                                    Set<WorkspaceSymbol> symbols = new HashSet<>();
                                     SearchType searchType = getSearchType(queryFin, exactFin, false, null, null);
 
                                     // CSL Part
@@ -1218,7 +1218,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                                             symbols.add(symbol);
                                         }
                                     }
-                                    result.complete(Either.forRight(symbols));
+                                    result.complete(Either.forRight(new ArrayList<>(symbols)));
                                 } catch (Throwable t) {
                                     result.completeExceptionally(t);
                                 }

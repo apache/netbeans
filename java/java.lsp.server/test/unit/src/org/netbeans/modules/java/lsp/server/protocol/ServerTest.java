@@ -1944,11 +1944,12 @@ public class ServerTest extends NbTestCase {
             }
             return ws.getKind() + ":" + ws.getName() + ":" + ws.getContainerName() + ":" + (ws.getLocation().isLeft() ? toString(ws.getLocation().getLeft()) : toString(ws.getLocation().getRight()));
         }).collect(Collectors.toList());
-        assertEquals(Arrays.asList("Constructor:Test():Test:Test.java:0:7-0:7",
-                                   "Method:testMethod():Test:Test.java:2:4-2:38",
+        Collections.sort(actual);
+        assertEquals(Arrays.asList("Class:Test:null:?CLASS#Test",
+                                   "Class:TestNested:Test:?CLASS#Test$TestNested",
+                                   "Constructor:Test():Test:Test.java:0:7-0:7",
                                    "Constructor:TestNested():Test.TestNested:Test.java:1:18-1:18",
-                                   "Class:Test:null:?CLASS#Test",
-                                   "Class:TestNested:Test:?CLASS#Test$TestNested"),
+                                   "Method:testMethod():Test:Test.java:2:4-2:38"),
                      actual);
     }
 

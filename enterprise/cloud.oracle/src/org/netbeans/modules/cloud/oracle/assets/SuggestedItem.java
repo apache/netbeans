@@ -32,7 +32,7 @@ import org.openide.util.NbBundle;
     "SelectDatabases=Select Oracle Autonomous Database",
     "SelectVault=Select OCI Vault",
     "SelectBucket=Select Object Storage Bucket",
-    "SelectCluster=Select Oracle Container Engine",
+    "SelectCluster=Select Oracle Container Engine for Kubernetes",
     "SelectCompute=Select Compute Instance"
 })
 public final class SuggestedItem extends OCIItem {
@@ -51,7 +51,7 @@ public final class SuggestedItem extends OCIItem {
     }
 
     public Set<String> getExclusivePaths() {
-        return exclusivePaths;
+        return Collections.unmodifiableSet(exclusivePaths);
     }
 
     public static SuggestedItem forPath(String path) {

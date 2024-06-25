@@ -75,14 +75,16 @@ import org.openide.util.NbBundle;
 @NbBundle.Messages({
     "AddADB=Add Oracle Autonomous DB",
     "SelectProfile=Select OCI Profile",
-    "# {0} - tenancy name",
-    "# {1} - region id",
-    "SelectProfile_Description={0} (region: {1})",
     "SelectCompartment=Select Compartment",
     "SelectDatabase=Select Database",
     "NoDatabase=No Database available in this Compartment",
     "EnterUsername=Enter Username",
-    "EnterPassword=Enter Password"
+    "EnterPassword=Enter Password",
+    "MSG_CollectingProfiles=Searching for OCI Profiles",
+    "MSG_CollectingProfiles_Text=Loading OCI Profiles",
+    "MSG_CollectingItems=Loading OCI contents",
+    "MSG_CollectingItems_Text=Listing compartments and databases",
+    "SelectProfile_Description={0} (region: {1})"
 })
 public class AddADBAction implements ActionListener {
     private static final Logger LOGGER = Logger.getLogger(AddADBAction.class.getName());
@@ -92,12 +94,6 @@ public class AddADBAction implements ActionListener {
     private static final String PASSWORD = "password"; //NOI18N
     private static final int NUMBER_OF_INPUTS = 4;
 
-    @NbBundle.Messages({
-        "MSG_CollectingProfiles=Searching for OCI Profiles",
-        "MSG_CollectingProfiles_Text=Loading OCI Profiles",
-        "MSG_CollectingItems=Loading OCI contents",
-        "MSG_CollectingItems_Text=Listing compartments and databases",
-    })
     @Override
     public void actionPerformed(ActionEvent e) {
         addADB();
@@ -212,8 +208,7 @@ public class AddADBAction implements ActionListener {
                         AbstractPasswordPanel.generatePassword(),
                         (String) result.get(USERNAME),
                         ((String) result.get(PASSWORD)).toCharArray(),
-                        selectedDatabase.getKey().getValue(),
-                        selectedDatabase.getCompartmentId());
+                        selectedDatabase);
                 action.addConnection(info);
                 return selectedDatabase;
             } catch (IOException ex) {

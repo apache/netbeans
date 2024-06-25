@@ -347,6 +347,19 @@ function shouldEnableConflictingJavaSupport() : boolean | undefined {
     return r;
 }
 
+function getValueAfterPrefix(input: string | undefined, prefix: string): string {
+    if (input === undefined) {
+        return "";
+    }
+    const parts = input.split(' ');
+    for (let i = 0; i < parts.length; i++) {
+        if (parts[i].startsWith(prefix)) {
+            return parts[i].substring(prefix.length);
+        }
+    }
+    return '';
+}
+
 export function activate(context: ExtensionContext): VSNetBeansAPI {
     const provider = new StringContentProvider();
     const scheme = 'in-memory';
@@ -361,6 +374,13 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         })
     );
     context.subscriptions.push(vscode.commands.registerCommand('cloud.assets.config.create', async function (viewItem) {
+            const CONFIG_LOCAL = 'Open a preview of the config in the editor';
+            const CONFIG_TO_CM = 'Upload the config to a ConfigMap artifact in an OCI DevOps Project';
+            const selected: any = await window.showQuickPick([CONFIG_LOCAL, CONFIG_TO_CM], { placeHolder: 'Select a target for the config' });
+            if (selected == CONFIG_TO_CM) {
+                await commands.executeCommand('nbls.cloud.assets.configmap.upload');
+                return;
+            } 
             const content = await vscode.commands.executeCommand('nbls.cloud.assets.config.create.local') as string;
             const document = vscode.Uri.parse(`${scheme}:application.properties?${encodeURIComponent(content)}`);
             vscode.workspace.openTextDocument(document).then(doc => {
@@ -1282,8 +1302,23 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         if (enableJava) {
             c.findTreeViewService().createView('cloud.resources', undefined, { canSelectMany : false });
         }
-        c.findTreeViewService().createView('cloud.assets', undefined, { canSelectMany : false, showCollapseAll: false });
+        c.findTreeViewService().createView('cloud.assets', undefined, { canSelectMany : false, showCollapseAll: false , providerInitializer : (customizable) =>
+            customizable.addItemDecorator(new CloudAssetsDecorator())});
     }).catch(setClient[1]);
+
+    class CloudAssetsDecorator implements TreeItemDecorator<Visualizer> {
+        decorateChildren(element: Visualizer, children: Visualizer[]): Visualizer[] {
+            return children;
+        }
+
+        async decorateTreeItem(vis : Visualizer, item : vscode.TreeItem) : Promise<vscode.TreeItem> {
+            item.description = getValueAfterPrefix(item.contextValue, "cloudAssetsReferenceName:");
+            return item;
+        }
+
+        dispose() {
+        }
+    }
 
     class Decorator implements TreeItemDecorator<Visualizer> {
         private provider : CustomizableTreeDataProvider<Visualizer>;

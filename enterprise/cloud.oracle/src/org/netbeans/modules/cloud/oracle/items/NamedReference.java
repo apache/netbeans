@@ -16,34 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.vault;
-
-import org.netbeans.modules.cloud.oracle.items.OCID;
-import org.netbeans.modules.cloud.oracle.items.OCIItem;
+package org.netbeans.modules.cloud.oracle.items;
 
 /**
- *
+ * References a resource that can be used in source code under a specified name, such as a datasource or an OCI vault.
+ * 
  * @author Jan Horvath
  */
-public class VaultItem extends OCIItem {
-    private String managementEndpoint;
-
-    public VaultItem(OCID id, String compartment, String name, String managementEndpoint) {
-        super(id, compartment, name);
-        this.managementEndpoint = managementEndpoint;
-    }
-
-    public VaultItem() {
-        super();
-    }
-
-    public String getManagementEndpoint() {
-        return managementEndpoint;
-    }
+public interface NamedReference {
     
-    @Override
-    public int maxInProject() {
-        return 1;
-    }
+    /**
+     * Set a reference name.
+     * 
+     * @param referenceName 
+     */
+    public void setReferenceName(String referenceName);
+    
+    /**
+     * Returns a reference name.
+     * @return 
+     */
+    public String getReferenceName();
     
 }

@@ -61,6 +61,7 @@
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddRepository" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddSuggestedItemAction" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.RemoveFromProject" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.SetReferenceName" stringvalue="Tools"/>
             </file>
         </folder>
         <folder name="AutoupdateType">

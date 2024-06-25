@@ -16,27 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.assets;
+package org.netbeans.modules.cloud.oracle.steps;
 
-import org.openide.NotifyDescriptor;
-import org.openide.util.Lookup;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Jan Horvath
  */
-public interface Step<T, U> {
-
-    Step<T, U> prepare(T item, Lookup lookup);
-
-    NotifyDescriptor createInput();
-
-    boolean onlyOneChoice();
-
-    Step getNext();
-
-    void setValue(String selected);
-
-    U getValue();
+public class OverwriteStepTest {
+    
+    /**
+     * Test of extractDatasourceName method, of class AddDbConnectionToVault.
+     */
+    @Test
+    public void datasourceName() {
+        String input = "DATASOURCES_DEFAULT_USERNAME";
+        String ds = OverwriteStep.extractDatasourceName(input);
+        assertEquals("DEFAULT", ds);
+        
+        input = "DATASOURCES_DEF3_USERNAME";
+        ds = OverwriteStep.extractDatasourceName(input);
+        assertEquals("DEF3", ds);
+    }
     
 }

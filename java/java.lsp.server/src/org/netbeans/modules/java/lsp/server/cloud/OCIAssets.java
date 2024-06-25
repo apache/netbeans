@@ -36,7 +36,6 @@ import org.openide.util.lookup.ServiceProvider;
 public class OCIAssets implements ExplorerManagerFactory {
     public static final String ID = "cloud.assets"; // NOI18N
     public static final String CLOUD_PATH = "CloudAssets"; // NOI18N
-    private static String CLOUD_NODE_NAME = "cloudAssets";
 
     @Override
     public CompletionStage<ExplorerManager> createManager(String id, Lookup context) {
@@ -46,7 +45,6 @@ public class OCIAssets implements ExplorerManagerFactory {
         ExplorerManager em = new ExplorerManager();
         Lookup.Result<Node> nodes = Lookups.forPath("Cloud/Oracle/Assets").lookupResult(Node.class);
         nodes.allInstances().stream()
-//            .filter(n -> CLOUD_NODE_NAME.equals(n.getName()))
                 .findFirst()
                 .ifPresent(n -> em.setRootContext(n));
         return CompletableFuture.completedFuture(em);

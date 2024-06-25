@@ -18,6 +18,9 @@
  */
 package org.netbeans.modules.cloud.oracle.assets;
 
+import org.netbeans.modules.cloud.oracle.steps.SuggestedStep;
+import org.netbeans.modules.cloud.oracle.steps.ProjectStep;
+import org.netbeans.modules.cloud.oracle.steps.CompartmentStep;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,22 +30,20 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.cloud.oracle.assets.Steps.ItemTypeStep;
+import org.netbeans.modules.cloud.oracle.actions.AddADBAction;
+import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
+import org.netbeans.modules.cloud.oracle.steps.ItemTypeStep;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import org.netbeans.modules.cloud.oracle.steps.DatabaseConnectionStep;
+import org.netbeans.modules.cloud.oracle.steps.TenancyStep;
 import org.netbeans.spi.lsp.CommandProvider;
-import org.openide.util.Lookup;
-import org.openide.util.NbBundle;
-import org.openide.util.Pair;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Jan Horvath
  */
-@NbBundle.Messages({
-    "NoProjects=No Project Found",
-    "SelectProject=Select Project to Update Dependencies",
-    "SelectResourceType=Select Resource Type"})
 @ServiceProvider(service = CommandProvider.class)
 public class AddNewAssetCommand implements CommandProvider {
 
@@ -68,20 +69,42 @@ public class AddNewAssetCommand implements CommandProvider {
     @Override
     public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
         CompletableFuture future = new CompletableFuture();
+        Steps.NextStepProvider nsProvider = Steps.NextStepProvider.builder()
+                    .stepForClass(ItemTypeStep.class, (s) -> {
+                        if ("Databases".equals(s.getValue())) {
+                            return new DatabaseConnectionStep();
+                        } 
+                        return new TenancyStep();
+                    }).stepForClass(TenancyStep.class, (s) -> new CompartmentStep())
+                    .stepForClass(CompartmentStep.class, (s) -> new SuggestedStep(null))
+                    .stepForClass(SuggestedStep.class, (s) -> new ProjectStep())
+                    .build();
         Steps.getDefault()
-                .executeMultistep(new ItemTypeStep(), Lookup.EMPTY)
-                .thenAccept(result -> {
-                    Project project = ((Pair<Project, OCIItem>) result).first();
-                    OCIItem item = ((Pair<Project, OCIItem>) result).second();
+                .executeMultistep(new ItemTypeStep(), Lookups.fixed(nsProvider))
+                .thenAccept(values -> {
+                    Project project = values.getValueForStep(ProjectStep.class);
+                    OCIItem item;
+                    if ("Databases".equals(values.getValueForStep(ItemTypeStep.class))) {
+                        item = values.getValueForStep(DatabaseConnectionStep.class);
+                        if (item == null) {
+                            item = new AddADBAction().addADB();
+                        }
+                    } else {
+                        item = values.getValueForStep(SuggestedStep.class);
+                    }
+                    if (item == null) {
+                        future.cancel(true);
+                        return;
+                    }
                     CloudAssets.getDefault().addItem(item);
                     String[] art = DEP_MAP.get(item.getKey().getPath());
                     try {
                         DependencyUtils.addDependency(project, art[0], art[1]);
+                        future.complete(null);
                     } catch (IllegalStateException e) {
                         future.completeExceptionally(e);
                     }
                 });
-        future.complete(null);
         return future;
     }
 

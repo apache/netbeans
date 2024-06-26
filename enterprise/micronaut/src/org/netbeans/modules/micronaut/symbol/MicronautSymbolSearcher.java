@@ -34,7 +34,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.Icon;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.lsp.Diagnostic;
@@ -127,7 +129,8 @@ public class MicronautSymbolSearcher implements IndexSearcher {
         Set<SymbolDescriptor> symbols = new HashSet<>();
         for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
             try {
-                FileObject cacheRoot = getCacheRoot(sg.getRootFolder().toURL());
+                FileObject root = sg.getRootFolder();
+                FileObject cacheRoot = getCacheRoot(root.toURL());
                 if (cacheRoot != null) {
                     cacheRoot.refresh();
                     Enumeration<? extends FileObject> children = cacheRoot.getChildren(true);
@@ -138,12 +141,17 @@ public class MicronautSymbolSearcher implements IndexSearcher {
                         }
                     }
                 }
+                if (UnitTestForSourceQuery.findUnitTests(root).length > 0) {
+                    ClassPath bootCP = ClassPath.getClassPath(root, ClassPath.BOOT);
+                    ClassPath execCP = ClassPath.getClassPath(root, ClassPath.EXECUTE);
+                    ClasspathInfo cpInfo = ClasspathInfo.create(bootCP != null ? bootCP : ClassPath.EMPTY, execCP != null ? execCP : ClassPath.EMPTY, null);
+                    for (MicronautSymbolFinder.ClassSymbolLocation loc : MicronautSymbolFinder.getSymbolsFromDependencies(cpInfo, textForQuery)) {
+                        symbols.add(new SymbolDescriptor(loc.getName(), loc.getFile(), loc.getKind(), loc.getSignatures()));
+                    }
+                }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
-        }
-        for (MicronautSymbolFinder.ClassSymbolLocation loc : MicronautSymbolFinder.getSymbolsFromDependencies(ClasspathInfo.create(project.getProjectDirectory()), textForQuery)) {
-            symbols.add(new SymbolDescriptor(loc.getName(), loc.getFile(), loc.getKind(), loc.getSignatures()));
         }
         return symbols;
     }

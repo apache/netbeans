@@ -62,6 +62,7 @@ import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
@@ -69,6 +70,8 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.indexing.Context;
@@ -106,7 +109,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
     private static final String MANAGEMENT_DELETE_ANNOTATION = "io.micronaut.management.endpoint.annotation.Delete";
     private static final String MANAGEMENT_SELECTOR_ANNOTATION = "io.micronaut.management.endpoint.annotation.Selector";
 
-    private final Map<Project, Boolean> map = new WeakHashMap<>();
+    private final Map<FileObject, Boolean> map = new WeakHashMap<>();
     private final Map<ClasspathInfo, List<ClassSymbolLocation>> cache = new WeakHashMap<>();
 
     @Override
@@ -135,15 +138,21 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
         if (p == null) {
             return false;
         }
-        Boolean ret = map.get(p);
-        if (ret == null) {
-            ClassPath cp = ClassPath.getClassPath(p.getProjectDirectory(), ClassPath.COMPILE);
-            cp.addPropertyChangeListener(WeakListeners.propertyChange(this, cp));
-            ret = cp.findResource("io/micronaut/http/annotation/HttpMethodMapping.class") != null
-                    || cp.findResource("io/micronaut/management/endpoint/annotation/Endpoint.class") != null;
-            map.put(p, ret);
+        for (SourceGroup sg : ProjectUtils.getSources(p).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
+            if (sg.contains(cc.getFileObject())) {
+                FileObject root = sg.getRootFolder();
+                Boolean ret = map.get(root);
+                if (ret == null) {
+                    ClassPath cp = ClassPath.getClassPath(root, ClassPath.COMPILE);
+                    cp.addPropertyChangeListener(WeakListeners.propertyChange(this, cp));
+                    ret = cp.findResource("io/micronaut/http/annotation/HttpMethodMapping.class") != null
+                            || cp.findResource("io/micronaut/management/endpoint/annotation/Endpoint.class") != null;
+                    map.put(root, ret);
+                }
+                return ret;
+            }
         }
-        return ret;
+        return false;
     }
 
     public static List<SymbolLocation> scan(CompilationController cc, boolean selectEndpointAnnotation) {
@@ -588,8 +597,23 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
                 for (AnnotationMirror ann : ee.getAnnotationMirrors()) {
                     String method = getEndpointMethod((TypeElement) ann.getAnnotationType().asElement());
                     if (method != null) {
-                        String name = '@' + path + getId(ee) + " -- " + method;
-                        ret.add(new ClassSymbolLocation(name, fo, mth.getKind().name(), getSignatures(mth)));
+                        List<String> ids = new ArrayList<>();
+                        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : ann.getElementValues().entrySet()) {
+                            if ("value".contentEquals(entry.getKey().getSimpleName()) || "uri".contentEquals(entry.getKey().getSimpleName())) {
+                                ids.add((String) entry.getValue().getValue());
+                            } else if ("uris".contentEquals(entry.getKey().getSimpleName())) {
+                                for (AnnotationValue av : (List<AnnotationValue>) entry.getValue().getValue()) {
+                                    ids.add((String) av.getValue());
+                                }
+                            }
+                        }
+                        if (ids.isEmpty()) {
+                            ids.add(getId(ee));
+                        }
+                        for (String id : ids) {
+                            String name = '@' + path + id + " -- " + method;
+                            ret.add(new ClassSymbolLocation(name, fo, mth.getKind().name(), getSignatures(mth)));
+                        }
                     }
                 }
             }

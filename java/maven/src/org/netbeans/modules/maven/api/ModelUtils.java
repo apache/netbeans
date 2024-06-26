@@ -321,6 +321,9 @@ public final class ModelUtils {
         Build bld = mdl.getProject().getBuild();
         if (bld != null) {
             old = bld.findPluginById(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER);
+            if (old == null && bld.getPluginManagement() != null) {
+                old = bld.getPluginManagement().findPluginById(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER);
+            }
         } else {
             mdl.getProject().setBuild(mdl.getFactory().createBuild());
         }

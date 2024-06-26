@@ -41,7 +41,7 @@ public final class Icons {
     private Icons() {
     }
     
-    public static Icon getCompletionIcon(CompletionItemKind completionKind) {
+    public static Icon getCompletionIcon(Enum<?> completionKind) {
         Image img = null;
 
         if (completionKind != null) {

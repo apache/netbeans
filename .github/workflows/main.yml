@@ -124,7 +124,7 @@ jobs:
     timeout-minutes: 40
     strategy:
       matrix:
-        java: [ '17', '21', '22' ]
+        java: [ '17', '21', '23-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
@@ -525,6 +525,18 @@ jobs:
       - name: Extract
         run: tar --zstd -xf build.tar.zst
 
+      - name: apisupport.project
+        run: ant $OPTS -f apisupport/apisupport.project test
+
+      - name: apisupport.refactoring
+        run: ant $OPTS -f apisupport/apisupport.refactoring test
+
+      - name: apisupport.wizards
+        run: ant $OPTS -f apisupport/apisupport.wizards test
+
+      - name: timers
+        run: ant $OPTS -f apisupport/timers test
+
       - name: ide/api.xml
         run: ant $OPTS -f ide/api.xml test
 
@@ -808,7 +820,7 @@ jobs:
     timeout-minutes: 50
     strategy:
       matrix:
-        java: [ '17', '21', '22' ]
+        java: [ '17', '21', '23-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
@@ -1403,56 +1415,6 @@ jobs:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
-  # TODO merge this job into other jobs once tests are fixed
-  apisupport-modules-test:
-    name: APISupport Modules on Linux/JDK ${{ matrix.java }}
-    needs: base-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    strategy:
-      matrix:
-        java: [ '17' ]
-      fail-fast: false
-    steps:
-
-      - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{ matrix.java }}
-          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Setup Xvfb
-        run: |
-          echo "DISPLAY=:99.0" >> $GITHUB_ENV
-          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-
-      - name: Download Build
-        uses: actions/download-artifact@v4
-        with:
-          name: build
-
-      - name: Extract
-        run: tar --zstd -xf build.tar.zst
-
-      - name: apisupport.project
-        run: ant $OPTS -f apisupport/apisupport.project test
-
-      - name: apisupport.refactoring
-        run: ant $OPTS -f apisupport/apisupport.refactoring test
-
-      - name: apisupport.wizards
-        run: ant $OPTS -f apisupport/apisupport.wizards test
-
-      - name: timers
-        run: ant $OPTS -f apisupport/timers test
-
-      - name: Create Test Summary
-        uses: test-summary/action@v2
-        if: failure()
-        with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
-
-
   java-hints-test:
     name: Java Hints ${{ matrix.config }} on Linux/JDK ${{ matrix.java }}
     # equals env.test_java == 'true'
@@ -1462,10 +1424,10 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '22' ]
+        java: [ '17', '23-ea' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '22' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '23-ea' }}
       fail-fast: false
     steps:
 
@@ -1509,13 +1471,13 @@ jobs:
   java-debugger-test:
     name: Java Debugger tests on Linux/JDK ${{ matrix.java }}
     # equals env.test_java == 'true'
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'debugger') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '21', '22' ]
+        java: [ '17', '21', '23-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
@@ -2658,7 +2620,6 @@ jobs:
       - java-hints-test
       - java-debugger-test
       - profiler-test
-      - apisupport-modules-test
       - build-tools
       - webcommon-test
       - php

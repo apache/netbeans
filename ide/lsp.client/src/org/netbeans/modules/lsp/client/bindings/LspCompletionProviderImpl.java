@@ -46,6 +46,62 @@ public class LspCompletionProviderImpl implements CompletionProvider {
 
     @Override
     public CompletionTask createTask(int queryType, JTextComponent component) {
+        if ((queryType & TOOLTIP_QUERY_TYPE) != 0) {
+            return new AsyncCompletionTask(new AsyncCompletionQuery() {
+                @Override
+                protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {
+                    try {
+                        FileObject file = NbEditorUtilities.getFileObject(doc);
+                        if (file == null) {
+                            //TODO: beep
+                            return;
+                        }
+                        final String mime = file.getMIMEType();
+                        for (CompletionCollector cc : MimeLookup.getLookup(mime).lookupAll(CompletionCollector.class)) {
+
+                        }
+                        /*
+                        String uri = Utils.toURI(file);
+                        SignatureHelpParams params;
+                        params = new SignatureHelpParams(new TextDocumentIdentifier(uri),
+                                Utils.createPosition(doc, caretOffset));
+                        SignatureHelp help = server.getTextDocumentService().signatureHelp(params).get();
+                        if (help == null || help.getSignatures().isEmpty()) {
+                            return ;
+                        }
+                        //TODO: active signature?
+                        StringBuilder signatures = new StringBuilder();
+                        signatures.append("<html>");
+                        for (SignatureInformation info : help.getSignatures()) {
+                            if (info.getParameters().isEmpty()) {
+                                signatures.append("No parameter.");
+                                continue;
+                            }
+                            String sigSep = "";
+                            int idx = 0;
+                            for (ParameterInformation pi : info.getParameters()) {
+                                if (idx == help.getActiveParameter()) {
+                                    signatures.append("<b>");
+                                }
+                                signatures.append(sigSep);
+                                signatures.append(pi.getLabel());
+                                if (idx == help.getActiveParameter()) {
+                                    signatures.append("</b>");
+                                }
+                                sigSep = ", ";
+                                idx++;
+                            }
+                        }
+                        JToolTip tip = new JToolTip();
+                        tip.setTipText(signatures.toString());
+                        resultSet.setToolTip(tip);
+                         */
+                    } finally {
+                        resultSet.finish();
+                    }
+                }
+            }, component);
+        }
         return new AsyncCompletionTask(new AsyncCompletionQuery() {
             @Override
             protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {

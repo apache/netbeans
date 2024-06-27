@@ -2001,7 +2001,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 try {
                     doc.addDocumentListener(l);
                     l.checkCancel();
-                    errors = errorProviders.stream().flatMap(errorPorvider -> errorPorvider.computeErrors(context).stream()).collect(Collectors.toList());
+                    errors = errorProviders.stream().flatMap(provider -> {
+                        List<? extends org.netbeans.api.lsp.Diagnostic> errorsOrNull = provider.computeErrors(context);
+                        if (errorsOrNull == null) {
+                            errorsOrNull = Collections.emptyList();
+                        }
+                        return errorsOrNull.stream();
+                    }).collect(Collectors.toList());
                 } finally {
                     doc.removeDocumentListener(l);
                 }

@@ -171,7 +171,7 @@ public class LspCompletionProviderImpl implements CompletionProvider {
         }
 
         @Override
-        TextEdit findEdit(boolean[] hideNow) {
+        TextEdit findEdit() {
             return i.getTextEdit();
         }
 

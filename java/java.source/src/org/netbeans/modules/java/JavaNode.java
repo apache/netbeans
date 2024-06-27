@@ -23,8 +23,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.awt.Image;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,12 +30,17 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.text.MessageFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HexFormat;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -52,7 +55,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.queries.FileBuiltQuery;
@@ -61,12 +63,10 @@ import org.netbeans.modules.classfile.Access;
 import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.classfile.InvalidClassFormatException;
 import org.netbeans.modules.java.source.usages.ExecutableFilesIndex;
-import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
-import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.java.loaders.RenameHandler;
 import org.openide.filesystems.*;
 import org.openide.loaders.DataNode;
@@ -77,18 +77,14 @@ import org.openide.nodes.PropertySupport;
 import org.openide.nodes.Sheet;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
-
-import static org.openide.util.ImageUtilities.assignToolTipToImage;
-import static org.openide.util.ImageUtilities.loadImage;
-
 import org.openide.util.Lookup;
-
-import static org.openide.util.NbBundle.getMessage;
-import org.openide.util.NbPreferences;
-
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
+
+import static org.openide.util.ImageUtilities.assignToolTipToImage;
+import static org.openide.util.ImageUtilities.loadImage;
+import static org.openide.util.NbBundle.getMessage;
 
 /**
  * The node representation of Java source files.
@@ -139,22 +135,18 @@ public final class JavaNode extends DataNode implements ChangeListener {
             if (isJavaSource) {
                 WORKER.post(new BuildStatusTask(this));
                 WORKER.post(new ExecutableTask(this));
-                jdo.addPropertyChangeListener(new PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if (DataObject.PROP_PRIMARY_FILE.equals(evt.getPropertyName())) {
-                            Logger.getLogger("TIMER").log(Level.FINE, "JavaNode", new Object[]{jdo.getPrimaryFile(), this});
-                            WORKER.post(new Runnable() {
-                                public void run() {
-                                    computedIconListener.set(null);
-                                    synchronized (JavaNode.this) {
-                                        status = null;
-                                        executableListener = null;
-                                        WORKER.post(new BuildStatusTask(JavaNode.this));
-                                        WORKER.post(new ExecutableTask(JavaNode.this));
-                                    }
-                                }
-                            });
-                        }
+                jdo.addPropertyChangeListener((evt) -> {
+                    if (DataObject.PROP_PRIMARY_FILE.equals(evt.getPropertyName())) {
+                        Logger.getLogger("TIMER").log(Level.FINE, "JavaNode", new Object[]{jdo.getPrimaryFile(), this});
+                        WORKER.post(() -> {
+                            computedIconListener.set(null);
+                            synchronized (JavaNode.this) {
+                                status = null;
+                                executableListener = null;
+                                WORKER.post(new BuildStatusTask(JavaNode.this));
+                                WORKER.post(new ExecutableTask(JavaNode.this));
+                            }
+                        });
                     }
                 });
             }
@@ -177,7 +169,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
     
     private static synchronized RenameHandler getRenameHandler() {
         Collection<? extends RenameHandler> handlers = (Lookup.getDefault().lookupAll(RenameHandler.class)) ;
-        if (handlers.size()==0)
+        if (handlers.isEmpty())
             return null;
         if (handlers.size()>1)
             LOG.warning("Multiple instances of RenameHandler found in Lookup; only using first one: " + handlers); //NOI18N
@@ -213,7 +205,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
         ps.setDisplayName(getMessage(JavaNode.class, "LBL_JavaNode_sheet_classpaths"));
         ps.setShortDescription(getMessage(JavaNode.class, "HINT_JavaNode_sheet_classpaths"));
         ps.put(new Node.Property[] {
-            new ClasspathProperty(ClassPath.COMPILE,
+                    new ClasspathProperty(ClassPath.COMPILE,
                     getMessage(JavaNode.class, "PROP_JavaNode_compile_classpath"),
                     getMessage(JavaNode.class, "HINT_JavaNode_compile_classpath")),
                     new ClasspathProperty(ClassPath.EXECUTE,
@@ -224,22 +216,35 @@ public final class JavaNode extends DataNode implements ChangeListener {
                     getMessage(JavaNode.class, "HINT_JavaNode_boot_classpath")),
         });
         sheet.put(ps);
-        
+
+        // classfile format etc
+        if (!isJavaSource) {
+            ps = new Sheet.Set();
+            ps.setName("classfile_info"); // NOI18N
+            ps.setDisplayName(getMessage(JavaNode.class, "LBL_JavaNode_sheet_classfile")); // NOI18N
+            ps.setShortDescription(getMessage(JavaNode.class, "HINT_JavaNode_sheet_classfile")); // NOI18N
+            ps.put(new ClassFileVersionProperty());
+            sheet.put(ps);
+        }
+
+        // "single-file" java programs
         Project parentProject = FileOwnerQuery.getOwner(super.getDataObject().getPrimaryFile());
         DataObject dObj = super.getDataObject();
         // If any of the parent folders is a project, user won't have the option to specify these attributes to the java files.
         if (parentProject == null) {
-            Node.Property arguments = new org.openide.nodes.PropertySupport.ReadWrite<String> (
+            Node.Property arguments = new PropertySupport.ReadWrite<String> (
                     "runFileArguments", // NOI18N
                     String.class,
                     "Arguments",
                     "Arguments passed to the main method while running the file."
                 ) {
+                    @Override
                     public String getValue () {
                         Object arguments = dObj.getPrimaryFile().getAttribute(FILE_ARGUMENTS);
                         return arguments != null ? (String) arguments : "";
                     }
 
+                    @Override
                     public void setValue (String o) {
                         try {
                             dObj.getPrimaryFile().setAttribute(FILE_ARGUMENTS, o);
@@ -250,23 +255,25 @@ public final class JavaNode extends DataNode implements ChangeListener {
                                     dObj.getPrimaryFile().getName());
                         }
                     }
-                };
-            Node.Property vmOptions = new org.openide.nodes.PropertySupport.ReadWrite<String> (
+            };
+            Node.Property vmOptions = new PropertySupport.ReadWrite<String> (
                     "runFileVMOptions", // NOI18N
                     String.class,
                     "VM Options",
                     "VM Options to be considered while running the file."
                 ) {
+                    @Override
                     public String getValue () {
                         Object vmOptions = dObj.getPrimaryFile().getAttribute(FILE_VM_OPTIONS);
                         return vmOptions != null ? (String) vmOptions : "";
                     }
 
+                    @Override
                     public void setValue(String o) {
                         try {
                             dObj.getPrimaryFile().setAttribute(FILE_VM_OPTIONS, o);
                             Source s = Source.create(dObj.getPrimaryFile());
-                            ModificationResult result = ModificationResult.runModificationTask(Collections.singleton(s), new UserTask() {
+                            ModificationResult result = ModificationResult.runModificationTask(List.of(s), new UserTask() {
 
                                 @Override
                                 public void run(ResultIterator resultIterator) {
@@ -280,7 +287,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
                                     dObj.getPrimaryFile().getName());
                         }
                 }
-                };
+            };
             Sheet.Set ss = new Sheet.Set();
             ss.setName("runFileArguments"); // NOI18N
             ss.setDisplayName(getMessage(JavaNode.class, "LBL_JavaNode_without_project_run"));
@@ -308,6 +315,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
                 getMessage (DataObject.class, "PROP_name"),
                 getMessage (DataObject.class, "HINT_name")
                 ) {
+            @Override
             public String getValue () {
                 return JavaNode.this.getName();
             }
@@ -319,6 +327,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
                     return super.getValue (key);
                 }
             }
+            @Override
             public void setValue(String val) throws IllegalAccessException,
                     IllegalArgumentException, InvocationTargetException {
                 if (!canWrite())
@@ -350,10 +359,11 @@ public final class JavaNode extends DataNode implements ChangeListener {
             setValue("oneline", false); // NOI18N
         }
         
+        @Override
         public String getValue() {
             ClassPath cp = ClassPath.getClassPath(getDataObject().getPrimaryFile(), id);
             if (cp != null) {
-                StringBuffer sb = new StringBuffer();
+                StringBuilder sb = new StringBuilder();
                 for (ClassPath.Entry entry : cp.entries()) {
                     URL u = entry.getURL();
                     String item = u.toExternalForm(); // fallback
@@ -378,10 +388,53 @@ public final class JavaNode extends DataNode implements ChangeListener {
         }
     }
 
+    /**
+     * Displays the class file version.
+     */
+    private final class ClassFileVersionProperty extends PropertySupport.ReadOnly<String> {
+
+        public static final Duration REFRESH = Duration.ofSeconds(5);
+        private Instant expiration = Instant.now();
+        private String version = null;
+
+        public ClassFileVersionProperty() {
+            super("classfile_version", String.class,  // NOI18N
+                getMessage(JavaNode.class, "PROP_JavaNode_classfile_version"), // NOI18N
+                getMessage(JavaNode.class, "HINT_JavaNode_classfile_version")); // NOI18N
+        }
+
+        @Override
+        public String getValue() {
+            FileObject file = getDataObject().getPrimaryFile();
+            // avoids IO but gets fresh values if they expire
+            if (version != null && Instant.now().isBefore(expiration)) {
+                return version;
+            }
+            try (InputStream in = file.getInputStream()) {
+                ByteBuffer bytes = ByteBuffer.wrap(in.readNBytes(8)); // 4b magic + 2x2b for version
+                if (bytes.capacity() == 8 && bytes.getInt() == HexFormat.fromHexDigits("CAFEBABE")) { // NOI18N
+                    int minor = bytes.getChar();
+                    int major = bytes.getChar();
+                    if (major >= 55) { // JEP 12
+                        version = major + " (Java " + (major - 44) + (minor == 65535 ? ", preview enabled" : "") + ")";  // NOI18N
+                    } else {
+                        version = major + "." + minor + " (Java " + (major - 44) + ")"; // NOI18N
+                    }
+                    expiration = Instant.now().plus(REFRESH);
+                    return version;
+                }
+            } catch (IOException ignored) {}
+            version = "unknown"; // NOI18N
+            return version;
+        }
+    }
+
+    @Override
     public void stateChanged(ChangeEvent e) {
         WORKER.post(new BuildStatusTask(this));
     }
 
+    @Override
     public Image getIcon(int type) {
         Image i = prefferImage(
             computedIcon.get(),
@@ -390,6 +443,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
         return enhanceIcon(i);
     }
 
+    @Override
     public Image getOpenedIcon(int type) {
         Image i = super.getOpenedIcon(type);
         return enhanceIcon(i);
@@ -413,7 +467,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
             computed = FileUIUtils.getImageDecorator(fo.getFileSystem ()).annotateIcon (
                 computed,
                 type,
-                Collections.singleton(fo));
+                Set.of(fo));
         } catch (FileStateInvalidException e) {
             // no fs, do nothing
         }
@@ -515,34 +569,20 @@ public final class JavaNode extends DataNode implements ChangeListener {
                 final JavaSource src = JavaSource.forFileObject(file);
                 if (src != null) {
                     try {
-                        src.runUserActionTask(new Task<CompilationController>() {
-                            @Override
-                            public void run(CompilationController cc) throws Exception {
-                                cc.toPhase(JavaSource.Phase.PARSED);
-                                final CompilationUnitTree cu = cc.getCompilationUnit();
-                                final Collection<ClassTree> topTypes = cu.accept(
-                                    new ClasssFinder(),
-                                    new ArrayList<ClassTree>());
-                                for (ClassTree ct : topTypes) {
-                                    switch(ct.getKind()) {
-                                        case CLASS:
-                                            res[0] = ct.getModifiers().getFlags().contains(Modifier.ABSTRACT) ?
-                                             ABSTRACT_CLASS_ICON_BASE :
-                                             JAVA_ICON_BASE;
-                                            break;
-                                        case INTERFACE:
-                                            res[0] = INTERFACE_ICON_BASE;
-                                            break;
-                                        case ENUM:
-                                            res[0] = ENUM_ICON_BASE;
-                                            break;
-                                        case ANNOTATION_TYPE:
-                                            res[0] = ANNOTATION_ICON_BASE;
-                                            break;
-                                    }
-                                    if (file.getName().contentEquals(ct.getSimpleName())) {
-                                        break;
-                                    }
+                        src.runUserActionTask((CompilationController cc) -> {
+                            cc.toPhase(JavaSource.Phase.PARSED);
+                            final CompilationUnitTree cu = cc.getCompilationUnit();
+                            final Collection<ClassTree> topTypes = cu.accept(new ClasssFinder(), new ArrayList<>());
+                            for (ClassTree ct : topTypes) {
+                                switch(ct.getKind()) {
+                                    case CLASS -> res[0] = ct.getModifiers().getFlags().contains(Modifier.ABSTRACT)
+                                                                ? ABSTRACT_CLASS_ICON_BASE : JAVA_ICON_BASE;
+                                    case INTERFACE -> res[0] = INTERFACE_ICON_BASE;
+                                    case ENUM -> res[0] = ENUM_ICON_BASE;
+                                    case ANNOTATION_TYPE -> res[0] = ANNOTATION_ICON_BASE;
+                                }
+                                if (file.getName().contentEquals(ct.getSimpleName())) {
+                                    break;
                                 }
                             }
                         }, true);
@@ -623,8 +663,9 @@ public final class JavaNode extends DataNode implements ChangeListener {
             this.node = node;
         }
 
+        @Override
         public void run() {
-            Status _status = null;
+            Status _status;
             synchronized (node) {
                 _status = node.status;
             }            
@@ -663,6 +704,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
             this.node = node;
         }
 
+        @Override
         public void run() {
             ChangeListener _executableListener;
             
@@ -673,10 +715,8 @@ public final class JavaNode extends DataNode implements ChangeListener {
             FileObject file = node.getDataObject().getPrimaryFile();
 
             if (_executableListener == null) {
-                _executableListener = new ChangeListener() {
-                    public void stateChanged(ChangeEvent e) {
-                        WORKER.post(new ExecutableTask(node));
-                    }
+                _executableListener = (ChangeEvent e) -> {
+                    WORKER.post(new ExecutableTask(node));
                 };
                 
                 ExecutableFilesIndex.DEFAULT.addChangeListener(file.toURL(), _executableListener);

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import javax.inject.Inject;
 import org.codehaus.plexus.logging.Logger;
 
 /**
@@ -32,12 +33,13 @@ import org.codehaus.plexus.logging.Logger;
  */
 public class AbstractIDEWorkspaceReader {
 
+    @Inject
     private Logger logger;
     
     private final Map<String, File> mappings;
 
     public AbstractIDEWorkspaceReader() {
-        mappings = new HashMap<String, File>();
+        mappings = new HashMap<>();
         String mapp = System.getenv("netbeansProjectMappings");
         if (mapp != null) {
             StringTokenizer st = new StringTokenizer(mapp, ",");
@@ -81,7 +83,7 @@ public class AbstractIDEWorkspaceReader {
 
     public List<String> findVersions(String groupId, String artifactId) {
         String id = groupId + ":" + artifactId + ":";
-        List<String> toRet = new ArrayList<String>();
+        List<String> toRet = new ArrayList<>();
         for (String s : mappings.keySet()) {
             if (s.startsWith(id)) {
                 toRet.add(s.substring(id.length()));

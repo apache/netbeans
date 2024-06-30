@@ -150,8 +150,7 @@ public class DockerAction {
                 String id = (String) json.get("Id");
                 long created = (long) json.get("Created");
                 long size = (long) json.get("Size");
-                long virtualSize = (long) json.get("VirtualSize");
-                ret.add(new DockerImage(instance, repoTags, id, created, size, virtualSize));
+                ret.add(new DockerImage(instance, repoTags, id, created, size));
             }
             return ret;
         } catch (DockerException ex) {
@@ -253,7 +252,7 @@ public class DockerAction {
 
             // FIXME image size and time parameters
             return new DockerImage(instance, Collections.singletonList(DockerUtils.getTag(repository, tag)),
-                    (String) value.get("Id"), time, 0, 0);
+                    (String) value.get("Id"), time, 0);
 
         } catch (UnsupportedEncodingException ex) {
             throw new DockerException(ex);
@@ -843,7 +842,7 @@ public class DockerAction {
                                 }
                                 // FIXME image size and time parameters
                                 return new DockerImage(instance, Collections.singletonList(DockerUtils.getTag(repository, tag)),
-                                        m.group(1), time, 0, 0);
+                                        m.group(1), time, 0);
                             }
                         }
                     } catch (ParseException ex) {

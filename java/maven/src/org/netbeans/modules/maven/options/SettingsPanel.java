@@ -159,27 +159,22 @@ public class SettingsPanel extends javax.swing.JPanel {
         comMavenHome.setRenderer(new ComboBoxRenderer());
 
         this.controller = controller;
-        listItemChangedListener = new ActionListener() {
-            
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (SEPARATOR.equals(comMavenHome.getSelectedItem())) {
-                    comMavenHome.setSelectedIndex(lastSelected);
-                    return;
-                }
-                
-                int selected = comMavenHome.getSelectedIndex();
-                if (selected == mavenHomeDataModel.getSize() - 1) {
-                    // browse
-                    comMavenHome.setSelectedIndex(lastSelected);
-                    SwingUtilities.invokeLater(SettingsPanel.this::browseAddNewRuntime);
-                    return;
-                }
-                
-                listDataChanged();
-                lastSelected = selected;
+        listItemChangedListener = (ActionEvent e) -> {
+            if (SEPARATOR.equals(comMavenHome.getSelectedItem())) {
+                comMavenHome.setSelectedIndex(lastSelected);
+                return;
             }
+            int selected = comMavenHome.getSelectedIndex();
+            if (selected == mavenHomeDataModel.getSize() - 1) {
+                // browse
+                comMavenHome.setSelectedIndex(lastSelected);
+                SwingUtilities.invokeLater(SettingsPanel.this::browseAddNewRuntime);
+                return;
+            }
+            listDataChanged();
+            lastSelected = selected;
         };
+
         comIndex.setSelectedIndex(0);
         listener = new ActionListenerImpl();
         comIndex.addActionListener(listener);
@@ -889,6 +884,10 @@ public class SettingsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnIndexActionPerformed
     
     private void btnGoalsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoalsActionPerformed
+        showGlobalMavenGoalCustomizer();
+    }//GEN-LAST:event_btnGoalsActionPerformed
+
+    public static void showGlobalMavenGoalCustomizer() {
         NbGlobalActionGoalProvider provider = Lookup.getDefault().lookup(NbGlobalActionGoalProvider.class);
         assert provider != null;
         try {
@@ -907,7 +906,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         }
-    }//GEN-LAST:event_btnGoalsActionPerformed
+    }
 
     private void btnOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOptionsActionPerformed
         GlobalOptionsPanel pnl = new GlobalOptionsPanel();
@@ -1033,7 +1032,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         chooser.setFileHidingEnabled(false);
         int selected = comMavenHome.getSelectedIndex();
         String path = getSelectedRuntime(selected);
-        if (path == null || path.trim().length() == 0) {
+        if (path == null || path.isBlank()) {
             path = new File(System.getProperty("user.home")).getAbsolutePath(); //NOI18N
         }
         if (path.length() > 0) {
@@ -1146,9 +1145,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbEnableIndexDownload.setSelected(RepositoryPreferences.isIndexDownloadEnabled());
         cbEnableMultiThreading.setSelected(RepositoryPreferences.isMultiThreadedIndexExtractionEnabled());
         switch (RepositoryPreferences.getIndexDateCutoffFilter()) {
-            case 5: rb5Years.setSelected(true); break;
-            case 2: rb2Years.setSelected(true); break;
-            default: rbFullIndex.setSelected(true); break;
+            case 5 -> rb5Years.setSelected(true);
+            case 2 -> rb2Years.setSelected(true);
+            default -> rbFullIndex.setSelected(true);
         }
         comBinaries.setSelectedItem(MavenSettings.getDefault().getBinaryDownloadStrategy());
         comJavadoc.setSelectedItem(MavenSettings.getDefault().getJavadocDownloadStrategy());

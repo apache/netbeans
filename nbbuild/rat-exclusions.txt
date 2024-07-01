@@ -78,6 +78,7 @@ webcommon/javascript2.jquery/external/jquery-api.xml
 **/Makefile-vc
 **/Makefile-vc-wo-crt
 **/package-list
+**/javax.inject.Named
 java/java.editor/src/org/netbeans/modules/java/editor/resources/JavaExample
 platform/lib.uihandler/src/org/netbeans/lib/uihandler/pubKey
 maven.indexer/external/NOTICE-patched-indexer-core-6.0.0

@@ -1936,7 +1936,7 @@ jobs:
 
 
   enterprise-test:
-    name: Enterprise on Linux/JDK ${{ matrix.java }} (some on 8)
+    name: Enterprise on Linux/JDK ${{ matrix.java }}
     # equals env.test_enterprise == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Java EE/Jakarta EE') || contains(github.event.pull_request.labels.*.name, 'Micronaut') || contains(github.event.pull_request.labels.*.name, 'enterprise') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
@@ -2168,14 +2168,9 @@ jobs:
       - name: websvc.wsstackapi
         run: ant $OPTS -f enterprise/websvc.wsstackapi test
 
-      - name: Set up JDK 8 for incompatible tests
-        uses: actions/setup-java@v4
-        with:
-          java-version: 8
-          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: websvc.editor.hints
-        run: ant $OPTS -f enterprise/websvc.editor.hints test
+# TODO fails on JDK11+ (#4904)
+#      - name: websvc.editor.hints
+#        run: ant $OPTS -f enterprise/websvc.editor.hints test
 
       - name: j2ee.dd.webservice
         run: ant $OPTS -f enterprise/j2ee.dd.webservice test

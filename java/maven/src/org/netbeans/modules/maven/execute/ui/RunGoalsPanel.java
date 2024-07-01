@@ -19,7 +19,6 @@
 package org.netbeans.modules.maven.execute.ui;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,46 +49,41 @@ public class RunGoalsPanel extends javax.swing.JPanel {
 
     private static final RequestProcessor RP = new RequestProcessor(RunGoalsPanel.class);
 
-    private List<NetbeansActionMapping> historyMappings;
+    private final List<NetbeansActionMapping> historyMappings;
     private int historyIndex = 0;
     private TextValueCompleter goalcompleter;
-    private TextValueCompleter profilecompleter;
+    private final TextValueCompleter profilecompleter;
     private NbMavenProjectImpl project;
 
     /** Creates new form RunGoalsPanel */
     public RunGoalsPanel() {
         initComponents();
         cbRememberActionPerformed(null);
-        historyMappings = new ArrayList<NetbeansActionMapping>();
+        historyMappings = new ArrayList<>();
         btnPrev.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/maven/execute/back.png", false)); //NOI18N
         btnNext.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/maven/execute/forward.png", false)); //NOI18N
 
-        goalcompleter = new TextValueCompleter(new ArrayList<String>(0), txtGoals, " "); //NOI18N
+        goalcompleter = new TextValueCompleter(new ArrayList<>(0), txtGoals, " "); //NOI18N
         goalcompleter.setLoading(true);
         // doing lazy.. 
-        RP.post(new Runnable() {
-            @Override public void run() {
-                GoalsProvider provider = Lookup.getDefault().lookup(GoalsProvider.class);
-                if (provider != null) {
-                    final Set<String> strs = provider.getAvailableGoals();
-                    try {
-                        List<String> phases = EmbedderFactory.getProjectEmbedder().getLifecyclePhases();
-                        strs.addAll(phases);
-                    } catch (Exception e) {
-                        // oh wel just ignore..
-                        e.printStackTrace();
-                    }
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            goalcompleter.setValueList(strs, false);//do not bother about partial results, too many intermediate apis..
-                        }
-                    });
+        RP.post(() -> {
+            GoalsProvider provider = Lookup.getDefault().lookup(GoalsProvider.class);
+            if (provider != null) {
+                Set<String> strs = provider.getAvailableGoals();
+                try {
+                    List<String> phases = EmbedderFactory.getProjectEmbedder().getLifecyclePhases();
+                    strs.addAll(phases);
+                } catch (Exception e) {
+                    // oh wel just ignore..
+                    e.printStackTrace();
                 }
+                SwingUtilities.invokeLater(() -> {
+                    goalcompleter.setValueList(strs, false);//do not bother about partial results, too many intermediate apis..
+                });
             }
         });
 
-        profilecompleter = new TextValueCompleter(new ArrayList<String>(0), txtProfiles, " ");
+        profilecompleter = new TextValueCompleter(new ArrayList<>(0), txtProfiles, " ");
     }
 
     @Override
@@ -101,18 +95,12 @@ public class RunGoalsPanel extends javax.swing.JPanel {
 
     private void readProfiles(final Project mavenProject) {
         profilecompleter.setLoading(true);
-        RP.post(new Runnable() {
-            @Override public void run() {
-                ProjectProfileHandler profileHandler = mavenProject.getLookup().lookup(ProjectProfileHandler.class);
-                final List<String> ret = profileHandler.getAllProfiles();
-                
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        profilecompleter.setValueList(ret, false);
-                    }
-                });
-            }
+        RP.post(() -> {
+            ProjectProfileHandler profileHandler = mavenProject.getLookup().lookup(ProjectProfileHandler.class);
+            List<String> ret = profileHandler.getAllProfiles();
+            SwingUtilities.invokeLater(() -> {
+                profilecompleter.setValueList(ret, false);
+            });
         });
     }
 
@@ -158,7 +146,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
         txtProfiles.setText(createSpaceSeparatedList(config.getActivatedProfiles()));
         
         setUpdateSnapshots(config.isUpdateSnapshots());
-        setOffline(config.isOffline() != null ? config.isOffline().booleanValue() : false);
+        setOffline(config.isOffline() != null ? config.isOffline() : false);
         setRecursive(config.isRecursive());
         setShowDebug(config.isShowDebug());
         if(config.getProject()!=null){
@@ -182,16 +170,16 @@ public class RunGoalsPanel extends javax.swing.JPanel {
 
     public void applyValues(NetbeansActionMapping mapp) {
         StringTokenizer tok = new StringTokenizer(txtGoals.getText().trim());
-        List<String> lst = new ArrayList<String>();
+        List<String> lst = new ArrayList<>();
         while (tok.hasMoreTokens()) {
             lst.add(tok.nextToken());
         }
-        mapp.setGoals(lst.size() > 0 ? lst : null);
+        mapp.setGoals(!lst.isEmpty() ? lst : null);
 
         mapp.setProperties(ActionMappings.convertStringToActionProperties(epProperties.getText()));
 
         tok = new StringTokenizer(txtProfiles.getText().trim(), " ,");
-        lst = new ArrayList<String>();
+        lst = new ArrayList<>();
         while (tok.hasMoreTokens()) {
             lst.add(tok.nextToken());
         }
@@ -202,13 +190,13 @@ public class RunGoalsPanel extends javax.swing.JPanel {
 
     public void applyValues(BeanRunConfig rc) {
         StringTokenizer tok = new StringTokenizer(txtGoals.getText().trim());
-        List<String> lst = new ArrayList<String>();
+        List<String> lst = new ArrayList<>();
         while (tok.hasMoreTokens()) {
             lst.add(tok.nextToken());
         }
-        rc.setGoals(lst.size() > 0 ? lst : Collections.singletonList("install")); //NOI18N
+        rc.setGoals(!lst.isEmpty() ? lst : List.of("install")); //NOI18N
         tok = new StringTokenizer(txtProfiles.getText().trim());
-        lst = new ArrayList<String>();
+        lst = new ArrayList<>();
         while (tok.hasMoreTokens()) {
             lst.add(tok.nextToken());
         }
@@ -226,7 +214,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
         rc.setRecursive(isRecursive());
         rc.setShowDebug(isShowDebug());
         rc.setUpdateSnapshots(isUpdateSnapshots());
-        rc.setOffline(Boolean.valueOf(isOffline()));
+        rc.setOffline(isOffline());
     }
 
     /** This method is called from within the constructor to
@@ -281,35 +269,19 @@ public class RunGoalsPanel extends javax.swing.JPanel {
 
         btnNext.setToolTipText(org.openide.util.NbBundle.getMessage(RunGoalsPanel.class, "TIP_Next")); // NOI18N
         btnNext.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        btnNext.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNextActionPerformed(evt);
-            }
-        });
+        btnNext.addActionListener(this::btnNextActionPerformed);
 
         btnPrev.setToolTipText(org.openide.util.NbBundle.getMessage(RunGoalsPanel.class, "TIP_Prev")); // NOI18N
         btnPrev.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        btnPrev.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPrevActionPerformed(evt);
-            }
-        });
+        btnPrev.addActionListener(this::btnPrevActionPerformed);
 
         org.openide.awt.Mnemonics.setLocalizedText(cbRemember, org.openide.util.NbBundle.getMessage(RunGoalsPanel.class, "LBL_Remember")); // NOI18N
         cbRemember.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         cbRemember.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        cbRemember.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbRememberActionPerformed(evt);
-            }
-        });
+        cbRemember.addActionListener(this::cbRememberActionPerformed);
 
         org.openide.awt.Mnemonics.setLocalizedText(btnAddProps, "&Add >");
-        btnAddProps.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddPropsActionPerformed(evt);
-            }
-        });
+        btnAddProps.addActionListener(this::btnAddPropsActionPerformed);
 
         epProperties.setContentType("text/x-properties"); // NOI18N
         jScrollPane2.setViewportView(epProperties);
@@ -331,11 +303,15 @@ public class RunGoalsPanel extends javax.swing.JPanel {
                             .addComponent(cbUpdateSnapshots)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblGoals)
-                            .addComponent(lblProfiles)
-                            .addComponent(jLabel2)
-                            .addComponent(btnAddProps))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblGoals)
+                                    .addComponent(lblProfiles)
+                                    .addComponent(jLabel2))
+                                .addGap(13, 13, 13))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btnAddProps)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtGoals)
                             .addComponent(txtProfiles)
@@ -363,12 +339,12 @@ public class RunGoalsPanel extends javax.swing.JPanel {
                     .addComponent(lblProfiles)
                     .addComponent(txtProfiles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(39, 39, 39)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnAddProps))
-                    .addComponent(jScrollPane2))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbRecursive)
@@ -377,7 +353,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbOffline)
                     .addComponent(cbDebug))
-                .addGap(34, 34, 34)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -385,7 +361,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
                     .addComponent(btnNext)
                     .addComponent(cbRemember)
                     .addComponent(txtRemember, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -447,7 +423,7 @@ public class RunGoalsPanel extends javax.swing.JPanel {
     public String isRememberedAs() {
         if (cbRemember.isSelected()) {
             String txt = txtRemember.getText().trim();
-            if (txt.length() > 0) {
+            if (!txt.isEmpty()) {
                 return txt;
             }
         }

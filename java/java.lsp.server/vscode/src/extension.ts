@@ -184,6 +184,7 @@ function findJDK(onChange: (path : string | null) => void): void {
     }
 
     let currentJdk = find();
+    let projectJDK : string | undefined = getProjectJDKHome();
     let timeout: NodeJS.Timeout | undefined = undefined;
     workspace.onDidChangeConfiguration(params => {
         if (timeout) {
@@ -206,10 +207,12 @@ function findJDK(onChange: (path : string | null) => void): void {
             let newJdk = find();
             let newD = isDarkColorTheme();
             let newJavaEnabled = isJavaSupportEnabled();
-            if (newJdk !== currentJdk || newD != nowDark || newJavaEnabled != nowJavaEnabled) {
+            let newProjectJDK : string | undefined = getProjectJDKHome();
+            if (newJdk !== currentJdk || newD != nowDark || newJavaEnabled != nowJavaEnabled || newProjectJDK != projectJDK) {
                 nowDark = newD;
                 nowJavaEnabled = newJavaEnabled;
                 currentJdk = newJdk;
+                projectJDK = newProjectJDK;
                 onChange(currentJdk);
             }
         }, 0);
@@ -939,6 +942,10 @@ function isJavaSupportEnabled() : boolean {
     return workspace.getConfiguration('netbeans')?.get('javaSupport.enabled') as boolean;
 }
 
+function getProjectJDKHome() : string {
+    return workspace.getConfiguration('netbeans')?.get('project.jdkhome') as string;
+}
+
 function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean,
     setClient : [(c : NbLanguageClient) => void, (err : any) => void]
 ): void {
@@ -1099,6 +1106,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 'netbeans.hints',
                 'netbeans.format',
                 'netbeans.java.imports',
+                'netbeans.project.jdkhome',
                 'java+.runConfig.vmOptions',
                 'java+.runConfig.cwd'
             ],

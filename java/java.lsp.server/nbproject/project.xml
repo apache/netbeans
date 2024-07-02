@@ -401,6 +401,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.java.platform</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.66</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.java.project</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -695,12 +704,6 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>9.24</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>com.google.guava</code-name-base>
-                    <run-dependency>
-                        <specification-version>27.16</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>

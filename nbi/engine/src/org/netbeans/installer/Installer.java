@@ -25,7 +25,7 @@ import java.util.Enumeration;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.TreeSet;
-import org.netbeans.installer.downloader.DownloadManager;
+//import org.netbeans.installer.downloader.DownloadManager;
 import org.netbeans.installer.product.Registry;
 import org.netbeans.installer.utils.DateUtils;
 import org.netbeans.installer.utils.EngineUtils;
@@ -106,7 +106,7 @@ public class Installer implements FinishHandler {
         // once we have set the local directory (and therefore devised the log
         // file path) we can start logging safely
         initializeLogManager();
-        initializeDownloadManager();
+//        initializeDownloadManager();
         initializeRegistry();
         initializeWizard();
         createLockFile();
@@ -213,14 +213,14 @@ public class Installer implements FinishHandler {
         LogManager.start();
     }
     
-    private void initializeDownloadManager() {
-        LogManager.logEntry("... initializing DownloadManager");
-        final DownloadManager downloadManager = DownloadManager.getInstance();
-        downloadManager.setLocalDirectory(getLocalDirectory());
-        downloadManager.setFinishHandler(this);
-        downloadManager.init();
-        LogManager.logExit("... end of initializing DownloadManager");
-    }
+//    private void initializeDownloadManager() {
+//        LogManager.logEntry("... initializing DownloadManager");
+//        final DownloadManager downloadManager = DownloadManager.getInstance();
+//        downloadManager.setLocalDirectory(getLocalDirectory());
+//        downloadManager.setFinishHandler(this);
+//        downloadManager.init();
+//        LogManager.logExit("... end of initializing DownloadManager");
+//    }
     
     private void initializeRegistry() {
         LogManager.logEntry("... initializing Registry");
@@ -241,7 +241,7 @@ public class Installer implements FinishHandler {
     // private //////////////////////////////////////////////////////////////////////
     private void exitNormally(int errorCode) {
         Wizard.getInstance().close();
-        DownloadManager.getInstance().terminate();
+//        DownloadManager.getInstance().terminate();
         LogManager.stop();
         
         exitImmediately(errorCode);

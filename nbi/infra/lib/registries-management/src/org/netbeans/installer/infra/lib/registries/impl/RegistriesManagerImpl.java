@@ -33,7 +33,6 @@ import java.util.Properties;
 import java.util.Queue;
 import java.util.concurrent.locks.ReentrantLock;
 import org.netbeans.installer.Installer;
-import org.netbeans.installer.downloader.DownloadManager;
 import org.netbeans.installer.product.Registry;
 import org.netbeans.installer.product.RegistryNode;
 import org.netbeans.installer.product.components.Group;
@@ -985,8 +984,8 @@ public class RegistriesManagerImpl implements RegistriesManager {
             //Issue #183611
             //Locale.setDefault(new Locale("en", "US"));
             
-            DownloadManager.getInstance().setLocalDirectory(temp);
-            DownloadManager.getInstance().setFinishHandler(DummyFinishHandler.INSTANCE);
+//            DownloadManager.getInstance().setLocalDirectory(temp);
+//            DownloadManager.getInstance().setFinishHandler(DummyFinishHandler.INSTANCE);
             
             System.setProperty(
                     Installer.LOCAL_DIRECTORY_PATH_PROPERTY, temp.getAbsolutePath());

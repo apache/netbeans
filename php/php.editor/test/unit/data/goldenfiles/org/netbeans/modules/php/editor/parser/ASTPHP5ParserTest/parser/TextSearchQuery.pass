@@ -16986,7 +16986,7 @@
                                                                                                             <ArrayAccess start='15518' end='15523' type='VARIABLE_ARRAY' isDollared='false'>
                                                                                                                 <ArrayDimension start='15520' end='15523'>
                                                                                                                     <Index>
-                                                                                                                        <Scalar start='15521' end='15522' type='REAL' value='1'/>
+                                                                                                                        <Scalar start='15521' end='15522' type='FLOAT' value='1'/>
                                                                                                                     </Index>
                                                                                                                 </ArrayDimension>
                                                                                                                 <Name>
@@ -17102,7 +17102,7 @@
                                                                                                             <ArrayAccess start='15717' end='15722' type='VARIABLE_ARRAY' isDollared='false'>
                                                                                                                 <ArrayDimension start='15719' end='15722'>
                                                                                                                     <Index>
-                                                                                                                        <Scalar start='15720' end='15721' type='REAL' value='1'/>
+                                                                                                                        <Scalar start='15720' end='15721' type='FLOAT' value='1'/>
                                                                                                                     </Index>
                                                                                                                 </ArrayDimension>
                                                                                                                 <Name>

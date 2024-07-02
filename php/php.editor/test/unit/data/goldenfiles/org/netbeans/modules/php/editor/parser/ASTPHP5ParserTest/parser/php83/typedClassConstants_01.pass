@@ -1328,7 +1328,7 @@
                             <Identifier start='1224' end='1229' name='FLOAT'/>
                         </Names>
                         <Initializers>
-                            <Scalar start='1232' end='1235' type='REAL' value='1.5'/>
+                            <Scalar start='1232' end='1235' type='FLOAT' value='1.5'/>
                         </Initializers>
                     </ClassConstantDeclaration>
                     <ClassConstantDeclaration start='1241' end='1271' modifier='public'>

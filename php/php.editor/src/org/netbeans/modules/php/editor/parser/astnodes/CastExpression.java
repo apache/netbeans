@@ -32,7 +32,8 @@ public class CastExpression extends Expression {
     	ARRAY, // 'array'
     	OBJECT, // 'object'
     	BOOL, // 'bool'
-    	UNSET// 'unset'
+    	UNSET,// 'unset'
+        FLOAT, // 'float'
     }
 
     private Expression expression;

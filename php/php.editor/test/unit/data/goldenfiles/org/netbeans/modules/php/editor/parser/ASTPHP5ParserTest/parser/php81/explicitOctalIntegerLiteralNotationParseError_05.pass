@@ -21,7 +21,7 @@
         <Statements>
             <ASTError start='815' end='818'/>
             <ExpressionStatement start='818' end='821'>
-                <Scalar start='818' end='820' type='REAL' value='.6'/>
+                <Scalar start='818' end='820' type='FLOAT' value='.6'/>
             </ExpressionStatement>
         </Statements>
     </Program>

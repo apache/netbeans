@@ -40,15 +40,12 @@ public final class DockerImage implements DockerInstanceEntity {
 
     private final long size;
 
-    private final long virtualSize;
-
     DockerImage(DockerInstance instance, List<String> tags,
-            String id, long created, long size, long virtualSize) {
+            String id, long created, long size) {
         this.instance = instance;
         this.id = id;
         this.created = created;
         this.size = size;
-        this.virtualSize = virtualSize;
         // See #268513
         // I'm not quite sure HOW to reproduce this situation, but it happens
         // if we have image named as "something:<none>".
@@ -88,15 +85,11 @@ public final class DockerImage implements DockerInstanceEntity {
         return size;
     }
 
-    public long getVirtualSize() {
-        return virtualSize;
-    }
-
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 79 * hash + Objects.hashCode(this.instance);
-        hash = 79 * hash + Objects.hashCode(this.id);
+        hash = 67 * hash + Objects.hashCode(this.instance);
+        hash = 67 * hash + Objects.hashCode(this.id);
         return hash;
     }
 

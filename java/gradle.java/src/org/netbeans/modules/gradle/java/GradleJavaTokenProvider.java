@@ -103,9 +103,23 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
         if ((fo != null) && fo.isData()) {
             GradleJavaProject gjp = GradleJavaProject.get(project);
             String className = evaluateClassName(gjp, fo);
-            String selectedMethod = method != null ? className + '.' + method.getMethodName() : className;
+            String selectedMethod = fullyQualifiedMethodName(className, method);
             map.put(SELECTED_METHOD, selectedMethod);
         }
+    }
+
+    private String fullyQualifiedMethodName(String className, SingleMethod singleMethod) {
+        if(singleMethod == null) {
+            return className;
+        }
+        StringBuilder sb = new StringBuilder(className.length() * 3);
+        sb.append(className);
+        if(singleMethod.getEnclosingType() != null) {
+            sb.append(singleMethod.getEnclosingType());
+        }
+        sb.append('.');
+        sb.append(singleMethod.getMethodName());
+        return sb.toString();
     }
 
     private void processSourceSets(final Map<String, String> map, Lookup context) {

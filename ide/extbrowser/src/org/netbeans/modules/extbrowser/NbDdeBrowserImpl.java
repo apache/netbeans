@@ -19,6 +19,10 @@
 
 package org.netbeans.modules.extbrowser;
 
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
+import java.util.Locale;
+
 import java.awt.EventQueue;
 import java.net.*;
 
@@ -61,6 +65,9 @@ import org.openide.util.Exceptions;
  * here</a>.
  *
  * @author  Radim Kubacki
+ *
+ * @author James Pollard
+ * year: 2023
  */
 public class NbDdeBrowserImpl extends ExtBrowserImpl {
 
@@ -126,6 +133,59 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
      *  .html files
      */
     public static native String getDefaultOpenCommand() throws NbBrowserException;
+    
+        /**
+     * Get the default browser name using Java JNA library
+     * @return String
+     */
+    private static String getDefaultWindowsBrowser() {
+        String userChoice = Advapi32Util
+                .registryGetStringValue(
+                        WinReg.HKEY_CURRENT_USER,
+                        "SOFTWARE\\Microsoft\\Windows\\Shell\\Associations\\UrlAssociations\\https\\UserChoice",
+                        "ProgId"
+                )
+                .toUpperCase(Locale.ROOT);
+                
+        // done this way so that values like FirefoxURL-308046B0AF4A39CB can be handled
+        if (userChoice == null || userChoice.trim().isEmpty()) {
+            return ExtWebBrowser.IEXPLORE;
+        }
+        else if (userChoice.contains(ExtWebBrowser.FIREFOX)) {
+            return ExtWebBrowser.FIREFOX;
+        }
+        else if (userChoice.contains(ExtWebBrowser.CHROME)) {
+            return ExtWebBrowser.CHROME;
+        } else if (userChoice.contains(ExtWebBrowser.CHROMIUM)) {
+            return ExtWebBrowser.CHROMIUM;
+        } else if (userChoice.contains(ExtWebBrowser.MOZILLA)) {
+            return ExtWebBrowser.MOZILLA;
+        } else {
+        	//may not be needed
+            return ExtWebBrowser.IEXPLORE;
+        }
+    }
+    
+    /**
+     * Retrieves the browser execution path from the registry using the java JNA library
+     * @param browser
+     * @return String
+     */
+    private static String getDefaultWindowsOpenCommandPath(String browser) {
+        String executionCommand = Advapi32Util
+                .registryGetStringValue(
+                        WinReg.HKEY_CLASSES_ROOT,
+                        "Applications\\" + browser.toLowerCase() + ".exe\\shell\\open\\command",
+                        ""
+                );
+        
+
+		return executionCommand;
+    }
+    
+    public static String getDefaultWindowsOpenCommand() {
+        return getDefaultWindowsOpenCommandPath(getDefaultWindowsBrowser());
+    }
     
     /** Sets current URL.
      *
@@ -212,7 +272,15 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
         }
         
         try {
-            String cmd = getDefaultOpenCommand ();
+            String cmd = getDefaultWindowsOpenCommand();
+            
+            /** if not found with getDefaultWindowsOpenCommand function
+             *  fallback to previous method
+             */
+            if (cmd == null || cmd.trim().isEmpty()) {
+                    cmd = getDefaultOpenCommand();
+                }
+            
             if (cmd != null) {
                 cmd = cmd.toUpperCase();
                 if (cmd.contains(ExtWebBrowser.IEXPLORE)) {

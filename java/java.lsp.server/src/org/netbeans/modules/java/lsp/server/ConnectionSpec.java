@@ -25,7 +25,7 @@ import java.io.OutputStream;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -45,31 +45,39 @@ import org.openide.util.Pair;
     "MSG_PortParseError=Cannot parse '{1}' as port in '{0}'"
 })
 final class ConnectionSpec implements Closeable {
+    private static final int HASH_LEN = 64;
     private final Boolean listen;
+    private final boolean hash;
     private final int port;
     // @GuardedBy (this)
     private final List<Closeable> close = new ArrayList<>();
     // @GuardedBy (this)
     private final List<Closeable> closed = new ArrayList<>();
 
-    private ConnectionSpec(Boolean listen, int port) {
+    private ConnectionSpec(Boolean listen, boolean hash, int port) {
         this.listen = listen;
+        this.hash = hash;
         this.port = port;
     }
 
     public static ConnectionSpec parse(String spec) throws CommandException {
         if (spec == null || spec.isEmpty() || spec.equals("stdio")) { // NOI18N
-            return new ConnectionSpec(null, -1);
+            return new ConnectionSpec(null, false, -1);
         }
         final String listenPrefix = "listen:"; // NOI18N
         if (spec.startsWith(listenPrefix)) {
             int port = parsePort(spec.substring(listenPrefix.length()), spec);
-            return new ConnectionSpec(true, port);
+            return new ConnectionSpec(true, false, port);
+        }
+        final String listenHashPrefix = "listen-hash:"; // NOI18N
+        if (spec.startsWith(listenHashPrefix)) {
+            int port = parsePort(spec.substring(listenHashPrefix.length()), spec);
+            return new ConnectionSpec(true, true, port);
         }
         final String connectPrefix = "connect:"; // NOI18N
         if (spec.startsWith(connectPrefix)) {
             int port = parsePort(spec.substring(connectPrefix.length()), spec);
-            return new ConnectionSpec(false, port);
+            return new ConnectionSpec(false, false, port);
 
         }
         throw new CommandException(555, Bundle.MSG_ConnectionSpecError(spec));
@@ -109,6 +117,21 @@ final class ConnectionSpec implements Closeable {
             // listen on TCP
             ServerSocket server = new ServerSocket(port, 1, Inet4Address.getLoopbackAddress());
             close.add(server);
+
+            char[] hashContent;
+            if (hash) {
+                byte[] hashBytes = new byte[HASH_LEN];
+                new SecureRandom().nextBytes(hashBytes);
+                hashContent = new char[hashBytes.length * 2];
+                int idx = 0;
+                for (byte b : hashBytes) {
+                    hashContent[idx + 0] = Integer.toHexString((b >> 4) & 0x0F).charAt(0);
+                    hashContent[idx + 1] = Integer.toHexString((b >> 0) & 0x0F).charAt(0);
+                    idx += 2;
+                }
+            } else {
+                hashContent = null;
+            }
             int localPort = server.getLocalPort();
             Thread listeningThread = new Thread(prefix + " listening at port " + localPort) {
                 @Override
@@ -118,7 +141,7 @@ final class ConnectionSpec implements Closeable {
                         try {
                             socket = server.accept();
                             close.add(socket);
-                            connectToSocket(socket, prefix, session, serverSetter, launcher);
+                            connectToSocket(socket, prefix, session, serverSetter, launcher, hashContent);
                         } catch (IOException ex) {
                             if (isClosed(server)) {
                                 break;
@@ -129,26 +152,54 @@ final class ConnectionSpec implements Closeable {
                 }
             };
             listeningThread.start();
-            out.write((prefix + " listening at port " + localPort).getBytes());
+            StringBuilder message = new StringBuilder();
+            message.append(prefix).append(" listening at port ").append(localPort);
+            if (hash) {
+                message.append(" with hash ");
+                for (char c : hashContent) {
+                    message.append(c);
+                }
+            }
+            message.append("\n");
+            out.write(message.toString().getBytes());
             out.flush();
         } else {
             // connect to TCP
             final Socket socket = new Socket(Inet4Address.getLoopbackAddress(), port);
-            connectToSocket(socket, prefix, session, serverSetter, launcher);
+            connectToSocket(socket, prefix, session, serverSetter, launcher, null);
         }
     }
 
     private <ServerType extends LspSession.ScheduledServer> void connectToSocket(
             final Socket socket, String prefix, LspSession session,
             BiConsumer<LspSession, ServerType> serverSetter,
-            BiFunction<Pair<InputStream, OutputStream>, LspSession, ServerType> launcher) {
+            BiFunction<Pair<InputStream, OutputStream>, LspSession, ServerType> launcher,
+            char[] hashContent) {
 
         final int connectTo = socket.getPort();
         Thread connectedThread = new Thread(prefix + " connected to " + connectTo) {
             @Override
             public void run() {
                 try {
-                    ServerType connectionObject = launcher.apply(Pair.of(socket.getInputStream(), socket.getOutputStream()), session);
+                    InputStream in = socket.getInputStream();
+
+                    if (hashContent != null) {
+                        for (char c : hashContent) {
+                            byte b = (byte) in.read();
+
+                            if (b != c) {
+                                IOException toThrow = new IOException("Hash validation failed!");
+                                try {
+                                    in.close();
+                                } catch (IOException ex) {
+                                    toThrow.addSuppressed(ex);
+                                }
+                                throw toThrow;
+                            }
+                        }
+                    }
+
+                    ServerType connectionObject = launcher.apply(Pair.of(in, socket.getOutputStream()), session);
                     serverSetter.accept(session, connectionObject);
                     connectionObject.getRunningFuture().get();
                 } catch (IOException | InterruptedException | ExecutionException ex) {

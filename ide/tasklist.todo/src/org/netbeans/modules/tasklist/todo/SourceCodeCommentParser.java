@@ -131,7 +131,7 @@ final class SourceCodeCommentParser {
          * @param buf destination buffer
          * @param str the string to append
          */
-        protected void appendEncodedChars(StringBuffer buf, String str) {
+        protected void appendEncodedChars(StringBuilder buf, String str) {
             int len = str.length();
             
             for (int ii = 0; ii < len; ++ii) {
@@ -190,11 +190,11 @@ final class SourceCodeCommentParser {
             this.blockStart = blockStart;
             this.blockEnd = blockEnd;
 
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             
             boolean needor = false;
 
-            if (lineComment != null) {
+            if (lineComment != null && !lineComment.isEmpty()) {
                 appendEncodedChars(sb, lineComment);
                 needor = true;
             }
@@ -217,6 +217,7 @@ final class SourceCodeCommentParser {
          * @throws java.io.IOException if a read error occurs on the input
          *         stream.
          */
+        @Override
         public boolean nextRegion(CommentRegion reg) throws IOException {
             boolean ret = false;
             

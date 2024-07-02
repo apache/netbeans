@@ -36,6 +36,18 @@
 	"contributes": {
 		"languages": [
 			{
+				"id": "java",
+				"extensions": [
+					".java",
+					".jav"
+				],
+				"aliases": [
+					"Java",
+					"java"
+				],
+				"configuration": "./language-configuration.json"
+			},
+			{
 				"id": "javascript",
 				"mimetypes": [
 					"text/javascript",

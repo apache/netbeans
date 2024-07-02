@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-07266A99C001F11616B36F5128EB78D2242F3096 com.dukescript.nbjavac:nb-javac:jdk-22.0.1+8:api
-D8B9FE09D677A6D589BA3C1E5AD636AF7F47AEE2 com.dukescript.nbjavac:nb-javac:jdk-22.0.1+8
+38B0436311A79824DC2A000D905A19A17A841748 https://oss.sonatype.org/content/repositories/comdukescript-1166/com/dukescript/nbjavac/nb-javac/jdk-23+26/nb-javac-jdk-23+26.jar nb-javac-jdk-23+26.jar
+88ED909EA461C4B12088E4D611BC0ED92D3DAA31 https://oss.sonatype.org/content/repositories/comdukescript-1166/com/dukescript/nbjavac/nb-javac/jdk-23+26/nb-javac-jdk-23+26-api.jar nb-javac-jdk-23+26-api.jar

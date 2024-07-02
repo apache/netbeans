@@ -23,10 +23,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.event.ChangeListener;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.modules.java.editor.base.javadoc.JavadocTestSupport;
+import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
+import org.openide.filesystems.FileObject;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -601,8 +605,212 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
                 "}\n";
         performCompletionTest(code, "@summary:");
     }    
-    
-    
+
+    public void testBlockTagsCompletionInMarkdown() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///\n" +
+                "    /// |\n" +
+                "    ///\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+
+    public void testBlockTagsCompletionInMarkdown2() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///\n" +
+                "    ///|\n" +
+                "    ///\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+
+    public void testBlockTagsCompletionInMarkdown3() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///\n" +
+                "    ///| \n" +
+                "    ///\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+
+    public void XXX_testBlockTagsCompletionInMarkdownStart() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///|\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+
+    public void testSeeMarkdown1() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///\n" +
+                "    /// @see CharSequence#le|\n" +
+                "    ///\n" +
+                "    Clazz() {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "public abstract int length()");
+    }
+
+    public void testSeeMarkdown2() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///\n" +
+                "    /// @see |\n" +
+                "    ///\n" +
+                "    Clazz() {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, null, "String", "Clazz");
+    }
+
+    public void testSeeMarkdown3() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///@param i i\n" +
+                "    ///@see |\n" +
+                "    ///\n" +
+                "    Clazz(int i) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, null, "String", "Clazz");
+    }
+
+    public void testParamMarkdown() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///\n" +
+                "    /// @param |\n" +
+                "    ///\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "p1:", "p2:");
+    }
+
+    public void testJavadocOldStart1() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**| */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+
+    public void testJavadocOldStart2() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**@s| */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "@see:", "@serialData:", "@since:");
+    }
+
+    public void testJavadocOldStart3() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**@param | */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "p1:", "p2:");
+    }
+
+    public void testJavadocOldStart4() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**@see | */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, null, "String", "Clazz");
+    }
+
+    public void testJavadocMarkdownStart1() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///|\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+
+    public void testJavadocMarkdownStart2() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///@s|\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "@see:", "@serialData:", "@since:");
+    }
+
+    public void testJavadocMarkdownStart3() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///@param |\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "p1:", "p2:");
+    }
+
+    public void testJavadocMarkdownStart4() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    ///@see |\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, null, "String", "Clazz");
+    }
 
     private static String stripHTML(String from) {
         StringBuilder result = new StringBuilder();
@@ -646,5 +854,28 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
             Collections.sort(resultStrings);
             assertEquals(goldenList, resultStrings);
         }
+    }
+
+    @ServiceProvider(service=SourceLevelQueryImplementation2.class)
+    public static final class SourceLevelQueryImpl implements SourceLevelQueryImplementation2 {
+
+        @Override
+        public Result getSourceLevel(FileObject javaFile) {
+            return new Result() {
+                @Override
+                public String getSourceLevel() {
+                    return "23";
+                }
+
+                @Override
+                public void addChangeListener(ChangeListener listener) {
+                }
+
+                @Override
+                public void removeChangeListener(ChangeListener listener) {
+                }
+            };
+        }
+
     }
 }

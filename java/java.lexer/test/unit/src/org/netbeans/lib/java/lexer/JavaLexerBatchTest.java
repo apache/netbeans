@@ -812,4 +812,78 @@ public class JavaLexerBatchTest extends TestCase {
         assertFalse(ts.moveNext());
     }
 
+    public void testMarkdown1() {
+        String text = "///test\n" +
+                      "///@see second line\n" +
+                      "///third\n" +
+                      "\n" +
+                      "///another run\n" +
+                      "///another line\n" +
+                      "\n";
+        InputAttributes attr = new InputAttributes();
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts,
+                                                 JavaTokenId.JAVADOC_COMMENT_LINE_RUN,
+                                                 "///test\n" +
+                                                 "///@see second line\n" +
+                                                 "///third\n");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, "\n");
+        LexerTestUtilities.assertNextTokenEquals(ts,
+                                                 JavaTokenId.JAVADOC_COMMENT_LINE_RUN,
+                                                 "///another run\n" +
+                                                 "///another line\n");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, "\n");
+        assertFalse(ts.moveNext());
+    }
+
+    public void testMarkdown2() {
+        String text = "///test\n" +
+                      "///@see second line\n" +
+                      "///third\n" +
+                      "\n" +
+                      "///another run\n" +
+                      "///another line\n";
+        InputAttributes attr = new InputAttributes();
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts,
+                                                 JavaTokenId.JAVADOC_COMMENT_LINE_RUN,
+                                                 "///test\n" +
+                                                 "///@see second line\n" +
+                                                 "///third\n");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, "\n");
+        LexerTestUtilities.assertNextTokenEquals(ts,
+                                                 JavaTokenId.JAVADOC_COMMENT_LINE_RUN,
+                                                 "///another run\n" +
+                                                 "///another line\n");
+        assertFalse(ts.moveNext());
+    }
+
+    public void testMarkdown3() {
+        String text = "///test\n" +
+                      "///@see second line\n" +
+                      "///third\n" +
+                      "\n" +
+                      "///another run\n" +
+                      "///another line";
+        InputAttributes attr = new InputAttributes();
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts,
+                                                 JavaTokenId.JAVADOC_COMMENT_LINE_RUN,
+                                                 "///test\n" +
+                                                 "///@see second line\n" +
+                                                 "///third\n");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, "\n");
+        LexerTestUtilities.assertNextTokenEquals(ts,
+                                                 JavaTokenId.JAVADOC_COMMENT_LINE_RUN,
+                                                 "///another run\n" +
+                                                 "///another line");
+        assertFalse(ts.moveNext());
+    }
+
 }

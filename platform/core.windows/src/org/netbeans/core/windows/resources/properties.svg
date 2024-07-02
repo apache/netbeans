@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #7ebcf8;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5 {
+        stroke-width: 0px;
+      }
+
+      .cls-2, .cls-3 {
+        fill: #000;
+      }
+
+      .cls-6, .cls-3 {
+        opacity: .4;
+      }
+
+      .cls-4 {
+        fill: #fff;
+      }
+
+      .cls-5 {
+        fill: #4c80c7;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="cls-4" x="2" width="14" height="13"/>
+    <g class="cls-6">
+      <path class="cls-2" d="M15,1v11H3V1h12M16,0H2v13h14V0h0Z"/>
+    </g>
+  </g>
+  <g>
+    <g>
+      <rect class="cls-4" x="7" y="1" width=".5" height="11.5"/>
+      <polygon class="cls-3" points="7.5 1 7 1 7 12.5 7.5 12.5 7.5 1 7.5 1"/>
+    </g>
+    <g>
+      <rect class="cls-4" x="3" y="3.5" width="12" height=".5"/>
+      <polygon class="cls-3" points="15 3.5 3 3.5 3 4 15 4 15 3.5 15 3.5"/>
+    </g>
+    <g>
+      <rect class="cls-4" x="3" y="6.5" width="12" height=".5"/>
+      <polygon class="cls-3" points="15 6.5 3 6.5 3 7 15 7 15 6.5 15 6.5"/>
+    </g>
+    <g>
+      <rect class="cls-4" x="3" y="9.5" width="12" height=".5"/>
+      <polygon class="cls-3" points="15 9.5 3 9.5 3 10 15 10 15 9.5 15 9.5"/>
+    </g>
+  </g>
+  <g>
+    <circle class="cls-1" cx="4.5" cy="10.5" r="4"/>
+    <path class="cls-5" d="M4.5,7c1.93,0,3.5,1.57,3.5,3.5s-1.57,3.5-3.5,3.5-3.5-1.57-3.5-3.5,1.57-3.5,3.5-3.5M4.5,6c-2.485,0-4.5,2.015-4.5,4.5s2.015,4.5,4.5,4.5,4.5-2.015,4.5-4.5-2.015-4.5-4.5-4.5h0Z"/>
+  </g>
+</svg>

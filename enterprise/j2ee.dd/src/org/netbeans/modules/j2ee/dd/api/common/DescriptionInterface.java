@@ -18,6 +18,9 @@
  */
 
 package org.netbeans.modules.j2ee.dd.api.common;
+
+import java.util.Map;
+
 /**
  * Super interface for all DD elements having the description property/properties.
  *
@@ -50,7 +53,7 @@ public interface DescriptionInterface {
      *
      * @param descriptions Map of descriptions in the form of [locale,description]
      */
-    public void setAllDescriptions(java.util.Map descriptions) throws VersionNotSupportedException;
+    public void setAllDescriptions(Map descriptions) throws VersionNotSupportedException;
     
     /**
      * Returns the description element value for particular locale.<br>
@@ -73,7 +76,7 @@ public interface DescriptionInterface {
      *
      * @return map of all descriptions in the form of [locale:description]
      */
-    public java.util.Map getAllDescriptions();
+    public Map getAllDescriptions();
     
     /**
      * Removes the description element for particular locale.

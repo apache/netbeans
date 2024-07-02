@@ -20,4 +20,42 @@
 
 -->
 <actions>
+    <action>
+        <actionName>CUSTOM-Add/Update Wrapper (mvnw)</actionName>
+        <displayName>Add/Update Wrapper (mvnw)</displayName>
+        <goals>
+            <goal>wrapper:wrapper</goal>
+        </goals>
+        <properties>
+            <type>only-script</type>
+        </properties>
+    </action>
+    <action>
+        <actionName>CUSTOM-Dependency Tree</actionName>
+        <displayName>Dependency Tree</displayName>
+        <goals>
+            <goal>eu.maveniverse.maven.plugins:toolbox:tree</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Dependency Tree (plugins)</actionName>
+        <displayName>Dependency Tree (plugins)</displayName>
+        <goals>
+            <goal>eu.maveniverse.maven.plugins:toolbox:plugin-tree</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Compute Libyear</actionName>
+        <displayName>Compute Libyear</displayName>
+        <goals>
+            <goal>eu.maveniverse.maven.plugins:toolbox:libyear</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Compute Libyear (plugins)</actionName>
+        <displayName>Compute Libyear (plugins)</displayName>
+        <goals>
+            <goal>eu.maveniverse.maven.plugins:toolbox:plugin-libyear</goal>
+        </goals>
+    </action>
 </actions>

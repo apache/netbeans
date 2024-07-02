@@ -33,7 +33,7 @@ import org.server.WithServerTestCase;
  *
  * @author Danila_Dugurov
  */
-public class QueueAndListenerWithServerTest extends WithServerTestCase {
+public class QueueAndListenerWithServerTest_ extends WithServerTestCase {
   
   public void testFailedDwonload() throws MalformedURLException {
     final DispatchedQueue queue = new DispatchedQueue(new File(MyTestCase.testWD, "queueState.xml"));

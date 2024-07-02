@@ -33,7 +33,7 @@ import org.server.WithServerTestCase;
  *
  * @author Danila_Dugurov
  */
-public class WorkabilityTest extends WithServerTestCase {
+public class WorkabilityTest_ extends WithServerTestCase {
   
   public void testStepByStepWorkability() {
     final DispatchedQueue queue = new DispatchedQueue(new File(MyTestCase.testWD, "queueState.xml"));
@@ -44,8 +44,8 @@ public class WorkabilityTest extends WithServerTestCase {
         System.out.println("pumping file " + pumping.outputFile() + " " + pumping.state());
         if (pumping.state() == Pumping.State.FINISHED) {
           assertEquals(pumping.length(), TestDataGenerator.testFileSizes[i++]);
-          synchronized (WorkabilityTest.this) {
-            WorkabilityTest.this.notify();
+          synchronized (WorkabilityTest_.this) {
+            WorkabilityTest_.this.notify();
           }
         } else if (pumping.state() == Pumping.State.FAILED) {fail();}
       }
@@ -91,8 +91,8 @@ public class WorkabilityTest extends WithServerTestCase {
         if (pumping.state() == Pumping.State.FINISHED) {
           i++;
           if (i == TestDataGenerator.testUrls.length) {
-            synchronized (WorkabilityTest.this) {
-              WorkabilityTest.this.notify();
+            synchronized (WorkabilityTest_.this) {
+              WorkabilityTest_.this.notify();
             }
           }
         } else if (pumping.state() == Pumping.State.FAILED) {fail();}

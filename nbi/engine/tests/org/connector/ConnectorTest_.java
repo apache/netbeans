@@ -37,7 +37,7 @@ import org.server.WithServerTestCase;
  *
  * @author Danila_Dugurov
  */
-public class ConnectorTest extends WithServerTestCase {
+public class ConnectorTest_ extends WithServerTestCase {
   
   public static URL smallest;
   public static URL small;

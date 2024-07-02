@@ -30,13 +30,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import org.netbeans.installer.downloader.DownloadManager;
-import org.netbeans.installer.downloader.services.FileProvider;
 import org.netbeans.installer.utils.exceptions.DownloadException;
-import org.netbeans.installer.downloader.DownloadProgress;
-import org.netbeans.installer.utils.helper.UiMode;
 import org.netbeans.installer.utils.progress.Progress;
-import org.netbeans.installer.downloader.ui.ProxySettingsDialog;
 import org.netbeans.installer.utils.helper.ExtendedUri;
 
 /**
@@ -48,7 +43,7 @@ public class FileProxy {
     private static final String RESOURCE_SCHEME = "resource";
     public static final String RESOURCE_SCHEME_PREFIX = RESOURCE_SCHEME + ":";
     
-    private final File tmpDir = new File(DownloadManager.getInstance().getLocalDirectory(), "tmp");
+    private final File tmpDir = new File(System.getProperty("java.io.tmpdir"), "tmp");
     private final Map<String, File> cache = new HashMap<String, File>();
     {
         tmpDir.mkdirs();
@@ -84,9 +79,9 @@ public class FileProxy {
         deleteFile(url.toString());
     }
     
-    public File getFile(URL url) throws DownloadException {
-        return getFile(url, null, false);
-    }
+//    public File getFile(URL url) throws DownloadException {
+//        return getFile(url, null, false);
+//    }
     
     public File getFile(String uri) throws DownloadException {
         return getFile(uri, null, null);
@@ -172,32 +167,33 @@ public class FileProxy {
                     } catch (IOException ignord) {}
             }
         } else if (uri.getScheme().startsWith("http")) {
-            try {
-                final File file = getFile(uri.toURL(), progress, deleteOnExit);
-                cache.put(cacheKey, file);
-                return file;
-            } catch(MalformedURLException ex) {
-                throw new DownloadException("malformed url: " + uri, ex);
-            }
+            throw new DownloadException("unsupported sheme: " + uri.getScheme());
+//            try {
+//                final File file = getFile(uri.toURL(), progress, deleteOnExit);
+//                cache.put(cacheKey, file);
+//                return file;
+//            } catch(MalformedURLException ex) {
+//                throw new DownloadException("malformed url: " + uri, ex);
+//            }
         }
         throw new DownloadException("unsupported sheme: " + uri.getScheme());
     }
     
-    protected File getFile(final URL url, final Progress progress, boolean deleteOnExit) throws DownloadException {
-        try {
-            final DownloadProgress dlProgress = new DownloadProgress(progress, url);
-            DownloadManager.instance.registerListener(dlProgress);
-            File file = null;
-            file = FileProvider.getProvider().get(url);
-            if (deleteOnExit) file.deleteOnExit();
-            return file;
-        } catch (DownloadException e) {
-            if (UiMode.getCurrentUiMode() == UiMode.SWING) {
-                new ProxySettingsDialog().execute();
-                return getFile(url, progress, deleteOnExit);
-            } else {
-                throw e;
-            }
-        }
-    }
+//    protected File getFile(final URL url, final Progress progress, boolean deleteOnExit) throws DownloadException {
+//        try {
+//            final DownloadProgress dlProgress = new DownloadProgress(progress, url);
+//            DownloadManager.instance.registerListener(dlProgress);
+//            File file = null;
+//            file = FileProvider.getProvider().get(url);
+//            if (deleteOnExit) file.deleteOnExit();
+//            return file;
+//        } catch (DownloadException e) {
+//            if (UiMode.getCurrentUiMode() == UiMode.SWING) {
+//                new ProxySettingsDialog().execute();
+//                return getFile(url, progress, deleteOnExit);
+//            } else {
+//                throw e;
+//            }
+//        }
+//    }
 }

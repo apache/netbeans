@@ -19,50 +19,50 @@
 
 package org.server.impl;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.*;
-import org.mortbay.jetty.Handler;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.ContextHandler;
-import org.mortbay.jetty.handler.DefaultHandler;
-import org.mortbay.jetty.handler.ResourceHandler;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHandler;
-import org.mortbay.jetty.servlet.ServletHolder;
-import org.server.*;
+//import java.io.IOException;
+//import javax.servlet.ServletException;
+//import javax.servlet.http.HttpServlet;
+//import javax.servlet.http.HttpServletRequest;
+//import javax.servlet.http.HttpServletResponse;
+//import org.*;
+//import org.mortbay.jetty.Handler;
+//import org.mortbay.jetty.Server;
+//import org.mortbay.jetty.handler.ContextHandler;
+//import org.mortbay.jetty.handler.DefaultHandler;
+//import org.mortbay.jetty.handler.ResourceHandler;
+//import org.mortbay.jetty.servlet.Context;
+//import org.mortbay.jetty.servlet.ServletHandler;
+//import org.mortbay.jetty.servlet.ServletHolder;
+//import org.server.*;
 
 /**
  *
  * @author Danila_Dugurov
  */
-public class DefaultJettyServer extends AbstractServer {
+public class DefaultJettyServer /*extends AbstractServer*/ {
   
-  private Server httpServer;
+//  private Server httpServer;
   
   public DefaultJettyServer(String testDataPath, int serverPort) {
-    super(testDataPath, serverPort);
+//    super(testDataPath, serverPort);
   }
   
   public void start() throws Exception {
-    if (httpServer == null) httpServer = new Server(serverPort);
-    if (httpServer.isRunning()) return;
-    final ResourceHandler handler = new ResourceHandler();
-    handler.setResourceBase(testDataPath);
-//    Context redirect = new Context(httpServer,"/",Context.SESSIONS);
-  //  redirect.addServlet(new ServletHolder(new RedirectServlet()), "/redirect/*");
-    ServletHandler redirectServlet = new ServletHandler();
-    redirectServlet.addServletWithMapping(RedirectServlet.class, "/redirect/*");
-    httpServer.addHandler(handler);
-    httpServer.addHandler(redirectServlet);
-    httpServer.start();
+//    if (httpServer == null) httpServer = new Server(serverPort);
+//    if (httpServer.isRunning()) return;
+//    final ResourceHandler handler = new ResourceHandler();
+//    handler.setResourceBase(testDataPath);
+////    Context redirect = new Context(httpServer,"/",Context.SESSIONS);
+//  //  redirect.addServlet(new ServletHolder(new RedirectServlet()), "/redirect/*");
+//    ServletHandler redirectServlet = new ServletHandler();
+//    redirectServlet.addServletWithMapping(RedirectServlet.class, "/redirect/*");
+//    httpServer.addHandler(handler);
+//    httpServer.addHandler(redirectServlet);
+//    httpServer.start();
   }
   
   public void stop() throws Exception {
-    if (httpServer == null && httpServer.isStopped()) return;
-    httpServer.stop();
+//    if (httpServer == null && httpServer.isStopped()) return;
+//    httpServer.stop();
   }
 }

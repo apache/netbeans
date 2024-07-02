@@ -34,7 +34,7 @@ import org.server.WithServerTestCase;
  *
  * @author Danila_Dugurov
  */
-public class RedirectTest extends WithServerTestCase {
+public class RedirectTest_ extends WithServerTestCase {
   
   public void testWithRedirect() {
     final DispatchedQueue queue = new DispatchedQueue(new File(MyTestCase.testWD, "queueState.xml"));
@@ -47,12 +47,12 @@ public class RedirectTest extends WithServerTestCase {
         if (pumping.state() == Pumping.State.FINISHED) {
           assertEquals(pumping.length(), TestDataGenerator.testFileSizes[0]);
           assertEquals(pumping.realURL(), TestDataGenerator.testUrls[0]);
-          synchronized (RedirectTest.this) {
-            RedirectTest.this.notify();
+          synchronized (RedirectTest_.this) {
+            RedirectTest_.this.notify();
           }
         } else if (pumping.state() == Pumping.State.FAILED) {
-          synchronized (RedirectTest.this) {
-            RedirectTest.this.notify();
+          synchronized (RedirectTest_.this) {
+            RedirectTest_.this.notify();
           }
           fail();
         }

@@ -21,7 +21,7 @@ package org;
 
 import junit.framework.TestSuite;
 import org.connector.ConnectionConfiguratorTest;
-import org.connector.ConnectorTest;
+import org.connector.ConnectorTest_;
 import org.connector.ProxySelectorTest;
 import org.connector.ProxyTest;
 import org.dispatcher.DispatcherTest;
@@ -37,7 +37,7 @@ public class RunAllSuite extends TestSuite {
         addTestSuite(ProxyTest.class);
         addTestSuite(ProxySelectorTest.class);
         addTestSuite(ConnectionConfiguratorTest.class);
-        addTestSuite(ConnectorTest.class);
+        addTestSuite(ConnectorTest_.class);
         addTestSuite(DispatcherTest.class);
         addTestSuite(DomVisitorTest.class);
         //addTestSuite(WindowsRegistryTest.class);

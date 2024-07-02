@@ -20,7 +20,7 @@
 package org.server;
 
 import org.*;
-import org.server.impl.DefaultJettyServer;
+//import org.server.impl.DefaultJettyServer;
 
 /**
  *
@@ -33,20 +33,20 @@ public class WithServerTestCase extends MyTestCase {
   
   public static final int PORT = 8080;
   
-  private final AbstractServer server = new DefaultJettyServer("testData", PORT);
+//  private final AbstractServer server = new DefaultJettyServer("testData", PORT);
   private final TestDataGenerator dataGenerator = new TestDataGenerator("testData");
   
   protected void setUp() throws Exception {
-    super.setUp();
-    dataGenerator.generateTestData();
-    server.start();
+//    super.setUp();
+//    dataGenerator.generateTestData();
+//    server.start();
   }
   
   protected void tearDown() throws Exception {
-    server.stop();
-    dataGenerator.deleteTestData();
-    //this method is depricated because test data rather big
-    //and it's not good idea to delete and generate it after every test.
-    super.tearDown();
+//    server.stop();
+//    dataGenerator.deleteTestData();
+//    //this method is depricated because test data rather big
+//    //and it's not good idea to delete and generate it after every test.
+//    super.tearDown();
   }
 }

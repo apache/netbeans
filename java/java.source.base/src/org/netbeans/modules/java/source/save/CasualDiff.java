@@ -109,7 +109,6 @@ import com.sun.tools.javac.tree.JCTree.JCRecordPattern;
 import com.sun.tools.javac.tree.JCTree.JCRequires;
 import com.sun.tools.javac.tree.JCTree.JCReturn;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
-import com.sun.tools.javac.tree.JCTree.JCStringTemplate;
 import com.sun.tools.javac.tree.JCTree.JCSwitch;
 import com.sun.tools.javac.tree.JCTree.JCSwitchExpression;
 import com.sun.tools.javac.tree.JCTree.JCSynchronized;
@@ -175,7 +174,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import javax.lang.model.type.TypeKind;
-import org.netbeans.modules.java.source.save.CasualDiff.StringTemplateFragmentTree.FragmentKind;
 import org.netbeans.modules.java.source.transform.TreeHelpers;
 
 public class CasualDiff {
@@ -1990,61 +1988,6 @@ public class CasualDiff {
         }
         copyTo(localPointer, bounds[1]);
         return bounds[1];
-    }
-
-    protected int diffStringTemplate(JCStringTemplate oldT, JCStringTemplate newT, int[] bounds) {
-        int localPointer = bounds[0];
-
-        // processor
-        int[] processorBounds = getBounds(oldT.processor);
-        copyTo(localPointer, processorBounds[0]);
-        localPointer = diffTree(oldT.processor, newT.processor, processorBounds);
-
-        tokenSequence.move(processorBounds[1]);
-        do { } while (tokenSequence.moveNext() && JavaTokenId.DOT != tokenSequence.token().id());
-        tokenSequence.moveNext();
-        copyTo(localPointer, localPointer = tokenSequence.offset());
-
-        // expressions
-        List<? extends JCExpression> oldFragmentsAndExpressions = zipFragmentsAndExpressions(oldT, localPointer);
-        List<? extends JCExpression> newFragmentsAndExpressions = zipFragmentsAndExpressions(newT, NOPOS);
-        PositionEstimator est = EstimatorFactory.stringTemplate(oldFragmentsAndExpressions, newFragmentsAndExpressions, diffContext);
-        localPointer = diffList(oldFragmentsAndExpressions, newFragmentsAndExpressions, localPointer, est, Measure.REAL_MEMBER, printer);
-        copyTo(localPointer, bounds[1]);
-        return bounds[1];
-    }
-
-    private List<JCExpression> zipFragmentsAndExpressions(JCStringTemplate template, int pos) {
-        ListBuffer<JCExpression> result = new ListBuffer<>();
-        Iterator<? extends String> fragmentIt = template.fragments.iterator();
-        Iterator<? extends JCExpression> expressionIt = template.expressions.iterator();
-
-        while (fragmentIt.hasNext()) {
-            JCExpression expression = expressionIt.hasNext() ? expressionIt.next() : null;
-            FragmentKind fragmentKind = result.isEmpty() ? FragmentKind.START
-                                                         : expression != null ? FragmentKind.MIDDLE
-                                                                              : FragmentKind.END;
-            JCLiteral literal = new StringTemplateFragmentTree(TypeTag.CLASS, fragmentIt.next(), fragmentKind);
-
-            if (pos != NOPOS) {
-                tokenSequence.move(pos);
-
-                if (tokenSequence.moveNext() && tokenSequence.token().id() == JavaTokenId.STRING_LITERAL) {
-                    literal.pos = tokenSequence.offset();
-                    diffContext.syntheticEndPositions.put(literal, literal.pos + tokenSequence.token().length());
-                }
-
-                pos = expression != null ? endPos(expression) : NOPOS;
-            }
-
-            result.append(literal);
-
-            if (expression != null) {
-                result.append(expression);
-            }
-        }
-
-        return result.toList();
     }
 
     protected int diffConstantCaseLabel(JCConstantCaseLabel oldT, JCConstantCaseLabel newT, int[] bounds) {
@@ -5813,9 +5756,6 @@ public class CasualDiff {
           case RECORDPATTERN:
               retVal = diffRecordPattern((JCRecordPattern) oldT, (JCRecordPattern) newT, elementBounds);
               break;
-          case STRING_TEMPLATE:
-              retVal = diffStringTemplate((JCStringTemplate) oldT, (JCStringTemplate) newT, elementBounds);
-              break;
           default:
               // handle special cases like field groups and enum constants
               if (oldT.getKind() == Kind.OTHER) {
@@ -6444,19 +6384,4 @@ public class CasualDiff {
         return -1;
     }
 
-    public static final class StringTemplateFragmentTree extends JCLiteral {
-
-        public final FragmentKind fragmentKind;
-
-        public StringTemplateFragmentTree(TypeTag typetag, Object value, FragmentKind kind) {
-            super(typetag, value);
-            this.fragmentKind = kind;
-        }
-
-        public enum FragmentKind {
-            START,
-            MIDDLE,
-            END;
-        }
-    }
 }

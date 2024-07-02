@@ -3557,18 +3557,6 @@ public class Reformatter implements ReformatTask {
         }
 
         @Override
-        public Boolean visitStringTemplate(StringTemplateTree node, Void p) {
-            scan(node.getProcessor(), p);
-            accept(DOT);
-            for (ExpressionTree expression : node.getExpressions()) {
-                accept(STRING_LITERAL);
-                scan(expression, p);
-            }
-            accept(STRING_LITERAL);
-            return true;
-        }
-
-        @Override
         public Boolean visitOther(Tree node, Void p) {
             do {
                 col += tokens.token().length();

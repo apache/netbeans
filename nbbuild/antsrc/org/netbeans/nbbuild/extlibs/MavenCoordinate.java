@@ -83,6 +83,11 @@ class MavenCoordinate {
     }
 
     public static boolean isMavenFile(String gradleFormat) {
+        if (gradleFormat.startsWith("http://") ||
+            gradleFormat.startsWith("https://") ||
+            gradleFormat.startsWith("file://")) {
+            return false;
+        }
         return gradleFormat.split(":").length > 2;
     }
 

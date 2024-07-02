@@ -1,10 +1,10 @@
 Name: Javac Compiler Implementation
 Description: Javac Compiler Implementation
-Version: jdk-22.0.1+8
-Files: nb-javac-jdk-22.0.1+8-api.jar nb-javac-jdk-22.0.1+8.jar
+Version: 23+26
+Files: nb-javac-jdk-23+26-api.jar nb-javac-jdk-23+26.jar
 License: GPL-2-CP
-Origin: OpenJDK (https://github.com/openjdk/jdk22u)
-Source: https://github.com/openjdk/jdk22u
+Origin: OpenJDK (https://github.com/openjdk/jdk)
+Source: https://github.com/openjdk/jdk
 Type: optional,reviewed
 Comment: The binary has been reviewed to be under the Classpath Exception as a whole. Optional at runtime, but used by default.
 

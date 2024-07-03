@@ -228,7 +228,7 @@ public class GradleInitPanelVisual extends javax.swing.JPanel {
 
         if (settings.getProperty(PROP_JAVA_VERSIONS) != null) {
             List<Integer> javaVersions = (List<Integer>) settings.getProperty(PROP_JAVA_VERSIONS);
-            DefaultComboBoxModel<Integer> versionModel = new DefaultComboBoxModel<>(javaVersions.toArray(new Integer[0]));
+            DefaultComboBoxModel<Integer> versionModel = new DefaultComboBoxModel<>(javaVersions.toArray(Integer[]::new));
             cbJavaVersion.setModel(versionModel);
 
             if (settings.getProperty(PROP_JAVA_VERSION) != null) {
@@ -241,7 +241,7 @@ public class GradleInitPanelVisual extends javax.swing.JPanel {
 
         if (settings.getProperty(PROP_TEST_FRAMEWORKS) != null) {
             List<TestFramework> testframeworks = (List<TestFramework>) settings.getProperty(PROP_TEST_FRAMEWORKS);
-            DefaultComboBoxModel<TestFramework> frameworkModel = new DefaultComboBoxModel<>(testframeworks.toArray(new TestFramework[0]));
+            DefaultComboBoxModel<TestFramework> frameworkModel = new DefaultComboBoxModel<>(testframeworks.toArray(TestFramework[]::new));
             cbTestFramework.setModel(frameworkModel);
             if (settings.getProperty(PROP_TEST_FRAMEWORK) != null) {
                 cbTestFramework.setSelectedItem(settings.getProperty(PROP_TEST_FRAMEWORK));

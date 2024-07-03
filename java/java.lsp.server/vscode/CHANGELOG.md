@@ -22,6 +22,7 @@
 -->
 ## Version 22.9.9
 * OCI Cloud Assets panel added which allows setting Micronaut OCI runtime properties & generate OCI policies
+* JDK Configuration wizard added to unify setting Java for various VSCode parts
 * API/SPI to apply WorkspaceEdit
 * Micronaut:
    * Endpoint method generator for non-db based controllers added

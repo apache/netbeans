@@ -346,9 +346,6 @@
                 <file name="callstackView.wstcref" url="modes/output/callstack.wstcref">
                     <attr name="position" intvalue="300"/>
                 </file>
-                <file name="breakpointsView.wstcref" url="modes/output/breakpoints.wstcref">
-                    <attr name="position" intvalue="400"/>
-                </file>
                 <file name="sessionsView.wstcref" url="modes/output/sessions.wstcref">
                     <attr name="position" intvalue="700"/>
                 </file>
@@ -365,6 +362,11 @@
             <folder name="code_evaluator">
                 <file name="evaluatorPane.wstcref" url="modes/evaluator/evaluator.wstcref">
                     <attr name="position" intvalue="300"/>
+                </file>
+            </folder>
+            <folder name="navigator">
+                <file name="breakpointsView.wstcref" url="modes/navigator/breakpoints.wstcref">
+                    <attr name="position" intvalue="400"/>
                 </file>
             </folder>
         </folder>

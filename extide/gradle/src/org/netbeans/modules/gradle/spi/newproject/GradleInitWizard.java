@@ -19,10 +19,8 @@
 package org.netbeans.modules.gradle.spi.newproject;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.netbeans.modules.gradle.newproject.GradleInitPanel;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.WizardDescriptor;
@@ -51,11 +49,10 @@ public final class GradleInitWizard {
 
         @Override
         public String toString() {
-            switch(this) {
-                case GROOVY: return Bundle.LBL_DSL_GROOVY();
-                case KOTLIN: return Bundle.LBL_DSL_KOTLIN();
-                default: throw new IllegalStateException("update switch");
-            }
+            return switch(this) {
+                case GROOVY -> Bundle.LBL_DSL_GROOVY();
+                case KOTLIN -> Bundle.LBL_DSL_KOTLIN();
+            };
         }
     }
 
@@ -91,17 +88,16 @@ public final class GradleInitWizard {
         
         @Override
         public String toString() {
-            switch(this) {
-                case CPP_TEST: return Bundle.LBL_TFW_CPP_TEST();
-                case JUNIT: return Bundle.LBL_TFW_JUNIT();
-                case JUNIT_5: return Bundle.LBL_TFW_JUNIT_5();
-                case KOTLIN_TEST: return Bundle.LBL_TFW_KOTLIN_TEST();
-                case SCALA_TEST: return Bundle.LBL_TFW_SCALA_TEST();
-                case SPOCK: return Bundle.LBL_TFW_SPOCK();
-                case TESTNG: return Bundle.LBL_TFW_TESTNG();
-                case XCTEST: return Bundle.LBL_TFW_XCTEST();
-                default: throw new IllegalStateException("update switch");
-            }
+            return switch(this) {
+                case CPP_TEST -> Bundle.LBL_TFW_CPP_TEST();
+                case JUNIT -> Bundle.LBL_TFW_JUNIT();
+                case JUNIT_5 -> Bundle.LBL_TFW_JUNIT_5();
+                case KOTLIN_TEST -> Bundle.LBL_TFW_KOTLIN_TEST();
+                case SCALA_TEST -> Bundle.LBL_TFW_SCALA_TEST();
+                case SPOCK -> Bundle.LBL_TFW_SPOCK();
+                case TESTNG -> Bundle.LBL_TFW_TESTNG();
+                case XCTEST-> Bundle.LBL_TFW_XCTEST();
+            };
         }
     }
 
@@ -112,7 +108,7 @@ public final class GradleInitWizard {
     private TestFramework preferredTestFramework;
     private List<Integer> javaVersions;
     private List<TestFramework> testFrameworks;
-    private List<String> important = Collections.emptyList();
+    private List<String> important = List.of();
 
     private GradleInitWizard(String type, String title) {
         this.type = type;
@@ -215,14 +211,14 @@ public final class GradleInitWizard {
             List<String> open = important.stream()
                     .map((s) -> packageBase != null ? s.replace("${package}", packageBase.replace('.', '/')) : s) //NOI18N
                     .map((s) -> s.replace("${projectName}", name)) //NOI18N
-                    .collect(Collectors.toList());
+                    .toList();
             ops.addProjectPreload(root, open);
         }
 
 
         @Override
         protected List<? extends WizardDescriptor.Panel<WizardDescriptor>> createPanels() {
-            return Collections.singletonList(new GradleInitPanel());
+            return List.of(new GradleInitPanel());
         }
 
         @Override

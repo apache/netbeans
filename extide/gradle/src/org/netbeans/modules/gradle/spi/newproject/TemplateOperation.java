@@ -479,7 +479,7 @@ public final class TemplateOperation implements Runnable {
                 } catch (IOException ex) {
                 }
             }
-            return Collections.<FileObject>emptySet();
+            return Set.of();
         }
 
     }
@@ -489,7 +489,7 @@ public final class TemplateOperation implements Runnable {
         final List<String> importantFiles;
 
         public PreloadProject(File dir) {
-            this(dir, Collections.emptyList());
+            this(dir, List.of());
         }
 
         public PreloadProject(File dir, List<String> importantFiles) {
@@ -643,7 +643,7 @@ public final class TemplateOperation implements Runnable {
                     } catch (IOException | ScriptException ex) {
                         throw new IOException(ex.getMessage(), ex);
                     }
-                    return important ? Collections.singleton(fo) : null;
+                    return important ? Set.of(fo) : null;
                 } catch (IOException ex) {}
             } catch (IOException ex) {}
             return null;
@@ -680,7 +680,7 @@ public final class TemplateOperation implements Runnable {
                     DataFolder targetFolder = DataFolder.findFolder(targetParent);
                     DataObject o = DataObject.find(template);
                     DataObject newData = o.createFromTemplate(targetFolder, targetName, tokens);
-                    return important ? Collections.singleton(newData.getPrimaryFile()) : null;
+                    return important ? Set.of(newData.getPrimaryFile()) : null;
                 } catch (IOException ex) {
 
                 }

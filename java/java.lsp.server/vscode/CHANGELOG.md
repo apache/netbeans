@@ -20,6 +20,21 @@
     under the License.
 
 -->
+## Version 22.9.9
+* OCI Cloud Assets panel added which allows setting Micronaut OCI runtime properties & generate OCI policies
+* JDK Configuration wizard added to unify setting Java for various VSCode parts
+* API/SPI to apply WorkspaceEdit
+* Micronaut:
+   * Endpoint method generator for non-db based controllers added
+   * Command creating request body for given endpoint added
+   * Provide Endpoint and Bean symbols originating from libraries
+   * Method parameters should be resolvable in expression language
+   * New from Template invocation should accept template as an optional parameter
+* ... and other bug fixes
+
+## Version 22.0.0
+* LSP: Generate Tests converted to Source Action
+* Micronaut: code completion for update methods fixed
 
 ## Version 21.9.9
 * This is Early Access of 22.0.0 version (this version used due to VSCode versioning)

@@ -25,13 +25,18 @@
 [![Build Status](https://ci-builds.apache.org/job/Netbeans/view/vscode/job/netbeans-vscode/badge/icon)](https://ci-builds.apache.org/job/Netbeans/view/vscode/job/netbeans-vscode/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/apache/netbeans/blob/master/LICENSE)
 
-**Version 21.9.9 is 22.0 Early Access version.**
+**Version 22.9.9 is 23.0 Early Access version.**
 
 This is [Apache NetBeans](http://netbeans.org) Language Server extension for VS Code. Use it to get all the _goodies of NetBeans_ via the VS Code user interface! Runs on __JDK11__ and all newer versions.
 
 Apache NetBeans Language Server brings full featured Java development (edit-compile-debug & test cycle) for Maven and Gradle projects to VSCode. As well as other features.
 ## Getting Started
-1. Set JDK in `VSCode | Preferences | Settings ...` __Netbeans: Jdkhome__ setting to point to JDK which Language Server will run on and projects will be compiled with. More below in section [Selecting the JDK](#selecting-the-jdk)
+1. Use command __Java: JDK Configuration__ to set same JDK in Apache NetBeans Language Server and all other Java settings in VSCode like Integrated terminal `JAVA_HOME` and `PATH`, Maven Runtime and JDK for MS Java as well if installed:
+![JDK Configuration](images/java_jdk_configuration.png)
+
+   2. Select installed JDK to use for these settings in step 2/3
+   3. In step 3/3 select if settings will be applied at User level for all Workspaces (Folders open) or for current Workspace (Folder) only.
+   4. NetBeans Language Server JDK Home setting `netbeans.jdkhome` is __also__ available in `VSCode | Preferences | Settings ...` `Netbeans: Jdkhome` . More below in section [Selecting the JDK](#selecting-the-jdk)
 
 2. Use __Java: New Project...__ " command to start creating new project, or
 3. Open the folder with existing __pom.xml__ for Maven or ___Gradle___ project files (_build.gradle, gradle.properties_).
@@ -184,6 +189,14 @@ Oracle Cloud Infrastructure Explorer supports viewing compartments and resources
 ![Cloud Explorer](images/cloud-explorer.png)
 
 It is possible to add JDBC connection to Oracle Autonomous DB running in OCI using __Add DB Connection__ menu. It downloads DB Wallet automatically.
+
+## Cloud Assets Panel
+Cloud Assets panel shows Micronaut OCI Properties to be set. These are read from project artefacts currently provided in project pom.xml or build.gradle. When user OCI configuration file `.oci/config` is present it allows to set various OCI assets (resources) needed for project runtime using user OCI tenancy. 
+
+![Cloud Assets](images/cloud_assets.png)
+
+It is also possible to generate suggested OCI Policies needed by project to run in OCI and copy & paste these policies into OCI Cloud Console.
+
 ## Supported Options
 
 * __netbeans.jdkhome__ - path to the JDK, see dedicated section below

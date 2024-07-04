@@ -111,7 +111,7 @@ public final class Type {
     public static boolean isPrimitive(String typeName) {
         boolean retval = false;
         if (BOOL.equals(typeName) || INT.equals(typeName)
-                || INTEGER.equals(typeName) || FLOAT.equals(typeName) || REAL.equals(typeName)
+                || INTEGER.equals(typeName) || FLOAT.equals(typeName)
                 || ARRAY.equals(typeName) || OBJECT.equals(typeName) || MIXED.equals(typeName)
                 || NUMBER.equals(typeName) || CALLBACK.equals(typeName) || RESOURCE.equals(typeName)
                 || DOUBLE.equals(typeName) || STRING.equals(typeName) || NULL.equals(typeName)
@@ -125,7 +125,7 @@ public final class Type {
 
     public static boolean isPrimitiveAlias(String typeName) {
         boolean retval = false;
-        if (BOOLEAN.equals(typeName)) {
+        if (BOOLEAN.equals(typeName) || REAL.equals(typeName)) {
             retval = true;
         }
         return retval;

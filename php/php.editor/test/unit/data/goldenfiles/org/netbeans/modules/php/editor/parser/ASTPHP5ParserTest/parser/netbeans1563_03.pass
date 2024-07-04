@@ -54,7 +54,7 @@
                             <ArrayAccess start='841' end='849' type='VARIABLE_ARRAY' isDollared='false'>
                                 <ArrayDimension start='846' end='849'>
                                     <Index>
-                                        <Scalar start='847' end='848' type='REAL' value='0'/>
+                                        <Scalar start='847' end='848' type='FLOAT' value='0'/>
                                     </Index>
                                 </ArrayDimension>
                                 <Name>

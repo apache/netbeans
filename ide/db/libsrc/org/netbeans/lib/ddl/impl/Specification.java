@@ -38,7 +38,7 @@ import org.netbeans.lib.ddl.adaptors.DatabaseMetaDataAdaptor;
 public class Specification implements DatabaseSpecification {
     
     /** Used DBConnection */
-    private HashMap desc;
+    private Map desc;
 
     /** Used JDBC Connection */
     private Connection jdbccon;
@@ -76,13 +76,13 @@ public class Specification implements DatabaseSpecification {
     public static final String DEFAULT_SCHEMA = "SetDefaultSchemaCommand";
 
     /** Constructor */
-    public Specification(HashMap description)
+    public Specification(Map description)
     {
         desc = description;
     }
 
     /** Constructor */
-    public Specification(HashMap description, Connection c)
+    public Specification(Map description, Connection c)
     {
         desc = description;
         jdbccon = c;

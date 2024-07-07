@@ -574,7 +574,7 @@ public final class DeployOnSaveManager {
                 FileObject targetFO,
                 FileObject destRoot,
                 String relativePath,
-                Map destMap, boolean checkTimeStamps) throws IOException {
+                Map<String, FileObject> destMap, boolean checkTimeStamps) throws IOException {
 
             FileObject destFolder;
             OutputStream destStream = null;

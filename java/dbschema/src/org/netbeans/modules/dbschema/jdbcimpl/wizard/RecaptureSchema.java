@@ -62,7 +62,7 @@ public class RecaptureSchema {
     }
     
     public void start() throws ClassNotFoundException, SQLException {
-        final DBschemaDataObject dobj = (DBschemaDataObject)dbSchemaNode.getCookie(DBschemaDataObject.class);
+        final DBschemaDataObject dobj = dbSchemaNode.getCookie(DBschemaDataObject.class);
         final SchemaElement elem = dobj.getSchema();
         //elem.
         //ConnectionProvider cp = new ConnectionProvider(elem.getDriver(), elem.getUrl(), elem.getUsername(), null);

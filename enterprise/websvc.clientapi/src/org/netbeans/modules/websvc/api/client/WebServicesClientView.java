@@ -78,7 +78,7 @@ public final class WebServicesClientView {
 			}
 		}
 
-		WebServicesClientViewProvider impl = (WebServicesClientViewProvider) Lookup.getDefault().lookup(WebServicesClientViewProvider.class);
+		WebServicesClientViewProvider impl = Lookup.getDefault().lookup(WebServicesClientViewProvider.class);
 		if(impl != null) {
 			WebServicesClientView wsv = impl.findWebServicesClientView(f);
 			return wsv;

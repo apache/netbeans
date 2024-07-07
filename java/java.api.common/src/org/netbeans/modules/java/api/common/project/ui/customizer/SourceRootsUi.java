@@ -461,7 +461,7 @@ out:        for( int i = 0; i < files.length; i++ ) {
             ListSelectionModel selectionModel = this.rootsList.getSelectionModel();
             selectionModel.clearSelection();
             for( int i = si.length -1 ; i >= 0 ; i-- ) {
-                Vector item = (Vector)rootsModel.getDataVector().elementAt(si[i]);
+                Vector item = rootsModel.getDataVector().elementAt(si[i]);
                 int newIndex = si[i] + 1;
                 rootsModel.removeRow( si[i] );
                 rootsModel.insertRow( newIndex, item );

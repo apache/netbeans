@@ -208,7 +208,7 @@ public abstract class AbstractGroovyExtender implements GroovyExtenderImplementa
                 try {
                     Enumeration<JarEntry> entries = jf.entries();
                     while (entries.hasMoreElements()) {
-                        JarEntry entry = (JarEntry) entries.nextElement();
+                        JarEntry entry = entries.nextElement();
                         if (classFilePath.equals(entry.getName())) {
                             return true;
                         }

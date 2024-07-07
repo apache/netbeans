@@ -134,6 +134,10 @@ public class ImportDataCreatorTest extends PHPTestBase {
         performTest("public function test(): st^atic {");
     }
 
+    public void testGH7546_01() throws Exception {
+        performTest("class GH7546 ^{");
+    }
+
     private void performTest(String caretLine) throws Exception {
         performTest(caretLine, null);
     }

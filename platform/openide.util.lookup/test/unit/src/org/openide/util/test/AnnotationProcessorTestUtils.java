@@ -118,6 +118,7 @@ public class AnnotationProcessorTestUtils {
         } else {
             args.add(source);
         }
+        args.add("-proc:full"); // https://inside.java/2024/06/18/quality-heads-up/
         args.add("-Xlint:-options");
         dest.mkdirs();
         destG.mkdirs();

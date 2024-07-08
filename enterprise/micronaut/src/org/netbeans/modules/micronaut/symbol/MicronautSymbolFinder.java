@@ -59,6 +59,7 @@ import javax.lang.model.type.TypeVariable;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import javax.swing.event.ChangeListener;
 import javax.tools.JavaFileObject;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -111,6 +112,11 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
 
     private final Map<FileObject, Boolean> map = new WeakHashMap<>();
     private final Map<ClasspathInfo, List<ClassSymbolLocation>> cache = new WeakHashMap<>();
+    private final ChangeListener cacheCleaner = (evt) -> {
+        if (cache.keySet().contains(evt.getSource())) {
+            cache.clear();
+        }
+    };
 
     @Override
     protected void index(Indexable indexable, Parser.Result parserResult, Context context) {
@@ -510,6 +516,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
     public static List<ClassSymbolLocation> getSymbolsFromDependencies(ClasspathInfo info, String textForQuery) {
         List<ClassSymbolLocation> cached = INSTANCE.cache.get(info);
         if (cached == null) {
+            info.addChangeListener(INSTANCE.cacheCleaner);
             List<ClassSymbolLocation> ret = new ArrayList<>();
             ClassIndex ci = info.getClassIndex();
             Set<ElementHandle<TypeElement>> beanHandles = new HashSet<>();

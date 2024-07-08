@@ -500,16 +500,6 @@ public final class ModuleManager extends Modules {
         }
     }
 
-    /** Only for use with Javeleon modules. */
-    public void replaceJaveleonModule(Module module, Module newModule) {
-        assert newModule instanceof JaveleonModule;
-        modules.remove(module);
-        modulesByName.remove(module.getCodeNameBase());
-        modules.add(newModule);
-        modulesByName.put(newModule.getCodeNameBase(), newModule);
-        invalidateClassLoader();
-    }
-
     private static void checkMissingModules(
         Set<Module> requested, List<Module> reallyEnabled
     ) throws InvalidException {
@@ -1976,44 +1966,6 @@ public final class ModuleManager extends Modules {
         return true;
     }
 
-    /** Only for use from Javeleon code. */
-    public List<Module> simulateJaveleonReload(Module moduleToReload) throws IllegalArgumentException {
-        Set<Module> transitiveDependents = new HashSet<Module>(20);
-        addToJaveleonDisableList(transitiveDependents, moduleToReload);
-        Map<Module,List<Module>> deps = Util.moduleDependencies(transitiveDependents, modulesByName, getProvidersOf());
-        try {
-            LinkedList<Module> orderedForEnabling = new LinkedList<Module>();
-            for (Module m : Utilities.topologicalSort(transitiveDependents, deps)) {
-                if (m != moduleToReload) {
-                    orderedForEnabling.addFirst(m);
-                }
-            }
-            return orderedForEnabling;
-        } catch (TopologicalSortException ex) {
-            return new ArrayList<Module>(transitiveDependents);
-        }
-    }
-    private void addToJaveleonDisableList(Set<Module> willDisable, Module m) {
-        if (willDisable.contains(m)) {
-            return;
-        }
-        willDisable.add(m);
-        for (Module other : modules) {
-            if (! other.isEnabled() || willDisable.contains(other)) {
-                continue;
-            }
-            Dependency[] depenencies = other.getDependenciesArray();
-            for (int i = 0; i < depenencies.length; i++) {
-                Dependency dep = depenencies[i];
-                if (dep.getType() == Dependency.TYPE_MODULE) {
-                    if (Util.parseCodeName(dep.getName())[0].equals(m.getCodeNameBase())) {
-                        addToJaveleonDisableList(willDisable, other);
-                        break;
-                    }
-                }
-            }
-        }
-    }
 
     /** Simulate what would happen if a set of modules were to be disabled.
      * None of the listed modules may be autoload modules, nor eager, nor currently disabled, nor fixed.

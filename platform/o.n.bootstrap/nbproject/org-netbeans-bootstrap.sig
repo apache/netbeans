@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.103
+#Version 2.104
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -290,28 +290,6 @@ supr org.netbeans.ProxyClassLoader
 hfds BASE_VERSION,LOGGER,META_INF,MULTI_RELEASE,RUNTIME_VERSION,archive,cache,module,patchingBytecode,sources
 hcls DirSource,JarSource,JarURLStreamHandler,NbJarURLConnection,Source
 
-CLSS public final org.netbeans.JaveleonModule
-cons public init(org.netbeans.ModuleManager,java.io.File,java.lang.Object,org.netbeans.Events) throws java.io.IOException
-fld public final static boolean isJaveleonPresent
-meth protected java.lang.ClassLoader createNewClassLoader(java.util.List<java.io.File>,java.util.List<java.lang.ClassLoader>)
-meth protected java.lang.ClassLoader getParentLoader(org.netbeans.Module)
-meth protected void classLoaderDown()
-meth protected void cleanup()
-meth public boolean isFixed()
-meth public final void reload() throws java.io.IOException
-meth public java.io.File getJarFile()
-meth public java.lang.Object getLocalizedAttribute(java.lang.String)
-meth public java.lang.String toString()
-meth public java.util.List<java.io.File> getAllJars()
-meth public java.util.jar.Manifest getManifest()
-meth public static boolean incrementGlobalId()
-meth public void classLoaderUp(java.util.Set<org.netbeans.Module>) throws java.io.IOException
-meth public void destroy()
-meth public void releaseManifest()
-meth public void setReloadable(boolean)
-supr org.netbeans.Module
-hfds LOG,currentClassLoaders,incrementGlobalId,registerClassLoader
-
 CLSS public final org.netbeans.Main
 meth public static void finishInitialization()
 meth public static void main(java.lang.String[]) throws java.lang.Exception
@@ -435,7 +413,6 @@ meth public java.lang.ClassLoader refineClassLoader(org.netbeans.Module,java.uti
 meth public java.util.Collection<org.netbeans.Module> getAttachedFragments(org.netbeans.Module)
 meth public java.util.List<org.netbeans.Module> simulateDisable(java.util.Set<org.netbeans.Module>)
 meth public java.util.List<org.netbeans.Module> simulateEnable(java.util.Set<org.netbeans.Module>)
-meth public java.util.List<org.netbeans.Module> simulateJaveleonReload(org.netbeans.Module)
 meth public java.util.Set<org.netbeans.Module> getModuleInterdependencies(org.netbeans.Module,boolean,boolean)
  anno 0 java.lang.Deprecated()
 meth public java.util.Set<org.netbeans.Module> getModuleInterdependencies(org.netbeans.Module,boolean,boolean,boolean)
@@ -455,7 +432,6 @@ meth public void disable(java.util.Set<org.netbeans.Module>)
 meth public void enable(java.util.Set<org.netbeans.Module>) throws org.netbeans.InvalidException
 meth public void releaseModuleManifests()
 meth public void reload(org.netbeans.Module) throws java.io.IOException
-meth public void replaceJaveleonModule(org.netbeans.Module,org.netbeans.Module)
 supr org.openide.modules.Modules
 hfds DEPLOG,EMPTY_COLLECTION,MODULE_PROBLEMS_LOCK,MUTEX,MUTEX_PRIVILEGED,PRINT_TOPOLOGICAL_EXCEPTION_STACK_TRACES,PROBING_IN_PROCESS,addedBecauseOfDependent,bootstrapModules,changeSupport,classLoader,classLoaderLock,classLoaderPatches,completeLookup,eagerActivation,enableContext,environmentTokens,ev,firer,fragmentModules,installer,lookup,mdc,moduleFactory,moduleProblemsWithNeeds,moduleProblemsWithoutNeeds,modules,modulesByName,netigso,providersOf,readOnly,reported,reportedProblems
 hcls CodeNameBaseComparator,EnableContext,ModuleDataCache,ProvidersOf,SystemClassLoader

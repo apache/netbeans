@@ -450,7 +450,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
             // Finally we add xsl namespace elements with other prefixes than the first one
             for (int prefixInd = 1; prefixInd < prefixList.size(); prefixInd++) {
-                String curPrefix = (String)prefixList.get(prefixInd) + ":"; // NOI18N
+                String curPrefix = prefixList.get(prefixInd) + ":"; // NOI18N
                 Node curNode = el;
                 String curName = null;
                 while(curNode != null && null != (curName = curNode.getNodeName()) && !curName.startsWith(curPrefix)) {
@@ -496,8 +496,8 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
         String curXslPrefix = null;
         for (int ind = 0; ind < prefixList.size(); ind++) {
-            if (elTagName.startsWith((String)prefixList.get(ind) + ":")){ // NOI18N
-                curXslPrefix = (String)prefixList.get(ind) + ":"; // NOI18N
+            if (elTagName.startsWith(prefixList.get(ind) + ":")){ // NOI18N
+                curXslPrefix = prefixList.get(ind) + ":"; // NOI18N
                 break;
             }
         }
@@ -512,7 +512,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
             if (prefixList.size() > 0) {
                 Iterator it = getResultElementAttr().iterator();
                 while ( it.hasNext()) {
-                    possibleAttributes.add((String)prefixList.get(0) + ":" + (String) it.next()); // NOI18N
+                    possibleAttributes.add(prefixList.get(0) + ":" + (String) it.next()); // NOI18N
                 }
             }
         }
@@ -874,7 +874,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
         boolean outputFound = false;
         if (prefixList.size() > 0) {
-            String outputElName = (String)prefixList.get(0) + ":output"; // NOI18N
+            String outputElName = prefixList.get(0) + ":output"; // NOI18N
             Node childOfRoot = rootNode.getFirstChild();
             while (childOfRoot != null) {
                 String childNodeName = childOfRoot.getNodeName();

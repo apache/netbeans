@@ -621,7 +621,7 @@ public class WebProjectUtilities {
         
         ep.setProperty(WebProjectProperties.JAVA_SOURCE_BASED,javaSourceBased+"");
         
-        UpdateHelper updateHelper = ((WebProject) p).getUpdateHelper();
+        UpdateHelper updateHelper = p.getUpdateHelper();
         
 // this enforcement is valid only for Web project for EE 6; non-EE6 containers may support JDK 7
 //        // #181215: JDK 6 should be the default source/binary format for Java EE 6 projects

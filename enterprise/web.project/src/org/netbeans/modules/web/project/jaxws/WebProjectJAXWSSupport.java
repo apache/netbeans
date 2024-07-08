@@ -103,7 +103,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
     @Override
     public String getWsdlLocation(String serviceName) {
         String localWsdl = serviceName+".wsdl"; //NOI18N
-        JaxWsModel jaxWsModel = (JaxWsModel)project.getLookup().lookup(JaxWsModel.class);
+        JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
         if (jaxWsModel!=null) {
             Service service = jaxWsModel.findServiceByName(serviceName);
             if (service!=null) {

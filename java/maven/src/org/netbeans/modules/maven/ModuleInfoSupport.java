@@ -235,7 +235,7 @@ public class ModuleInfoSupport {
                 src.runModificationTask((WorkingCopy copy) -> {
                     copy.toPhase(JavaSource.Phase.RESOLVED);
                     TreeMaker tm = copy.getTreeMaker();
-                    ModuleTree modle = (ModuleTree) copy.getCompilationUnit().getModule();
+                    ModuleTree modle = copy.getCompilationUnit().getModule();
                     ModuleTree newModle = modle;
                     for (String mName : mNames) {
                         newModle = tm.addModuleDirective(newModle, tm.Requires(false, false, tm.QualIdent(mName)));

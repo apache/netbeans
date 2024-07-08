@@ -306,7 +306,7 @@ class ProjectJavaSettings extends Setting {
                         name: version,
                         path: jdk.javaHome
                     });
-                }
+                    }
             }
             try {
                 await vscode.workspace.getConfiguration().update(this.property, definitions, scope);
@@ -324,8 +324,15 @@ const NBLS_EXTENSION_ID = 'asf.apache-netbeans-java';
 const NBLS_SETTINGS_NAME = 'Language Server by Apache NetBeans';
 const NBLS_SETTINGS_PROPERTY = 'netbeans.jdkhome';
 function nblsSetting(): Setting {
-    return new JavaSetting(NBLS_SETTINGS_NAME, NBLS_SETTINGS_PROPERTY, false);
+    return new JavaSetting(NBLS_SETTINGS_NAME, NBLS_SETTINGS_PROPERTY, true);
 }
+
+const NBLS_SETTINGS_PROJECT_NAME = 'Language Server by Apache NetBeans - Java Runtime for Projects';
+const NBLS_SETTINGS_PROJECT_PROPERTY = 'netbeans.project.jdkhome';
+function nblsProjectSetting(): Setting {
+    return new JavaSetting(NBLS_SETTINGS_PROJECT_NAME, NBLS_SETTINGS_PROJECT_PROPERTY, true);
+}
+
 
 const JDTLS_EXTENSION_ID = 'redhat.java';
 const JDTLS_SETTINGS_NAME = 'Language Server by RedHat';
@@ -334,7 +341,7 @@ function jdtlsSetting(): Setting {
     return new JavaSetting(JDTLS_SETTINGS_NAME, JDTLS_SETTINGS_PROPERTY);
 }
 
-const PROJECTS_SETTINGS_NAME = 'Java Runtime for Projects';
+const PROJECTS_SETTINGS_NAME = 'Language Server by RedHat - Java Runtime for Projects';
 const PROJECTS_SETTINGS_PROPERTY = 'java.configuration.runtimes';
 export function projectsSettings(): Setting {
     return new ProjectJavaSettings(PROJECTS_SETTINGS_NAME, PROJECTS_SETTINGS_PROPERTY);
@@ -364,6 +371,7 @@ export function getAvailable(): Setting[] {
 
     if (vscode.extensions.getExtension(NBLS_EXTENSION_ID)) {
         settings.push(nblsSetting());
+        settings.push(nblsProjectSetting());
     }
 
     if (vscode.extensions.getExtension(JDTLS_EXTENSION_ID)) {

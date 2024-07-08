@@ -240,6 +240,7 @@ import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.modules.editor.indent.api.Reformat;
 import org.netbeans.modules.java.lsp.server.URITranslator;
+import org.netbeans.modules.java.lsp.server.ui.AbstractJavaPlatformProviderOverride;
 import org.netbeans.modules.parsing.impl.SourceAccessor;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
@@ -2086,6 +2087,15 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         reRunDiagnostics();
     }
     
+    void updateProjectJDKHome(JsonPrimitive configuration) {
+        if (configuration == null) {
+            client.logMessage(new MessageParams(MessageType.Log,"Project runtime JDK unset, defaults to NBLS JDK"));
+        } else {
+            client.logMessage(new MessageParams(MessageType.Log, "Project runtime JDK set to " + configuration.getAsString()));
+        }
+        AbstractJavaPlatformProviderOverride.setDefaultPlatformOverride(configuration != null ? configuration.getAsString() : null);
+    }
+
     private String key(ErrorProvider.Kind errorKind) {
         return errorKind.name().toLowerCase(Locale.ROOT);
     }

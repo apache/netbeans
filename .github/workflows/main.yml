@@ -2114,9 +2114,8 @@ jobs:
       - name: web.jsfapi
         run: ant $OPTS -f enterprise/web.jsfapi test
 
-# Fails
-#      - name: web.jspparser
-#        run: ant $OPTS -f enterprise/web.jspparser test
+      - name: web.jspparser
+        run: ant $OPTS -f enterprise/web.jspparser test
 
 # Fails
 #      - name: web.project

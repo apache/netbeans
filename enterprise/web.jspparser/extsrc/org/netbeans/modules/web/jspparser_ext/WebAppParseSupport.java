@@ -129,12 +129,7 @@ public class WebAppParseSupport implements WebAppParseProxy, PropertyChangeListe
     private ServletContext editorContext;
     private ServletContext diskContext;
     private JspRuntimeContext rctxt;
-    private ParserClassLoader waClassLoader;
-    private ParserClassLoader waContextClassLoader;
-
-    // This is intended for tests exclusively!!!
-    @SuppressWarnings("FieldMayBeFinal")
-    private static boolean noReset = false;
+    private URL[][] classLoaderSources = null;
 
     // @GuardedBy(this)
     /**
@@ -226,8 +221,6 @@ public class WebAppParseSupport implements WebAppParseProxy, PropertyChangeListe
             return new JspParserAPI.JspOpenInfo(epd.isXMLSyntax(), epd.getEncoding());
         } catch (IOException | JasperException | RuntimeException e) {
             LOG.fine(e.getMessage());
-        } finally {
-            resetClassLoaders();
         }
         return DEFAULT_JSP_OPEN_INFO;
     }
@@ -313,33 +306,13 @@ public class WebAppParseSupport implements WebAppParseProxy, PropertyChangeListe
         }
 
         @SuppressWarnings("CollectionsToArray")
-        URL[] loadingURLs = loadingTable.values().toArray(new URL[0]);
-        @SuppressWarnings("CollectionsToArray")
-        URL[] tomcatURLs = tomcatTable.values().toArray(new URL[0]);
+        URL[][] urls = {
+            loadingTable.values().toArray(new URL[0]),
+            tomcatTable.values().toArray(new URL[0])
+        };
 
-        waClassLoader = new ParserClassLoader(loadingURLs, tomcatURLs, getClass().getClassLoader());
-        waContextClassLoader = new ParserClassLoader(loadingURLs, tomcatURLs, getClass().getClassLoader());
+        this.classLoaderSources = urls;
     }
-
-    // #128360
-    private void resetClassLoaders() {
-        if (noReset) {
-            return;
-        }
-        URL[] loadingURLs = waClassLoader.getLoadingURLs();
-        URL[] tomcatURLs = waClassLoader.getTomcatURLs();
-        URL[] loadingContextURLs = waContextClassLoader.getLoadingURLs();
-        URL[] tomcatContextURLs = waContextClassLoader.getTomcatURLs();
-
-        try {
-            waClassLoader.close();
-            waContextClassLoader.close();
-        } catch (IOException | RuntimeException e) {
-            LOG.log(Level.WARNING, null, e);
-        }
-        waClassLoader = new ParserClassLoader(loadingURLs, tomcatURLs, waClassLoader.getParent());
-        waContextClassLoader = new ParserClassLoader(loadingContextURLs, tomcatContextURLs, waContextClassLoader.getParent());
-     }
 
     // #127379 - XXX review after listening on a web module is possible
     private FileObject getWebInf() {
@@ -442,10 +415,10 @@ public class WebAppParseSupport implements WebAppParseProxy, PropertyChangeListe
         checkReinitCachesTask();
         JspCompilationContext ctxt = createCompilationContext(jspFile, true);
 
-        try {
-            return callTomcatParser(jspFile, ctxt, waContextClassLoader, errorReportingMode);
-        } finally {
-            resetClassLoaders();
+        try (URLClassLoader cl = new ParserClassLoader(this.classLoaderSources[0], this.classLoaderSources[1], getClass().getClassLoader())) {
+            return callTomcatParser(jspFile, ctxt, cl, errorReportingMode);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -482,7 +455,8 @@ public class WebAppParseSupport implements WebAppParseProxy, PropertyChangeListe
             reinitOptions();
         }
         // XXX #128360 - classloader is leaking out - no chance to close it
-        return waClassLoader;
+        // Callers must close the classloader as soon as possible!
+        return new ParserClassLoader(this.classLoaderSources[0], this.classLoaderSources[1], getClass().getClassLoader());
     }
 
     @Override
@@ -715,22 +689,24 @@ public class WebAppParseSupport implements WebAppParseProxy, PropertyChangeListe
             }
 
             Thread compThread = new WebAppParseSupport.InitTldLocationCacheThread(lc);
-            compThread.setContextClassLoader(waContextClassLoader);
-            long start = 0;
-            if (LOG.isLoggable(Level.FINE)) {
-                start = System.currentTimeMillis();
-                LOG.fine("InitTldLocationCacheThread start"); //NOI18N
-            }
-            compThread.start();
-
-            try {
-                compThread.join();
+            try (URLClassLoader cl = new ParserClassLoader(this.classLoaderSources[0], this.classLoaderSources[1], getClass().getClassLoader())) {
+                compThread.setContextClassLoader(cl);
+                long start = 0;
                 if (LOG.isLoggable(Level.FINE)) {
-                    long end = System.currentTimeMillis();
-                    LOG.log(Level.FINE, "InitTldLocationCacheThread finished in {0} ms", (end - start)); //NOI18N
+                    start = System.currentTimeMillis();
+                    LOG.fine("InitTldLocationCacheThread start"); //NOI18N
                 }
-            } catch (InterruptedException e) {
-                LOG.log(Level.INFO, null, e);
+                compThread.start();
+
+                try {
+                    compThread.join();
+                    if (LOG.isLoggable(Level.FINE)) {
+                        long end = System.currentTimeMillis();
+                        LOG.log(Level.FINE, "InitTldLocationCacheThread finished in {0} ms", (end - start)); //NOI18N
+                    }
+                } catch (InterruptedException e) {
+                    LOG.log(Level.INFO, null, e);
+                }
             }
 
             // obtain the current mappings after parsing
@@ -752,7 +728,7 @@ public class WebAppParseSupport implements WebAppParseProxy, PropertyChangeListe
             }
             // cache tld files under WEB-INF directory as well
             mappings.putAll(getImplicitLocation());
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException | IOException e) {
             LOG.log(Level.INFO, null, e);
         }
     }

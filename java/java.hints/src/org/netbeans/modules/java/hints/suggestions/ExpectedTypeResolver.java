@@ -73,7 +73,6 @@ import com.sun.source.tree.ProvidesTree;
 import com.sun.source.tree.RequiresTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Scope;
-import com.sun.source.tree.StringTemplateTree;
 import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
@@ -1429,12 +1428,6 @@ public class ExpectedTypeResolver implements TreeVisitor<List<? extends TypeMirr
 
     @Override
     public List<? extends TypeMirror> visitDeconstructionPattern(DeconstructionPatternTree node, Object p) {
-        return null;
-    }
-
-    @Override
-    public List<? extends TypeMirror> visitStringTemplate(StringTemplateTree stt, Object p) {
-        //TODO:
         return null;
     }
 

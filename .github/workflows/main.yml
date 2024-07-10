@@ -1424,10 +1424,10 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '22' ]
+        java: [ '17', '23-ea' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '22' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '23-ea' }}
       fail-fast: false
     steps:
 

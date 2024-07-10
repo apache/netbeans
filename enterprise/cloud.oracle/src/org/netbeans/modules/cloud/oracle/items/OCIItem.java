@@ -18,9 +18,9 @@
  */
 package org.netbeans.modules.cloud.oracle.items;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Objects;
-import javax.swing.event.ChangeListener;
-import org.openide.util.ChangeSupport;
 
 /**
  * Represents Oracle Cloud Resource identified by Oracle Cloud Identifier (OCID)
@@ -32,7 +32,7 @@ public abstract class OCIItem {
     final String name;
     final String compartmentId;
     String description;
-    transient ChangeSupport changeSupport;
+    final transient PropertyChangeSupport changeSupport;
 
     /**
     * Construct a new {@code OCIItem}.
@@ -45,7 +45,7 @@ public abstract class OCIItem {
         this.id = id;
         this.name = name;
         this.compartmentId = compartmentId;
-        changeSupport = new ChangeSupport(this);
+        changeSupport = new PropertyChangeSupport(this);
     }
 
     public OCIItem() {
@@ -101,29 +101,29 @@ public abstract class OCIItem {
      * Triggers node refresh.
      */
     public void refresh() {
-        changeSupport.fireChange();
+        changeSupport.firePropertyChange("children", 0, 1);
     }
     
     /**
      * Adds a <code>ChangeListener</code> to the listener list.
      * 
-     * @param listener the <code>ChangeListener</code> to be added.
+     * @param listener the <code>PropertyChangeListener</code> to be added.
      */
-    public void addChangeListener(ChangeListener listener) {
-        changeSupport.addChangeListener(listener);
+    public void addChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
     }
     
     /**
      * Removes a <code>ChangeListener</code> from the listener list.
      * 
-     * @param listener the <code>ChangeListener</code> to be removed.
+     * @param listener the <code>PropertyChangeListener</code> to be removed.
      */
-    public void removeChangeListener(ChangeListener listener) {
-        changeSupport.removeChangeListener(listener);
+    public void removeChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
     }
 
     public int maxInProject() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -156,5 +156,8 @@ public abstract class OCIItem {
         return Objects.equals(this.id, other.id);
     }
     
+    public void fireRefNameChanged(String oldRefName, String referenceName) {
+        changeSupport.firePropertyChange("referenceName", oldRefName, referenceName);
+    }
     
 }

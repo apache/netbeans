@@ -50,20 +50,6 @@ public class AddDbConnectionToVaultTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of extractDatasourceName method, of class AddDbConnectionToVault.
-     */
-    @Test
-    public void datasourceName() {
-        String input = "DATASOURCES_DEFAULT_USERNAME";
-        String ds = AddDbConnectionToVault.extractDatasourceName(input);
-        assertEquals("DEFAULT", ds);
-        
-        input = "DATASOURCES_DEF3_USERNAME";
-        ds = AddDbConnectionToVault.extractDatasourceName(input);
-        assertEquals("DEF3", ds);
-    }
-    
     @Test
     public void testConfigMap() {
         String cm = "apiVersion: v1\n" +

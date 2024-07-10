@@ -19,11 +19,11 @@
 package org.netbeans.modules.cloud.oracle;
 
 import com.oracle.bmc.auth.BasicAuthenticationDetailsProvider;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -121,10 +121,14 @@ public class OCINode extends AbstractNode {
         return super.getHandle();
     }
 
-    private final class RefreshListener implements ChangeListener {
+    private final class RefreshListener implements PropertyChangeListener {
         @Override
-        public void stateChanged(ChangeEvent e) {
-            refresh();
+        public void propertyChange(PropertyChangeEvent evt) {
+            if ("referenceName".equals(evt.getPropertyName())) {
+                fireDisplayNameChange("", getDisplayName());
+            } else {
+                refresh();
+            }
         }
     }
     

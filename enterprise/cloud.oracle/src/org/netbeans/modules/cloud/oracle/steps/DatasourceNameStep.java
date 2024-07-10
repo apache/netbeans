@@ -16,42 +16,49 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.assets;
+package org.netbeans.modules.cloud.oracle.steps;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import org.openide.awt.ActionID;
-import org.openide.awt.ActionRegistration;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.modules.cloud.oracle.assets.AbstractStep;
+import org.netbeans.modules.cloud.oracle.assets.Steps.Values;
+import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 
 /**
  *
  * @author Jan Horvath
  */
-@ActionID(
-        category = "Tools",
-        id = "org.netbeans.modules.cloud.oracle.actions.RemoveFromProject"
-)
-@ActionRegistration( 
-        displayName = "#RemoveFromProject", 
-        asynchronous = true
-)
-
 @NbBundle.Messages({
-    "RemoveFromProject=Remove From Oracle Cloud Assets"
+    "DatasourceName=Datasource Name",
 })
-public class RemoveFromProject implements ActionListener {
-    
-    private final OCIItem context;
+public class DatasourceNameStep extends AbstractStep<String> {
+    private String selected = null;
 
-    public RemoveFromProject(OCIItem context) {
-        this.context = context;
+    public DatasourceNameStep() {
+    }
+    
+    @Override
+    public void prepare(ProgressHandle h, Values values) {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        CloudAssets.getDefault().removeItem(context);
+    public NotifyDescriptor createInput() {
+        return new NotifyDescriptor.InputLine(selected == null ? "" : "DEFAULT", Bundle.DatasourceName()); //NOI18N
     }
 
+    @Override
+    public void setValue(String selected) {
+        this.selected = selected;
+    }
+
+    @Override
+    public String getValue() {
+        return selected;
+    }
+
+    @Override
+    public boolean onlyOneChoice() {
+        return false;
+    }
+    
 }

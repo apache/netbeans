@@ -222,12 +222,6 @@ public class TreeFactory {
         return make.at(NOPOS).PatternCaseLabel((JCPattern) pat);
     }
 
-    public StringTemplateTree StringTemplate(ExpressionTree processor, List<String> fragments, List<? extends ExpressionTree> expressions) {
-        return make.at(NOPOS).StringTemplate((JCExpression) processor,
-                                             fragments.stream().collect(com.sun.tools.javac.util.List.collector()),
-                                             expressions.stream().map(expr -> (JCExpression) expr).collect(com.sun.tools.javac.util.List.collector()));
-    }
-
     public AnyPatternTree AnyPattern() {
         return make.at(NOPOS).AnyPattern();
     }

@@ -116,7 +116,6 @@ import org.netbeans.modules.java.source.builder.CommentSetImpl;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.save.CasualDiff;
-import org.netbeans.modules.java.source.save.CasualDiff.StringTemplateFragmentTree;
 import org.netbeans.modules.java.source.save.DiffContext;
 import org.netbeans.modules.java.source.save.PositionEstimator;
 import org.netbeans.modules.java.source.save.Reformatter;
@@ -1895,27 +1894,14 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	  case CHAR:
 	    print("\'" +
 		  quote(
-		  String.valueOf((char) ((Number) tree.value).intValue()), '"') +
+		  String.valueOf((char) ((Number) tree.value).intValue()), '"', true) +
 		  "\'");
 	    break;
 	   case CLASS:
              if (tree.value instanceof String) {
-                 String leading;
-                 String trailing;
-                 if (tree instanceof StringTemplateFragmentTree) {
-                     StringTemplateFragmentTree stf = (StringTemplateFragmentTree) tree;
-                     switch (stf.fragmentKind) {
-                         case START: leading = "\""; trailing = "\\{"; break;
-                         case MIDDLE: leading = "}"; trailing = "\\{"; break;
-                         case END: leading = "}"; trailing = "\""; break;
-                         default: throw new IllegalStateException(stf.fragmentKind.name());
-                     }
-                 } else {
-                     leading = trailing = "\"";
-                 }
-                 print(leading);
-                 print(quote((String) tree.value, '\''));
-                 print(trailing);
+                 print("\"");
+                 print(quote((String) tree.value, '\'', false));
+                 print("\"");
              } else if (tree.value instanceof String[]) {
                  int indent = out.col;
                  print("\"\"\"");
@@ -1929,7 +1915,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                              print('\\');
                              print('"');
                          } else if (line.charAt(c) != '\'' && line.charAt(c) != '"') {
-                             print(Convert.quote(line.charAt(c)));
+                             print(Convert.quote(line.charAt(c), false));
                          } else {
                              print(line.charAt(c));
                          }
@@ -1954,12 +1940,12 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	}
     }
 
-    private static String quote(String val, char keep) {
+    private static String quote(String val, char keep, boolean charContext) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < val.length(); i++) {
             char c = val.charAt(i);
             if (c != keep) {
-                sb.append(Convert.quote(c));
+                sb.append(Convert.quote(c, charContext));
             } else {
                 sb.append(c);
             }
@@ -2090,31 +2076,6 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     @Override
     public void visitConstantCaseLabel(JCConstantCaseLabel tree) {
         printExpr(tree.expr);
-    }
-
-    @Override
-    public void visitStringTemplate(JCStringTemplate tree) {
-        printExpr(tree.processor, TreeInfo.postfixPrec);
-        print('.');
-
-        Iterator<? extends String> fragmentIt = tree.fragments.iterator();
-        Iterator<? extends JCExpression> expressionIt = tree.expressions.iterator();
-        boolean start = true;
-
-        while (expressionIt.hasNext()) {
-            if (start) {
-                print("\"");
-            } else {
-                print("}");
-            }
-            print(quote(fragmentIt.next(), '\''));
-            print("\\{");
-            print(expressionIt.next());
-            start = false;
-        }
-        print("}");
-        print(quote(fragmentIt.next(), '\''));
-        print("\"");
     }
 
     @Override

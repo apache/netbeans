@@ -1256,6 +1256,7 @@
 		"@types/ps-node": "^0.1.0",
 		"@types/vscode": "^1.76.0",
 		"@types/vscode-webview": "^1.57.1",
+		"@types/xml2js": "^0.4.14",
 		"@vscode/codicons": "0.0.29",
 		"esbuild": "^0.16.17",
 		"glob": "^7.1.6",
@@ -1269,7 +1270,8 @@
 		"@vscode/webview-ui-toolkit": "^1.2.2",
 		"jdk-utils": "^0.4.4",
 		"jsonc-parser": "3.0.0",
-		"vscode-languageclient": "8.0.1"
+		"vscode-languageclient": "8.0.1",
+		"xml2js": "^0.6.2"
 	},
 	"__metadata": {
 		"id": "66c7d7dc-934c-499b-94af-5375e8234fdd",

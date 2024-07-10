@@ -120,7 +120,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.modules.SpecificationVersion;
 import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
@@ -165,9 +164,9 @@ public class JavaFixUtilities {
                 }
             }
             params.put(e.getKey(), TreePathHandle.create(e.getValue(), info));
-            if (e.getValue() instanceof Callable) {
+            if (e.getValue() instanceof Callable callable) {
                 try {
-                    extraParamsData.put(e.getKey(), ((Callable) e.getValue()).call());
+                    extraParamsData.put(e.getKey(), callable.call());
                 } catch (Exception ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -352,7 +351,7 @@ public class JavaFixUtilities {
         }
     }
 
-    private static java.util.regex.Pattern SPEC_VERSION = java.util.regex.Pattern.compile("[0-9]+(\\.[0-9]+)+");
+    private static final java.util.regex.Pattern SPEC_VERSION = java.util.regex.Pattern.compile("[0-9]+(\\.[0-9]+)+");
 
     static SpecificationVersion computeSpecVersion(CompilationInfo info, Element el) {
         if (!Utilities.isJavadocSupported(info)) return null;
@@ -772,8 +771,7 @@ public class JavaFixUtilities {
             TreePath tp = parameters.get(name);
 
             if (tp != null) {
-                if (tp.getLeaf() instanceof Hacks.RenameTree) {
-                    Hacks.RenameTree rt = (Hacks.RenameTree) tp.getLeaf();
+                if (tp.getLeaf() instanceof Hacks.RenameTree rt) {
                     return make.setLabel(rt.originalTree, rt.newName);
                 }
                 if (!parameterNames.containsKey(name)) {
@@ -993,10 +991,9 @@ public class JavaFixUtilities {
 
         @Override
         public Number visitLiteral(LiteralTree node, Void p) {
-            if (node.getValue() instanceof Number) {
-                return (Number) node.getValue();
+            if (node.getValue() instanceof Number number) {
+                return number;
             }
-
             return super.visitLiteral(node, p);
         }
 
@@ -1006,138 +1003,128 @@ public class JavaFixUtilities {
             Number right = scan(node.getRightOperand(), p);
 
             if (left != null && right != null) {
-                Number result = null;
-                switch (node.getKind()) {
-                    case MULTIPLY:
-                            if (left instanceof Double || right instanceof Double) {
-                                result = left.doubleValue() * right.doubleValue();
-                            } else if (left instanceof Float || right instanceof Float) {
-                                result = left.floatValue() * right.floatValue();
-                            } else if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() * right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() * right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case DIVIDE:
-                            if (left instanceof Double || right instanceof Double) {
-                                result = left.doubleValue() / right.doubleValue();
-                            } else if (left instanceof Float || right instanceof Float) {
-                                result = left.floatValue() / right.floatValue();
-                            } else if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() / right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() / right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case REMAINDER:
-                            if (left instanceof Double || right instanceof Double) {
-                                result = left.doubleValue() % right.doubleValue();
-                            } else if (left instanceof Float || right instanceof Float) {
-                                result = left.floatValue() % right.floatValue();
-                            } else if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() % right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() % right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case PLUS:
-                            if (left instanceof Double || right instanceof Double) {
-                                result = left.doubleValue() + right.doubleValue();
-                            } else if (left instanceof Float || right instanceof Float) {
-                                result = left.floatValue() + right.floatValue();
-                            } else if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() + right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() + right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case MINUS:
-                            if (left instanceof Double || right instanceof Double) {
-                                result = left.doubleValue() - right.doubleValue();
-                            } else if (left instanceof Float || right instanceof Float) {
-                                result = left.floatValue() - right.floatValue();
-                            } else if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() - right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() - right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case LEFT_SHIFT:
-                            if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() << right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() << right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case RIGHT_SHIFT:
-                            if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() >> right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() >> right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case UNSIGNED_RIGHT_SHIFT:
-                            if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() >>> right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() >>> right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case AND:
-                            if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() & right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() & right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case XOR:
-                            if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() ^ right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() ^ right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case OR:
-                            if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() | right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() | right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-                }
+                Number result = switch (node.getKind()) {
+                    case MULTIPLY -> {
+                        if (left instanceof Double || right instanceof Double) {
+                            yield left.doubleValue() * right.doubleValue();
+                        } else if (left instanceof Float || right instanceof Float) {
+                            yield left.floatValue() * right.floatValue();
+                        } else if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() * right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() * right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case DIVIDE -> {
+                        if (left instanceof Double || right instanceof Double) {
+                            yield left.doubleValue() / right.doubleValue();
+                        } else if (left instanceof Float || right instanceof Float) {
+                            yield left.floatValue() / right.floatValue();
+                        } else if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() / right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() / right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case REMAINDER -> {
+                        if (left instanceof Double || right instanceof Double) {
+                            yield left.doubleValue() % right.doubleValue();
+                        } else if (left instanceof Float || right instanceof Float) {
+                            yield left.floatValue() % right.floatValue();
+                        } else if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() % right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() % right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case PLUS -> {
+                        if (left instanceof Double || right instanceof Double) {
+                            yield left.doubleValue() + right.doubleValue();
+                        } else if (left instanceof Float || right instanceof Float) {
+                            yield left.floatValue() + right.floatValue();
+                        } else if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() + right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() + right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case MINUS -> {
+                        if (left instanceof Double || right instanceof Double) {
+                            yield left.doubleValue() - right.doubleValue();
+                        } else if (left instanceof Float || right instanceof Float) {
+                            yield left.floatValue() - right.floatValue();
+                        } else if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() - right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() - right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case LEFT_SHIFT -> {
+                        if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() << right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() << right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case RIGHT_SHIFT -> {
+                        if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() >> right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() >> right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case UNSIGNED_RIGHT_SHIFT -> {
+                        if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() >>> right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() >>> right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case AND -> {
+                        if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() & right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() & right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case XOR -> {
+                        if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() ^ right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() ^ right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case OR -> {
+                        if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() | right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() | right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    default -> null;
+                };
 
                 if (result != null) {
                     rewrite(node, make.Literal(result));
@@ -1154,25 +1141,23 @@ public class JavaFixUtilities {
             Number op  = scan(node.getExpression(), p);
 
             if (op != null) {
-                Number result = null;
-                switch (node.getKind()) {
-                    case UNARY_MINUS:
-                            if (op instanceof Double) {
-                                result = -op.doubleValue();
-                            } else if (op instanceof Float) {
-                                result = -op.floatValue();
-                            } else if (op instanceof Long) {
-                                result = -op.longValue();
-                            } else if (op instanceof Integer) {
-                                result = -op.intValue();
-                            } else {
-                                throw new IllegalStateException("op=" + op.getClass());
-                            }
-                            break;
-                    case UNARY_PLUS:
-                        result = op;
-                        break;
-                }
+                Number result = switch (node.getKind()) {
+                    case UNARY_MINUS -> {
+                        if (op instanceof Double) {
+                            yield -op.doubleValue();
+                        } else if (op instanceof Float) {
+                            yield -op.floatValue();
+                        } else if (op instanceof Long) {
+                            yield -op.longValue();
+                        } else if (op instanceof Integer) {
+                            yield -op.intValue();
+                        } else {
+                            throw new IllegalStateException("op=" + op.getClass());
+                        }
+                    }
+                    case UNARY_PLUS -> op;
+                    default -> null;
+                };
 
                 if (result != null) {
                     rewrite(node, make.Literal(result));
@@ -1273,12 +1258,12 @@ public class JavaFixUtilities {
                     Set<Modifier> actualFlags = EnumSet.noneOf(Modifier.class);
                     boolean[] actualAnnotationsMask = new boolean[0];
                     
-                    if (actualContent instanceof Object[] && ((Object[]) actualContent)[0] instanceof Set) {
-                        actualFlags.addAll(NbCollections.checkedSetByFilter((Set) ((Object[]) actualContent)[0], Modifier.class, false));
+                    if (actualContent instanceof Object[] objects && objects[0] instanceof Set set) {
+                        actualFlags.addAll(NbCollections.checkedSetByFilter(set, Modifier.class, false));
                     }
                     
-                    if (actualContent instanceof Object[] && ((Object[]) actualContent)[1] instanceof boolean[]) {
-                        actualAnnotationsMask = (boolean[]) ((Object[]) actualContent)[1];
+                    if (actualContent instanceof Object[] objects && objects[1] instanceof boolean[] booleans) {
+                        actualAnnotationsMask = booleans;
                     }
                     
                     nue = origMods;
@@ -1295,10 +1280,15 @@ public class JavaFixUtilities {
                     int ai = 0;
                     
                     OUTER: for (AnnotationTree a : origMods.getAnnotations()) {
-                        if (actualAnnotationsMask.length <= ai || actualAnnotationsMask[ai++]) continue;
+                        if (actualAnnotationsMask.length <= ai || actualAnnotationsMask[ai++]) {
+                            continue;
+                        }
                         for (Iterator<AnnotationTree> it = annotations.iterator(); it.hasNext();) {
                             AnnotationTree toCheck = it.next();
-                            Collection<? extends Occurrence> match = org.netbeans.api.java.source.matching.Matcher.create(info).setTreeTopSearch().setSearchRoot(new TreePath(getCurrentPath(), a)).match(Pattern.createSimplePattern(new TreePath(getCurrentPath(), toCheck)));
+                            Collection<? extends Occurrence> match = org.netbeans.api.java.source.matching.Matcher.create(info)
+                                    .setTreeTopSearch()
+                                    .setSearchRoot(new TreePath(getCurrentPath(), a))
+                                    .match(Pattern.createSimplePattern(new TreePath(getCurrentPath(), toCheck)));
                             
                             if (!match.isEmpty()) {
                                 //should be kept:
@@ -1398,7 +1388,7 @@ public class JavaFixUtilities {
         private ExpressionTree negate(ExpressionTree original, Tree parent, boolean nullOnPlainNeg) {
             ExpressionTree newTree;
             switch (original.getKind()) {
-                case PARENTHESIZED:
+                case PARENTHESIZED -> {
                     ExpressionTree expr = ((ParenthesizedTree) original).getExpression();
                     ExpressionTree negatedOrNull = negate(expr, original, nullOnPlainNeg);
                     if (negatedOrNull != null) {
@@ -1414,47 +1404,30 @@ public class JavaFixUtilities {
                         return make.Unary(Kind.LOGICAL_COMPLEMENT, original);
                     }
                     */
-                    
-                case INSTANCE_OF:
+                }
+                case INSTANCE_OF -> {
                     return make.Unary(Kind.LOGICAL_COMPLEMENT, make.Parenthesized(original));
-                    
-                case LOGICAL_COMPLEMENT:
+                }
+                case LOGICAL_COMPLEMENT -> {
                     newTree = ((UnaryTree) original).getExpression();
                     while (newTree.getKind() == Kind.PARENTHESIZED && !JavaFixUtilities.requiresParenthesis(((ParenthesizedTree) newTree).getExpression(), original, parent)) {
                         newTree = ((ParenthesizedTree) newTree).getExpression();
                     }
-                    break;
-                case NOT_EQUAL_TO:
-                    newTree = negateBinaryOperator(original, Kind.EQUAL_TO, false);
-                    break;
-                case EQUAL_TO:
-                    newTree = negateBinaryOperator(original, Kind.NOT_EQUAL_TO, false);
-                    break;
-                case BOOLEAN_LITERAL:
-                    newTree = make.Literal(!(Boolean) ((LiteralTree) original).getValue());
-                    break;
-                case CONDITIONAL_AND:
-                    newTree = negateBinaryOperator(original, Kind.CONDITIONAL_OR, true);
-                    break;
-                case CONDITIONAL_OR:
-                    newTree = negateBinaryOperator(original, Kind.CONDITIONAL_AND, true);
-                    break;
-                case LESS_THAN:
-                    newTree = negateBinaryOperator(original, Kind.GREATER_THAN_EQUAL, false);
-                    break;
-                case LESS_THAN_EQUAL:
-                    newTree = negateBinaryOperator(original, Kind.GREATER_THAN, false);
-                    break;
-                case GREATER_THAN:
-                    newTree = negateBinaryOperator(original, Kind.LESS_THAN_EQUAL, false);
-                    break;
-                case GREATER_THAN_EQUAL:
-                    newTree = negateBinaryOperator(original, Kind.LESS_THAN, false);
-                    break;
-                default:
+                }
+                case NOT_EQUAL_TO -> newTree = negateBinaryOperator(original, Kind.EQUAL_TO, false);
+                case EQUAL_TO -> newTree = negateBinaryOperator(original, Kind.NOT_EQUAL_TO, false);
+                case BOOLEAN_LITERAL -> newTree = make.Literal(!(Boolean) ((LiteralTree) original).getValue());
+                case CONDITIONAL_AND -> newTree = negateBinaryOperator(original, Kind.CONDITIONAL_OR, true);
+                case CONDITIONAL_OR -> newTree = negateBinaryOperator(original, Kind.CONDITIONAL_AND, true);
+                case LESS_THAN -> newTree = negateBinaryOperator(original, Kind.GREATER_THAN_EQUAL, false);
+                case LESS_THAN_EQUAL -> newTree = negateBinaryOperator(original, Kind.GREATER_THAN, false);
+                case GREATER_THAN -> newTree = negateBinaryOperator(original, Kind.LESS_THAN_EQUAL, false);
+                case GREATER_THAN_EQUAL -> newTree = negateBinaryOperator(original, Kind.LESS_THAN, false);
+                default -> {
                     if (nullOnPlainNeg)
                         return null;
                     newTree = make.Unary(Kind.LOGICAL_COMPLEMENT, original);
+                }
             }
          
             if (JavaFixUtilities.requiresParenthesis(newTree, original, parent)) {
@@ -1587,18 +1560,12 @@ public class JavaFixUtilities {
     public static boolean requiresParenthesis(Tree inner, Tree original, Tree outter) {
         if (!ExpressionTree.class.isAssignableFrom(inner.getKind().asInterface()) || outter == null) return false;
         if (!ExpressionTree.class.isAssignableFrom(outter.getKind().asInterface())) {
-            boolean condition = false;
-            switch (outter.getKind()) {
-                case IF:
-                    condition = original == ((IfTree)outter).getCondition();
-                    break;
-                case WHILE_LOOP:
-                    condition = original == ((WhileLoopTree)outter).getCondition();
-                    break;
-                case DO_WHILE_LOOP:
-                    condition = original == ((DoWhileLoopTree)outter).getCondition();
-                    break;
-            }
+            boolean condition = switch (outter.getKind()) {
+                case IF -> original == ((IfTree)outter).getCondition();
+                case WHILE_LOOP -> original == ((WhileLoopTree)outter).getCondition();
+                case DO_WHILE_LOOP -> original == ((DoWhileLoopTree)outter).getCondition();
+                default -> false;
+            };
             return condition && inner.getKind() != Tree.Kind.PARENTHESIZED;
         }
 
@@ -1710,25 +1677,20 @@ public class JavaFixUtilities {
             Tree parentLeaf = what.getParentPath().getLeaf();
 
             switch (parentLeaf.getKind()) {
-                case ANNOTATION:
+                case ANNOTATION -> {
                     AnnotationTree at = (AnnotationTree) parentLeaf;
-                    AnnotationTree newAnnot;
-
-                    newAnnot = make.removeAnnotationAttrValue(at, (ExpressionTree) leaf);
-
+                    AnnotationTree newAnnot = make.removeAnnotationAttrValue(at, (ExpressionTree) leaf);
                     wc.rewrite(at, newAnnot);
-                    break;
-                case BLOCK:
+                }
+                case BLOCK -> {
                     BlockTree bt = (BlockTree) parentLeaf;
-
                     wc.rewrite(bt, make.removeBlockStatement(bt, (StatementTree) leaf));
-                    break;
-                case CASE:
+                }
+                case CASE -> {
                     CaseTree caseTree = (CaseTree) parentLeaf;
-
                     wc.rewrite(caseTree, make.removeCaseStatement(caseTree, (StatementTree) leaf));
-                    break;
-                case CLASS:
+                }
+                case CLASS -> {
                     ClassTree classTree = (ClassTree) parentLeaf;
                     ClassTree nueClassTree;
 
@@ -1745,16 +1707,16 @@ public class JavaFixUtilities {
                     }
 
                     wc.rewrite(classTree, nueClassTree);
-                    break;
-                case UNION_TYPE:
+                }
+                case UNION_TYPE -> {
                     UnionTypeTree disjunct = (UnionTypeTree) parentLeaf;
                     List<? extends Tree> alternatives = new LinkedList<Tree>(disjunct.getTypeAlternatives());
 
                     alternatives.remove(leaf);
 
                     wc.rewrite(disjunct, make.UnionType(alternatives));
-                    break;
-                case METHOD:
+                }
+                case METHOD -> {
                     MethodTree mTree = (MethodTree) parentLeaf;
                     MethodTree newMethod;
 
@@ -1769,8 +1731,8 @@ public class JavaFixUtilities {
                     }
 
                     wc.rewrite(mTree, newMethod);
-                    break;
-                case METHOD_INVOCATION:
+                }
+                case METHOD_INVOCATION -> {
                     MethodInvocationTree iTree = (MethodInvocationTree) parentLeaf;
                     MethodInvocationTree newInvocation;
 
@@ -1783,13 +1745,12 @@ public class JavaFixUtilities {
                     }
 
                     wc.rewrite(iTree, newInvocation);
-                    break;
-                case MODIFIERS:
+                }
+                case MODIFIERS -> {
                     ModifiersTree modsTree = (ModifiersTree) parentLeaf;
-
                     wc.rewrite(modsTree, make.removeModifiersAnnotation(modsTree, (AnnotationTree) leaf));
-                    break;
-                case NEW_CLASS:
+                }
+                case NEW_CLASS -> {
                     NewClassTree newCTree = (NewClassTree) parentLeaf;
                     NewClassTree newNCT;
 
@@ -1802,13 +1763,12 @@ public class JavaFixUtilities {
                     }
 
                     wc.rewrite(newCTree, newNCT);
-                    break;
-                case PARAMETERIZED_TYPE:
+                }
+                case PARAMETERIZED_TYPE -> {
                     ParameterizedTypeTree parTree = (ParameterizedTypeTree) parentLeaf;
-
                     wc.rewrite(parTree, make.removeParameterizedTypeTypeArgument(parTree, (ExpressionTree) leaf));
-                    break;
-                case SWITCH:
+                }
+                case SWITCH -> {
                     SwitchTree switchTree = (SwitchTree) parentLeaf;
                     SwitchTree newSwitch;
 
@@ -1819,8 +1779,8 @@ public class JavaFixUtilities {
                     }
 
                     wc.rewrite(switchTree, newSwitch);
-                    break;
-                case TRY:
+                }
+                case TRY -> {
                     TryTree tryTree = (TryTree) parentLeaf;
                     TryTree newTry;
 
@@ -1837,11 +1797,11 @@ public class JavaFixUtilities {
                     }
 
                     wc.rewrite(tryTree, newTry);
-                    break;
-                case EXPRESSION_STATEMENT:
+                }
+                case EXPRESSION_STATEMENT -> {
                     doRemoveFromParent(wc, what.getParentPath());
-                    break;
-                case ASSIGNMENT:
+                }
+                case ASSIGNMENT -> {
                     AssignmentTree assignmentTree = (AssignmentTree) parentLeaf;
                     if (leaf == assignmentTree.getVariable()) {
                         if (wc.getTreeUtilities().isExpressionStatement(assignmentTree.getExpression())) {
@@ -1852,18 +1812,10 @@ public class JavaFixUtilities {
                     } else {
                         throw new UnsupportedOperationException();
                     }
-                    break;
-                case AND_ASSIGNMENT:
-                case DIVIDE_ASSIGNMENT:
-                case LEFT_SHIFT_ASSIGNMENT:
-                case MINUS_ASSIGNMENT:
-                case MULTIPLY_ASSIGNMENT:
-                case OR_ASSIGNMENT:
-                case PLUS_ASSIGNMENT:
-                case REMAINDER_ASSIGNMENT:
-                case RIGHT_SHIFT_ASSIGNMENT:
-                case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
-                case XOR_ASSIGNMENT:
+                }
+                case AND_ASSIGNMENT, DIVIDE_ASSIGNMENT, LEFT_SHIFT_ASSIGNMENT, MINUS_ASSIGNMENT,
+                     MULTIPLY_ASSIGNMENT, OR_ASSIGNMENT, PLUS_ASSIGNMENT, REMAINDER_ASSIGNMENT,
+                     RIGHT_SHIFT_ASSIGNMENT, UNSIGNED_RIGHT_SHIFT_ASSIGNMENT, XOR_ASSIGNMENT -> {
                     CompoundAssignmentTree compoundAssignmentTree = (CompoundAssignmentTree) parentLeaf;
                     if (leaf == compoundAssignmentTree.getVariable()) {
                         if (wc.getTreeUtilities().isExpressionStatement(compoundAssignmentTree.getExpression())) {
@@ -1874,10 +1826,10 @@ public class JavaFixUtilities {
                     } else {
                         throw new UnsupportedOperationException();
                     }
-                    break;
-                default:
+                }
+                default -> {
                     wc.rewrite(what.getLeaf(), make.Block(Collections.<StatementTree>emptyList(), false));
-                    break;
+                }
             }
         }
 
@@ -1894,7 +1846,7 @@ public class JavaFixUtilities {
                             if (el == e) {
                                 Tree parentLeaf = treePath.getParentPath().getLeaf();
                                 switch (parentLeaf.getKind()) {
-                                    case ASSIGNMENT:
+                                    case ASSIGNMENT -> {
                                         AssignmentTree assignmentTree = (AssignmentTree) parentLeaf;
                                         if (tree == assignmentTree.getVariable()) {
                                             if (!info.getTreeUtilities().isExpressionStatement(assignmentTree.getExpression()) && canHaveSideEffects(assignmentTree.getExpression())) {
@@ -1903,18 +1855,10 @@ public class JavaFixUtilities {
                                         } else {
                                             ret.set(false);
                                         }
-                                        break;
-                                    case AND_ASSIGNMENT:
-                                    case DIVIDE_ASSIGNMENT:
-                                    case LEFT_SHIFT_ASSIGNMENT:
-                                    case MINUS_ASSIGNMENT:
-                                    case MULTIPLY_ASSIGNMENT:
-                                    case OR_ASSIGNMENT:
-                                    case PLUS_ASSIGNMENT:
-                                    case REMAINDER_ASSIGNMENT:
-                                    case RIGHT_SHIFT_ASSIGNMENT:
-                                    case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
-                                    case XOR_ASSIGNMENT:
+                                    }
+                                    case AND_ASSIGNMENT, DIVIDE_ASSIGNMENT, LEFT_SHIFT_ASSIGNMENT, MINUS_ASSIGNMENT,
+                                         MULTIPLY_ASSIGNMENT, OR_ASSIGNMENT, PLUS_ASSIGNMENT, REMAINDER_ASSIGNMENT,
+                                         RIGHT_SHIFT_ASSIGNMENT, UNSIGNED_RIGHT_SHIFT_ASSIGNMENT, XOR_ASSIGNMENT -> {
                                         CompoundAssignmentTree compoundAssignmentTree = (CompoundAssignmentTree) parentLeaf;
                                         if (tree == compoundAssignmentTree.getVariable()) {
                                             if (!info.getTreeUtilities().isExpressionStatement(compoundAssignmentTree.getExpression()) && canHaveSideEffects(compoundAssignmentTree.getExpression())) {
@@ -1923,9 +1867,10 @@ public class JavaFixUtilities {
                                         } else {
                                             ret.set(false);
                                         }
-                                        break;
-                                    default:
+                                    }
+                                    default -> {
                                         ret.set(false);
+                                    }
                                 }
                             }
                         }
@@ -1943,14 +1888,10 @@ public class JavaFixUtilities {
                 public Void scan(Tree tree, Void p) {
                     if (tree != null) {
                         switch (tree.getKind()) {
-                            case METHOD_INVOCATION:
-                            case NEW_CLASS:
-                            case POSTFIX_DECREMENT:
-                            case POSTFIX_INCREMENT:
-                            case PREFIX_DECREMENT:
-                            case PREFIX_INCREMENT:
+                            case METHOD_INVOCATION, NEW_CLASS, POSTFIX_DECREMENT, POSTFIX_INCREMENT,
+                                 PREFIX_DECREMENT, PREFIX_INCREMENT -> {
                                 ret.set(true);
-                                break;
+                            }
                         }
                     }
                     return super.scan(tree, p);
@@ -2003,8 +1944,6 @@ public class JavaFixUtilities {
                 source = DataObject.find(toMove);
                 sourceFolder = source.getFolder();
                 source.move(targetFolder);
-            } catch (DataObjectNotFoundException ex) {
-                ex.printStackTrace();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -2014,8 +1953,6 @@ public class JavaFixUtilities {
         public void undoChange() {
             try {
                 source.move(sourceFolder);
-            } catch (DataObjectNotFoundException ex) {
-                ex.printStackTrace();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

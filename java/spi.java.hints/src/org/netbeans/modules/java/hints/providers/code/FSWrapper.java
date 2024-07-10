@@ -194,12 +194,7 @@ public class FSWrapper {
 
         String getConstantValue() {
             Object constantValue = folder.getAttribute("constantValue");
-
-            if (constantValue instanceof String) {
-                return (String) constantValue;
-            }
-
-            return null;
+            return constantValue instanceof String string ? string : null;
         }
     }
 

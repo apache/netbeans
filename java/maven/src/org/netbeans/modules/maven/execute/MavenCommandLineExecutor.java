@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -663,7 +664,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         File mavenHome = null;
         File wrapper = null;
         if (MavenSettings.getDefault().isPreferMavenWrapper()) {
-            wrapper = searchMavenWrapper(config);
+            // wrapper will be an absolute or relative path, do not "absolutize" after searchMavenWrapper
+            wrapper = searchMavenWrapper(clonedConfig);
         }
         if (wrapper != null) {
             constructeur = new WrapperShellConstructor(wrapper);
@@ -754,17 +756,21 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
 
         return builder;
     }
-
-    private static void printGray(InputOutput io, String text) {
+    
+    private static void printColor(InputOutput io, String text, IOColors.OutputType style) {
         if (IOColorLines.isSupported(io)) {
             try {
-                IOColorLines.println(io, text, IOColors.getColor(io, IOColors.OutputType.LOG_DEBUG));
+                IOColorLines.println(io, text, IOColors.getColor(io, style));
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
         } else {
             io.getOut().println(text);
         }
+    }
+
+    private static void printGray(InputOutput io, String text) {
+        printColor(io, text, IOColors.OutputType.LOG_DEBUG);
     }
 
     private void processIssue153101(IOException x, InputOutput ioput) {
@@ -893,6 +899,43 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         }
         return false;
     }
+
+    /**
+     * Tries to relativize wrapper path. The execution starts in a {@link RunConfig#getExecutionDirectory() },
+     * assuming one of the project or parent project directories. If wrapper is present, it should be inside
+     * project, so relative paths between project modules should work. This is how "normal humans" run and use
+     * mvnw wrapper. In addition, it avoids issues with the wrapper script when the project has a space
+     * in its path - there's most probably no spaces in module names - but it is NOT forbidden !!
+     * 
+     * @param wrapper wrapper file
+     * @param config execution config
+     * @return relativized path, if possible.
+     */
+    @NbBundle.Messages({
+        "WARN_SpaceInPath=Warning: A space in project path or module name may prevent mvnw wrapper to function properly."
+    })
+    private File resolveWrapperPath(File wrapper, RunConfig config) {
+        File absWrapper = wrapper.getAbsoluteFile();
+        File executionDir = config.getExecutionDirectory();
+        Path absWrapperDir = absWrapper.toPath().getParent();
+        Path absDir = executionDir.getAbsoluteFile().toPath();
+
+        if (absWrapperDir.startsWith(absDir) || absDir.startsWith(absWrapperDir)) {
+            Path relative = absDir.relativize(wrapper.getAbsoluteFile().toPath());
+            if (!relative.toString().contains(" ")) { // NOI18N
+                if (relative.getNameCount() == 1) {
+                    // prevent searching on PATH
+                    return Paths.get(".").resolve(relative).toFile();  // NOI18N
+                } else {
+                    return relative.toFile();
+                }
+            }
+        } 
+        if (absWrapper.toString().contains(" ")) {
+            printColor(io, Bundle.WARN_SpaceInPath(), IOColors.OutputType.LOG_WARNING);
+        }
+        return absWrapper;
+    }
     
     private File searchMavenWrapper(RunConfig config) {
         String fileName = Utilities.isWindows() ? "mvnw.cmd" : "mvnw"; //NOI18N
@@ -902,7 +945,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             if (baseDir != null) {
                 File mvnw = new File(baseDir, fileName);
                 if (mvnw.exists()) {
-                    return mvnw;
+                    return resolveWrapperPath(mvnw, config);
                 }
             }
             project = project.getParent();
@@ -914,7 +957,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     private static class WrapperShellConstructor implements Constructor {
 
         private final @NonNull File wrapper;
-
+        
         WrapperShellConstructor(@NonNull File wrapper) {
             this.wrapper = wrapper;
         }
@@ -925,7 +968,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             //if maven.bat file is in space containing path, we need to quote with simple quotes.
             String quote = "\"";
             List<String> toRet = new ArrayList<>();
-            toRet.add(quoteSpaces(wrapper.getAbsolutePath(), quote));
+            toRet.add(quoteSpaces(wrapper.getPath(), quote));
 
             if (Utilities.isWindows()) { //#153101, since #228901 always on windows use cmd /c
                 toRet.add(0, "/c"); //NOI18N

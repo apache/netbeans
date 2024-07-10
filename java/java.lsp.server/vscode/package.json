@@ -474,6 +474,15 @@
 				"title": "Copy OCID"
 			},
 			{
+				"command": "nbls.cloud.publicIp.copy",
+				"title": "Copy the public IP address"
+			},
+			{
+				"command": "nbls.cloud.computeInstance.ssh",
+				"title": "Start SSH session",
+                                "icon": "$(terminal)"
+			},
+			{
 				"command": "nbls.workspace.compile",
 				"title": "Compile Workspace",
 				"category": "Java"
@@ -774,6 +783,14 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls.cloud.publicIp.copy",
+					"when": "false"
+				},
+				{
+					"command": "nbls.cloud.computeInstance.ssh",
+					"when": "false"
+				},
+				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
 					"when": "false"
 				},
@@ -991,6 +1008,16 @@
 					"command": "nbls.cloud.ocid.copy",
 					"when": "viewItem =~ /class:oracle.items.OCIItem/ && viewItem =~ /^(?!.*Suggested).*/",
 					"group": "oci@1000"
+				},
+				{
+					"command": "nbls.cloud.publicIp.copy",
+					"when": "viewItem =~ /cap:publicIp/",
+					"group": "oci@1000"
+				},
+				{
+					"command": "nbls.cloud.computeInstance.ssh",
+					"when": "viewItem =~ /cap:publicIp/",
+					"group": "inline@10"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddRepository",

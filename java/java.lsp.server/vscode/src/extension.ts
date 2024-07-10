@@ -821,6 +821,20 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         }
     ));
 
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.cloud.publicIp.copy',
+        async (node) => {
+            const publicIp : string = await commands.executeCommand(COMMAND_PREFIX + '.cloud.publicIp.get', node.id);
+            vscode.env.clipboard.writeText(publicIp);
+        }
+    ));
+
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.cloud.computeInstance.ssh',
+        async (node) => {
+            const publicIp : string = await commands.executeCommand(COMMAND_PREFIX + '.cloud.publicIp.get', node.id);
+            openSSHSession("opc", publicIp);
+        }
+    ));
+
     const archiveFileProvider = <vscode.TextDocumentContentProvider> {
         provideTextDocumentContent: async (uri: vscode.Uri, token: vscode.CancellationToken): Promise<string> => {
             return await commands.executeCommand('nbls.get.archive.file.content', uri.toString());
@@ -896,6 +910,11 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
     }
 }
 
+function openSSHSession(username: string, host: string) {
+    const terminal = vscode.window.createTerminal(`SSH: ${username}@${host}`);
+    terminal.sendText(`ssh ${username}@${host}`);
+    terminal.show();
+}
 
 function killNbProcess(notifyKill : boolean, log : vscode.OutputChannel, specProcess?: ChildProcess) : Promise<void> {
     const p = nbProcess;

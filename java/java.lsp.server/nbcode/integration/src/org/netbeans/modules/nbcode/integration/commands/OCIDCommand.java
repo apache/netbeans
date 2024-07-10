@@ -19,12 +19,15 @@
 package org.netbeans.modules.nbcode.integration.commands;
 
 import com.google.gson.JsonPrimitive;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.cloud.oracle.compute.ComputeInstanceItem;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.java.lsp.server.explorer.TreeNodeRegistry;
 import org.netbeans.modules.java.lsp.server.explorer.TreeViewProvider;
@@ -43,13 +46,19 @@ public class OCIDCommand implements CommandProvider {
     private static final Logger LOG = Logger.getLogger(OCIDCommand.class.getName());
 
     private static final String COMMAND_CLOUD_OCID_GET = "nbls.cloud.ocid.get"; // NOI18N
+    private static final String COMMAND_CLOUD_PUBLIC_IP_GET = "nbls.cloud.publicIp.get"; // NOI18N
+    
+    private static final Set COMMANDS = new HashSet<>(Arrays.asList(
+            COMMAND_CLOUD_OCID_GET,
+            COMMAND_CLOUD_PUBLIC_IP_GET
+    ));
 
     public OCIDCommand() {
     }
 
     @Override
     public Set<String> getCommands() {
-        return Collections.singleton(COMMAND_CLOUD_OCID_GET);
+        return COMMANDS;
     }
 
     @Override
@@ -74,7 +83,14 @@ public class OCIDCommand implements CommandProvider {
         }
         OCIItem item = node.getLookup().lookup(OCIItem.class);
         if (item != null) {
-            return CompletableFuture.completedFuture(item.getKey().getValue());
+            switch(command) {
+                case COMMAND_CLOUD_OCID_GET: 
+                    return CompletableFuture.completedFuture(item.getKey().getValue());
+                case COMMAND_CLOUD_PUBLIC_IP_GET:
+                    if (item instanceof ComputeInstanceItem) {
+                        return CompletableFuture.completedFuture(((ComputeInstanceItem) item).getPublicIp());
+                    } 
+            }
         }
         return CompletableFuture.completedFuture(null);
     }

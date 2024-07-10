@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.cloud.oracle.assets.CloudAssets;
 import org.netbeans.modules.cloud.oracle.bucket.BucketItem;
+import org.netbeans.modules.cloud.oracle.compute.ComputeInstanceItem;
 import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import static org.netbeans.modules.java.lsp.server.explorer.DefaultDecorationsImpl.COOKIES_EXT;
@@ -45,6 +46,7 @@ public class LspAssetsDecorationProvider implements TreeDataProvider.Factory {
     private static final Logger LOG = Logger.getLogger(LspAssetsDecorationProvider.class.getName());
     
     public static final String CTXVALUE_CAP_REFERENCE_NAME = "cap:refName"; // NOI18N
+    public static final String CTXVALUE_CAP_PUBLIC_IP = "cap:publicIp"; // NOI18N
     public static final String CTXVALUE_PREFIX_REFERENCE_NAME = "cloudAssetsReferenceName:"; // NOI18N
 
     void readFiles(FileObject parent, List<String> lines) {
@@ -83,6 +85,10 @@ public class LspAssetsDecorationProvider implements TreeDataProvider.Factory {
             }
             if (refName != null) {
                 d.addContextValues(CTXVALUE_PREFIX_REFERENCE_NAME + refName);
+                set = true;
+            }
+            if (item instanceof ComputeInstanceItem && ((ComputeInstanceItem) item).getPublicIp() != null) {
+                d.addContextValues(CTXVALUE_CAP_PUBLIC_IP);
                 set = true;
             }
             if (item instanceof BucketItem 

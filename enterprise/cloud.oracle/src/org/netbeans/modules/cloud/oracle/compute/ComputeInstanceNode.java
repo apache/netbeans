@@ -35,7 +35,7 @@ import org.openide.util.NbBundle;
  * @author Jan Horvath
  */
 @NbBundle.Messages({
-    "CoputeInstanceDesc=Compute Instance: {0}"
+    "CoputeInstanceDesc=Compute Instance: {0}\nPublic IP: {1}"
 })
 public class ComputeInstanceNode extends OCINode {
     private static final String COMPUTE_INSTANCE_ICON = "org/netbeans/modules/cloud/oracle/resources/computeinstance.svg"; // NOI18N
@@ -45,7 +45,7 @@ public class ComputeInstanceNode extends OCINode {
         setName(instance.getName());
         setDisplayName(instance.getName());
         setIconBaseWithExtension(COMPUTE_INSTANCE_ICON);
-        setShortDescription(Bundle.CoputeInstanceDesc(instance.getName()));
+        setShortDescription(Bundle.CoputeInstanceDesc(instance.getName(), instance.getPublicIp()));
     }
 
     public static NodeProvider<ComputeInstanceItem> createNode() {

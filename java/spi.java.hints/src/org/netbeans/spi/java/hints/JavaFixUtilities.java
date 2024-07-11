@@ -1851,9 +1851,11 @@ public class JavaFixUtilities {
                                         if (tree == assignmentTree.getVariable()) {
                                             if (!info.getTreeUtilities().isExpressionStatement(assignmentTree.getExpression()) && canHaveSideEffects(assignmentTree.getExpression())) {
                                                 ret.set(false);
+                                                return null;
                                             }
                                         } else {
                                             ret.set(false);
+                                            return null;
                                         }
                                     }
                                     case AND_ASSIGNMENT, DIVIDE_ASSIGNMENT, LEFT_SHIFT_ASSIGNMENT, MINUS_ASSIGNMENT,
@@ -1863,13 +1865,16 @@ public class JavaFixUtilities {
                                         if (tree == compoundAssignmentTree.getVariable()) {
                                             if (!info.getTreeUtilities().isExpressionStatement(compoundAssignmentTree.getExpression()) && canHaveSideEffects(compoundAssignmentTree.getExpression())) {
                                                 ret.set(false);
+                                                return null;
                                             }
                                         } else {
                                             ret.set(false);
+                                            return null;
                                         }
                                     }
                                     default -> {
                                         ret.set(false);
+                                        return null;
                                     }
                                 }
                             }
@@ -1891,6 +1896,7 @@ public class JavaFixUtilities {
                             case METHOD_INVOCATION, NEW_CLASS, POSTFIX_DECREMENT, POSTFIX_INCREMENT,
                                  PREFIX_DECREMENT, PREFIX_INCREMENT -> {
                                 ret.set(true);
+                                return null;
                             }
                         }
                     }

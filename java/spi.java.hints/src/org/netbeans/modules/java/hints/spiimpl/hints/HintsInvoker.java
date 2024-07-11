@@ -44,11 +44,14 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.type.TypeKind;
@@ -84,7 +87,9 @@ import org.openide.util.Exceptions;
  */
 public class HintsInvoker {
 
-    private final Map<String, Long> timeLog = new HashMap<>();
+    private static final Logger LOG = Logger.getLogger(HintsInvoker.class.getName());
+
+    private final Map<String, Long> timeLog = new LinkedHashMap<>();
 
     private final HintsSettings settings;
     private final int caret;
@@ -160,7 +165,7 @@ public class HintsInvoker {
 
         List<ErrorDescription> errors = join(computeHints(info, startAt, descs, new ArrayList<>()));
 
-        dumpTimeSpentInHints();
+        printHintMetrics();
         
         return errors;
     }
@@ -460,7 +465,8 @@ public class HintsInvoker {
 
         for (HintDescription hd : kindBasedHints) {
             for (Kind k : ((Kinds) hd.getTrigger()).getKinds()) {
-                result.computeIfAbsent(k, l -> new LinkedList<>()).add(hd);
+                result.computeIfAbsent(k, l -> new LinkedList<>())
+                      .add(hd);
             }
         }
 
@@ -471,7 +477,8 @@ public class HintsInvoker {
         Map<PatternDescription, List<HintDescription>> result = new HashMap<>();
 
         for (HintDescription hd : kindBasedHints) {
-            result.computeIfAbsent((PatternDescription) hd.getTrigger(), k -> new LinkedList<>()).add(hd);
+            result.computeIfAbsent((PatternDescription) hd.getTrigger(), k -> new LinkedList<>())
+                  .add(hd);
         }
 
         return result;
@@ -481,7 +488,8 @@ public class HintsInvoker {
         Map<String, List<PatternDescription>> patternTests = new HashMap<>();
         for (Entry<PatternDescription, List<HintDescription>> e : patternHints.entrySet()) {
             String p = e.getKey().getPattern();
-            patternTests.computeIfAbsent(p, k -> new LinkedList<>()).add(e.getKey());
+            patternTests.computeIfAbsent(p, k -> new LinkedList<>())
+                        .add(e.getKey());
         }
         return patternTests;
     }
@@ -741,30 +749,35 @@ public class HintsInvoker {
         return result;
     }
 
-    private static final boolean logTimeSpentInHints = Boolean.getBoolean("java.HintsInvoker.time.in.hints");
-    private final Map<String, Long> hint2SpentTime = new HashMap<>();
+    private final Map<String, HintMetric> hint2SpentTime = new HashMap<>();
 
     private void reportSpentTime(String id, long nanoTime) {
-        if (!logTimeSpentInHints) return;
-        
-        Long prev = hint2SpentTime.get(id);
-
-        if (prev == null) {
-            prev = (long) 0;
+        if (!LOG.isLoggable(Level.FINE)) {
+            return;
         }
-
-        hint2SpentTime.put(id, prev + nanoTime);
+        HintMetric metric = hint2SpentTime.computeIfAbsent(id, k -> new HintMetric());
+        metric.invocations++;
+        metric.time += nanoTime;
+        metric.cancelled = cancel.get();
     }
 
-    private void dumpTimeSpentInHints() {
-        if (!logTimeSpentInHints) return;
+    private void printHintMetrics() {
+        if (!LOG.isLoggable(Level.FINE)) {
+            return;
+        }
+        hint2SpentTime.entrySet().stream()
+            .sorted((e1, e2) -> Long.compare(e2.getValue().time, e1.getValue().time))
+            .forEach((e) -> LOG.fine(e.getValue() + ": " + e.getKey()));
+        LOG.fine("hint processing " + (cancel.get() ? "cancelled" : "complete")); // NOI18N
+    }
 
-        List<Entry<String, Long>> l = new ArrayList<>(hint2SpentTime.entrySet());
-
-        l.sort((Entry<String, Long> o1, Entry<String, Long> o2) -> (int) Math.signum(o1.getValue() - o2.getValue()));
-
-        for (Entry<String, Long> e : l) {
-            System.err.println(e.getKey() + "=" + String.format("%3.2f", e.getValue() / 1000000.0));
+    private static final class HintMetric {
+        private long time;
+        private int invocations;
+        private boolean cancelled;
+        @Override
+        public String toString() {
+            return "{time=" + String.format("%3.2f", time / 1_000_000.0) + "ms, invocations=" + invocations + ", cancelled=" + cancelled + '}'; // NOI18N
         }
     }
 }

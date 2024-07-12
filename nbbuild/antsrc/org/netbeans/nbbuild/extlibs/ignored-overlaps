@@ -56,7 +56,7 @@ extide/gradle/external/gradle-7.4-bin.zip ide/c.google.guava.failureaccess/exter
 extide/gradle/external/gradle-7.4-bin.zip ide/c.jcraft.jzlib/external/jzlib-1.1.3.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/libs.commons_compress/external/commons-compress-1.26.2.jar
 extide/gradle/external/gradle-7.4-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
-extide/gradle/external/gradle-7.4-bin.zip ide/o.eclipse.jgit/external/org.eclipse.jgit-5.7.0.202003110725-r.jar
+extide/gradle/external/gradle-7.4-bin.zip ide/o.eclipse.jgit/external/org.eclipse.jgit-6.10.0.202406032230-r.jar
 extide/gradle/external/gradle-7.4-bin.zip java/debugger.jpda.truffle/external/antlr4-runtime-4.7.2.jar
 extide/gradle/external/gradle-7.4-bin.zip java/maven.embedder/external/apache-maven-3.9.8-bin.zip
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar

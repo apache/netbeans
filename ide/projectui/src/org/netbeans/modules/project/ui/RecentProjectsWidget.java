@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.ide.dashboard;
+package org.netbeans.modules.project.ui;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;

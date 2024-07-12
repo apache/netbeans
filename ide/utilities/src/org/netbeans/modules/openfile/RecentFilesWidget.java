@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.ide.dashboard;
+package org.netbeans.modules.openfile;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -29,8 +29,6 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
-import org.netbeans.modules.openfile.OpenFile;
-import org.netbeans.modules.openfile.RecentFiles;
 import org.netbeans.spi.dashboard.DashboardDisplayer;
 import org.netbeans.spi.dashboard.DashboardWidget;
 import org.netbeans.spi.dashboard.WidgetElement;

@@ -1,7 +1,7 @@
 Name: Apache Commons Codec
 Description: General encoding/decoding algorithms (for example phonetic, base64, URL).
 Origin: https://commons.apache.org/proper/commons-codec/
-Version: 1.16.1
+Version: 1.17.0
 License: Apache-2.0
 
                                  Apache License

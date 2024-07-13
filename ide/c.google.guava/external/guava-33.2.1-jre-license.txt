@@ -1,5 +1,5 @@
 Name: Guava
-Version: 33.0.0
+Version: 33.2.1
 License: Apache-2.0
 Origin: https://github.com/google/guava
 Description: Guava is a set of core libraries that includes new collection types (such as multimap and multiset), immutable collections, a graph library, and utilities for concurrency, I/O, hashing, primitives, strings, and more.

@@ -21,8 +21,6 @@ package org.netbeans.modules.java.hints.providers.spi;
 
 import java.util.Collection;
 import java.util.Map;
-import org.netbeans.modules.java.hints.providers.spi.HintDescription;
-import org.netbeans.modules.java.hints.providers.spi.HintMetadata;
 
 public interface HintProvider {
 

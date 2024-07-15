@@ -34,15 +34,11 @@ public enum HintSeverity {
     CURRENT_LINE_WARNING;
 
     public Severity toEditorSeverity() {
-        switch ( this ) {
-            case ERROR:
-                return Severity.ERROR;
-            case WARNING:
-                return Severity.VERIFIER;
-            case CURRENT_LINE_WARNING:
-                return Severity.HINT;
-            default:
-                return null;
-        }
+        return switch (this) {
+            case ERROR -> Severity.ERROR;
+            case WARNING -> Severity.VERIFIER;
+            case CURRENT_LINE_WARNING -> Severity.HINT;
+            default -> null;
+        };
     }
 }

@@ -22,7 +22,6 @@ package org.netbeans.modules.java.hints.spiimpl.processor;
 import java.lang.reflect.Array;
 import java.util.Map.Entry;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.processing.Processor;
@@ -50,8 +49,6 @@ import org.openide.util.lookup.ServiceProvider;
 @SupportedAnnotationTypes("org.netbeans.spi.java.hints.*")
 @ServiceProvider(service=Processor.class, position=100)
 public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
-    
-    private static final Logger LOG = Logger.getLogger(JavaHintsAnnotationProcessor.class.getName());
     
     @Override
     protected boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws LayerGenerationException {
@@ -134,8 +131,8 @@ public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
                         dumpAnnotation(builder, fieldFolder, var, am, true);
                     }
 
-                    if (var.getConstantValue() instanceof String) {
-                        fieldFolder.stringvalue("constantValue", (String) var.getConstantValue());
+                    if (var.getConstantValue() instanceof String value) {
+                        fieldFolder.stringvalue("constantValue", value);
                     }
 
                     fieldFolder.write();
@@ -147,20 +144,11 @@ public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
                     AnnotationMirror hintMirror = findAnnotation(e.getAnnotationMirrors(), "org.netbeans.spi.java.hints.Hint");
             
                     if (hintMirror != null) {
-                        String qualifiedName;
-                        switch (e.getKind()) {
-                            case METHOD: case CONSTRUCTOR:
-                                qualifiedName = e.getEnclosingElement().asType().toString() + "." + e.getSimpleName().toString() + e.asType().toString();
-                                break;
-                            case FIELD: case ENUM_CONSTANT:
-                                qualifiedName = e.getEnclosingElement().asType().toString() + "." + e.getSimpleName().toString();
-                                break;
-                            case ANNOTATION_TYPE: case CLASS:
-                            case ENUM: case INTERFACE:
-                            default:
-                                qualifiedName = e.asType().toString();
-                                break;
-                        }
+                        String qualifiedName = switch (e.getKind()) {
+                            case METHOD, CONSTRUCTOR -> e.getEnclosingElement().asType().toString() + "." + e.getSimpleName().toString() + e.asType().toString();
+                            case FIELD, ENUM_CONSTANT -> e.getEnclosingElement().asType().toString() + "." + e.getSimpleName().toString();
+                            default -> e.asType().toString();
+                        };
                         
                         try {
                             File keywordsFile = layer(e)
@@ -260,8 +248,8 @@ public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
             Class<?> componentType = clazz.getComponentType();
 
             for (Object attr : attributes) {
-                if (attr instanceof AnnotationValue) {
-                    attr = ((AnnotationValue) attr).getValue();
+                if (attr instanceof AnnotationValue annotationValue) {
+                    attr = annotationValue.getValue();
                 }
                 
                 if (componentType.isAssignableFrom(attr.getClass())) {
@@ -310,12 +298,8 @@ public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
 
         if (id == null || id.isEmpty()) {
             switch (hint.getKind()) {
-                case CLASS:
-                case METHOD:
-                    break; //OK
-                default:
-                    //compiler should have already warned about this
-                    return false;
+                case CLASS, METHOD -> {} // OK
+                default -> { return false; } // compiler should have already warned about this
             }
         }
 

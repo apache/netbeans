@@ -23,7 +23,8 @@ import org.netbeans.modules.java.hints.providers.spi.HintDescriptionFactory;
 import org.netbeans.spi.java.hints.HintContext;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.hints.providers.spi.HintDescription.Worker;
@@ -67,7 +68,7 @@ public abstract class PatternConvertor {
         Collection<HintDescription> result = new ArrayList<>(patterns.size());
 
         for (String pattern : patterns) {
-            PatternDescription pd = PatternDescription.create(pattern, Collections.<String, String>emptyMap());
+            PatternDescription pd = PatternDescription.create(pattern, Map.of());
 
             HintDescription desc = HintDescriptionFactory.create()
     //                                                     .setDisplayName("Pattern Matches")
@@ -86,8 +87,7 @@ public abstract class PatternConvertor {
         @Override
         public Collection<? extends ErrorDescription> createErrors(HintContext ctx) {
             ErrorDescription ed = ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), "Found pattern occurrence");
-
-            return Collections.singleton(ed);
+            return List.of(ed);
         }
         
     }

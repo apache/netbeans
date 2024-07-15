@@ -20,7 +20,6 @@
 package org.netbeans.modules.java.hints.providers.spi;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 import org.netbeans.api.annotations.common.NonNull;
@@ -40,7 +39,6 @@ public class HintDescriptionFactory {
     private       AdditionalQueryConstraints additionalConstraints;
     private       String hintText;
     private       Set<Options> options;
-    private       boolean finished;
 
     private HintDescriptionFactory() {
     }
@@ -103,7 +101,7 @@ public class HintDescriptionFactory {
         if (this.additionalConstraints == null) {
             this.additionalConstraints = AdditionalQueryConstraints.empty();
         }
-        return HintDescription.create(metadata, trigger, worker, additionalConstraints, hintText, options != null ? options : Collections.<Options>emptySet());
+        return new HintDescription(metadata, trigger, worker, additionalConstraints, hintText, options != null ? options : Set.of());
     }
     
 }

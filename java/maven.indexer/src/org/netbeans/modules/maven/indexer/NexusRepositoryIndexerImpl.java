@@ -102,7 +102,6 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.repository.ComponentDescriptor;
 import org.codehaus.plexus.component.repository.ComponentRequirement;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
-import org.codehaus.plexus.util.FileUtils;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
@@ -613,7 +612,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                     try {
                         // Ensure no stale cache files are left
                         removeGroupCache(repo);
-                        scan(indexingContext, null, repoListener, updateLocal);
+                        scanLocalRepo(indexingContext, null, repoListener, updateLocal);
                         storeGroupCache(repo, indexingContext);
                     } finally {
                         repoListener.close();
@@ -796,34 +795,34 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
      * @see DefaultScannerListener
      * @see #artifactDiscovered(ArtifactContext, IndexingContext)
      */
-    private void scan(IndexingContext context, String fromPath, ArtifactScanningListener listener, boolean update) throws IOException {
+    private void scanLocalRepo(IndexingContext context, String fromPath, ArtifactScanningListener listener, boolean update) throws IOException {
 
         File repositoryDirectory = context.getRepository();
         if (repositoryDirectory == null) {
             return;  // nothing to scan
         }
- 
+
         if (!repositoryDirectory.exists()) {
             throw new IOException( "Repository directory " + repositoryDirectory + " does not exist" );
         }
- 
+
         // always use cache directory when reindexing
-        File tmpDir = new File(Places.getCacheDirectory(), "tmp-" + context.getRepositoryId());
-        if (!tmpDir.mkdirs()) {
-            throw new IOException( "Cannot create temporary directory: " + tmpDir );
+        Path tmpDir = Places.getCacheDirectory().toPath().resolve("tmp-" + context.getRepositoryId());
+        if (Files.exists(tmpDir)) {
+            removeDir(tmpDir);
         }
-        File tmpFile = new File(tmpDir, context.getId() + "-tmp"); // TODO: purpose of file?
- 
+        Files.createDirectory(tmpDir);
+
         IndexingContext tmpContext = null;
         try {
-            FSDirectory directory = FSDirectory.open(tmpDir.toPath());
+            FSDirectory directory = FSDirectory.open(tmpDir);
             if (update) {
                 IndexUtils.copyDirectory(context.getIndexDirectory(), directory);
             }
             tmpContext = new DefaultIndexingContext( context.getId() + "-tmp",
                                                      context.getRepositoryId(),
                                                      context.getRepository(),
-                                                     tmpDir,
+                                                     tmpDir.toFile(),
                                                      context.getRepositoryUrl(),
                                                      context.getIndexUpdateUrl(),
                                                      context.getIndexCreators(),
@@ -840,10 +839,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             if (tmpContext != null) {
                 tmpContext.close( true );
             }
-            if (tmpFile.exists()) {
-                tmpFile.delete();
-            }
-            FileUtils.deleteDirectory(tmpDir);
+            removeDir(tmpDir);
         }
     }    
 

@@ -21,8 +21,6 @@
  */
 package org.netbeans.libs.freemarker;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
@@ -38,7 +36,7 @@ public class FreemarkerFactory implements ScriptEngineFactory {
 
     @Override
     public String getEngineVersion() {
-        return "2.3.32";
+        return "2.3.33";
     }
 
     @Override
@@ -53,7 +51,7 @@ public class FreemarkerFactory implements ScriptEngineFactory {
 
     @Override
     public String getLanguageVersion() {
-        return "2.3.32";
+        return "2.3.33";
     }
 
     @Override
@@ -94,15 +92,9 @@ public class FreemarkerFactory implements ScriptEngineFactory {
         for (int i = 0; i < len; i++) {
             char ch = toDisplay.charAt(i);
             switch (ch) {
-            case '"':
-                buf.append("\\\"");
-                break;
-            case '\\':
-                buf.append("\\\\");
-                break;
-            default:
-                buf.append(ch);
-                break;
+            case '"' -> buf.append("\\\"");
+            case '\\' -> buf.append("\\\\");
+            default -> buf.append(ch);
             }
         }
         buf.append("\")}");
@@ -111,21 +103,15 @@ public class FreemarkerFactory implements ScriptEngineFactory {
 
     @Override
     public String getParameter(String key) {
-        if (key.equals(ScriptEngine.NAME)) {
-            return getLanguageName();
-        } else if (key.equals(ScriptEngine.ENGINE)) {
-            return getEngineName();
-        } else if (key.equals(ScriptEngine.ENGINE_VERSION)) {
-            return getEngineVersion();
-        } else if (key.equals(ScriptEngine.LANGUAGE)) {
-            return getLanguageName();
-        } else if (key.equals(ScriptEngine.LANGUAGE_VERSION)) {
-            return getLanguageVersion();
-        } else if (key.equals("THREADING")) {
-            return "MULTITHREADED";
-        } else {
-            return null;
-        }
+        return switch (key) {
+            case ScriptEngine.NAME -> getLanguageName();
+            case ScriptEngine.ENGINE -> getEngineName();
+            case ScriptEngine.ENGINE_VERSION -> getEngineVersion();
+            case ScriptEngine.LANGUAGE -> getLanguageName();
+            case ScriptEngine.LANGUAGE_VERSION -> getLanguageVersion();
+            case "THREADING" -> "MULTITHREADED";
+            default -> null;
+        };
     } 
 
     @Override
@@ -143,20 +129,8 @@ public class FreemarkerFactory implements ScriptEngineFactory {
         return new FreemarkerEngine(this);
     }
 
-    private static final List<String> names;
-    private static final List<String> extensions;
-    private static final List<String> mimeTypes;
-    static {
-        ArrayList<String> n = new ArrayList<>(2);
-        n.add("FreeMarker");
-        n.add("freemarker");
-        names = Collections.unmodifiableList(n);
-        ArrayList<String> e = new ArrayList<>(2);
-        e.add("fm");
-        e.add("ftl");
-        extensions = Collections.unmodifiableList(e);
-        ArrayList<String> m = new ArrayList<>(1);
-        m.add("text/x-freemarker");
-        mimeTypes = Collections.unmodifiableList(m);
-    }
+    private static final List<String> names = List.of("FreeMarker", "freemarker");
+    private static final List<String> extensions = List.of("fm", "ftl");
+    private static final List<String> mimeTypes = List.of("text/x-freemarker");
+ 
 }

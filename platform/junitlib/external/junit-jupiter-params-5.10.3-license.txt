@@ -1,9 +1,9 @@
 Name: JUnit Jupiter Params
-Version: 5.10.2
+Version: 5.10.3
 License: EPL-v20
 Description: JUnit Jupiter Params
 Origin: JUnit
-Files: junit-jupiter-params-5.10.2-sources.jar junit-jupiter-params-5.10.2-javadoc.jar
+Files: junit-jupiter-params-5.10.3-sources.jar junit-jupiter-params-5.10.3-javadoc.jar
 
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.

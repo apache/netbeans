@@ -1,8 +1,10 @@
-Name: Apache Commons Codec
-Description: General encoding/decoding algorithms (for example phonetic, base64, URL).
-Origin: https://commons.apache.org/proper/commons-codec/
-Version: 1.16.1
+Name: Jackson
+Description: Jackson is a high-performance JSON processor for Java.
 License: Apache-2.0
+Origin: https://github.com/FasterXML/jackson
+Version: 2.17.2
+Files: jackson-annotations-2.17.2.jar, jackson-core-2.17.2.jar, jackson-databind-2.17.2.jar, jackson-dataformat-cbor-2.17.2.jar, jackson-datatype-jsr310-2.17.2.jar, jackson-module-jaxb-annotations-2.17.2.jar
+
 
                                  Apache License
                            Version 2.0, January 2004
@@ -205,3 +207,4 @@ License: Apache-2.0
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+

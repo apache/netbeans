@@ -1,7 +1,7 @@
 Name: Gradle Tooling API
 Description: Gradle Tooling API
-Version: 8.7
-Files: gradle-tooling-api-8.7.jar
+Version: 8.9
+Files: gradle-tooling-api-8.9.jar
 License: Apache-2.0
 Origin: Gradle Inc.
 URL: https://gradle.org/

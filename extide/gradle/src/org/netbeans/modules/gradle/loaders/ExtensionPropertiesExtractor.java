@@ -44,8 +44,8 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
     public Result fallback(GradleFiles files) {
         return new Result() {
             @Override
-            public Set getExtract() {
-                return Collections.emptySet();
+            public Set<?> getExtract() {
+                return Set.of();
             }
 
             @Override
@@ -59,18 +59,18 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
     public Result extract(Map<String, Object> props, Map<Class, Object> otherInfo) {
         return new Result() {
             @Override
-            public Set getExtract() {
+            public Set<?> getExtract() {
                 Map<String, String> values = (Map<String, String>)props.getOrDefault("extensions.propertyValues", Collections.emptyMap()); // NOI18N
                 Map<String, String> types = (Map<String, String>)props.getOrDefault("extensions.propertyTypes", Collections.emptyMap()); // NOI18N
                 Map<String, String> taskValues = (Map<String, String>)props.getOrDefault("tasks.propertyValues", Collections.emptyMap()); // NOI18N
                 Map<String, String> taskTypes = (Map<String, String>)props.getOrDefault("tasks.propertyTypes", Collections.emptyMap()); // NOI18N
                 PropertyEvaluator a = new PropertyEvaluator(values, types, taskValues, taskTypes);
-                return Collections.singleton(a);
+                return Set.of(a);
             }
 
             @Override
             public Set<String> getProblems() {
-                return Collections.emptySet();
+                return Set.of();
             }
         };
     }

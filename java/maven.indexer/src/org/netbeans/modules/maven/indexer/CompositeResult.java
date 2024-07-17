@@ -19,7 +19,6 @@
 package org.netbeans.modules.maven.indexer;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.netbeans.modules.maven.indexer.spi.ResultImplementation;
 
 /**
@@ -27,13 +26,7 @@ import org.netbeans.modules.maven.indexer.spi.ResultImplementation;
  * 
  * @author mbien
  */
-final class CompositeResult<T> implements ResultImplementation<T> {
-
-    private final List<ResultImplementation<T>> results;
-
-    public CompositeResult(List<ResultImplementation<T>> results) {
-        this.results = results;
-    }
+record CompositeResult<T>(List<ResultImplementation<T>> results) implements ResultImplementation<T> {
 
     public CompositeResult(ResultImplementation<T> first, ResultImplementation<T> second) {
         this(List.of(first, second));
@@ -62,7 +55,7 @@ final class CompositeResult<T> implements ResultImplementation<T> {
                       .flatMap(r -> r.getResults().stream())
                       .sorted()
                       .distinct()
-                      .collect(Collectors.toList());
+                      .toList();
     }
 
     @Override

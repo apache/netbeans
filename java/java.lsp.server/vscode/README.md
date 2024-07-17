@@ -217,6 +217,15 @@ following locations:
 
 As soon as one of the settings is changed, the Language Server is restarted.
 
+## Checking JDK compatibility
+
+The extension will check if source level Java (defined in the project) is compatible
+with the one used by extension. It checks if the source level Java version is lower or equal 
+to the Java version used by extension, and if this condition is not fulfilled, it will show
+warning message.
+
+It will not perform the check if the RedHat extension is installed.
+
 ## Running Language Server per VSCode workspace or for user
 It is possible to run Apache NetBeans Language Server per workspace (VSCode window). This allows separation of Language Server for given project as Language Server JVM is not shared for more VSCode open workspaces (projects).
 It is possible to change this in `Preferences | Settings | Netbeans: Userdir`. Set to `local` to use dedicated Language Server per workspace or set to `global` (this is default) to have one Language Server for all VSCode workspaces.

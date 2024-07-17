@@ -135,6 +135,8 @@ final class WidgetPanel extends JPanel {
                 container.add(cmp, gbc);
             }
         }
+        revalidate();
+        repaint();
     }
 
     private class Accessor implements DashboardDisplayer.Panel {

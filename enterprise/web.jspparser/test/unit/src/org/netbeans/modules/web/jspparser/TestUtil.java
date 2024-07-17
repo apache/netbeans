@@ -104,8 +104,6 @@ public final class TestUtil extends ProxyLookup {
     static void setup(NbTestCase test) throws Exception {
         test.clearWorkDir();
         Logger.getLogger("org.netbeans.modules.web.jspparser_ext").setLevel(Level.FINE);
-        // unzip test project
-        TestUtil.getProject(test, "project3");
         TestUtil.initParserJARs();
     }
 

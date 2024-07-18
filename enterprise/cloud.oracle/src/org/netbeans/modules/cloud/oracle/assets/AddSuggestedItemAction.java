@@ -32,6 +32,7 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -55,7 +56,6 @@ import org.openide.util.lookup.Lookups;
     "CollectingProfiles=Searching for OCI Profiles",
     "CollectingItems=Loading OCI contents",})
 public class AddSuggestedItemAction implements ActionListener {
-
     private static final Logger LOG = Logger.getLogger(AddADBAction.class.getName());
 
     private final SuggestedItem context;
@@ -70,10 +70,13 @@ public class AddSuggestedItemAction implements ActionListener {
             Steps.getDefault().executeMultistep(new DatabaseConnectionStep(), Lookup.EMPTY)
                     .thenAccept(values -> {
                         DatabaseItem db = values.getValueForStep(DatabaseConnectionStep.class);
-                        if (db == null) {
-                            db = new AddADBAction().addADB();
+                        if (db != null) {
+                            CloudAssets.getDefault().addItem(db);
+                        } else {
+                            new AddADBAction().addADB().thenAccept(i -> {
+                                CloudAssets.getDefault().addItem(i);
+                            });
                         }
-                        CloudAssets.getDefault().addItem(db);
                     });
             return;
         }

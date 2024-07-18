@@ -19,11 +19,22 @@
 package org.netbeans.modules.cloud.oracle.compute;
 
 import com.oracle.bmc.core.ComputeClient;
+import com.oracle.bmc.core.VirtualNetworkClient;
 import com.oracle.bmc.core.model.Instance;
+import com.oracle.bmc.core.model.Vnic;
+import com.oracle.bmc.core.model.VnicAttachment;
+import com.oracle.bmc.core.requests.GetImageRequest;
+import com.oracle.bmc.core.requests.GetVnicRequest;
 import com.oracle.bmc.core.requests.ListInstancesRequest;
+import com.oracle.bmc.core.requests.ListVnicAttachmentsRequest;
+import com.oracle.bmc.core.responses.GetImageResponse;
+import com.oracle.bmc.core.responses.GetVnicResponse;
+import com.oracle.bmc.core.responses.ListVnicAttachmentsResponse;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
+import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.OCINode;
 import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
@@ -35,7 +46,7 @@ import org.openide.util.NbBundle;
  * @author Jan Horvath
  */
 @NbBundle.Messages({
-    "CoputeInstanceDesc=Compute Instance: {0}"
+    "CoputeInstanceDesc=Compute Instance: {0}\nPublic IP: {1}\nUsername: {2}\nProcessor: {3}"
 })
 public class ComputeInstanceNode extends OCINode {
     private static final String COMPUTE_INSTANCE_ICON = "org/netbeans/modules/cloud/oracle/resources/computeinstance.svg"; // NOI18N
@@ -45,13 +56,69 @@ public class ComputeInstanceNode extends OCINode {
         setName(instance.getName());
         setDisplayName(instance.getName());
         setIconBaseWithExtension(COMPUTE_INSTANCE_ICON);
-        setShortDescription(Bundle.CoputeInstanceDesc(instance.getName()));
+        setShortDescription(Bundle.CoputeInstanceDesc(
+                instance.getName(), 
+                instance.getPublicIp(),
+                instance.getUsername(),
+                instance.getProcessorDescription()
+        ));
     }
 
     public static NodeProvider<ComputeInstanceItem> createNode() {
-        return ComputeInstanceNode::new;
+        return (instance) -> {
+            update(instance);
+            return new ComputeInstanceNode(instance);
+        };
     }
+    
+    
+    static public void update(ComputeInstanceItem instance) {
+        ComputeClient computeClient = ComputeClient.builder()
+                .build(OCIManager.getDefault().getActiveProfile().getAuthenticationProvider());
+        if (instance.getImageId() != null) {
+            GetImageRequest request = GetImageRequest.builder()
+                    .imageId(instance.getImageId()).build();
+            GetImageResponse response = computeClient.getImage(request);
+            String os = response.getImage().getOperatingSystem();
+             if (os.contains("Oracle")) { //NOI18N
+                instance.setUsername("opc"); //NOI18N
+            } else if (os.contains("Ubuntu")) { //NOI18N
+                instance.setUsername("ubuntu"); //NOI18N
+            } else if (os.contains("CentOS")) { //NOI18N
+                instance.setUsername("centos"); //NOI18N
+            } else if (os.contains("Debian")) { //NOI18N
+                instance.setUsername("debian"); //NOI18N
+            } else if (os.contains("Windows")) { //NOI18N
+                instance.setUsername("Administrator"); //NOI18N
+            } else {
+                instance.setUsername("opc"); //NOI18N
+            }
+        }
+         
+        VirtualNetworkClient virtualNetworkClient = VirtualNetworkClient.builder()
+                .build(OCIManager.getDefault().getActiveProfile().getAuthenticationProvider());
 
+        ListVnicAttachmentsRequest listVnicAttachmentsRequest = ListVnicAttachmentsRequest.builder()
+                .compartmentId(instance.getCompartmentId())
+                .instanceId(instance.getKey().getValue())
+                .build();
+        
+        ListVnicAttachmentsResponse listVnicAttachmentsResponse = computeClient.listVnicAttachments(listVnicAttachmentsRequest);
+        List<VnicAttachment> vnicAttachments = listVnicAttachmentsResponse.getItems();
+
+        for (VnicAttachment vnicAttachment : vnicAttachments) {
+            GetVnicRequest getVnicRequest = GetVnicRequest.builder()
+                    .vnicId(vnicAttachment.getVnicId())
+                    .build();
+            GetVnicResponse getVnicResponse = virtualNetworkClient.getVnic(getVnicRequest);
+            Vnic vnic = getVnicResponse.getVnic();
+
+            if (vnic.getPublicIp() != null) {
+                instance.setPublicId(vnic.getPublicIp());
+            }
+        }
+    }
+    
     /**
      * Retrieves list of Vaults belonging to a given Compartment.
      *
@@ -60,7 +127,7 @@ public class ComputeInstanceNode extends OCINode {
      */
     public static ChildrenProvider.SessionAware<CompartmentItem, ComputeInstanceItem> getComputeInstances() {
         return (compartmentId, session) -> {
-            ComputeClient client = session.newClient(ComputeClient.class);
+            final ComputeClient client = session.newClient(ComputeClient.class);
 
             ListInstancesRequest listInstancesRequest = ListInstancesRequest.builder()
                     .compartmentId(compartmentId.getKey().getValue())
@@ -75,7 +142,11 @@ public class ComputeInstanceNode extends OCINode {
                     .map(d -> new ComputeInstanceItem(
                         OCID.of(d.getId(), "ComputeInstance"), //NOI18N
                             compartmentId.getKey().getValue(),
-                        d.getDisplayName()
+                            d.getDisplayName(), 
+                            d.getShapeConfig().getProcessorDescription(),
+                            d.getImageId(),
+                            null,
+                            null
                     ))
                     .collect(Collectors.toList());
         };

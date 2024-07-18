@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.cloud.oracle.assets.AbstractStep;
-import org.netbeans.modules.cloud.oracle.assets.Steps;
 import org.netbeans.modules.cloud.oracle.assets.Steps.Values;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
@@ -35,15 +34,16 @@ import org.openide.util.NbBundle;
  * @author Jan Horvath
  */
 @NbBundle.Messages({
-    "SelectResourceType=Select Resource Type"
+    "SelectResourceType=Select Resource Type",
 })
 public class ItemTypeStep extends AbstractStep<String> {
 
     private static final Map<String, String> TYPES = new HashMap() {
         {
-            put("Databases", Bundle.Databases()); //NOI18N
-            put("Bucket", Bundle.Bucket()); //NOI18N 
-            put("Vault", Bundle.Vault()); //NOI18N
+            put(Bundle.Databases(), "Databases"); //NOI18N
+            put(Bundle.Bucket(), "Bucket"); //NOI18N 
+            put(Bundle.Vault(), "Vault"); //NOI18N
+            put(Bundle.ContainerRepository(), "ContainerRepository"); //NOI18N
         }
     };
     private String selected;
@@ -56,7 +56,7 @@ public class ItemTypeStep extends AbstractStep<String> {
     public NotifyDescriptor createInput() {
         List<NotifyDescriptor.QuickPick.Item> items = new ArrayList<>(TYPES.size());
         for (Map.Entry<String, String> itemType : TYPES.entrySet()) {
-            items.add(new NotifyDescriptor.QuickPick.Item(itemType.getKey(), itemType.getValue()));
+            items.add(new NotifyDescriptor.QuickPick.Item(itemType.getKey(), ""));
         }
         return new NotifyDescriptor.QuickPick(Bundle.SelectResourceType(), Bundle.SelectResourceType(), items, false);
     }
@@ -67,8 +67,8 @@ public class ItemTypeStep extends AbstractStep<String> {
     }
 
     @Override
-    public void setValue(String selected) {
-        this.selected = selected;
+    public void setValue(String selectedName) {
+        this.selected = TYPES.get(selectedName);
     }
 
     @Override

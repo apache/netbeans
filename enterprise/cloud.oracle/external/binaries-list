@@ -32,6 +32,7 @@ D9918C04C60741D1BBEFBCC82E9D3B8BE690D412 com.oracle.oci.sdk:oci-java-sdk-objects
 3088420C75219556F803B55D8B71B96D29D1FC80 com.oracle.oci.sdk:oci-java-sdk-objectstorage-extensions:3.25.3
 A7D98B96CEA17F78E4BB9270B4A60FEBFACF6C78 com.oracle.oci.sdk:oci-java-sdk-core:3.25.3
 2236737DDF39CA3A3BABDB58B41F50C47E861EA7 com.oracle.oci.sdk:oci-java-sdk-containerengine:3.25.3
+923F38FE7186DFCBF921F9B3626832FFFFB8F6E9 com.oracle.oci.sdk:oci-java-sdk-artifacts:3.25.3
 
 E5F6CAE5CA7ECAAC1EC2827A9E2D65AE2869CADA org.apache.httpcomponents:httpclient:4.5.13
 853B96D3AFBB7BF8CC303FE27EE96836A10C1834 org.apache.httpcomponents:httpcore:4.4.13

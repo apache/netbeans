@@ -55,6 +55,7 @@ import org.netbeans.modules.cloud.oracle.bucket.BucketItem;
 import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
 import org.netbeans.modules.cloud.oracle.compute.ComputeInstanceItem;
 import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
+import org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.vault.VaultItem;
@@ -339,6 +340,9 @@ public final class CloudAssets {
                                     break;
                                 case "Vault": //NOI18N
                                     loaded.add(gson.fromJson(element, VaultItem.class));
+                                    break;
+                                case "ContainerRepository": //NOI18N
+                                    loaded.add(gson.fromJson(element, ContainerRepositoryItem.class));
                                     break;
                             }
                         }

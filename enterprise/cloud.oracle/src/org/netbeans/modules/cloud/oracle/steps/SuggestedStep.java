@@ -35,6 +35,7 @@ import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.netbeans.modules.cloud.oracle.compute.ClusterNode;
 import org.netbeans.modules.cloud.oracle.compute.ComputeInstanceNode;
 import org.netbeans.modules.cloud.oracle.database.DatabaseNode;
+import org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryNode;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.vault.VaultNode;
 import org.openide.NotifyDescriptor;
@@ -52,6 +53,7 @@ import org.openide.util.NbBundle;
     "Cluster=Oracle Container Engine",
     "Compute=Compute Instance",
     "SelectItem=Select {0}",
+    "ContainerRepository=Container Repository",
 })
 public class SuggestedStep extends AbstractStep<OCIItem> {
     private static final Logger LOG = Logger.getLogger(SuggestedStep.class.getName());
@@ -86,6 +88,8 @@ public class SuggestedStep extends AbstractStep<OCIItem> {
                 return Bundle.Cluster();
             case "ComputeInstance":
                 return Bundle.Compute();
+            case "ContainerRepository":
+                return Bundle.ContainerRepository();
         }
         throw new MissingResourceException("Missing OCI type", null, suggestedType);
     }
@@ -133,6 +137,8 @@ public class SuggestedStep extends AbstractStep<OCIItem> {
                     return ClusterNode.getClusters().apply(parent);
                 case "ComputeInstance": //NOI18N
                     return ComputeInstanceNode.getComputeInstances().apply(parent);
+                case "ContainerRepository": //NOI18N
+                    return ContainerRepositoryNode.getContainerRepositories().apply(parent);
                 default:
                     return Collections.emptyList();
             }

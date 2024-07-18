@@ -121,6 +121,10 @@ public abstract class OCIItem {
     public void removeChangeListener(PropertyChangeListener listener) {
         changeSupport.removePropertyChangeListener(listener);
     }
+    
+    protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+        changeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    }
 
     public int maxInProject() {
         return 1;

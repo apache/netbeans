@@ -34,6 +34,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -48,7 +49,6 @@ import org.netbeans.modules.cloud.oracle.database.DatabaseNode;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.items.TenancyItem;
-import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.NotifyDescriptor.ComposedInput.Callback;
@@ -56,8 +56,8 @@ import org.openide.NotifyDescriptor.QuickPick;
 import org.openide.NotifyDescriptor.QuickPick.Item;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -67,8 +67,8 @@ import org.openide.util.NbBundle;
         category = "Tools",
         id = "org.netbeans.modules.cloud.oracle.actions.AddADBAction"
 )
-@ActionRegistration( 
-        displayName = "#AddADB", 
+@ActionRegistration(
+        displayName = "#AddADB",
         asynchronous = true
 )
 
@@ -87,23 +87,26 @@ import org.openide.util.NbBundle;
     "SelectProfile_Description={0} (region: {1})"
 })
 public class AddADBAction implements ActionListener {
+
     private static final Logger LOGGER = Logger.getLogger(AddADBAction.class.getName());
-    
+
     private static final String DB = "db"; //NOI18N
     private static final String USERNAME = "username"; //NOI18N
     private static final String PASSWORD = "password"; //NOI18N
     private static final int NUMBER_OF_INPUTS = 4;
+    private static final RequestProcessor RP = new RequestProcessor(AddADBAction.class);
 
     @Override
     public void actionPerformed(ActionEvent e) {
         addADB();
     }
-    
-    public DatabaseItem addADB() {
-        Map<String, Object> result = new HashMap<> ();
-        
+
+    public CompletableFuture<DatabaseItem> addADB() {
+        Map<String, Object> result = new HashMap<>();
+        CompletableFuture future = new CompletableFuture();
+
         NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddADB(), NUMBER_OF_INPUTS, new Callback() {
-            Map<Integer, Map> values = new HashMap<> ();
+            Map<Integer, Map> values = new HashMap<>();
 
             @Override
             public NotifyDescriptor createInput(NotifyDescriptor.ComposedInput input, int number) {
@@ -111,7 +114,7 @@ public class AddADBAction implements ActionListener {
                     ProgressHandle h = ProgressHandle.createHandle(Bundle.MSG_CollectingProfiles());
                     h.start();
                     h.progress(Bundle.MSG_CollectingProfiles_Text());
-        
+
                     Map<OCIProfile, Tenancy> profiles = new LinkedHashMap<>();
                     Map<String, TenancyItem> tenancyItems = new LinkedHashMap<>();
                     try {
@@ -153,9 +156,9 @@ public class AddADBAction implements ActionListener {
                     NotifyDescriptor prev = input.getInputs()[number - 2];
                     OCIItem prevItem = null;
                     if (prev instanceof NotifyDescriptor.QuickPick) {
-                        for (QuickPick.Item item : ((QuickPick)prev).getItems()) {
+                        for (QuickPick.Item item : ((QuickPick) prev).getItems()) {
                             if (item.isSelected()) {
-                                prevItem = (OCIItem)values.get(number - 1).get(item.getLabel());
+                                prevItem = (OCIItem) values.get(number - 1).get(item.getLabel());
                                 break;
                             }
                         }
@@ -197,35 +200,40 @@ public class AddADBAction implements ActionListener {
                     return null;
                 }
             }
-            
+
         });
-        if (DialogDescriptor.OK_OPTION ==  DialogDisplayer.getDefault().notify(ci)) {
-            try {
-                DatabaseItem selectedDatabase = (DatabaseItem) result.get(DB);
-                DownloadWalletAction action = new DownloadWalletAction(selectedDatabase);
-                WalletInfo info = new WalletInfo(
-                        DownloadWalletDialog.getWalletsDir().getAbsolutePath(),
-                        AbstractPasswordPanel.generatePassword(),
-                        (String) result.get(USERNAME),
-                        ((String) result.get(PASSWORD)).toCharArray(),
-                        selectedDatabase);
-                action.addConnection(info);
-                return selectedDatabase;
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+        DialogDisplayer.getDefault().notifyFuture(ci).handle((r, exception) -> {
+            if (exception == null) {
+                try {
+                    DatabaseItem selectedDatabase = (DatabaseItem) result.get(DB);
+                    DownloadWalletAction action = new DownloadWalletAction(selectedDatabase);
+                    WalletInfo info = new WalletInfo(
+                            DownloadWalletDialog.getWalletsDir().getAbsolutePath(),
+                            AbstractPasswordPanel.generatePassword(),
+                            (String) result.get(USERNAME),
+                            ((String) result.get(PASSWORD)).toCharArray(),
+                            selectedDatabase);
+                    action.addConnection(info);
+                    future.complete(selectedDatabase);
+                } catch (IOException ex) {
+                    future.completeExceptionally(exception);
+                }
+            } else {
+                future.completeExceptionally(exception);
             }
-        }
-        return null;
+            return null;
+        });
+        return future;
     }
-    
+
     private <T extends OCIItem> NotifyDescriptor.QuickPick createQuickPick(Map<String, T> ociItems, String title) {
-        
+
         List<Item> items = ociItems.entrySet().stream()
                 .map(entry -> new Item(entry.getKey(), entry.getValue().getDescription()))
                 .collect(Collectors.toList());
         return new NotifyDescriptor.QuickPick(title, title, items, false);
     }
-    
+
     private Map<String, OCIItem> getFlatCompartment(TenancyItem tenancy) {
         Map<OCID, FlatCompartmentItem> compartments = new HashMap<>();
         OCISessionInitiator session = OCIManager.getDefault().getActiveSession();
@@ -254,7 +262,7 @@ public class AddADBAction implements ActionListener {
             nextPageToken = response.getOpcNextPage();
         } while (nextPageToken != null);
         Map<String, OCIItem> pickItems = computeFlatNames(compartments);
-        pickItems.put(tenancy.getName()+" (root)", tenancy);        // NOI18N
+        pickItems.put(tenancy.getName() + " (root)", tenancy);        // NOI18N
         return pickItems;
     }
 
@@ -267,6 +275,7 @@ public class AddADBAction implements ActionListener {
     }
 
     private abstract class FlatCompartmentItem extends CompartmentItem {
+
         private final OCID parentId;
         private String flatName;
 
@@ -283,9 +292,13 @@ public class AddADBAction implements ActionListener {
             if (flatName == null) {
                 String parentFlatName = "";
                 FlatCompartmentItem parentComp = getItem(parentId);
-                if (parentComp != null) parentFlatName = parentComp.getName();
+                if (parentComp != null) {
+                    parentFlatName = parentComp.getName();
+                }
                 flatName = super.getName();
-                if (!parentFlatName.isEmpty()) flatName = parentFlatName + "/" + flatName;  // NOI18N
+                if (!parentFlatName.isEmpty()) {
+                    flatName = parentFlatName + "/" + flatName;  // NOI18N
+                }
             }
             return flatName;
         }
@@ -294,7 +307,7 @@ public class AddADBAction implements ActionListener {
     }
 
     private Map<String, OCIItem> getDbs(OCIItem parent) {
-        Map<String, OCIItem> items = new HashMap<> ();
+        Map<String, OCIItem> items = new HashMap<>();
         try {
             if (parent instanceof CompartmentItem) {
                 DatabaseNode.getDatabases().apply((CompartmentItem) parent).forEach((db) -> items.put(db.getName(), db));
@@ -304,5 +317,5 @@ public class AddADBAction implements ActionListener {
         }
         return items;
     }
-    
+
 }

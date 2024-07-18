@@ -60,7 +60,7 @@ public class WorkspaceEdit {
      * a {@link WorkspaceEdit} with {@link TextDocumentEdit}s that have empty set of changes. 
      * The implementation must apply edits so they result in the same result as if the contents
      * of the WorkspaceEdit are applied in the order.
-     * <p/>
+     *
      * Upon failure, the returned Future completes with {@link ResourceModificationException}. 
      * Completed WorkspaceEdits, the failed one and the index of a failed operation within it should be reported.
      * If any resource was saved before the failure, it should be reported as saved.

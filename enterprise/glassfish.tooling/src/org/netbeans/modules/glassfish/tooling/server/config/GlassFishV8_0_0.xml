@@ -27,6 +27,7 @@
         <platform version="21"/>
         <platform version="22"/>
         <platform version="23"/>
+        <platform version="24"/>
     </java>
     <javaee version="11.0.0">
         <profile version="11.0.0" type="web"/>

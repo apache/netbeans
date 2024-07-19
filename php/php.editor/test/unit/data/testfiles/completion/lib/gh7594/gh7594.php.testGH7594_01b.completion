@@ -1,0 +1,5 @@
+Code completion result for source line:
+} catch(\Thr|) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      Throwable                       [PUBLIC]   stub.php

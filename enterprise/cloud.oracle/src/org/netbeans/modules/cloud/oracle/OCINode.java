@@ -124,7 +124,8 @@ public class OCINode extends AbstractNode {
     private final class RefreshListener implements PropertyChangeListener {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if ("referenceName".equals(evt.getPropertyName())) {
+            if ("referenceName".equals(evt.getPropertyName()) //NOI18N
+                    || "publicIp".equals(evt.getPropertyName())) { //NOI18N
                 fireDisplayNameChange("", getDisplayName());
             } else {
                 refresh();

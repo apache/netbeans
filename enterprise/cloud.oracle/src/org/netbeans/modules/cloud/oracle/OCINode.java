@@ -114,6 +114,11 @@ public class OCINode extends AbstractNode {
         if (factory != null) {
             factory.refreshKeys();
         }
+        update(item);
+    }
+    
+    public void update(OCIItem item) {
+        
     }
 
     @Override
@@ -124,11 +129,8 @@ public class OCINode extends AbstractNode {
     private final class RefreshListener implements PropertyChangeListener {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if ("referenceName".equals(evt.getPropertyName())) {
-                fireDisplayNameChange("", getDisplayName());
-            } else {
-                refresh();
-            }
+            refresh();
+            fireDisplayNameChange("", getDisplayName());
         }
     }
     

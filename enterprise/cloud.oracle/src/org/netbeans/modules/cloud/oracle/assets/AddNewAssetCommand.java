@@ -83,27 +83,33 @@ public class AddNewAssetCommand implements CommandProvider {
                 .executeMultistep(new ItemTypeStep(), Lookups.fixed(nsProvider))
                 .thenAccept(values -> {
                     Project project = values.getValueForStep(ProjectStep.class);
-                    OCIItem item;
-                    if ("Databases".equals(values.getValueForStep(ItemTypeStep.class))) {
-                        item = values.getValueForStep(DatabaseConnectionStep.class);
-                        if (item == null) {
+                    CompletableFuture<? extends OCIItem> item;
+                    if ("Databases".equals(values.getValueForStep(ItemTypeStep.class))) { 
+                        DatabaseItem i = values.getValueForStep(DatabaseConnectionStep.class);
+                        if (i == null) {
                             item = new AddADBAction().addADB();
+                        } else {
+                            item = CompletableFuture.completedFuture(i);
                         }
                     } else {
-                        item = values.getValueForStep(SuggestedStep.class);
+                        OCIItem i = values.getValueForStep(SuggestedStep.class);
+                        if (i == null) {
+                            future.cancel(true);
+                            return;
+                        } else {
+                            item = CompletableFuture.completedFuture(i);
+                        }
                     }
-                    if (item == null) {
-                        future.cancel(true);
-                        return;
-                    }
-                    CloudAssets.getDefault().addItem(item);
-                    String[] art = DEP_MAP.get(item.getKey().getPath());
-                    try {
-                        DependencyUtils.addDependency(project, art[0], art[1]);
-                        future.complete(null);
-                    } catch (IllegalStateException e) {
-                        future.completeExceptionally(e);
-                    }
+                    item.thenAccept(i -> {
+                        CloudAssets.getDefault().addItem(i);
+                        String[] art = DEP_MAP.get(i.getKey().getPath());
+                        try {
+                            DependencyUtils.addDependency(project, art[0], art[1]);
+                            future.complete(null);
+                        } catch (IllegalStateException e) {
+                            future.completeExceptionally(e);
+                        }
+                    });
                 });
         return future;
     }

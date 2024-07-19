@@ -79,6 +79,9 @@
                     <file name="org-netbeans-modules-cloud-oracle-compute-ComputeInstanceNode-getComputeInstances.instance">
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.compute.ComputeInstanceNode.getComputeInstances" name="instanceCreate"/>
                     </file>
+                    <file name="org-netbeans-modules-cloud-oracle-developer-ContainerRepositoryNode-getContainerRepositories.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryNode.getContainerRepositories" name="instanceCreate"/>
+                    </file>
                     <file name="org-netbeans-modules-cloud-oracle-compute-ClusterNode-getClusters.instance">
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.compute.ClusterNode.getClusters" name="instanceCreate"/>
                     </file>
@@ -199,6 +202,23 @@
                 <folder name="Nodes">
                     <file name="org-netbeans-modules-cloud-oracle-compute-ComputeInstanceNode-createNode.instance">
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.compute.ComputeInstanceNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="ContainerRepository">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-developer-ContainerRepositoryNode-getContainerRepositories-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryNode.createNode" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-developer-ContainerTagNode-getContainerTags.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.ContainerTagNode.getContainerTags" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="ContainerTag">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-cdeveloper-ContainerTagNode-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.ContainerTagNode.createNode" name="instanceCreate"/>
                     </file>
                 </folder>
             </folder>

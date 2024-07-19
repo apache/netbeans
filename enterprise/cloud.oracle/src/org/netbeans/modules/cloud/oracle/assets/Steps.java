@@ -28,7 +28,6 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Lookup;
@@ -38,8 +37,9 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
- * An implementation of the {@link Step} interface used for multiple commands or actions.
- * 
+ * An implementation of the {@link Step} interface used for multiple commands or
+ * actions.
+ *
  * @author Jan Horvath
  */
 @NbBundle.Messages({
@@ -49,6 +49,7 @@ import org.openide.util.lookup.ProxyLookup;
     "LoadingItems=Loading items for the next step"
 })
 public final class Steps {
+
     private static final Logger LOG = Logger.getLogger(Steps.class.getName());
     private static final RequestProcessor RP = new RequestProcessor("Steps"); //NOI18N
     private static Steps instance = null;
@@ -81,34 +82,40 @@ public final class Steps {
         });
         return future;
     }
-    
+
     /**
-     * Provider class that supplies the next {@link Step} for navigation from the current {@link Step}.
-     * 
+     * Provider class that supplies the next {@link Step} for navigation from
+     * the current {@link Step}.
+     *
      */
     public static class NextStepProvider {
+
         private final Map<Class<? extends AbstractStep>, Function<AbstractStep, AbstractStep>> steps;
-        
+
         /**
-         * Private constructor to initialize the NextStepProvider with a map of steps.
+         * Private constructor to initialize the NextStepProvider with a map of
+         * steps.
          *
-         * @param steps a map associating classes with their corresponding {@link Step} instances
+         * @param steps a map associating classes with their corresponding
+         * {@link Step} instances
          */
         private NextStepProvider(Map<Class<? extends AbstractStep>, Function<AbstractStep, AbstractStep>> steps) {
             this.steps = steps;
         }
-        
+
         /**
          * Retrieves the next {@link Step} for the specified {@link Step}.
          *
-         * @param currentStep the current step for which the next step is to be retrieved
-         * @return the {@link Step} associated with the specified class, or null if no step is found
+         * @param currentStep the current step for which the next step is to be
+         * retrieved
+         * @return the {@link Step} associated with the specified class, or null
+         * if no step is found
          */
         public AbstractStep nextStepFor(AbstractStep currentStep) {
             Function<AbstractStep, AbstractStep> nextStep = steps.get(currentStep.getClass());
             return nextStep != null ? nextStep.apply(currentStep) : null;
         }
-        
+
         /**
          * Creates a new Builder for constructing a NextStepProvider.
          *
@@ -117,19 +124,20 @@ public final class Steps {
         public static Builder builder() {
             return new Builder();
         }
-        
+
         /**
          * Builder class for constructing a NextStepProvider.
          */
         public static class Builder {
-            private final Map<Class<? extends AbstractStep>, Function<AbstractStep, AbstractStep>> steps = new HashMap<> ();
+
+            private final Map<Class<? extends AbstractStep>, Function<AbstractStep, AbstractStep>> steps = new HashMap<>();
 
             /**
              * Private constructor for the Builder.
              */
             private Builder() {
             }
-            
+
             /**
              * Associates a {@link Step} function with a class in the builder.
              *
@@ -141,7 +149,7 @@ public final class Steps {
                 steps.put(clazz, stepFunction);
                 return this;
             }
-            
+
             /**
              * Builds and returns a NextStepProvider with the configured steps.
              *
@@ -152,17 +160,18 @@ public final class Steps {
             }
         }
     }
-    
+
     /**
      * Provides values for steps in the multi step dialog.
-     * 
+     *
      */
     public interface Values {
-        
+
         /**
          * Returns a value for a given {@link Step}.
+         *
          * @param step
-         * @return 
+         * @return
          */
         public <T> T getValueForStep(Class<? extends AbstractStep<T>> step);
     }
@@ -229,7 +238,7 @@ public final class Steps {
                     }
                     return steps.getLast().createInput();
                 }
-                
+
                 private void prepare(AbstractStep step) {
                     ProgressHandle h = ProgressHandle.createHandle(Bundle.LoadingItems());
                     h.start();
@@ -240,7 +249,7 @@ public final class Steps {
                         h.finish();
                     }
                 }
-                
+
                 private AbstractStep getNextFor(AbstractStep step) {
                     Steps.NextStepProvider nsProvider = lookup.lookup(Steps.NextStepProvider.class);
                     if (nsProvider != null) {
@@ -249,7 +258,7 @@ public final class Steps {
                             prepare(ns);
                             return ns;
                         }
-                    } 
+                    }
                     return null;
                 }
             };
@@ -258,14 +267,15 @@ public final class Steps {
         public Values getResult() {
             return values;
         }
-        
+
         private static class MultistepValues implements Values {
+
             private final List<AbstractStep> steps;
 
             public MultistepValues(List<AbstractStep> steps) {
                 this.steps = steps;
             }
-            
+
             @Override
             public <T> T getValueForStep(Class<? extends AbstractStep<T>> forStep) {
                 for (AbstractStep step : steps) {
@@ -279,7 +289,7 @@ public final class Steps {
     }
 
     public static <T extends OCIItem> NotifyDescriptor.QuickPick createQuickPick(Map<String, T> ociItems, String title) {
-        List<NotifyDescriptor.QuickPick.Item> items = new ArrayList<> ();
+        List<NotifyDescriptor.QuickPick.Item> items = new ArrayList<>();
         for (Map.Entry<String, T> entry : ociItems.entrySet()) {
             String description = entry.getValue().getDescription();
             if (description == null || description.isBlank()) {

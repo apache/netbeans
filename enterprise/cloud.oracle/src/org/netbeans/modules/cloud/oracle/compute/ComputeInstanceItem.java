@@ -26,13 +26,48 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
  * @author Jan Horvath
  */
 public final class ComputeInstanceItem extends OCIItem {
-
-    public ComputeInstanceItem(OCID id, String compartmentId, String name) {
+    private String publicIp = null;
+    private String processorDescription;
+    private String username;
+    private String imageId;
+    
+    public ComputeInstanceItem(OCID id, String compartmentId, String name, String processorDescription, String imageId, String publicIp, String username) {
         super(id, compartmentId, name);
+        this.processorDescription = processorDescription;
+        this.publicIp = publicIp;
+        this.username = username;
+        this.imageId = imageId;
     }
 
     public ComputeInstanceItem() {
         super();
+    }
+
+    public String getPublicIp() {
+        if (publicIp == null) {
+            return "-"; //NOI18N
+        }
+        return publicIp;
+    } 
+    
+    public String getProcessorDescription() {
+        return processorDescription;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    void setUsername(String username) {
+        this.username = username;
+    }
+    
+    public String getImageId() {
+        return imageId;
+    }
+
+    void setPublicId(String publicIp) {
+        this.publicIp = publicIp;
     }
     
 }

@@ -483,6 +483,24 @@
 				"title": "Copy OCID"
 			},
 			{
+				"command": "nbls.cloud.publicIp.copy",
+				"title": "Copy the public IP address"
+			},
+                        {
+				"command": "nbls.cloud.imageUrl.copy",
+				"title": "Copy pull command"
+			},
+			{
+				"command": "nbls.cloud.computeInstance.ssh",
+				"title": "Start SSH session",
+                                "icon": "$(terminal)"
+			},
+			{
+				"command": "nbls.cloud.container.docker",
+				"title": "Run in Compute Instance",
+                                "icon": "$(play)"
+			},
+			{
 				"command": "nbls.workspace.compile",
 				"title": "Compile Workspace",
 				"category": "Java"
@@ -783,6 +801,22 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls.cloud.publicIp.copy",
+					"when": "false"
+				},
+				{
+					"command": "nbls.cloud.imageUrl.copy",
+					"when": "false"
+				},
+				{
+					"command": "nbls.cloud.computeInstance.ssh",
+					"when": "false"
+				},
+				{
+					"command": "nbls.cloud.container.docker",
+					"when": "false"
+				},
+				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
 					"when": "false"
 				},
@@ -998,8 +1032,28 @@
 				},
 				{
 					"command": "nbls.cloud.ocid.copy",
-					"when": "viewItem =~ /class:oracle.items.OCIItem/ && viewItem =~ /^(?!.*Suggested).*/",
+					"when": "viewItem =~ /ocid:.*/",
 					"group": "oci@1000"
+				},
+				{
+					"command": "nbls.cloud.publicIp.copy",
+					"when": "viewItem =~ /publicIp:.*/ && viewItem =~ /^(?!.*imageUrl:).*/",
+					"group": "oci@1000"
+				},
+				{
+					"command": "nbls.cloud.imageUrl.copy",
+					"when": "viewItem =~ /imageUrl:.*/",
+					"group": "oci@1000"
+				},
+				{
+					"command": "nbls.cloud.computeInstance.ssh",
+					"when": "viewItem =~ /publicIp:.*/ && viewItem =~ /^(?!.*imageUrl:).*/",
+					"group": "inline@10"
+				},
+				{
+					"command": "nbls.cloud.container.docker",
+					"when": "viewItem =~ /publicIp:.*/ && viewItem =~ /imageUrl:.*/",
+					"group": "inline@10"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddRepository",
@@ -1013,7 +1067,7 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddToProject",
-					"when": "viewItem =~ /(ComputeInstanceItem|ClusterItem|BucketItem|DatabaseItem|VaultItem)/ && view != cloud.assets",
+					"when": "viewItem =~ /(ComputeInstanceItem|ClusterItem|BucketItem|DatabaseItem|VaultItem|ContainerRepositoryItem)/ && view != cloud.assets",
 					"group": "inline@14"
 				},
 				{
@@ -1033,7 +1087,7 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CloudRefresh",
-					"when": "viewItem =~ /class:oracle/ && view != cloud.assets",
+					"when": "viewItem =~ /class:oracle/",
 					"group": "inline@13"
 				},
 				{
@@ -1129,6 +1183,14 @@
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/computeinstance.svg",
 				"codeicon": "server-environment"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/containerrepository.svg",
+				"codeicon": "briefcase"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/containertag.svg",
+				"codeicon": "tag"
 			},
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/cluster.svg",

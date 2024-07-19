@@ -1347,7 +1347,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         String fullConfigPrefix = client.getNbCodeCapabilities().getConfigurationPrefix();
         String configPrefix = fullConfigPrefix.substring(0, fullConfigPrefix.length() - 1);
         server.openedProjects().thenAccept(projects -> {
+            // PENDING: invent a pluggable mechanism for this, this does not scale and the typecast to serviceImpl is ugly
             ((TextDocumentServiceImpl)server.getTextDocumentService()).updateJavaHintPreferences(((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject(NETBEANS_JAVA_HINTS));
+            ((TextDocumentServiceImpl)server.getTextDocumentService()).updateProjectJDKHome(((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("project").getAsJsonPrimitive("jdkhome"));
             if (projects != null && projects.length > 0) {
                 updateJavaFormatPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("format"));
                 updateJavaImportPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("java").getAsJsonObject("imports"));

@@ -115,8 +115,17 @@
 						"null"
 					],
 					"default": null,
-					"description": "Specifies JDK for the Apache NetBeans Language Server",
-					"scope": "machine"
+					"description": "Specifies the JDK on which the Apache NetBeans Language Server is run",
+					"scope": "machine-overridable"
+				},
+				"netbeans.project.jdkhome": {
+					"type": [
+						"string",
+						"null"
+					],
+					"default": null,
+					"description": "Specifies the JDK on which user's project will be run. Defaults to the value of netbeans.jdkhome",
+					"scope": "machine-overridable"
 				},
 				"netbeans.verbose": {
 					"type": "boolean",

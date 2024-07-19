@@ -45,6 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.google.gson.InstanceCreator;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import java.util.prefs.Preferences;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -382,6 +383,7 @@ public final class Server {
 
         private static final String NETBEANS_FORMAT = "format";
         private static final String NETBEANS_JAVA_IMPORTS = "java.imports";
+        private static final String NETBEANS_PROJECT_JDKHOME = "project.jdkhome";
         private static final String NETBEANS_JAVA_HINTS = "hints";
 
         // change to a greater throughput if the initialization waits on more processes than just (serialized) project open.
@@ -1020,6 +1022,7 @@ public final class Server {
         private void initializeOptions() {
             getWorkspaceProjects().thenAccept(projects -> {
                 ConfigurationItem item = new ConfigurationItem();
+                // PENDING: what about doing just one roundtrip to the client- we may request multiple ConfiguratonItems in one message ?
                 item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVA_HINTS);
                 client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
                     if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
@@ -1029,6 +1032,16 @@ public final class Server {
                         textDocumentService.hintsSettingsRead = true;
                         textDocumentService.reRunDiagnostics();
                     }
+                });
+                item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_PROJECT_JDKHOME);
+                client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
+                    JsonPrimitive newProjectJDKHomePath = null;
+
+                    if (c != null && !c.isEmpty() && c.get(0) instanceof JsonPrimitive) {
+                        newProjectJDKHomePath = (JsonPrimitive) c.get(0);
+                    } else {
+                    }
+                    textDocumentService.updateProjectJDKHome(newProjectJDKHomePath);
                 });
                 if (projects != null && projects.length > 0) {
                     FileObject fo = projects[0].getProjectDirectory();

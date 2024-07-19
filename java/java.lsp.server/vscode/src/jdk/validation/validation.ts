@@ -27,14 +27,28 @@ import { getProjectFrom } from './project';
 const CONFIGURE_JDK_COMMAND = 'nbls.jdk.configuration'
 const CONFIGURE_JDK = 'Configure JDK';
 
-export async function validateJDKCompatibility(javaPath: string | null) {
+export async function validateJDKCompatibility(javaPath: string | null, projectPath: string | null) {
     // In this case RH will try it's best to validate Java versions
     if (isRHExtensionActive()) return;
 
     const projectJavaVersion = await getProjectJavaVersion();
     const ideJavaVersion = await parseJavaVersion(javaPath);
-    if (projectJavaVersion && ideJavaVersion && ideJavaVersion < projectJavaVersion) {
-        const value = await vscode.window.showWarningMessage(`Source level (JDK ${projectJavaVersion}) not compatible with current JDK installation (JDK ${ideJavaVersion})`, CONFIGURE_JDK);
+    const ideProjectJavaVersion = await parseJavaVersion(projectPath);
+
+    let conflictingVersion : number = 0;
+
+    if (projectJavaVersion) {
+        // project settings is preferred, if defined.
+        if (ideProjectJavaVersion) {
+            if (ideProjectJavaVersion < projectJavaVersion) {
+                conflictingVersion = ideProjectJavaVersion;
+            } 
+        } else if (ideJavaVersion && ideJavaVersion < projectJavaVersion) {
+            conflictingVersion = ideJavaVersion;
+        }
+    }
+    if (conflictingVersion) {
+        const value = await vscode.window.showWarningMessage(`Source level (JDK ${projectJavaVersion}) not compatible with current JDK installation (JDK ${conflictingVersion})`, CONFIGURE_JDK);
         if (value === CONFIGURE_JDK) {
             vscode.commands.executeCommand(CONFIGURE_JDK_COMMAND);
         }

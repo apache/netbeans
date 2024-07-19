@@ -19,6 +19,8 @@
 
 package org.netbeans.spi.editor.hints;
 
+import org.netbeans.modules.editor.hints.HintsControllerImpl;
+
 /**
  * Allows to perform a change when the user selects the hint.
  * @author Jan Lahoda
@@ -39,4 +41,8 @@ public interface Fix {
      *  determined.
      */
     public abstract ChangeInfo implement() throws Exception;
+    
+    default Iterable<? extends Fix> getSubfixes() {
+        return HintsControllerImpl.getSubfixes(this);
+    }
 }

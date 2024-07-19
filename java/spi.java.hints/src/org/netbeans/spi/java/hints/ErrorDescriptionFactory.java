@@ -59,6 +59,7 @@ import org.netbeans.modules.analysis.spi.Analyzer.WarningDescription;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata.Options;
 import org.netbeans.modules.java.hints.spiimpl.Hacks.InspectAndTransformOpener;
+import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.modules.java.hints.spiimpl.SPIAccessor;
 import org.netbeans.modules.java.hints.spiimpl.SyntheticFix;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
@@ -415,7 +416,13 @@ public class ErrorDescriptionFactory {
         }
 
         if (treePath.getLeaf().getKind() != Kind.COMPILATION_UNIT) {
-            return new FixImpl(TreePathHandle.create(treePath, compilationInfo), compilationInfo.getFileObject(), keys);
+            class SyntheticJavaFixImpl extends JavaFixImpl implements SyntheticFix {
+                public SyntheticJavaFixImpl(JavaFix jf) {
+                    super(jf);
+                }
+            }
+            FixImpl javaFix = new FixImpl(TreePathHandle.create(treePath, compilationInfo), compilationInfo.getFileObject(), keys);
+            return new SyntheticJavaFixImpl(javaFix);
         } else {
             return null;
         }
@@ -454,13 +461,14 @@ public class ErrorDescriptionFactory {
 
     private static final Set<Kind> DECLARATION = EnumSet.of(Kind.ANNOTATION_TYPE, Kind.CLASS, Kind.ENUM, Kind.INTERFACE, Kind.METHOD, Kind.VARIABLE);
 
-    private static final class FixImpl implements Fix, SyntheticFix {
+    private static final class FixImpl extends JavaFix {
 
         private final String keys[];
         private final TreePathHandle handle;
         private final FileObject file;
 
         public FixImpl(TreePathHandle handle, FileObject file, String... keys) {
+            super(handle);
             this.keys = keys;
             this.handle = handle;
             this.file = file;
@@ -480,79 +488,72 @@ public class ErrorDescriptionFactory {
             return NbBundle.getMessage(ErrorDescriptionFactory.class, "LBL_FIX_Suppress_Waning",  keyNames.toString() );  // NOI18N
         }
 
-        @Override
-        public ChangeInfo implement() throws IOException {
-            JavaSource js = JavaSource.forFileObject(file);
+        public void performRewrite(TransformationContext ctx) throws IOException {
+            WorkingCopy copy = ctx.getWorkingCopy();
+            TreePath path = ctx.getPath();
 
-            js.runModificationTask((WorkingCopy copy) -> {
-                copy.toPhase(Phase.RESOLVED); //XXX: performance
-                TreePath path = handle.resolve(copy);
+            while (path != null && path.getLeaf().getKind() != Kind.COMPILATION_UNIT && !DECLARATION.contains(path.getLeaf().getKind())) {
+                path = path.getParentPath();
+            }
 
-                while (path != null && path.getLeaf().getKind() != Kind.COMPILATION_UNIT && !DECLARATION.contains(path.getLeaf().getKind())) {
-                    path = path.getParentPath();
-                }
+            if (path == null || path.getLeaf().getKind() == Kind.COMPILATION_UNIT) {
+                return ;
+            }
 
-                if (path == null || path.getLeaf().getKind() == Kind.COMPILATION_UNIT) {
-                    return ;
-                }
+            Tree top = path.getLeaf();
+            TreePath lambdaPath = null;
 
-                Tree top = path.getLeaf();
-                TreePath lambdaPath = null;
-
-                ModifiersTree modifiers = switch (top.getKind()) {
-                    case ANNOTATION_TYPE, CLASS, ENUM, INTERFACE -> ((ClassTree) top).getModifiers();
-                    case METHOD -> ((MethodTree) top).getModifiers();
-                    case VARIABLE -> {
-                        TreePath parent = path.getParentPath();
-                        if (parent != null && parent.getLeaf().getKind() == Tree.Kind.LAMBDA_EXPRESSION) {
-                            // check if the variable is an implict parameter. If so, it must be turned into explicit
-                            TreePath typePath = TreePath.getPath(parent, ((VariableTree)top).getType());
-                            if (copy.getTreeUtilities().isSynthetic(typePath)) {
-                                lambdaPath = parent;
-                            }
-                        }
-                        yield ((VariableTree) top).getModifiers();
-                    }
-                    default -> {
-                        assert false : "Unhandled Tree.Kind";  // NOI18N
-                        yield null;
-                    }
-                };
-
-                if (modifiers == null) {
-                    return ;
-                }
-
-                TypeElement el = copy.getElements().getTypeElement("java.lang.SuppressWarnings");  // NOI18N
-
-                if (el == null) {
-                    return ;
-                }
-
-                LiteralTree[] keyLiterals = new LiteralTree[keys.length];
-
-                for (int i = 0; i < keys.length; i++) {
-                    keyLiterals[i] = copy.getTreeMaker().
-                            Literal(keys[i]);
-                }
-
-                if (lambdaPath != null) {
-                    LambdaExpressionTree let = (LambdaExpressionTree)lambdaPath.getLeaf();
-                    for (VariableTree var : let.getParameters()) {
-                        TreePath typePath = TreePath.getPath(lambdaPath, var.getType());
+            ModifiersTree modifiers = switch (top.getKind()) {
+                case ANNOTATION_TYPE, CLASS, ENUM, INTERFACE -> ((ClassTree) top).getModifiers();
+                case METHOD -> ((MethodTree) top).getModifiers();
+                case VARIABLE -> {
+                    TreePath parent = path.getParentPath();
+                    if (parent != null && parent.getLeaf().getKind() == Tree.Kind.LAMBDA_EXPRESSION) {
+                        // check if the variable is an implict parameter. If so, it must be turned into explicit
+                        TreePath typePath = TreePath.getPath(parent, ((VariableTree)top).getType());
                         if (copy.getTreeUtilities().isSynthetic(typePath)) {
-                            Tree imported = copy.getTreeMaker().Type(copy.getTrees().getTypeMirror(typePath));
-                            copy.rewrite(var.getType(), imported);
+                            lambdaPath = parent;
                         }
                     }
+                    yield ((VariableTree) top).getModifiers();
                 }
+                default -> {
+                    assert false : "Unhandled Tree.Kind";  // NOI18N
+                    yield null;
+                }
+            };
 
-                ModifiersTree nueMods = GeneratorUtilities.get(copy).appendToAnnotationValue(modifiers, el, "value", keyLiterals);
+            if (modifiers == null) {
+                return ;
+            }
 
-                copy.rewrite(modifiers, nueMods);
-            }).commit();
+            TypeElement el = copy.getElements().getTypeElement("java.lang.SuppressWarnings");  // NOI18N
 
-            return null;
+            if (el == null) {
+                return ;
+            }
+
+            LiteralTree[] keyLiterals = new LiteralTree[keys.length];
+
+            for (int i = 0; i < keys.length; i++) {
+                keyLiterals[i] = copy.getTreeMaker().
+                        Literal(keys[i]);
+            }
+
+            if (lambdaPath != null) {
+                LambdaExpressionTree let = (LambdaExpressionTree)lambdaPath.getLeaf();
+                for (VariableTree var : let.getParameters()) {
+                    TreePath typePath = TreePath.getPath(lambdaPath, var.getType());
+                    if (copy.getTreeUtilities().isSynthetic(typePath)) {
+                        Tree imported = copy.getTreeMaker().Type(copy.getTrees().getTypeMirror(typePath));
+                        copy.rewrite(var.getType(), imported);
+                    }
+                }
+            }
+
+            ModifiersTree nueMods = GeneratorUtilities.get(copy).appendToAnnotationValue(modifiers, el, "value", keyLiterals);
+
+            copy.rewrite(modifiers, nueMods);
         }
 
         @Override
@@ -584,5 +585,5 @@ public class ErrorDescriptionFactory {
             hash = 79 * hash + (this.file != null ? this.file.hashCode() : 0);
             return hash;
         }
+        }
     }
-}

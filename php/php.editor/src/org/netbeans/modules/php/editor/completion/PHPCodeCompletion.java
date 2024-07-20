@@ -273,6 +273,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
     private static final List<String> INHERITANCE_KEYWORDS =
             Arrays.asList(new String[]{"extends", "implements"}); //NOI18N
     private static final String EXCEPTION_CLASS_NAME = "\\Exception"; // NOI18N
+    private static final String ERROR_CLASS_NAME = "\\Error"; // NOI18N
+    private static final String THROWABLE_INTERFACE_NAME = "\\Throwable"; // NOI18N
     private static final List<PHPTokenId> VALID_UNION_TYPE_TOKENS = Arrays.asList(
             PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING, PHPTokenId.PHP_NS_SEPARATOR,
             PHPTokenId.PHP_TYPE_BOOL, PHPTokenId.PHP_TYPE_FLOAT, PHPTokenId.PHP_TYPE_INT, PHPTokenId.PHP_TYPE_STRING, PHPTokenId.PHP_TYPE_VOID,
@@ -891,7 +893,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            if (isExceptionClass(classElement)) {
+            if (isExceptionClass(classElement)
+                    || isErrorClass(classElement)) {
                 completionResult.add(new PHPCompletionItem.ClassItem(classElement, request, false, null));
                 if (withConstructors) {
                     constructorClassNames.add(classElement.getFullyQualifiedName());
@@ -904,7 +907,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     if (CancelSupport.getDefault().isCancelled()) {
                         return;
                     }
-                    if (isExceptionClass(inheritedClass)) {
+                    if (isExceptionClass(inheritedClass)
+                            || isErrorClass(inheritedClass)) {
                         completionResult.add(new PHPCompletionItem.ClassItem(classElement, request, false, null));
                         if (withConstructors) {
                             constructorClassNames.add(classElement.getFullyQualifiedName());
@@ -912,6 +916,13 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         break;
                     }
                 }
+            }
+        }
+        final Set<InterfaceElement> interfaces = request.index.getInterfaces(nameQuery);
+        for (InterfaceElement interfaceElement : interfaces) {
+            if (isThrowableInterface(interfaceElement)) {
+                completionResult.add(new PHPCompletionItem.InterfaceItem(interfaceElement, request, false));
+                break;
             }
         }
         for (QualifiedName qualifiedName : constructorClassNames) {
@@ -924,6 +935,14 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
 
     private boolean isExceptionClass(ClassElement classElement) {
         return classElement.getFullyQualifiedName().toString().equals(EXCEPTION_CLASS_NAME);
+    }
+
+    private boolean isErrorClass(ClassElement classElement) {
+        return classElement.getFullyQualifiedName().toString().equals(ERROR_CLASS_NAME);
+    }
+
+    private boolean isThrowableInterface(InterfaceElement interfaceElement) {
+        return interfaceElement.getFullyQualifiedName().toString().equals(THROWABLE_INTERFACE_NAME);
     }
 
     private void autoCompleteClassNames(final PHPCompletionResult completionResult,

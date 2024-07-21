@@ -594,7 +594,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
     @Override
     protected String getProjectJavaEEVersion() {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
-        if (webModule != null) {
+        if (webModule != null && webModule.getJ2eeProfile() != null) {
             switch (webModule.getJ2eeProfile()) {
                 case JAVA_EE_6_WEB:
                 case JAVA_EE_6_FULL:

@@ -89,7 +89,7 @@ class JaxRsFilterPanel implements Panel<WizardDescriptor> {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
             Profile profile = webModule.getJ2eeProfile();
-            if (profile.isAtMost(Profile.JAVA_EE_6_FULL)) {
+            if (profile != null && profile.isAtMost(Profile.JAVA_EE_6_FULL)) {
                 setErrorMessage(NbBundle.getMessage(JaxRsFilterPanel.class,
                         "MSG_NoJEE7Profile"));          // NOI18N
                 return false;

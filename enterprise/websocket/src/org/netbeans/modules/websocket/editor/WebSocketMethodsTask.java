@@ -124,7 +124,7 @@ public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
             return false;
         }
         Profile profile = webModule.getJ2eeProfile();
-        if (profile.isAtMost(Profile.JAVA_EE_6_FULL)) {
+        if (profile != null && profile.isAtMost(Profile.JAVA_EE_6_FULL)) {
             return false;
         }
         return true;

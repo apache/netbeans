@@ -836,7 +836,7 @@ public class WebProjectUtilities {
 
     public static void upgradeJ2EEProfile(WebProject project){
         Profile profile = project.getAPIEjbJar().getJ2eeProfile();
-        if (profile.isWebProfile() && profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
+        if (profile != null && profile.isWebProfile() && profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
             //check the J2EE 6/7 Full profile specific functionality
             Boolean isFullRequired = Boolean.FALSE;
             try{

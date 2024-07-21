@@ -465,7 +465,7 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
             if (manager.getTomEEType().ordinal() >= 3 ) {
                 switch (manager.getTomEEVersion()) {
                     case TOMEE_100:
-                        profiles.add(Profile.JAKARTA_EE_11_FULL);
+                        profiles.add(Profile.JAKARTA_EE_10_FULL);
                     case TOMEE_90:
                         profiles.add(Profile.JAKARTA_EE_9_1_FULL);
                         break;
@@ -481,7 +481,7 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
             }
             switch (manager.getTomEEVersion()) {
                 case TOMEE_100:
-                    profiles.add(Profile.JAKARTA_EE_11_WEB);
+                    profiles.add(Profile.JAKARTA_EE_10_WEB);
                 case TOMEE_90:
                     profiles.add(Profile.JAKARTA_EE_9_1_WEB);
                     break;

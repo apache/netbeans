@@ -465,6 +465,8 @@ public final class TomcatFactory implements DeploymentFactory {
             return TomcatManager.TomEEVersion.TOMEE_80;
         } else if (version.startsWith("9.")) { // NOI18N
             return TomcatManager.TomEEVersion.TOMEE_90;
+        } else if (version.startsWith("10.")) { // NOI18N
+            return TomcatManager.TomEEVersion.TOMEE_100;
         }
         return defaultVersion;
     }

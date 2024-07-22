@@ -26,9 +26,11 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.maven.model.Build;
 import org.netbeans.modules.maven.spi.actions.MavenActionsProvider;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -41,7 +43,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.execute.ExecutionContext;
-import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.maven.execute.model.ActionToGoalMapping;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
 import org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3Reader;
@@ -95,7 +96,7 @@ public final class ActionToGoalUtils {
      * @since 2.50
      */
     public static @NonNull List<? extends MavenActionsProvider> actionProviders(@NonNull Project project) {
-        List<MavenActionsProvider> providers = new ArrayList<MavenActionsProvider>();
+        List<MavenActionsProvider> providers = new ArrayList<>();
         providers.addAll(project.getLookup().lookupAll(MavenActionsProvider.class));        
         providers.addAll(Lookup.getDefault().lookupAll(MavenActionsProvider.class));
         return providers;
@@ -157,11 +158,11 @@ public final class ActionToGoalUtils {
             if (rc instanceof ModelRunConfig && ((ModelRunConfig)rc).isFallback()) {
                 return rc;
             }
-            List<String> acts = new ArrayList<String>(); 
+            List<String> acts = new ArrayList<>(); 
             acts.addAll(rc.getActivatedProfiles());
             acts.addAll(requested.getActivatedProfiles());
             rc.setActivatedProfiles(acts);
-            Map<String, String> props = new HashMap<String, String>(rc.getProperties());
+            Map<String, String> props = new HashMap<>(rc.getProperties());
             props.putAll(requested.getProperties());
             rc.addProperties(props);
         }
@@ -280,8 +281,8 @@ public final class ActionToGoalUtils {
     
     private static NetbeansActionMapping[] getActiveCustomMappingsImpl(NbMavenProjectImpl project, boolean forFiles) {
         M2ConfigProvider configs = project.getLookup().lookup(M2ConfigProvider.class);
-        List<NetbeansActionMapping> toRet = new ArrayList<NetbeansActionMapping>();
-        List<String> names = new ArrayList<String>();
+        List<NetbeansActionMapping> toRet = new ArrayList<>();
+        Set<String> names = new HashSet<>();
         // first add all project specific custom actions.
         for (NetbeansActionMapping map : configs.getActiveConfiguration().getCustomMappings()) {
             toRet.add(map);
@@ -320,7 +321,7 @@ public final class ActionToGoalUtils {
             }
             
         }
-        return toRet.toArray(new NetbeansActionMapping[0]);
+        return toRet.toArray(NetbeansActionMapping[]::new);
     }
         
 
@@ -347,9 +348,7 @@ public final class ActionToGoalUtils {
             NetbeansBuildActionXpp3Reader reader = new NetbeansBuildActionXpp3Reader();
             try {
                 mapp = reader.read(new StringReader(string));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } catch (XmlPullParserException ex) {
+            } catch (IOException | XmlPullParserException ex) {
                 ex.printStackTrace();
             }
         }

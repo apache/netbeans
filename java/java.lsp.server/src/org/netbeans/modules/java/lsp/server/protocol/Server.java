@@ -160,7 +160,8 @@ import org.openide.util.lookup.ProxyLookup;
  */
 public final class Server {
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
-
+    private static final LspServerTelemetryManager LSP_SERVER_TELEMETRY = new LspServerTelemetryManager();
+    
     private Server() {
     }
 
@@ -182,7 +183,7 @@ public final class Server {
         ((LanguageClientAware) server).connect(remote);
         msgProcessor.attachClient(server.client);
         Future<Void> runningServer = serverLauncher.startListening();
-        LSPServerTelemetryFactory.getDefault().connect(server.client, runningServer);
+        LSP_SERVER_TELEMETRY.connect(server.client, runningServer);        
         return new NbLspServer(server, runningServer);
     }
     
@@ -771,6 +772,8 @@ public final class Server {
                         }
                     }
                     f.complete(candidateMapping);
+                    List<FileObject> workspaceClientFolders = workspaceService.getClientWorkspaceFolders();
+                    LSP_SERVER_TELEMETRY.sendWorkspaceInfo(client, workspaceClientFolders, openedProjects, System.currentTimeMillis() - t);
                     LOG.log(Level.INFO, "{0} projects opened in {1}ms", new Object[] { prjsRequested.length, (System.currentTimeMillis() - t) });
                 } else {
                     LOG.log(Level.FINER, "{0}: Collecting projects to prime from: {1}", new Object[]{id, Arrays.asList(additionalProjects)});
@@ -1379,11 +1382,10 @@ public final class Server {
         }
     }
 
-    public static class LSPServerTelemetryFactory extends CustomIndexerFactory {
+    public static class CustomIndexerTelemetryFactory extends CustomIndexerFactory {
 
-        private static LSPServerTelemetryFactory INSTANCE;
+        private static CustomIndexerTelemetryFactory INSTANCE;
 
-        private final WeakHashMap<LanguageClient, Future<Void>> clients = new WeakHashMap<>();
         private final CustomIndexer noOp = new CustomIndexer() {
             @Override
             protected void index(Iterable<? extends Indexable> files, Context context) {
@@ -1391,49 +1393,25 @@ public final class Server {
         };
 
         @MimeRegistration(mimeType="", service=CustomIndexerFactory.class)
-        public static LSPServerTelemetryFactory getDefault() {
+        public static CustomIndexerTelemetryFactory getDefault() {
             if (INSTANCE == null) {
-                INSTANCE = new LSPServerTelemetryFactory();
+                INSTANCE = new CustomIndexerTelemetryFactory();
             }
             return INSTANCE;
         }
 
-        private LSPServerTelemetryFactory() {
-        }
-
-        public synchronized void connect(LanguageClient client, Future<Void> future) {
-            clients.put(client, future);
+        private CustomIndexerTelemetryFactory() {
         }
 
         @Override
         public synchronized boolean scanStarted(Context context) {
-            Set<LanguageClient> toRemove = new HashSet<>();
-            for (Map.Entry<LanguageClient, Future<Void>> entry : clients.entrySet()) {
-                if (entry.getValue().isDone()) {
-                    toRemove.add(entry.getKey());
-                } else {
-                    entry.getKey().telemetryEvent("nbls.scanStarted");
-                }
-            }
-            for (LanguageClient lc : toRemove) {
-                clients.remove(lc);
-            }
-            return true;
+           LSP_SERVER_TELEMETRY.sendTelemetry(new TelemetryEvent(MessageType.Info.toString(), LSP_SERVER_TELEMETRY.SCAN_START_EVT, "nbls.scanStarted")); 
+	   return true;
         }
 
         @Override
         public synchronized void scanFinished(Context context) {
-            Set<LanguageClient> toRemove = new HashSet<>();
-            for (Map.Entry<LanguageClient, Future<Void>> entry : clients.entrySet()) {
-                if (entry.getValue().isDone()) {
-                    toRemove.add(entry.getKey());
-                } else {
-                    entry.getKey().telemetryEvent("nbls.scanFinished");
-                }
-            }
-            for (LanguageClient lc : toRemove) {
-                clients.remove(lc);
-            }
+        LSP_SERVER_TELEMETRY.sendTelemetry(new TelemetryEvent(MessageType.Info.toString(),LSP_SERVER_TELEMETRY.SCAN_END_EVT,"nbls.scanFinished"));
         }
 
         @Override
@@ -1446,7 +1424,7 @@ public final class Server {
 
         @Override
         public String getIndexerName() {
-            return "LSPServerTelemetry";
+            return "CustomIndexerTelemetryFactory";
         }
 
         @Override

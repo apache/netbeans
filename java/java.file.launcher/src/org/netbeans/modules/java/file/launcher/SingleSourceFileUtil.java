@@ -30,7 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.netbeans.api.java.platform.JavaPlatformManager;
+import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
@@ -49,6 +49,7 @@ import org.openide.util.Lookup;
 public final class SingleSourceFileUtil {
     public static final Logger LOG = Logger.getLogger(SingleSourceFileUtil.class.getPackage().getName());
 
+    // TODO this checks the runtime JDK of NB!
     public static int findJavaVersion() throws NumberFormatException {
         // JEP-330 is supported only on JDK-11 and above.
         String javaVersion = System.getProperty("java.specification.version"); //NOI18N
@@ -59,7 +60,9 @@ public final class SingleSourceFileUtil {
         return version;
     }
 
+    // synced with JavaNode
     public static final String FILE_ARGUMENTS = "single_file_run_arguments"; //NOI18N
+    public static final String FILE_JDK = "single_file_run_jdk"; //NOI18N
     public static final String FILE_VM_OPTIONS = "single_file_vm_options"; //NOI18N
 
     public static FileObject getJavaFileWithoutProjectFromLookup(Lookup lookup) {
@@ -101,8 +104,8 @@ public final class SingleSourceFileUtil {
             return false;
         }
     }
-    public static Process compileJavaSource(FileObject fileObject) {
-        FileObject javac = JavaPlatformManager.getDefault().getDefaultPlatform().findTool("javac"); //NOI18N
+    public static Process compileJavaSource(FileObject fileObject, JavaPlatform jdk) {
+        FileObject javac = jdk.findTool("javac"); //NOI18N
         File javacFile = FileUtil.toFile(javac);
         String javacPath = javacFile.getAbsolutePath();
         List<String> compileCommandList = new ArrayList<>();

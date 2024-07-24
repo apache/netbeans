@@ -57,6 +57,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
+import org.apache.maven.project.MavenProject;
 
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -71,8 +72,12 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.lsp.TextDocumentEdit;
 import org.netbeans.api.lsp.TextEdit;
 import org.netbeans.api.lsp.WorkspaceEdit;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
+import org.netbeans.modules.gradle.api.BuildPropertiesSupport;
 import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
+import org.netbeans.modules.maven.api.NbMavenProject;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Union2;
 import org.openide.util.WeakListeners;
@@ -511,6 +516,31 @@ public final class Utils {
                 TypeElement annotationElement = (TypeElement) annotation.getAnnotationType().asElement();
                 if ("io.micronaut.data.annotation.Id".contentEquals(annotationElement.getQualifiedName()) || "javax.persistence.Id".contentEquals(annotationElement.getQualifiedName())) { //NOI18N
                     return element;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static String getOciFunctionName(CompilationInfo info, String className) {
+        Project prj = FileOwnerQuery.getOwner(info.getFileObject());
+        if (prj != null) {
+            String property = null;
+            NbMavenProject p = prj.getLookup().lookup(NbMavenProject.class);
+            MavenProject mvnp = p != null ? p.getMavenProject() : null;
+            if (mvnp != null) {
+                property = (String) mvnp.getProperties().get("function.entrypoint");
+            } else {
+                BuildPropertiesSupport bps = BuildPropertiesSupport.get(prj);
+                if (bps != null) {
+                    BuildPropertiesSupport.Property prop = bps.findTaskProperty("dockerfile", "defaultCommand");
+                    property = prop != null ? prop.getStringValue() : null;
+                }
+            }
+            if (property != null && property.startsWith(className)) {
+                String name = property.substring(className.length());
+                if (name.startsWith("::")) {
+                    return name.substring(2);
                 }
             }
         }

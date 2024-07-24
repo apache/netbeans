@@ -809,11 +809,11 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             }
         }
     }));
-    context.subscriptions.push(commands.registerCommand('nbls.workspace.symbols', async (query) => {
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.workspace.symbols', async (query) => {
         const c = await client;
         return (await c.sendRequest<SymbolInformation[]>('workspace/symbol', { 'query': query })) ?? [];
     }));
-    context.subscriptions.push(commands.registerCommand('nbls.workspace.symbol.resolve', async (symbol) => {
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.workspace.symbol.resolve', async (symbol) => {
         const c = await client;
         return (await c.sendRequest<SymbolInformation>('workspaceSymbol/resolve', symbol)) ?? null;
     }));
@@ -827,7 +827,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.startup.condition', async () => {
         return client;
     }));
-    context.subscriptions.push(commands.registerCommand('nbls.addEventListener', (eventName, listener) => {
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.addEventListener', (eventName, listener) => {
         let ls = listeners.get(eventName);
         if (!ls) {
             ls = [];
@@ -835,7 +835,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         }
         ls.push(listener);
     }));
-    context.subscriptions.push(commands.registerCommand('nbls.node.properties.edit',
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.node.properties.edit',
         async (node) => await PropertiesView.createOrShow(context, node, (await client).findTreeViewService())));
 
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.cloud.ocid.copy',
@@ -898,7 +898,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     const archiveFileProvider = <vscode.TextDocumentContentProvider> {
         provideTextDocumentContent: async (uri: vscode.Uri, token: vscode.CancellationToken): Promise<string> => {
-            return await commands.executeCommand('nbls.get.archive.file.content', uri.toString());
+            return await commands.executeCommand(COMMAND_PREFIX + '.get.archive.file.content', uri.toString());
         }
     };
     context.subscriptions.push(workspace.registerTextDocumentContentProvider('jar', archiveFileProvider));

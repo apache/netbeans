@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.singlesourcefile;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.netbeans.junit.NbTestCase;
@@ -58,6 +59,17 @@ public class SingleFileOptionsQueryImplTest extends NbTestCase {
         assertEquals(workspace2, SingleFileOptionsQueryImpl.findWorkspaceFolder(workspace, source2));
         assertEquals(workspace2, SingleFileOptionsQueryImpl.findWorkspaceFolder(workspace, source2.getParent()));
         assertEquals(workspace2, SingleFileOptionsQueryImpl.findWorkspaceFolder(workspace, source2.getParent().getParent()));
+
+        FileObject singleSourceDir = FileUtil.createFolder(wd, "standalone");
+        FileObject singleSourceFile = FileUtil.createData(singleSourceDir, "Test.java");
+
+        assertNull(SingleFileOptionsQueryImpl.findWorkspaceFolder(workspace, singleSourceFile));
+        assertNull(SingleFileOptionsQueryImpl.findWorkspaceFolder(workspace, singleSourceDir));
+
+        Workspace emptyWorkspace = new WorkspaceImpl(Collections.emptyList());
+
+        assertNull(SingleFileOptionsQueryImpl.findWorkspaceFolder(emptyWorkspace, singleSourceFile));
+        assertNull(SingleFileOptionsQueryImpl.findWorkspaceFolder(emptyWorkspace, singleSourceDir));
     }
 
     public void testWorkspaceOptions() throws Exception {
@@ -73,6 +85,10 @@ public class SingleFileOptionsQueryImplTest extends NbTestCase {
 
         query.setConfiguration(workspace, "-Dtest=test", null);
 
+        Workspace emptyWorkspace = new WorkspaceImpl(Collections.emptyList());
+
+        query.setConfiguration(emptyWorkspace, "-Dtest=empty", null);
+
         Lookups.executeWith(new ProxyLookup(Lookups.fixed(workspace), Lookup.getDefault()), () -> {
             assertEquals("-Dtest=test", query.optionsFor(source1).getOptions());
             assertEquals(workspace1.toURI(), query.optionsFor(source1).getWorkDirectory());
@@ -83,6 +99,17 @@ public class SingleFileOptionsQueryImplTest extends NbTestCase {
             assertEquals(workspace2.toURI(), query.optionsFor(source2).getWorkDirectory());
             assertEquals("-Dtest=test", query.optionsFor(source2.getParent()).getOptions());
             assertEquals(workspace2.toURI(), query.optionsFor(source2.getParent()).getWorkDirectory());
+
+            assertNotNull(query.optionsFor(source3));
+            assertEquals("-Dtest=empty", query.optionsFor(source3).getOptions());
+            assertEquals(source3.getParent().toURI(), query.optionsFor(source3).getWorkDirectory());
+
+            assertNotNull(query.optionsFor(source3.getParent()));
+            assertEquals("-Dtest=empty", query.optionsFor(source3.getParent()).getOptions());
+            assertEquals(source3.getParent().toURI(), query.optionsFor(source3.getParent()).getWorkDirectory());
+
+            assertNull(query.optionsFor(wd));
+            assertEquals(query.optionsFor(source3), query.optionsFor(source3.getParent()));
 
             AtomicInteger changeCount = new AtomicInteger();
 
@@ -149,8 +176,12 @@ public class SingleFileOptionsQueryImplTest extends NbTestCase {
         assertEquals("-Dtest=test2", query.optionsFor(source2.getParent()).getOptions());
         assertEquals(workspace2.toURI(), query.optionsFor(source2.getParent()).getWorkDirectory());
 
-        assertNull(query.optionsFor(source3));
-        assertNull(query.optionsFor(source3.getParent()));
+        assertNotNull(query.optionsFor(source3));
+        assertEquals("-Dtest=empty", query.optionsFor(source3).getOptions());
+        assertEquals(source3.getParent().toURI(), query.optionsFor(source3).getWorkDirectory());
+        assertNotNull(query.optionsFor(source3.getParent()));
+        assertEquals("-Dtest=empty", query.optionsFor(source3.getParent()).getOptions());
+        assertEquals(source3.getParent().toURI(), query.optionsFor(source3.getParent()).getWorkDirectory());
     }
 
     private static final class WorkspaceImpl implements Workspace {

@@ -63,6 +63,9 @@ import { PropertiesView } from './propertiesView/propertiesView';
 import * as configuration from './jdk/configuration';
 import * as jdk from './jdk/jdk';
 import { validateJDKCompatibility } from './jdk/validation/validation';
+import * as sshGuide from './panels/SshGuidePanel';
+import * as runImageGuide from './panels/RunImageGuidePanel';
+import { shouldHideGuideFor } from './panels/guidesUtil';
 
 const API_VERSION : string = "1.0";
 export const COMMAND_PREFIX : string = "nbls";
@@ -365,7 +368,7 @@ function getValueAfterPrefix(input: string | undefined, prefix: string): string 
     return '';
 }
 
-export function activate(context: ExtensionContext): VSNetBeansAPI {
+export function activate(context: ExtensionContext): VSNetBeansAPI {    
     const provider = new StringContentProvider();
     const scheme = 'in-memory';
     const providerRegistration = vscode.workspace.registerTextDocumentContentProvider(scheme, provider);
@@ -843,7 +846,15 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.cloud.computeInstance.ssh',
         async (node) => {
             const publicIp = getValueAfterPrefix(node.contextValue, 'publicIp:');
-            //TODO: For the first invocation for a given OCID, show instructions on how to set up SSH for a Compute Instance.
+            const ocid = getValueAfterPrefix(node.contextValue, 'ocid:');
+
+            if (!shouldHideGuideFor(sshGuide.viewType, ocid)) {
+                sshGuide.SshGuidePanel.createOrShow(context, {
+                    publicIp,
+                    ocid
+                });
+            }
+
             openSSHSession("opc", publicIp, node.label);
         }
     ));
@@ -852,7 +863,15 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         async (node) => {
             const publicIp = getValueAfterPrefix(node.contextValue, 'publicIp:');
             const imageUrl = getValueAfterPrefix(node.contextValue, 'imageUrl:');
-            //TODO: For the first invocation for a given OCID, show instructions on how to set up a Compute Instance.
+            const ocid = getValueAfterPrefix(node.contextValue, 'ocid:');
+
+            if (!shouldHideGuideFor(runImageGuide.viewType, ocid)){
+                runImageGuide.RunImageGuidePanel.createOrShow(context, {
+                    publicIp,
+                    ocid
+                });
+            }
+
             runDockerSSH("opc", publicIp, imageUrl);
         }
     ));

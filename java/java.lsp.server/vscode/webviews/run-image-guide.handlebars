@@ -1,0 +1,120 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'none'; style-src {{cspSource}} 'self' 'unsafe-inline'; img-src {{cspSource}}; script-src {{cspSource}}"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{{cssUri}}" />
+        <title>Run Container Image in Compute Instance</title>
+    </head>
+
+    <body>
+        <div class="guidePageContainer">
+            <div class="guidePage" role="document">
+
+                <div class="title">
+                    <h1>Run Container Image on a Compute Instance</h1>
+                </div>
+
+                <div class="content">
+                    <div class="subtitle">
+                        <h2>Before you begin:</h2>
+                    </div>
+
+                    <div class="list-steps">
+                        <ul>
+                            <li>
+                                Locate the path to the private ssh key file for this compute instance. The private ssh key file will have either:
+                                <ul class="inner-list">
+                                    <li>Been generated when you launched the instance and you will have been prompted to download it</li>
+                                    <li>Or, you uploaded a public ssh key, from a public/private key paid, and you will now need the private key that matches
+                                        that public key</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="subtitle">
+                        <h2>Connecting to Your Linux Instance Using SSH</h2>
+                    </div>
+
+                    <p>Add the path to the instance of the private ssh key to your ssh config file:
+                        <span class="path">{{sshConfigLocation}}</span>:</p>
+
+                    <p>Paste the following entry into your <a id="openSSHConfig" href="#" title="Open SSH Config File">ssh config</a>, with the paths to the private ssh key included:</p>
+                    <div class="codeContainer">
+                        <pre>Host {{publicIp}} instance<br />&nbsp;&nbsp;IdentityFile {{dummyKeyPathLocation}}</pre>
+                    </div>
+
+                    <div class="subtitle">
+                        <h2>Setting up Virtual Firewall</h2>
+                    </div>
+                    <p>
+                        This is done so that container can be reached from the internet.
+                    </p>
+
+                    <div class="subtitle">
+                        <h3>Add a Security List Ingress Rule to Your Compute Instance</h3>
+                    </div>
+
+                    <div class="list-steps">
+                        <ul>
+                            <li>Open
+                                <a href="https://cloud.oracle.com/compute/instances" title="Compute instances">Compute instances</a>.</li>
+                            <li>Open the details for your compute instance by clicking on name of the instance.</li>
+                            <li>Within the Compute instance detail, under the
+                                <b>Primary VNIC</b>
+                                section click on
+                                <b>Subnet name</b>.</li>
+                            <li>Click on <b>Security Lists</b> section.</li>
+                            <li>Click on the security list.</li>
+                            <li>Click,
+                                <b>Add Ingress Rule</b>.
+                                <ul class="inner-list">
+                                    <li>Add an ingress rule with the following properties:
+                                        <ul>
+                                            <li>Source Type: <span class="propertyValue">CIDR</span></li>
+                                            <li>Source CIDR: <span class="propertyValue">0.0.0.0/0</span></li>
+                                            <li>IP Protocol: <span class="propertyValue">TCP</span></li>
+                                            <li>Destination Port Range: <span class="propertyValue">8080</span></li>
+                                        </ul>
+                                    </li>
+                                    <li>Click on <b>Add Ingress Rule</b></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer">
+                    <p class="guideControl">
+                        <input type="checkbox" id="showGuide" class="checkbox" {{showGuide}} />
+                        <label for="showGuide" class="checkboxLabel">Hide this page when running this container image in the future.</label>
+                    </p>
+                </div>
+
+                <script src="{{javascriptUri}}"></script>
+            </div>
+        </div>
+    </body>
+</html>

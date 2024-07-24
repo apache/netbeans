@@ -21,6 +21,7 @@ package org.netbeans.modules.java.lsp.server.singlesourcefile;
 import java.io.File;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -67,6 +68,15 @@ public abstract class SingleFileOptionsQueryImpl implements SingleFileOptionsQue
                     }
                 }
 
+                for (Workspace w : workspaces) {
+                    // Since this is a single source file, associate it with
+                    // any workspace which has no client workspace folders.
+                    final List<FileObject> clientWorkspaceFolders = w.getClientWorkspaceFolders();
+                    if (clientWorkspaceFolders == null || clientWorkspaceFolders.isEmpty()) {
+                        final FileObject folder = file.isFolder() ? file : file.getParent();
+                        return getResult(w, folder == null ? file : folder);
+                    }
+                }
                 return null;
             }
         }

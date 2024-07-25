@@ -419,7 +419,8 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
     public ChangeInfo implement() throws Exception {
         JButton btnOk = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Ok"));
         JButton btnCancel = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Cancel"));
-        IntroduceMethodPanel panel = new IntroduceMethodPanel("", duplicatesCount, targets, targetIsInterface); //NOI18N
+        btnCancel.setDefaultCapable(false);
+        IntroduceMethodPanel panel = new IntroduceMethodPanel("method", duplicatesCount, targets, targetIsInterface); //NOI18N
         String caption = NbBundle.getMessage(IntroduceHint.class, "CAP_IntroduceMethod");
         DialogDescriptor dd = new DialogDescriptor(panel, caption, true, new Object[]{btnOk, btnCancel}, btnOk, DialogDescriptor.DEFAULT_ALIGN, null, null);
         NotificationLineSupport notifier = dd.createNotificationLineSupport();

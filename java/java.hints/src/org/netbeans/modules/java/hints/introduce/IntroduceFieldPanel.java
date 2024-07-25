@@ -18,27 +18,19 @@
  */
 package org.netbeans.modules.java.hints.introduce;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.prefs.Preferences;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.openide.NotificationLineSupport;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
-import org.openide.util.Utilities;
 
 /**
  * Panel that contains options for creating a field or a local variable.
@@ -203,9 +195,9 @@ public class IntroduceFieldPanel extends javax.swing.JPanel implements ChangeLis
                 ok = true;
             } else if (result.getConflictingKind() != null) {
                 if (result.getConflictingKind() != ElementKind.FIELD) {
-                    notifier.setErrorMessage(Bundle.ERR_LocalVarOrParameterHidden());
+                    notifyNameError(Bundle.ERR_LocalVarOrParameterHidden());
                 } else {
-                    notifier.setErrorMessage(Bundle.ERR_ConflictingField());
+                    notifyNameError(Bundle.ERR_ConflictingField());
                 }
                 ok = false;
             } else if (result.getOverriden() != null) {
@@ -574,24 +566,24 @@ public class IntroduceFieldPanel extends javax.swing.JPanel implements ChangeLis
     }// </editor-fold>//GEN-END:initComponents
 
     private void declareFinalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_declareFinalActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_declareFinalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_declareFinalActionPerformed
 
-private void initConstructorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_initConstructorsActionPerformed
-    adjustFinal();
-}//GEN-LAST:event_initConstructorsActionPerformed
+    private void initConstructorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_initConstructorsActionPerformed
+        adjustFinal();
+    }//GEN-LAST:event_initConstructorsActionPerformed
 
-private void initFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_initFieldActionPerformed
-    adjustFinal();
-}//GEN-LAST:event_initFieldActionPerformed
+    private void initFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_initFieldActionPerformed
+        adjustFinal();
+    }//GEN-LAST:event_initFieldActionPerformed
 
-private void initMethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_initMethodActionPerformed
-    adjustFinal();
-}//GEN-LAST:event_initMethodActionPerformed
+    private void initMethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_initMethodActionPerformed
+        adjustFinal();
+    }//GEN-LAST:event_initMethodActionPerformed
 
-private void replaceAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceAllActionPerformed
+    private void replaceAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceAllActionPerformed
         adjustInitializeIn();
-}//GEN-LAST:event_replaceAllActionPerformed
+    }//GEN-LAST:event_replaceAllActionPerformed
 
     private void checkRefactorExistingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkRefactorExistingActionPerformed
         if (checkRefactorExisting.isEnabled()) {

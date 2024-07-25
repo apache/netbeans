@@ -1557,7 +1557,10 @@ public class Actions {
                 return;
             }
 
-            if (!popup) {
+            /* I believe the empty icon was originally set to make the text of items with and
+            without icons align. But a JCheckBoxMenuItem without an icon will include its own
+            checkmark icon, which we want to preserve. */
+            if (!popup && !(button instanceof JCheckBoxMenuItem)) {
                 button.setIcon(ImageUtilities.loadImageIcon("org/openide/resources/actions/empty.gif", true)); // NOI18N
             }
         }

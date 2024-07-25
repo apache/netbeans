@@ -21,6 +21,7 @@ package org.netbeans.modules.java.hints.infrastructure;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.util.TreePath;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -81,20 +82,18 @@ import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
 import org.openide.util.Union2;
 
-/**
+/** Provides errors and hints for VSCode. This class is abstract to
+ * be subclasses and registered by VSCode extension XML layer.
  *
  * @author lahvac
  */
-@MimeRegistration(mimeType="text/x-java", service=ErrorProvider.class)
 public class JavaErrorProvider implements ErrorProvider {
-    
     public static final String HINTS_TOOL_ID = "hints";
     public static Consumer<ErrorProvider.Kind> computeDiagsCallback; //for tests
 
     @Override
     public List<? extends Diagnostic> computeErrors(Context context) {
         List<Diagnostic> result = new ArrayList<>();
-
         try {
             ParserManager.parse(Collections.singletonList(Source.create(context.file())), new UserTask() {
                 @Override

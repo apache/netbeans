@@ -80,6 +80,7 @@ import org.netbeans.spi.lsp.ErrorProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
+import org.openide.util.Pair;
 import org.openide.util.Union2;
 
 /** Provides errors and hints for VSCode. This class is abstract to
@@ -116,7 +117,7 @@ public class JavaErrorProvider implements ErrorProvider {
                                     AtomicBoolean cancel = new AtomicBoolean();
                                     context.registerCancelCallback(() -> cancel.set(true));
                                     HintsSettings settings;
-                                    
+
                                     if (context.getHintsConfigFile() != null) {
                                         Preferences hintSettings = ToolPreferences.from(context.getHintsConfigFile().toURI()).getPreferences(HINTS_TOOL_ID, "text/x-java");
                                         settings = HintsSettings.createPreferencesBasedHintsSettings(hintSettings, true, null);
@@ -124,7 +125,7 @@ public class JavaErrorProvider implements ErrorProvider {
                                         settings = HintsSettings.getGlobalSettings();
                                     }
                                     result.addAll(convert2Diagnostic(context.errorKind(), new HintsInvoker(settings, context.getOffset(), cancel).computeHints(cc), ed -> !disabled.contains(ed.getSeverity())));
-                                    
+
                                 }
                                 break;
                         }
@@ -200,24 +201,42 @@ public class JavaErrorProvider implements ErrorProvider {
         }
 
         List<Fix> fixes = sortFixes(lfl.getFixes());
-        List<CodeAction> result = new ArrayList<>();
+
+        List<Pair<Fix, Boolean>> fixesAndSubfixes = new ArrayList<>(); // true if main fix
 
         for (Fix f : fixes) {
+            fixesAndSubfixes.add(Pair.of(f, true));
+            for (Fix subFix : f.getSubfixes()) {
+                fixesAndSubfixes.add(Pair.of(subFix, false));
+            }
+        }
+
+        List<CodeAction> result = new ArrayList<>();
+        boolean printSubFixes = false;
+
+        for (Pair<Fix, Boolean> textAndFix : fixesAndSubfixes) {
+            if (!printSubFixes && !textAndFix.second()) {
+                continue;
+            }
+
+            Fix f = textAndFix.first();
+            int startResultSize = result.size();
+            String text = textAndFix.second() ? f.getText() : " -> " + f.getText();
+
             if (f instanceof IncompleteClassPath.ResolveFix) {
                 // We know that this is a project problem and that the problems reported by ProjectProblemsProvider should be resolved
-                CodeAction action = new CodeAction(f.getText(), new Command(f.getText(), "nbls.project.resolveProjectProblems"));
+                CodeAction action = new CodeAction(text, new Command(text, "nbls.project.resolveProjectProblems"));
                 result.add(action);
             }
             if (f instanceof org.netbeans.modules.java.hints.errors.EnablePreview.ResolveFix) {
                 org.netbeans.modules.java.hints.errors.EnablePreview.ResolveFix rf = (org.netbeans.modules.java.hints.errors.EnablePreview.ResolveFix) f;
                 List<Object> params = rf.getNewSourceLevel() != null ? Arrays.asList(rf.getNewSourceLevel())
-                                                                     : Collections.emptyList();
-                CodeAction action = new CodeAction(f.getText(), new Command(f.getText(), "nbls.java.project.enable.preview", params));
+                        : Collections.emptyList();
+                CodeAction action = new CodeAction(text, new Command(text, "nbls.java.project.enable.preview", params));
                 result.add(action);
             }
             if (f instanceof ImportClass.FixImport) {
                 //TODO: FixImport is not a JavaFix, create one. Is there a better solution?
-                String text = f.getText();
                 CharSequence sortText = ((ImportClass.FixImport) f).getSortText();
                 ElementHandle<Element> toImport = ((ImportClass.FixImport) f).getToImport();
                 f = new JavaFix(topLevelHandle[0], sortText != null ? sortText.toString() : null) {
@@ -233,8 +252,8 @@ public class JavaErrorProvider implements ErrorProvider {
                         }
                         WorkingCopy copy = ctx.getWorkingCopy();
                         CompilationUnitTree cut = GeneratorUtilities.get(copy).addImports(
-                            copy.getCompilationUnit(),
-                            Collections.singleton(resolved)
+                                copy.getCompilationUnit(),
+                                Collections.singleton(resolved)
                         );
                         copy.rewrite(copy.getCompilationUnit(), cut);
                     }
@@ -242,7 +261,7 @@ public class JavaErrorProvider implements ErrorProvider {
             }
             if (f instanceof JavaFixImpl) {
                 JavaFix jf = ((JavaFixImpl) f).jf;
-                CodeAction action = new LazyCodeAction(f.getText(), () -> {
+                CodeAction action = new LazyCodeAction(text, () -> {
                     try {
                         List<TextEdit> edits = modify2TextEdits(js, wc -> {
                             wc.toPhase(JavaSource.Phase.RESOLVED);
@@ -261,7 +280,7 @@ public class JavaErrorProvider implements ErrorProvider {
             }
             if (f instanceof ModificationResultBasedFix) {
                 ModificationResultBasedFix cf = (ModificationResultBasedFix) f;
-                CodeAction codeAction = new LazyCodeAction(f.getText(), () -> {
+                CodeAction codeAction = new LazyCodeAction(text, () -> {
                     try {
                         List<Union2<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
                         for (ModificationResult changes : cf.getModificationResults()) {
@@ -289,8 +308,8 @@ public class JavaErrorProvider implements ErrorProvider {
                                             continue outer;
                                         } else {
                                             edits.add(new TextEdit(diff.getStartPosition().getOffset(),
-                                                                   diff.getEndPosition().getOffset(),
-                                                                   newText != null ? newText : ""));
+                                                    diff.getEndPosition().getOffset(),
+                                                    newText != null ? newText : ""));
                                         }
                                     }
                                     documentChanges.add(Union2.createFirst(new TextDocumentEdit(fileObject.toURI().toString(), edits))); //XXX: toURI
@@ -304,6 +323,9 @@ public class JavaErrorProvider implements ErrorProvider {
                     }
                 });
                 result.add(codeAction);
+            }
+            if (textAndFix.second()) {
+                printSubFixes = startResultSize != result.size();
             }
         }
 
@@ -369,8 +391,8 @@ public class JavaErrorProvider implements ErrorProvider {
         for (ModificationResult.Difference diff : diffs) {
             String newText = diff.getNewText();
             edits.add(new TextEdit(diff.getStartPosition().getOffset(),
-                                   diff.getEndPosition().getOffset(),
-                                   newText != null ? newText : ""));
+                    diff.getEndPosition().getOffset(),
+                    newText != null ? newText : ""));
         }
         return edits;
     }

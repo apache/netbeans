@@ -18,19 +18,13 @@
  */
 package org.netbeans.modules.lsp.client.bindings;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.Range;
@@ -40,17 +34,10 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.LSPBindings.BackgroundTask;
 import org.netbeans.modules.lsp.client.Utils;
-import org.netbeans.spi.navigator.NavigatorPanel;
-import org.openide.explorer.ExplorerManager;
-import org.openide.explorer.view.BeanTreeView;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.util.Lookup;
-import org.openide.util.LookupEvent;
-import org.openide.util.LookupListener;
-import org.openide.util.NbBundle.Messages;
 
 /**
  *

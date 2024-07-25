@@ -1033,7 +1033,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             continue;
                         }
                     }
-                    Optional<Diagnostic> diag = diagnostics.stream().filter(d -> entry.getKey().equals(d.getCode().getLeft())).findFirst();
+                    Optional<Diagnostic> diag = diagnostics.stream().filter(d -> {
+                        String code = d.getCode() != null ? d.getCode().getLeft() : null;
+                        return entry.getKey().equals(code);
+                    }).findFirst();
                     org.netbeans.api.lsp.Diagnostic.LazyCodeActions actions = err.getActions();
                     if (actions != null) {
                         for (org.netbeans.api.lsp.CodeAction inputAction : actions.computeCodeActions(ex -> client.logMessage(new MessageParams(MessageType.Error, ex.getMessage())))) {

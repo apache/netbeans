@@ -26,7 +26,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
+import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
 import org.openide.filesystems.FileObject;
@@ -59,8 +61,10 @@ final class LaunchProcess implements Callable<Process> {
         try {
             boolean compile = SingleSourceFileUtil.findJavaVersion() < 11 || SingleSourceFileUtil.hasClassSibling(fileObject);
 
+            JavaPlatform jdk = readRunJdkFromAttribute(fileObject);
+
             if (compile) {
-                Process p = SingleSourceFileUtil.compileJavaSource(fileObject);
+                Process p = SingleSourceFileUtil.compileJavaSource(fileObject, jdk);
                 if (p.waitFor() != 0) {
                     return p;
                 }
@@ -68,7 +72,7 @@ final class LaunchProcess implements Callable<Process> {
 
             List<String> commandsList = new ArrayList<>();
 
-            FileObject java = JavaPlatformManager.getDefault().getDefaultPlatform().findTool("java"); //NOI18N
+            FileObject java = jdk.findTool("java"); //NOI18N
             File javaFile = FileUtil.toFile(java);
             String javaPath = javaFile.getAbsolutePath();
             URI cwd = SingleSourceFileUtil.getOptionsFor(fileObject).getWorkDirectory();
@@ -121,6 +125,19 @@ final class LaunchProcess implements Callable<Process> {
                     "Could not get InputStream of Run Process"); //NOI18N
         }
         return null;
+    }
+
+    private static JavaPlatform readRunJdkFromAttribute(FileObject fo) {
+        String runJDKAttribute = fo.getAttribute(SingleSourceFileUtil.FILE_JDK) instanceof String str ? str : null;
+        if (runJDKAttribute != null && !runJDKAttribute.isBlank()) {
+            for (JavaPlatform jdk : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
+                if (runJDKAttribute.equals(jdk.getDisplayName())) {
+                    return jdk;
+                }
+            }
+            Logger.getLogger(LaunchProcess.class.getName()).log(Level.WARNING, "Unknown JDK: [{0}]", runJDKAttribute);
+        }
+        return JavaPlatformManager.getDefault().getDefaultPlatform();
     }
 
     private static List<String> readArgumentsFromAttribute(FileObject fileObject, String attributeName) {

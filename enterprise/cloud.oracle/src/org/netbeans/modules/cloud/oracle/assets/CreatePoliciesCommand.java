@@ -18,13 +18,10 @@
  */
 package org.netbeans.modules.cloud.oracle.assets;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import org.netbeans.modules.cloud.oracle.policy.PolicyGenerator;
@@ -73,19 +70,10 @@ public class CreatePoliciesCommand implements CommandProvider {
                 });
             return future;
         } else if (COMMAND_CREATE_CONFIG.equals(command)) {
-            StringWriter writer = new StringWriter();
-            Properties dbProps = new Properties();
             PropertiesGenerator propGen = new PropertiesGenerator(false);
-            dbProps.putAll(propGen.getApplication());
-            dbProps.putAll(propGen.getBootstrap());
-            try {
-                dbProps.store(writer, "Generated application.properties\n" //NOI18N
-                    + "Uncomment following line when running inside Oracle Cloud\n" //NOI18N
-                    + "oci.config.instance-principal.enabled=true"); //NOI18N
-                future.complete(writer.toString());
-            } catch (IOException ex) {
-                future.completeExceptionally(ex);
-            }
+            ApplicationPropertiesGenerator appPropGen = new ApplicationPropertiesGenerator(propGen);
+            String toWrite = appPropGen.getApplicationPropertiesString();
+            future.complete(toWrite);
         } else if (COMMAND_CLOUD_ASSETS_REFRESH.equals(command)) {
             CloudAssets.getDefault().update();
         }

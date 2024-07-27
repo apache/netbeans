@@ -20,12 +20,9 @@
 package org.netbeans.modules.jumpto.file;
 
 import java.awt.Color;
-import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -37,7 +34,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonModel;
 import javax.swing.Icon;
 import javax.swing.InputMap;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -56,19 +52,13 @@ import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.jumpto.SearchHistory;
 import org.netbeans.modules.jumpto.common.UiUtils;
-import org.netbeans.modules.jumpto.settings.JumpToOptionsPanelController;
 import org.netbeans.spi.jumpto.file.FileDescriptor;
-import org.netbeans.spi.options.OptionsPanelController;
-import org.openide.DialogDescriptor;
-import org.openide.DialogDisplayer;
-import org.openide.awt.Mnemonics;
-import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
@@ -84,6 +74,7 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
 
     @StaticResource
     private static final String WAIT_ICON_RES = "org/netbeans/modules/jumpto/resources/wait.gif";    // NOI18N
+    private static final String GLOBAL_OPTIONS_CATEGORY = "Editor/goto"; //NOI18N
     private static Icon WAIT_ICON = ImageUtilities.loadImageIcon(WAIT_ICON_RES, false);
     public static final String SEARCH_IN_PROGRES = NbBundle.getMessage(FileSearchPanel.class, "TXT_SearchingOtherProjects"); // NOI18N
     private static Icon WARN_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/jumpto/resources/warning.png", false); // NOI18N
@@ -610,49 +601,9 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
     }//GEN-LAST:event_fileNameTextFieldKeyPressed
 
     private void gotoSettingsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gotoSettingsBtnActionPerformed
-        JumpToOptionsPanelController jumpToController = new JumpToOptionsPanelController();
-        jumpToController.update();
+        OptionsDisplayer.getDefault().open(GLOBAL_OPTIONS_CATEGORY, true);
 
-        JButton saveSettingsBtn = new JButton();
-        Mnemonics.setLocalizedText(saveSettingsBtn, NbBundle.getMessage(FileSearchPanel.class, "CTL_Save"));
-        saveSettingsBtn.getAccessibleContext().setAccessibleDescription(saveSettingsBtn.getText());
-        saveSettingsBtn.setEnabled(false);
-
-        jumpToController.addPropertyChangeListener(pcEvt -> {
-            if (OptionsPanelController.PROP_CHANGED.equals(pcEvt.getPropertyName())) {
-                saveSettingsBtn.setEnabled(true);
-            }
-        });
-
-        saveSettingsBtn.addActionListener(ae -> {
-            jumpToController.applyChanges();
-
-            update(true);
-        });
-
-        Object[] buttons = new Object[] { saveSettingsBtn, DialogDescriptor.CANCEL_OPTION };
-
-        DialogDescriptor dialogDescriptor = new DialogDescriptor(
-                jumpToController.getComponent(Lookup.EMPTY),
-                NbBundle.getMessage(FileSearchPanel.class, "MSG_SettingsDlgTitle"),
-                true,
-                buttons,
-                null,
-                DialogDescriptor.DEFAULT_ALIGN,
-                HelpCtx.DEFAULT_HELP,
-                null);
-        dialogDescriptor.setClosingOptions(buttons);
-
-        final Dialog settingsDialog = DialogDisplayer.getDefault().createDialog(dialogDescriptor);
-
-        settingsDialog.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                settingsDialog.dispose();
-            }
-        });
-
-        settingsDialog.setVisible(true);
+        update(true);
     }//GEN-LAST:event_gotoSettingsBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

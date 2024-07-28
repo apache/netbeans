@@ -163,9 +163,11 @@
                 <friend>org.nbphpcouncil.modules.php.laravel4</friend>
                 <friend>org.nbphpcouncil.modules.php.yii</friend>
                 <friend>org.nbphpcouncil.modules.php.yii2</friend>
+                <friend>org.netbeans.modules.php.blade</friend>
                 <friend>org.netbeans.modules.php.cake3</friend>
                 <friend>org.netbeans.modules.php.doctrine2</friend>
                 <friend>org.netbeans.modules.php.fuel</friend>
+                <friend>org.netbeans.modules.php.laravel</friend>
                 <friend>org.netbeans.modules.php.nette2</friend>
                 <friend>org.netbeans.modules.php.project</friend>
                 <friend>org.netbeans.modules.php.smarty</friend>

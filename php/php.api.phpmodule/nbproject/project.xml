@@ -226,6 +226,7 @@
             </test-dependencies>
             <friend-packages>
                 <friend>org.cakephp.netbeans</friend>
+                <friend>org.netbeans.modules.php.blade</friend>
                 <friend>org.nbphpcouncil.modules.php.ci</friend>
                 <friend>org.nbphpcouncil.modules.php.laravel4</friend>
                 <friend>org.nbphpcouncil.modules.php.yii</friend>
@@ -239,6 +240,7 @@
                 <friend>org.netbeans.modules.php.api.testing</friend>
                 <friend>org.netbeans.modules.php.apigen</friend>
                 <friend>org.netbeans.modules.php.atoum</friend>
+                <friend>org.netbeans.modules.php.blade</friend>
                 <friend>org.netbeans.modules.php.cake3</friend>
                 <friend>org.netbeans.modules.php.code.analysis</friend>
                 <friend>org.netbeans.modules.php.codeception</friend>
@@ -247,6 +249,7 @@
                 <friend>org.netbeans.modules.php.doctrine2</friend>
                 <friend>org.netbeans.modules.php.editor</friend>
                 <friend>org.netbeans.modules.php.fuel</friend>
+                <friend>org.netbeans.modules.php.laravel</friend>
                 <friend>org.netbeans.modules.php.nette</friend>
                 <friend>org.netbeans.modules.php.nette.tester</friend>
                 <friend>org.netbeans.modules.php.nette2</friend>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-blade">
+                <attr name="displayName" stringvalue="Blade"/>
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="NetBeans">
+                            <folder name="Defaults">
+                                <file name="FontAndColors.xml" url="FlatLafDark-FontAndColors.xml">
+                                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.blade.resources.Bundle"/>
+                                </file>
+                            </folder>
+                        </folder>
+                    </folder>
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="FontAndColors.xml" url="FontAndColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.blade.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+                <folder name="Preferences">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-php-blade-resources-preferences.xml" url="preferences.xml"/>
+                    </folder>
+                </folder>    
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-blade">
+                <attr name="iconBase" stringvalue="org/netbeans/modules/php/blade/resources/icon.png"/>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="OptionsDialog">
+        <folder name="PreviewExamples">
+            <folder name="text">
+                <file name="x-blade" url="highlightBlade.blade.php"/>
+            </folder>
+        </folder>
+        <folder name="Editor">
+            <folder name="Hints">
+                <attr name="position" intvalue="3"/>
+                <folder name="text">
+                    <folder name="x-blade">
+                        <file name="PHPBladeHints.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.php.blade.editor.hints.HintsControllerFactory.createOptions"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="Formatting">
+                <folder name="text">
+                    <folder name="x-blade">
+                        <file name="TabsAndIndents.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.options.editor.spi.CustomizerFactories.createDefaultTabsAndIndentsCustomizerFactory"/>
+                            <attr name="previewTextFile" stringvalue="org/netbeans/modules/php/blade/resources/formattingExample.blade.php"/>
+                            <attr name="position" intvalue="100"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="csl-hints">
+        <folder name="text">
+            <folder name="x-blade">
+                <folder name="hints">
+                    <folder name="directive">
+                        <file name="org-netbeans-modules-php-blade-editor-hints-UnknownDirective.instance"/>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="custom-directives">
+        
+    </folder>
+</filesystem>

@@ -23,6 +23,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
 import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
+import org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 
 /**
@@ -37,6 +38,7 @@ public class CloudAssetsTest {
         instance.loadAssets();
         instance.addItem(new DatabaseItem(OCID.of("db-ocid", "Databases"), "db-comp-id", "DB1", "http://test", "DB1"));
         instance.addItem(new ClusterItem(OCID.of("cluster-ocid", "Cluster"), "cluster-comp-id", "Cluster1"));
+        instance.addItem(new ContainerRepositoryItem(OCID.of("container-repo-ocid", "ContainerRepository"), "container-repo-comp-id", "Repo1", "reg", "namespace", true, 2));
         instance.storeAssets();
         
         CloudAssets instance1 = new CloudAssets();

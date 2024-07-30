@@ -29,7 +29,7 @@ public class CreateNewResourceItem extends OCIItem {
     private static final String DISPLAY_NAME = "<Create new>";
     
     public CreateNewResourceItem() {
-        super(null, null, DISPLAY_NAME);
+        super(null, null, DISPLAY_NAME, null, null);
     }
     
 }

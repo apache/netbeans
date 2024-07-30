@@ -134,6 +134,9 @@ public class ComputeInstanceNode extends OCINode {
                     .limit(88)
                     .build();
 
+            String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+            String regionCode = session.getRegion().getRegionCode();
+
             return client.listInstances(listInstancesRequest)
                     .getItems()
                     .stream()
@@ -146,7 +149,9 @@ public class ComputeInstanceNode extends OCINode {
                             d.getShapeConfig().getProcessorDescription(),
                             d.getImageId(),
                             null,
-                            null
+                            null,
+                            tenancyId,
+                            regionCode
                     ))
                     .collect(Collectors.toList());
         };

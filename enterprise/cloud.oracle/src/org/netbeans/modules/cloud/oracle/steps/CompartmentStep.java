@@ -102,6 +102,8 @@ public final class CompartmentStep extends AbstractStep<CompartmentItem> {
         OCISessionInitiator session = OCIManager.getDefault().getActiveSession();
         Identity identityClient = session.newClient(IdentityClient.class);
         String nextPageToken = null;
+        String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+        String regionCode = session.getRegion().getRegionCode();
 
         do {
             ListCompartmentsResponse response
@@ -115,7 +117,7 @@ public final class CompartmentStep extends AbstractStep<CompartmentItem> {
                                     .page(nextPageToken)
                                     .build());
             for (Compartment comp : response.getItems()) {
-                FlatCompartmentItem ci = new FlatCompartmentItem(comp) {
+                FlatCompartmentItem ci = new FlatCompartmentItem(comp, tenancyId, regionCode) {
                     @Override
                     FlatCompartmentItem getItem(OCID compId) {
                         return compartments.get(compId);
@@ -148,8 +150,8 @@ public final class CompartmentStep extends AbstractStep<CompartmentItem> {
         private final OCID parentId;
         private String flatName;
 
-        private FlatCompartmentItem(Compartment ociComp) {
-            super(OCID.of(ociComp.getId(), "Compartment"), ociComp.getCompartmentId(), ociComp.getName());      // NOI18N
+        private FlatCompartmentItem(Compartment ociComp, String tenancyId, String regionCode) {
+            super(OCID.of(ociComp.getId(), "Compartment"), ociComp.getCompartmentId(), ociComp.getName(), tenancyId, regionCode);      // NOI18N
             setDescription(ociComp.getDescription());
             parentId = OCID.of(ociComp.getCompartmentId(), "Compartment"); // NOI18N
         }

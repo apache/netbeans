@@ -43,7 +43,7 @@ public final class SuggestedItem extends OCIItem {
     private final Set<String> exclusivePaths;
 
     public SuggestedItem(String path, String name, Set<String> exclusivePaths) {
-        super(OCID.of("", "Suggested"), null, name); //NOI18N
+        super(OCID.of("", "Suggested"), null, name, null, null); //NOI18N
         this.path = path;
         this.exclusivePaths = exclusivePaths;
     }

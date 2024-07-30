@@ -40,6 +40,8 @@ public class CreateContainerRepositoryCommand extends CreateResourceCommand<Cont
         CreateContainerRepositoryResponse response = client.createContainerRepository(request);
         ContainerRepository res = response.getContainerRepository();
 
+        String tenancyId = this.getProfile().getTenancy().isPresent() ? this.getProfile().getTenancy().get().getKey().getValue() : null;
+
         return new ContainerRepositoryItem(
                 OCID.of(res.getId(), "ContainerRepository"), //NOI18N
                 res.getCompartmentId(),
@@ -47,7 +49,8 @@ public class CreateContainerRepositoryCommand extends CreateResourceCommand<Cont
                 this.getProfile().getRegion().getRegionCode(),
                 res.getNamespace(),
                 res.getIsPublic(), 
-                res.getImageCount()
+                res.getImageCount(),
+                tenancyId
         );
     }
     

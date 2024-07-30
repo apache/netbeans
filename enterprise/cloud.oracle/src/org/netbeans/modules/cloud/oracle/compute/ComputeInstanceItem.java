@@ -31,8 +31,8 @@ public final class ComputeInstanceItem extends OCIItem {
     private String username;
     private String imageId;
     
-    public ComputeInstanceItem(OCID id, String compartmentId, String name, String processorDescription, String imageId, String publicIp, String username) {
-        super(id, compartmentId, name);
+    public ComputeInstanceItem(OCID id, String compartmentId, String name, String processorDescription, String imageId, String publicIp, String username, String tenancyId, String regionCode) {
+        super(id, compartmentId, name, tenancyId, regionCode);
         this.processorDescription = processorDescription;
         this.publicIp = publicIp;
         this.username = username;

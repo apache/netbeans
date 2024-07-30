@@ -72,6 +72,7 @@ public class MetricsNode extends OCINode {
                     .build();
 
             Set<String> uniqueMetrics = new HashSet<>();
+            String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
 
             return client.listMetrics(request)
                     .getItems()
@@ -81,7 +82,8 @@ public class MetricsNode extends OCINode {
                             d.getCompartmentId(),
                             d.getName(),
                             d.getNamespace(),
-                            session.getRegion().getRegionId()
+                            session.getRegion(),
+                            tenancyId
                     ))
                     .collect(Collectors.toList());
         };

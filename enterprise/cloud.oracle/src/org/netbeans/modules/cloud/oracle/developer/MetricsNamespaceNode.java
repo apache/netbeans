@@ -70,12 +70,16 @@ public class MetricsNamespaceNode extends OCINode {
                     .listMetricsDetails(listMetricsDetails)
                     .build();
 
+            String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+
             return client.listMetrics(request)
                     .getItems()
                     .stream()
                     .map(d -> new MetricsNamespaceItem(
                             compartmentId.getKey().getValue(),
-                            d.getNamespace()
+                            d.getNamespace(),
+                            tenancyId,
+                            session.getRegion().getRegionCode()
                     ))
                     .collect(Collectors.toList());
         };

@@ -43,8 +43,8 @@ public class KnowledgeBaseItem extends OCIItem implements URLProvider{
     
     protected final Date timeUpdated;
     
-    public KnowledgeBaseItem(OCID id, String compartmentId, String displayName, Date timeUpdated) {
-        super(id, compartmentId, displayName);
+    public KnowledgeBaseItem(OCID id, String compartmentId, String displayName, Date timeUpdated, String tenancyId, String regionCode) {
+        super(id, compartmentId, displayName, tenancyId, regionCode);
         this.timeUpdated = timeUpdated;
         registerItem();
     }

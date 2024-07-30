@@ -63,14 +63,19 @@ public class BuildRunNode extends OCINode {
         return BuildRunNode::new;
     }
 
-    public static ChildrenProvider<DevopsProjectItem, BuildRunFolderItem> listBuildRuns() {
-        return project -> Collections.singletonList(
-                new BuildRunFolderItem(OCID.of(project.getKey().getValue(), "BuildRunFolder"), project.getCompartmentId(), Bundle.BuildRuns())
+    public static ChildrenProvider.SessionAware<DevopsProjectItem, BuildRunFolderItem> listBuildRuns() {
+        return (project, session) -> Collections.singletonList(
+                new BuildRunFolderItem(
+                        OCID.of(project.getKey().getValue(), "BuildRunFolder"),
+                        project.getCompartmentId(),
+                        Bundle.BuildRuns(),
+                        session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null,
+                        session.getRegion().getRegionCode())
         );
     }
     
-    public static ChildrenProvider<BuildRunFolderItem, BuildRunItem> expandBuildRuns() {
-        return project -> {
+    public static ChildrenProvider.SessionAware<BuildRunFolderItem, BuildRunItem> expandBuildRuns() {
+        return (project, session) -> {
             try ( DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider())) {
                 ListBuildRunsRequest request = ListBuildRunsRequest.builder()
                         .projectId(project.getKey().getValue())
@@ -79,12 +84,19 @@ public class BuildRunNode extends OCINode {
                         .build();
                 ListBuildRunsResponse response = client.listBuildRuns(request);
                 List<BuildRunSummary> projects = response.getBuildRunSummaryCollection().getItems();
+
+                String tenancyId = session.getTenancy().isPresent() ?
+                        session.getTenancy().get().getKey().getValue() : null;
+                String regionCode = session.getRegion().getRegionCode();
+
                 return projects.stream()
                                         .map(p -> new BuildRunItem(
                                                 OCID.of(p.getId(), "BuildRun"), 
                                                 project.getCompartmentId(),
                                                 p.getDisplayName(),
-                                                p.getLifecycleState().getValue()
+                                                p.getLifecycleState().getValue(),
+                                                tenancyId,
+                                                regionCode
                                         ))
                                         .collect(Collectors.toList()
                 );

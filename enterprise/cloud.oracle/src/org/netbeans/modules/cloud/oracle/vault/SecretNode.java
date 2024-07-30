@@ -62,14 +62,19 @@ public class SecretNode extends OCINode {
                     .vaultId(vault.getKey().getValue())
                     .limit(88)
                     .build();
-                    
+
+            String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+            String regionCode = session.getRegion().getRegionCode();
+
             return client.listSecrets(listSecretsRequest)
                     .getItems()
                     .stream()
                     .map(d -> new SecretItem(
-                                OCID.of(d.getId(), "Vault/Secret"), //NOI18N
-                                d.getCompartmentId(),
-                                d.getSecretName())
+                            OCID.of(d.getId(), "Vault/Secret"), //NOI18N
+                            d.getCompartmentId(),
+                            d.getSecretName(),
+                            tenancyId,
+                            regionCode)
                     )
                     .collect(Collectors.toList());
         };

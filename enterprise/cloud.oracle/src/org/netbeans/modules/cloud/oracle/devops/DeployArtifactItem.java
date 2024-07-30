@@ -28,16 +28,16 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
  */
 public class DeployArtifactItem extends OCIItem {
 
-    public DeployArtifactItem(OCID id, String compartmentId, String name) {
-        super(id, compartmentId, name);
+    public DeployArtifactItem(OCID id, String compartmentId, String name, String tenancyId, String regionCode) {
+        super(id, compartmentId, name, tenancyId, regionCode);
     }
 
     public static class DeployArtifactFolder extends OCIItem {
 
         private final List<DeployArtifactItem> artifacts;
 
-        public DeployArtifactFolder(OCID project, String compartmentId, String name, List<DeployArtifactItem> artifacts) {
-            super(project, compartmentId, name);
+        public DeployArtifactFolder(OCID project, String compartmentId, String name, List<DeployArtifactItem> artifacts, String tenancyId, String regionCode) {
+            super(project, compartmentId, name, tenancyId, regionCode);
             this.artifacts = artifacts;
         }
     

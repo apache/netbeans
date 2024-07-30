@@ -29,8 +29,8 @@ public class BuildRunItem extends OCIItem {
     
     private final String lifecycleState;
 
-    public BuildRunItem(OCID id, String compartmentId, String name, String lifecycleState) {
-        super(id, compartmentId, name);
+    public BuildRunItem(OCID id, String compartmentId, String name, String lifecycleState, String tenancyId, String regionCode) {
+        super(id, compartmentId, name, tenancyId, regionCode);
         
         this.lifecycleState = lifecycleState;
     }

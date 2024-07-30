@@ -68,6 +68,9 @@ public class CompartmentNode extends OCINode {
 
             List<CompartmentItem> compartments = new ArrayList<>();
 
+            String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+            String regionCode = session.getRegion().getRegionCode();
+
             String nextPageToken = null;
             do {
                 ListCompartmentsResponse response
@@ -79,7 +82,12 @@ public class CompartmentNode extends OCINode {
                                         .page(nextPageToken)
                                         .build());
                 response.getItems().stream()
-                        .map(c -> new CompartmentItem(OCID.of(c.getId(), "Compartment"), parent.getKey().getValue(), c.getName())) // NOI18N
+                        .map(c -> new CompartmentItem(
+                                OCID.of(c.getId(), "Compartment"),
+                                parent.getKey().getValue(),
+                                c.getName(),
+                                tenancyId,
+                                regionCode)) // NOI18N
                         .collect(Collectors.toCollection(() -> compartments));
                 nextPageToken = response.getOpcNextPage();
             } while (nextPageToken != null);

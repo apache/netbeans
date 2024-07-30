@@ -137,7 +137,7 @@ public final class DelegateMethodGenerator extends CodeActionsProvider {
         data.put(OFFSET, offset);
         data.put(TYPE, typeItem);
         data.put(FIELDS, fields);
-        return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateDelegateMethod(), CODE_GENERATOR_KIND, null, "nbls.generate.code", GENERATE_DELEGATE_METHOD, data));
+        return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateDelegateMethod(), CODE_GENERATOR_KIND, null, "nbls.generate.code", Utils.encodeCommand(GENERATE_DELEGATE_METHOD, client.getNbCodeCapabilities()), data));
     }
 
     @Override

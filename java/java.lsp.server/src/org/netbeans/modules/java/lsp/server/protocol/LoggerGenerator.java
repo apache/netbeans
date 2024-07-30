@@ -108,7 +108,7 @@ public final class LoggerGenerator extends CodeActionsProvider {
         Map<String, Object> data = new HashMap<>();
         data.put(URI, uri);
         data.put(OFFSET, offset);
-        return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateLogger(), CODE_GENERATOR_KIND, null, "nbls.generate.code", GENERATE_LOGGER, data));
+        return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateLogger(), CODE_GENERATOR_KIND, null, "nbls.generate.code", Utils.encodeCommand(GENERATE_LOGGER, client.getNbCodeCapabilities()), data));
     }
 
     @Override

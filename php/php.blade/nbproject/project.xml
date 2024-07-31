@@ -409,38 +409,7 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages>
-                <package>org.netbeans.modules.php.blade.csl.elements</package>
-                <package>org.netbeans.modules.php.blade.editor</package>
-                <package>org.netbeans.modules.php.blade.editor.actions</package>
-                <package>org.netbeans.modules.php.blade.editor.cache</package>
-                <package>org.netbeans.modules.php.blade.editor.completion</package>
-                <package>org.netbeans.modules.php.blade.editor.components</package>
-                <package>org.netbeans.modules.php.blade.editor.components.annotation</package>
-                <package>org.netbeans.modules.php.blade.editor.declaration</package>
-                <package>org.netbeans.modules.php.blade.editor.directives</package>
-                <package>org.netbeans.modules.php.blade.editor.embedding</package>
-                <package>org.netbeans.modules.php.blade.editor.format</package>
-                <package>org.netbeans.modules.php.blade.editor.highlighting</package>
-                <package>org.netbeans.modules.php.blade.editor.hints</package>
-                <package>org.netbeans.modules.php.blade.editor.indexing</package>
-                <package>org.netbeans.modules.php.blade.editor.lexer</package>
-                <package>org.netbeans.modules.php.blade.editor.navigator</package>
-                <package>org.netbeans.modules.php.blade.editor.parser</package>
-                <package>org.netbeans.modules.php.blade.editor.path</package>
-                <package>org.netbeans.modules.php.blade.editor.preferences</package>
-                <package>org.netbeans.modules.php.blade.editor.refactoring</package>
-                <package>org.netbeans.modules.php.blade.editor.tools</package>
-                <package>org.netbeans.modules.php.blade.editor.typinghooks</package>
-                <package>org.netbeans.modules.php.blade.editor.ui.customizer</package>
-                <package>org.netbeans.modules.php.blade.editor.ui.wizard</package>
-                <package>org.netbeans.modules.php.blade.project</package>
-                <package>org.netbeans.modules.php.blade.syntax</package>
-                <package>org.netbeans.modules.php.blade.syntax.annotation</package>
-                <package>org.netbeans.modules.php.blade.syntax.antlr4.formatter</package>
-                <package>org.netbeans.modules.php.blade.syntax.antlr4.v10</package>
-                <package>org.netbeans.modules.php.blade.syntax.antlr4.v10.compiler</package>
-            </public-packages>
+            <public-packages/>
         </data>
     </configuration>
 </project>

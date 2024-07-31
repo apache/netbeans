@@ -77,9 +77,10 @@ public class BladeBracesMatcher implements BracesMatcher {
 
             String tokenText = originToken.getText();
             
-            if (!tokenText.startsWith("@")
-                    && !tokenText.startsWith("{")
-                    && !tokenText.endsWith("}")) {
+            if (!tokenText.startsWith("@") // NOI18N
+                    && !tokenText.startsWith("{") // NOI18N
+                    && !tokenText.endsWith("}")) // NOI18N
+            {
                 return result;
             }
 
@@ -146,7 +147,8 @@ public class BladeBracesMatcher implements BracesMatcher {
             return BraceDirectionType.CURLY_START_TO_END;
         }
         
-        if (tokenText.startsWith("@end") || tokenText.equals("@show")) {
+        if (tokenText.startsWith(BladeDirectivesUtils.END_DIRECTIVE_PREFIX) ||
+                tokenText.equals(BladeDirectivesUtils.DIRECTIVE_SHOW)) {
             return BraceDirectionType.END_TO_START;
         }
 

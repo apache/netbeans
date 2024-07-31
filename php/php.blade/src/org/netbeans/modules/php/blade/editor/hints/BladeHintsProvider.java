@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.text.BadLocationException;
 import org.netbeans.api.editor.document.EditorDocumentUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.Error;

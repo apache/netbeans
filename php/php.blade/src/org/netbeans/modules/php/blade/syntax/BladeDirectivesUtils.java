@@ -25,11 +25,17 @@ import org.netbeans.modules.php.blade.syntax.annotation.Directive;
  *
  * @author bhaidu
  */
-public class BladeDirectivesUtils {
+public final class BladeDirectivesUtils {
 
+    public static final String END_DIRECTIVE_PREFIX = "@end"; // NOI18N
+    public static final String DIRECTIVE_SECTION = "@section"; // NOI18N
+    public static final String DIRECTIVE_SHOW = "@show"; // NOI18N
+    public static final String DIRECTIVE_STOP = "@stop"; // NOI18N
+    public static final String DIRECTIVE_APPEND = "@append"; // NOI18N
+    
     public static String[] directiveStart2EndPair(String directive){
-        if (directive.equals("@section")){
-            return new String[]{"@endsection", "@show", "@stop", "@append"};
+        if (directive.equals(DIRECTIVE_SECTION)){
+            return new String[]{"@endsection", DIRECTIVE_SHOW, DIRECTIVE_STOP, DIRECTIVE_APPEND};
         }
         DirectivesList listClass = new DirectivesList();
         for (Directive directiveEl :  listClass.getDirectives()){
@@ -50,10 +56,10 @@ public class BladeDirectivesUtils {
             case "@endif":
                 return new String[]{"@if", "@hasSection", "@sectionMissing"};
             case "@endsection":
-            case "@stop":
-            case "@append":
-            case "@show":
-                return new String[]{"@section"};
+            case DIRECTIVE_APPEND:
+            case DIRECTIVE_STOP:
+            case DIRECTIVE_SHOW:
+                return new String[]{DIRECTIVE_SECTION};
         }
         DirectivesList listClass = new DirectivesList();
         for (Directive directiveEl :  listClass.getDirectives()){

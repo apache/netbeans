@@ -188,7 +188,16 @@ final class NbInstaller extends ModuleInstaller {
                         install.validate();
                     } catch (NoSuchMethodException nsme) {
                         // OK, did not find it here, continue.
-                    }
+                    } catch (NoClassDefFoundError ncdfe) {
+                        // A Netbeans module could have a ModuleInstall class referencing classes from an OSGi module
+                        // In such cases, we will face a NCDFE because the OSGi modules have a delayed start and their
+                        // exposed classes are not yet registered to the ProxyClassPackages, systemClassLoader is not yet ready, etc.
+                        // Thus we continue the process without having called the validate method.
+                        // If we are not in an OSGi context, we rethrow the exception as it's not expected.
+                        if (!hasOsgiDependencies(m)) {
+                            throw ncdfe;
+                        }
+		    }
                 }
                 if (c == Object.class) throw new ClassCastException("Should extend ModuleInstall: " + clazz.getName()); // NOI18N
                 // Did not find any validate() method, so remember the class and resolve later.
@@ -1200,7 +1209,19 @@ final class NbInstaller extends ModuleInstaller {
         }
         return true;
     }
-    
+
+    private boolean hasOsgiDependencies(Module m) {
+        Set<Dependency> dependencies = m.getDependencies();
+        for (Dependency d : dependencies) {
+            String depName = d.getName();
+            Module depModule = mgr.get(depName);
+            if (depModule != null && depModule.isNetigso()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** Cache important attributes from module manifests */
     static class Cache implements Stamps.Updater {
         private static final String CACHE = "all-installer.dat"; // NOI18N

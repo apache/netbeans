@@ -21,7 +21,6 @@ package org.netbeans.modules.maven.api;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
@@ -70,7 +69,7 @@ public class PluginPropertyUtils {
     private PluginPropertyUtils() {
     }
 
-    private static final List<String> LIFECYCLE_PLUGINS = Arrays.asList(
+    private static final List<String> LIFECYCLE_PLUGINS = List.of(
                 Constants.PLUGIN_COMPILER,
                 Constants.PLUGIN_SUREFIRE,
                 Constants.PLUGIN_EAR,
@@ -93,7 +92,7 @@ public class PluginPropertyUtils {
      * tries to figure out if the property of the given plugin is customized in the
      * current project and returns it's value if so, otherwise null
      * @param parameter the name of the plugin parameter to look for
-     * @param expressionProperty expression property that once defined (and plugin configuration is omited) is used. only value, no ${}
+     * @param expressionProperty expression property that once defined (and plugin configuration is omitted) is used. only value, no ${}
      */
     public static @CheckForNull String getPluginProperty(@NonNull Project prj, @NonNull String groupId, @NonNull String artifactId, @NonNull String parameter, @NullAllowed String goal, @NullAllowed String expressionProperty) {
         NbMavenProjectImpl project = prj instanceof NbMavenProjectImpl ? (NbMavenProjectImpl)prj : prj.getLookup().lookup(NbMavenProjectImpl.class);
@@ -116,7 +115,7 @@ public class PluginPropertyUtils {
      * tries to figure out if the property of the given plugin is customized in the
      * current project and returns it's value if so, otherwise null
      * @param parameter the name of the plugin parameter to look for
-     * @param expressionProperty expression property that once defined (and plugin configuration is omited) is used. only value, no ${}
+     * @param expressionProperty expression property that once defined (and plugin configuration is omitted) is used. only value, no ${}
      */
     public static @CheckForNull String getPluginProperty(@NonNull MavenProject prj, @NonNull String groupId, @NonNull String artifactId, @NonNull String parameter, @NullAllowed String goal, @NullAllowed String expressionProperty) {
         return getPluginPropertyImpl(prj, groupId, artifactId, simpleProperty(parameter), goal, simpleDefaultProperty(expressionProperty));

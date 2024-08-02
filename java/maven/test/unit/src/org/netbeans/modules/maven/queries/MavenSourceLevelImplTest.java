@@ -48,7 +48,7 @@ public class MavenSourceLevelImplTest extends NbTestCase {
                 + "<groupId>test</groupId><artifactId>prj</artifactId>"
                 + "<packaging>jar</packaging><version>1.0</version></project>");
         FileObject source = TestFileUtils.writeFile(wd, "src/main/java/p/C.java", "package p; class C {}");
-        assertEquals("1.5", SourceLevelQuery.getSourceLevel(source));
+        assertEquals("1.8", SourceLevelQuery.getSourceLevel(source));
     }
 
     public void testCompilerPluginSpecifiedWithoutVersion() throws Exception {
@@ -58,7 +58,7 @@ public class MavenSourceLevelImplTest extends NbTestCase {
                 + "<build><plugins><plugin><artifactId>maven-compiler-plugin</artifactId></plugin></plugins></build>"
                 + "</project>");
         FileObject source = TestFileUtils.writeFile(wd, "src/main/java/p/C.java", "package p; class C {}");
-        assertEquals("1.5", SourceLevelQuery.getSourceLevel(source));
+        assertEquals("1.8", SourceLevelQuery.getSourceLevel(source));
     }
 
     public void testCompilerPluginSpecifiedWithOldVersion() throws Exception {
@@ -109,7 +109,7 @@ public class MavenSourceLevelImplTest extends NbTestCase {
                 + "<groupId>test</groupId><artifactId>prj</artifactId>"
                 + "<packaging>stuff</packaging><version>1.0</version></project>");
         FileObject source = TestFileUtils.writeFile(wd, "src/main/java/p/C.java", "package p; class C {}");
-        assertEquals("1.5", SourceLevelQuery.getSourceLevel(source));
+        assertEquals("1.8", SourceLevelQuery.getSourceLevel(source));
     }
 
     public void testTestSourceLevel() throws Exception { // e.g. org.apache.felix.configadmin

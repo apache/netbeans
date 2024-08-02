@@ -99,7 +99,7 @@ final class DashboardPanel extends JPanel {
             }
             if (requiredColumns != currentColumns) {
                 layout.setColumns(requiredColumns);
-                invalidate();
+                revalidate();
             }
         }
 

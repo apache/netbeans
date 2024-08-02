@@ -23,14 +23,12 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.providers.spi.HintDescription.AdditionalQueryConstraints;
 import org.netbeans.api.java.source.matching.Matcher;
@@ -51,18 +49,17 @@ public class CopyFinderBasedBulkSearch extends BulkSearch {
     @Override
     public Map<String, Collection<TreePath>> match(CompilationInfo info, AtomicBoolean cancel, TreePath toSearch, BulkPattern pattern, Map<String, Long> timeLog) {
         Parameters.notNull("info", info);
+
         Map<String, Collection<TreePath>> result = new HashMap<>();
         TreePath topLevel = new TreePath(info.getCompilationUnit());
-        
+        Matcher matcher = Matcher.create(info)
+                .setUntypedMatching()
+                .setCancel(cancel);
+
         for (Entry<Tree, String> e : ((BulkPatternImpl) pattern).pattern2Code.entrySet()) {
-            for (Occurrence od : Matcher.create(info).setCancel(new AtomicBoolean()).setUntypedMatching().setCancel(cancel).match(Pattern.createPatternWithFreeVariables(new TreePath(topLevel, e.getKey()), Collections.<String, TypeMirror>emptyMap()))) {
-                Collection<TreePath> c = result.get(e.getValue());
-
-                if (c == null) {
-                    result.put(e.getValue(), c = new LinkedList<>());
-                }
-
-                c.add(od.getOccurrenceRoot());
+            for (Occurrence od : matcher.match(Pattern.createPatternWithFreeVariables(new TreePath(topLevel, e.getKey()), Map.of()))) {
+                result.computeIfAbsent(e.getValue(), k -> new LinkedList<>())
+                      .add(od.getOccurrenceRoot());
             }
         }
 
@@ -71,8 +68,20 @@ public class CopyFinderBasedBulkSearch extends BulkSearch {
 
     @Override
     public boolean matches(CompilationInfo info, AtomicBoolean cancel, TreePath toSearch, BulkPattern pattern) {
-        //XXX: performance
-        return !match(info, cancel, toSearch, pattern).isEmpty();
+        Parameters.notNull("info", info);
+
+        TreePath topLevel = new TreePath(info.getCompilationUnit());
+        Matcher matcher = Matcher.create(info)
+                .setUntypedMatching()
+                .setCancel(cancel);
+
+        for (Tree tree : ((BulkPatternImpl) pattern).pattern2Code.keySet()) {
+            if (!matcher.match(Pattern.createPatternWithFreeVariables(new TreePath(topLevel, tree), Map.of())).isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -109,7 +118,7 @@ public class CopyFinderBasedBulkSearch extends BulkSearch {
         private final Map<Tree, String> pattern2Code;
         
         public BulkPatternImpl(Collection<? extends AdditionalQueryConstraints> additionalConstraints, Map<Tree, String> pattern2Code) {
-            super(new LinkedList<String>(pattern2Code.values()), null, null, new LinkedList<AdditionalQueryConstraints>(additionalConstraints));
+            super(new LinkedList<>(pattern2Code.values()), null, null, new LinkedList<>(additionalConstraints));
             this.pattern2Code = pattern2Code;
         }
 

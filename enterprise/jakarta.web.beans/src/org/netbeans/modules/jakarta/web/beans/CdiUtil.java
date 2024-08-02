@@ -156,7 +156,8 @@ public class CdiUtil {
      * @return 
      */
     public static boolean isCdi11OrLater(Project p) {
-        if(! hasResource(p, "javax/enterprise/inject/spi/AfterTypeDiscovery.class") ) {
+        if(! (hasResource(p, "javax/enterprise/inject/spi/AfterTypeDiscovery.class")
+                || hasResource(p, "jakarta/enterprise/inject/spi/AfterTypeDiscovery.class"))) {
             return false;
         } else {
             FileObject beans = getBeansXmlExists(p);
@@ -177,7 +178,8 @@ public class CdiUtil {
     }
     
     public boolean isCdi11OrLater() {
-        if(! hasResource(getProject(), "javax/enterprise/inject/spi/AfterTypeDiscovery.class") ) {
+        if (!(hasResource(getProject(), "javax/enterprise/inject/spi/AfterTypeDiscovery.class")
+                || hasResource(getProject(), "jakarta/enterprise/inject/spi/AfterTypeDiscovery.class"))) {
             return false;
         } else {
             FileObject beans = getBeansXmlExists();

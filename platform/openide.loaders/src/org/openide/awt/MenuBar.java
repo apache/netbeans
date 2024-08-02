@@ -39,7 +39,6 @@ import java.util.Objects;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
@@ -63,6 +62,7 @@ import org.openide.nodes.NodeListener;
 import org.openide.nodes.NodeMemberEvent;
 import org.openide.nodes.NodeReorderEvent;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.Task;
@@ -98,11 +98,6 @@ public class MenuBar extends JMenuBar implements Externalizable {
 
     /** the folder which represents and loads content of the menubar */
     private MenuBarFolder menuBarFolder;
-
-    /*
-    private static final Icon BLANK_ICON = new ImageIcon(
-        Utilities.loadImage("org/openide/loaders/empty.gif")); // NOI18N            
-     */
 
     static final long serialVersionUID =-4721949937356581268L;
     static {
@@ -656,8 +651,9 @@ public class MenuBar extends JMenuBar implements Externalizable {
                 // set the text and be aware of mnemonics
                 Node n = master.getNodeDelegate ();
                 Mnemonics.setLocalizedText(this, n.getDisplayName());
-                if (icon) setIcon (new ImageIcon (
-                n.getIcon (java.beans.BeanInfo.ICON_COLOR_16x16)));
+                if (icon) {
+                    setIcon(ImageUtilities.image2Icon(n.getIcon(java.beans.BeanInfo.ICON_COLOR_16x16)));
+                }
             } else {
                 setText(master.getName());
                 setIcon(null);

@@ -89,9 +89,7 @@ implements TemplateLoader, TemplateExceptionHandler {
        if (tmp == null) {
            try {
                tmp = FileUtil.toFileObject(FileUtil.normalizeFile(Utilities.toFile(new URI(name))));
-           } catch (URISyntaxException ex) {
-           } catch (IllegalArgumentException iae) {
-           }
+           } catch (URISyntaxException | IllegalArgumentException ignore) {}
        }
        return tmp;
     } 

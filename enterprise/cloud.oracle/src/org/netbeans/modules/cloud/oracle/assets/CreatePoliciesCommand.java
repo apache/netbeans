@@ -27,25 +27,19 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Logger;
 import org.netbeans.modules.cloud.oracle.policy.PolicyGenerator;
 import org.netbeans.spi.lsp.CommandProvider;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- *
+ * 
  * @author Jan Horvath
  */
 @ServiceProvider(service = CommandProvider.class)
 public class CreatePoliciesCommand implements CommandProvider {
-    private static final Logger LOG = Logger.getLogger(CreatePoliciesCommand.class.getName());
-    
-    
-
     private static final String COMMAND_CREATE_POLICIES = "nbls.cloud.assets.policy.create.local"; //NOI18N
     private static final String COMMAND_CREATE_CONFIG = "nbls.cloud.assets.config.create.local"; //NOI18N
     private static final String COMMAND_CLOUD_ASSETS_REFRESH = "nbls.cloud.assets.refresh"; //NOI18N
@@ -81,7 +75,9 @@ public class CreatePoliciesCommand implements CommandProvider {
         } else if (COMMAND_CREATE_CONFIG.equals(command)) {
             StringWriter writer = new StringWriter();
             Properties dbProps = new Properties();
-            dbProps.putAll(PropertiesGenerator.getProperties(null));
+            PropertiesGenerator propGen = new PropertiesGenerator(false);
+            dbProps.putAll(propGen.getApplication());
+            dbProps.putAll(propGen.getBootstrap());
             try {
                 dbProps.store(writer, "Generated application.properties\n" //NOI18N
                     + "Uncomment following line when running inside Oracle Cloud\n" //NOI18N
@@ -95,5 +91,5 @@ public class CreatePoliciesCommand implements CommandProvider {
         }
         return future;
     }
-
+        
 }

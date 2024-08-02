@@ -18,7 +18,10 @@
  */
 package org.netbeans.modules.java.file.launcher.queries;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -243,6 +246,22 @@ public class MultiSourceRootProviderTest extends NbTestCase {
         MultiSourceRootProvider provider = new MultiSourceRootProvider();
 
         provider.findClassPath(test, JavaClassPathConstants.MODULE_COMPILE_PATH);
+    }
+
+    public void testMultiSourceRootProviderOnlySupportedForLocalFiles() throws IOException {
+        File supportedFile = null;
+        try {
+            supportedFile = Files.createTempFile("dummy", ".java").toFile();
+            FileObject realFileSource = FileUtil.createData(supportedFile);
+            FileObject inMemorySource = FileUtil.createMemoryFileSystem().getRoot().createData("Ahoj.java");
+
+            assertFalse(MultiSourceRootProvider.isSupportedFile(inMemorySource));
+            assertTrue(MultiSourceRootProvider.isSupportedFile(realFileSource));
+        } finally {
+            if(supportedFile != null && supportedFile.exists()) {
+                supportedFile.delete();
+            }
+        }
     }
 
     @Override

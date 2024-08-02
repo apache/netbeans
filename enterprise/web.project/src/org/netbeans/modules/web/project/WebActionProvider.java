@@ -835,7 +835,7 @@ public class WebActionProvider extends BaseActionProvider {
     }
 
     private boolean isDebugged() {
-        J2eeModuleProvider jmp = (J2eeModuleProvider) getWebProject().getLookup().lookup(J2eeModuleProvider.class);
+        J2eeModuleProvider jmp = getWebProject().getLookup().lookup(J2eeModuleProvider.class);
         Session[] sessions = DebuggerManager.getDebuggerManager().getSessions();
         ServerDebugInfo sdi = null;
         if (sessions != null && sessions.length > 0) {

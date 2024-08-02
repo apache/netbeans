@@ -801,7 +801,7 @@ public class XmlMultiViewEditorSupport extends DataEditorSupport implements Seri
                             if (mvtc == topComponent) {
                                 if (en.hasMoreElements()) {
                                     // Remember next cloned top component
-                                    mvtc = (CloneableTopComponent) en.nextElement();
+                                    mvtc = en.nextElement();
                                 } else {
                                     // All cloned top components are closed
                                     notifyClosed();

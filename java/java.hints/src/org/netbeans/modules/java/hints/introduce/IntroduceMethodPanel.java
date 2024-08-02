@@ -23,7 +23,6 @@ import java.awt.event.ItemListener;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.prefs.Preferences;
 import javax.lang.model.element.Modifier;
@@ -73,15 +72,17 @@ public class IntroduceMethodPanel extends CommonMembersPanel implements ChangeLi
         initComponents();
         
         this.targetInterface = targetInterface;
-        this.name.setText(name);
+
+        this.changeSupport = new MethodNameSupport(this.name, true);
+        this.changeSupport.setChangeListener(this);
+
+        this.name.setText(name); // triggers validation task
         if ( name != null && name.trim().length() > 0 ) {
             this.name.setCaretPosition(name.length());
             this.name.setSelectionStart(0);
             this.name.setSelectionEnd(name.length());
         }
-        this.changeSupport = new MethodNameSupport(this.name);
-        this.changeSupport.setChangeListener(this);
-        
+
         Preferences pref = getPreferences();
         
         if (!targetInterface) {
@@ -127,8 +128,9 @@ public class IntroduceMethodPanel extends CommonMembersPanel implements ChangeLi
     }
 
     private class MethodNameSupport extends NameChangeSupport {
-        public MethodNameSupport(JTextField control) {
-            super(control);
+
+        public MethodNameSupport(JTextField control, boolean initAsValid) {
+            super(control, initAsValid);
         }
 
         @Override

@@ -495,7 +495,7 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
                 removeUserdirCheckbox.doClick();
             }
 
-            if (nbBasePresent) {
+            if (nbBasePresent && Boolean.getBoolean(CHECK_FOR_UPDATES_PROPERTY)) {
                 checkForUpdatesCheckbox.setSelected(true);
                 System.setProperty(CHECK_FOR_UPDATES_CHECKBOX_PROPERTY, Boolean.TRUE.toString());
                 

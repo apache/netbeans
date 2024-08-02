@@ -255,12 +255,11 @@ implements CloneableEditorSupport.Env {
             // ok
         }
         
-        // Since 6.43 (UndoRedoManager addition) the CES installs DocumentFilter (that prevents modification)
-        // to any AbstractDocument-based document including javax.swing.text.PlainDocument
-        // so even non-NbLikeEditorKit will have 1 attempt
-        int expected = createEditorKit () instanceof NbLikeEditorKit ? 1 : 1;
-        assertEquals (expected + " modification called (but it was vetoed)", expected, support.notifyModified);
-        assertEquals (expected + " unmodification called", expected, support.notifyUnmodified);
+        // Since JDK-11 the Swing Implementation checks boundary first before
+        // calling into document filters -> we don't see an (attempted)
+        // modification
+        assertEquals (0 + " modification called (but it was vetoed)", 0, support.notifyModified);
+        assertEquals (0 + " unmodification called", 0, support.notifyUnmodified);
 
         String first = doc.getText (0, 1);
         assertEquals ("First letter is N", "N", first);

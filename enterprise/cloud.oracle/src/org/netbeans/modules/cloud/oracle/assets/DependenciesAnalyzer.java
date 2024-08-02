@@ -62,6 +62,7 @@ public final class DependenciesAnalyzer implements SuggestionAnalyzer {
         }
         result.add(SuggestedItem.forPath("Cluster"));
         result.add(SuggestedItem.forPath("ComputeInstance"));
+        result.add(SuggestedItem.forPath("ContainerRepository"));
         return result;
     }
 

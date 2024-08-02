@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.io.PushbackInputStream;
 import java.io.RandomAccessFile;
 import java.io.SequenceInputStream;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -384,7 +385,7 @@ public final class LogRecords {
     private static final class Parser extends DefaultHandler {
         private Handler callback;
         private static enum Elem {
-            UIGESTURES, RECORD, DATE, MILLIS, SEQUENCE, LEVEL, THREAD,
+            UIGESTURES, RECORD, DATE, MILLIS, NANOS, SEQUENCE, LEVEL, THREAD,
             MESSAGE, KEY, PARAM, FRAME, CLASS, METHOD, LOGGER, EXCEPTION, LINE,
             CATALOG, MORE, FILE;
             
@@ -502,6 +503,7 @@ public final class LogRecords {
             
             if ("record".equals(qName)) { // NOI18N
                 String millis = Elem.MILLIS.parse(values);
+                String nanos = Elem.NANOS.parse(values);
                 String seq = Elem.SEQUENCE.parse(values);
                 String lev = Elem.LEVEL.parse(values);
                 String thread = Elem.THREAD.parse(values);
@@ -517,7 +519,11 @@ public final class LogRecords {
                         LOG.log(Level.WARNING, ex.getMessage(), ex);
                     }
                     r.setSequenceNumber(parseLong(seq));
-                    r.setMillis(parseLong(millis));
+                    Instant timestamp = Instant.ofEpochMilli(parseLong(millis));
+                    if(nanos != null && !nanos.isBlank()) {
+                        timestamp = timestamp.plusNanos(parseLong(nanos));
+                    }
+                    r.setInstant(timestamp);
                     r.setResourceBundleName(key);
                     if (catalog != null && key != null) {
                         r.setResourceBundleName(catalog);

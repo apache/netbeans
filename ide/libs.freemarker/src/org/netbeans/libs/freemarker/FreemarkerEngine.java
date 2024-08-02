@@ -120,8 +120,8 @@ class FreemarkerEngine extends AbstractScriptEngine {
             if (template == null) {
                 template = new MyTemplate(fo, fileName, reader, conf);
                 Object exceptionHandler = ctx.getAttribute(FREEMARKER_EXCEPTION_HANDLER);
-                if (exceptionHandler instanceof TemplateExceptionHandler) {
-                    template.setTemplateExceptionHandler((TemplateExceptionHandler) exceptionHandler);
+                if (exceptionHandler instanceof TemplateExceptionHandler templateEH) {
+                    template.setTemplateExceptionHandler(templateEH);
                 }
             } else {
                 ((MyTemplate)template).conf = conf;
@@ -155,8 +155,8 @@ class FreemarkerEngine extends AbstractScriptEngine {
     // internals only below this point  
     private static String getFilename(ScriptContext ctx) {
         Object tfo = ctx.getAttribute(FREEMARKER_TEMPLATE);
-        if (tfo instanceof FileObject) {
-            return ((FileObject)tfo).getPath();
+        if (tfo instanceof FileObject fo) {
+            return fo.getPath();
         }
         Object fileName = ctx.getAttribute(ScriptEngine.FILENAME);
         if (fileName != null) {
@@ -167,11 +167,7 @@ class FreemarkerEngine extends AbstractScriptEngine {
 
     private static boolean isStringOutputMode(ScriptContext ctx) {
         Object flag = ctx.getAttribute(STRING_OUTPUT_MODE);
-        if (flag != null) {
-            return flag.equals(Boolean.TRUE);
-        } else {
-            return false;
-        }
+        return flag != null ? flag.equals(Boolean.TRUE) : false;
     }
 
     private void initFreeMarkerConfiguration(ScriptContext ctx) {
@@ -180,9 +176,9 @@ class FreemarkerEngine extends AbstractScriptEngine {
                 if (conf != null) {
                     return;
                 }
-                Object cfg = ctx.getAttribute(FREEMARKER_CONFIG);
-                if (cfg instanceof Configuration) {
-                    conf = (Configuration) cfg;
+                Object obj = ctx.getAttribute(FREEMARKER_CONFIG);
+                if (obj instanceof Configuration configuration) {
+                    conf = configuration;
                     return;
                 }
 
@@ -225,8 +221,8 @@ class FreemarkerEngine extends AbstractScriptEngine {
                 Set<Object> keys = props.keySet();
                 for (Object obj : keys) {
                     String key;
-                    if (obj instanceof String) {
-                        key = (String) obj;
+                    if (obj instanceof String str) {
+                        key = str;
                     } else {
                         continue;
                     }

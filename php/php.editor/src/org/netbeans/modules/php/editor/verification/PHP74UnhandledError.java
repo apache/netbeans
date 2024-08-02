@@ -149,6 +149,7 @@ public final class PHP74UnhandledError extends UnhandledErrorRule {
 
         private void checkNumericLiteralSeparator(Scalar node) {
             if (node.getScalarType() == Scalar.Type.INT
+                    || node.getScalarType() == Scalar.Type.FLOAT
                     || node.getScalarType() == Scalar.Type.REAL) {
                 if (node.getStringValue().contains("_")) { // NOI18N
                     createError(node);

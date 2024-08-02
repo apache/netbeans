@@ -72,7 +72,7 @@ public final class JAXWSClientView {
 			}
 		}
 
-		JAXWSClientViewProvider impl = (JAXWSClientViewProvider) Lookup.getDefault().lookup(JAXWSClientViewProvider.class);
+		JAXWSClientViewProvider impl = Lookup.getDefault().lookup(JAXWSClientViewProvider.class);
 		if(impl != null) {
 			JAXWSClientView wsv = impl.findJAXWSClientView();
 			return wsv;

@@ -84,9 +84,9 @@ public final class PersistentTimerInEjbLite {
         final EJBProblemContext ctx = HintsUtils.getOrCacheContext(hintContext);
         if (ctx != null && ctx.getEjb() instanceof Session) {
             final Profile profile = ctx.getEjbModule().getJ2eeProfile();
-            boolean ee9lite = profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
-            boolean ee7lite = profile.isAtLeast(Profile.JAVA_EE_7_WEB);
-            boolean ee6lite = (profile == Profile.JAVA_EE_6_WEB);
+            boolean ee9lite = profile != null && profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
+            boolean ee7lite = profile != null && profile.isAtLeast(Profile.JAVA_EE_7_WEB);
+            boolean ee6lite = profile == Profile.JAVA_EE_6_WEB;
             J2eePlatform platform = ProjectUtil.getPlatform(ctx.getProject());
             if ((ee6lite || ee7lite || ee9lite) && nonEeFullServer(platform)) {
                 for (Element element : ctx.getClazz().getEnclosedElements()) {

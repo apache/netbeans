@@ -344,7 +344,7 @@ public class DBSchemaTablesPanel extends JPanel implements ListDataListener {
         int i;
         
         for (i = start; i < handlers.size(); i++) {
-            Handler h = (Handler)handlers.get(i);
+            Handler h = handlers.get(i);
             if (!h.isRunnable()) {
                 if (LOG) {
                     LOGGER.log(Level.FINE, "Skipping " + h);

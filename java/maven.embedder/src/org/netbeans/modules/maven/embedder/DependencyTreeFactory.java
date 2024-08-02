@@ -19,7 +19,7 @@
 package org.netbeans.modules.maven.embedder;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.maven.MavenExecutionException;
@@ -45,7 +45,7 @@ public class DependencyTreeFactory {
     @Deprecated
     public static DependencyNode createDependencyTree(MavenProject project, MavenEmbedder embedder, String scope) {
         try {
-            return createDependencyTree(project, embedder, Collections.singleton(scope));
+            return createDependencyTree(project, embedder, List.of(scope));
         } catch (MavenExecutionException ex) {
             LOG.log(Level.INFO, "Dependency tree scan failed", ex);
             return null;

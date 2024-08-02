@@ -39,7 +39,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>gradle/gradle-tooling-api.jar</runtime-relative-path>
-                <binary-origin>external/gradle-tooling-api-8.7.jar</binary-origin>
+                <binary-origin>external/gradle-tooling-api-8.9.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

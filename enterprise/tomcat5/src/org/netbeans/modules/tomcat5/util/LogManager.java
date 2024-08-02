@@ -268,7 +268,7 @@ public class LogManager {
         if (!moduleConfig.hasLogger()) {
             return;
         }
-        contextLog = (LogViewer)contextLogViewers.get(moduleID);
+        contextLog = contextLogViewers.get(moduleID);
         LogViewer newContextLog = null;
         try {
             newContextLog = new LogViewer(

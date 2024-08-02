@@ -19,6 +19,7 @@
 package org.netbeans.modules.maven.hints.pom;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.prefs.Preferences;
@@ -38,6 +39,7 @@ import org.netbeans.modules.maven.model.pom.POMExtensibilityElement;
 import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.maven.model.pom.POMQName;
 import org.netbeans.modules.maven.model.pom.Plugin;
+import org.netbeans.modules.maven.model.pom.PluginContainer;
 import org.netbeans.modules.maven.model.pom.PluginExecution;
 import org.netbeans.modules.maven.model.pom.Properties;
 import org.netbeans.spi.editor.hints.ChangeInfo;
@@ -96,18 +98,24 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
 
         boolean releaseSupportedByDeclaredPlugin = false;
 
-        if (build != null && build.getPlugins() != null) {
-            Optional<Plugin> compilerPlugin = build.getPlugins().stream()
-                    .filter((p) -> Constants.PLUGIN_COMPILER.equals(p.getArtifactId()))
-                    .filter(this::isPluginCompatible)
-                    .findFirst();
+        if (build != null) {
 
-            if (compilerPlugin.isPresent()) {
-                releaseSupportedByDeclaredPlugin = true;
-                hints.addAll(createHintsForParent("", compilerPlugin.get().getConfiguration()));
-                if (compilerPlugin.get().getExecutions() != null) {
-                    for (PluginExecution exec : compilerPlugin.get().getExecutions()) {
-                        hints.addAll(createHintsForParent("", exec.getConfiguration()));
+            for (PluginContainer pc : Arrays.asList(build, build.getPluginManagement())) {
+                if (pc == null || pc.getPlugins() == null) {
+                    continue;
+                }
+                Optional<Plugin> compilerPlugin = pc.getPlugins().stream()
+                        .filter(p -> Constants.PLUGIN_COMPILER.equals(p.getArtifactId()))
+                        .filter(this::isPluginCompatible)
+                        .findFirst();
+
+                if (compilerPlugin.isPresent()) {
+                    releaseSupportedByDeclaredPlugin |= true;
+                    hints.addAll(createHintsForParent("", compilerPlugin.get().getConfiguration()));
+                    if (compilerPlugin.get().getExecutions() != null) {
+                        for (PluginExecution exec : compilerPlugin.get().getExecutions()) {
+                            hints.addAll(createHintsForParent("", exec.getConfiguration()));
+                        }
                     }
                 }
             }
@@ -164,7 +172,7 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
             return List.of();
         }
 
-        if (source == target && source >= 9) {
+        if (source == target && source >= 8) { // ok since 3.13.0+ maps release to source/target on 8
             List<ErrorDescription> hints = new ArrayList<>();
             for (POMComponent prop : parent.getChildren()) {
                 String name = prop.getPeer().getNodeName();
@@ -189,7 +197,7 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
     private boolean isPluginCompatible(Plugin plugin) {
         String version = plugin.getVersion();
         if (version == null || version.isEmpty()) {
-            return false;
+            return true; // plugin management, lets assume that it is compatible
         }
         return new ComparableVersion(version).compareTo(COMPILER_PLUGIN_VERSION) >= 0;
     }

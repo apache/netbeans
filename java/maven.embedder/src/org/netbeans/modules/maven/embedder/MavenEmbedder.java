@@ -142,8 +142,8 @@ public final class MavenEmbedder {
         settingsDecrypter = plexus.lookup(SettingsDecrypter.class);
         
         VersionResolver vr = plexus.lookup(VersionResolver.class);
-        if (vr instanceof NbVersionResolver2) {
-            versionResolver = (NbVersionResolver2)vr;
+        if (vr instanceof NbVersionResolver2 vr2) {
+            versionResolver = vr2;
         } else {
             versionResolver = null;
         }
@@ -454,7 +454,7 @@ public final class MavenEmbedder {
      */
     public List<Model> createModelLineage(File pom) throws ModelBuildingException {
         ModelBuildingResult res = executeModelBuilder(pom);
-        List<Model> toRet = new ArrayList<Model>();
+        List<Model> toRet = new ArrayList<>();
 
         for (String id : res.getModelIds()) {
             Model m = res.getRawModel(id);
@@ -550,12 +550,12 @@ public final class MavenEmbedder {
 
         LifecycleMapping lifecycleMapping = lookupComponent(LifecycleMapping.class);
         if (lifecycleMapping != null) {
-            Set<String> phases = new TreeSet<String>();
+            Set<String> phases = new TreeSet<>();
             Map<String, Lifecycle> lifecycles = lifecycleMapping.getLifecycles();
             for (Lifecycle lifecycle : lifecycles.values()) {
                 phases.addAll(lifecycle.getPhases().keySet());
             }
-            return new ArrayList<String>(phases);
+            return new ArrayList<>(phases);
         }
 
         return Collections.<String>emptyList();

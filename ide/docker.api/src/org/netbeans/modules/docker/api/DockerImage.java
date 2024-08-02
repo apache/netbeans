@@ -88,6 +88,11 @@ public final class DockerImage implements DockerInstanceEntity {
         return size;
     }
 
+    /**
+     * @deprecated Removed from Docker Engine in v1.44. Return size value.
+     * @return 
+     */
+    @Deprecated
     public long getVirtualSize() {
         return virtualSize;
     }

@@ -39,7 +39,7 @@ import org.openide.util.NbBundle;
 )
 
 @NbBundle.Messages({
-    "RemoveFromProject=Remove From Assets"
+    "RemoveFromProject=Remove From Oracle Cloud Assets"
 })
 public class RemoveFromProject implements ActionListener {
     
@@ -54,5 +54,4 @@ public class RemoveFromProject implements ActionListener {
         CloudAssets.getDefault().removeItem(context);
     }
 
-    
 }

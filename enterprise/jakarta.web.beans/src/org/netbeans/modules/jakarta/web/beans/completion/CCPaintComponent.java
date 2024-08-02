@@ -215,7 +215,7 @@ public class CCPaintComponent extends JPanel {
     }
     
     protected int getWidth(String s) {
-        Integer i = (Integer)widths.get(s);
+        Integer i = widths.get(s);
         if (i != null) {
             return i;
         } else {

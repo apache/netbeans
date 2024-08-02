@@ -47,14 +47,11 @@
         </exec>
     </target>
 
-    <!--
-    TODO the branches of https://github.com/graalvm/mx disappered
     <target name="test-preinit" depends="-checkout-graalvm">
         <exec dir="${graal.dir}/truffle" executable="${mx.dir}/mx" failonerror="true">
             <arg value="build"/>
         </exec>
     </target>
-    -->
     <target name="test-unit-build-datajar"/>
 
     <import file="../../nbbuild/templates/projectized.xml"/>

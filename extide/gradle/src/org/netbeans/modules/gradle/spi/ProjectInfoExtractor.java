@@ -41,17 +41,17 @@ public interface ProjectInfoExtractor {
         static Result NONE = new Result() {
 
             @Override
-            public Set getExtract() {
-                return Collections.emptySet();
+            public Set<?> getExtract() {
+                return Set.of();
             }
 
             @Override
             public Set<String> getProblems() {
-                return Collections.emptySet();
+                return Set.of();
             }
         };
 
-        Set getExtract();
+        Set<?> getExtract();
 
         Set<String> getProblems();
     }
@@ -72,8 +72,8 @@ public interface ProjectInfoExtractor {
         }
 
         @Override
-        public Set getExtract() {
-            return Collections.singleton(extract);
+        public Set<?> getExtract() {
+            return Set.of(extract);
         }
 
         @Override

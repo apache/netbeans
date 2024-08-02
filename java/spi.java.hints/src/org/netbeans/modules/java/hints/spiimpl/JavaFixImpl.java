@@ -22,7 +22,6 @@ package org.netbeans.modules.java.hints.spiimpl;
 import com.sun.source.util.TreePath;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -67,7 +66,7 @@ public class JavaFixImpl implements Fix {
     public ChangeInfo implement() throws Exception {
         FileObject file = Accessor.INSTANCE.getFile(jf);
         
-        BatchUtilities.fixDependencies(file, Collections.singletonList(jf), new IdentityHashMap<>());
+        BatchUtilities.fixDependencies(file, List.of(jf), new IdentityHashMap<>());
 
         JavaSource js = JavaSource.forFileObject(file);
 
@@ -79,7 +78,7 @@ public class JavaFixImpl implements Fix {
             Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
             Map<FileObject, List<Difference>> resourceContentDiffs = new HashMap<>();
             BatchUtilities.addResourceContentChanges(resourceContentChanges, resourceContentDiffs);
-            JavaSourceAccessor.getINSTANCE().createModificationResult(resourceContentDiffs, Collections.<Object, int[]>emptyMap()).commit();
+            JavaSourceAccessor.getINSTANCE().createModificationResult(resourceContentDiffs, Map.of()).commit();
         });
 
         result.commit();
@@ -91,8 +90,8 @@ public class JavaFixImpl implements Fix {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof JavaFixImpl) {
-            return jf.equals(((JavaFixImpl)obj).jf);
+        if (obj instanceof JavaFixImpl javaFixImpl) {
+            return jf.equals(javaFixImpl.jf);
         }
         return super.equals(obj);
     }

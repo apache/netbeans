@@ -25,7 +25,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import javax.swing.Action;
-import javax.swing.ImageIcon;
 
 /**
  * An action which operates in the global <i>selection context</i> (a
@@ -172,7 +171,7 @@ public abstract class ContextAction<T> extends NbAction {
             putValue (Action.NAME, displayName);
         }
         if (icon != null) {
-            putValue (Action.SMALL_ICON, new ImageIcon (icon));
+            putValue (Action.SMALL_ICON, ImageUtilities.image2Icon(icon));
         }
         putValue ("noIconInMenu", true);
     }

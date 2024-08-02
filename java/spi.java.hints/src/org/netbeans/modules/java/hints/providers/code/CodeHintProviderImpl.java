@@ -25,7 +25,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,10 +79,6 @@ public class CodeHintProviderImpl implements HintProvider {
     
     @Override
     public Map<HintMetadata, ? extends Collection<? extends HintDescription>> computeHints() {
-        return computeHints(findLoader(), "META-INF/nb-hints/hints");
-    }
-
-    private Map<HintMetadata, ? extends Collection<? extends HintDescription>> computeHints(ClassLoader l, String path) {
         Map<HintMetadata, Collection<HintDescription>> result = new HashMap<>();
         
         for (ClassWrapper c : FSWrapper.listClasses()) {
@@ -116,7 +111,7 @@ public class CodeHintProviderImpl implements HintProvider {
         if (metadata != null) {
             String id = metadata.id();
 
-            if (id == null || id.length() == 0) {
+            if (id == null || id.isEmpty()) {
                 id = clazz.getName();
             }
             hm = fromAnnotation(id, clazz, null, metadata);
@@ -131,7 +126,7 @@ public class CodeHintProviderImpl implements HintProvider {
             if (localMetadataAnnotation != null) {
                 String localID = localMetadataAnnotation.id();
 
-                if (localID == null || localID.length() == 0) {
+                if (localID == null || localID.isEmpty()) {
                     localID = clazz.getName() + "." + m.getName();
                 }
 
@@ -155,7 +150,7 @@ public class CodeHintProviderImpl implements HintProvider {
                                               .setKind(metadata.hintKind())
                                               .setCustomizerProvider(createCustomizerProvider(clazz, method, id, metadata))
                                               .addSuppressWarnings(metadata.suppressWarnings())
-                                              .addOptions(Options.fromHintOptions(metadata.options()).toArray(new Options[0]))
+                                              .addOptions(Options.fromHintOptions(metadata.options()).toArray(Options[]::new))
                                               .setSourceVersion(metadata.minSourceVersion())
                                               .build();
         return hm;
@@ -313,18 +308,18 @@ public class CodeHintProviderImpl implements HintProvider {
                     return null;
                 }
 
-                if (result instanceof Iterable) {
+                if (result instanceof Iterable iterable) {
                     List<ErrorDescription> out = new LinkedList<>();
 
-                    for (ErrorDescription ed : NbCollections.iterable(NbCollections.checkedIteratorByFilter(((Iterable) result).iterator(), ErrorDescription.class, false))) {
+                    for (ErrorDescription ed : NbCollections.iterable(NbCollections.checkedIteratorByFilter(iterable.iterator(), ErrorDescription.class, false))) {
                         out.add(ed);
                     }
 
                     return out;
                 }
 
-                if (result instanceof ErrorDescription) {
-                    return Collections.singletonList((ErrorDescription) result);
+                if (result instanceof ErrorDescription desc) {
+                    return List.of(desc);
                 }
 
                 //XXX: log if result was ignored...
@@ -358,13 +353,7 @@ public class CodeHintProviderImpl implements HintProvider {
 
     }
 
-    private static final class DelegatingCustomizerProvider implements CustomizerProvider {
-
-        private final Class<? extends CustomizerProvider> component;
-
-        public DelegatingCustomizerProvider(Class<? extends CustomizerProvider> component) {
-            this.component = component;
-        }
+    private record DelegatingCustomizerProvider(Class<? extends CustomizerProvider> component) implements CustomizerProvider {
 
         @Override
         public JComponent getCustomizer(Preferences prefs) {

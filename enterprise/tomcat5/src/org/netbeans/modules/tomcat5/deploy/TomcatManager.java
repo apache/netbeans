@@ -520,11 +520,11 @@ public class TomcatManager implements DeploymentManager {
     }
 
     public boolean isJpa31() {
-        return false;
+        return isTomEE10();
     }
     
     public boolean isJpa32() {
-        return isTomEE10();
+        return false;
     }
 
     public boolean isJpa22() {

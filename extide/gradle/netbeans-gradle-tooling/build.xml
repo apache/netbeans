@@ -23,7 +23,7 @@
     <description>Builds, tests, and runs the project org.netbeans.modules.gradle</description>
 
     <property name="tooling" value="netbeans-gradle-tooling"/>
-    <property name="gradle.version" value="7.4" />
+    <property file="../nbproject/project.properties"/>
 
     <available property="has.gradle-libs" file="build/gradle-libs" type="dir"/>
     
@@ -33,16 +33,16 @@
     
     <target name="prepare-libs" unless="has.gradle-libs">
         <mkdir dir="build/gradle-libs"/>
-        <unzip src="../external/gradle-${gradle.version}-bin.zip" dest="build/gradle-libs">
+        <unzip src="../external/gradle-${tooling.gradle.version}-bin.zip" dest="build/gradle-libs">
             <patternset>
-                <include name="gradle-${gradle.version}/lib/**/*.jar"/>
+                <include name="gradle-${tooling.gradle.version}/lib/**/*.jar"/>
             </patternset>
             <mapper type="flatten"/>
         </unzip>    
     </target>
     <target name="compile" depends="prepare-libs">
         <mkdir dir="build/classes/java/main"/>
-        <javac srcdir="src/main/java" destdir="build/classes/java/main" classpathref="compile.classpath" release="8" includeantruntime="false" debug="true"/>
+        <javac srcdir="src/main/java" destdir="build/classes/java/main" classpathref="compile.classpath" release="${tooling.javac.release}" includeantruntime="false" debug="true"/>
     </target>
 
     <target name="jar" depends="compile">

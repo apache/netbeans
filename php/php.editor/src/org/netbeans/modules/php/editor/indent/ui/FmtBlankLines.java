@@ -66,6 +66,7 @@ public class FmtBlankLines extends javax.swing.JPanel {
         aClassHeaderField.putClientProperty(OPTION_ID, BLANK_LINES_AFTER_CLASS_HEADER);
         bFieldsField.putClientProperty(OPTION_ID, BLANK_LINES_BEFORE_FIELDS);
         betweenFields.putClientProperty(OPTION_ID, BLANK_LINES_BETWEEN_FIELDS);
+        emptyFunctionBodyCheckBox.putClientProperty(OPTION_ID, BLANK_LINES_EMPTY_FUNCTION_BODY);
         endOfFileCheckBox.putClientProperty(OPTION_ID, BLANK_LINES_EOF);
         cbGroupFields.putClientProperty(OPTION_ID, BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES);
         aFieldsField.putClientProperty(OPTION_ID, BLANK_LINES_AFTER_FIELDS);
@@ -168,6 +169,7 @@ public class FmtBlankLines extends javax.swing.JPanel {
         endOfFileCheckBox = new JCheckBox();
         afterUseTraitLabel = new JLabel();
         afterUseTraitTextField = new JTextField();
+        emptyFunctionBodyCheckBox = new JCheckBox();
 
         setName(NbBundle.getMessage(FmtBlankLines.class, "LBL_BlankLines")); // NOI18N
         setOpaque(false);
@@ -278,6 +280,8 @@ public class FmtBlankLines extends javax.swing.JPanel {
 
         afterUseTraitTextField.setText(NbBundle.getMessage(FmtBlankLines.class, "FmtBlankLines.afterUseTraitTextField.text")); // NOI18N
 
+        Mnemonics.setLocalizedText(emptyFunctionBodyCheckBox, NbBundle.getMessage(FmtBlankLines.class, "FmtBlankLines.emptyFunctionBodyCheckBox.text")); // NOI18N
+
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -337,7 +341,8 @@ public class FmtBlankLines extends javax.swing.JPanel {
                                 .addComponent(afterUseTraitTextField))))
                     .addComponent(cbGroupFields, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(betweenUseTypesLabel)
-                    .addComponent(endOfFileCheckBox))
+                    .addComponent(endOfFileCheckBox)
+                    .addComponent(emptyFunctionBodyCheckBox))
                 .addContainerGap())
         );
 
@@ -430,6 +435,8 @@ public class FmtBlankLines extends javax.swing.JPanel {
                     .addComponent(maxPreservedBlankLabel)
                     .addComponent(maxPreservedBlankField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(emptyFunctionBodyCheckBox)
+                .addGap(7, 7, 7)
                 .addComponent(endOfFileCheckBox)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbGroupFields, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -548,6 +555,7 @@ public class FmtBlankLines extends javax.swing.JPanel {
     private JTextField betweenUseTypesField;
     private JLabel betweenUseTypesLabel;
     private JCheckBox cbGroupFields;
+    private JCheckBox emptyFunctionBodyCheckBox;
     private JCheckBox endOfFileCheckBox;
     private JPanel jPanel1;
     private JTextField maxPreservedBlankField;

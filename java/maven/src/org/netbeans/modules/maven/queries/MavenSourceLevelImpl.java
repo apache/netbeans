@@ -61,12 +61,12 @@ public class MavenSourceLevelImpl implements SourceLevelQueryImplementation2 {
     
     static final Pattern PROFILE = Pattern.compile("-profile (compact1|compact2|compact3){1}?");
 
-    private static final List<Pair<String, String>> SOURCE_PROPERTIES_AND_PARAM = Arrays.asList(
+    private static final List<Pair<String, String>> SOURCE_PROPERTIES_AND_PARAM = List.of(
         Pair.of("maven.compiler.release", Constants.RELEASE_PARAM), //NOI18N
         Pair.of("maven.compiler.source", Constants.SOURCE_PARAM)   //NOI18N
     );
 
-    private static final List<Pair<String, String>> TEST_PROPERTIES_AND_PARAM = Arrays.asList(
+    private static final List<Pair<String, String>> TEST_PROPERTIES_AND_PARAM = List.of(
         Pair.of("maven.compiler.testRelease", "testRelease"),       //NOI18N
         Pair.of("maven.compiler.release", Constants.RELEASE_PARAM), //NOI18N
         Pair.of("maven.compiler.testSource", "testSource"),        //NOI18N
@@ -118,7 +118,17 @@ public class MavenSourceLevelImpl implements SourceLevelQueryImplementation2 {
         String version = PluginPropertyUtils.getPluginVersion(
                 nbprj.getOriginalMavenProject(),
                 Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER);
-        if (version == null || new DefaultArtifactVersion(version).compareTo(new DefaultArtifactVersion("2.3")) >= 0) {
+
+        // TODO after a converstation with the maven team: v4 will likely simplify this to work like javac, JDK version = bytecode version
+        if (version == null) {
+            return "1.8";
+        } else if (new DefaultArtifactVersion(version).compareTo(new DefaultArtifactVersion("3.11.0")) >= 0) {
+            return "1.8";
+        } else if (new DefaultArtifactVersion(version).compareTo(new DefaultArtifactVersion("3.9.0")) >= 0) {
+            return "1.7";
+        } else if (new DefaultArtifactVersion(version).compareTo(new DefaultArtifactVersion("3.8.0")) >= 0) {
+            return "1.6";
+        } else if (new DefaultArtifactVersion(version).compareTo(new DefaultArtifactVersion("2.3")) >= 0) {
             return "1.5";
         } else {
             return "1.3";

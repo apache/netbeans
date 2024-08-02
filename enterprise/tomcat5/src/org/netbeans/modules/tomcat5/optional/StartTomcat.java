@@ -772,7 +772,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
     }
     
     private String getJavaHome(JavaPlatform platform) {
-        FileObject fo = (FileObject)platform.getInstallFolders().iterator().next();
+        FileObject fo = platform.getInstallFolders().iterator().next();
         return FileUtil.toFile(fo).getAbsolutePath();
     }
     

@@ -598,7 +598,7 @@ abstract class ContentModel {
         public boolean hasNext() {
             if (list.size() > current) return true;
             if (en.hasMoreElements()) {
-                String next = (String) en.nextElement();
+                String next = en.nextElement();
                 return list.add(next);                
             } else {
                 return false;

@@ -564,7 +564,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                     if (bridge != null) {
                         rset = bridge.getDriverSpecification().getRow();
                         keySeq = rset.get(new Integer(5));
-                        colName = (String) rset.get(new Integer(4));
+                        colName = rset.get(new Integer(4));
                         rset.clear();
                     } else {
                         keySeq = rs.getObject("KEY_SEQ"); //NOI18N

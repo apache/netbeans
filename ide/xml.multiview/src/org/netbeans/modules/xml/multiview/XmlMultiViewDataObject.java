@@ -504,7 +504,7 @@ public abstract class XmlMultiViewDataObject extends MultiDataObject implements 
         
         private synchronized FileLock getLock() {
             // How this week reference can be useful ?
-            FileLock l = lockReference == null ? null : (FileLock) lockReference.get();
+            FileLock l = lockReference == null ? null : lockReference.get();
             if (l != null && !l.isValid()) {
                 l = null;
             }

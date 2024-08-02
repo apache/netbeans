@@ -35,28 +35,28 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
-import org.openide.util.WeakListeners;
 
 /** A delegate action that is usually associated with a specific lookup and
  * listens on certain classes to appear and disappear there.
  */
-class ContextAction<T> extends Object 
+class ContextAction<T> extends Object
 implements Action, ContextAwareAction, ChangeListener, Runnable {
     //, Presenter.Menu, Presenter.Popup, Presenter.Toolbar, PropertyChangeListener {
     static final Logger LOG = Logger.getLogger(ContextAction.class.getName());
-    
+
     /** type to check */
     final Class<T> type;
     /** selection mode */
     final ContextSelection selectMode;
     /** performer to call */
-    final ContextAction.Performer<? super T> performer;
+    final ContextAction.Performer<T> performer;
+    /** performer factory to create copies of this action */
+    final Supplier<ContextAction.Performer<T>> performerSupplier;
 
     /** global lookup to work with */
     final ContextManager global;
@@ -66,7 +66,7 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
 
     /** was this action enabled or not*/
     private boolean previousEnabled;
-    
+
     protected final StatefulMonitor enableMonitor;
 
     /** Constructs new action that is bound to given context and
@@ -74,18 +74,19 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
      * to right action.
      */
     public ContextAction(
-        ContextAction.Performer<? super T> performer, 
+        Supplier<ContextAction.Performer<T>> performerSupplier,
         ContextSelection selectMode,
-        Lookup actionContext, 
+        Lookup actionContext,
         Class<T> type,
         boolean surviveFocusChange, StatefulMonitor enableMonitor
     ) {
-        if (performer == null) {
-            throw new NullPointerException("Has to provide a key!"); // NOI18N
+        if (performerSupplier == null) {
+            throw new NullPointerException("Has to performerSupplier a key!"); // NOI18N
         }
         this.type = type;
         this.selectMode = selectMode;
-        this.performer = performer;
+        this.performerSupplier = performerSupplier;
+        this.performer = performerSupplier.get();
         this.global = ContextManager.findManager(actionContext, surviveFocusChange);
         this.enableMonitor = enableMonitor;
         if (enableMonitor != null) {
@@ -93,7 +94,7 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
                     this, enableMonitor} );
         }
     }
-    
+
     /** Overrides superclass method, adds delegate description. */
     @Override
     public String toString() {
@@ -102,10 +103,12 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
 
     /** Invoked when an action occurs.
      */
+    @Override
     public void actionPerformed(final java.awt.event.ActionEvent e) {
         global.actionPerformed(e, performer, type, selectMode);
     }
 
+    @Override
     public boolean isEnabled() {
         assert EventQueue.isDispatchThread();
         boolean r;
@@ -117,17 +120,17 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
         previousEnabled = r;
         return r;
     }
-    
+
     private boolean fetchEnabledValue() {
         return global.runEnabled(type, selectMode, (all, everything) -> {
-            Supplier<Action> af = () -> (Action)performer.delegate0(everything, all, true);
+            Supplier<Action> af = () -> (Action)performer.delegate(everything, all);
             if (enableMonitor.getType() == Action.class) {
                 // special case for monitoring the action itself
                 Action dele = (Action)performer.delegate(everything, all);
                 // delegate to the action
                 return enableMonitor.enabled(Collections.singletonList(dele), () -> dele);
             } else if (enableMonitor.getType() != type) {
-                return global.runEnabled(enableMonitor.getType(), selectMode, 
+                return global.runEnabled(enableMonitor.getType(), selectMode,
                     (all2, everything2) -> {
                         // run enable monitor for the other type and the original action
                         return enableMonitor.enabled(all2, af);
@@ -173,27 +176,27 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
             }
         }
     }
-    
+
     protected void startListeners() {
-        performer.startListeners();
         global.registerListener(type, this);
         if (enableMonitor != null) {
             fetchEnabledValue();
             enableMonitor.addChangeListener(this);
         }
     }
-    
+
     protected void stopListeners() {
         global.unregisterListener(type, this);
-        performer.stopListeners();
         if (enableMonitor != null) {
             enableMonitor.removeChangeListener(this);
         }
     }
 
+    @Override
     public void putValue(String key, Object o) {
     }
 
+    @Override
     public Object getValue(String key) {
         if ("enabler".equals(key)) { // NOI18N
             // special API to support re-enablement
@@ -211,9 +214,10 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
         return null;
     }
 
+    @Override
     public void setEnabled(boolean b) {
     }
-    
+
     void clearState() {
         performer.clear();
         if (enableMonitor != null) {
@@ -232,7 +236,7 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
         }
         updateStateProperties();
     }
-    
+
     void updateStateProperties() {
         boolean prev = previousEnabled;
         boolean now = isEnabled();
@@ -240,17 +244,17 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
             updateEnabledState(now);
         }
     }
-    
+
     boolean wasEnabled() {
         return previousEnabled;
     }
-    
+
     protected boolean isListening() {
         synchronized (this) {
             return support != null;
         }
     }
-    
+
     protected void firePropertyChange(String property, Boolean old, Boolean current) {
         PropertyChangeSupport s;
         synchronized (this) {
@@ -261,7 +265,7 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
         }
         s.firePropertyChange(property, old, current);
     }
-    
+
     protected void updateEnabledState(boolean enabled) {
         this.previousEnabled = enabled;
         firePropertyChange("enabled", !enabled, enabled); // NOI18N
@@ -269,8 +273,9 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
 
     /** Clones itself with given context.
      */
+    @Override
     public Action createContextAwareInstance(Lookup actionContext) {
-        return  new ContextAction<T>(performer, selectMode, actionContext, type, global.isSurvive(),
+        return  new ContextAction<>(performerSupplier, selectMode, actionContext, type, global.isSurvive(),
             enableMonitor == null ? null : enableMonitor.createContextMonitor(actionContext));
     }
 
@@ -284,10 +289,10 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
         if (obj == this) {
             return true;
         }
-        
+
         if (obj instanceof ContextAction) {
             ContextAction c = (ContextAction)obj;
-            
+
             return type.equals(c.type) &&
                 selectMode.equals(c.selectMode) &&
                 performer.equals(c.performer) &&
@@ -295,17 +300,11 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
         }
         return false;
     }
-    
-    private static final Reference<Object> NONE = new WeakReference<>(null);
-    
-    static class Performer<Data> implements ChangeListener {
+
+    static class Performer<Data> {
         final Map delegate;
-        Reference<ContextAction>    owner;
-        Reference<Object>   instDelegate = null;
-        StatefulMonitor enabler = null;
-        ChangeListener weakEnableListener;
-        PropertyChangeListener weakActionListener;
-        
+        Reference<Object> instDelegate = null;
+
         public Performer(Map delegate) {
             this.delegate = delegate;
         }
@@ -314,14 +313,13 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
             ContextActionPerformer<Data> p,
             ContextActionEnabler<Data> e
         ) {
-            Map<Object, Object> map = new HashMap<Object, Object>();
+            Map<Object, Object> map = new HashMap<>();
             map.put("delegate", p); // NOI18N
             map.put("enabler", e);  // NOI18N
             this.delegate = map;
         }
-        
+
         void clear() {
-            stopListeners();
             Reference<Object> r = instDelegate;
             instDelegate = null;
             if (r != null) {
@@ -331,21 +329,17 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
                 }
             }
         }
-        
-        void attach(ContextAction a) {
-            this.owner = new WeakReference<>(a);
-        }
-        
+
         /**
-         * Creates a delegate. 
+         * Creates a delegate.
          * @param everything
          * @param data
-         * @return 
+         * @return
          */
         Object delegate(Lookup.Provider everything, List<?> data) {
             return delegate0(everything, data, true);
         }
-        
+
         private Object delegate0(Lookup.Provider everything, List<?> data, boolean getAction) {
             Object d = instDelegate != null ? instDelegate.get() : null;
             if (d != null) {
@@ -357,6 +351,9 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
             d = createDelegate(everything, data);
             if (d != null) {
                 if (getAction && (d instanceof Performer)) {
+                    // WHY??????????
+                    // If I'm not mistaken this is a strange way to make a
+                    // WeakReference a hard reference.
                     final Object fd = d;
                     instDelegate = new WeakReference<Object>(d) { private Object hardRef = fd; };
                     return ((Performer)d).delegate0(everything, data, getAction);
@@ -366,35 +363,9 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
                 }
                 instDelegate = new WeakReference<>(d);
             } else {
-                instDelegate = NONE;
+                instDelegate = null;
             }
             return d;
-        }
-        
-        void stopListeners() {
-            if (enabler != null) {
-                enabler.removeChangeListener(weakEnableListener);
-                weakEnableListener = null;
-            }
-        }
-
-        void startListeners() {
-            if (enabler != null) {
-                weakEnableListener = WeakListeners.change(this, enabler);
-                enabler.addChangeListener(weakEnableListener);
-            }
-        }
-        
-        /**
-         * Called when the manager decides that the action should not be enabled at all.
-         * The Performer should detach from the delegate and enabler.
-         */
-        void detach() {
-            stopListeners();
-            Object inst = instDelegate != null ? instDelegate.get() : null;
-            if (inst instanceof Action) {
-                ((Action)inst).removePropertyChangeListener(weakActionListener);
-            }
         }
 
         @SuppressWarnings("unchecked")
@@ -409,10 +380,10 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
                 return en.enabled(data);
             }
 
-            GeneralAction.LOG.warning("Wrong enabler for " + delegate + ":" + o);
+            GeneralAction.LOG.log(Level.WARNING, "Wrong enabler for {0}:{1}", new Object[]{delegate, o});
             return false;
         }
-        
+
         protected Object createDelegate(Lookup.Provider everything, List<?> data) {
             Object obj = delegate.get("delegate"); // NOI18N
             if (obj instanceof ContextActionPerformer) {
@@ -422,7 +393,7 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
                 return obj;
             }
             if (!(obj instanceof ActionListener)) {
-                GeneralAction.LOG.warning("Wrong delegate for " + delegate + ":" + obj);
+                GeneralAction.LOG.log(Level.WARNING, "Wrong delegate for {0}:{1}", new Object[]{delegate, obj});
             }
             return obj;
         }
@@ -446,7 +417,7 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
                 ((ActionListener)obj).actionPerformed(ev);
             }
         }
-        
+
         @Override
         public int hashCode() {
             return delegate.hashCode() + 117;
@@ -465,14 +436,6 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
         }
 
         @Override
-        public void stateChanged(ChangeEvent e) {
-            ContextAction a = owner.get();
-            if (a != null) {
-                a.updateState();
-            }
-        }
-        
-        @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
             Object o = delegate.get(ACTION_COMMAND_KEY);
@@ -489,13 +452,13 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
 
     /**
      * Interface between Performer and value monitors.
-     * @param <T> 
+     * @param <T>
      */
     static interface StatefulMonitor<T> {
         public void clear();
         public void addChangeListener(ChangeListener l);
         public void removeChangeListener(ChangeListener l);
-        
+
         /**
          * Factory interface allows first to evaluate guard conditions, then
          * query action; delays action creation.
@@ -504,6 +467,6 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
         public Class<?> getType();
         public StatefulMonitor<T> createContextMonitor(Lookup context);
     }
-    
+
 }
 

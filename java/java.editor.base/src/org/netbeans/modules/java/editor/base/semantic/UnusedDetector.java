@@ -653,7 +653,7 @@ public class UnusedDetector {
         @Override
         public Void visitLiteral(LiteralTree node, Void p) {
             if (node.getKind() == Kind.STRING_LITERAL) {
-                allStringLiterals.add((String) ((LiteralTree) node).getValue());
+                allStringLiterals.add((String)node.getValue());
             }
             return super.visitLiteral(node, p);
         }

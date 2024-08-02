@@ -50,8 +50,8 @@ public final class MavenVersionSettings {
             entry(key("org.netbeans.api", "org-netbeans-modules-editor"), nb_version), // represents all other nb artifacts
             entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER), "3.13.0"),
             entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_RESOURCES), "3.3.1"),
-            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_FAILSAFE), "3.2.5"),
-            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE), "3.2.5"),
+            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_FAILSAFE), "3.3.1"),
+            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE), "3.3.1"),
             entry(key("org.apache.netbeans.utilities", "utilities-parent"), nb_utilities_version),
             entry(key("org.apache.netbeans.utilities", "nbm-maven-harness"), nb_utilities_version),
             entry(key("org.apache.netbeans.utilities", "nbm-shared"), nb_utilities_version),
@@ -87,10 +87,13 @@ public final class MavenVersionSettings {
     // non blocking query, might not succeed if index not available
     private static String queryLatestKnownArtifactVersion(String gid, String aid, String min) {
         RepositoryQueries.Result<NBVersionInfo> query = RepositoryQueries.getVersionsResult(gid, aid, null);
+        // TODO don't upgrade to maven 4 plugins for now - we should take the active mvn version into account for a proper fix
+        boolean onlyMaven3 = Constants.GROUP_APACHE_PLUGINS.equals(gid);
         // Versions are sorted in descending order
         return query.getResults().stream()
                     .map(NBVersionInfo::getVersion)
                     .filter(v -> !v.endsWith("-SNAPSHOT"))
+                    .filter(v -> !onlyMaven3 || (onlyMaven3 && v.startsWith("3.")))
                     .findFirst()
                     .filter(v -> min == null || new ComparableVersion(v).compareTo(new ComparableVersion(min)) > 0) // don't downgrade
                     .orElse(min);

@@ -1038,7 +1038,7 @@ public class NotifyDescriptor extends Object {
         /**
          * Property whose value is the input text, an event is fired
          * when the input text's value changes,
-         * if enabled using {@link #setInputTextEventsEnabled(boolean) }.
+         * if enabled using {@link #setInputTextEventEnabled(boolean) }.
          *
          * @since 7.70
          */

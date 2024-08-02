@@ -21,7 +21,7 @@ package org.netbeans.modules.java.hints.jackpot.spi;
 
 import org.netbeans.modules.java.hints.providers.spi.HintDescription;
 import com.sun.source.util.TreePath;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -39,7 +39,8 @@ public class HintsRunner {
 
     @CheckForNull
     public static Map<HintDescription, List<ErrorDescription>> computeErrors(CompilationInfo info, Iterable<? extends HintDescription> hints, AtomicBoolean cancel) {
-        return new HintsInvoker(HintsSettings.getSettingsFor(info.getFileObject()), cancel).computeHints(info, new TreePath(info.getCompilationUnit()), hints, new LinkedList<>());
+        return new HintsInvoker(HintsSettings.getSettingsFor(info.getFileObject()), cancel)
+                        .computeHints(info, new TreePath(info.getCompilationUnit()), hints, new ArrayList<>());
     }
 
 }

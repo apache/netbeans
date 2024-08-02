@@ -48,7 +48,7 @@ public class DeclarativeHintRegistryTest extends NbTestCase {
 
         HintDescription hd = allHints.iterator().next().iterator().next();
 
-        assertEquals(new HashSet<>(Arrays.asList("java.lang.String")), hd.getAdditionalConstraints().requiredErasedTypes);
+        assertEquals(new HashSet<>(Arrays.asList("java.lang.String")), hd.getAdditionalConstraints().requiredErasedTypes());
     }
 
     public void testSuppressWarnings() {

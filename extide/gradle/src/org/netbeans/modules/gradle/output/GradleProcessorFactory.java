@@ -59,12 +59,12 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
 
     @Override
     public Set<? extends OutputProcessor> createOutputProcessors(RunConfig cfg) {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+        return Set.of(
                 GRADLE_PROCESSOR,
                 JAVAC_PROCESSOR,
                 GROOVYC_PROCESSOR,
                 new WarningModeAllProcessor(cfg)
-        )));
+        );
     }
 
     private static final Pattern GRADLE_ERROR = Pattern.compile("(Build file|Script) '(.*)\\.gradle' line: ([0-9]+)");

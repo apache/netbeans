@@ -25,7 +25,6 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -52,20 +51,25 @@ public class MatcherUtilities {
 
     public static boolean matches(@NonNull HintContext ctx, @NonNull TreePath variable, @NonNull String pattern, boolean fillInVariablesHack) {
         return matches(ctx, variable, pattern, ctx.getVariables(), ctx.getMultiVariables(), ctx.getVariableNames(), 
-                fillInVariablesHack ? ctx.getConstraints() : Collections.<String, TypeMirror>emptyMap());
+                fillInVariablesHack ? ctx.getConstraints() : Map.of());
     }
 
     public static boolean matches(@NonNull HintContext ctx, @NonNull TreePath variable, @NonNull String pattern, Map<String, TreePath> outVariables, Map<String, Collection<? extends TreePath>> outMultiVariables, Map<String, String> outVariables2Names) {
-        return matches(ctx, variable, pattern, outVariables, outMultiVariables, outVariables2Names, Collections.<String, TypeMirror>emptyMap());
+        return matches(ctx, variable, pattern, outVariables, outMultiVariables, outVariables2Names, Map.of());
     }
 
     public static boolean matches(@NonNull HintContext ctx, @NonNull TreePath variable, @NonNull String pattern, Map<String, TreePath> outVariables, 
                         Map<String, Collection<? extends TreePath>> outMultiVariables, Map<String, String> outVariables2Names, Map<String, TypeMirror> variable2Type) {
-        Pattern p = PatternCompiler.compile(ctx.getInfo(), pattern, variable2Type, Collections.<String>emptyList());
+        Pattern p = PatternCompiler.compile(ctx.getInfo(), pattern, variable2Type, List.of());
         Map<String, TreePath> variables = new HashMap<>(ctx.getVariables());
         Map<String, Collection<? extends TreePath>> multiVariables = new HashMap<>(ctx.getMultiVariables());
         Map<String, String> variables2Names = new HashMap<>(ctx.getVariableNames());
-        Iterable<? extends Occurrence> occurrences = Matcher.create(ctx.getInfo()).setCancel(new AtomicBoolean()).setPresetVariable(variables, multiVariables, variables2Names).setSearchRoot(variable).setTreeTopSearch().match(p);
+        Iterable<? extends Occurrence> occurrences = Matcher.create(ctx.getInfo())
+                                                            .setCancel(new AtomicBoolean())
+                                                            .setPresetVariable(variables, multiVariables, variables2Names)
+                                                            .setSearchRoot(variable)
+                                                            .setTreeTopSearch()
+                                                            .match(p);
 
         if (occurrences.iterator().hasNext()) {
             Occurrence od = occurrences.iterator().next();
@@ -80,7 +84,7 @@ public class MatcherUtilities {
     }
 
     public static boolean matches(@NonNull HintContext ctx, @NonNull Collection<? extends TreePath> variable, @NonNull String pattern, Map<String, TreePath> outVariables, Map<String, Collection<? extends TreePath>> outMultiVariables, Map<String, String> outVariables2Names) {
-        Scope s = Utilities.constructScope(ctx.getInfo(), Collections.<String, TypeMirror>emptyMap());
+        Scope s = Utilities.constructScope(ctx.getInfo(), Map.of());
         Tree  patternTree = Utilities.parseAndAttribute(ctx.getInfo(), pattern, s);
         List<? extends Tree> patternTrees;
 
@@ -89,7 +93,7 @@ public class MatcherUtilities {
 
             patternTrees = statements.subList(1, statements.size() - 1);
         } else {
-            patternTrees = Collections.singletonList(patternTree);
+            patternTrees = List.of(patternTree);
         }
 
         if (variable.size() != patternTrees.size()) return false;
@@ -102,8 +106,13 @@ public class MatcherUtilities {
 
         while (variableIt.hasNext() && patternTreesIt.hasNext()) {
             TreePath patternTreePath = new TreePath(new TreePath(ctx.getInfo().getCompilationUnit()), patternTreesIt.next());
-            Pattern p = Pattern.createPatternWithFreeVariables(patternTreePath, Collections.<String, TypeMirror>emptyMap());
-            Iterable<? extends Occurrence> occurrences = Matcher.create(ctx.getInfo()).setCancel(new AtomicBoolean()).setPresetVariable(variables, multiVariables, variables2Names).setSearchRoot(variableIt.next()).setTreeTopSearch().match(p);
+            Pattern p = Pattern.createPatternWithFreeVariables(patternTreePath, Map.of());
+            Iterable<? extends Occurrence> occurrences = Matcher.create(ctx.getInfo())
+                                                                .setCancel(new AtomicBoolean())
+                                                                .setPresetVariable(variables, multiVariables, variables2Names)
+                                                                .setSearchRoot(variableIt.next())
+                                                                .setTreeTopSearch()
+                                                                .match(p);
 
             if (!occurrences.iterator().hasNext()) {
                 return false;

@@ -51,7 +51,6 @@ import java.util.logging.Logger;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.spi.lsp.CommandProvider;
-import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -85,7 +84,9 @@ public class OCIPropertiesProvider implements CommandProvider {
         Properties dbProps = new Properties();
         DatabaseConnection conn = ConnectionManager.getDefault().getPreferredConnection(true);
 
-        dbProps.putAll(PropertiesGenerator.getProperties(null));
+        PropertiesGenerator propGen = new PropertiesGenerator(true);
+        dbProps.putAll(propGen.getApplication());
+        dbProps.putAll(propGen.getBootstrap());
         // If cloud assets are empty, try to get properties for a preferred DB connection
         if (conn != null && dbProps.isEmpty()) {
             dbProps.put("datasources.default.url", conn.getDatabaseURL()); //NOI18N

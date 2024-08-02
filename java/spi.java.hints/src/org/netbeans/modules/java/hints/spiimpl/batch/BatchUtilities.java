@@ -18,8 +18,6 @@
  */
 package org.netbeans.modules.java.hints.spiimpl.batch;
 
-import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.util.Log;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -27,7 +25,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -173,7 +170,7 @@ public class BatchUtilities {
         
         addResourceContentChanges(resourceContentChanges, result);
 
-        return Collections.singletonList(JavaSourceAccessor.getINSTANCE().createModificationResult(result, Collections.<Object, int[]>emptyMap()));
+        return List.of(JavaSourceAccessor.getINSTANCE().createModificationResult(result, Map.of()));
     }
 
     public static void addResourceContentChanges(final Map<FileObject, byte[]> resourceContentChanges, final Map<FileObject, List<Difference>> result) {
@@ -201,10 +198,8 @@ public class BatchUtilities {
                 }
                 String newContent  = encoding.newDecoder().decode(ByteBuffer.wrap(e.getValue())).toString();
 
-                result.put(e.getKey(), DiffUtilities.diff2ModificationResultDifference(e.getKey(), null, Collections.<Integer, String>emptyMap(), origContent[0], newContent, s[0]));
-            } catch (BadLocationException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IOException ex) {
+                result.put(e.getKey(), DiffUtilities.diff2ModificationResultDifference(e.getKey(), null, Map.of(), origContent[0], newContent, s[0]));
+            } catch (BadLocationException | IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
@@ -345,8 +340,7 @@ public class BatchUtilities {
                 }
 
                 if (!changes.isEmpty()) {
-                    ModificationResult perFixResult = JavaSourceAccessor.getINSTANCE().createModificationResult(changes, Collections.<Object, int[]>emptyMap());
-
+                    ModificationResult perFixResult = JavaSourceAccessor.getINSTANCE().createModificationResult(changes, Map.of());
                     changesPerFix.put(f, perFixResult);
                 }
             }
@@ -377,7 +371,7 @@ public class BatchUtilities {
         
         addResourceContentChanges(resourceContentChanges, result);
         
-        return Collections.singletonList(JavaSourceAccessor.getINSTANCE().createModificationResult(result, Collections.<Object, int[]>emptyMap()));
+        return List.of(JavaSourceAccessor.getINSTANCE().createModificationResult(result, Map.of()));
     }
 
     public static Collection<FileObject> getSourceGroups(Iterable<? extends Project> prjs) {
@@ -399,14 +393,8 @@ public class BatchUtilities {
 
         for (FileObject f : from) {
             CPCategorizer cpCategorizer = new CPCategorizer(f);
-
-            Collection<FileObject> files = m.get(cpCategorizer);
-
-            if (files == null) {
-                m.put(cpCategorizer, files = new LinkedList<>());
-            }
-
-            files.add(f);
+            m.computeIfAbsent(cpCategorizer, k -> new LinkedList<>())
+             .add(f);
         }
         
         Map<ClasspathInfo, Collection<FileObject>> result = new IdentityHashMap<>();
@@ -514,11 +502,7 @@ public class BatchUtilities {
                     Project p = FileOwnerQuery.getOwner(file);
 
                     if (p != null) {
-                        Set<String> seen = alreadyProcessed.get(p);
-
-                        if (seen == null) {
-                            alreadyProcessed.put(p, seen = new HashSet<>());
-                        }
+                        Set<String> seen = alreadyProcessed.computeIfAbsent(p, k -> new HashSet<>());
 
                         if (seen.add(updateTo)) {
                             for (ProjectDependencyUpgrader up : Lookup.getDefault().lookupAll(ProjectDependencyUpgrader.class)) {

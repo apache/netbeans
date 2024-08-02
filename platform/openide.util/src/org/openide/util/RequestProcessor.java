@@ -19,7 +19,6 @@
 
 package org.openide.util;
 
-import java.lang.reflect.Method;
 import java.security.PrivilegedAction;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -1051,26 +1050,10 @@ outer:  do {
     private static final TopLevelThreadGroup TOP_GROUP = new TopLevelThreadGroup();
     private static final class TopLevelThreadGroup implements PrivilegedAction<ThreadGroup> {
         public ThreadGroup getTopLevelThreadGroup() {
-            ThreadGroup orig = java.security.AccessController.doPrivileged(this);
-            ThreadGroup nuova = null;
-
-            try {
-                Class<?> appContext = Class.forName("sun.awt.AppContext");
-                Method instance = appContext.getMethod("getAppContext");
-                Method getTG = appContext.getMethod("getThreadGroup");
-                nuova = (ThreadGroup) getTG.invoke(instance.invoke(null));
-            } catch (Exception exception) {
-                logger().log(Level.FINE, "Cannot access sun.awt.AppContext", exception);
-                return orig;
-            }
-
-            assert nuova != null;
-
-            if (nuova != orig) {
-                logger().log(Level.WARNING, "AppContext group {0} differs from originally used {1}", new Object[]{nuova, orig});
-            }
-            return nuova;
-            
+            /* There used to be a workaround for
+            https://bz.apache.org/netbeans/show_bug.cgi?id=184494 here, relating to Applet and JNLP
+            environments. It was removed, since these environments are never used anymore. */
+            return java.security.AccessController.doPrivileged(this);
         }
         @Override
         public ThreadGroup run() {

@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.document.LineDocument;
-import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lsp.Diagnostic;
 import org.netbeans.modules.editor.hints.AnnotationHolder;
 import org.netbeans.spi.editor.hints.ErrorDescription;
@@ -34,14 +33,15 @@ import org.openide.text.PositionBounds;
 /**
  * A simple implementation of {@link ErrorProvider} that converts errors + hints collected by
  * {@link HintsController} to LSP {@link Diagnostic}. The implementation <b>does not support</b> code actions yet.
+ * The implementation is registered by
+ * {@code java/java.lsp.server/nbcode/integration/src/org/netbeans/modules/nbcode/integration/layer.xml}.
  * <p>
  * As {@link ErrorProvider}s are registered in MIME Lookup, this implementation is enumerated after those
  * possibly registered for specific MIME types.
  * 
  * @author sdedic
  */
-@MimeRegistration(mimeType = "", service = ErrorProvider.class)
-public class HintsDiagnosticsProvider implements ErrorProvider {
+public final class HintsDiagnosticsProvider implements ErrorProvider {
     public HintsDiagnosticsProvider() {
     }
     

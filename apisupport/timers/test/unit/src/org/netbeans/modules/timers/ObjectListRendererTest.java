@@ -25,9 +25,9 @@ import java.lang.ref.WeakReference;
 import java.util.logging.Level;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import junit.framework.TestCase;
 import org.netbeans.junit.Log;
 import org.netbeans.junit.MockServices;
+import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
@@ -38,11 +38,14 @@ import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.fail;
+
 /**
  *
  * @author Jaroslav Tulach <jaroslav.tulach@netbeans.org>
  */
-public class ObjectListRendererTest extends TestCase {
+public class ObjectListRendererTest extends NbTestCase {
     private FileObject fo;
     private DataObject obj;
     private Node node;
@@ -66,6 +69,11 @@ public class ObjectListRendererTest extends TestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
+    }
+
+    @Override
+    protected boolean runInEQ() {
+        return true;
     }
 
     /**

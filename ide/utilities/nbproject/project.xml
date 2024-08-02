@@ -26,6 +26,15 @@
             <code-name-base>org.netbeans.modules.utilities</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>org.netbeans.api.dashboard</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0</release-version>
+                        <specification-version>0.2</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.queries</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -176,7 +185,6 @@
             <friend-packages>
                 <friend>org.netbeans.modules.cnd.utils</friend>
                 <friend>org.netbeans.modules.dlight.remote.impl</friend>
-                <friend>org.netbeans.modules.ide.dashboard</friend>
                 <friend>org.netbeans.modules.utilities.project</friend>
                 <friend>org.netbeans.modules.visualweb.gravy</friend>
                 <friend>io.github.jeddict.jpa.modeler</friend>

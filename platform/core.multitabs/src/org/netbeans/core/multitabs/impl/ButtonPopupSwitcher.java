@@ -341,7 +341,7 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
                 }
                 break;
             case KeyEvent.VK_DELETE: {
-                final Item item = ( Item ) pTable.getSelectedItem();
+                final Item item = pTable.getSelectedItem();
                 if (item != null) {
                     TabData tab = item.getTabData();
                     int tabIndex = controller.getTabModel().indexOf( tab );

@@ -26,7 +26,7 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
  * @author Jan Horvath
  */
 public class VaultItem extends OCIItem {
-    String managementEndpoint;
+    private String managementEndpoint;
 
     public VaultItem(OCID id, String compartment, String name, String managementEndpoint) {
         super(id, compartment, name);
@@ -43,7 +43,7 @@ public class VaultItem extends OCIItem {
     
     @Override
     public int maxInProject() {
-        return Integer.MAX_VALUE;
+        return 1;
     }
     
 }

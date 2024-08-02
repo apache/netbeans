@@ -25,7 +25,6 @@ package org.openide.explorer.propertysheet;
 
 import org.openide.nodes.Node.Property;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Utilities;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -507,7 +506,7 @@ class EditorPropertyDisplayer extends JComponent implements PropertyDisplayer_In
             Object o = getProperty().getValue("valueIcon"); //NOI18N
 
             if (o instanceof Image) {
-                ic = new ImageIcon((Image) o);
+                ic = ImageUtilities.image2Icon((Image) o);
             } else {
                 ic = (Icon) o;
             }

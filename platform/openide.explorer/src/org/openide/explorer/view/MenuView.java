@@ -34,12 +34,10 @@ import java.beans.*;
 
 import java.io.*;
 
-import java.net.URL;
-
-import java.util.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import org.openide.util.ImageUtilities;
 
 
 /** An explorer view that shows the context hierarchy in
@@ -524,7 +522,7 @@ public class MenuView extends JPanel {
         static void initialize(final JMenuItem item, final Node node) {
             final class NI implements Runnable, NodeListener, ItemListener {
                 public void run() {
-                    item.setIcon(new ImageIcon(node.getIcon(java.beans.BeanInfo.ICON_COLOR_16x16)));
+                    item.setIcon(ImageUtilities.image2Icon(node.getIcon(java.beans.BeanInfo.ICON_COLOR_16x16)));
                     item.setText(node.getDisplayName());
 
                     /*

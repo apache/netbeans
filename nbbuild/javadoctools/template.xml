@@ -134,6 +134,12 @@ cause it to fail.
         <condition property="javadoc.reference.generated" >
             <isset property="javadoc.docs.${javadoc.name}" />
         </condition>
+        <!-- generate a javac.source for javadoc task that prioritize javac.release over javac.source -->
+        <condition property="javac.sourcerelease" value="${javac.release}" else="${javac.source}" >
+            <not>
+                <equals arg1="${javac.release}" arg2="" trim="true"/>
+            </not>
+        </condition>
     </target>
 
     <target name="javadoc-generate-references" depends="javadoc-init" unless="javadoc.reference.generated" >
@@ -288,7 +294,7 @@ cause it to fail.
     
     <target name="javadoc-exec-packages" depends="javadoc-init,javadoc-generate-references,javadoc-generate-overview,javadoc-exec-condition,javadoc-check-timestamps,javadoc-make-plain-title,javadoc-make-hyperlinked-title,javadoc-exec-condition,-javadoc-set-footer" unless="javadoc.exec.packages">
         <!-- -->
-        <javadoc source="${javac.source}" failonerror="${apidoc.check}" failonwarning="false" author="false" destdir="${javadoc.out.dir}" packagenames="${javadoc.packages}" stylesheetfile="${javadoc.css.main}" windowtitle="${javadoc.title}" overview="${javadoc.overview}" splitindex="true" use="true" version="false" useexternalfile="true" encoding="UTF-8">
+        <javadoc source="${javac.sourcerelease}" failonerror="${apidoc.check}" failonwarning="false" author="false" destdir="${javadoc.out.dir}" packagenames="${javadoc.packages}" stylesheetfile="${javadoc.css.main}" windowtitle="${javadoc.title}" overview="${javadoc.overview}" splitindex="true" use="true" version="false" useexternalfile="true" encoding="UTF-8">
             <sourcepath>
                 <pathelement location="${javadoc.docfiles}"/>
                 <pathelement location="${javadoc.src}"/>
@@ -321,7 +327,7 @@ cause it to fail.
     </target>
     
     <target name="javadoc-exec-files" depends="javadoc-init,javadoc-generate-references,javadoc-generate-overview,javadoc-exec-condition,javadoc-check-timestamps,javadoc-make-plain-title,javadoc-make-hyperlinked-title" if="javadoc.files.provided,-javadoc-set-footer" unless="javadoc.up.to.date">
-        <javadoc source="${javac.source}" author="false" destdir="${javadoc.out.dir}" packagenames="${javadoc.packages}" stylesheetfile="${javadoc.css.main}" windowtitle="${javadoc.title}" overview="${javadoc.overview}" splitindex="true" use="true" version="false" useexternalfile="true" encoding="UTF-8">
+        <javadoc source="${javac.sourcerelease}" author="false" destdir="${javadoc.out.dir}" packagenames="${javadoc.packages}" stylesheetfile="${javadoc.css.main}" windowtitle="${javadoc.title}" overview="${javadoc.overview}" splitindex="true" use="true" version="false" useexternalfile="true" encoding="UTF-8">
             <fileset dir="${javadoc.docfiles}"/>
             <fileset dir="${javadoc.src}" >
                 <and>

@@ -94,8 +94,18 @@ public class MultiSourceRootProvider implements ClassPathProvider {
     private Map<FileObject, ClassPath> file2ClassPath = new WeakHashMap<>();
     private Map<FileObject, ClassPath> file2ModulePath = new WeakHashMap<>();
 
+    static boolean isSupportedFile(FileObject file) {
+        return SingleSourceFileUtil.isSingleSourceFile(file)
+                // MultiSourceRootProvider assumes it can convert FileObject to
+                // java.io.File, so filter here
+                && Objects.equals("file", file.toURI().getScheme());
+    }
+
     @Override
     public ClassPath findClassPath(FileObject file, String type) {
+        if (! isSupportedFile(file)) {
+            return null;
+        }
         switch (type) {
             case ClassPath.SOURCE: return getSourcePath(file);
             case ClassPath.COMPILE:

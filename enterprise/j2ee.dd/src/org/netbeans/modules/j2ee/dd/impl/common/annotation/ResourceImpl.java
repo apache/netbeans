@@ -21,7 +21,6 @@ package org.netbeans.modules.j2ee.dd.impl.common.annotation;
 
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Resource.AuthenticationType;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;

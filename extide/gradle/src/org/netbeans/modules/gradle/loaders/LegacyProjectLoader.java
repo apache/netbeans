@@ -481,7 +481,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
     }
 
     private static BuildActionExecuter<NbProjectInfo> createInfoAction(ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl) {
-        BuildActionExecuter<NbProjectInfo> ret = pconn.action(new NbProjectInfoAction());
+        BuildActionExecuter<NbProjectInfo> ret = pconn.action(NbProjectInfo.createAction());
         cmd.configure(ret);
         if (DEBUG_GRADLE_INFO_ACTION) {
             // This would start the Gradle Daemon in Debug Mode, so the Tooling API can be debugged as well
@@ -652,14 +652,6 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         }
     }
     
-    private static class NbProjectInfoAction implements Serializable, BuildAction<NbProjectInfo> {
-
-        @Override
-        public NbProjectInfo execute(BuildController bc) {
-            return bc.getModel(NbProjectInfo.class);
-        }
-    }
-
     private static class ProjectLoaderTask implements Callable<GradleProject>, Cancellable {
 
         private final ReloadContext ctx;

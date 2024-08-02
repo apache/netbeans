@@ -84,7 +84,7 @@ public class DatabaseNode extends OCINode {
                                 OCID.of(d.getId(), "Databases"), //NOI18N
                                 compartmentId.getKey().getValue(),
                                 d.getDbName(),
-                                d.getConnectionUrls().getOrdsUrl()+SERVICE_CONSOLE_SUFFIX,
+                                d.getConnectionUrls().getOrdsUrl() + SERVICE_CONSOLE_SUFFIX,
                                 getConnectionName(profiles));
                         StringBuilder sb = new StringBuilder();
                         sb.append(Bundle.LBL_WorkloadType(d.getDbWorkload().getValue()));

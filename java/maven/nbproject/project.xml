@@ -611,7 +611,6 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
-                <friend>org.javeleon.netbeans</friend>
                 <!-- sven reimers -->
                 <friend>org.nbheaven.sqe.core.maven</friend>
                 <friend>org.nbheaven.sqe.core.maven3</friend>

@@ -19,18 +19,21 @@
 package org.netbeans.modules.languages.yaml;
 
 import java.awt.event.ActionEvent;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
+import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.editor.BaseAction;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.BaseKit;
 import org.netbeans.editor.Utilities;
+import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 
 /**
  *
@@ -38,11 +41,7 @@ import org.netbeans.editor.Utilities;
  */
 public class InsertTabAction extends BaseAction {
 
-    private static final List<Action> CUSTOM_ACTIONS = new LinkedList<Action>();
-
-    static {
-        CUSTOM_ACTIONS.add(new InsertTabAction());
-    }
+    private static final List<Action> CUSTOM_ACTIONS = List.of(new InsertTabAction());
 
     public InsertTabAction() {
         super(BaseKit.insertTabAction);
@@ -91,11 +90,11 @@ public class InsertTabAction extends BaseAction {
         }
 
         private void replaceTab() throws BadLocationException {
-            final int rowStart = Utilities.getRowStart(baseDocument, caretOffset);
+            final int rowStart = LineDocumentUtils.getLineStart(baseDocument, caretOffset);
             assert caretOffset >= rowStart : "Caret: " + caretOffset + " rowStart: " + rowStart;
             final String indentString = baseDocument.getText(rowStart, caretOffset - rowStart);
             if (indentString.contains(TAB_CHARACTER)) {
-                final String newIndentString = indentString.replace(TAB_CHARACTER, IndentUtils.getIndentString(IndentUtils.getIndentSize(baseDocument)));
+                final String newIndentString = indentString.replace(TAB_CHARACTER, " ".repeat(getSpacesPerTab(baseDocument)));
                 baseDocument.replace(rowStart, caretOffset - rowStart, newIndentString, null);
             }
         }
@@ -104,6 +103,11 @@ public class InsertTabAction extends BaseAction {
             return firstNonWhiteCharOffset >= caretOffset || firstNonWhiteCharOffset == -1;
         }
 
+    }
+
+    private static int getSpacesPerTab(Document doc) {
+        return CodeStylePreferences.get(doc).getPreferences()
+                .getInt(SimpleValueNames.SPACES_PER_TAB, 2);
     }
 
     public static List<Action> createCustomActions() {

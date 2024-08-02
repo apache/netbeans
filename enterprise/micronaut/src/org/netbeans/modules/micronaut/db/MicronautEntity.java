@@ -104,7 +104,7 @@ public class MicronautEntity extends RelatedCMPWizard {
 
     @NbBundle.Messages({
         "MSG_NoDbConn=No database connection found",
-        "MSG_NoDdSupport=No database support libraries found for {0}",
+        "MSG_NoDdSupport=No Micronaut Data support libraries found for {0}",
         "MSG_NoProject=No project found for {0}",
         "MSG_NoSourceGroup=No source group found for {0}",
         "MSG_SelectTables=Select Database Tables",

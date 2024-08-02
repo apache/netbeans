@@ -4,7 +4,7 @@
 	"description": "Apache NetBeans Language Server Extension for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
-	"version": "0.1.0",
+	"version": "99.99.9",
 	"preview": false,
 	"repository": {
 		"type": "git",
@@ -90,7 +90,7 @@
 				},
 				{
 					"id": "cloud.assets",
-					"name": "Cloud Assets",
+					"name": "Oracle Cloud Assets",
 					"when": "nbJavaLSReady"
 				},
 				{
@@ -127,8 +127,17 @@
 						"null"
 					],
 					"default": null,
-					"description": "Specifies JDK for the Apache NetBeans Language Server",
-					"scope": "machine"
+					"description": "Specifies the JDK on which the Apache NetBeans Language Server is run",
+					"scope": "machine-overridable"
+				},
+				"netbeans.project.jdkhome": {
+					"type": [
+						"string",
+						"null"
+					],
+					"default": null,
+					"description": "Specifies the JDK on which user's project will be run. Defaults to the value of netbeans.jdkhome",
+					"scope": "machine-overridable"
 				},
 				"netbeans.verbose": {
 					"type": "boolean",
@@ -486,6 +495,24 @@
 				"title": "Copy OCID"
 			},
 			{
+				"command": "nbls.cloud.publicIp.copy",
+				"title": "Copy the public IP address"
+			},
+                        {
+				"command": "nbls.cloud.imageUrl.copy",
+				"title": "Copy pull command"
+			},
+			{
+				"command": "nbls.cloud.computeInstance.ssh",
+				"title": "Start SSH session",
+                                "icon": "$(terminal)"
+			},
+			{
+				"command": "nbls.cloud.container.docker",
+				"title": "Run in Compute Instance",
+                                "icon": "$(play)"
+			},
+			{
 				"command": "nbls.workspace.compile",
 				"title": "Compile Workspace",
 				"category": "Java"
@@ -560,22 +587,27 @@
 			},
 			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddToProject",
-				"title": "Add To Project",
+				"title": "Add to Oracle Cloud Assets",
 				"icon": "$(add)"
 			},
 			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.SetReferenceName",
+				"title": "Set a Reference Name",
+				"icon": "$(edit)"
+			},
+			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.RemoveFromProject",
-				"title": "Remove From Project",
+				"title": "Remove from Oracle Cloud Assets",
 				"icon": "$(remove)"
 			},
 			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddSuggestedItemAction",
-				"title": "Add To Project",
+				"title": "Add Suggested to Oracle Cloud Assets",
 				"icon": "$(add)"
 			},
 			{
 				"command": "nbls.cloud.assets.refresh",
-				"title": "Refresh Cloud Assets",
+				"title": "Refresh Oracle Cloud Assets",
 				"icon": "$(refresh)"
 			},
 			{
@@ -591,6 +623,11 @@
 			{
 				"command": "nbls.cloud.assets.add.new",
 				"title": "Add New Cloud Resource",
+				"icon": "$(add)"
+			},
+			{
+				"command": "nbls.cloud.assets.configmap.upload",
+				"title": "Add Cloud Assets to ConfigMap",
 				"icon": "$(add)"
 			},
 			{
@@ -776,6 +813,22 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls.cloud.publicIp.copy",
+					"when": "false"
+				},
+				{
+					"command": "nbls.cloud.imageUrl.copy",
+					"when": "false"
+				},
+				{
+					"command": "nbls.cloud.computeInstance.ssh",
+					"when": "false"
+				},
+				{
+					"command": "nbls.cloud.container.docker",
+					"when": "false"
+				},
+				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
 					"when": "false"
 				},
@@ -797,6 +850,10 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddToProject",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.SetReferenceName",
 					"when": "false"
 				},
 				{
@@ -987,8 +1044,28 @@
 				},
 				{
 					"command": "nbls.cloud.ocid.copy",
-					"when": "viewItem =~ /class:oracle.items.OCIItem/",
+					"when": "viewItem =~ /ocid:.*/",
 					"group": "oci@1000"
+				},
+				{
+					"command": "nbls.cloud.publicIp.copy",
+					"when": "viewItem =~ /publicIp:.*/ && viewItem =~ /^(?!.*imageUrl:).*/",
+					"group": "oci@1000"
+				},
+				{
+					"command": "nbls.cloud.imageUrl.copy",
+					"when": "viewItem =~ /imageUrl:.*/",
+					"group": "oci@1000"
+				},
+				{
+					"command": "nbls.cloud.computeInstance.ssh",
+					"when": "viewItem =~ /publicIp:.*/ && viewItem =~ /^(?!.*imageUrl:).*/",
+					"group": "inline@10"
+				},
+				{
+					"command": "nbls.cloud.container.docker",
+					"when": "viewItem =~ /publicIp:.*/ && viewItem =~ /imageUrl:.*/",
+					"group": "inline@10"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddRepository",
@@ -1002,7 +1079,12 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddToProject",
-					"when": "viewItem =~ /class:oracle/ && view != cloud.assets",
+					"when": "viewItem =~ /(ComputeInstanceItem|ClusterItem|BucketItem|DatabaseItem|VaultItem|ContainerRepositoryItem)/ && view != cloud.assets",
+					"group": "inline@14"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.SetReferenceName",
+					"when": "viewItem =~ /cap:refName/ && view == cloud.assets",
 					"group": "inline@14"
 				},
 				{
@@ -1017,7 +1099,7 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CloudRefresh",
-					"when": "viewItem =~ /class:oracle/ && view != cloud.assets",
+					"when": "viewItem =~ /class:oracle/",
 					"group": "inline@13"
 				},
 				{
@@ -1113,6 +1195,14 @@
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/computeinstance.svg",
 				"codeicon": "server-environment"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/containerrepository.svg",
+				"codeicon": "briefcase"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/containertag.svg",
+				"codeicon": "tag"
 			},
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/cluster.svg",
@@ -1249,6 +1339,7 @@
 		"@types/ps-node": "^0.1.0",
 		"@types/vscode": "^1.76.0",
 		"@types/vscode-webview": "^1.57.1",
+		"@types/xml2js": "^0.4.14",
 		"@vscode/codicons": "0.0.29",
 		"esbuild": "^0.16.17",
 		"glob": "^7.1.6",
@@ -1262,7 +1353,8 @@
 		"@vscode/webview-ui-toolkit": "^1.2.2",
 		"jdk-utils": "^0.4.4",
 		"jsonc-parser": "3.0.0",
-		"vscode-languageclient": "8.0.1"
+		"vscode-languageclient": "8.0.1",
+		"xml2js": "^0.6.2"
 	},
 	"__metadata": {
 		"id": "66c7d7dc-934c-499b-94af-5375e8234fdd",

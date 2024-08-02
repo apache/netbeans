@@ -657,7 +657,13 @@ public class FormatVisitor extends DefaultVisitor {
                     }
                     ts.moveNext();
                     if (includeWBC) {
-                        formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_OPEN_CLOSE_BRACES, ts.offset()));
+                        if (parent instanceof FunctionDeclaration || parent instanceof MethodDeclaration) {
+                            // GH-6716 for PER
+                            // https://www.php-fig.org/per/coding-style/#44-methods-and-functions
+                            formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_FUNCTION_OPEN_CLOSE_BRACES, ts.offset()));
+                        } else {
+                            formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_OPEN_CLOSE_BRACES, ts.offset()));
+                        }
                     }
 
                     if (isTypeNode(parent)) {
@@ -1952,7 +1958,8 @@ public class FormatVisitor extends DefaultVisitor {
     private boolean addIndentToFunctionInvocation() {
         boolean addIndentation = !(path.get(1) instanceof ReturnStatement
                     || path.get(1) instanceof Assignment
-                    || (path.size() > 2 && path.get(1) instanceof MethodInvocation && path.get(2) instanceof Assignment));
+                    || (path.size() > 2 && path.get(1) instanceof MethodInvocation && path.get(2) instanceof Assignment)
+                    || (path.size() > 2 && path.get(1) instanceof StaticMethodInvocation && path.get(2) instanceof Assignment));
         if (!addIndentation && path.size() > 1 && path.get(1) instanceof MethodInvocation) {
             // GH-7172
             // e.g.

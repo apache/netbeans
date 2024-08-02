@@ -127,6 +127,8 @@ public enum GlassFishVersion {
     GF_7_0_13       ((short) 7, (short) 0, (short) 13, (short) 0, GlassFishVersion.GF_7_0_13_STR),
     /** GlassFish 7.0.14 */
     GF_7_0_14       ((short) 7, (short) 0, (short) 14, (short) 0, GlassFishVersion.GF_7_0_14_STR),
+    /** GlassFish 7.0.15 */
+    GF_7_0_15       ((short) 7, (short) 0, (short) 15, (short) 0, GlassFishVersion.GF_7_0_15_STR),
     /** GlassFish 8.0.0 */
     GF_8_0_0       ((short) 8, (short) 0, (short) 0, (short) 0, GlassFishVersion.GF_8_0_0_STR);
     ////////////////////////////////////////////////////////////////////////////
@@ -354,6 +356,11 @@ public enum GlassFishVersion {
     /** Additional {@code String} representations of GF_7_0_14 value. */
     static final String GF_7_0_14_STR_NEXT[] = {"7.0.14", "7.0.14.0"};
 
+    /** A {@code String} representation of GF_7_0_15 value. */
+    static final String GF_7_0_15_STR = "7.0.15";
+    /** Additional {@code String} representations of GF_7_0_15 value. */
+    static final String GF_7_0_15_STR_NEXT[] = {"7.0.15", "7.0.15.0"};
+
     /** A {@code String} representation of GF_8_0_0 value. */
     static final String GF_8_0_0_STR = "8.0.0";
     /** Additional {@code String} representations of GF_8_0_0 value. */
@@ -410,6 +417,7 @@ public enum GlassFishVersion {
         initStringValuesMapFromArray(GF_7_0_12, GF_7_0_12_STR_NEXT);
         initStringValuesMapFromArray(GF_7_0_13, GF_7_0_13_STR_NEXT);
         initStringValuesMapFromArray(GF_7_0_14, GF_7_0_14_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_15, GF_7_0_15_STR_NEXT);
         initStringValuesMapFromArray(GF_8_0_0, GF_8_0_0_STR_NEXT);
     }
 

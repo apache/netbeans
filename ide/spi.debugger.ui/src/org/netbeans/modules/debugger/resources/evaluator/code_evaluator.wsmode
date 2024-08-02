@@ -24,15 +24,17 @@
           "-//NetBeans//DTD Mode Properties 2.0//EN"
           "http://www.netbeans.org/dtds/mode-properties2_0.dtd">
 
-<mode version="2.0">
+
+<mode version="2.4">
     <name unique="code_evaluator" />
     <kind type="view" />
     <state type="joined" />
     <constraints>
-        <path orientation="horizontal" number="60" weight="0.7" />
-        <path orientation="vertical" number="79" weight="0.1" />
-        <path orientation="horizontal" number="30" weight="0.8" />
+        <path orientation="horizontal" number="20" weight="0.3"/>
+        <path orientation="vertical" number="21" weight="0.095"/>
     </constraints>
+    <bounds x="0" y="0" width="0" height="0" />
+    <frame state="0"/>
     <active-tc id="evaluatorPane" />
-    <empty-behavior permanent="true" />
+    <empty-behavior permanent="true"/>
 </mode>

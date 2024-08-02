@@ -27,6 +27,8 @@ var PrimitiveArrayInstance = Java.type("org.netbeans.lib.profiler.heap.Primitive
 var Field = Java.type("org.netbeans.lib.profiler.heap.Field");
 var FieldValue = Java.type("org.netbeans.lib.profiler.heap.FieldValue");
 var GCRoot = Java.type("org.netbeans.lib.profiler.heap.GCRoot");
+// Injected by environment (type lookup not possible in GraalJS
+// var ArrayDump = Java.type("org.netbeans.lib.profiler.heap.ArrayDump");
 
 var snapshot;
 
@@ -1273,7 +1275,7 @@ function wrapIterator(itr, wrap) {
         };
     } else if (itr instanceof java.util.Enumeration) {
         return itr; // already wrapped
-    } else if (itr instanceof org.netbeans.lib.profiler.heap.ArrayDump) {
+    } else if (itr instanceof ArrayDump) {
         return wrapJavaObject(itr);
     } else if (itr.constructor == JavaClassProto && !(itr instanceof JSAdapter)) {
         var arr = new Array();

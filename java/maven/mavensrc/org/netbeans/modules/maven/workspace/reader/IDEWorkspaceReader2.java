@@ -20,6 +20,8 @@ package org.netbeans.modules.maven.workspace.reader;
 
 import java.io.File;
 import java.util.List;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.repository.WorkspaceReader;
 import org.eclipse.aether.repository.WorkspaceRepository;
@@ -28,13 +30,11 @@ import org.eclipse.aether.repository.WorkspaceRepository;
  * netbeansProjectMappings comma separated list of <GAV>=<path> where gav is G:A:V
  * @author mkleint
  */
+@Named("ide")
+@Singleton
 public class IDEWorkspaceReader2 extends AbstractIDEWorkspaceReader implements WorkspaceReader {
 
     private final WorkspaceRepository repo = new WorkspaceRepository("ide");
-
-    public IDEWorkspaceReader2() {      
-        super();
-    }
 
     @Override
     public WorkspaceRepository getRepository() {

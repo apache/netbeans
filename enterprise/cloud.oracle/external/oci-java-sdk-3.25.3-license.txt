@@ -3,7 +3,7 @@ Description: Oracle Cloud Infrastructure SDK for Java
 Origin: https://github.com/oracle/oci-java-sdk
 Version: 3.25.3
 License: UPL-Apache-2.0
-Files: oci-java-sdk-circuitbreaker-3.25.3.jar, oci-java-sdk-common-3.25.3.jar, oci-java-sdk-database-3.25.3.jar, oci-java-sdk-identity-3.25.3.jar, oci-java-sdk-workrequests-3.25.3.jar, oci-java-sdk-adm-3.25.3.jar, oci-java-sdk-devops-3.25.3.jar, oci-java-sdk-addons-apache-configurator-jersey-3.25.3.jar, oci-java-sdk-common-httpclient-3.25.3.jar, oci-java-sdk-common-httpclient-jersey-3.25.3.jar oci-java-sdk-keymanagement-3.25.3.jar oci-java-sdk-vault-3.25.3.jar oci-java-sdk-containerengine-3.25.3.jar oci-java-sdk-core-3.25.3.jar oci-java-sdk-objectstorage-3.25.3.jar oci-java-sdk-objectstorage-extensions-3.25.3.jar oci-java-sdk-objectstorage-generated-3.25.3.jar
+Files: oci-java-sdk-circuitbreaker-3.25.3.jar, oci-java-sdk-common-3.25.3.jar, oci-java-sdk-database-3.25.3.jar, oci-java-sdk-identity-3.25.3.jar, oci-java-sdk-workrequests-3.25.3.jar, oci-java-sdk-adm-3.25.3.jar, oci-java-sdk-devops-3.25.3.jar, oci-java-sdk-addons-apache-configurator-jersey-3.25.3.jar, oci-java-sdk-common-httpclient-3.25.3.jar, oci-java-sdk-common-httpclient-jersey-3.25.3.jar oci-java-sdk-keymanagement-3.25.3.jar oci-java-sdk-vault-3.25.3.jar oci-java-sdk-containerengine-3.25.3.jar oci-java-sdk-core-3.25.3.jar oci-java-sdk-objectstorage-3.25.3.jar oci-java-sdk-objectstorage-extensions-3.25.3.jar oci-java-sdk-objectstorage-generated-3.25.3.jar, oci-java-sdk-artifacts-3.25.3.jar
 
 Copyright (c) 2016, 2020, Oracle and/or its affiliates.  All rights reserved.
 

@@ -20,6 +20,7 @@
 package org.netbeans.modules.gradle.tooling.internal;
 
 import org.netbeans.modules.gradle.tooling.Model;
+import org.gradle.tooling.BuildAction;
 import java.util.Map;
 import java.util.Set;
 
@@ -67,5 +68,9 @@ public interface NbProjectInfo extends Model, org.gradle.tooling.model.Model {
         public String getMessage();
         public String getDetail();
         public Report getCause();
+    }
+
+    public static BuildAction<NbProjectInfo> createAction() {
+        return new NbProjectInfoAction();
     }
 }

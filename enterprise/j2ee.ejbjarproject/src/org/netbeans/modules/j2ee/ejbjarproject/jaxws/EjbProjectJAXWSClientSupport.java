@@ -86,7 +86,7 @@ public class EjbProjectJAXWSClientSupport extends ProjectJAXWSClientSupport/* im
     @Override
     protected String getProjectJavaEEVersion() {
         EjbJar ejbModule = EjbJar.getEjbJar(project.getProjectDirectory());
-        if (ejbModule != null) {
+        if (ejbModule != null && ejbModule.getJ2eeProfile() != null) {
             switch (ejbModule.getJ2eeProfile()) {
                 case JAVA_EE_6_WEB:
                 case JAVA_EE_6_FULL:

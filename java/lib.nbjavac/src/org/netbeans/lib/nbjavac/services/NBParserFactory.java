@@ -157,7 +157,7 @@ public class NBParserFactory extends ParserFactory {
             if (result instanceof JCEnhancedForLoop) {
                 JCEnhancedForLoop tree = (JCEnhancedForLoop) result;
                 if (getEndPos(tree.var) == Position.NOPOS) {
-                    endPosTable.storeEnd(tree.var, getEndPos(((JCVariableDecl) tree.var).vartype));
+                    endPosTable.storeEnd(tree.var, getEndPos(tree.var.vartype));
                 }
             }
             return result;

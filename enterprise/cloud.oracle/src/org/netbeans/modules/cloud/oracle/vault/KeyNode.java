@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
-import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.OCINode;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.openide.nodes.Children;
@@ -63,7 +62,7 @@ public class KeyNode extends OCINode {
             Vault v = Vault.builder()
                     .compartmentId(vault.getCompartmentId())
                     .id(vault.getKey().getValue())
-                    .managementEndpoint(vault.managementEndpoint)
+                    .managementEndpoint(vault.getManagementEndpoint())
                     .build();
             KmsManagementClient client = KmsManagementClient.builder()
                     .vault(v)

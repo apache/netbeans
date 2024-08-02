@@ -63,7 +63,7 @@ public class LogFormatterTest extends NbTestCase {
         assertTrue(result.contains("<more>"));
         assertTrue(result.contains("</more>"));
         assertTrue(result.contains(" <class>junit.framework.TestCase</class>"));
-        assertTrue(result.contains("<class>sun.reflect.NativeMethodAccessorImpl</class>"));
+        assertTrue(result.contains("<class>java.lang.reflect.Method</class>"));
         assertFalse(result.contains("<more>80</more>"));
     }
 

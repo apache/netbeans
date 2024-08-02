@@ -98,7 +98,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
     }
 
     public NodeList createNodes(Project p) {
-        WebProject project = (WebProject) p.getLookup().lookup(WebProject.class);
+        WebProject project = p.getLookup().lookup(WebProject.class);
         assert project != null;
         return new ConfFilesNodeList(project);
     }
@@ -111,7 +111,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
 
         ConfFilesNodeList(WebProject proj) {
             project = proj;
-            WebLogicalViewProvider logView = (WebLogicalViewProvider) project.getLookup().lookup(WebLogicalViewProvider.class);
+            WebLogicalViewProvider logView = project.getLookup().lookup(WebLogicalViewProvider.class);
             assert logView != null;
         }
 
@@ -283,7 +283,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
                 Iterator it = groupsListeners.keySet().iterator();
                 while (it.hasNext()) {
                     SourceGroup group = (SourceGroup) it.next();
-                    PropertyChangeListener pcl = (PropertyChangeListener) groupsListeners.get(group);
+                    PropertyChangeListener pcl = groupsListeners.get(group);
                     group.removePropertyChangeListener(pcl);
                 }
             }
@@ -306,7 +306,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
                 Iterator it = fileSystemListeners.keySet().iterator();
                 while (it.hasNext()) {
                     FileSystem fs = (FileSystem) it.next();
-                    FileStatusListener fsl = (FileStatusListener) fileSystemListeners.get(fs);
+                    FileStatusListener fsl = fileSystemListeners.get(fs);
                     fs.removeFileStatusListener(fsl);
                 }
             }
@@ -357,8 +357,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
         }
         
         public static ConfFilesChildrenFactory forProject(Project project) {
-            ProjectWebModule pwm = (ProjectWebModule) project.getLookup().lookup(
-                    ProjectWebModule.class);
+            ProjectWebModule pwm = project.getLookup().lookup(ProjectWebModule.class);
             return new ConfFilesChildrenFactory(pwm);
         }
         
@@ -531,7 +530,7 @@ public final class ConfFilesNodeFactory implements NodeFactory {
             boolean result = false;
             start :
             for (int i = 0; i < providers.size(); i++) {
-                WebFrameworkProvider provider = (WebFrameworkProvider) providers.get(i);
+                WebFrameworkProvider provider = providers.get(i);
                 FileObject wmBase = getWebModule().getDocumentBase();
                 File[] files = null;
                 if (wmBase != null) {

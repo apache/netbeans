@@ -60,20 +60,22 @@ public class UseReleaseOptionHintTest extends NbTestCase {
 
     public void testImplicitCompilerPlugin() throws Exception {
         FileObject pom = TestFileUtils.writeFile(work, "pom.xml",
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-            "    <modelVersion>4.0.0</modelVersion>\n" +
-            "    <groupId>test</groupId>\n" +
-            "    <artifactId>mavenproject1</artifactId>\n" +
-            "    <version>1.0-SNAPSHOT</version>\n" +
-            "    <packaging>jar</packaging>\n" +
-            "    <properties>\n" +
-            "        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n" +
-            "        <exec.mainClass>test.mavenproject1.Mavenproject1</exec.mainClass>\n" +
-            "        <maven.compiler.source>11</maven.compiler.source>\n" +
-            "        <maven.compiler.target>11</maven.compiler.target>\n" +
-            "    </properties>\n" +
-            "</project>");
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                <modelVersion>4.0.0</modelVersion>
+                <groupId>test</groupId>
+                <artifactId>mavenproject1</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <packaging>jar</packaging>
+                <properties>
+                    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                    <exec.mainClass>test.mavenproject1.Mavenproject1</exec.mainClass>
+                    <maven.compiler.source>11</maven.compiler.source>
+                    <maven.compiler.target>11</maven.compiler.target>
+                </properties>
+            </project>
+            """);
 
         POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));
         Project project = ProjectManager.getDefault().findProject(pom.getParent());
@@ -88,48 +90,63 @@ public class UseReleaseOptionHintTest extends NbTestCase {
     }
 
     private static final String COMPILER_POM =
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-            "    <modelVersion>4.0.0</modelVersion>\n" +
-            "    <groupId>test</groupId>\n" +
-            "    <artifactId>mavenproject1</artifactId>\n" +
-            "    <version>1.0-SNAPSHOT</version>\n" +
-            "    <packaging>jar</packaging>\n" +
-            "    <properties>\n" +
-            "        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n" +
-            "        <exec.mainClass>test.mavenproject1.Mavenproject1</exec.mainClass>\n" +
-            "        <prop>11</prop>\n" +
-            "    </properties>\n" +
-            "    <build>\n" +
-            "        <plugins>\n" +
-            "            <plugin>\n" +
-            "                <groupId>org.apache.maven.plugins</groupId>\n" +
-            "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-            "                <version>3.10.1</version>\n" +
-            "                <configuration>\n" +
-            "                    <source>11</source>\n" +
-            "                    <target>11</target>\n" +
-            "                </configuration>" +
-            "                <executions>\n" +
-            "                    <execution>\n" +
-            "                        <id>default-compile</id>\n" +
-            "                        <configuration>\n" +
-            "                            <source>${prop}</source>\n" +
-            "                            <target>${prop}</target>\n" +
-            "                        </configuration>\n" +
-            "                    </execution>\n" +
-            "                    <execution>\n" +
-            "                        <id>default-testCompile</id>\n" +
-            "                        <configuration>\n" +
-            "                            <source>17</source>\n" +
-            "                            <target>17</target>\n" +
-            "                        </configuration>\n" +
-            "                    </execution>\n" +
-            "                </executions>\n" +
-            "            </plugin>\n" +
-            "        </plugins>\n" +
-            "    </build>\n" +
-            "</project>";
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                <modelVersion>4.0.0</modelVersion>
+                <groupId>test</groupId>
+                <artifactId>mavenproject1</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <packaging>jar</packaging>
+                <properties>
+                    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                    <exec.mainClass>test.mavenproject1.Mavenproject1</exec.mainClass>
+                    <prop>11</prop>
+                </properties>
+                <build>
+                    <pluginManagement>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.13.0</version>
+                                <configuration>
+                                    <source>17</source>
+                                    <target>17</target>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <version>3.10.1</version>
+                            <configuration>
+                                <source>11</source>
+                                <target>11</target>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>default-compile</id>
+                                    <configuration>
+                                        <source>${prop}</source>
+                                        <target>${prop}</target>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>default-testCompile</id>
+                                    <configuration>
+                                        <source>17</source>
+                                        <target>17</target>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </build>
+            </project>
+            """;
 
     public void testCompilerPlugin() throws Exception {
         FileObject pom = TestFileUtils.writeFile(work, "pom.xml", COMPILER_POM);
@@ -138,7 +155,7 @@ public class UseReleaseOptionHintTest extends NbTestCase {
         Project project = ProjectManager.getDefault().findProject(pom.getParent());
 
         List<ErrorDescription> hints = new UseReleaseOptionHint().getErrorsForDocument(model, project);
-        assertEquals(6, hints.size());
+        assertEquals(8, hints.size());
     }
 
     public void testCompilerPluginWithNoGroupID() throws Exception {
@@ -148,7 +165,7 @@ public class UseReleaseOptionHintTest extends NbTestCase {
         Project project = ProjectManager.getDefault().findProject(pom.getParent());
 
         List<ErrorDescription> hints = new UseReleaseOptionHint().getErrorsForDocument(model, project);
-        assertEquals(6, hints.size());
+        assertEquals(8, hints.size());
     }
 
     public void testOldCompilerPlugin() throws Exception {

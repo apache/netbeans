@@ -19,7 +19,6 @@
 package org.netbeans.modules.java.hints.bugs;
 
 import com.sun.source.tree.Tree.Kind;
-import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.ElementKind;
 import org.netbeans.modules.java.editor.base.semantic.UnusedDetector;
@@ -33,6 +32,8 @@ import org.netbeans.spi.java.hints.HintContext;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.openide.util.NbBundle.Messages;
+
+import static org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy.ON_TASK_END;
 
 /**
  *
@@ -52,24 +53,46 @@ public class Unused {
     @BooleanOption(displayName="#LBL_UnusedPackagePrivate", tooltip="#TP_UnusedPackagePrivate", defaultValue=DETECT_UNUSED_PACKAGE_PRIVATE_DEFAULT)
     public static final String DETECT_UNUSED_PACKAGE_PRIVATE = "detect.unused.package.private";
 
-    @TriggerTreeKind(Kind.COMPILATION_UNIT)
+    @TriggerTreeKind({
+        //class-like kinds:
+        Kind.ANNOTATION_TYPE, Kind.CLASS, Kind.ENUM, Kind.INTERFACE, Kind.RECORD,
+        Kind.VARIABLE,
+        Kind.METHOD
+    })
     public static List<ErrorDescription> unused(HintContext ctx) {
         List<UnusedDescription> unused = UnusedDetector.findUnused(ctx.getInfo(), () -> ctx.isCanceled());
-        List<ErrorDescription> result = new ArrayList<>(unused.size());
-        boolean detectUnusedPackagePrivate = ctx.getPreferences().getBoolean(DETECT_UNUSED_PACKAGE_PRIVATE, DETECT_UNUSED_PACKAGE_PRIVATE_DEFAULT);
+        if (unused.isEmpty()) {
+            return null;
+        }
+        boolean detectUnusedPackagePrivate = getTaskCachedBoolean(ctx, DETECT_UNUSED_PACKAGE_PRIVATE, DETECT_UNUSED_PACKAGE_PRIVATE_DEFAULT);
         for (UnusedDescription ud : unused) {
             if (ctx.isCanceled()) {
                 break;
+            }
+            if (ud.unusedElementPath.getLeaf() != ctx.getPath().getLeaf()) {
+                continue;
             }
             if (!detectUnusedPackagePrivate && ud.packagePrivate) {
                 continue;
             }
             ErrorDescription err = convertUnused(ctx, ud);
             if (err != null) {
-                result.add(err);
+                return List.of(err);
             }
+            break;
         }
-        return result;
+        return null;
+    }
+
+    // reading from AuxiliaryConfigBasedPreferences in inner loops is not cheap since it needs a mutex
+    private static boolean getTaskCachedBoolean(HintContext ctx, String key, boolean defaultVal) {
+        Object cached = ctx.getInfo().getCachedValue(key);
+        if (cached instanceof Boolean val) {
+            return val;
+        }
+        boolean fromPrefs = ctx.getPreferences().getBoolean(key, defaultVal);
+        ctx.getInfo().putCachedValue(key, fromPrefs, ON_TASK_END);
+        return fromPrefs;
     }
 
     @Messages({

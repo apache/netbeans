@@ -225,12 +225,8 @@ public final class RepositoryQueries {
         for (RepositoryInfo repo : repos) {
             for (RepositoryIndexQueryProvider idx : idxs) {
                 if(idx.handlesRepository(repo)) {
-                    List<RepositoryInfo> mappedRepos = qp2Repo.get(idx);
-                    if(mappedRepos == null) {
-                        mappedRepos = new LinkedList<>();
-                        qp2Repo.put(idx, mappedRepos);
-                    }
-                    mappedRepos.add(repo);
+                    qp2Repo.computeIfAbsent(idx, k -> new LinkedList<>())
+                           .add(repo);
                     break;
                 }
             }

@@ -112,7 +112,7 @@ public class Util  {
 	Enumeration<String> e = ht.keys();
 
 	while(e.hasMoreElements()) {
-	    String name = (String)e.nextElement();
+	    String name = e.nextElement();
 	    try {
 		String[] value = (String[])(ht.get(name));
 		for(int i=0; i<value.length; ++i) {
@@ -141,7 +141,7 @@ public class Util  {
 	if(ht != null && ht.size() > 0) {
 	    Enumeration<String> e = ht.keys();
 	    while(e.hasMoreElements()) {
-		String name = (String)e.nextElement();
+		String name = e.nextElement();
 		String[] value = (String[])(ht.get(name));
 		for(int i=0; i<value.length; ++i) {
 		    if(debug) 

@@ -216,7 +216,7 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
                 d.addContextValues(CTXVALUE_CAP_RENAME);
                 set = true;
             }
-
+            
             return set ? d : null;
         }
 

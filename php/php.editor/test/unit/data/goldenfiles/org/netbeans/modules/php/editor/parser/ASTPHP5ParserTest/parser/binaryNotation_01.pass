@@ -28,7 +28,7 @@
                     <Variable start='7' end='11' isDollared='true'>
                         <Identifier start='8' end='11' name='int'/>
                     </Variable>
-                    <Scalar start='14' end='17' type='REAL' value='0b1'/>
+                    <Scalar start='14' end='17' type='FLOAT' value='0b1'/>
                 </Assignment>
             </ExpressionStatement>
             <EmptyStatement start='20' end='22'/>

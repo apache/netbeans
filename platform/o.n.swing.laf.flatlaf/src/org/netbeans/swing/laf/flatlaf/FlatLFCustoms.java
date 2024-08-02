@@ -89,6 +89,8 @@ public class FlatLFCustoms extends LFCustoms {
 
             EDITOR_TABSCOMPONENT_BORDER, BorderFactory.createEmptyBorder(),
             EDITOR_TOOLBAR_BORDER, new CompoundBorder(DPISafeBorder.matte(0, 0, 1, 0, editorContentBorderColor), BorderFactory.createEmptyBorder(1, 0, 1, 0)),
+            "NbExplorerView.quicksearch.border.instance",
+                new CompoundBorder(DPISafeBorder.matte(1, 0, 0, 0, editorContentBorderColor), BorderFactory.createEmptyBorder(2, 6, 2, 2)),
             EDITOR_TAB_CONTENT_BORDER, DPISafeBorder.matte(0, 1, 1, 1, editorContentBorderColor),
             VIEW_TAB_CONTENT_BORDER, DPISafeBorder.matte(0, 1, 1, 1, UIManager.getColor("TabbedContainer.view.contentBorderColor")), // NOI18N
 

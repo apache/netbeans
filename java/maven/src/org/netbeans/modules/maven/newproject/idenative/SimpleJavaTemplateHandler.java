@@ -19,21 +19,21 @@
 package org.netbeans.modules.maven.newproject.idenative;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
-import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.api.archetype.ProjectInfo;
 import org.netbeans.modules.maven.classpath.AbstractBootPathImpl;
-import org.netbeans.modules.maven.model.ModelOperation;
 import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.maven.model.pom.Project;
 import org.netbeans.modules.maven.model.pom.Properties;
 import org.netbeans.modules.maven.options.MavenSettings;
 import org.netbeans.modules.maven.spi.newproject.CreateProjectBuilder;
+
+import static org.netbeans.modules.maven.api.Constants.GROUP_APACHE_PLUGINS;
+import static org.netbeans.modules.maven.api.Constants.PLUGIN_COMPILER;
 
 /**
  *
@@ -43,59 +43,52 @@ public class SimpleJavaTemplateHandler extends IDENativeTemplateHandler {
 
     @Override
     protected CreateProjectBuilder customizeBuilder(CreateProjectBuilder builder, ProjectInfo pi) {
-        return super.customizeBuilder(builder, pi).setAdditionalNonPomWork(new CreateProjectBuilder.AdditionalChangeHandle() {
-            @Override
-            public Runnable createAdditionalChange(final CreateProjectBuilder.Context context) {
-                return new Runnable() {
-
-                    @Override
-                    public void run() {
-                        File src = new File(context.getProjectDirectory(), "src" + File.separator + "main" + File.separator + "java");
-                        src.mkdirs();
-                        if (context.getPackageName() != null) {
-                            String path = context.getPackageName().replace(".", File.separator);
-                            new File(src, path).mkdirs();
+        return super.customizeBuilder(builder, pi)
+            .setAdditionalNonPomWork(
+                (CreateProjectBuilder.Context context) -> () -> {
+                    File src = new File(context.getProjectDirectory(), "src" + File.separator + "main" + File.separator + "java");
+                    src.mkdirs();
+                    String packageName = context.getPackageName();
+                    if (packageName != null) {
+                        String path = packageName.replace(".", File.separator);
+                        new File(src, path).mkdirs();
+                    }
+                }
+            )
+            .setAdditionalOperations(
+                (CreateProjectBuilder.Context context) -> List.of((POMModel model) -> {
+                    MavenProject mp = context.getParent();
+                    boolean setLevel = true;
+                    if (mp != null) {
+                        if (   PluginPropertyUtils.getPluginProperty(mp, GROUP_APACHE_PLUGINS, PLUGIN_COMPILER, "release", "compile", "maven.compiler.release") != null
+                            || PluginPropertyUtils.getPluginProperty(mp, GROUP_APACHE_PLUGINS, PLUGIN_COMPILER, "source", "compile", "maven.compiler.source") != null
+                            || PluginPropertyUtils.getPluginProperty(mp, GROUP_APACHE_PLUGINS, PLUGIN_COMPILER, "target", "compile", "maven.compiler.target") != null) {
+                            setLevel = false;
                         }
                     }
-                };
-            }
-        }).setAdditionalOperations(new CreateProjectBuilder.PomOperationsHandle() {
-            //#230984 use source 1.7 by default, unless parent paroject defines something, in that case, just inherit
-            @Override
-            public List<ModelOperation<POMModel>> createPomOperations(final CreateProjectBuilder.Context context) {
-                return Collections.<ModelOperation<POMModel>>singletonList(new ModelOperation<POMModel>() {
-
-                    @Override
-                    public void performOperation(POMModel model) {
-                        MavenProject mp = context.getParent();
-                        boolean setLevel = true;
-                        if (mp != null) {
-                            String source = PluginPropertyUtils.getPluginProperty(mp, Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER, "source", "compile", "maven.compiler.source");
-                            String target = PluginPropertyUtils.getPluginProperty(mp, Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER, "target", "compile", "maven.compiler.target");
-                            if (target != null || source != null) {
-                                setLevel = false;
+                    if (setLevel) {
+                        Project root = model.getProject();
+                        if (root != null) {
+                            Properties props = root.getProperties();
+                            if (props == null) {
+                                props = model.getFactory().createProperties();
+                                root.setProperties(props);
                             }
-                        }
-                        if (setLevel) {
-                            Project root = model.getProject();
-                            if (root != null) {
-                                Properties props = root.getProperties();
-                                if (props == null) {
-                                    props = model.getFactory().createProperties();
-                                    root.setProperties(props);
-                                }
-                                JavaPlatform active = AbstractBootPathImpl.getActivePlatform(MavenSettings.getDefault().getDefaultJdk());
-                                if (active == null) {
-                                    active = JavaPlatformManager.getDefault().getDefaultPlatform();
-                                }
-                                String version = active.getSpecification().getVersion().toString();
+                            JavaPlatform active = AbstractBootPathImpl.getActivePlatform(MavenSettings.getDefault().getDefaultJdk());
+                            if (active == null) {
+                                active = JavaPlatformManager.getDefault().getDefaultPlatform();
+                            }
+                            String version = active.getSpecification().getVersion().toString();
+                            if (version != null && version.startsWith("1.")) {
                                 props.setProperty("maven.compiler.source", version);
                                 props.setProperty("maven.compiler.target", version);
+                            } else {
+                                // MCOMPILER-582: compiler plugin 3.13.0+ supports the release flag on all JDK versions
+                                props.setProperty("maven.compiler.release", version);
                             }
                         }
                     }
-                });
-            }
-        });
+                })
+            );
     }
 }

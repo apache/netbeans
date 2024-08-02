@@ -284,7 +284,9 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
 
         @Override
         public void repeatExecution() {
-            //TODO: Implement
+            if (config.getExecFlags().contains(RunConfig.ExecFlag.REPEATABLE)) {
+                RunUtils.executeGradle(config, null);
+            }
         }
 
         @Override

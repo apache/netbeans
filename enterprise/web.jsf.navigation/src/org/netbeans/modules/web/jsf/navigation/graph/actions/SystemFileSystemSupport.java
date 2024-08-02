@@ -88,7 +88,7 @@ public final class SystemFileSystemSupport {
         }
 
         synchronized (dataFolder2actionsProvider) {
-            ActionsProvider actionsProvider = (ActionsProvider)dataFolder2actionsProvider.get(dataFolder);
+            ActionsProvider actionsProvider = dataFolder2actionsProvider.get(dataFolder);
             if (actionsProvider == null) {
                 actionsProvider = new DefaultActionsProvider(dataFolder);
                 dataFolder2actionsProvider.put(dataFolder, actionsProvider);

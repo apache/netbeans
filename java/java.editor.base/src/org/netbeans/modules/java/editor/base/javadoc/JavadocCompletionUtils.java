@@ -273,7 +273,7 @@ public final class JavadocCompletionUtils {
             boolean result = (pos > 0
                     && JAVADOC_LINE_BREAK.matcher(text).find()
                     && (pos == token.length() || !isInsideIndent(token, pos))
-                    ) || ts.index() == 0;
+                    );
             return result;
         } catch (IndexOutOfBoundsException e) {
             throw (IndexOutOfBoundsException) new IndexOutOfBoundsException("pos: " + pos + ", token.length: " + token.length() + ", token text: " + token.text()).initCause(e);

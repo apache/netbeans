@@ -146,4 +146,19 @@ public class ElementJavadocTest extends NbTestCase {
         assertEquals(expectedJavadoc, actualJavadoc);
     }
 
+    public void testLinkNoRef() throws Exception {
+        prepareTest("test/Test.java",
+                    "///Hello!\n" +
+                    "///{@link }\n" +
+                    "public class T<caret>est {\n" +
+                    "}\n");
+
+        String actualJavadoc = ElementJavadoc.create(info, selectedElement).getText();
+        String expectedJavadoc = "<pre>public class <b>Test</b><br>extends <a href='*0'>Object</a></pre><p>Hello!\n" +
+                                 "\n" +
+                                 "<p>";
+
+        assertEquals(expectedJavadoc, actualJavadoc);
+    }
+
 }

@@ -496,7 +496,7 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
                 "package p;\n" +
                 "class Clazz {\n" +
                 "    /**\n" +
-                "     * {@value Mat|\n" +
+                "     * {@value Math|\n" +
                 "     */\n" +
                 "    Clazz() {\n" +
                 "    }\n" +

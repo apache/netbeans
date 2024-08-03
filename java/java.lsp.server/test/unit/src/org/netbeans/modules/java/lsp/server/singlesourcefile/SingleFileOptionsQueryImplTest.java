@@ -85,10 +85,6 @@ public class SingleFileOptionsQueryImplTest extends NbTestCase {
 
         query.setConfiguration(workspace, "-Dtest=test", null);
 
-        Workspace emptyWorkspace = new WorkspaceImpl(Collections.emptyList());
-
-        query.setConfiguration(emptyWorkspace, "-Dtest=empty", null);
-
         Lookups.executeWith(new ProxyLookup(Lookups.fixed(workspace), Lookup.getDefault()), () -> {
             assertEquals("-Dtest=test", query.optionsFor(source1).getOptions());
             assertEquals(workspace1.toURI(), query.optionsFor(source1).getWorkDirectory());
@@ -101,15 +97,15 @@ public class SingleFileOptionsQueryImplTest extends NbTestCase {
             assertEquals(workspace2.toURI(), query.optionsFor(source2.getParent()).getWorkDirectory());
 
             assertNotNull(query.optionsFor(source3));
-            assertEquals("-Dtest=empty", query.optionsFor(source3).getOptions());
+            assertEquals("-Dtest=test", query.optionsFor(source3).getOptions());
             assertEquals(source3.getParent().toURI(), query.optionsFor(source3).getWorkDirectory());
 
             assertNotNull(query.optionsFor(source3.getParent()));
-            assertEquals("-Dtest=empty", query.optionsFor(source3.getParent()).getOptions());
+            assertEquals("-Dtest=test", query.optionsFor(source3.getParent()).getOptions());
             assertEquals(source3.getParent().toURI(), query.optionsFor(source3.getParent()).getWorkDirectory());
 
-            assertNull(query.optionsFor(wd));
             assertEquals(query.optionsFor(source3), query.optionsFor(source3.getParent()));
+            assertNull(query.optionsFor(wd));
 
             AtomicInteger changeCount = new AtomicInteger();
 
@@ -177,11 +173,25 @@ public class SingleFileOptionsQueryImplTest extends NbTestCase {
         assertEquals(workspace2.toURI(), query.optionsFor(source2.getParent()).getWorkDirectory());
 
         assertNotNull(query.optionsFor(source3));
-        assertEquals("-Dtest=empty", query.optionsFor(source3).getOptions());
+        assertEquals("-Dtest=test2", query.optionsFor(source3).getOptions());
         assertEquals(source3.getParent().toURI(), query.optionsFor(source3).getWorkDirectory());
         assertNotNull(query.optionsFor(source3.getParent()));
-        assertEquals("-Dtest=empty", query.optionsFor(source3.getParent()).getOptions());
+        assertEquals("-Dtest=test2", query.optionsFor(source3.getParent()).getOptions());
         assertEquals(source3.getParent().toURI(), query.optionsFor(source3.getParent()).getWorkDirectory());
+        assertEquals(query.optionsFor(source3), query.optionsFor(source3.getParent()));
+
+        // with multiple open workspaces:
+        Workspace emptyWorkspace = new WorkspaceImpl(Collections.emptyList());
+        query.setConfiguration(emptyWorkspace, "-Dtest=empty", null);
+
+        assertEquals("-Dtest=test2", query.optionsFor(source1).getOptions());
+        assertEquals(workspace1.toURI(), query.optionsFor(source1).getWorkDirectory());
+
+        assertEquals("-Dtest=test2", query.optionsFor(source2).getOptions());
+        assertEquals(workspace2.toURI(), query.optionsFor(source2).getWorkDirectory());
+
+        assertNull(query.optionsFor(source3));
+        assertNull(query.optionsFor(source3.getParent()));
     }
 
     private static final class WorkspaceImpl implements Workspace {

@@ -180,11 +180,7 @@ public final class RemoteServices {
     
     private static int getTargetMajorVersion(VirtualMachine vm) throws InternalExceptionWrapper, VMDisconnectedExceptionWrapper {
         String version = VirtualMachineWrapper.version(vm);
-        int dot = version.indexOf(".");
-        if (dot < 0) {
-            dot = version.length();
-        }
-        return Integer.parseInt(version.substring(0, dot));
+        return Runtime.Version.parse(version).feature();
     }
 
     public static ClassObjectReference uploadBasicClasses(JPDAThreadImpl t, String basicClassName) throws InvalidTypeException, ClassNotLoadedException, IncompatibleThreadStateException, InvocationException, IOException, PropertyVetoException, InternalExceptionWrapper, VMDisconnectedExceptionWrapper, ObjectCollectedExceptionWrapper, UnsupportedOperationExceptionWrapper, ClassNotPreparedExceptionWrapper {

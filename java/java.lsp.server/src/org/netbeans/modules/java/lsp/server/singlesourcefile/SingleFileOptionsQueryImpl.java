@@ -20,11 +20,11 @@ package org.netbeans.modules.java.lsp.server.singlesourcefile;
 
 import java.io.File;
 import java.net.URI;
-import java.util.ConcurrentModificationException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.WeakHashMap;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -55,27 +55,22 @@ public abstract class SingleFileOptionsQueryImpl implements SingleFileOptionsQue
             if (workspaceFolder != null) {
                 return getResult(workspace, workspaceFolder);
             } else {
-                Set<Workspace> workspaces;
+                List<Workspace> workspaces;
 
                 synchronized (this) {
-                    workspaces = workspace2Settings.keySet();
+                    workspaces = new ArrayList<>(workspace2Settings.keySet());
                 }
 
                 int count = 0;
-                try {
-                    for (Workspace w : workspaces) {
-                        if (w == null)
-                            continue;   // Since a WeakHashMap is in use, it is possible to receive a null value.
-                        FileObject folder = findWorkspaceFolder(w, file);
-                        if (folder != null) {
-                            return getResult(w, folder);
-                        }
-                        if (count++ == 0 && workspace == null)
-                            workspace = w;
+                for (Workspace w : workspaces) {
+                    if (w == null)
+                        continue;   // Since a WeakHashMap is in use, it is possible to receive a null value.
+                    FileObject folder = findWorkspaceFolder(w, file);
+                    if (folder != null) {
+                        return getResult(w, folder);
                     }
-                } catch (ConcurrentModificationException ignore) {
-                    // In the rare event that a concurrent invocation of this method caused the Map to change,
-                    // at least avoid an unexpected exception for the invoker.
+                    if (count++ == 0 && workspace == null)
+                        workspace = w;
                 }
 
                 if (count == 1) {

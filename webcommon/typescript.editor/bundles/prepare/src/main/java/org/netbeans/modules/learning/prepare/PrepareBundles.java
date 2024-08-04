@@ -58,6 +58,10 @@ public class PrepareBundles {
         "License.txt",
         "LICENSE.md"
     };
+    private static final String[] SECONDARY_LICENSE_FILE_NAMES = {
+        "thirdpartynotices.txt",
+        "ThirdPartyNoticeText.txt"
+    };
     private static final String nl = "\n";
 
     public static void main(String... args) throws IOException, InterruptedException, NoSuchAlgorithmException {
@@ -99,6 +103,7 @@ public class PrepareBundles {
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(packagesDir.resolve("node_modules"))) {
             for (Path module : ds) {
                 if (".bin".equals(module.getFileName().toString())) continue;
+                if (! Files.isDirectory(module)) continue;
                 Path packageJson = module.resolve("package.json");
 
                 if (!Files.isReadable(packageJson)) {
@@ -118,7 +123,15 @@ public class PrepareBundles {
                     throw new IllegalStateException("Cannot find license for: " + module.getFileName());
                 }
 
-                Path thirdpartynoticestxt = module.resolve("thirdpartynotices.txt");
+                Path thirdpartynoticestxt = null;
+
+                for(String l: SECONDARY_LICENSE_FILE_NAMES) {
+                    if (Files.isReadable(module.resolve(l))) {
+                        thirdpartynoticestxt = module.resolve(l);
+                        break;
+                    }
+                }
+
                 String packageJsonText = readFileIntoString(packageJson);
                 Map<String, Object> packageJsonData = new Gson().fromJson(packageJsonText, HashMap.class);
                 String name = (String) packageJsonData.get("name");
@@ -128,12 +141,12 @@ public class PrepareBundles {
                 String licenseKey = (String) packageJsonData.get("license");
                 String licenseText;
 
-                if (Files.isReadable(thirdpartynoticestxt)) {
-                    licenseText = "Parts of this work are licensed:\n" +
-                                  readFileIntoString(license) +
-                                  "\n\n" +
-                                  "Parts of this work are licensed:\n" +
-                                  readFileIntoString(thirdpartynoticestxt);
+                if (thirdpartynoticestxt != null) {
+                    licenseText = "Parts of this work are licensed:\n"
+                            + readFileIntoString(license)
+                            + "\n\n"
+                            + "Parts of this work are licensed:\n"
+                            + readFileIntoString(thirdpartynoticestxt);
                 } else {
                     licenseText = readFileIntoString(license);
                 }

@@ -302,6 +302,7 @@ public class TextDocumentSyncServerCapabilityHandler {
                 }
             });
 
+            // @todo: the mimetype is not the language ID
             TextDocumentItem textDocumentItem = new TextDocumentItem(uri,
                                                                      FileUtil.getMIMEType(file),
                                                                      0,

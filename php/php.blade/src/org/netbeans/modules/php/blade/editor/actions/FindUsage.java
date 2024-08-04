@@ -40,7 +40,7 @@ import org.openide.windows.TopComponent;
 @ActionRegistration(displayName = "Template Usages")
 public class FindUsage extends AbstractAction implements ActionListener {
 
-    Node node;
+    private final Node node;
 
     public FindUsage(Node node) {
         this.node = node;

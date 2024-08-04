@@ -292,9 +292,8 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                 String namespace = reference.namespace;
 
                 if (namespace != null && reference.namespace.length() > 2) {
-                    int subOffset = reference.namespace.startsWith("\\") ? 1 : 0;
                     indexClassResults = PhpIndexUtils.queryExactNamespaceClasses(reference.identifier,
-                            reference.namespace.substring(subOffset, reference.namespace.length() - 1),
+                            EditorStringUtils.trimNamespace(namespace),
                             sourceFolder
                     );
                 } else {
@@ -315,10 +314,9 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                     return location;
                 }
                 String queryNamespace = reference.namespace;
+
                 if (queryNamespace != null && queryNamespace.length() > 2) {
-                    int subOffset = queryNamespace.startsWith("\\") ? 1 : 0;
-                    int endOffset = queryNamespace.endsWith("\\") ? queryNamespace.length() - 1 : queryNamespace.length();
-                    queryNamespace = queryNamespace.substring(subOffset, endOffset);
+                    queryNamespace = EditorStringUtils.trimNamespace(queryNamespace);
                 } else {
                     queryNamespace = null;
                 }
@@ -334,7 +332,9 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                             indexResult.getClassNamespace(),
                             indexResult.getParams()
                     );
-                    DeclarationLocation functionLocation = new DeclarationFinder.DeclarationLocation(indexResult.declarationFile, indexResult.getStartOffset(), resultHandle);
+                    DeclarationLocation functionLocation = new DeclarationFinder.DeclarationLocation(
+                            indexResult.declarationFile,
+                            indexResult.getStartOffset(), resultHandle);
                     if (location.equals(DeclarationLocation.NONE)) {
                         location = functionLocation;
                     }
@@ -376,10 +376,8 @@ public class BladeDeclarationFinder implements DeclarationFinder {
             case PHP_NAMESPACE_PATH_TYPE:{
                 Collection<PhpIndexResult> indexNamespaceResults;
                 if (reference.namespace != null) {
-                    int subOffset = reference.namespace.startsWith("\\") ? 1 : 0;
-                    String namespacePath = reference.namespace.substring(subOffset);
                     indexNamespaceResults = PhpIndexUtils.queryExactNamespaceClasses(reference.identifier,
-                            namespacePath,
+                            EditorStringUtils.trimNamespace(reference.namespace),
                             sourceFolder
                     );
                     for (PhpIndexResult indexResult : indexNamespaceResults) {
@@ -395,7 +393,8 @@ public class BladeDeclarationFinder implements DeclarationFinder {
 
                     for (PhpIndexResult indexResult : indexNamespaceResults) {
                         NamedElement resultHandle = new NamedElement(referenceIdentifier, indexResult.declarationFile, ElementType.PHP_NAMESPACE);
-                        DeclarationLocation constantLocation = new DeclarationFinder.DeclarationLocation(indexResult.declarationFile, indexResult.getStartOffset(), resultHandle);
+                        DeclarationLocation constantLocation = new DeclarationFinder.DeclarationLocation(
+                                indexResult.declarationFile, indexResult.getStartOffset(), resultHandle);
                         if (location.equals(DeclarationLocation.NONE)) {
                             location = constantLocation;
                         }

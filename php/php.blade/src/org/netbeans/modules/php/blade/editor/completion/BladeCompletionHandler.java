@@ -105,7 +105,8 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
         String tokenText = currentToken.getText();
         FileObject fo = completionContext.getParserResult().getSnapshot().getSource().getFileObject();
         //D_UNKNOWN_ATTR_ENC hack to fix completion not triggered in html embedded text
-        if (tokenText.startsWith("@") && currentToken.getType() != D_UNKNOWN_ATTR_ENC) {
+        if (tokenText.startsWith("@") // NOI18N
+                && currentToken.getType() != D_UNKNOWN_ATTR_ENC) {
             completeDirectives(completionProposals, completionContext, fo, currentToken);
         } else {
             if (prefix.length() == 1) {
@@ -174,7 +175,7 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
             request.carretOffset = completionContext.getCaretOffset();
             request.prefix = variablePrefix;
             if ("$loop".startsWith(variablePrefix)) {
-                String variableName = "$loop";
+                String variableName = "$loop"; // NOI18N
                 NamedElement variableElement = new NamedElement(variableName, fo, ElementType.VARIABLE);
                 completionProposals.add(new BladeCompletionProposal.BladeVariableItem(variableElement, request, variableName));
             }
@@ -276,7 +277,7 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
             return CodeCompletionHandler.QueryType.NONE;
         }
 
-        if (typedText.startsWith("@")) {
+        if (typedText.startsWith("@")) { // NOI18N
             return CodeCompletionHandler.QueryType.ALL_COMPLETION;
         }
 

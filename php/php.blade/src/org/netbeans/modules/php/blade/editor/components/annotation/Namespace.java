@@ -25,7 +25,7 @@ package org.netbeans.modules.php.blade.editor.components.annotation;
 public @interface Namespace {
     String path();
     String relativeFilePath() default "";
-    String packageName() default "blade";
+    String packageName() default "blade"; // NOI18N
     //inside App folder
     boolean from_app() default false;
     boolean from_vendor() default true;

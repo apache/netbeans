@@ -19,16 +19,22 @@
 package org.netbeans.modules.php.blade.editor;
 
 import javax.swing.ImageIcon;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.openide.util.ImageUtilities;
 
 /**
  *
  * @author bhaidu
  */
-public class ResourceUtilities {
+public final class ResourceUtilities {
 
     public static final String ICON_BASE = "org/netbeans/modules/php/blade/resources/"; //NOI18N
+    
+    private ResourceUtilities(){
+        
+    }
 
+    @CheckForNull
     public static ImageIcon loadResourceIcon(String path){
         return ImageUtilities.loadImageIcon(ICON_BASE + path, false);
     }

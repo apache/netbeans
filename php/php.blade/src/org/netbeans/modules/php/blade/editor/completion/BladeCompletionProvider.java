@@ -171,7 +171,7 @@ public class BladeCompletionProvider implements CompletionProvider {
                         if ("livewire".startsWith(nText)) {
                             //quick implementation
                             //??
-                            addHtmlTagCompletionItem(nText, "livewire", "livewire", caretOffset, resultSet);
+                            addHtmlTagCompletionItem(nText, "livewire", "livewire", caretOffset, resultSet); // NOI18N
                         }
                         break;
                     case HTML_COMPONENT_PREFIX:
@@ -299,7 +299,7 @@ public class BladeCompletionProvider implements CompletionProvider {
             case YIELD_ID:
                 return ResourceUtilities.ICON_BASE + "icons/layout.png"; //NOI18N
         }
-        return ResourceUtilities.ICON_BASE + "icons/at.png";
+        return ResourceUtilities.ICON_BASE + "icons/at.png"; // NOI18N
     }
 
 }

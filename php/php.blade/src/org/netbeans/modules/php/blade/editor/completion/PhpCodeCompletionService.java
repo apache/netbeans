@@ -32,6 +32,7 @@ import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.netbeans.modules.php.blade.csl.elements.ClassElement;
 import org.netbeans.modules.php.blade.csl.elements.ElementType;
 import org.netbeans.modules.php.blade.csl.elements.NamedElement;
+import org.netbeans.modules.php.blade.editor.EditorStringUtils;
 import static org.netbeans.modules.php.blade.editor.completion.BladeCompletionHandler.completionRequest;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexFunctionResult;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexResult;
@@ -237,7 +238,7 @@ public class PhpCodeCompletionService {
             final List<CompletionProposal> completionProposals,
             FileObject fo) {
 
-        if (!prefix.startsWith("\\") && !Character.isUpperCase(prefix.charAt(0))) {
+        if (!prefix.startsWith(EditorStringUtils.NAMESPACE_SEPARATOR) && !Character.isUpperCase(prefix.charAt(0))) {
             //skip lowercase string from namespce search
             return;
         }
@@ -247,7 +248,7 @@ public class PhpCodeCompletionService {
         if (projectOwner == null) {
             return;
         }
-        int substringOffset = prefix.startsWith("\\") ? 1 : 0;
+        int substringOffset = prefix.startsWith(EditorStringUtils.NAMESPACE_SEPARATOR) ? 1 : 0;
         Collection<PhpIndexResult> indexClassResults = PhpIndexUtils.queryNamespace(
                 projectOwner.getProjectDirectory(), prefix.substring(substringOffset)
         );

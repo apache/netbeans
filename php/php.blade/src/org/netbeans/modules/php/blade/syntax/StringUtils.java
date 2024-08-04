@@ -49,8 +49,7 @@ public class StringUtils {
     }
 
     public static String kebabToCamel(String str) {
-        str = str.toLowerCase();
-        String[] words = str.split("-");
+        String[] words = str.toLowerCase().split("-");
         String camelCase = words[0];
         for (int i = 1; i < words.length; i++) {
             camelCase += words[i].substring(0, 1).toUpperCase() + words[i].substring(1);

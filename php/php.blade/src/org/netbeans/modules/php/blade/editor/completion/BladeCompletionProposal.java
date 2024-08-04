@@ -453,11 +453,11 @@ public class BladeCompletionProposal implements CompletionProposal {
             String template = getName() + "($$${arg})\n    ${cursor}\n" + directive.endtag();
 
             switch (getName()) {
-                case "@foreach":
+                case "@foreach": // NOI18N
                     template = getName() + "($$${array} as $$${item})\n    ${selection}${cursor}\n" + directive.endtag();
                     break;
-                case "@section":
-                case "@session":
+                case "@section": // NOI18N
+                case "@session": // NOI18N
                     template = getName() + "('${id}')\n    ${cursor}\n" + directive.endtag();
                     break;
             }

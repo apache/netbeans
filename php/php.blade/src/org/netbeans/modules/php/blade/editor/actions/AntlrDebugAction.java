@@ -48,7 +48,7 @@ import org.openide.util.actions.Presenter;
 @ActionRegistration(displayName = "Antlr Debug", lazy=false)
 public class AntlrDebugAction extends AbstractAction implements ContextAwareAction, Presenter.Popup {
 
-    Node node;
+    private Node node;
 
     public void setNode(Node node){
         this.node = node;

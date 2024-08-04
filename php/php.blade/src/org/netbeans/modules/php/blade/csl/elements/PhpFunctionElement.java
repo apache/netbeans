@@ -28,8 +28,8 @@ import org.openide.filesystems.FileObject;
  */
 public class PhpFunctionElement extends NamedElement {
 
-    public final List<String> params;
     public final String namespace;
+    private final List<String> params;
 
     public PhpFunctionElement(String name, FileObject file,
             ElementType type,

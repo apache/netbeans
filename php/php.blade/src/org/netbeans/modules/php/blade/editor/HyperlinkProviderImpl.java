@@ -51,12 +51,12 @@ import org.openide.util.Exceptions;
 @MimeRegistration(mimeType = "text/x-php5", service = HyperlinkProviderExt.class)
 public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
-    String methodName;
-    String identifiableText;
-    String tooltipText = "";
-    FileObject goToFile;
-    int goToOffset = 0;
-    int triggeredEvent = 0;
+    private String methodName;
+    private String identifiableText;
+    private String tooltipText = "";
+    private FileObject goToFile;
+    private int goToOffset = 0;
+    private int triggeredEvent = 0;
 
     public enum DeclarationType {
         VIEW_PATH;
@@ -159,9 +159,9 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         switch (type) {
             case GO_TO_DECLARATION:
                 switch (methodName) {
-                    case "view":
-                    case "make":
-                    case "render":
+                    case "view": // NOI18N
+                    case "make": // NOI18N
+                    case "render": // NOI18N
                         if (goToFile != null) {
                             openDocument(goToFile, goToOffset);
                             triggeredEvent++;

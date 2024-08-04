@@ -245,7 +245,7 @@ public class BladeCompletionItem implements CompletionItem {
 
         @Override
         protected ImageIcon getIcon() {
-            String path = ResourceUtilities.ICON_BASE + "icons/at.png";//NOI18N
+            String path = ResourceUtilities.ICON_BASE + "icons/at.png"; //NOI18N
             return ImageUtilities.loadImageIcon(path, false);
         }
     }
@@ -259,11 +259,11 @@ public class BladeCompletionItem implements CompletionItem {
 
         @Override
         protected String getSubstituteText() {
-            String template = getItemText() + "($$${arg})";
+            String template = getItemText() + "($$${arg})"; // NOI18N
             switch (text){
-                case "@include":
-                case "@extends":    
-                    template = getItemText() + "('${path}')";
+                case "@include": // NOI18N
+                case "@extends": // NOI18N   
+                    template = getItemText() + "('${path}')"; // NOI18N
                     break;
             }
             return template;
@@ -332,11 +332,11 @@ public class BladeCompletionItem implements CompletionItem {
 
         @Override
         protected String getSubstituteText() {
-            String template = getItemText() + "($$${arg})\n\n${selection}${cursor}\n" + endTag;
+            String template = getItemText() + "($$${arg})\n\n${selection}${cursor}\n" + endTag; // NOI18N
             
             switch (text){
                 case "@foreach":
-                    template = getItemText() + "($$${array} as $$${item})\n${selection}${cursor}\n" + endTag;
+                    template = getItemText() + "($$${array} as $$${item})\n${selection}${cursor}\n" + endTag; // NOI18N
                     break;
             }
             
@@ -365,7 +365,7 @@ public class BladeCompletionItem implements CompletionItem {
 
         @Override
         protected ImageIcon getIcon() {
-            String path = ResourceUtilities.ICON_BASE + "icons/file.png";
+            String path = ResourceUtilities.ICON_BASE + "icons/blade_file.png"; // NOI18N
             if (isFolder) {
                 path = "org/openide/loaders/defaultFolder.gif";//NOI18N
             }
@@ -374,7 +374,7 @@ public class BladeCompletionItem implements CompletionItem {
 
         @Override
         protected String getRightHtmlText() {
-            int viewsPos = filePath.indexOf("/views/");
+            int viewsPos = filePath.indexOf("/views/"); // NOI18N
             return filePath.substring(viewsPos, filePath.length());
         }
     }

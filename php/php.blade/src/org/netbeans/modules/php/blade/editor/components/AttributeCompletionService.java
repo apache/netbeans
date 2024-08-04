@@ -28,9 +28,9 @@ import org.netbeans.modules.php.blade.editor.components.annotation.AttributeRegi
  * @author bhaidu
  */
 @AttributeRegister({
-    @Attribute(name = "class"),
-    @Attribute(name = "id"),
-    @Attribute(name = "title"),
+    @Attribute(name = "class"), // NOI18N
+    @Attribute(name = "id"), // NOI18N
+    @Attribute(name = "title"), // NOI18N
 })
 public class AttributeCompletionService {
 

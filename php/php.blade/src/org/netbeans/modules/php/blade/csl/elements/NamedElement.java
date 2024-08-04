@@ -42,14 +42,12 @@ public class NamedElement implements ElementHandle {
     protected final ElementType type;
 
     public NamedElement(String name, FileObject file) {
-        //we can add a file object from element
         this.name = name;
         this.file = file;
         this.type = ElementType.NA;
     }
 
     public NamedElement(String name, FileObject file, ElementType type) {
-        //we can add a file object from element
         this.name = name;
         this.file = file;
         this.type = type;

@@ -58,14 +58,14 @@ import org.openide.util.Exceptions;
  * @author bhaidu
  */
 @MimeRegistrations(value = {
-    @MimeRegistration(mimeType = "text/x-php5", service = CompletionProvider.class, position = 102), //    @MimeRegistration(mimeType = "text/x-blade", service = CompletionProvider.class, position = 105),
+    @MimeRegistration(mimeType = "text/x-php5", service = CompletionProvider.class, position = 102),
 }
 )
 public class BladePhpCompletionProvider implements CompletionProvider {
 
     private static final Logger LOGGER = Logger.getLogger(BladePhpCompletionProvider.class.getName());
-    public static final String JS_ASSET_FOLDER = "resources/js";
-    public static final String CSS_ASSET_FOLDER = "resources/css";
+    public static final String JS_ASSET_FOLDER = "resources/js"; // NOI18N
+    public static final String CSS_ASSET_FOLDER = "resources/css"; // NOI18N
 
     public enum CompletionType {
         BLADE_PATH,
@@ -342,7 +342,7 @@ public class BladePhpCompletionProvider implements CompletionProvider {
             int caretOffset, CompletionResultSet resultSet) {
 
         String filePath = fo.getPath();
-        int viewsPos = filePath.indexOf("/views/");
+        int viewsPos = filePath.indexOf("/views/"); // NOI18N
 
         CompletionItem item = CompletionUtilities.newCompletionItemBuilder(identifier)
                 .iconResource(getReferenceIcon(CompletionType.YIELD_ID))
@@ -370,11 +370,11 @@ public class BladePhpCompletionProvider implements CompletionProvider {
 
         switch (type) {
             case FOLDER:
-                return "org/openide/loaders/defaultFolder.gif";
+                return "org/openide/loaders/defaultFolder.gif"; // NOI18N
             case CSS_FILE:
-                return "org/netbeans/modules/css/visual/resources/style_sheet_16.png";
+                return "org/netbeans/modules/css/visual/resources/style_sheet_16.png"; // NOI18N
             case JS_FILE:
-                return "org/netbeans/modules/javascript2/editor/resources/javascript.png";
+                return "org/netbeans/modules/javascript2/editor/resources/javascript.png"; // NOI18N
         }
         return ResourceUtilities.ICON_BASE + "icons/layout.png"; //NOI18N
 

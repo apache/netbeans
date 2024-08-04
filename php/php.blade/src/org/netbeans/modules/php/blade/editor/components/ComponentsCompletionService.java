@@ -34,13 +34,13 @@ import org.openide.filesystems.FileObject;
  * @author bhaidu
  */
 @NamespaceRegister({
-    @Namespace(path = "App\\View\\Components", from_app=true, relativeFilePath="app/View/Components"),
-    @Namespace(path = "App\\Http\\Livewire", from_app=true, relativeFilePath="app/Http/Livewire"),
-    @Namespace(path = "App\\Livewire", from_app=true, relativeFilePath="app/Livewire"),//from 10
-    @Namespace(path = "Illuminate\\Console\\View\\Components"),
-    @Namespace(path = "BladeUIKit\\Components\\Buttons", packageName="blade-ui-kit/blade-ui-kit"),
-    @Namespace(path = "BladeUIKit\\Components\\Layouts", packageName="blade-ui-kit/blade-ui-kit"),
-    @Namespace(path = "BladeUIKit\\Components\\Forms\\Inputs", packageName="blade-ui-kit/blade-ui-kit"),
+    @Namespace(path = "App\\View\\Components", from_app=true, relativeFilePath="app/View/Components"), // NOI18N
+    @Namespace(path = "App\\Http\\Livewire", from_app=true, relativeFilePath="app/Http/Livewire"), // NOI18N
+    @Namespace(path = "App\\Livewire", from_app=true, relativeFilePath="app/Livewire"), // NOI18N
+    @Namespace(path = "Illuminate\\Console\\View\\Components"), // NOI18N
+    @Namespace(path = "BladeUIKit\\Components\\Buttons", packageName="blade-ui-kit/blade-ui-kit"), // NOI18N
+    @Namespace(path = "BladeUIKit\\Components\\Layouts", packageName="blade-ui-kit/blade-ui-kit"), // NOI18N
+    @Namespace(path = "BladeUIKit\\Components\\Forms\\Inputs", packageName="blade-ui-kit/blade-ui-kit"), // NOI18N
 })
 public class ComponentsCompletionService {
 

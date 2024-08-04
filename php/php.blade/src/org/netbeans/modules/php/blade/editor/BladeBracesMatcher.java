@@ -233,7 +233,8 @@ public class BladeBracesMatcher implements BracesMatcher {
     }
 
     public int[] findCustomDirectiveEnd(String directive) {
-        String[] pair = new String[]{"@end" + directive.substring(1)};
+        String endPrefix = "@end"; // NOI18N
+        String[] pair = new String[]{endPrefix + directive.substring(1)};
         List<String> stopDirectives = Arrays.asList(pair);
         List<String> startDirectiveForBalance = Arrays.asList(new String[]{directive});
 

@@ -63,7 +63,5 @@ public class PhpFunctionElement extends NamedElement {
     public List<String> getParams() {
         return params;
     }
-    
-    
 
 }

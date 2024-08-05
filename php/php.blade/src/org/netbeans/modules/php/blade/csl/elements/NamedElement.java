@@ -76,16 +76,22 @@ public class NamedElement implements ElementHandle {
     @Override
     public ElementKind getKind() {
         switch (type) {
-            case YIELD_ID:
+            case YIELD_ID -> {
                 return ElementKind.PACKAGE;
-            case STACK_ID:
+            }
+            case STACK_ID -> {
                 return ElementKind.PACKAGE;
-            case CUSTOM_DIRECTIVE:
+            }
+            case CUSTOM_DIRECTIVE -> {
                 return ElementKind.METHOD;
-            case PHP_CLASS:
+            }
+            case PHP_CLASS -> {
                 return ElementKind.CLASS;
+            }
+            default -> {
+                return ElementKind.FILE;
+            }
         }
-        return ElementKind.FILE;
     }
 
     @Override
@@ -106,5 +112,5 @@ public class NamedElement implements ElementHandle {
     public ElementType getType() {
         return type;
     }
-    
+
 }

@@ -19,7 +19,9 @@
 package org.netbeans.modules.php.blade.editor.indexing;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.php.blade.project.ProjectUtils;
 import org.openide.filesystems.FileObject;
@@ -29,43 +31,40 @@ import org.openide.util.Exceptions;
  *
  * @author bogdan
  */
-public class QueryUtils {
+public final class QueryUtils {
 
-    public static List<BladeIndex.IndexedReference> queryYieldReferences(String prefix, FileObject fo) {
-        BladeIndex bladeIndex = getIndex(fo);
-        if (bladeIndex == null) {
-            return null;
-        }
-        return bladeIndex.queryYieldIndexedReferences(prefix);
+    private QueryUtils() {
+
     }
-    
+
     public static List<BladeIndex.IndexedReference> findYieldReferences(String prefix, FileObject fo) {
         BladeIndex bladeIndex = getIndex(fo);
         if (bladeIndex == null) {
-            return null;
+            return new ArrayList<>();
         }
         return bladeIndex.findYieldIndexedReferences(prefix);
     }
-
-    public static List<BladeIndex.IndexedReference> queryStacksReferences(String prefix, FileObject fo) {
+    
+    public static List<BladeIndex.IndexedReference> findStacksReferences(String prefix, FileObject fo) {
         BladeIndex bladeIndex = getIndex(fo);
         if (bladeIndex == null) {
-            return null;
+            return new ArrayList<>();
         }
-        return bladeIndex.queryStacksIdsReference(prefix);
+        return bladeIndex.findStackIdIndexedReferences(prefix);
     }
-    
+
     public static List<BladeIndex.IndexedOffsetReference> getIncludePathReferences(String prefix, FileObject fo) {
         BladeIndex bladeIndex = getIndex(fo);
         if (bladeIndex == null) {
-            return null;
+            return new ArrayList<>();
         }
         return bladeIndex.getIncludePaths(prefix);
     }
-    
+
+    @CheckForNull
     public static BladeIndex getIndex(FileObject fo) {
         Project project = ProjectUtils.getMainOwner(fo);
-        
+
         try {
             return BladeIndex.get(project);
         } catch (IOException ex) {

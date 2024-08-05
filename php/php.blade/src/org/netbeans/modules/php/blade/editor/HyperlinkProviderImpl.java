@@ -33,7 +33,7 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.project.Project;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.modules.php.blade.editor.lexer.EditorUtils;
+import org.netbeans.modules.php.blade.editor.lexer.PHPLexerUtils;
 import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
 import org.netbeans.modules.php.blade.project.BladeProjectProperties;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
@@ -87,7 +87,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
         BaseDocument baseDoc = (BaseDocument) doc;
         int lineStart = LineDocumentUtils.getLineStart(baseDoc, offset);
-        TokenSequence<PHPTokenId> tokensq = EditorUtils.getTokenSequence(doc, offset);
+        TokenSequence<PHPTokenId> tokensq = PHPLexerUtils.getTokenSequence(doc, offset);
 
         if (tokensq == null) {
             return null;

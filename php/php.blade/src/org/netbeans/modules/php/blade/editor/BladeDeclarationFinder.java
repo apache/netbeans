@@ -118,7 +118,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
             }
 
             if (nt.getType() == BL_PARAM_STRING || nt.getType() == EXPR_STRING) {
-                List<Integer> tokensToMatch = BladeLexerUtils.tokensWithIdentifiableParam();
+                List<Integer> tokensToMatch = BladeLexerUtils.TOKENS_WITH_IDENTIFIABLE_PARAM;
                 List<Integer> tokensStop = Arrays.asList(new Integer[]{HTML});
                 org.antlr.v4.runtime.Token matchedToken = BladeAntlrUtils.findBackward(tokens, tokensToMatch, tokensStop);
                 int offsetCorrection = caretOffset - lineOffset;
@@ -248,7 +248,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
             case PUSH_IF:
             case PREPEND:
                 String stackId = referenceIdentifier;
-                List<BladeIndex.IndexedReference> stacks = QueryUtils.queryStacksReferences(stackId, currentFile);
+                List<BladeIndex.IndexedReference> stacks = QueryUtils.findStacksReferences(stackId, currentFile);
 
                 if (stacks == null) {
                     return DeclarationLocation.NONE;

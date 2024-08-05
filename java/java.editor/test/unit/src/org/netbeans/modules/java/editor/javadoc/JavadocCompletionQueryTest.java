@@ -856,26 +856,29 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
         }
     }
 
-    @ServiceProvider(service=SourceLevelQueryImplementation2.class)
-    public static final class SourceLevelQueryImpl implements SourceLevelQueryImplementation2 {
-
-        @Override
-        public Result getSourceLevel(FileObject javaFile) {
-            return new Result() {
-                @Override
-                public String getSourceLevel() {
-                    return "23";
-                }
+    @Override
+    protected Object[] additionalServices() {
+        return new Object[] {
+            new SourceLevelQueryImplementation2() {
 
                 @Override
-                public void addChangeListener(ChangeListener listener) {
-                }
+                public Result getSourceLevel(FileObject javaFile) {
+                    return new Result() {
+                        @Override
+                        public String getSourceLevel() {
+                            return "23";
+                        }
 
-                @Override
-                public void removeChangeListener(ChangeListener listener) {
-                }
-            };
-        }
+                        @Override
+                        public void addChangeListener(ChangeListener listener) {
+                        }
 
+                        @Override
+                        public void removeChangeListener(ChangeListener listener) {
+                        }
+                    };
+                }
+            }
+        };
     }
 }

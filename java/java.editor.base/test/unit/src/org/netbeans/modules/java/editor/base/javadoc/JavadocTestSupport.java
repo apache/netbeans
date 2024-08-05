@@ -20,7 +20,9 @@
 package org.netbeans.modules.java.editor.base.javadoc;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import javax.swing.text.StyledDocument;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
@@ -62,10 +64,10 @@ public abstract class JavadocTestSupport extends NbTestCase {
         super.setUp();
         
         MockMimeLookup.setInstances(MimePath.parse("text/x-java"), new JavaKit());
-        SourceUtilsTestUtil.prepareTest(new String[0], new Object[] {
-            new Pool(),
-            new MockMimeLookup(),
-        });
+        List<Object> services = new ArrayList<>();
+        services.add(new Pool());
+        services.add(new MockMimeLookup());
+        SourceUtilsTestUtil.prepareTest(new String[0], services.toArray());
         FileUtil.setMIMEType("java", "text/x-java");
         
         if (cache == null) {
@@ -115,7 +117,11 @@ public abstract class JavadocTestSupport extends NbTestCase {
         assertNotNull(info);
         assertTrue(info.getDiagnostics().toString(), info.getDiagnostics().isEmpty());
     }
-    
+
+    protected Object[] additionalServices() {
+        return new Object[0];
+    }
+
     /**
      * Inserts a marker '|' to string {@code s} on position {@code pos}. Useful
      * for assert's debug messages

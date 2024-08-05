@@ -31,7 +31,17 @@ import org.netbeans.modules.php.editor.lexer.PHPTokenId;
  *
  * @author bogdan
  */
-public class BladeLexerUtils {
+public final class BladeLexerUtils {
+
+    private BladeLexerUtils() {
+
+    }
+
+    public static final List<Integer> TOKENS_WITH_IDENTIFIABLE_PARAM = Arrays.asList(new Integer[]{
+        D_EXTENDS, D_INCLUDE, D_INCLUDE_IF, D_INCLUDE_WHEN,
+        D_INCLUDE_UNLESS, D_EACH, D_SECTION, D_HAS_SECTION, D_SECTION_MISSING,
+        D_PUSH, D_PUSH_IF, D_PREPEND, D_USE, D_INJECT, D_ASSET_BUNDLER
+    });
 
     public static TokenSequence<? extends PHPTokenId> getPhpTokenSequence(TokenHierarchy<Document> th, final int offset) {
         return getTokenSequence(th, offset, PHPTokenId.language());
@@ -65,13 +75,5 @@ public class BladeLexerUtils {
             }
         }
         return ts;
-    }
-
-    public static List<Integer> tokensWithIdentifiableParam() {
-        return Arrays.asList(new Integer[]{
-            D_EXTENDS, D_INCLUDE, D_INCLUDE_IF, D_INCLUDE_WHEN,
-            D_INCLUDE_UNLESS, D_EACH, D_SECTION, D_HAS_SECTION, D_SECTION_MISSING,
-            D_PUSH, D_PUSH_IF, D_PREPEND, D_USE, D_INJECT, D_ASSET_BUNDLER
-        });
     }
 }

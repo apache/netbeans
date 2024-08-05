@@ -26,7 +26,11 @@ import org.openide.filesystems.FileObject;
  *
  * @author bogdan
  */
-public class ProjectUtils {
+public final class ProjectUtils {
+
+    private ProjectUtils() {
+
+    }
 
     public static Project getMainOwner(FileObject file) {
         Project project = ProjectConvertors.getNonConvertorOwner(file);
@@ -34,17 +38,17 @@ public class ProjectUtils {
         if (project == null) {
             return null;
         }
-        
+
         return project;
     }
-    
+
     public static FileObject getProjectDirectory(FileObject file) {
         Project project = getMainOwner(file);
 
-        if (project == null){
+        if (project == null) {
             return null;
         }
-        
+
         return project.getProjectDirectory();
     }
 }

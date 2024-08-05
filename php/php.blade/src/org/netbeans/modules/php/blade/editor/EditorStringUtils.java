@@ -32,32 +32,12 @@ public final class EditorStringUtils {
     private EditorStringUtils() {
     }
 
-    public static String implode(Collection<String> items, String delimiter) {
-        Parameters.notNull("items", items); // NOI18N
-        Parameters.notNull("delimiter", delimiter); // NOI18N
-
-        if (items.isEmpty()) {
-            return ""; // NOI18N
-        }
-
-        StringBuilder buffer = new StringBuilder(200);
-        boolean first = true;
-        for (String s : items) {
-            if (!first) {
-                buffer.append(delimiter);
-            }
-            buffer.append(s);
-            first = false;
-        }
-        return buffer.toString();
-    }
-
     public static boolean isQuotedString(String text) {
         if (text.length() < 2) {
             return false;
         }
-        return (text.startsWith("'") && text.endsWith("'"))
-                || (text.startsWith("\"") && text.endsWith("\""));
+        return (text.startsWith("'") && text.endsWith("'")) // NOI18N
+                || (text.startsWith("\"") && text.endsWith("\"")); // NOI18N
     }
 
     public static String stripSurroundingQuotes(String text) {

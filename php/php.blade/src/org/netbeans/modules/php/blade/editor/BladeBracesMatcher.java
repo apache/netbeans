@@ -99,36 +99,36 @@ public class BladeBracesMatcher implements BracesMatcher {
 
     @Override
     public int[] findMatches() throws InterruptedException, BadLocationException {
-        int[] result = null;
         if (originToken == null) {
-            return result;
+            return null;
         }
         String tokenText = originToken.getText();
 
         switch (currentDirection) {
-            case CURLY_START_TO_END:
+            case CURLY_START_TO_END -> {
                 return findCloseTag();
-            case CURLY_END_TO_START:
+            }
+            case CURLY_END_TO_START -> {
                 return findOpenTag();
-            case START_TO_END:
+            }
+            case START_TO_END -> {
                 return findDirectiveEnd(tokenText);
-            case CUSTOM_START_TO_END:
+            }
+            case CUSTOM_START_TO_END -> {
                 return findCustomDirectiveEnd(tokenText);
-            case END_TO_START:
+            }
+            case END_TO_START -> {
                 return findOriginForDirectiveEnd(tokenText);
+            }
+            default -> { return null;}
         }
-
-        return result;
     }
 
     private static boolean shouldLookForBraceMatch(@NonNull Token currentToken) {
         switch (currentToken.getType()) {
-            case HTML:
-            case PHP_EXPRESSION:
-            case AT:
-            case BLADE_COMMENT:
-            case ERROR:
+            case HTML, PHP_EXPRESSION, AT, BLADE_COMMENT, ERROR -> {
                 return false;
+            }
         }
 
         return true;

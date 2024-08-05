@@ -45,6 +45,10 @@ public final class GeneralPreferencesUtils {
 
     // default values
     private static Preferences PREFERENCES;
+    
+    private GeneralPreferencesUtils(){
+        
+    }
 
     private static final PreferenceChangeListener PREFERENCES_TRACKER = new PreferenceChangeListener() {
         @Override
@@ -54,9 +58,6 @@ public final class GeneralPreferencesUtils {
             enableAutoTagCompletion = PREFERENCES.getBoolean(ENABLE_AUTO_TAG_COMPLETION, false);
         }
     };
-
-    private GeneralPreferencesUtils() {
-    }
 
     public static boolean isFormattingEnabled(){
         lazyInit();

@@ -295,11 +295,11 @@ public class BladeCompletionProvider implements CompletionProvider {
     private static String getReferenceIcon(CompletionType type) {
         switch (type) {
             case HTML_COMPONENT_TAG:
-                return "org/netbeans/modules/html/custom/resources/custom_html_element.png"; //NOI18N
+                return ResourceUtilities.COMPONENT_TAG;
             case YIELD_ID:
-                return ResourceUtilities.ICON_BASE + "icons/layout.png"; //NOI18N
+                return ResourceUtilities.LAYOUT_IDENTIFIER;
         }
-        return ResourceUtilities.ICON_BASE + "icons/at.png"; // NOI18N
+        return ResourceUtilities.DIRECTIVE_ICON;
     }
 
 }

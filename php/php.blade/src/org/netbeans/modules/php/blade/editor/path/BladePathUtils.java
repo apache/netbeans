@@ -36,10 +36,14 @@ import org.openide.filesystems.FileUtil;
  *
  * @author bogdan
  */
-public class BladePathUtils {
+public final class BladePathUtils {
 
     public static final String LARAVEL_VIEW_PATH = "resources/views"; //NOI18N
     public static final String BLADE_EXT = ".blade.php"; //NOI18N
+
+    private BladePathUtils() {
+
+    }
 
     /**
      * first we need to extract the root folder of view after we apply a generic
@@ -136,9 +140,9 @@ public class BladePathUtils {
         relativeSlash = unixPath.lastIndexOf("/");
 
         HashSet<FileObject> filteredViewRoots = new HashSet<>();
-        
+
         Map<String, FileObject> relativeFilePathMap = new HashMap<>();
-        
+
         if (relativeSlash > 0) {
             //filter only relative folders
             for (FileObject rootFolder : viewRoots) {
@@ -157,7 +161,7 @@ public class BladePathUtils {
 
         if (relativeSlash > 0) {
             //extract the path name prefix
-            relativePrefixToCompare = unixPath.substring(relativeSlash+1, unixPath.length());
+            relativePrefixToCompare = unixPath.substring(relativeSlash + 1, unixPath.length());
         } else {
             //root reference
             relativePrefixToCompare = unixPath;
@@ -168,7 +172,7 @@ public class BladePathUtils {
             for (FileObject rootFolder : filteredViewRoots) {
                 list.addAll(Arrays.asList(rootFolder.getChildren()));
             }
-            for (Map.Entry<String, FileObject> entry : relativeFilePathMap.entrySet()){
+            for (Map.Entry<String, FileObject> entry : relativeFilePathMap.entrySet()) {
                 list.addAll(Arrays.asList(entry.getValue().getChildren()));
             }
         } else {
@@ -181,10 +185,10 @@ public class BladePathUtils {
                     }
                 }
             }
-            
-            for (Map.Entry<String, FileObject> entry : relativeFilePathMap.entrySet()){
+
+            for (Map.Entry<String, FileObject> entry : relativeFilePathMap.entrySet()) {
                 for (FileObject file : entry.getValue().getChildren()) {
-                    if (file.getName().startsWith(relativePrefixToCompare)){
+                    if (file.getName().startsWith(relativePrefixToCompare)) {
                         list.add(file);
                     }
                 }
@@ -275,44 +279,44 @@ public class BladePathUtils {
 
         return path;
     }
-    
-    public static String getRelativeProjectPath(FileObject currentFile){
+
+    public static String getRelativeProjectPath(FileObject currentFile) {
         Project projectOwner = ProjectConvertors.getNonConvertorOwner(currentFile);
-        if (projectOwner == null){
+        if (projectOwner == null) {
             return "";
         }
-        
+
         String dirPath = projectOwner.getProjectDirectory().getPath();
         String relativePath = currentFile.getPath().replace(dirPath, "");
 
         //only if we found the relative project path
-        if (currentFile.getPath().length() > relativePath.length()){
+        if (currentFile.getPath().length() > relativePath.length()) {
             return relativePath;
         }
-        
+
         return "";
     }
-    
-    public static String toBladeViewPath(String filePath){
+
+    public static String toBladeViewPath(String filePath) {
         return filePath.replace(BLADE_EXT, "").replace("/", ".");
     }
-    
-    public static String viewPathToFilePath(String viewPath){
+
+    public static String viewPathToFilePath(String viewPath) {
         return viewPath.replace(".", "/") + BLADE_EXT;
     }
-    
-    public static HashSet<FileObject> getDefaultRoots(Project project){
+
+    public static HashSet<FileObject> getDefaultRoots(Project project) {
         HashSet<FileObject> defaultList = new HashSet<>();
         FileObject defaultViewsRoot = project.getProjectDirectory().getFileObject(LARAVEL_VIEW_PATH);
-        
-        if (defaultViewsRoot != null && defaultViewsRoot.isValid()){
+
+        if (defaultViewsRoot != null && defaultViewsRoot.isValid()) {
             defaultList.add(defaultViewsRoot);
         }
-        
+
         return defaultList;
     }
-    
-    public static String toBladeToProjectFilePath(String path){
+
+    public static String toBladeToProjectFilePath(String path) {
         return LARAVEL_VIEW_PATH + "/" + viewPathToFilePath(path);
     }
 }

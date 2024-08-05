@@ -353,7 +353,7 @@ public class BladeCompletionProposal implements CompletionProposal {
 
         @Override
         public ImageIcon getIcon() {
-            String path = ResourceUtilities.ICON_BASE + "icons/at.png";//NOI18N
+            String path = ResourceUtilities.DIRECTIVE_ICON;
             return ImageUtilities.loadImageIcon(path, false);
         }
 

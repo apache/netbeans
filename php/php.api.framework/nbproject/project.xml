@@ -167,7 +167,6 @@
                 <friend>org.netbeans.modules.php.cake3</friend>
                 <friend>org.netbeans.modules.php.doctrine2</friend>
                 <friend>org.netbeans.modules.php.fuel</friend>
-                <friend>org.netbeans.modules.php.laravel</friend>
                 <friend>org.netbeans.modules.php.nette2</friend>
                 <friend>org.netbeans.modules.php.project</friend>
                 <friend>org.netbeans.modules.php.smarty</friend>

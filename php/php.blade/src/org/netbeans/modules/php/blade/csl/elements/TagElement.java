@@ -59,7 +59,7 @@ public class TagElement implements ElementHandle {
 
     @Override
     public String getIn() {
-        return "";
+        return ""; // NOI18N
     }
 
     @Override

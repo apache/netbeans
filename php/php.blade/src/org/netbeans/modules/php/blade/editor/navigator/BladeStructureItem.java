@@ -163,7 +163,7 @@ public abstract class BladeStructureItem implements ElementHandle, StructureItem
 
         @Override
         public ImageIcon getCustomIcon() {
-            return ResourceUtilities.loadResourceIcon("icons/layout.png");
+            return ResourceUtilities.loadLayoutIcon();
         }
     }
 
@@ -211,7 +211,7 @@ public abstract class BladeStructureItem implements ElementHandle, StructureItem
 
         @Override
         public ImageIcon getCustomIcon() {
-            return ResourceUtilities.loadResourceIcon("icons/layout.png");
+            return ResourceUtilities.loadLayoutIcon();
         }
     }
 

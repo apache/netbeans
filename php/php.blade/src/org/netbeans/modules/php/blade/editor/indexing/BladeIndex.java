@@ -179,6 +179,20 @@ public class BladeIndex {
         }
         );
     }
+    
+    public List<IndexedReference> findStackIdIndexedReferences(String prefix) {
+        return findIndexedReferences(prefix,
+                BladeIndexer.STACK_ID,
+                new String[]{BladeIndexer.STACK_ID, BladeIndexer.STACK_REFERENCE},
+                BladeIndexer.STACK_REFERENCE,
+                new IndexReferenceCallback() {
+            @Override
+            public Reference createIndexReference(String value) {
+                return BladeIndexer.extractStackDataFromIndex(value);
+            }
+        }
+        );
+    }
 
     private List<IndexedReference> findIndexedReferences(String prefix,
             String indexKey, String[] valuesKeys, String valueKey,

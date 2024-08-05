@@ -50,17 +50,7 @@ import org.openide.loaders.DataObject;
  *
  * @author bogdan
  */
-public class ParsingUtils {
-
-    private final FileObject currentFile;
-
-    public ParsingUtils(FileObject file) {
-        this.currentFile = file;
-    }
-
-    public ParsingUtils() {
-        this.currentFile = null;
-    }
+public final class ParsingUtils {
 
     private PHPParseResult phpParserResult;
 
@@ -70,19 +60,16 @@ public class ParsingUtils {
 
     public void parsePhpText(String phpText) {
         FakeFileObject file = new FakeFileObject(phpText);
-        if (currentFile != null) {
-            file.setParent(currentFile.getParent());
-        }
         parseFileObject(file);
     }
-    
-    public void parseFileObject(FileObject file){
+
+    public void parseFileObject(FileObject file) {
         Document doc = openDocument(file);
 
         try {
             Source source = Source.create(doc);
-            
-            if (source == null){
+
+            if (source == null) {
                 return;
             }
 

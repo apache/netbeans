@@ -28,7 +28,13 @@ import org.openide.util.ImageUtilities;
  */
 public final class ResourceUtilities {
 
+    public static final String FOLDER = "org/openide/loaders/defaultFolder.gif";//NOI18N
     public static final String ICON_BASE = "org/netbeans/modules/php/blade/resources/"; //NOI18N
+    public static final String DIRECTIVE_ICON = ICON_BASE + "icons/at.png"; //NOI18N
+    public static final String BLADE_VIEW = ICON_BASE + "icons/blade_file.png"; //NOI18N
+    public static final String LAYOUT_IDENTIFIER = ICON_BASE + "icons/layout.png"; //NOI18N
+    public static final String COMPONENT_TAG = "org/netbeans/modules/html/custom/resources/custom_html_element.png"; //NOI18N
+    
     
     private ResourceUtilities(){
         
@@ -37,5 +43,10 @@ public final class ResourceUtilities {
     @CheckForNull
     public static ImageIcon loadResourceIcon(String path){
         return ImageUtilities.loadImageIcon(ICON_BASE + path, false);
+    }
+    
+    @CheckForNull
+    public static ImageIcon loadLayoutIcon(){
+        return ImageUtilities.loadImageIcon(LAYOUT_IDENTIFIER, false);
     }
 }

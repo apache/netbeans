@@ -370,13 +370,13 @@ public class BladePhpCompletionProvider implements CompletionProvider {
 
         switch (type) {
             case FOLDER:
-                return "org/openide/loaders/defaultFolder.gif"; // NOI18N
+                return ResourceUtilities.FOLDER; // NOI18N
             case CSS_FILE:
                 return "org/netbeans/modules/css/visual/resources/style_sheet_16.png"; // NOI18N
             case JS_FILE:
                 return "org/netbeans/modules/javascript2/editor/resources/javascript.png"; // NOI18N
         }
-        return ResourceUtilities.ICON_BASE + "icons/layout.png"; //NOI18N
+        return ResourceUtilities.LAYOUT_IDENTIFIER; //NOI18N
 
     }
 

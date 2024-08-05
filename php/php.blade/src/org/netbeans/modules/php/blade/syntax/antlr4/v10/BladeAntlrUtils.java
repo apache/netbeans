@@ -1,4 +1,4 @@
- /*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -30,7 +30,11 @@ import org.netbeans.spi.lexer.antlr4.AntlrTokenSequence;
  *
  * @author bogdan
  */
-public class BladeAntlrUtils {
+public final class BladeAntlrUtils {
+
+    private BladeAntlrUtils() {
+
+    }
 
     public static AntlrTokenSequence getTokens(Document doc) {
 
@@ -58,10 +62,10 @@ public class BladeAntlrUtils {
         Token token = tokens.next().get();
 
         //need to move back
-        if ( token != null && tokens.hasPrevious() && token.getStartIndex() > offset && token.getStopIndex() > offset){
+        if (token != null && tokens.hasPrevious() && token.getStartIndex() > offset && token.getStopIndex() > offset) {
             token = tokens.previous().get();
         }
-        
+
         return token;
     }
 
@@ -211,7 +215,7 @@ public class BladeAntlrUtils {
         return null;
 
     }
-    
+
     public static Token findForwardWithStop(Document doc, Token start,
             int tokensMatch, List<Integer> stopTokens) {
         AntlrTokenSequence tokens = getTokens(doc);
@@ -271,7 +275,7 @@ public class BladeAntlrUtils {
         return null;
 
     }
-    
+
     public static Token findBackwardWithStop(Document doc, Token start,
             int tokensMatch, List<Integer> stopTokens) {
         AntlrTokenSequence tokens = getTokens(doc);

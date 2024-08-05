@@ -245,7 +245,7 @@ public class BladeCompletionItem implements CompletionItem {
 
         @Override
         protected ImageIcon getIcon() {
-            String path = ResourceUtilities.ICON_BASE + "icons/at.png"; //NOI18N
+            String path = ResourceUtilities.DIRECTIVE_ICON;
             return ImageUtilities.loadImageIcon(path, false);
         }
     }
@@ -312,7 +312,7 @@ public class BladeCompletionItem implements CompletionItem {
 
         @Override
         protected ImageIcon getIcon() {
-            String path = ResourceUtilities.ICON_BASE + "icons/at.png";//NOI18N
+            String path = ResourceUtilities.DIRECTIVE_ICON;
             return ImageUtilities.loadImageIcon(path, false);
         }
 
@@ -365,9 +365,9 @@ public class BladeCompletionItem implements CompletionItem {
 
         @Override
         protected ImageIcon getIcon() {
-            String path = ResourceUtilities.ICON_BASE + "icons/blade_file.png"; // NOI18N
+            String path = ResourceUtilities.BLADE_VIEW;
             if (isFolder) {
-                path = "org/openide/loaders/defaultFolder.gif";//NOI18N
+                path = ResourceUtilities.FOLDER;
             }
             return ImageUtilities.loadImageIcon(path, false);
         }

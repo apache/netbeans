@@ -1965,9 +1965,6 @@ public class ElementJavadoc {
         }
     }
     private void appendReference(StringBuilder sb, ReferenceTree ref, List<? extends DocTree> label, TreePath docPath, DocCommentTree doc, DocTrees trees) {
-        if (ref == null) {
-            System.err.println("!!!!");
-        }
         String sig = ref.getSignature();
         if (sig != null && sig.length() > 0) {
             if (sig.charAt(0) == '#') { //NOI18N

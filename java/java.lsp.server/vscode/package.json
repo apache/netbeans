@@ -230,6 +230,23 @@
 					"default": 999,
 					"minimum": 1
 				},
+				"netbeans.guides.notified": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"ocid": {
+								"format": "string"
+							},
+							"actionType": {
+								"format": "string"
+							}
+						}
+					},
+					"default": null,
+					"description": "Specifies the OCIDs of resources for which guides are already shown",
+					"scope": "machine-overridable"
+				},
 				"java+.runConfig.arguments": {
 					"type": "string",
 					"default": "",
@@ -486,19 +503,19 @@
 				"command": "nbls.cloud.publicIp.copy",
 				"title": "Copy the public IP address"
 			},
-                        {
+			{
 				"command": "nbls.cloud.imageUrl.copy",
 				"title": "Copy pull command"
 			},
 			{
 				"command": "nbls.cloud.computeInstance.ssh",
 				"title": "Start SSH session",
-                                "icon": "$(terminal)"
+				"icon": "$(terminal)"
 			},
 			{
 				"command": "nbls.cloud.container.docker",
 				"title": "Run in Compute Instance",
-                                "icon": "$(play)"
+				"icon": "$(play)"
 			},
 			{
 				"command": "nbls.workspace.compile",
@@ -1339,6 +1356,7 @@
 	"dependencies": {
 		"@vscode/debugadapter": "1.55.1",
 		"@vscode/webview-ui-toolkit": "^1.2.2",
+		"handlebars": "^4.7.8",
 		"jdk-utils": "^0.4.4",
 		"jsonc-parser": "3.0.0",
 		"vscode-languageclient": "8.0.1",

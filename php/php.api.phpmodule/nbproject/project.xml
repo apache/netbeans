@@ -226,7 +226,6 @@
             </test-dependencies>
             <friend-packages>
                 <friend>org.cakephp.netbeans</friend>
-                <friend>org.netbeans.modules.php.blade</friend>
                 <friend>org.nbphpcouncil.modules.php.ci</friend>
                 <friend>org.nbphpcouncil.modules.php.laravel4</friend>
                 <friend>org.nbphpcouncil.modules.php.yii</friend>

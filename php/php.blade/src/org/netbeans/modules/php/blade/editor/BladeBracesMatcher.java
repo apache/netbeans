@@ -120,8 +120,9 @@ public class BladeBracesMatcher implements BracesMatcher {
             case END_TO_START -> {
                 return findOriginForDirectiveEnd(tokenText);
             }
-            default -> { return null;}
         }
+        
+        return null;
     }
 
     private static boolean shouldLookForBraceMatch(@NonNull Token currentToken) {

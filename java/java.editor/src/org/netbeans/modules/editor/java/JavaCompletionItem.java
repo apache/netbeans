@@ -1522,7 +1522,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         public String toString() {
             return (typeName != null ? typeName + " " : "") + varName; //NOI18N
         }
-   }
+    }
 
     static class FieldItem extends WhiteListJavaCompletionItem<VariableElement> {
 
@@ -1545,6 +1545,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private String typeName;
         private String leftText;
         private String rightText;
+        private CharSequence sortText;
         private boolean autoImportEnclosingType;
         private CharSequence enclSortText;
         private int castEndOffset;
@@ -1597,7 +1598,10 @@ public abstract class JavaCompletionItem implements CompletionItem {
 
         @Override
         public CharSequence getSortText() {
-            return simpleName + "#" + enclSortText; //NOI18N
+            if (sortText == null) {
+                sortText = LazySortText.link(simpleName, enclSortText);
+            }
+            return sortText;
         }
 
         @Override
@@ -1827,7 +1831,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         protected List<ParamDesc> params;
         private String typeName;
         private boolean addSemicolon;
-        private String sortText;
+        private CharSequence sortText;
         private String leftText;
         private String rightText;
         private boolean autoImportEnclosingType;
@@ -1910,7 +1914,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                     cnt++;
                 }
                 sortParams.append(')');
-                sortText = simpleName + "#" + enclSortText + "#" + ((cnt < 10 ? "0" : "") + cnt) + "#" + sortParams.toString(); //NOI18N
+                sortText = LazySortText.link(simpleName, enclSortText, ((cnt < 10 ? "0" : "") + cnt) + "#" + sortParams.toString()); //NOI18N
             }
             return sortText;
         }

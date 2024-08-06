@@ -813,13 +813,15 @@ public class JavaLexerBatchTest extends TestCase {
     }
 
     public void testMarkdown1() {
-        String text = "///test\n" +
-                      "///@see second line\n" +
-                      "///third\n" +
-                      "\n" +
-                      "///another run\n" +
-                      "///another line\n" +
-                      "\n";
+        String text = """
+                      ///test
+                      ///@see second line
+                      ///third
+
+                      ///another run
+                      ///another line
+
+                      """;
         InputAttributes attr = new InputAttributes();
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
         TokenSequence<?> ts = hi.tokenSequence();
@@ -839,12 +841,14 @@ public class JavaLexerBatchTest extends TestCase {
     }
 
     public void testMarkdown2() {
-        String text = "///test\n" +
-                      "///@see second line\n" +
-                      "///third\n" +
-                      "\n" +
-                      "///another run\n" +
-                      "///another line\n";
+        String text = """
+                      ///test
+                      ///@see second line
+                      ///third
+
+                      ///another run
+                      ///another line
+                      """;
         InputAttributes attr = new InputAttributes();
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
         TokenSequence<?> ts = hi.tokenSequence();
@@ -863,12 +867,13 @@ public class JavaLexerBatchTest extends TestCase {
     }
 
     public void testMarkdown3() {
-        String text = "///test\n" +
-                      "///@see second line\n" +
-                      "///third\n" +
-                      "\n" +
-                      "///another run\n" +
-                      "///another line";
+        String text = """
+                      ///test
+                      ///@see second line
+                      ///third
+
+                      ///another run
+                      ///another line""";
         InputAttributes attr = new InputAttributes();
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
         TokenSequence<?> ts = hi.tokenSequence();

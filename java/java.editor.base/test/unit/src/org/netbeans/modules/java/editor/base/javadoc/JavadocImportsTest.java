@@ -209,34 +209,36 @@ public class JavadocImportsTest extends JavadocTestSupport {
     
     public void testComputeReferencedElementsMarkdown() throws Exception {
         String code =
-                "package p;\n" +
-                "import java.io.IOException;\n" +
-                "import java.util.Collections;\n" +
-                "import java.util.List;\n" +
-                "class C {\n" +
-                "   ///link1 {@link Runnable}\n" +
-                "   ///link3 {@linkplain Collections#binarySearch(java.util.List, Object) search}\n" +
-                "   ///{@link java. uncomplete reference}\n" +
-//                "   ///unclosed link {@value Math#PI\n" + //TODO: does not work
-                "   ///unclosed link {@value Math#PI}\n" +
-                "   ///@see List\n" +
-                "   ///@throws IOException\n" +
-                "   void m() throws java.io.IOException {\n" +
-                "   }\n" +
-                "   ///\n" +
-                "   ///{@link Collections}\n" +
-                "   ///\n" +
-                "   int field;\n" +
-                "   /// {@link IOException\n" +
-                "   interface InnerInterface {}\n" +
-                "   /// {@link Collections}\n" +
-                "   @interface InnerAnnotationType {}\n" +
-                "}\n" +
-                "/// {@link Collections}\n" +
-                "enum TopLevelEnum {\n" +
-                "   /** {@link Collections} */" +
-                "   E1\n" +
-                "}\n";
+                """
+                package p;
+                import java.io.IOException;
+                import java.util.Collections;
+                import java.util.List;
+                class C {
+                   ///link1 {@link Runnable}
+                   ///link3 {@linkplain Collections#binarySearch(java.util.List, Object) search}
+                   ///{@link java. uncomplete reference}
+                   ///unclosed link {@value Math#PI}
+                   ///@see List
+                   ///@throws IOException
+                   void m() throws java.io.IOException {
+                   }
+                   ///
+                   ///{@link Collections}
+                   ///
+                   int field;
+                   /// {@link IOException
+                   interface InnerInterface {}
+                   /// {@link Collections}
+                   @interface InnerAnnotationType {}
+                }
+                /// {@link Collections}
+                enum TopLevelEnum {
+                   /** {@link Collections} */   E1
+                }
+                """;
+                //TODO: does not work:
+                //unclosed link {@value Math#PI\n
         prepareTest(code);
 
         // C.m()
@@ -404,22 +406,24 @@ public class JavadocImportsTest extends JavadocTestSupport {
 
     public void testComputeTokensOfReferencedElementsMarkdown() throws Exception {
         String code =
-                "package p;\n" +
-                "import java.util.Collections;\n" +
-                "class C {\n" +
-                "   ///link1 {@link Runnable}\n" +
-                "   ///link2 {@link Collections#binarySearch(java.util.List, java.lang.Object) search}\n" +
-                "   ///{@link java. uncomplete reference}" +
-//                "   ///unclosed link {@value Math#PI\n" + //TODO: does not work
-                "   ///unclosed link {@value Math#PI}\n" +
-                "   ///@see java.util.Collections\n" +
-                "   ///@throws ThrowsUnresolved\n" +
-                "   ///\n" +
-                "   void m() throws java.io.IOException {\n" +
-                "       Collections.<String>binarySearch(Collections.<String>emptyList(), \"\");\n" +
-                "       double pi = Math.PI;\n" +
-                "   }\n" +
-                "}\n";
+                """
+                package p;
+                import java.util.Collections;
+                class C {
+                   ///link1 {@link Runnable}
+                   ///link2 {@link Collections#binarySearch(java.util.List, java.lang.Object) search}
+                   ///{@link java. uncomplete reference}   ///unclosed link {@value Math#PI}
+                   ///@see java.util.Collections
+                   ///@throws ThrowsUnresolved
+                   ///
+                   void m() throws java.io.IOException {
+                       Collections.<String>binarySearch(Collections.<String>emptyList(), "");
+                       double pi = Math.PI;
+                   }
+                }
+                """;
+                //TODO: does not work:
+                //unclosed link {@value Math#PI\n
         prepareTest(code);
 
         TreePath where = findPath(code, "m() throws");

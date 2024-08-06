@@ -1147,12 +1147,14 @@ public class GoToSupportTest extends NbTestCase {
 
     public void testJavadoc() throws Exception {
         final boolean[] wasCalled = new boolean[1];
-        final String code = "package test;\n" +
-                      "/**\n" +
-                      " * @see Obj|ect\n" +
-                      " */\n" +
-                      "public class Test {\n" +
-                      "}\n";
+        final String code = """
+                            package test;
+                            /**
+                             * @see Obj|ect
+                             */
+                            public class Test {
+                            }
+                            """;
 
         performTest(code, new UiUtilsCaller() {
             @Override public boolean open(FileObject fo, int pos) {
@@ -1179,10 +1181,12 @@ public class GoToSupportTest extends NbTestCase {
     public void testMarkdownJavadoc() throws Exception {
         final boolean[] wasCalled = new boolean[1];
         this.sourceLevel = "23";
-        final String code = "package test;\n" +
-                      "///@see Obj|ect\n" +
-                      "public class Test {\n" +
-                      "}\n";
+        final String code = """
+                            package test;
+                            ///@see Obj|ect
+                            public class Test {
+                            }
+                            """;
 
         performTest(code, new UiUtilsCaller() {
             @Override public boolean open(FileObject fo, int pos) {

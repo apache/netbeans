@@ -49,7 +49,7 @@ import java.beans.PropertyVetoException;
 import java.io.InvalidObjectException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.InaccessibleObjectException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -250,7 +250,12 @@ public class VariableMirrorTranslator {
                 logger.log(Level.CONFIG, "No Such Field({0}) of class {1}", new Object[]{name, clazz});
                 return null;
             }
-            field.setAccessible(true);
+            try {
+                field.setAccessible(true);
+            } catch(InaccessibleObjectException ex) {
+                logger.log(Level.CONFIG, "InaccessibleObjectException({0}) of field {1}", new Object[]{ex.getLocalizedMessage(), field});
+                return null;
+            }
             Value v = fieldValues.get(f);
             try {
                 if (v == null) {

@@ -599,6 +599,11 @@
 				"icon": "$(refresh)"
 			},
 			{
+				"command": "nbls.project.buildPushImage",
+				"title": "Build and Push container image",
+                                "icon": "$(live-share)"
+			},
+			{
 				"command": "cloud.assets.policy.create",
 				"title": "Create OCI Policies",
 				"icon": "$(key)"
@@ -1054,6 +1059,11 @@
 					"command": "nbls.cloud.container.docker",
 					"when": "viewItem =~ /publicIp:.*/ && viewItem =~ /imageUrl:.*/",
 					"group": "inline@10"
+				},
+                                {
+					"command": "nbls.project.buildPushImage",
+					"when": "viewItem =~ /class:oracle.developer.ContainerRepositoryItem/",
+					"group": "inline@9"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddRepository",

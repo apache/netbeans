@@ -4785,7 +4785,6 @@ public class Reformatter implements ReformatTask {
             EXCEPTION_DESCRIPTION,
             AFTER_PRE_TAG,
             AFTER_OTHER_TAG
-
         }
 
         private enum JavadocReformattingActionType {
@@ -4837,18 +4836,18 @@ public class Reformatter implements ReformatTask {
                             nlAdd = null;
                             String tokenText = javadocTokens.token().text().toString();
                             JavadocReformattingState newState;
-                            if (JDOC_PARAM_TAG.equalsIgnoreCase(tokenText)) {
+                            if (hasInlineTagPrefix(text, tokenText, javadocTokens.offset() - offset)) {
+                                insideTag = true;
+                                addMark(Pair.of(currWSOffset, JavadocReformattingActionType.NO_FORMAT), marks, state);
+                                lastWSOffset = currWSOffset = -1;
+                                break;
+                            } else if (JDOC_PARAM_TAG.equalsIgnoreCase(tokenText)) {
                                 newState = JavadocReformattingState.AFTER_PARAM_TAG;
                             } else if (JDOC_RETURN_TAG.equalsIgnoreCase(tokenText)) {
                                 newState = JavadocReformattingState.RETURN_DESCRIPTION;
                             } else if (JDOC_THROWS_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_EXCEPTION_TAG.equalsIgnoreCase(tokenText)) {
                                 newState = JavadocReformattingState.AFTER_THROWS_TAG;
-                            } else if (isInlineTag(tokenText)) {
-                                insideTag = true;
-                                addMark(Pair.of(currWSOffset >= 0 ? currWSOffset : javadocTokens.offset() - offset, JavadocReformattingActionType.NO_FORMAT), marks, state);
-                                lastWSOffset = currWSOffset = -1;
-                                break;
                             } else {
                                 if (insideTag)
                                     break;
@@ -5426,20 +5425,12 @@ public class Reformatter implements ReformatTask {
         }
 
         /**
+         * 
          * @see <a href="https://docs.oracle.com/en/java/javase/22/docs/specs/javadoc/doc-comment-spec.html#Where%20Tags%20Can%20Be%20Used">for more info on inline tags check documentation here.</a>
-         * @param tokenText
- * @return returns true if has inline tag prefix like "{+@tagname"
+         * @return returns true if has inline tag prefix like "{+@tagname"
          */
-        private static boolean isInlineTag(String tokenText) {
-            return JDOC_LINK_TAG.equalsIgnoreCase(tokenText)
-                    || JDOC_LINKPLAIN_TAG.equalsIgnoreCase(tokenText)
-                    || JDOC_CODE_TAG.equalsIgnoreCase(tokenText)
-                    || JDOC_SNIPPET_TAG.equalsIgnoreCase(tokenText)
-                    || JDOC_DOCROOT_TAG.equalsIgnoreCase(tokenText)
-                    || JDOC_INHERITDOC_TAG.equalsIgnoreCase(tokenText)
-                    || JDOC_VALUE_TAG.equalsIgnoreCase(tokenText)
-                    || JDOC_SUMMARY_TAG.equalsIgnoreCase(tokenText)
-                    || JDOC_LITERAL_TAG.equalsIgnoreCase(tokenText);
+        private static boolean hasInlineTagPrefix(String commentsText, String tokenText ,int tagTokenStartOffset) {
+            return commentsText.startsWith("{"+tokenText, tagTokenStartOffset-1);
         }
 
         private void addMark(Pair<Integer, JavadocReformattingActionType> mark, List<Pair<Integer, JavadocReformattingActionType>> marks, JavadocReformattingState state) {

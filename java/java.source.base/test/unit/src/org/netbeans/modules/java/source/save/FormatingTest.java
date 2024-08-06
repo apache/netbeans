@@ -5201,6 +5201,54 @@ public class FormatingTest extends NbTestCase {
                 + "}\n";
         reformat(doc, content, golden);
 
+        content ="""
+                package hierbas.del.litoral;
+
+                public class Test{
+                /**{@return foo bar method} */    String bar() { 
+                        return null; 
+                    }
+                }""";
+        golden ="""
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    /**
+                     * {@return foo bar method}
+                     */
+                    String bar() {
+                        return null;
+                    }
+                }
+                """;
+        reformat(doc, content, golden);    
+        
+        content ="""
+                 package hierbas.del.litoral;
+                 
+                 public class Test{
+                 /** bar method description {@return foo bar method} */    String bar() { 
+                         return null; 
+                     }
+                 }
+                 """;
+        golden ="""
+                package hierbas.del.litoral;
+                
+                public class Test {
+                
+                    /**
+                     * bar method description
+                     * {@return foo bar method}
+                     */
+                    String bar() {
+                        return null;
+                    }
+                }
+                """;
+        reformat(doc, content, golden);
+        
         content =
                 "package hierbas.del.litoral;\n"
                 + "\n"

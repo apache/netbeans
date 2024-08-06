@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -303,6 +304,15 @@ public final class NbMavenProject {
      */
     public @NonNull MavenProject getEvaluatedProject(ProjectActionContext context) {
         return project.getEvaluatedProject(context);
+    }
+    
+    /**
+     * Returns the original project, or waits for reload task if already pending. Use with care, as
+     * the method blocks until the project reload eventually finishes in the reload thread / RP.
+     * @return possibly reloaded Maven project.
+     */
+    public @NonNull CompletableFuture<MavenProject> getFreshProject() {
+        return project.getFreshOriginalMavenProject();
     }
     
     /**

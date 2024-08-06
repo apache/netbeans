@@ -36,10 +36,15 @@ import org.openide.util.lookup.Lookups;
  * @author Jan Horvath
  */
 public class RootNode {
+    
+    private static Node instance = null;
 
-    static Node instance() {
-        return new AbstractNode(
+    static synchronized Node instance() {
+        if (instance == null) {
+            instance = new AbstractNode(
                 Children.create(new AssetsChildren(OCIManager.getDefault().getActiveSession()), true));
+        }
+        return instance;
     }
     
     static class AssetsChildren extends ChildFactory<OCIItem> implements ChangeListener {

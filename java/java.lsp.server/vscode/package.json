@@ -616,6 +616,11 @@
 				"icon": "$(refresh)"
 			},
 			{
+				"command": "nbls.project.buildPushImage",
+				"title": "Build and Push container image",
+                                "icon": "$(live-share)"
+			},
+			{
 				"command": "cloud.assets.policy.create",
 				"title": "Create OCI Policies",
 				"icon": "$(key)"
@@ -1072,6 +1077,11 @@
 					"when": "viewItem =~ /publicIp:.*/ && viewItem =~ /imageUrl:.*/",
 					"group": "inline@10"
 				},
+                                {
+					"command": "nbls.project.buildPushImage",
+					"when": "viewItem =~ /class:oracle.developer.ContainerRepositoryItem/",
+					"group": "inline@9"
+				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddRepository",
 					"when": "viewItem =~ /class:oracle.devops.DevopsProjectItem/",
@@ -1094,7 +1104,7 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.RemoveFromProject",
-					"when": "viewItem =~ /^(?!.*Suggested).*/ && view == cloud.assets",
+					"when": "viewItem =~ /^(?!.*(Suggested|ContainerTagItem)).*/ && view == cloud.assets",
 					"group": "inline@17"
 				},
 				{
@@ -1104,7 +1114,7 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CloudRefresh",
-					"when": "viewItem =~ /class:oracle/",
+					"when": "viewItem =~ /^(?!.*(ContainerTagItem|Suggested)).*class:oracle.*$/",
 					"group": "inline@13"
 				},
 				{

@@ -50,12 +50,20 @@
                         <specification-version>1.3</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.javax.inject</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.61</specification-version>
+                    </run-dependency>
+                </dependency>
             </module-dependencies>
             <public-packages>
                 <package>jakarta.annotation</package>
                 <package>jakarta.annotation.security</package>
                 <package>jakarta.annotation.sql</package>
-                <package>javax.inject</package>
                 <package>javax.persistence</package>
                 <package>javax.persistence.criteria</package>
                 <package>javax.persistence.metamodel</package>
@@ -221,10 +229,6 @@
             <class-path-extension>
                 <runtime-relative-path>ext/jersey2/jakarta.validation-api-2.0.2.jar</runtime-relative-path>
                 <binary-origin>external/jakarta.validation-api-2.0.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jersey2/jakarta.inject-2.6.1.jar</runtime-relative-path>
-                <binary-origin>external/jakarta.inject-2.6.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jersey2/hk2-utils-2.6.1.jar</runtime-relative-path>

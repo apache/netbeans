@@ -56,7 +56,6 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
     private String tooltipText = "";
     private FileObject goToFile;
     private int goToOffset = 0;
-    private int triggeredEvent = 0;
 
     public enum DeclarationType {
         VIEW_PATH;
@@ -164,7 +163,6 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                     case "render": // NOI18N
                         if (goToFile != null) {
                             openDocument(goToFile, goToOffset);
-                            triggeredEvent++;
                         }
                         break;
                 }

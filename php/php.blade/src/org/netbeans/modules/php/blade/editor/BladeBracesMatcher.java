@@ -104,35 +104,21 @@ public class BladeBracesMatcher implements BracesMatcher {
         }
         String tokenText = originToken.getText();
 
-        switch (currentDirection) {
-            case CURLY_START_TO_END -> {
-                return findCloseTag();
-            }
-            case CURLY_END_TO_START -> {
-                return findOpenTag();
-            }
-            case START_TO_END -> {
-                return findDirectiveEnd(tokenText);
-            }
-            case CUSTOM_START_TO_END -> {
-                return findCustomDirectiveEnd(tokenText);
-            }
-            case END_TO_START -> {
-                return findOriginForDirectiveEnd(tokenText);
-            }
-        }
-        
-        return null;
+        return switch (currentDirection) {
+            case CURLY_START_TO_END -> findCloseTag();
+            case CURLY_END_TO_START -> findOpenTag();
+            case START_TO_END -> findDirectiveEnd(tokenText);
+            case CUSTOM_START_TO_END -> findCustomDirectiveEnd(tokenText);
+            case END_TO_START -> findOriginForDirectiveEnd(tokenText);
+            default -> null;
+        };
     }
 
     private static boolean shouldLookForBraceMatch(@NonNull Token currentToken) {
-        switch (currentToken.getType()) {
-            case HTML, PHP_EXPRESSION, AT, BLADE_COMMENT, ERROR -> {
-                return false;
-            }
-        }
-
-        return true;
+        return switch (currentToken.getType()) {
+            case HTML, PHP_EXPRESSION, AT, BLADE_COMMENT, ERROR -> false;
+            default -> true;
+        };
     }
 
     public BraceDirectionType findBraceDirectionType(String tokenText, Token token) {

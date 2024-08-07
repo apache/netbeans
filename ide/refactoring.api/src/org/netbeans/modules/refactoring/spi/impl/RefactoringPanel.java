@@ -47,6 +47,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.*;
@@ -176,11 +177,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         left.setLayout(new BorderLayout());
         setLayout(new BorderLayout());
         add(splitPane, BorderLayout.CENTER);
-        if (!isQuery) {
-            splitPane.setRightComponent(new JLabel(org.openide.util.NbBundle.getMessage(RefactoringPanel.class, "LBL_Preview_not_Available"), SwingConstants.CENTER));
-        } else {
-            splitPane.setDividerSize(0);
-        }
+        splitPane.setRightComponent(new JLabel(org.openide.util.NbBundle.getMessage(RefactoringPanel.class, "LBL_Preview_not_Available"), SwingConstants.CENTER));
         splitPane.setBorder(null);
         // add panel with buttons
         JButton[] buttons = getButtons();
@@ -418,7 +415,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
     private static final byte LOGICAL = 0;
     private static final byte PHYSICAL = 1;
     private static final byte GRAPHICAL = 2;
-    
+
     private static final String PREF_VIEW_TYPE = "PREF_VIEW_TYPE";
     private byte currentView = getPrefViewType();
 
@@ -469,7 +466,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         expandButton.setEnabled(false);
         refresh(false);
     }
-    
+
     private CheckNode createNode(TreeElement representedObject, Map<Object, CheckNode> nodes, CheckNode root) {
         //checkEventThread();
         boolean isLogical = currentView == LOGICAL;
@@ -829,8 +826,10 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                     }
                     
                     if (!(isQuery && showParametersPanel)) {
-                        root.setNodeLabel(description + getErrorDesc(errorsNum, isQuery ? size.get() : elements.size(), hidden, isQuery && sizeIsApproximate.get()).toString());
+                        root.setNodeLabel(description + getErrorDesc(errorsNum, elements.size(), hidden, false).toString());
                         setupTree(root, showParametersPanel, elements.size());
+                    } else if (isQuery && showParametersPanel) {
+                        SwingUtilities.invokeLater(() -> expandTreeIfNeeded(showParametersPanel, size.get()));
                     }
                     
                 }
@@ -899,26 +898,8 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             public void run() {
                 createTree(root);
 
-                if (showParametersPanel) {
-                    splitPane.setDividerLocation(0.3);
-                    if (size < MAX_ROWS) {
-                        expandAll();
-                        if (!isQuery) {
-                            selectNextUsage();
-                        }
-                    } else {
-                        expandButton.setSelected(false);
-                    }
-                } else {
-                    if (expandButton.isSelected()) {
-                        expandAll();
-                        if (!isQuery) {
-                            selectNextUsage();
-                        }
-                    } else {
-                        expandButton.setSelected(false);
-                    }
-                }
+                splitPane.setDividerLocation(0.3);
+                expandTreeIfNeeded(showParametersPanel, size);
 
                 tree.setSelectionRow(0);
                 setRefactoringEnabled(true, true);
@@ -927,6 +908,24 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                 }
             }
         });
+    }
+
+    private void expandTreeIfNeeded(boolean showParametersPanel, int size) {
+        if (showParametersPanel) {
+            if (size < MAX_ROWS) {
+                expandAll();
+                selectNextUsage();
+            } else {
+                expandButton.setSelected(false);
+            }
+        } else {
+            if (expandButton.isSelected()) {
+                expandAll();
+                selectNextUsage();
+            } else {
+                expandButton.setSelected(false);
+            }
+        }
     }
     
      private Map<FileObject, Long> timeStamps = new HashMap<FileObject, Long>();
@@ -1013,6 +1012,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             public void run() {
                 createTree(root);
                 tree.setSelectionRow(0);
+                splitPane.setDividerLocation(0.3);
                 if (refactorButton != null) {
                     refactorButton.requestFocusInWindow();
                 } else if (tree != null) {
@@ -1090,6 +1090,10 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         }
     }
 
+    public boolean isQuery() {
+        return isQuery;
+    }
+
     private byte getPrefViewType() {
         Preferences prefs = NbPreferences.forModule(RefactoringPanel.class);
         return (byte) prefs.getInt(PREF_VIEW_TYPE, PHYSICAL);
@@ -1131,6 +1135,24 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
     @Override
     public void filterStateChanged(ChangeEvent e) {
         refresh(false);
+    }
+
+    @CheckForNull
+    public static RefactoringPanel getCurrentRefactoringPanel() {
+        TopComponent activated = TopComponent.getRegistry().getActivated();
+        RefactoringPanel refactoringPanel = null;
+        if (activated instanceof RefactoringPanelContainer) {
+            RefactoringPanelContainer panel = (RefactoringPanelContainer) activated;
+            refactoringPanel = panel.getCurrentPanel();
+        }
+        if (refactoringPanel == null) {
+            refactoringPanel = RefactoringPanelContainer.getRefactoringComponent().getCurrentPanel();
+        }
+        if (refactoringPanel == null) {
+            refactoringPanel = RefactoringPanelContainer.getUsagesComponent().getCurrentPanel();
+        }
+
+        return refactoringPanel;
     }
 
     ////////////////////////////////////////////////////////////////////////////

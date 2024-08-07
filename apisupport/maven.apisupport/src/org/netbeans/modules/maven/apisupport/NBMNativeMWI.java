@@ -24,8 +24,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -49,6 +47,7 @@ import org.netbeans.modules.maven.model.pom.Plugin;
 import org.netbeans.modules.maven.model.pom.Project;
 import org.netbeans.modules.maven.model.pom.Repository;
 import org.netbeans.modules.maven.model.pom.RepositoryPolicy;
+import org.netbeans.modules.maven.options.MavenVersionSettings;
 import org.netbeans.modules.maven.spi.newproject.CreateProjectBuilder;
 import org.openide.util.Exceptions;
 
@@ -58,12 +57,12 @@ import org.openide.util.Exceptions;
  */
 final class NBMNativeMWI {
 
-    static void instantiate(ProjectInfo vi, File projFile, String version, boolean useOsgi, MavenProject mp) {
+    static void instantiate(ProjectInfo vi, File projFile, String nbVersion, boolean useOsgi, MavenProject mp) {
         CreateProjectBuilder builder = new CreateProjectBuilder(projFile, vi.groupId, vi.artifactId, vi.version)
                 .setPackageName(vi.packageName)
                 .setPackaging("nbm")
                 .setAdditionalNonPomWork(new AdditionalFiles())
-                .setAdditionalOperations(new AdditionalOperations(version, useOsgi));
+                .setAdditionalOperations(new AdditionalOperations(nbVersion, useOsgi));
         if (mp != null) {
             builder = builder.setParentProject(mp);
         }
@@ -237,7 +236,6 @@ final class NBMNativeMWI {
                 //nbm-maven-plugin
                 boolean addPlugin = true;
                 String managedPVersion = null;
-                String pVersion = MavenNbModuleImpl.getLatestNbmPluginVersion();
 //                boolean useOsgiDepsSet = false;
                 if (parent != null) {
                     //TODO do we want to support the case when the plugin is defined in parent pom with inherited=true?
@@ -259,12 +257,13 @@ final class NBMNativeMWI {
                         }
                     }
                 }
+                MavenVersionSettings settings = MavenVersionSettings.getDefault();
                 if (addPlugin) {
                     Plugin p = model.getFactory().createPlugin();
                     p.setGroupId(MavenNbModuleImpl.GROUPID_APACHE);
                     p.setArtifactId(MavenNbModuleImpl.NBM_PLUGIN);
                     if (managedPVersion == null) {
-                        p.setVersion(pVersion);
+                        p.setVersion(MavenNbModuleImpl.getLatestNbmPluginVersion());
                     }
                     p.setExtensions(true);
                     if (useOsgi) {
@@ -278,52 +277,44 @@ final class NBMNativeMWI {
                 //now comes the compiler plugin
                 addPlugin = true;
                 managedPVersion = null;
-                String source = null;
-                String target = null;
-                pVersion = "3.11.0";
                 if (parent != null) {
                     //TODO do we want to support the case when the plugin is defined in parent pom with inherited=true?
                     PluginManagement pm = parent.getPluginManagement();
                     if (pm != null) {
-                        for (org.apache.maven.model.Plugin p : pm.getPlugins()) {
-                            if (Constants.GROUP_APACHE_PLUGINS.equals(p.getGroupId()) && Constants.PLUGIN_COMPILER.equals(p.getArtifactId())) {
-                                managedPVersion = p.getVersion();
-                                Xpp3Dom conf = (Xpp3Dom) p.getConfiguration();
-                                if (conf != null) {
-                                    Xpp3Dom sourceEl = conf.getChild("source");
-                                    if (sourceEl != null) {
-                                        source = sourceEl.getValue();
+                        if (parent.getProperties().getProperty("maven.compiler.release") != null) {
+                            addPlugin = false;
+                        } else {
+                            for (org.apache.maven.model.Plugin p : pm.getPlugins()) {
+                                if (Constants.GROUP_APACHE_PLUGINS.equals(p.getGroupId()) && Constants.PLUGIN_COMPILER.equals(p.getArtifactId())) {
+                                    managedPVersion = p.getVersion();
+                                    Xpp3Dom conf = (Xpp3Dom) p.getConfiguration();
+                                    if (conf != null) {
+                                        if (   conf.getChild("release") != null
+                                            || conf.getChild("source") != null
+                                            || conf.getChild("target") != null) {
+                                            addPlugin = false;
+                                        }
                                     }
-                                    Xpp3Dom targetEl = conf.getChild("target");
-                                    if (targetEl != null) {
-                                        target = targetEl.getValue();
-                                    }
+                                    break;
                                 }
-                                break;
                             }
                         }
                     }
                 }
-                addPlugin = target == null || source == null;
                 if (addPlugin) {
                     Plugin p = model.getFactory().createPlugin();
                     p.setGroupId(Constants.GROUP_APACHE_PLUGINS);
                     p.setArtifactId(Constants.PLUGIN_COMPILER);
                     if (managedPVersion == null) {
-                        p.setVersion(pVersion);
+                        p.setVersion(settings.getVersion(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER));
                     }
-                    Configuration c = model.getFactory().createConfiguration();
-                    c.setSimpleParameter("source", "1.8");
-                    c.setSimpleParameter("target", "1.8");
-                    p.setConfiguration(c);
                     getOrCreateBuild(model).addPlugin(p);
+                    model.getProject().getProperties().setProperty("maven.compiler.release", "17");
                 }
                 
                 //now the jar plugin
-                addPlugin = true;
                 managedPVersion = null;
                 String useManifest = null;
-                pVersion = "3.3.0";
                 if (parent != null) {
                     //TODO do we want to support the case when the plugin is defined in parent pom with inherited=true?
                     PluginManagement pm = parent.getPluginManagement();
@@ -359,6 +350,7 @@ final class NBMNativeMWI {
                     p.setGroupId(Constants.GROUP_APACHE_PLUGINS);
                     p.setArtifactId(Constants.PLUGIN_JAR);
                     if (managedPVersion == null) {
+                        String pVersion = settings.getVersion(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_JAR);
                         p.setVersion(pVersion);
                         managedPVersion = pVersion;
                     }

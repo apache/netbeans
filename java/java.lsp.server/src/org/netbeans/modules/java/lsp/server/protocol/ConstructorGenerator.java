@@ -188,7 +188,7 @@ public final class ConstructorGenerator extends CodeActionsProvider {
         data.put(OFFSET, startOffset);
         data.put(CONSTRUCTORS, constructors);
         data.put(FIELDS, fields);
-        return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateConstructor(), isSource ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, null, "nbls.generate.code", GENERATE_CONSTRUCTOR, data));
+        return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateConstructor(), isSource ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, null, "nbls.generate.code", Utils.encodeCommand(GENERATE_CONSTRUCTOR, client.getNbCodeCapabilities()), data));
     }
 
     @Override

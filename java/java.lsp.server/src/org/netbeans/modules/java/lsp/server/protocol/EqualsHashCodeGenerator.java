@@ -115,11 +115,11 @@ public final class EqualsHashCodeGenerator extends CodeActionsProvider {
         String uri = Utils.toUri(info.getFileObject());
         if (equalsHashCode[0] == null) {
             if (equalsHashCode[1] == null) {
-                return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateEqualsHashCode(), CODE_GENERATOR_KIND, null, "nbls.generate.code", GENERATE_EQUALS_HASHCODE, data(0, uri, offset, fields)));
+                return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateEqualsHashCode(), CODE_GENERATOR_KIND, null, "nbls.generate.code", Utils.encodeCommand(GENERATE_EQUALS_HASHCODE, client.getNbCodeCapabilities()), data(0, uri, offset, fields)));
             }
-            return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateEquals(), CODE_GENERATOR_KIND, null, "nbls.generate.code", GENERATE_EQUALS_HASHCODE, data(EQUALS_ONLY, uri, offset, fields)));
+            return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateEquals(), CODE_GENERATOR_KIND, null, "nbls.generate.code", Utils.encodeCommand(GENERATE_EQUALS_HASHCODE, client.getNbCodeCapabilities()), data(EQUALS_ONLY, uri, offset, fields)));
         }
-        return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateHashCode(), CODE_GENERATOR_KIND, null, "nbls.generate.code", GENERATE_EQUALS_HASHCODE, data(HASH_CODE_ONLY, uri, offset, fields)));
+        return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateHashCode(), CODE_GENERATOR_KIND, null, "nbls.generate.code", Utils.encodeCommand(GENERATE_EQUALS_HASHCODE, client.getNbCodeCapabilities()), data(HASH_CODE_ONLY, uri, offset, fields)));
     }
 
     @Override

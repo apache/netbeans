@@ -28,6 +28,8 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
+import org.netbeans.modules.php.blade.editor.EditorStringUtils;
+import static org.netbeans.modules.php.blade.editor.EditorStringUtils.NAMESPACE_SEPARATOR;
 import org.netbeans.modules.php.blade.editor.cache.QueryCache;
 import org.netbeans.modules.php.editor.api.QuerySupportFactory;
 import org.netbeans.modules.php.editor.index.PHPIndexer;
@@ -43,6 +45,7 @@ import org.openide.util.Exceptions;
  */
 public final class PhpIndexUtils {
 
+    public final static String ESCAPED_NAMESPACE_SEPARATOR = "\\\\"; // NOI18N
     private final static QueryCache<String, Collection<PhpIndexResult>> cache = new QueryCache();
     private final static QueryCache<String, Collection<PhpIndexFunctionResult>> functionCache = new QueryCache();
 
@@ -102,7 +105,7 @@ public final class PhpIndexUtils {
             String namespace, FileObject fo) {
         QuerySupport phpindex = QuerySupportFactory.get(fo);
         Collection<PhpIndexResult> results = new ArrayList<>();
-        String queryPrefix = prefix.toLowerCase() + ".*" + namespace.replace("\\", "\\\\") + ";.*";
+        String queryPrefix = prefix.toLowerCase() + ".*" + namespace.replace(NAMESPACE_SEPARATOR, ESCAPED_NAMESPACE_SEPARATOR) + ";.*"; // NOI18N
 
         try {
             Collection<? extends IndexResult> indexResults = phpindex.query(
@@ -122,7 +125,7 @@ public final class PhpIndexUtils {
                             && classNamespace.length() > 0
                             && classNamespace.startsWith(namespace)) {
                         results.add(new PhpIndexResult(fullName,
-                                classNamespace + "\\" + fullName, indexFile, PhpIndexResult.Type.CLASS, new OffsetRange(0, 1)));
+                                classNamespace + NAMESPACE_SEPARATOR + fullName, indexFile, PhpIndexResult.Type.CLASS, new OffsetRange(0, 1)));
                     }
                 }
             }
@@ -156,7 +159,7 @@ public final class PhpIndexUtils {
                     continue;
                 }
 
-                results.add(new PhpIndexResult(namespace + "\\" + identifier, indexFile, PhpIndexResult.Type.CLASS, new OffsetRange(0, 1)));
+                results.add(new PhpIndexResult(namespace + NAMESPACE_SEPARATOR + identifier, indexFile, PhpIndexResult.Type.CLASS, new OffsetRange(0, 1)));
             }
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -185,7 +188,7 @@ public final class PhpIndexUtils {
                 String domainName = sig.string(2);
                 FileObject indexFile = indexResult.getFile();
                 if (indexFile.getName().equals(identifier)) {
-                    results.add(new PhpIndexResult(domainName + "\\" + name + "\\" + indexFile.getName(),
+                    results.add(new PhpIndexResult(domainName + NAMESPACE_SEPARATOR + name + NAMESPACE_SEPARATOR + indexFile.getName(),
                             indexFile, PhpIndexResult.Type.CLASS, new OffsetRange(0, 1)));
                 }
             }
@@ -331,7 +334,7 @@ public final class PhpIndexUtils {
                         classSignature = sig;
 
                         if (namespace.length() > 0) {
-                            classNamespace = namespace + "\\" + className;
+                            classNamespace = namespace + NAMESPACE_SEPARATOR + className;
                         }
                     }
                 }
@@ -376,11 +379,9 @@ public final class PhpIndexUtils {
             String method, String className, String queryNamespace) {
         QuerySupport phpindex = QuerySupportFactory.get(fo);
         Collection<PhpIndexFunctionResult> results = new ArrayList<>();
-
+        String queryNamespacePath = queryNamespace;
         if (queryNamespace != null && queryNamespace.length() > 3) {
-            int startOffset = queryNamespace.startsWith("\\") ? 1 : 0;
-            int endOffset = queryNamespace.endsWith("\\") ? 1 : 0;
-            queryNamespace = queryNamespace.substring(startOffset, queryNamespace.length() - endOffset);
+            queryNamespacePath =  EditorStringUtils.trimNamespace(queryNamespace);
         }
         //should query the class befoe
         //for the moment a quick hack
@@ -403,7 +404,7 @@ public final class PhpIndexUtils {
                         classSignature = sig;
                         String namespace = sig.string(4);
 
-                        if (queryNamespace != null && !namespace.equals(queryNamespace)) {
+                        if (queryNamespacePath != null && !namespace.equals(queryNamespacePath)) {
                             classSignature = null;
                             continue;
                         }
@@ -477,11 +478,11 @@ public final class PhpIndexUtils {
         //the first el is the folder
         String originalPrefix = prefix;
 
-        if (prefix.endsWith("\\\\")) {
+        if (prefix.endsWith(ESCAPED_NAMESPACE_SEPARATOR)) {
             return results;
         }
 
-        String[] queryItems = prefix.split("\\\\");
+        String[] queryItems = prefix.split(ESCAPED_NAMESPACE_SEPARATOR);
 
         if (queryItems.length == 0) {
             return results;
@@ -491,7 +492,7 @@ public final class PhpIndexUtils {
 
         try {
             Collection<? extends IndexResult> indexResults = phpindex.query(
-                    PHPIndexer.FIELD_TOP_LEVEL, queryPrefix + "\\", QuerySupport.Kind.PREFIX, new String[]{
+                    PHPIndexer.FIELD_TOP_LEVEL, queryPrefix + NAMESPACE_SEPARATOR, QuerySupport.Kind.PREFIX, new String[]{
                         PHPIndexer.FIELD_NAMESPACE, PHPIndexer.FIELD_TOP_LEVEL});
             for (IndexResult indexResult : indexResults) {
                 FileObject indexFile = indexResult.getFile();
@@ -507,10 +508,10 @@ public final class PhpIndexUtils {
                     String name = sig.string(1);
                     String namespace = sig.string(2);
 
-                    String fullNamespace = "";
+                    String fullNamespace = ""; // NOI18N
 
                     if (!namespace.isEmpty()) {
-                        fullNamespace = namespace + "\\";
+                        fullNamespace = namespace + NAMESPACE_SEPARATOR;
                     }
 
                     fullNamespace += name;

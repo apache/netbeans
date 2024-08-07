@@ -19,7 +19,6 @@
 package org.netbeans.modules.php.blade.editor.indexing;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.project.Project;
@@ -40,7 +39,7 @@ public final class QueryUtils {
     public static List<BladeIndex.IndexedReference> findYieldReferences(String prefix, FileObject fo) {
         BladeIndex bladeIndex = getIndex(fo);
         if (bladeIndex == null) {
-            return new ArrayList<>();
+            return List.of();
         }
         return bladeIndex.findYieldIndexedReferences(prefix);
     }
@@ -48,7 +47,7 @@ public final class QueryUtils {
     public static List<BladeIndex.IndexedReference> findStacksReferences(String prefix, FileObject fo) {
         BladeIndex bladeIndex = getIndex(fo);
         if (bladeIndex == null) {
-            return new ArrayList<>();
+            return List.of();
         }
         return bladeIndex.findStackIdIndexedReferences(prefix);
     }
@@ -56,7 +55,7 @@ public final class QueryUtils {
     public static List<BladeIndex.IndexedOffsetReference> getIncludePathReferences(String prefix, FileObject fo) {
         BladeIndex bladeIndex = getIndex(fo);
         if (bladeIndex == null) {
-            return new ArrayList<>();
+            return List.of();
         }
         return bladeIndex.getIncludePaths(prefix);
     }

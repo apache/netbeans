@@ -30,31 +30,32 @@ import org.openide.filesystems.FileObject;
  * @author bogdan
  */
 @NamespaceRegister({
-    @Namespace(path = "App\\View\\Components", from_app = true, relativeFilePath = "app/View/Components"),
-    @Namespace(path = "App\\Http\\Livewire", from_app = true, relativeFilePath = "app/Http/Livewire"),
-    @Namespace(path = "App\\Livewire", from_app = true, relativeFilePath = "app/Livewire"),//from 10
-    @Namespace(path = "Illuminate\\Console\\View\\Components"),
-    @Namespace(path = "BladeUI\\Icons\\Components", packageName = "blade-ui-kit/blade-icons"),
-    @Namespace(path = "BladeUIKit\\Components", packageName = "blade-ui-kit/blade-ui-kit"),
- })
+    @Namespace(path = "App\\View\\Components", from_app = true, relativeFilePath = "app/View/Components"), // NOI18N
+    @Namespace(path = "App\\Http\\Livewire", from_app = true, relativeFilePath = "app/Http/Livewire"), // NOI18N
+    @Namespace(path = "App\\Livewire", from_app = true, relativeFilePath = "app/Livewire"), // NOI18N
+    @Namespace(path = "Illuminate\\Console\\View\\Components"), // NOI18N
+    @Namespace(path = "BladeUI\\Icons\\Components", packageName = "blade-ui-kit/blade-icons"), // NOI18N
+    @Namespace(path = "BladeUIKit\\Components", packageName = "blade-ui-kit/blade-ui-kit"),}) // NOI18N
 public class ComponentsSupport {
 
     private static final Map<Project, ComponentsSupport> INSTANCES = new HashMap<>();
     private final Map<FileObject, Namespace> installedComponentNamespace = new HashMap<>();
     private boolean scanned = false;
-    public Project project;
+    private final Project project;
 
     private ComponentsSupport(Project project) {
         this.project = project;
     }
 
     public static ComponentsSupport getInstance(Project project) {
-        if (INSTANCES.containsKey(project)) {
-            return INSTANCES.get(project);
+        synchronized (INSTANCES) {
+            if (INSTANCES.containsKey(project)) {
+                return INSTANCES.get(project);
+            }
+            ComponentsSupport instance = new ComponentsSupport(project);
+            INSTANCES.put(project, instance);
+            return instance;
         }
-        ComponentsSupport instance = new ComponentsSupport(project);
-        INSTANCES.put(project, instance);
-        return instance;
     }
 
     public void scanForInstalledComponents() {
@@ -64,7 +65,7 @@ public class ComponentsSupport {
                 //check if folder exists
                 fo = project.getProjectDirectory().getFileObject(namespace.relativeFilePath());
             } else {
-                fo = project.getProjectDirectory().getFileObject("vendor/" + namespace.relativeFilePath());
+                fo = project.getProjectDirectory().getFileObject("vendor/" + namespace.relativeFilePath()); // NOI18N
 
             }
             if (fo == null || !fo.isValid()) {

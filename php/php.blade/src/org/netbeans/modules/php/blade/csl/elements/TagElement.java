@@ -34,8 +34,8 @@ import org.openide.filesystems.FileObject;
  */
 public class TagElement implements ElementHandle {
 
-    protected final String name;
-    protected final ElementType type;
+    private final String name;
+    private final ElementType type;
 
     public TagElement(String name) {
         this.name = name;

@@ -18,9 +18,6 @@
  */
 package org.netbeans.modules.php.blade.editor;
 
-import java.util.Collection;
-import org.openide.util.Parameters;
-
 /**
  *
  * @author bhaidu

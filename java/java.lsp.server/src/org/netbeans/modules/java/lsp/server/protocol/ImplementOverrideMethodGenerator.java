@@ -109,7 +109,7 @@ public final class ImplementOverrideMethodGenerator extends CodeActionsProvider 
                 implementMethods.add(new QuickPickItem(createLabel(info, method), enclosingTypeName, null, mustImplement, new ElementData(method)));
             }
             if (!implementMethods.isEmpty()) {
-                result.add(createCodeAction(client, Bundle.DN_GenerateImplementMethod(), CODE_GENERATOR_KIND, null, "nbls.generate.code", GENERATE_IMPLEMENT_OVERRIDE, data(uri, offset, true, implementMethods)));
+                result.add(createCodeAction(client, Bundle.DN_GenerateImplementMethod(), CODE_GENERATOR_KIND, null, "nbls.generate.code", Utils.encodeCommand(GENERATE_IMPLEMENT_OVERRIDE, client.getNbCodeCapabilities()), data(uri, offset, true, implementMethods)));
             }
         }
         if (typeElement.getKind().isClass() || typeElement.getKind().isInterface()) {
@@ -125,7 +125,7 @@ public final class ImplementOverrideMethodGenerator extends CodeActionsProvider 
                 overrideMethods.add(item);
             }
             if (!overrideMethods.isEmpty()) {
-                result.add(createCodeAction(client, Bundle.DN_GenerateOverrideMethod(), CODE_GENERATOR_KIND, null, "nbls.generate.code", GENERATE_IMPLEMENT_OVERRIDE, data(uri, offset, false, overrideMethods)));
+                result.add(createCodeAction(client, Bundle.DN_GenerateOverrideMethod(), CODE_GENERATOR_KIND, null, "nbls.generate.code", Utils.encodeCommand(GENERATE_IMPLEMENT_OVERRIDE, client.getNbCodeCapabilities()), data(uri, offset, false, overrideMethods)));
             }
         }
         return result;

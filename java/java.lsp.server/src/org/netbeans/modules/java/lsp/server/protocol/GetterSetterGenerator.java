@@ -103,7 +103,7 @@ public final class GetterSetterGenerator extends CodeActionsProvider {
         List<CodeAction> result = new ArrayList<>();
         if (missingGetters) {
             String name = pair.first().size() == 1 ? Bundle.DN_GenerateGetterFor(pair.first().iterator().next().getSimpleName().toString()) : Bundle.DN_GenerateGetters();
-            result.add(createCodeAction(client, name, all ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, null, "nbls.generate.code", GENERATE_GETTER_SETTER, data(GeneratorUtils.GETTERS_ONLY, uri, offset, all, pair.first().stream().map(variableElement -> {
+            result.add(createCodeAction(client, name, all ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, null, "nbls.generate.code", Utils.encodeCommand(GENERATE_GETTER_SETTER, client.getNbCodeCapabilities()), data(GeneratorUtils.GETTERS_ONLY, uri, offset, all, pair.first().stream().map(variableElement -> {
                 QuickPickItem item = new QuickPickItem(createLabel(info, variableElement));
                 item.setUserData(new ElementData(variableElement));
                 return item;
@@ -111,7 +111,7 @@ public final class GetterSetterGenerator extends CodeActionsProvider {
         }
         if (missingSetters) {
             String name = pair.second().size() == 1 ? Bundle.DN_GenerateSetterFor(pair.second().iterator().next().getSimpleName().toString()) : Bundle.DN_GenerateSetters();
-            result.add(createCodeAction(client, name, all ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, null, "nbls.generate.code", GENERATE_GETTER_SETTER, data(GeneratorUtils.SETTERS_ONLY, uri, offset, all, pair.second().stream().map(variableElement -> {
+            result.add(createCodeAction(client, name, all ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, null, "nbls.generate.code", Utils.encodeCommand(GENERATE_GETTER_SETTER, client.getNbCodeCapabilities()), data(GeneratorUtils.SETTERS_ONLY, uri, offset, all, pair.second().stream().map(variableElement -> {
                 QuickPickItem item = new QuickPickItem(createLabel(info, variableElement));
                 item.setUserData(new ElementData(variableElement));
                 return item;
@@ -120,7 +120,7 @@ public final class GetterSetterGenerator extends CodeActionsProvider {
         if (missingGetters && missingSetters) {
             pair.first().retainAll(pair.second());
             String name = pair.first().size() == 1 ? Bundle.DN_GenerateGetterSetterFor(pair.first().iterator().next().getSimpleName().toString()) : Bundle.DN_GenerateGettersSetters();
-            result.add(createCodeAction(client, name, all ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, null, "nbls.generate.code", GENERATE_GETTER_SETTER, data(0, uri, offset, all, pair.first().stream().map(variableElement -> {
+            result.add(createCodeAction(client, name, all ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, null, "nbls.generate.code", Utils.encodeCommand(GENERATE_GETTER_SETTER, client.getNbCodeCapabilities()), data(0, uri, offset, all, pair.first().stream().map(variableElement -> {
                 QuickPickItem item = new QuickPickItem(createLabel(info, variableElement));
                 item.setUserData(new ElementData(variableElement));
                 return item;

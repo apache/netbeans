@@ -30,6 +30,7 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
+import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 
@@ -111,14 +112,20 @@ public class OCINode extends AbstractNode {
     }
     
     public void refresh() {
-        if (factory != null) {
-            factory.refreshKeys();
-        }
-        update(item);
+        RequestProcessor.getDefault().post(() -> {
+            if (factory != null) {
+                factory.refreshKeys();
+            }
+            update(item);
+        });
     }
     
     public void update(OCIItem item) {
         
+    }
+    
+    public OCIItem getItem() {
+        return this.item;
     }
 
     @Override

@@ -1361,10 +1361,13 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             }
         });
         c.onNotification(TelemetryEventNotification.type, (param) => {
-            const ls = listeners.get(param);
-            if (ls) {
-                for (const listener of ls) {
-                    commands.executeCommand(listener);
+            const names = param.name !== 'SCAN_START_EVT' && param.name !== 'SCAN_END_EVT' ? [param.name] : [param.name, param.properties];
+            for (const name of names) {
+                const ls = listeners.get(name);
+                if (ls) {
+                    for (const listener of ls) {
+                        commands.executeCommand(listener);
+                    }
                 }
             }
         });

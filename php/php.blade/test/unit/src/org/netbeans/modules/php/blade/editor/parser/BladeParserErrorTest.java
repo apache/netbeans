@@ -16,42 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.blade.project;
+package org.netbeans.modules.php.blade.editor.parser;
 
-import org.netbeans.api.annotations.common.CheckForNull;
-import org.netbeans.api.project.Project;
-import org.netbeans.spi.project.ui.support.ProjectConvertors;
-import org.openide.filesystems.FileObject;
+import org.netbeans.modules.php.blade.editor.BladeTestBase;
 
 /**
  *
  * @author bogdan
  */
-public final class ProjectUtils {
+public class BladeParserErrorTest extends BladeTestBase {
 
-    private ProjectUtils() {
-
+    public BladeParserErrorTest(String testName) {
+        super(testName);
     }
 
-    @CheckForNull
-    public static Project getMainOwner(FileObject file) {
-        Project project = ProjectConvertors.getNonConvertorOwner(file);
-
-        if (project == null) {
-            return null;
-        }
-
-        return project;
-    }
-
-    @CheckForNull
-    public static FileObject getProjectDirectory(FileObject file) {
-        Project project = getMainOwner(file);
-
-        if (project == null) {
-            return null;
-        }
-
-        return project.getProjectDirectory();
+    public void testUnopendSetError_01() throws Exception {
+        checkErrors("testfiles/parser/unopend/unopend_set_error_01.blade.php");
     }
 }

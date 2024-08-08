@@ -16,42 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.blade.project;
+package org.netbeans.modules.php.blade.editor;
 
-import org.netbeans.api.annotations.common.CheckForNull;
-import org.netbeans.api.project.Project;
-import org.netbeans.spi.project.ui.support.ProjectConvertors;
-import org.openide.filesystems.FileObject;
+import org.netbeans.modules.csl.api.test.CslTestBase;
+import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 
 /**
  *
  * @author bogdan
  */
-public final class ProjectUtils {
+public abstract class BladeTestBase extends CslTestBase {
 
-    private ProjectUtils() {
-
+    public BladeTestBase(String testName) {
+        super(testName);
     }
 
-    @CheckForNull
-    public static Project getMainOwner(FileObject file) {
-        Project project = ProjectConvertors.getNonConvertorOwner(file);
-
-        if (project == null) {
-            return null;
-        }
-
-        return project;
+    @Override
+    protected DefaultLanguageConfig getPreferredLanguage() {
+        return new BladeLanguage();
     }
 
-    @CheckForNull
-    public static FileObject getProjectDirectory(FileObject file) {
-        Project project = getMainOwner(file);
-
-        if (project == null) {
-            return null;
-        }
-
-        return project.getProjectDirectory();
+    @Override
+    protected String getPreferredMimeType() {
+        return BladeLanguage.MIME_TYPE;
     }
 }

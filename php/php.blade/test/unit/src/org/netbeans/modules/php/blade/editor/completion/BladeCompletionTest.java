@@ -16,42 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.blade.project;
+package org.netbeans.modules.php.blade.editor.completion;
 
-import org.netbeans.api.annotations.common.CheckForNull;
-import org.netbeans.api.project.Project;
-import org.netbeans.spi.project.ui.support.ProjectConvertors;
-import org.openide.filesystems.FileObject;
+import org.netbeans.modules.php.blade.editor.BladeTestBase;
 
 /**
  *
  * @author bogdan
  */
-public final class ProjectUtils {
+public class BladeCompletionTest extends BladeTestBase {
 
-    private ProjectUtils() {
-
+    public BladeCompletionTest(String testName) {
+        super(testName);
     }
-
-    @CheckForNull
-    public static Project getMainOwner(FileObject file) {
-        Project project = ProjectConvertors.getNonConvertorOwner(file);
-
-        if (project == null) {
-            return null;
-        }
-
-        return project;
-    }
-
-    @CheckForNull
-    public static FileObject getProjectDirectory(FileObject file) {
-        Project project = getMainOwner(file);
-
-        if (project == null) {
-            return null;
-        }
-
-        return project.getProjectDirectory();
+    
+    public void testCompletion_01() throws Exception {
+        checkCompletion("testfiles/completion/testCompletion_01.blade.php", "@^", false);
     }
 }

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.blade.csl.elements;
 
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.openide.filesystems.FileObject;
 
@@ -27,7 +28,8 @@ import org.openide.filesystems.FileObject;
  */
 public class ClassElement extends NamedElement {
 
-    protected final String namespace;
+    @NullAllowed
+    private final String namespace;
 
     public ClassElement(String name, FileObject file) {
         super(name, file, ElementType.PHP_CLASS);

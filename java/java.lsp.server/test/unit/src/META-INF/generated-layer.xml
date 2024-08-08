@@ -14,14 +14,4 @@
             </file>
         </folder>
     </folder>
-    <folder name="Editors">
-        <folder name="text">
-            <folder name="x-java">
-                <!-- need JavaErrorProvider to run ServerTest -->
-                <file name="org-netbeans-modules-java-hints-infrastructure-JavaErrorProvider.instance">
-                    <attr name="instanceOf" stringvalue="org.netbeans.spi.lsp.ErrorProvider"/>
-                </file>
-            </folder>
-        </folder>
-    </folder>
 </filesystem>

@@ -75,28 +75,17 @@ public class NamedElement implements ElementHandle {
 
     @Override
     public ElementKind getKind() {
-        switch (type) {
-            case YIELD_ID -> {
-                return ElementKind.PACKAGE;
-            }
-            case STACK_ID -> {
-                return ElementKind.PACKAGE;
-            }
-            case CUSTOM_DIRECTIVE -> {
-                return ElementKind.METHOD;
-            }
-            case PHP_CLASS -> {
-                return ElementKind.CLASS;
-            }
-            default -> {
-                return ElementKind.FILE;
-            }
-        }
+        return switch (type) {
+            case YIELD_ID, STACK_ID -> ElementKind.PACKAGE;
+            case CUSTOM_DIRECTIVE -> ElementKind.METHOD;
+            case PHP_CLASS -> ElementKind.CLASS;
+            default -> ElementKind.FILE;
+        };
     }
 
     @Override
     public Set<Modifier> getModifiers() {
-        return new HashSet<>();
+        return Set.of();
     }
 
     @Override

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,84 +19,40 @@
     under the License.
 
 -->
-<!-- Generator: Adobe Illustrator 24.2.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
-	<!ENTITY st0 "fill:#FFFFFF;">
-	<!ENTITY st1 "opacity:0.25;">
-	<!ENTITY st2 "fill:#E0E0E0;">
-	<!ENTITY st3 "opacity:0.4;">
-	<!ENTITY st4 "fill:none;stroke:#474747;stroke-miterlimit:10;">
-	<!ENTITY st5 "opacity:0.42;">
-	<!ENTITY st6 "fill:#CAE3FF;">
-	<!ENTITY st7 "fill:#FAFAFA;">
-	<!ENTITY st8 "opacity:0.2;">
-	<!ENTITY st9 "opacity:0.03;">
-	<!ENTITY st10 "opacity:0.1;">
-	<!ENTITY st11 "opacity:0.15;">
-	<!ENTITY st12 "opacity:0.45;">
-	<!ENTITY st13 "fill:#FFE1B0;">
-	<!ENTITY st14 "fill:#B3DBFF;">
-	<!ENTITY st15 "opacity:0.33;">
-	<!ENTITY st16 "fill:#FBDC7C;">
-	<!ENTITY st17 "fill:#FFDB43;">
-	<!ENTITY st18 "fill:#E79B00;">
-	<!ENTITY st19 "fill:#3883CE;">
-	<!ENTITY st20 "fill:none;stroke:#003399;stroke-width:1.375;stroke-miterlimit:10;">
-	<!ENTITY st21 "fill:#E8513D;">
-	<!ENTITY st22 "fill:#1E1E1E;">
-	<!ENTITY st23 "fill:#FFC36D;">
-	<!ENTITY st24 "fill:#9FCBFF;">
-	<!ENTITY st25 "fill:#E9F7FF;">
-	<!ENTITY st26 "fill:#62707C;">
-	<!ENTITY st27 "fill:#7A8896;">
-	<!ENTITY st28 "fill:#57BFFF;">
-	<!ENTITY st29 "fill:#E69D35;">
-	<!ENTITY st30 "fill:#9CFF73;">
-	<!ENTITY st31 "fill:#4891CC;">
-	<!ENTITY st32 "fill:#474747;">
-	<!ENTITY st33 "fill:#CCA05E;">
-	<!ENTITY st34 "opacity:0.67;">
-	<!ENTITY st35 "opacity:0.3;">
-	<!ENTITY st36 "fill:#EAEAEA;">
-	<!ENTITY st37 "fill:#FFE945;">
-	<!ENTITY st38 "fill:#FFCF8C;">
-	<!ENTITY st39 "fill:#FF5252;">
-	<!ENTITY st40 "opacity:0.12;">
-	<!ENTITY st41 "fill:#45A5F4;">
-	<!ENTITY st42 "fill:url(#SVGID_1_);">
-	<!ENTITY st43 "fill:url(#SVGID_2_);">
-	<!ENTITY st44 "opacity:0.05;">
-	<!ENTITY st45 "fill:#3D81F5;">
-	<!ENTITY st46 "fill:#CECECE;">
-	<!ENTITY st47 "fill:#B5B5B5;">
-	<!ENTITY st48 "fill:#595959;">
-	<!ENTITY st49 "fill:#80FF80;">
-	<!ENTITY st50 "fill:#C8FF80;">
-	<!ENTITY st51 "fill:#FFEE80;">
-	<!ENTITY st52 "fill:#FFA680;">
-	<!ENTITY st53 "fill:#FF8080;">
-	<!ENTITY st54 "fill:none;">
-	<!ENTITY st55 "fill:#007AFF;">
-	<!ENTITY st56 "fill:#EFFF78;">
-	<!ENTITY st57 "fill:#FFDA00;">
-	<!ENTITY st58 "fill:#3EADFF;">
-	<!ENTITY st59 "opacity:0.67;fill:#FFFFFF;">
-	<!ENTITY st60 "fill:#2E92FF;">
-	<!ENTITY st61 "fill:#3AEA00;">
-	<!ENTITY st62 "fill:#303030;">
-]>
-<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="15px" height="14px" viewBox="0 0 15 14" style="enable-background:new 0 0 15 14;" xml:space="preserve">
-<g>
-	<path style="&st18;" d="M13.561,11.439L7.197,5.075L5.075,7.197l6.364,6.364c0.586,0.586,1.536,0.586,2.121,0
-		C14.146,12.975,14.146,12.025,13.561,11.439z"/>
-	<g style="&st15;">
-		<path d="M7.197,6.136l5.834,5.834c0.292,0.292,0.292,0.768,0,1.061c-0.142,0.142-0.33,0.22-0.53,0.22
-			c-0.2,0-0.389-0.078-0.53-0.22L6.136,7.197L7.197,6.136 M7.197,5.075L5.075,7.197l6.364,6.364C11.732,13.854,12.116,14,12.5,14
-			c0.384,0,0.768-0.146,1.061-0.439c0.586-0.586,0.586-1.536,0-2.121L7.197,5.075L7.197,5.075z"/>
-	</g>
-</g>
-<circle style="&st6;" cx="5.5" cy="5.5" r="5"/>
-<path style="&st19;" d="M5.5,1C7.981,1,10,3.019,10,5.5S7.981,10,5.5,10S1,7.981,1,5.5S3.019,1,5.5,1 M5.5,0C2.462,0,0,2.462,0,5.5
-	S2.462,11,5.5,11S11,8.538,11,5.5S8.538,0,5.5,0L5.5,0z"/>
+<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="15" height="14" version="1.1" viewBox="0 0 15 14">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #e79b00;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: #cae3ff;
+      }
+
+      .cls-3 {
+        fill: #000;
+      }
+
+      .cls-5 {
+        opacity: .33;
+      }
+
+      .cls-4 {
+        fill: #3883ce;
+      }
+    </style>
+  </defs>
+  <g>
+    <path class="cls-1" d="M13.561,11.439l-6.364-6.364-2.121,2.121,6.364,6.364c.586.586,1.536.586,2.121,0,.586-.586.586-1.536,0-2.121Z"/>
+    <g class="cls-5">
+      <path class="cls-3" d="M7.197,6.136l5.834,5.834c.292.292.292.768,0,1.061-.142.142-.33.22-.53.22s-.389-.078-.53-.22l-5.834-5.834,1.061-1.061M7.197,5.075l-2.121,2.121,6.364,6.364c.293.293.677.439,1.061.439s.768-.146,1.061-.439c.586-.586.586-1.536,0-2.121l-6.364-6.364h0Z"/>
+    </g>
+  </g>
+  <circle class="cls-2" cx="5.5" cy="5.5" r="5"/>
+  <path class="cls-4" d="M5.5,1c2.481,0,4.5,2.019,4.5,4.5s-2.019,4.5-4.5,4.5S1,7.981,1,5.5,3.019,1,5.5,1M5.5,0C2.462,0,0,2.462,0,5.5s2.462,5.5,5.5,5.5,5.5-2.462,5.5-5.5S8.538,0,5.5,0h0Z"/>
 </svg>

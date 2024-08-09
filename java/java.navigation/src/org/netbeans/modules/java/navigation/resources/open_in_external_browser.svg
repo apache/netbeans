@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,101 +19,53 @@
     under the License.
 
 -->
-<!-- Generator: Adobe Illustrator 23.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
-	<!ENTITY Drop_x0020_Shadow "fill:none;">
-	<!ENTITY Outer_x0020_Glow_x0020_5_x0020_pt "fill:none;">
-	<!ENTITY Blue_x0020_Neon "fill:none;stroke:#8AACDA;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;">
-	<!ENTITY Chrome_x0020_Highlight "fill:url(#SVGID_1_);stroke:#FFFFFF;stroke-width:0.3629;stroke-miterlimit:1;">
-	<!ENTITY Jive_GS "fill:#FFDD00;">
-	<!ENTITY Alyssa_GS "fill:#A6D0E4;">
-	<!ENTITY st0 "fill:#FFFFFF;">
-	<!ENTITY st1 "opacity:0.25;">
-	<!ENTITY st2 "fill:#FAFAFA;">
-	<!ENTITY st3 "opacity:0.33;">
-	<!ENTITY st4 "fill:none;stroke:#474747;stroke-miterlimit:10;">
-	<!ENTITY st5 "opacity:0.42;">
-	<!ENTITY st6 "fill:#CAE3FF;">
-	<!ENTITY st7 "opacity:0.2;">
-	<!ENTITY st8 "opacity:0.03;">
-	<!ENTITY st9 "opacity:0.1;">
-	<!ENTITY st10 "opacity:0.15;">
-	<!ENTITY st11 "opacity:0.45;">
-	<!ENTITY st12 "fill:#FFE1B0;">
-	<!ENTITY st13 "fill:#B3DBFF;">
-	<!ENTITY st14 "fill:#FBDC7C;">
-	<!ENTITY st15 "fill:#FFDB43;">
-	<!ENTITY st16 "fill:#E79B00;">
-	<!ENTITY st17 "fill:#3883CE;">
-	<!ENTITY st18 "fill:none;stroke:#003399;stroke-width:1.375;stroke-miterlimit:10;">
-	<!ENTITY st19 "fill:#E8513D;">
-	<!ENTITY st20 "fill:#1E1E1E;">
-	<!ENTITY st21 "fill:#FFC36D;">
-	<!ENTITY st22 "fill:#9FCBFF;">
-	<!ENTITY st23 "fill:#E9F7FF;">
-	<!ENTITY st24 "fill:#62707C;">
-	<!ENTITY st25 "fill:#7A8896;">
-	<!ENTITY st26 "fill:#57BFFF;">
-	<!ENTITY st27 "fill:#E69D35;">
-	<!ENTITY st28 "fill:#9CFF73;">
-	<!ENTITY st29 "fill:#4891CC;">
-	<!ENTITY st30 "fill:#474747;">
-	<!ENTITY st31 "fill:#CCA05E;">
-	<!ENTITY st32 "opacity:0.67;">
-	<!ENTITY st33 "opacity:0.3;">
-	<!ENTITY st34 "fill:#EAEAEA;">
-	<!ENTITY st35 "fill:#FFE945;">
-	<!ENTITY st36 "fill:#FFCF8C;">
-	<!ENTITY st37 "fill:#FF5252;">
-	<!ENTITY st38 "opacity:0.12;">
-	<!ENTITY st39 "fill:#45A5F4;">
-	<!ENTITY st40 "fill:url(#SVGID_2_);">
-	<!ENTITY st41 "fill:url(#SVGID_3_);">
-	<!ENTITY st42 "opacity:0.05;">
-	<!ENTITY st43 "fill:#3D81F5;">
-	<!ENTITY st44 "fill:#CECECE;">
-	<!ENTITY st45 "fill:#B5B5B5;">
-	<!ENTITY st46 "opacity:0.4;">
-	<!ENTITY st47 "fill:#595959;">
-	<!ENTITY st48 "fill:#80FF80;">
-	<!ENTITY st49 "fill:#C8FF80;">
-	<!ENTITY st50 "fill:#FFEE80;">
-	<!ENTITY st51 "fill:#FFA680;">
-	<!ENTITY st52 "fill:#FF8080;">
-	<!ENTITY st53 "fill:none;">
-	<!ENTITY st54 "fill:#007AFF;">
-	<!ENTITY st55 "fill:#EFFF78;">
-	<!ENTITY st56 "fill:#FFDA00;">
-	<!ENTITY st57 "fill:#3EADFF;">
-	<!ENTITY st58 "opacity:0.67;fill:#FFFFFF;">
-	<!ENTITY st59 "fill:#2E92FF;">
-	<!ENTITY st60 "fill:#3AEA00;">
-	<!ENTITY st61 "fill:#303030;">
-]>
-<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-84" y1="-168" x2="-84" y2="-169">
-	<stop  offset="0" style="stop-color:#656565"/>
-	<stop  offset="0.618" style="stop-color:#1B1B1B"/>
-	<stop  offset="0.6292" style="stop-color:#545454"/>
-	<stop  offset="0.9831" style="stop-color:#3E3E3E"/>
-</linearGradient>
-<rect x="1" style="&st0;" width="15" height="13"/>
-<g style="&st3;">
-	<path d="M15,1v11H2V1H15 M16,0H1v13h15V0L16,0z"/>
-</g>
-<rect x="1.014" style="&st57;" width="14.986" height="3"/>
-<rect x="14" y="1" style="&st58;" width="1" height="1"/>
-<rect x="12" y="1" style="&st58;" width="1" height="1"/>
-<circle style="&st59;" cx="4.5" cy="10.5" r="4.5"/>
-<path style="&st60;" d="M6.045,6.29C5.574,6.65,5,7.275,5,8c0,1.056-1.261,1.331-1.632,1.616c-0.308,0.237-0.44,0.3-0.33,0.776
-	c0.093,0.404,0.529,0.573,0.918,0.518c0.584-0.084,0.665,0.096,0.786,0.64c0.079,0.356-0.016,1.094,0.274,1.339
-	c0.391,0.33,0.732-0.151,0.876-0.495c0.178-0.424,0.188-0.696,0.226-1.162c0.043-0.531,0.43-0.638,0.703-1.02
-	c0.185-0.259,1.07-0.931,1.776-1.553C8.104,7.561,7.183,6.707,6.045,6.29z"/>
-<path style="&st60;" d="M4.661,7.066C4.556,7.589,4.219,7.962,3.907,7.899C3.595,7.837,3.427,7.363,3.531,6.84
-	c0.105-0.523,0.442-0.896,0.754-0.833C4.597,6.069,4.765,6.543,4.661,7.066z"/>
-<g style="&st3;">
-	<path d="M4.5,7C6.43,7,8,8.57,8,10.5S6.43,14,4.5,14S1,12.43,1,10.5S2.57,7,4.5,7 M4.5,6C2.015,6,0,8.015,0,10.5S2.015,15,4.5,15
-		S9,12.985,9,10.5S6.985,6,4.5,6L4.5,6z"/>
-</g>
+<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #3aea00;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: #000;
+      }
+
+      .cls-3 {
+        opacity: .67;
+      }
+
+      .cls-3, .cls-6 {
+        fill: #fff;
+      }
+
+      .cls-7 {
+        opacity: .33;
+      }
+
+      .cls-4 {
+        fill: #3eadff;
+      }
+
+      .cls-5 {
+        fill: #2e92ff;
+      }
+    </style>
+  </defs>
+  <rect class="cls-6" x="1" width="15" height="13"/>
+  <g class="cls-7">
+    <path class="cls-2" d="M15,1v11H2V1h13M16,0H1v13h15V0h0Z"/>
+  </g>
+  <rect class="cls-4" x="1.014" width="14.986" height="3"/>
+  <rect class="cls-3" x="14" y="1" width="1" height="1"/>
+  <rect class="cls-3" x="12" y="1" width="1" height="1"/>
+  <circle class="cls-5" cx="4.5" cy="10.5" r="4.5"/>
+  <path class="cls-1" d="M6.045,6.29c-.471.361-1.045.986-1.045,1.71,0,1.056-1.261,1.331-1.632,1.617-.308.237-.44.3-.33.776.093.404.529.573.918.518.584-.084.665.096.786.64.079.356-.016,1.094.274,1.339.391.33.732-.151.876-.495.178-.424.188-.696.226-1.162.043-.532.43-.638.703-1.02.185-.258,1.07-.931,1.776-1.553-.494-1.098-1.415-1.952-2.553-2.37Z"/>
+  <path class="cls-1" d="M4.661,7.066c-.104.523-.442.896-.754.833-.312-.062-.48-.537-.376-1.059s.442-.896.754-.833c.312.062.48.537.376,1.059Z"/>
+  <g class="cls-7">
+    <path class="cls-2" d="M4.5,7c1.93,0,3.5,1.57,3.5,3.5s-1.57,3.5-3.5,3.5-3.5-1.57-3.5-3.5,1.57-3.5,3.5-3.5M4.5,6c-2.485,0-4.5,2.015-4.5,4.5s2.015,4.5,4.5,4.5,4.5-2.015,4.5-4.5-2.015-4.5-4.5-4.5h0Z"/>
+  </g>
 </svg>

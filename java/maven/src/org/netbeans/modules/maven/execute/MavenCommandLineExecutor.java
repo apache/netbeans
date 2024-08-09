@@ -370,7 +370,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 final Project prj = clonedConfig.getProject();
                 if (prj != null) {
                     NbMavenProjectImpl impl = prj.getLookup().lookup(NbMavenProjectImpl.class);
-                    if (impl != null) {
+                    // magic number -10 seems to be a cancelled process.
+                    if (impl != null && executionresult != -10) {
                         // this reload must not wait for blockers.
                         RequestProcessor.Task reloadTask = impl.fireProjectReload();
                         reloadTask.waitFinished();

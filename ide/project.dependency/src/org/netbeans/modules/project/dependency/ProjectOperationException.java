@@ -26,12 +26,15 @@ import org.openide.filesystems.FileObject;
 /**
  * The exception is thrown when an error happens during project operation because
  * of limited or refused access to the project metadata / structure.
- * <p/>
+ * <p>
  * It may wrap underlying build system error, such as maven not able to parse the
  * POM.
  * @author sdedic
  */
 public final class ProjectOperationException extends IllegalStateException {
+    /**
+     * An overall status of the operation.
+     */
     public enum State {
         /**
          * Unexpected project system error, see the exception cause for details.
@@ -73,23 +76,50 @@ public final class ProjectOperationException extends IllegalStateException {
          * @since 1.7
          */
         UNSUPPORTED,
+        
+        /**
+         * The operation was cancelled. Individual operations throw either CancellationException
+         * from their Futures, or ProjectOperationException with CANCELLED status. 
+         * @since 1.7
+         */
+        CANCELLED,
     }
     
     private final Project project;
     private final State state;
     private Set<FileObject> files;
     
+    /**
+     * Constructs an exception 
+     * @param project the project
+     * @param state state
+     * @param s message
+     */
     public ProjectOperationException(Project project, State state, String s) {
         this(project, state, s, Collections.emptySet());
     }
 
+    /**
+     * Constructs an exception reporting a set of files.
+     * @param project the project
+     * @param state error state
+     * @param s message
+     * @param files files
+     */
     public ProjectOperationException(Project project, State state, String s, Set<FileObject> files) {
         super(s);
         this.files = files;
         this.project = project;
         this.state = state;
     }
-    
+
+    /**
+     * Wraps an underlying exception.
+     * @param project the project
+     * @param state error state
+     * @param message message
+     * @param cause underlying exception
+     */
     public ProjectOperationException(Project project, State state, String message, Throwable cause) {
         super(message, cause);
         this.state = state;
@@ -97,15 +127,26 @@ public final class ProjectOperationException extends IllegalStateException {
         this.files = Collections.emptySet();
     }
 
+    /**
+     * @return the project
+     */
     public Project getProject() {
         return project;
     }
 
+    /**
+     * State of the operation. 
+     * @return outcome state
+     */
     public State getState() {
         return state;
     }
 
+    /**
+     * Returns set of files reported by this exception
+     * @return set of files.
+     */
     public Set<FileObject> getFiles() {
-        return files;
+        return Collections.unmodifiableSet(files);
     }
 }

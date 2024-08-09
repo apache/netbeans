@@ -65,6 +65,12 @@ under the License.
                     <div class="codeContainer">
                         <pre>Host {{publicIp}} instance<br />&nbsp;&nbsp;IdentityFile {{dummyKeyPathLocation}}</pre>
                     </div>
+
+                    <p>In order to avoid <span class="propertyValue">Permissions ... are too open</span> error, key file permissions needs to be changed. Run:
+                    <div class="codeContainer">
+                        <pre>chmod 400 {{dummyKeyPathLocation}}</pre>
+                    </div>
+                    <p>This command sets the permissions so that only the owner of the file can read it.</p>
                 </div>
                 <div class="footer">
                     <p class="guideControl">

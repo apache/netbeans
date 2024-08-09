@@ -864,11 +864,15 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             const publicIp = getValueAfterPrefix(node.contextValue, 'publicIp:');
             const imageUrl = getValueAfterPrefix(node.contextValue, 'imageUrl:');
             const ocid = getValueAfterPrefix(node.contextValue, 'ocid:');
+            const isRepositoryPrivate = "false" === getValueAfterPrefix(node.parent.contextValue, "repositoryPublic:");
+            const registryUrl = imageUrl.split('/')[0];
 
             if (!shouldHideGuideFor(runImageGuide.viewType, ocid)){
                 runImageGuide.RunImageGuidePanel.createOrShow(context, {
                     publicIp,
-                    ocid
+                    ocid,
+                    isRepositoryPrivate,
+                    registryUrl
                 });
             }
 

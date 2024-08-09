@@ -24,6 +24,8 @@ import { dummyKeyPathLocation, shouldHideGuideFor, sshConfigLocation, toggleGuid
 export type RunImageGuidePanelProps = {
     publicIp: string;
     ocid: string;
+    isRepositoryPrivate: boolean;
+    registryUrl: string;
 }
 
 export const viewType: string = "runImageGuide";
@@ -50,10 +52,12 @@ export class RunImageGuidePanel extends GuidePanel {
     }
 
     constructor(context: vscode.ExtensionContext, props: RunImageGuidePanelProps) {
-        const { ocid, publicIp } = props;
+        const { ocid, publicIp, isRepositoryPrivate, registryUrl } = props;
         super(context, viewType, templatePath, {
             ocid,
             publicIp,
+            isRepositoryPrivate,
+            registryUrl,
             dummyKeyPathLocation,
             sshConfigLocation,
             showGuide: "",

@@ -150,12 +150,13 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                     int end = (int) sp.getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
                     Document doc = info.getSnapshot().getSource().getDocument(false);
                     try {
+                        String enclosingType = getEnclosingType(elements.getBinaryName(typeElement).toString(), info.getFileObject().getName());
                         result.add(new TestMethod(elements.getBinaryName(typeElement).toString(),
-                                doc != null ? doc.createPosition(clazzPreferred) : new SimplePosition(clazzPreferred),
-                                new SingleMethod(info.getFileObject(), mn),
-                                doc != null ? doc.createPosition(start) : new SimplePosition(start),
-                                doc != null ? doc.createPosition(preferred) : new SimplePosition(preferred),
-                                doc != null ? doc.createPosition(end) : new SimplePosition(end)));
+                            doc != null ? doc.createPosition(clazzPreferred) : new SimplePosition(clazzPreferred),
+                            new SingleMethod(info.getFileObject(), mn, enclosingType),
+                            doc != null ? doc.createPosition(start) : new SimplePosition(start),
+                            doc != null ? doc.createPosition(preferred) : new SimplePosition(preferred),
+                            doc != null ? doc.createPosition(end) : new SimplePosition(end)));
                     } catch (BadLocationException ex) {
                         //ignore
                     }
@@ -176,6 +177,15 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                 }
             });
         }
+    }
+
+    private static String getEnclosingType(String fqClassName, String fileName) {
+        // drop the package name
+        String classOnly = fqClassName.substring(fqClassName.lastIndexOf('.') + 1);
+        if (classOnly.startsWith(fileName) && classOnly.length() > fileName.length()) {
+            return classOnly.substring(fileName.length());
+        }
+        return null;
     }
 
     private static boolean isTestSource(FileObject fo) {

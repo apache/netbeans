@@ -78,6 +78,11 @@ public final class MavenProjectCache {
     private static final String CONTEXT_FAKED_ARTIFACTS = "NB_FakedArtifacts";
     
     /**
+     * Timestamp of the project model load.
+     */
+    private static final String CONTEXT_LOAD_TIMESTAMP = "org.netbeans.modules.maven.loadTimestamp"; // NOI18N
+    
+    /**
      * Marks a project that observed unknown build participants.
      */
     private static final String CONTEXT_PARTICIPANTS = "NB_AbstractParticipant_Present";
@@ -169,6 +174,31 @@ public final class MavenProjectCache {
     
     public static boolean unknownBuildParticipantObserved(MavenProject project) {
         return project.getContextValue(CONTEXT_PARTICIPANTS) != null;
+    }
+    
+    /**
+     * Extracts a timestamp from the MavenProject. Timestamps are placed
+     * as context values in {@link #loadOriginalMavenProjectInternal}.
+     * @param p project
+     * @return timestamp, -1 if p is null, -2 if unknown
+     */
+    public static long getLoadTimestamp(MavenProject p) {
+        if (p == null) {
+            return -1;
+        }
+        Object o = p.getContextValue(CONTEXT_LOAD_TIMESTAMP);
+        return o instanceof Long l ? l : -2;
+    }
+    
+    /**
+     * Extracts the set of artifacts not present in the local repository and 'faked' during the
+     * project load.
+     * @param p project
+     * @return set of faked artifacts.
+     */
+    public static Collection<Artifact> getFakedArtifacts(MavenProject p) {
+        Object o = p.getContextValue(CONTEXT_FAKED_ARTIFACTS);
+        return o instanceof Collection ? (Collection)o : Collections.emptySet();
     }
     
     /**
@@ -288,12 +318,15 @@ public final class MavenProjectCache {
                 }
             }
             LOG.log(Level.FINE, "Loaded project flags - incomplete {0}, fake count {1}", new Object[] { isIncompleteProject(newproject), fakes.size() });
-            if (!fakes.isEmpty() && !isIncompleteProject(newproject)) {
+            if (!fakes.isEmpty()) {
                 LOG.log(Level.FINE, "Incomplete artifact encountered during loading the project: {0}", fakes);
-                newproject.setContextValue(CONTEXT_PARTIAL_PROJECT, Boolean.TRUE);
+                if (!isIncompleteProject(newproject)) {
+                    newproject.setContextValue(CONTEXT_PARTIAL_PROJECT, Boolean.TRUE);
+                }
                 newproject.setContextValue(CONTEXT_FAKED_ARTIFACTS, fakes);
             }
         }
+        newproject.setContextValue(CONTEXT_LOAD_TIMESTAMP, startLoading);
         return newproject;
     }
     

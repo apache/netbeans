@@ -43,7 +43,7 @@
         <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/hk2-api-2.6.1.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/hk2-locator-2.6.1.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/hk2-utils-2.6.1.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/jakarta.inject-2.6.1.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.javax.inject/modules/ext/jersey2/jakarta.inject-2.6.1.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/aopalliance-repackaged-2.6.1.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/osgi.core-8.0.0.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/osgi-resource-locator-1.0.3.jar!/</resource>

@@ -39,7 +39,7 @@ import org.netbeans.api.project.Project;
 public final class JAXWSClientView {
 
 	private JAXWSClientViewImpl impl;
-	private static final Lookup.Result implementations =
+	private static final Lookup.Result<?> implementations =
 		Lookup.getDefault().lookupResult(JAXWSClientViewProvider.class);
 
 	static  {

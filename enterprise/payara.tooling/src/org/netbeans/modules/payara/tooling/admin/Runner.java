@@ -294,7 +294,7 @@ public abstract class Runner implements Callable<Result> {
      * is responsible for correct <code>TaskState</code> and receiveResult value
      * handling.
      */
-    Result result;
+    Result<?> result;
 
     /** Query string for this command. */
     final String query;

@@ -58,6 +58,8 @@ import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.gradle.GradleProjectLoader;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.GradleProjects;
+import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.NbGradleProject.LoadOptions;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.modules.gradle.execute.EscapeProcessingOutputStream;
 import org.netbeans.modules.gradle.execute.GradlePlainEscapeProcessor;
@@ -526,7 +528,7 @@ public final class TemplateOperation implements Runnable {
                             //Just load the project into the cache.
                             GradleProjectLoader loader = nbProject.getLookup().lookup(GradleProjectLoader.class);
                             if (loader != null) {
-                                loader.loadProject(Quality.FULL_ONLINE, null, true, false);
+                                loader.loadProject(NbGradleProject.loadOptions(Quality.FULL_ONLINE).setIgnoreCache(true));
                             }
                         }
                         Set<FileObject> ret = new LinkedHashSet<>();

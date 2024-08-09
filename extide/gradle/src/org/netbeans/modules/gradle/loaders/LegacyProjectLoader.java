@@ -128,7 +128,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
 
     @Override
     public boolean isEnabled() {
-        return ctx.aim.betterThan(EVALUATED);
+        return ctx.getAim().betterThan(EVALUATED);
     }
 
     @NbBundle.Messages({
@@ -140,7 +140,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
     private static GradleProject loadGradleProject(ReloadContext ctx, CancellationToken token, ProgressListener pl) {
         long start = System.currentTimeMillis();
         NbProjectInfo info = null;
-        NbGradleProject.Quality quality = ctx.aim;
+        NbGradleProject.Quality quality = ctx.getAim();
         GradleBaseProject base = ctx.previous.getBaseProject();
 
         ProjectConnection pconn = ctx.project.getLookup().lookup(ProjectConnection.class);
@@ -157,9 +157,9 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         GoOnline goOnline;
         if (GradleSettings.getDefault().isOffline()) {
             goOnline = GoOnline.NEVER;
-        } else if (ctx.aim == FULL_ONLINE) {
+        } else if (quality == FULL_ONLINE) {
             goOnline = GoOnline.ALWAYS;
-        } else {
+        }  else {
             switch (GradleSettings.getDefault().getDownloadLibs()) {
                 case NEVER:
                     goOnline = GoOnline.NEVER;
@@ -170,6 +170,9 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                 default:
                     goOnline = GoOnline.ON_DEMAND;
             }
+        }
+        if (ctx.getOptions().isOffline()) {
+            goOnline = GoOnline.NEVER;
         }
         try {
 
@@ -297,6 +300,14 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
             List<GradleReport> problems = exceptionsToProblems(ctx.project.getGradleFiles().getBuildScript(), ex);
             errors.openNotification(TIT_LOAD_FAILED(base.getProjectDir()), ex.getMessage(), GradleProjectErrorNotifications.bulletedList(problems));
             return ctx.previous.invalidate(problems.toArray(new GradleReport[0]));
+        } catch (ThreadDeath td) {
+            throw td;
+        } catch (Throwable t) {
+            // catch any possible other errors, report project loading failure - but complete the loading operation.
+            LOG.log(Level.SEVERE, "Internal error during loading: " + base.getProjectDir(), t);
+            List<GradleReport> problems = exceptionsToProblems(ctx.project.getGradleFiles().getBuildScript(), t);
+            errors.openNotification(TIT_LOAD_FAILED(base.getProjectDir()), t.getMessage(), GradleProjectErrorNotifications.bulletedList(problems));
+            return ctx.previous.invalidate(problems.toArray(new GradleReport[0]));
         } finally {
             loadedProjects.incrementAndGet();
         }
@@ -306,7 +317,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         if (SwingUtilities.isEventDispatchThread()) {
             LOG.log(FINE, "Load happened on AWT event dispatcher", new RuntimeException());
         }
-        ProjectInfoDiskCache.QualifiedProjectInfo qinfo = new ProjectInfoDiskCache.QualifiedProjectInfo(quality, info);
+        ProjectInfoDiskCache.QualifiedProjectInfo qinfo = new ProjectInfoDiskCache.QualifiedProjectInfo(quality, info, start);
         GradleProject ret = createGradleProject(ctx.project.getGradleFiles(), qinfo);
         GradleArtifactStore.getDefault().processProject(ret);
         if (info.getMiscOnly()) {
@@ -672,8 +683,8 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         public GradleProject call() throws Exception {
             tokenSource = GradleConnector.newCancellationTokenSource();
             String msg;
-            if (ctx.description != null) {
-                msg = Bundle.FMT_ProjectLoadReason(ctx.description, ctx.previous.getBaseProject().getName());
+            if (ctx.getDescription() != null) {
+                msg = Bundle.FMT_ProjectLoadReason(ctx.getDescription(), ctx.previous.getBaseProject().getName());
             } else {
                 msg = Bundle.LBL_Loading(ctx.previous.getBaseProject().getName());
             }

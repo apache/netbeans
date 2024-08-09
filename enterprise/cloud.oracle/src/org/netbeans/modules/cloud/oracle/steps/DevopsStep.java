@@ -29,6 +29,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.cloud.oracle.OCIManager;
+import org.netbeans.modules.cloud.oracle.OCISessionInitiator;
 import org.netbeans.modules.cloud.oracle.assets.AbstractStep;
 import org.netbeans.modules.cloud.oracle.assets.Steps;
 import org.netbeans.modules.cloud.oracle.assets.Steps.Values;
@@ -104,8 +105,17 @@ public class DevopsStep extends AbstractStep<DevopsProjectItem> {
             for (ProjectSummary project : projects) {
                 project.getNotificationConfig().getTopicId();
             }
-            return projects.stream().map(p -> new DevopsProjectItem(OCID.of(p.getId(), "DevopsProject"), // NOI18N
-                    compartmentId, p.getName())).collect(Collectors.toMap(DevopsProjectItem::getName, Function.identity()));
+
+            OCISessionInitiator session = OCIManager.getDefault().getActiveProfile();
+            String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+            String regionCode = session.getRegion().getRegionCode();
+
+            return projects.stream().map(p -> new DevopsProjectItem(
+                    OCID.of(p.getId(), "DevopsProject"), // NOI18N
+                    compartmentId,
+                    p.getName(),
+                    tenancyId,
+                    regionCode)).collect(Collectors.toMap(DevopsProjectItem::getName, Function.identity()));
         }
     }
 

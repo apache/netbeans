@@ -31,6 +31,8 @@ public abstract class OCIItem {
     final OCID id;
     final String name;
     final String compartmentId;
+    final String tenancyId;
+    final String regionCode;
     String description;
     final transient PropertyChangeSupport changeSupport;
 
@@ -40,16 +42,20 @@ public abstract class OCIItem {
     * @param id OCID of the item
     * @param compartmentId OCID of the compartmentId
     * @param name Name of the item
+    * @param tenancyId Tenancy OCID of the item
+    * @param regionCode Region code of the item
     */
-    public OCIItem(OCID id, String compartmentId, String name) {
+    public OCIItem(OCID id, String compartmentId, String name, String tenancyId, String regionCode) {
         this.id = id;
         this.name = name;
         this.compartmentId = compartmentId;
+        this.tenancyId = tenancyId;
+        this.regionCode = regionCode;
         changeSupport = new PropertyChangeSupport(this);
     }
 
     public OCIItem() {
-        this(null, null, null);
+        this(null, null, null, null, null);
     }
     
     /**
@@ -86,6 +92,24 @@ public abstract class OCIItem {
      */
     public String getCompartmentId() {
         return compartmentId;
+    }
+
+    /**
+     * OCID of the tenancyId.
+     *
+     * @return OCID of the tenancyId
+     */
+    public String getTenancyId() {
+        return tenancyId;
+    }
+
+    /**
+     * 3 digit region code.
+     *
+     * @return 3 digit region code
+     */
+    public String getRegionCode() {
+        return regionCode;
     }
     
     /**

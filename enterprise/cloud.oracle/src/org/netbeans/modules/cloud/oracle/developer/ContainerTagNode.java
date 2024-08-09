@@ -65,6 +65,8 @@ public class ContainerTagNode extends OCINode {
                     .repositoryId(containerRepository.getKey().getValue())
                     .build();
 
+            String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+
             return client.listContainerImages(listContainerImagesRequest)
                     .getContainerImageCollection()
                     .getItems()
@@ -76,7 +78,8 @@ public class ContainerTagNode extends OCINode {
                             containerRepository.getRegionCode(),
                             containerRepository.getNamespace(),
                             d.getVersion(),
-                            d.getDigest().trim()
+                            d.getDigest().trim(),
+                            tenancyId
                     ))
                     .collect(Collectors.toList());
         };

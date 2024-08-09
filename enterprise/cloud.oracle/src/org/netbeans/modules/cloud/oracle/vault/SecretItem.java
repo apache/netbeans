@@ -27,8 +27,8 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
  */
 public class SecretItem extends OCIItem {
 
-    public SecretItem(OCID id, String compartmentId, String name) {
-        super(id, compartmentId, name);
+    public SecretItem(OCID id, String compartmentId, String name, String tenancyId, String regionCode) {
+        super(id, compartmentId, name, tenancyId, regionCode);
     }
 
     public SecretItem() {

@@ -67,14 +67,20 @@ public class ClusterNode extends OCINode {
                     .limit(88)
                     .build();
 
+            String tenancyId = session.getTenancy().isPresent() ?
+                    session.getTenancy().get().getKey().getValue() : null;
+            String regionCode = session.getRegion().getRegionCode();
+
             return client.listClusters(listClustersRequest)
                     .getItems()
                     .stream()
                     .filter(c -> !c.getLifecycleState().equals(Instance.LifecycleState.Terminated))
                     .map(d -> new ClusterItem(
-                        OCID.of(d.getId(), "Cluster"), //NOI18N
+                            OCID.of(d.getId(), "Cluster"), //NOI18N
                             compartmentId.getKey().getValue(),
-                        d.getName()
+                            d.getName(),
+                            tenancyId,
+                            regionCode
                     ))
                     .collect(Collectors.toList());
         };

@@ -30,6 +30,9 @@ import org.netbeans.junit.*;
 /**
  *
  * @author rk109395
+ * 
+ * @author James
+ * year: 2023
  */
 public class NbDdeBrowserImplTest extends NbTestCase {
 
@@ -52,7 +55,15 @@ public class NbDdeBrowserImplTest extends NbTestCase {
     public void testGetDefaultOpenCommand () throws NbBrowserException {
         if (!org.openide.util.Utilities.isWindows ())
             return;
-        getDDEBrowserImpl().getDefaultOpenCommand ();
+        getDDEBrowserImpl().getDefaultWindowsOpenCommand();
+        
+        /** if not found with getDefaultWindowsOpenCommand function
+        *  fallback to previous method
+        */
+         if (getDDEBrowserImpl().getDefaultWindowsOpenCommand().isEmpty())
+        {
+            getDDEBrowserImpl().getDefaultOpenCommand();
+        }
     }
     
     /** Test of backward method, of class org.netbeans.modules.extbrowser.NbDdeBrowserImpl. */

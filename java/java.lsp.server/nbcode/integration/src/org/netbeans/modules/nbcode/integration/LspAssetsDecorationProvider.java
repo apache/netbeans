@@ -27,6 +27,7 @@ import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryItem;
 import org.netbeans.modules.cloud.oracle.developer.ContainerTagItem;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import org.netbeans.modules.cloud.oracle.vault.SecretItem;
 import org.netbeans.modules.java.lsp.server.explorer.NodeLookupContextValues;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeDataListener;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeDataProvider;
@@ -49,6 +50,7 @@ public class LspAssetsDecorationProvider implements TreeDataProvider.Factory {
     public static final String CTXVALUE_PREFIX_IMAGE_URL = "imageUrl:"; // NOI18N
     public static final String CTXVALUE_PREFIX_IMAGE_COUNT = "imageCount:"; // NOI18N
     public static final String CTXVALUE_PREFIX_REPOSITORY_PUBLIC = "repositoryPublic:"; // NOI18N
+    public static final String CTXVALUE_PREFIX_SECRET_LIFECYCLE_STATE = "lifecycleState:"; // NOI18N
 
     @Override
     public synchronized TreeDataProvider createProvider(String treeId) {
@@ -99,6 +101,11 @@ public class LspAssetsDecorationProvider implements TreeDataProvider.Factory {
             if (item instanceof BucketItem 
                     || item instanceof DatabaseItem) {
                 d.addContextValues(CTXVALUE_CAP_REFERENCE_NAME);
+                set = true;
+            }
+            
+            if (item instanceof SecretItem) {
+                d.addContextValues(CTXVALUE_PREFIX_SECRET_LIFECYCLE_STATE + ((SecretItem)item).getLifecycleState());
                 set = true;
             }
             return set ? d : null;

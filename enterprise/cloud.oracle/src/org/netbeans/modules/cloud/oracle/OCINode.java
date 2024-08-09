@@ -120,6 +120,10 @@ public class OCINode extends AbstractNode {
     public void update(OCIItem item) {
         
     }
+    
+    public OCIItem getItem() {
+        return this.item;
+    }
 
     @Override
     public Node.Handle getHandle() {

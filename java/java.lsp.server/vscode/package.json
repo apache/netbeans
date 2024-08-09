@@ -834,6 +834,10 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls:Edit:org.openide.actions.DeleteAction",
+					"when": "false"
+				},
+				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
 					"when": "false"
 				},
@@ -1111,6 +1115,11 @@
 					"command": "nbls.workspace.configureRunSettings",
 					"when": "view == run-config && viewItem == configureRunSettings",
 					"group": "inline@1"
+				},
+				{
+					"command": "nbls:Edit:org.openide.actions.DeleteAction",
+					"when": "viewItem =~ /lifecycleState:ACTIVE*/ || (viewItem =~ /publicIp:.*/ && viewItem =~ /imageUrl:.*/)",
+					"group": "inline@10"
 				}
 			]
 		},

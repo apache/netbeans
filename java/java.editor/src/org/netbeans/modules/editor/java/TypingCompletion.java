@@ -563,6 +563,21 @@ class TypingCompletion {
         return false;
     }
 
+    static boolean javadocLineRunCompletion(TypedBreakInterceptor.MutableContext context) {
+        TokenSequence<JavaTokenId> ts = javaTokenSequence(context, false);
+        if (ts == null) {
+            return false;
+        }
+        int dotPosition = context.getCaretOffset();
+        ts.move(dotPosition);
+        if (!((ts.moveNext() || ts.movePrevious()) && ts.token().id() == JavaTokenId.JAVADOC_COMMENT_LINE_RUN)) {
+            return false;
+        }
+        context.setText("\n///", -1, 4, 0, 4);
+
+        return false;
+    }
+
     private static boolean isAtRowEnd(CharSequence txt, int pos) {
         int length = txt.length();
         for (int i = pos; i < length; i++) {

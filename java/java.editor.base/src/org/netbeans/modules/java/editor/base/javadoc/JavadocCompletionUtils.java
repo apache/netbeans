@@ -51,7 +51,7 @@ import org.netbeans.api.lexer.TokenSequence;
  */
 public final class JavadocCompletionUtils {
     
-    static final Pattern JAVADOC_LINE_BREAK = Pattern.compile("\\n[ \\t]*\\**[ \\t]*\\z"); // NOI18N
+    static final Pattern JAVADOC_LINE_BREAK = Pattern.compile("(\\n[ \\t]*\\**[ \\t]*\\z)|(\\n[ \\t]*///[ \\t]*\\z)"); // NOI18N
     static final Pattern JAVADOC_WHITE_SPACE = Pattern.compile("[^ \\t]"); // NOI18N
     /**
      * javadoc parser considers whatever number of spaces or standalone newline
@@ -62,7 +62,7 @@ public final class JavadocCompletionUtils {
     static final Pattern JAVADOC_EMPTY = Pattern.compile("(\\s*\\**\\s*\n)*\\s*\\**\\s*\\**"); // NOI18N
     static final Pattern JAVADOC_FIRST_WHITE_SPACE = Pattern.compile("[ \\t]*\\**[ \\t]*"); // NOI18N
     private static Set<JavaTokenId> IGNORE_TOKES = EnumSet.of(
-            JavaTokenId.WHITESPACE, JavaTokenId.BLOCK_COMMENT, JavaTokenId.LINE_COMMENT);
+            JavaTokenId.WHITESPACE, JavaTokenId.BLOCK_COMMENT, JavaTokenId.LINE_COMMENT, JavaTokenId.JAVADOC_COMMENT_LINE_RUN);
     private static final Logger LOGGER = Logger.getLogger(JavadocCompletionUtils.class.getName());
     
     /**
@@ -196,6 +196,7 @@ public final class JavadocCompletionUtils {
                         break;
                     }
                 case JAVADOC_COMMENT:
+                case JAVADOC_COMMENT_LINE_RUN:
                     if (token.partType() == PartType.COMPLETE) {
                         return javac.getElements().getDocComment(e) == null
                                 ? null : s.embedded(JavadocTokenId.language());
@@ -246,36 +247,39 @@ public final class JavadocCompletionUtils {
     
     /**
      * Is javadoc line break?
-     * @param token token to test
+     * @param ts a token sequence positioned to the token to test
      * @return {@code true} in case the token is something like {@code "\n\t*"}
      */
-    public static boolean isLineBreak(Token<JavadocTokenId> token) {
-        return isLineBreak(token, token.length());
+    public static boolean isLineBreak(TokenSequence<JavadocTokenId> ts) {
+        return isLineBreak(ts, ts.token().length());
     }
     
     /**
      * Tests if the token part before {@code pos} is a javadoc line break.
-     * @param token a token to test
+     * @param ts a token sequence positioned to the token to test
      * @param pos position in the token
      * @return {@code true} in case the token is something like {@code "\n\t* |\n\t*"}
      */
-    public static boolean isLineBreak(Token<JavadocTokenId> token, int pos) {
+    public static boolean isLineBreak(TokenSequence<JavadocTokenId> ts, int pos) {
+        Token<JavadocTokenId> token = ts.token();
+
         if (token == null || token.id() != JavadocTokenId.OTHER_TEXT) {
-            return false;
+            return ts.isEmpty() || ts.index() == 0;
         }
         try {
             CharSequence text = token.text();
             if (pos < token.length())
                 text = text.subSequence(0, pos);
-            boolean result = pos > 0
+            boolean result = (pos > 0
                     && JAVADOC_LINE_BREAK.matcher(text).find()
-                    && (pos == token.length() || !isInsideIndent(token, pos));
+                    && (pos == token.length() || !isInsideIndent(token, pos))
+                    );
             return result;
         } catch (IndexOutOfBoundsException e) {
             throw (IndexOutOfBoundsException) new IndexOutOfBoundsException("pos: " + pos + ", token.length: " + token.length() + ", token text: " + token.text()).initCause(e);
         }
     }
-    
+
     public static boolean isWhiteSpace(CharSequence text) {
         return text != null && text.length() > 0 && !JAVADOC_WHITE_SPACE.matcher(text).find();
     }
@@ -437,7 +441,8 @@ public final class JavadocCompletionUtils {
             return false;
         }
         
-        if (ts.token().id() != JavaTokenId.JAVADOC_COMMENT) {
+        if (ts.token().id() != JavaTokenId.JAVADOC_COMMENT &&
+            ts.token().id() != JavaTokenId.JAVADOC_COMMENT_LINE_RUN) {
             return false;
         }
         
@@ -455,6 +460,11 @@ public final class JavadocCompletionUtils {
             CharSequence text = token.text();
             // check special case /**|*/
             return offset == 3 && "/***/".contentEquals(text); //NOI18N
+        }
+        if (token != null && token.id() == JavaTokenId.JAVADOC_COMMENT_LINE_RUN) {
+            CharSequence text = token.text();
+            // check special case ///|\n
+            return offset == 3 && "///\n".contentEquals(text); //NOI18N
         }
         return false;
     }

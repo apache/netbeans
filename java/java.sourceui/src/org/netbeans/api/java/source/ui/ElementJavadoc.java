@@ -32,6 +32,7 @@ import com.sun.source.doctree.InheritDocTree;
 import com.sun.source.doctree.LinkTree;
 import com.sun.source.doctree.LiteralTree;
 import com.sun.source.doctree.ParamTree;
+import com.sun.source.doctree.RawTextTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.doctree.ReturnTree;
 import com.sun.source.doctree.SeeTree;
@@ -119,6 +120,11 @@ import javax.tools.SimpleJavaFileObject;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
+import com.vladsch.flexmark.ext.tables.TablesExtension;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 import javax.lang.model.element.RecordComponentElement;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.queries.SourceLevelQuery.Profile;
@@ -1275,7 +1281,7 @@ public class ElementJavadoc {
     private StringBuilder inlineTags(List<? extends DocTree> tags, TreePath docPath, DocCommentTree doc, DocTrees trees, CharSequence inherited) {
         StringBuilder sb = new StringBuilder();
         Integer snippetCount=0;
-        for (DocTree tag : tags) {
+        for (DocTree tag : resolveMarkdown(trees, tags)) {
             switch (tag.getKind()) {
                 case REFERENCE:
                     ReferenceTree refTag = (ReferenceTree)tag;
@@ -1287,6 +1293,9 @@ public class ElementJavadoc {
                     break;
                 case LINK:
                     linkTag = (LinkTree)tag;
+                    if (linkTag.getReference() == null) {
+                        break;
+                    }
                     sb.append("<code>"); //NOI18N
                     appendReference(sb, linkTag.getReference(), linkTag.getLabel(), docPath, doc, trees);
                     sb.append("</code>"); //NOI18N
@@ -1393,6 +1402,53 @@ public class ElementJavadoc {
             }
         }
         return sb;
+    }
+
+    private static final char REPLACEMENT = '\uFFFD';
+    private List<? extends DocTree> resolveMarkdown(DocTrees trees, List<? extends DocTree> tags) {
+        if (tags.stream().noneMatch(t -> t.getKind() == DocTree.Kind.MARKDOWN)) {
+            return tags;
+        }
+
+        StringBuilder markdownSource = new StringBuilder();
+        List<DocTree> replacements = new ArrayList<>();
+
+        for (DocTree t : tags) {
+            if (t.getKind() == DocTree.Kind.MARKDOWN) {
+                markdownSource.append(((RawTextTree) t).getContent());
+            } else {
+                markdownSource.append(REPLACEMENT);
+                replacements.add(t);
+            }
+        }
+
+        TablesExtension tablesExtension = TablesExtension.create();
+
+        Parser.Builder parserBuilder = Parser.builder();
+        tablesExtension.extend(parserBuilder);
+
+        HtmlRenderer.Builder rendererBuilder = HtmlRenderer.builder();
+        tablesExtension.extend(rendererBuilder, "HTML");
+
+        String html = rendererBuilder.build()
+                                     .render(parserBuilder.build()
+                                                          .parse(markdownSource.toString()));
+
+        if (html.startsWith("<p>")) {
+            html = html.substring("<p>".length());
+        }
+        html = html.replace("</p>", "");
+        List<DocTree> result = new ArrayList<>();
+        String[] parts = html.split(Pattern.quote("" + REPLACEMENT));
+
+        result.add(trees.getDocTreeFactory().newTextTree(parts[0]));
+
+        for (int i = 1; i < parts.length; i++) {
+            result.add(replacements.get(i - 1));
+            result.add(trees.getDocTreeFactory().newTextTree(parts[i]));
+        }
+
+        return result;
     }
 
     private void processDocSnippet(StringBuilder sb, SnippetTree javadocSnippet, Integer snippetCount, TreePath docPath,DocCommentTree doc, DocTrees trees) {

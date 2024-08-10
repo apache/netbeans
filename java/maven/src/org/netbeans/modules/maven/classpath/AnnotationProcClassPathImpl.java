@@ -50,7 +50,6 @@ final class AnnotationProcClassPathImpl extends AbstractProjectClassPathImpl imp
     private static final String GOAL_COMPILE = "compile"; // NOI18N
     private static final String GOAL_TEST_COMPILE = "testCompile"; // NOI18N
     private static final String PROPERTY_PATH = "annotationProcessorPaths"; // NOI18N
-    private static final String PROPERTY_ITEM = "path"; // NOI18N
     
     private final boolean mainCompile;
     
@@ -84,14 +83,12 @@ final class AnnotationProcClassPathImpl extends AbstractProjectClassPathImpl imp
     }
 
     static boolean getCompileArtifacts(NbMavenProjectImpl prjImpl, String goal, MavenProject mavenProject, List<URI> lst) {
-        PluginConfigPathParams query = new PluginConfigPathParams(COMPILER_GROUP_ID, COMPILER_ARTIFACT_ID, 
-                PROPERTY_PATH, PROPERTY_ITEM);
+        PluginConfigPathParams query = new PluginConfigPathParams(COMPILER_GROUP_ID, COMPILER_ARTIFACT_ID, PROPERTY_PATH);
         query.setDefaultScope(Artifact.SCOPE_RUNTIME);
         query.setGoal(goal);
         List<ArtifactResolutionException> errorList = new ArrayList<>();
-        List<Artifact> arts = Collections.emptyList();
-        
-        arts = PluginPropertyUtils.getPluginPathProperty(prjImpl, query, true, errorList);
+
+        List<Artifact> arts = PluginPropertyUtils.getPluginPathProperty(prjImpl, query, true, errorList);
         if (arts == null) {
             return false;
         }

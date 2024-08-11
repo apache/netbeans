@@ -20,7 +20,6 @@ package org.netbeans.modules.lsp.client.bindings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -49,16 +48,11 @@ import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
-import org.netbeans.api.lsp.Diagnostic;
 import org.netbeans.editor.BaseDocumentEvent;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.*;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
-import org.netbeans.spi.editor.hints.ErrorDescription;
-import org.netbeans.spi.editor.hints.ErrorDescriptionFactory;
-import org.netbeans.spi.editor.hints.HintsController;
-import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.lsp.ErrorProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -333,7 +327,14 @@ public class TextDocumentSyncServerCapabilityHandler {
 
             if (server == null) {
                 Lookup lkp = MimeLookup.getLookup(file.getMIMEType());
-                Collection<? extends ErrorProvider> errorProviders = lkp.lookupAll(ErrorProvider.class);
+                ArrayList<ErrorProvider> errorProviders = new ArrayList<>();
+                for (ErrorProvider ep : lkp.lookupAll(ErrorProvider.class)) {
+                    boolean errors = ep.hintsLayerNameFor(ErrorProvider.Kind.ERRORS) != null;
+                    boolean hints = ep.hintsLayerNameFor(ErrorProvider.Kind.HINTS) != null;
+                    if (errors || hints) {
+                        errorProviders.add(ep);
+                    }
+                }
                 if (!errorProviders.isEmpty()) {
                     ErrorProviderBridge b = new ErrorProviderBridge(doc, file, errorProviders, WORKER);
                     b.start();

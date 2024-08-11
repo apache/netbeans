@@ -41,6 +41,29 @@ public interface ErrorProvider {
      */
     public List<? extends Diagnostic> computeErrors(Context context);
 
+    /** The default hints layer name. Since version 1.29 of this module it
+     * is possible to display <b>hints</b> in NetBeans IDE (not only in
+     * NetBeans VSCode extension). However one has to <b>opt-in</b> to do so.
+     * Override this method to return non-{@code null} values:
+     * <pre>
+     * @Override
+     * public String hintsLayerNameFor(Kind kind) {
+     *   return switch (kind) {
+     *     case ERRORS -> "lsp:errors";
+     *     case HINTS -> "lsp:hints";
+     *   };
+     * }
+     * </pre>
+     *
+     * @param kind errors or hints
+     * @return non-{@code null} value if you want these errors or hints be visible
+     *   in the NetBeans IDE
+     * @since 1.29
+     */
+    public default String hintsLayerNameFor(Kind kind) {
+        return null;
+    }
+
     /**
      * The context for the error provider.
      */

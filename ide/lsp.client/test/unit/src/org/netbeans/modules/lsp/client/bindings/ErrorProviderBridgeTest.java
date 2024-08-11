@@ -109,6 +109,18 @@ public class ErrorProviderBridgeTest {
         }
 
         @Override
+        public String hintsLayerNameFor(Kind kind) {
+            switch (kind) {
+                case ERRORS:
+                    return "lsp:errors";
+                case HINTS:
+                    return "lsp:hints";
+                default:
+                    throw new IllegalStateException();
+            }
+        }
+
+        @Override
         public List<? extends Diagnostic> computeErrors(Context context) {
             List<Diagnostic> arr = new ArrayList<>();
             JTextComponent tmp = c.get();

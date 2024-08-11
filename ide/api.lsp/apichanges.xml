@@ -51,6 +51,20 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="ErrorProvider-hintsLayerNameFor">
+        <api name="LSP_API"/>
+        <summary>ErrorProvider.hintsLayerNameFor()</summary>
+        <version major="1" minor="29"/>
+        <date day="12" month="8" year="2024"/>
+        <author login="jtulach"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no" />
+        <description>
+            Control when <code>ErrorProvider</code> results should be used in
+            the NetBeans IDE by overriding <code>hintsLayerNameFor</code>
+            and returning non-<code>null</code> value.
+        </description>
+        <class package="org.netbeans.spi.lsp" name="ErrorProvider"/>
+    </change>
     <change id="CodeActionProvider.getSupportedCodeActionKinds">
         <api name="LSP_API"/>
         <summary>Adding CodeActionProvider.getSupportedCodeActionKinds method</summary>

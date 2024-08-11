@@ -60,12 +60,16 @@ class ErrorProviderBridge implements Runnable, DocumentListener {
     @Override
     public final void run() {
         for (ErrorProvider p : errorProviders) {
-            computeHints(ErrorProvider.Kind.ERRORS, p, "lsp:errors");
-            computeHints(ErrorProvider.Kind.HINTS, p, "lsp:hints");
+            computeHints(ErrorProvider.Kind.ERRORS, p);
+            computeHints(ErrorProvider.Kind.HINTS, p);
         }
     }
 
-    private void computeHints(final ErrorProvider.Kind type, ErrorProvider p, final String prefix) {
+    private void computeHints(final ErrorProvider.Kind type, ErrorProvider p) {
+        final String prefix = p.hintsLayerNameFor(type);
+        if (prefix == null) {
+            return;
+        }
         List<ErrorDescription> arr = new ArrayList<>();
         ErrorProvider.Context errorCtx = new ErrorProvider.Context(file, type);
         List<? extends Diagnostic> errors = p.computeErrors(errorCtx);

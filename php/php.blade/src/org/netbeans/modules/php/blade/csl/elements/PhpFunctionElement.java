@@ -30,7 +30,7 @@ import org.openide.filesystems.FileObject;
 public class PhpFunctionElement extends NamedElement {
 
     @NullAllowed
-    public final String namespace;
+    private final String namespace;
     private final List<String> params;
 
     public PhpFunctionElement(String name, FileObject file,
@@ -63,7 +63,11 @@ public class PhpFunctionElement extends NamedElement {
     }
 
     public List<String> getParams() {
-        return params;
+        return List.copyOf(params);
+    }
+    
+    public String getNamespace(){
+        return namespace;
     }
 
 }

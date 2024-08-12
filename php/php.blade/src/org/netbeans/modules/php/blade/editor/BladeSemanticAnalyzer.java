@@ -95,11 +95,6 @@ public class BladeSemanticAnalyzer extends SemanticAnalyzer<BladeParserResult> {
             highlights.put(entry.getKey(), UNDEFINED_FIELD_SET);
         }
 
-//        List<? extends org.netbeans.modules.csl.api.Error> errorList = parserResult.getDiagnostics();
-//        for (org.netbeans.modules.csl.api.Error error : errorList) {
-//            OffsetRange range = new OffsetRange(error.getStartPosition(), error.getEndPosition());
-//            highlights.put(range, UNDEFINED_FIELD_SET);
-//        }
         this.semanticHighlights = highlights;
     }
 

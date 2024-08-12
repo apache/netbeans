@@ -112,7 +112,7 @@ public class BladeBracesMatcher implements BracesMatcher {
             case START_TO_END -> findDirectiveEnd(tokenText);
             case CUSTOM_START_TO_END -> findCustomDirectiveEnd(tokenText);
             case END_TO_START -> findOriginForDirectiveEnd(tokenText);
-            default -> null;
+            case NONE, STOP -> null;
         };
     }
 

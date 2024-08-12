@@ -80,11 +80,6 @@ import org.netbeans.modules.php.blade.editor.parser.BladeParserResult;
     @ActionReference(id = @ActionID(category = "TemplateActions", id = "org.netbeans.modules.php.blade.editor.actions.FindUsage"),
             path = ACTIONS, separatorBefore = 1700, position = 1800),
     @ActionReference(id = @ActionID(category = "System", id = "org.netbeans.modules.php.blade.editor.actions.AntlrDebug"), path = ACTIONS, position = 1900), //    @ActionReference(id = @ActionID(category = "DebugAntlrActions", id = "org.netbeans.modules.php.blade.editor.actions.ViewAntlrLexerTokens"), path = ACTIONS, position = 2000),
-//    @ActionReference(
-//        path = "Editors/" + BladeLanguage.MIME_TYPE+ "/Popup",
-//        id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.WhereUsedAction"),
-//        position = 1600
-//    ),
 }
 )
 public class BladeLanguage extends DefaultLanguageConfig {
@@ -191,11 +186,6 @@ public class BladeLanguage extends DefaultLanguageConfig {
                 || (hasQuote && c == '.') || (c == '_');
     }
 
-//    @deprecated    
-//    @Override
-//    public KeystrokeHandler getKeystrokeHandler() {
-//        return new BladeBracketCompleter();
-//    }
     private static final Language<BladeTokenId> language
             = new BladeLanguageHierarchy() {
 

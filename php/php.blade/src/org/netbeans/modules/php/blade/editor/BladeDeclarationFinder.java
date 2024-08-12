@@ -104,12 +104,12 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                 case HTML_COMPONENT_PREFIX -> {
                     //direct detection
                     currentTokenId = HTML_COMPONENT_PREFIX;
-     
+
                     if (nt.getText().length() <= 3) {
                         return offsetRange;
                     }
-                    
-                    tokenText =  nt.getText();
+
+                    tokenText = nt.getText();
 
                     return new OffsetRange(nt.getStartIndex() + 1, nt.getStopIndex() + 1);
                 }
@@ -170,9 +170,9 @@ public class BladeDeclarationFinder implements DeclarationFinder {
 
         if (fieldAccessReference != null) {
             switch (fieldAccessReference.type) {
-                case STATIC_FIELD_ACCESS:
+                case STATIC_FIELD_ACCESS -> {
                     switch (fieldAccessReference.fieldType) {
-                        case CONSTANT:
+                        case CONSTANT -> {
                             Collection<PhpIndexResult> indexConstantsResults = PhpIndexUtils.queryExactClassConstants(currentFile, fieldAccessReference.fieldName, fieldAccessReference.ownerClass.identifier);
                             for (PhpIndexResult indexResult : indexConstantsResults) {
                                 NamedElement resultHandle = new NamedElement(fieldAccessReference.fieldName, indexResult.declarationFile, ElementType.PHP_CONSTANT);
@@ -183,7 +183,9 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                                 location.addAlternative(new AlternativeLocationImpl(constantLocation));
                             }
                             return location;
+                        }
                     }
+                }
             }
         }
 
@@ -203,11 +205,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
         String referenceIdentifier = reference.identifier;
 
         switch (reference.type) {
-            case EXTENDS:
-            case INCLUDE:
-            case INCLUDE_IF:
-            case EACH:
-            case INCLUDE_COND:
+            case EXTENDS, INCLUDE, INCLUDE_IF, EACH, INCLUDE_COND -> {
                 String viewPath = referenceIdentifier;
                 List<FileObject> includedFiles = BladePathUtils.findFileObjectsForBladeViewPath(currentFile, viewPath);
 
@@ -224,9 +222,8 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                     location.addAlternative(new AlternativeLocationImpl(dln));
                 }
                 return location;
-            case SECTION:
-            case HAS_SECTION:
-            case SECTION_MISSING:
+            }
+            case SECTION, HAS_SECTION, SECTION_MISSING -> {
                 String yieldId = referenceIdentifier;
                 List<BladeIndex.IndexedReference> yields = QueryUtils.findYieldReferences(yieldId, currentFile);
                 if (yields == null) {
@@ -246,9 +243,8 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                 }
 
                 return location;
-            case PUSH:
-            case PUSH_IF:
-            case PREPEND:
+            }
+            case PUSH, PUSH_IF, PREPEND -> {
                 String stackId = referenceIdentifier;
                 List<BladeIndex.IndexedReference> stacks = QueryUtils.findStacksReferences(stackId, currentFile);
 
@@ -268,7 +264,8 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                 }
 
                 return location;
-            case CUSTOM_DIRECTIVE:
+            }
+            case CUSTOM_DIRECTIVE -> {
                 String directiveNameFound = reference.identifier;
                 DeclarationLocation dlcustomDirective = DeclarationLocation.NONE;
 
@@ -289,7 +286,8 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                     }
                 }
                 return dlcustomDirective;
-            case PHP_CLASS:
+            }
+            case PHP_CLASS -> {
                 Collection<PhpIndexResult> indexClassResults;
                 String namespace = reference.namespace;
 
@@ -311,7 +309,8 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                     location.addAlternative(new AlternativeLocationImpl(classLocation));
                 }
                 return location;
-            case PHP_METHOD: {
+            }
+            case PHP_METHOD -> {
                 if (reference.ownerClass == null) {
                     return location;
                 }
@@ -343,7 +342,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                 }
                 return location;
             }
-            case PHP_FUNCTION:
+            case PHP_FUNCTION -> {
                 Collection<PhpIndexFunctionResult> indexResults = PhpIndexUtils.queryExactFunctions(sourceFolder, reference.identifier);
 
                 for (PhpIndexFunctionResult indexResult : indexResults) {
@@ -360,7 +359,8 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                     location.addAlternative(new AlternativeLocationImpl(functionLocation));
                 }
                 return location;
-            case PHP_CONSTANT:
+            }
+            case PHP_CONSTANT -> {
                 Collection<PhpIndexResult> indexConstantsResults = PhpIndexUtils.queryExactConstants(sourceFolder, reference.identifier);
 
                 for (PhpIndexResult indexResult : indexConstantsResults) {
@@ -372,9 +372,8 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                     location.addAlternative(new AlternativeLocationImpl(constantLocation));
                 }
                 return location;
-            case USE:
-            case INJECT:
-            case PHP_NAMESPACE_PATH_TYPE: {
+            }
+            case USE, INJECT, PHP_NAMESPACE_PATH_TYPE -> {
                 Collection<PhpIndexResult> indexNamespaceResults;
                 if (reference.namespace != null) {
                     indexNamespaceResults = PhpIndexUtils.queryExactNamespaceClasses(reference.identifier,
@@ -404,7 +403,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                 }
                 return location;
             }
-            case VITE_PATH:
+            case VITE_PATH -> {
                 VitePathDeclarationService vitePathDeclService = new VitePathDeclarationService(sourceFolder);
                 FileObject viteAssetFile = vitePathDeclService.findFileObject(referenceIdentifier);
                 if (viteAssetFile == null || !viteAssetFile.isValid()) {
@@ -417,6 +416,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                 }
                 location.addAlternative(new AlternativeLocationImpl(constantLocation));
                 return location;
+            }
         }
 
         return DeclarationLocation.NONE;
@@ -441,7 +441,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
             if (el != null) {
                 formatter.appendText(el.getName());
                 if (el.getFileObject() != null) {
-                    formatter.appendText(" in ");
+                    formatter.appendText(" in "); // NOI18N
                     formatter.appendText(FileUtil.getFileDisplayName(el.getFileObject()));
                 }
                 return formatter.getText();

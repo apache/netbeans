@@ -171,7 +171,7 @@ public class BladeBracesMatcher implements BracesMatcher {
         return null;
     }
 
-    public int[] findCloseTag() {
+    private int[] findCloseTag() {
         int matchTokenType = BladeAntlrUtils.getTagPairTokenType(originToken.getType());
         List<Integer> skipableTokenTypes = new ArrayList<>();
         skipableTokenTypes.add(HTML);

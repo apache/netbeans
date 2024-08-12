@@ -123,7 +123,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                 methodName = text;
                 //tooltip text
                 switch (methodName) {
-                    case "view", "make", "render" -> {
+                    case "view", "make", "render" -> { // NOI18N
                         FileObject currentFile = EditorUtils.getFileObject(doc);
 
                         if (currentFile == null) {
@@ -198,6 +198,10 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         }
         BladeProjectProperties bladeProperties = BladeProjectProperties.getInstance(projectOwner);
 
+        if (bladeProperties == null){
+            return false;
+        }
+        
         return bladeProperties.getNonLaravelDeclFinderFlag();
     }
 

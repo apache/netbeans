@@ -69,7 +69,7 @@ public class TagElement implements ElementHandle {
 
     @Override
     public Set<Modifier> getModifiers() {
-        return new HashSet<>();
+        return Set.of();
     }
 
     @Override

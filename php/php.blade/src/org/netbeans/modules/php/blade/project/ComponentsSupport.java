@@ -30,9 +30,9 @@ import org.openide.filesystems.FileObject;
  * @author bogdan
  */
 @NamespaceRegister({
-    @Namespace(path = "App\\View\\Components", from_app = true, relativeFilePath = "app/View/Components"), // NOI18N
-    @Namespace(path = "App\\Http\\Livewire", from_app = true, relativeFilePath = "app/Http/Livewire"), // NOI18N
-    @Namespace(path = "App\\Livewire", from_app = true, relativeFilePath = "app/Livewire"), // NOI18N
+    @Namespace(path = "App\\View\\Components", fromApp = true, relativeFilePath = "app/View/Components"), // NOI18N
+    @Namespace(path = "App\\Http\\Livewire", fromApp = true, relativeFilePath = "app/Http/Livewire"), // NOI18N
+    @Namespace(path = "App\\Livewire", fromApp = true, relativeFilePath = "app/Livewire"), // NOI18N
     @Namespace(path = "Illuminate\\Console\\View\\Components"), // NOI18N
     @Namespace(path = "BladeUI\\Icons\\Components", packageName = "blade-ui-kit/blade-icons"), // NOI18N
     @Namespace(path = "BladeUIKit\\Components", packageName = "blade-ui-kit/blade-ui-kit"),}) // NOI18N
@@ -61,7 +61,7 @@ public class ComponentsSupport {
     public void scanForInstalledComponents() {
         for (Namespace namespace : getRegisteredNamespaces()) {
             FileObject fo;
-            if (namespace.from_app()) {
+            if (namespace.fromApp()) {
                 //check if folder exists
                 fo = project.getProjectDirectory().getFileObject(namespace.relativeFilePath());
             } else {

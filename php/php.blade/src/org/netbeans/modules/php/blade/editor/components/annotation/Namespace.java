@@ -27,6 +27,6 @@ public @interface Namespace {
     String relativeFilePath() default "";
     String packageName() default "blade"; // NOI18N
     //inside App folder
-    boolean from_app() default false;
+    boolean fromApp() default false;
     boolean from_vendor() default true;
 }

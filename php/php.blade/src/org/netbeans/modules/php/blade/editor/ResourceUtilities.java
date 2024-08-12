@@ -36,7 +36,7 @@ public final class ResourceUtilities {
     public static final String COMPONENT_TAG = "org/netbeans/modules/html/custom/resources/custom_html_element.png"; //NOI18N
     
     
-    private ResourceUtilities(){
+    private ResourceUtilities() {
         
     }
 

@@ -77,9 +77,9 @@ public final class BladeUtils {
 
     public static String replaceLinesAndTabs(String input) {
         String escapedString = input;
-        escapedString = escapedString.replaceAll("\n", "\\\\n"); //NOI18N
-        escapedString = escapedString.replaceAll("\r", "\\\\r"); //NOI18N
-        escapedString = escapedString.replaceAll("\t", "\\\\t"); //NOI18N
+        escapedString = escapedString.replaceAll("\n", "\\\\n");
+        escapedString = escapedString.replaceAll("\r", "\\\\r");
+        escapedString = escapedString.replaceAll("\t", "\\\\t");
         return escapedString;
     }
 }

@@ -173,7 +173,7 @@ public final class ProjectReload {
             return ProjectReloadInternal.getInstance().getProjectState0(p, Lookup.EMPTY, false).second();
         }
         try {
-            return withProjectState(p, StateRequest.load().toQuality(Quality.NONE).tryQuality(Quality.SIMPLE).consistent(false)).get();
+            return withProjectState(p, StateRequest.load().toQuality(Quality.NONE).tryQuality(Quality.SIMPLE).consistent(false).offline()).get();
         } catch (ExecutionException ex) {
             if (ex.getCause() instanceof ProjectOperationException) {
                 throw (ProjectOperationException)ex.getCause();
@@ -611,7 +611,7 @@ public final class ProjectReload {
          */
         public StateRequest tryQuality(Quality q) {
             this.tryQuality = q;
-            if (this.minQuality.isWorseThan(q)) {
+            if (q.isWorseThan(minQuality)) {
                 this.minQuality = q;
             }
             return this;

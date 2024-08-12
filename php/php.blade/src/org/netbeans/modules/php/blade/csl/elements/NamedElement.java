@@ -76,10 +76,18 @@ public class NamedElement implements ElementHandle {
     @Override
     public ElementKind getKind() {
         return switch (type) {
-            case YIELD_ID, STACK_ID -> ElementKind.PACKAGE;
-            case CUSTOM_DIRECTIVE -> ElementKind.METHOD;
-            case PHP_CLASS -> ElementKind.CLASS;
-            default -> ElementKind.FILE;
+            case YIELD_ID, STACK_ID, PHP_NAMESPACE, LARAVEL_COMPONENT ->
+                ElementKind.PACKAGE;
+            case CUSTOM_DIRECTIVE, DIRECTIVE, PHP_FUNCTION ->
+                ElementKind.METHOD;
+            case PHP_CLASS ->
+                ElementKind.CLASS;
+            case PHP_CONSTANT ->
+                ElementKind.CONSTANT;
+            case VARIABLE ->
+                ElementKind.VARIABLE;
+            case NA, PATH, ASSET_FILE ->
+                ElementKind.FILE;
         };
     }
 

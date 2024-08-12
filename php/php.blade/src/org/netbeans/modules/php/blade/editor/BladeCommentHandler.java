@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.blade.editor;
 
+import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.lexer.Token;
@@ -39,6 +40,8 @@ public class BladeCommentHandler extends CommentHandler.DefaultCommentHandler {
 
     private static final String COMMENT_START_DELIMITER = "{{--"; //NOI18N
     private static final String COMMENT_END_DELIMITER = "--}}"; //NOI18N
+    
+    private static final Logger LOGGER = Logger.getLogger(BladeCommentHandler.class.getName());
 
     @Override
     public String getCommentStartDelimiter() {
@@ -69,7 +72,7 @@ public class BladeCommentHandler extends CommentHandler.DefaultCommentHandler {
                 if (token != null && token.id() instanceof BladeTokenId) {
                     //handle uncomment
                     switch ((BladeTokenId) token.id()) {
-                        case BLADE_COMMENT_START:
+                        case BLADE_COMMENT_START -> {
                             bounds[0] = ts.offset();
 
                             while (ts.moveNext()) {
@@ -78,12 +81,11 @@ public class BladeCommentHandler extends CommentHandler.DefaultCommentHandler {
                                     break;
                                 }
                             }
-                            break;
-                        case BLADE_DIRECTIVE:
+                        }
+                        case BLADE_DIRECTIVE -> {
                             bounds[0] = ts.offset();
 
-                            ts.moveNext();
-                            if (ts.token().id() == BladeTokenId.PHP_BLADE_EXPRESSION) {
+                            if (ts.moveNext() && ts.token().id() == BladeTokenId.PHP_BLADE_EXPRESSION) {
                                 bounds[1] =  ts.offset() + ts.token().length();
                             }
                             
@@ -94,9 +96,9 @@ public class BladeCommentHandler extends CommentHandler.DefaultCommentHandler {
                                 bounds[0] = 0;
                                 bounds[1] = 0;
                             } catch (BadLocationException ex) {
-                                Exceptions.printStackTrace(ex);
+                                LOGGER.warning(ex.getMessage());
                             }
-                            break;
+                        }
 
                     }
 

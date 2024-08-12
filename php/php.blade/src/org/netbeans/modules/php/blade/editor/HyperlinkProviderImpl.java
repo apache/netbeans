@@ -33,6 +33,7 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.project.Project;
 import org.netbeans.editor.BaseDocument;
+import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.blade.editor.lexer.PHPLexerUtils;
 import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
 import org.netbeans.modules.php.blade.project.BladeProjectProperties;
@@ -48,12 +49,12 @@ import org.openide.util.Exceptions;
  *
  * @author bhaidu
  */
-@MimeRegistration(mimeType = "text/x-php5", service = HyperlinkProviderExt.class)
+@MimeRegistration(mimeType = FileUtils.PHP_MIME_TYPE, service = HyperlinkProviderExt.class)
 public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
-    private String methodName;
+    private String methodName = ""; // NOI18N
     private String identifiableText;
-    private String tooltipText = "";
+    private String tooltipText = ""; // NOI18N
     private FileObject goToFile;
     private int goToOffset = 0;
 
@@ -102,6 +103,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         String focusedText = currentToken.text().toString();
 
         //2 char config are not that relevant
+        //quote x 2 + min 3 length config
         if (focusedText.length() < 5 || !EditorStringUtils.isQuotedString(focusedText)) {
             return null;
         }
@@ -121,10 +123,8 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                 methodName = text;
                 //tooltip text
                 switch (methodName) {
-                    case "view":
-                    case "make":
-                    case "render":
-                        FileObject currentFile = EditorUtils.getFileObjectFromDoc(doc);
+                    case "view", "make", "render" -> {
+                        FileObject currentFile = EditorUtils.getFileObject(doc);
 
                         if (currentFile == null) {
                             return null;
@@ -134,19 +134,21 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
                         for (FileObject includedFile : includedFiles) {
                             goToFile = includedFile;
-                            tooltipText = "Blade Template File : <b>" + viewPath
-                                    + "</b><br><br><i style='margin-left:20px;'>" + identifiableText + "</i>";
+                            tooltipText = "Blade Template File : <b>" + viewPath // NOI18N
+                                    + "</b><br><br><i style='margin-left:20px;'>" + identifiableText + "</i>"; // NOI18N
                             goToOffset = 0;
                             break;
                         }
 
                         return new int[]{startOffset, startOffset + currentToken.length()};
-                    default:
+                    }
+                    default -> {
                         return null;
+                    }
                 }
             }
 
-            if (id.equals(PHPTokenId.PHP_TOKEN) && text.equals("(")) {
+            if (id.equals(PHPTokenId.PHP_TOKEN) && text.equals("(")) { // NOI18N
                 prevTokenId = id;
             }
         }
@@ -156,24 +158,25 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
     @Override
     public void performClickAction(Document doc, int offset, HyperlinkType type) {
         switch (type) {
-            case GO_TO_DECLARATION:
+            case GO_TO_DECLARATION -> {
                 switch (methodName) {
-                    case "view": // NOI18N
-                    case "make": // NOI18N
-                    case "render": // NOI18N
+                    case "view", "make", "render" -> // NOI18N
+                    {
                         if (goToFile != null) {
                             openDocument(goToFile, goToOffset);
                         }
-                        break;
+                    }
+                    default -> {
+                        //no-op
+                    }
                 }
-                break;
-            case ALT_HYPERLINK:
+            }
+            case ALT_HYPERLINK -> {
                 JTextComponent focused = EditorRegistry.focusedComponent();
                 if (focused != null && focused.getDocument() == doc) {
                     focused.setCaretPosition(offset);
-                    //GoToImplementation.goToImplementation(focused);
                 }
-                break;
+            }
         }
     }
 
@@ -190,17 +193,17 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
     private boolean nonLaravelDeclFinderEnabled(Document doc) {
         Project projectOwner = EditorUtils.getProjectOwner(doc);
-        if (projectOwner == null){
+        if (projectOwner == null) {
             return false;
         }
         BladeProjectProperties bladeProperties = BladeProjectProperties.getInstance(projectOwner);
-        
+
         return bladeProperties.getNonLaravelDeclFinderFlag();
     }
 
     @Override
     public String getTooltipText(Document doc, int offset, HyperlinkType type) {
-        return "<html><body>" + tooltipText + "</body></html>";
+        return "<html><body>" + tooltipText + "</body></html>"; // NOI18N
     }
 
 }

@@ -36,7 +36,7 @@ public final class EditorUtils {
     }
 
     @CheckForNull
-    public static FileObject getFileObjectFromDoc(Document doc) {
+    public static FileObject getFileObject(Document doc) {
         DataObject dObject = NbEditorUtilities.getDataObject(doc);
         if (dObject != null) {
             return dObject.getPrimaryFile().getParent();
@@ -46,7 +46,7 @@ public final class EditorUtils {
 
     @CheckForNull
     public static Project getProjectOwner(Document doc) {
-        FileObject file = getFileObjectFromDoc(doc);
+        FileObject file = getFileObject(doc);
         if (file == null) {
             return null;
         }

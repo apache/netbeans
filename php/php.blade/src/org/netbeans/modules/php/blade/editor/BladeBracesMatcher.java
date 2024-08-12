@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import org.antlr.v4.runtime.Token;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.editor.BaseDocument;
@@ -44,11 +45,11 @@ import org.netbeans.spi.editor.bracesmatching.MatcherContext;
 public class BladeBracesMatcher implements BracesMatcher {
 
     public enum BraceDirectionType {
-        END_TO_START, START_TO_END, CUSTOM_START_TO_END, CURLY_END_TO_START, CURLY_START_TO_END, STOP
-    }
+        END_TO_START, START_TO_END, CUSTOM_START_TO_END, CURLY_END_TO_START, CURLY_START_TO_END, STOP, NONE
+    };
     private final MatcherContext context;
     private Token originToken;
-    private BraceDirectionType currentDirection;
+    private BraceDirectionType currentDirection = BraceDirectionType.NONE;
 
     private BladeBracesMatcher(MatcherContext context) {
         this.context = context;
@@ -102,6 +103,7 @@ public class BladeBracesMatcher implements BracesMatcher {
         if (originToken == null) {
             return null;
         }
+
         String tokenText = originToken.getText();
 
         return switch (currentDirection) {
@@ -121,7 +123,7 @@ public class BladeBracesMatcher implements BracesMatcher {
         };
     }
 
-    public BraceDirectionType findBraceDirectionType(String tokenText, Token token) {
+    private BraceDirectionType findBraceDirectionType(String tokenText, Token token) {
         boolean isCloseTag = Arrays.asList(BladeTagsUtils.outputCloseTags()).indexOf(tokenText) >= 0;
 
         if (isCloseTag) {
@@ -143,7 +145,6 @@ public class BladeBracesMatcher implements BracesMatcher {
             return BraceDirectionType.START_TO_END;
         }
 
-        //TODO get more directive context
         if (token.getType() == BladeAntlrLexer.D_CUSTOM
                 || token.getType() == BladeAntlrLexer.D_UNKNOWN) {
             return BraceDirectionType.CUSTOM_START_TO_END;
@@ -152,7 +153,7 @@ public class BladeBracesMatcher implements BracesMatcher {
         return BraceDirectionType.STOP;
     }
 
-    public int[] findOpenTag() {
+    private int[] findOpenTag() {
         int matchTokenType = BladeAntlrUtils.getTagPairTokenType(originToken.getType());
         List<Integer> skipableTokenTypes = new ArrayList<>();
         skipableTokenTypes.add(HTML);
@@ -188,7 +189,8 @@ public class BladeBracesMatcher implements BracesMatcher {
         return null;
     }
 
-    public int[] findDirectiveEnd(String directive) {
+    @CheckForNull
+    private int[] findDirectiveEnd(String directive) {
         String[] pair = BladeDirectivesUtils.directiveStart2EndPair(directive);
         if (pair == null){
             return null;
@@ -210,7 +212,6 @@ public class BladeBracesMatcher implements BracesMatcher {
                 startDirectiveForBalance);
         
         if (endToken != null) {
-            //String text = endToken.getText();
             int start = endToken.getStartIndex();
             int end = endToken.getStopIndex();
             return new int[]{start, end + 1};
@@ -219,8 +220,9 @@ public class BladeBracesMatcher implements BracesMatcher {
         return null;
     }
 
-    public int[] findCustomDirectiveEnd(String directive) {
-        String endPrefix = "@end"; // NOI18N
+    @CheckForNull
+    private int[] findCustomDirectiveEnd(String directive) {
+        String endPrefix = BladeDirectivesUtils.END_DIRECTIVE_PREFIX;
         String[] pair = new String[]{endPrefix + directive.substring(1)};
         List<String> stopDirectives = Arrays.asList(pair);
         List<String> startDirectiveForBalance = Arrays.asList(new String[]{directive});
@@ -239,7 +241,8 @@ public class BladeBracesMatcher implements BracesMatcher {
         return null;
     }
 
-    public int[] findOriginForDirectiveEnd(String directive) {
+    @CheckForNull
+    private int[] findOriginForDirectiveEnd(String directive) {
         String[] pair = BladeDirectivesUtils.directiveEnd2StartPair(directive);
         List<String> endDirectivesForBalance = new ArrayList<>();
         List<String> openDirectives = Arrays.asList(pair);

@@ -21,6 +21,7 @@ package org.netbeans.modules.php.blade.editor;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.antlr.v4.runtime.CharStreams;
@@ -60,7 +61,7 @@ import org.openide.filesystems.FileUtil;
 
 /**
  * focuses mainly on string inputs
- * 
+ *
  * ?? TODO implement a Extension module
  *
  * @author bhaidu
@@ -69,28 +70,24 @@ public class BladeDeclarationFinder implements DeclarationFinder {
 
     private int currentTokenId;
     private String tokenText;
+    private static final Logger LOGGER = Logger.getLogger(BladeDeclarationFinder.class.getName());
 
     @Override
     public OffsetRange getReferenceSpan(Document document, int caretOffset) {
         BaseDocument baseDoc = (BaseDocument) document;
 
-        //baseDoc.readLock();
         AntlrTokenSequence tokens = null;
         OffsetRange offsetRange = OffsetRange.NONE;
         tokenText = null;
         int lineOffset = caretOffset;
+
         try {
-            try {
-                String text = baseDoc.getText(0, baseDoc.getLength());
-                tokens = new AntlrTokenSequence(new BladeAntlrLexer(CharStreams.fromString(text)));
-            } catch (BadLocationException ex) {
-                //Exceptions.printStackTrace(ex);
-            }
-        } finally {
-            //baseDoc.readUnlock();
+            String text = baseDoc.getText(0, baseDoc.getLength());
+            tokens = new AntlrTokenSequence(new BladeAntlrLexer(CharStreams.fromString(text)));
+        } catch (BadLocationException ex) {
+            LOGGER.warning(ex.getMessage());
         }
 
-        //inside php expression context ??
         if (tokens == null || tokens.isEmpty()) {
             return offsetRange;
         }
@@ -101,16 +98,21 @@ public class BladeDeclarationFinder implements DeclarationFinder {
             org.antlr.v4.runtime.Token nt = tokens.next().get();
 
             switch (nt.getType()) {
-                case D_CUSTOM:
-                case PHP_IDENTIFIER:
-                case PHP_NAMESPACE_PATH:
+                case D_CUSTOM, PHP_IDENTIFIER, PHP_NAMESPACE_PATH -> {
                     return new OffsetRange(nt.getStartIndex(), nt.getStopIndex() + 1);
-                case HTML_COMPONENT_PREFIX:
+                }
+                case HTML_COMPONENT_PREFIX -> {
                     //direct detection
                     currentTokenId = HTML_COMPONENT_PREFIX;
-                    //remove '<x-'
-                    tokenText = nt.getText().length() > 3 ? nt.getText() : null;
+     
+                    if (nt.getText().length() <= 3) {
+                        return offsetRange;
+                    }
+                    
+                    tokenText =  nt.getText();
+
                     return new OffsetRange(nt.getStartIndex() + 1, nt.getStopIndex() + 1);
+                }
             }
 
             if (!tokens.hasPrevious()) {
@@ -199,7 +201,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
 
         FileObject sourceFolder = projectOwner.getProjectDirectory();
         String referenceIdentifier = reference.identifier;
-        
+
         switch (reference.type) {
             case EXTENDS:
             case INCLUDE:
@@ -309,7 +311,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                     location.addAlternative(new AlternativeLocationImpl(classLocation));
                 }
                 return location;
-            case PHP_METHOD:{
+            case PHP_METHOD: {
                 if (reference.ownerClass == null) {
                     return location;
                 }
@@ -322,8 +324,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                 }
                 Collection<PhpIndexFunctionResult> indexMethodResults = PhpIndexUtils.queryExactClassMethods(sourceFolder,
                         referenceIdentifier, reference.ownerClass, queryNamespace);
-                
-                
+
                 for (PhpIndexFunctionResult indexResult : indexMethodResults) {
                     PhpFunctionElement resultHandle = new PhpFunctionElement(
                             referenceIdentifier,
@@ -373,7 +374,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                 return location;
             case USE:
             case INJECT:
-            case PHP_NAMESPACE_PATH_TYPE:{
+            case PHP_NAMESPACE_PATH_TYPE: {
                 Collection<PhpIndexResult> indexNamespaceResults;
                 if (reference.namespace != null) {
                     indexNamespaceResults = PhpIndexUtils.queryExactNamespaceClasses(reference.identifier,
@@ -406,7 +407,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
             case VITE_PATH:
                 VitePathDeclarationService vitePathDeclService = new VitePathDeclarationService(sourceFolder);
                 FileObject viteAssetFile = vitePathDeclService.findFileObject(referenceIdentifier);
-                if (viteAssetFile == null || !viteAssetFile.isValid()){
+                if (viteAssetFile == null || !viteAssetFile.isValid()) {
                     return location;
                 }
                 NamedElement resultHandle = new NamedElement(referenceIdentifier, viteAssetFile, ElementType.ASSET_FILE);

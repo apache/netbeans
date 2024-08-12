@@ -18,8 +18,6 @@
  */
 package org.netbeans.modules.php.blade.project;
 
-import java.util.prefs.PreferenceChangeEvent;
-import java.util.prefs.PreferenceChangeListener;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
@@ -27,7 +25,7 @@ import org.netbeans.spi.project.ui.ProjectOpenedHook;
  *
  * @author bhaidu
  */
-public class BladeProjectSupport extends ProjectOpenedHook implements PreferenceChangeListener{
+public class BladeProjectSupport extends ProjectOpenedHook {
     private final Project project;
         
     public BladeProjectSupport(Project project) {
@@ -53,11 +51,6 @@ public class BladeProjectSupport extends ProjectOpenedHook implements Preference
     @ProjectServiceProvider(service = ProjectOpenedHook.class, projectType = "org-netbeans-modules-web-project") // NOI18N
     public static BladeProjectSupport forWebProject(Project project) {
         return create(project);
-    }
-    
-    @Override
-    public void preferenceChange(PreferenceChangeEvent evt) {
-        //
     }
 
     @Override

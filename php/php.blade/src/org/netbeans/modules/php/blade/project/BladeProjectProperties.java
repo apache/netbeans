@@ -20,6 +20,7 @@ package org.netbeans.modules.php.blade.project;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import javax.swing.DefaultListModel;
@@ -27,7 +28,6 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.php.blade.editor.ui.customizer.UiOptionsUtils;
-//import org.netbeans.modules.php.blade.editor.actions.ToggleBlockCommentAction;
 import org.openide.util.NbPreferences;
 
 /**
@@ -42,11 +42,12 @@ public final class BladeProjectProperties {
     private static final String DIRECTIVE_CUSTOMIZER_PATH_LIST = "directive_customizer.path.list"; // NOI18N
     private static final String VIEW_PATH_LIST = "views.path.list"; // NOI18N
     private static final String NON_LARAVEL_DECL_FINDER = "non_laravel.decl.finder"; // NOI18N
-    public final Project project;
+    private final Project project;
 
     private DefaultListModel<String> directiveCustomizerPathList = new DefaultListModel();
     private DefaultListModel<String> viewsPathList = new DefaultListModel();
-    private boolean nonLaravelDeclFinder = false;
+    // declaration finder outside of framework plugin
+    private final AtomicBoolean nonLaravelDeclFinder = new AtomicBoolean(false);
 
     private BladeProjectProperties(Project project) {
         this.project = project;
@@ -81,7 +82,7 @@ public final class BladeProjectProperties {
     private void initModelsFromPreferences() {
         directiveCustomizerPathList = createModelForDirectiveCusomizerPathList();
         viewsPathList = createModelForViewsPathList();
-        nonLaravelDeclFinder = getPreferences().getBoolean(NON_LARAVEL_DECL_FINDER, false);
+        nonLaravelDeclFinder.set(getPreferences().getBoolean(NON_LARAVEL_DECL_FINDER, false));
     }
 
     public void storeDirectiveCustomizerPaths() {
@@ -95,7 +96,7 @@ public final class BladeProjectProperties {
     }
 
     public void storeNonLaravelDeclFinderFlag(boolean status) {
-        nonLaravelDeclFinder = status;
+        nonLaravelDeclFinder.set(status);
         getPreferences().putBoolean(NON_LARAVEL_DECL_FINDER, status);
     }
 
@@ -137,7 +138,7 @@ public final class BladeProjectProperties {
     }
 
     public boolean getNonLaravelDeclFinderFlag() {
-        return nonLaravelDeclFinder;
+        return nonLaravelDeclFinder.get();
     }
 
     private DefaultListModel<String> creatModelFromPreferences(String pathName) {

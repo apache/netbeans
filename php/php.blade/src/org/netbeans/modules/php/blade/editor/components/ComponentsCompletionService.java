@@ -22,9 +22,12 @@ import org.netbeans.modules.php.blade.editor.components.annotation.NamespaceRegi
 import org.netbeans.modules.php.blade.editor.components.annotation.Namespace;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexResult;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexUtils;
+import org.netbeans.modules.php.blade.project.ComponentsSupport;
 import org.netbeans.modules.php.blade.project.ProjectUtils;
 import org.openide.filesystems.FileObject;
 
@@ -33,35 +36,28 @@ import org.openide.filesystems.FileObject;
  * 
  * @author bhaidu
  */
-@NamespaceRegister({
-    @Namespace(path = "App\\View\\Components", from_app=true, relativeFilePath="app/View/Components"), // NOI18N
-    @Namespace(path = "App\\Http\\Livewire", from_app=true, relativeFilePath="app/Http/Livewire"), // NOI18N
-    @Namespace(path = "App\\Livewire", from_app=true, relativeFilePath="app/Livewire"), // NOI18N
-    @Namespace(path = "Illuminate\\Console\\View\\Components"), // NOI18N
-    @Namespace(path = "BladeUIKit\\Components\\Buttons", packageName="blade-ui-kit/blade-ui-kit"), // NOI18N
-    @Namespace(path = "BladeUIKit\\Components\\Layouts", packageName="blade-ui-kit/blade-ui-kit"), // NOI18N
-    @Namespace(path = "BladeUIKit\\Components\\Forms\\Inputs", packageName="blade-ui-kit/blade-ui-kit"), // NOI18N
-})
+
 public class ComponentsCompletionService {
 
+    @CheckForNull
     public Collection<PhpIndexResult> queryComponents(String prefix, FileObject fo) {
         Collection<PhpIndexResult> results = new ArrayList<>();
         Project project = ProjectUtils.getMainOwner(fo);
-        for (Namespace namespace : getNamespaces()){
-            if (namespace.from_app()){
-                //check if folder exists
-                if (project.getProjectDirectory().getFileObject(namespace.relativeFilePath()) == null){
-                    continue;
-                }
-            }
-            results.addAll(PhpIndexUtils.queryNamespaceClassesName(prefix, namespace.path(), fo));
+        
+        if (project == null){
+            return results;
+        }
+
+        ComponentsSupport componentSupport = ComponentsSupport.getInstance(project);
+
+        if (!componentSupport.isScanned()){
+            componentSupport.scanForInstalledComponents();
+        }
+        
+        for (Map.Entry<FileObject, Namespace> namespace : componentSupport.getInstalledComponentNamespace().entrySet()){
+            results.addAll(PhpIndexUtils.queryNamespaceClassesName(prefix, namespace.getValue().path(), fo));
         }
 
         return results;
-    }
-
-    public Namespace[] getNamespaces() {
-        NamespaceRegister namespaceRegister = this.getClass().getAnnotation(NamespaceRegister.class);
-        return namespaceRegister.value();
     }
 }

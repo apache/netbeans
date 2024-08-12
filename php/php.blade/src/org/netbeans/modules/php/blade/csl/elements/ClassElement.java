@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.blade.csl.elements;
 
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.openide.filesystems.FileObject;
@@ -47,6 +48,7 @@ public class ClassElement extends NamedElement {
         return ElementKind.CLASS;
     }
 
+    @CheckForNull
     public String getNamespace() {
         return namespace;
     }

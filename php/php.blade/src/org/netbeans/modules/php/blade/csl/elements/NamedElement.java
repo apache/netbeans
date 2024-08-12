@@ -37,9 +37,9 @@ import org.openide.filesystems.FileObject;
  */
 public class NamedElement implements ElementHandle {
 
-    protected final String name;
-    protected final FileObject file;
-    protected final ElementType type;
+    private final String name;
+    private final FileObject file;
+    private final ElementType type;
 
     public NamedElement(String name, FileObject file) {
         this.name = name;

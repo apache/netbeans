@@ -51,8 +51,8 @@ public class TooltipDoc {
     
     public static Documentation generateFunctionDoc(PhpFunctionElement elementHandle) {
         String info = "<div align=\"left\"><b>" + elementHandle.getName() + elementHandle.getParamsAsString() + "</b></div>";
-        if (elementHandle.namespace != null){
-            info += "<div>" + elementHandle.namespace + "</div>";
+        if (elementHandle.getNamespace() != null){
+            info += "<div>" + elementHandle.getNamespace() + "</div>";
         }
         info += "<div>" + elementHandle.getFileObject().getNameExt() + "</div>";
         info += String.format("<div align=\"right\"><font size=-1>%s</font></div>", "php function");

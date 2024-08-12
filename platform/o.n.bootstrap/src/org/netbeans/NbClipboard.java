@@ -60,9 +60,6 @@ implements LookupListener, FlavorListener, AWTEventListener
     private Lookup.Result<ExClipboard.Convertor> result;
     final boolean slowSystemClipboard;
     private Transferable last;
-    private long lastWindowActivated;
-    private long lastWindowDeactivated;
-    private Reference<Object> lastWindowDeactivatedSource = new WeakReference<>(null);
     private volatile Task setContentsTask = Task.EMPTY;
     private volatile Task getContentsTask = Task.EMPTY;
     private boolean anyWindowIsActivated = true;
@@ -279,14 +276,12 @@ implements LookupListener, FlavorListener, AWTEventListener
         getContentsTask.waitFinished ();
     }
 
-    final void activateWindowHack (boolean reschedule) {
+    /** Used by tests only. */
+    final void activateWindowHack () {
         // if WINDOW_DEACTIVATED is followed immediatelly with
         // WINDOW_ACTIVATED then it is JDK bug described in
         // issue 41098.
-        lastWindowActivated = System.currentTimeMillis();
-        if (reschedule) {
-            scheduleGetFromSystemClipboard(true);
-        }
+        scheduleGetFromSystemClipboard(true);
     }
 
     private void logFlavors (Transferable trans, Level level, boolean content) {
@@ -340,8 +335,6 @@ implements LookupListener, FlavorListener, AWTEventListener
             return;
 
         if (ev.getID() == WindowEvent.WINDOW_DEACTIVATED) {
-            lastWindowDeactivated = System.currentTimeMillis();
-            lastWindowDeactivatedSource = new WeakReference<>(ev.getSource());
             anyWindowIsActivated = false;
             if( Utilities.isWindows() ) {
                 //#247585 - even listening to clipboard changes when the window isn't active
@@ -356,10 +349,6 @@ implements LookupListener, FlavorListener, AWTEventListener
                 fireChange();
             }
             anyWindowIsActivated = true;
-            if (System.currentTimeMillis() - lastWindowDeactivated < 100 &&
-                ev.getSource() == lastWindowDeactivatedSource.get()) {
-                activateWindowHack (false);
-            }
             if (log.isLoggable (Level.FINE)) {
                 log.log (Level.FINE, "window activated scheduling update"); // NOI18N
             }

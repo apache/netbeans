@@ -26,7 +26,9 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.Dependency;
 import org.netbeans.modules.project.dependency.DependencyChange;
+import org.netbeans.modules.project.dependency.DependencyChange.Options;
 import org.netbeans.modules.project.dependency.DependencyChangeException;
+import org.netbeans.modules.project.dependency.DependencyChangeRequest;
 import org.netbeans.modules.project.dependency.ProjectDependencies;
 import org.netbeans.modules.project.dependency.ProjectOperationException;
 import org.netbeans.modules.project.dependency.Scopes;
@@ -38,12 +40,49 @@ import org.netbeans.modules.refactoring.spi.ModificationResult;
  * @author Jan Horvath
  */
 public class DependencyUtils {
-    
+
     public static void addDependency(Project project, String groupId, String artifactId) {
+        Project projectToModify = getProjectToModify(project, "oci");
+        
+        if (projectToModify != null) {
+            ArtifactSpec spec = ArtifactSpec.make(groupId, artifactId);
+            Dependency dep = Dependency.make(spec, Scopes.COMPILE);
+            DependencyChange change = DependencyChange.add(Collections.singletonList(dep), Options.skipConflicts);
+            try {
+                ModificationResult mod = ProjectDependencies.modifyDependencies(projectToModify, change);
+                mod.commit();
+            } catch (IOException | DependencyChangeException | ProjectOperationException ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
+    }
+    
+    public static void addAnnotationProcessor(Project project, String groupId, String artifactId) {
+        Project projectToModify = getProjectToModify(project, "lib");
+        
+        if (projectToModify != null) {
+            ArtifactSpec spec = ArtifactSpec.make(groupId, artifactId);
+            Dependency dep = Dependency.make(spec, Scopes.PROCESS);
+            DependencyChange change = DependencyChange.builder(DependencyChange.Kind.ADD)
+                    .dependency(dep)
+                    .option(Options.skipConflicts)
+                    .create();
+
+            try {
+                ModificationResult mod = ProjectDependencies
+                        .modifyDependencies(projectToModify, new DependencyChangeRequest(Collections.singletonList(change)));
+                mod.commit();
+            } catch (IOException | DependencyChangeException | ProjectOperationException ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
+    }
+    
+    private static Project getProjectToModify(Project project, String projectDirectory) {
         Project projectToModify = null;
         Set<Project> subProjects = ProjectUtils.getContainedProjects(project, false);
         for (Project subProject : subProjects) {
-            if ("oci".equals(subProject.getProjectDirectory().getName())) { //NOI18N
+            if (projectDirectory.equals(subProject.getProjectDirectory().getName())) { //NOI18N
                 projectToModify = subProject;
                 break;
             }
@@ -51,17 +90,7 @@ public class DependencyUtils {
         if (projectToModify == null) {
             projectToModify = project;
         }
-        if (projectToModify != null) {
-            ArtifactSpec spec = ArtifactSpec.make(groupId, artifactId);
-            Dependency dep = Dependency.make(spec, Scopes.COMPILE);
-            DependencyChange change = DependencyChange.add(Collections.singletonList(dep), DependencyChange.Options.skipConflicts);
-            try {
-                ModificationResult mod = ProjectDependencies.modifyDependencies(projectToModify, change);
-                mod.commit();
-            } catch (IOException | DependencyChangeException | ProjectOperationException ex) {
-                throw new IllegalStateException(ex);
-            } 
-        }
+        
+        return projectToModify;
     }
-    
 }

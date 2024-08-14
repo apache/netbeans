@@ -364,6 +364,10 @@
                 <binary-origin>external/oci-java-sdk-artifacts-3.25.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
+                <runtime-relative-path>ext/oci-java-sdk-monitoring-3.25.3.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-monitoring-3.25.3.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
                 <runtime-relative-path>ext/httpclient-4.5.13.jar</runtime-relative-path>
                 <binary-origin>external/httpclient-4.5.13.jar</binary-origin>
             </class-path-extension>

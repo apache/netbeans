@@ -38,6 +38,7 @@ import org.netbeans.modules.cloud.oracle.compute.ClusterNode;
 import org.netbeans.modules.cloud.oracle.compute.ComputeInstanceNode;
 import org.netbeans.modules.cloud.oracle.database.DatabaseNode;
 import org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryNode;
+import org.netbeans.modules.cloud.oracle.developer.MetricsNamespaceNode;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.vault.VaultNode;
 import org.openide.NotifyDescriptor;
@@ -56,6 +57,7 @@ import org.openide.util.NbBundle;
     "Compute=Compute Instance",
     "SelectItem=Select {0}",
     "ContainerRepository=Container Repository",
+    "MetricsNamespace=Metrics Namespace",
 })
 public class SuggestedStep extends AbstractStep<OCIItem> {
     private static final Logger LOG = Logger.getLogger(SuggestedStep.class.getName());
@@ -92,6 +94,8 @@ public class SuggestedStep extends AbstractStep<OCIItem> {
                 return Bundle.Compute();
             case "ContainerRepository":
                 return Bundle.ContainerRepository();
+            case "MetricsNamespace":
+                return Bundle.MetricsNamespace();
         }
         throw new MissingResourceException("Missing OCI type", null, suggestedType);
     }
@@ -143,6 +147,8 @@ public class SuggestedStep extends AbstractStep<OCIItem> {
                     items.add(new CreateNewResourceItem());
                     items.addAll(ContainerRepositoryNode.getContainerRepositories().apply(parent));
                     return items;
+                case "MetricsNamespace": //NOI18N
+                    return MetricsNamespaceNode.getMetricNamespaces().apply(parent);
                 default:
                     return Collections.emptyList();
             }

@@ -46,11 +46,17 @@ jobs:
           submodules: false
           show-progress: false
 
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'zulu'
+
       - name: Check Dependencies
         run: |
           DEPS=org.apache.maven:maven-artifact:3.9.8,org.apache.maven.indexer:search-backend-smo:7.1.4
           mvn eu.maveniverse.maven.plugins:toolbox:gav-copy-transitive -Dgav=$DEPS -DsinkSpec="flat(./lib)"
           echo "<pre>" >> $GITHUB_STEP_SUMMARY
-          $JAVA_HOME_21_X64/bin/java -cp "lib/*" .github/scripts/BinariesListUpdates.java ./ | tee -a $GITHUB_STEP_SUMMARY
+          java -cp "lib/*" .github/scripts/BinariesListUpdates.java ./ | tee -a $GITHUB_STEP_SUMMARY
           echo "</pre>" >> $GITHUB_STEP_SUMMARY
           rm -Rf lib

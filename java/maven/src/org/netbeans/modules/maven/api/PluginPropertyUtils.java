@@ -30,6 +30,7 @@ import java.util.Properties;
 import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.InvalidArtifactRTException;
 import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
@@ -802,16 +803,29 @@ public class PluginPropertyUtils {
             // BEGIN:copied from maven-compiler-plugin + adapted
             Artifact artifact;
             try {
-                artifact = new DefaultArtifact(
-                     coord.getGroupId(),
-                     coord.getArtifactId(),
-                     VersionRange.createFromVersionSpec( coord.getVersion() ),
-                     coord.getScope() == null ? query.getDefaultScope() : coord.getScope(),
-                     coord.getType(),
-                     coord.getClassifier(),
-                     handler,
-                     false );
-            } catch (InvalidVersionSpecificationException ex) {
+                VersionRange rng = VersionRange.createFromVersionSpec( coord.getVersion() );
+                if (rng != null) {
+                    artifact = new DefaultArtifact(
+                         coord.getGroupId(),
+                         coord.getArtifactId(),
+                         VersionRange.createFromVersionSpec( coord.getVersion() ),
+                         coord.getScope() == null ? query.getDefaultScope() : coord.getScope(),
+                         coord.getType(),
+                         coord.getClassifier(),
+                         handler,
+                         false );
+                } else {
+                    artifact = new DefaultArtifact(
+                         coord.getGroupId(),
+                         coord.getArtifactId(),
+                         "",
+                         coord.getScope() == null ? query.getDefaultScope() : coord.getScope(),
+                         coord.getType(),
+                         coord.getClassifier(),
+                         handler
+                    );
+                }
+            } catch (InvalidVersionSpecificationException | InvalidArtifactRTException ex) {
                 errorsOpt.add(new ArtifactResolutionException(ex.getMessage(), 
                         coord.getGroupId(), coord.getArtifactId(), coord.getVersion(), 
                         coord.getType(), coord.getClassifier(), ex));

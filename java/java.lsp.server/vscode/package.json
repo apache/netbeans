@@ -647,7 +647,8 @@
 			},
 			{
 				"command": "nbls:Edit:org.openide.actions.DeleteAction",
-				"title": "Delete"
+				"title": "Delete",
+				"icon": "$(trash)"
 			},
 			{
 				"command": "nbls.project.run",
@@ -1128,7 +1129,7 @@
 				},
 				{
 					"command": "nbls:Edit:org.openide.actions.DeleteAction",
-					"when": "viewItem =~ /lifecycleState:ACTIVE*/ || (viewItem =~ /publicIp:.*/ && viewItem =~ /imageUrl:.*/)",
+					"when": "viewItem =~ /lifecycleState:ACTIVE*/ || viewItem =~ /ContainerTagItem/",
 					"group": "inline@10"
 				}
 			]

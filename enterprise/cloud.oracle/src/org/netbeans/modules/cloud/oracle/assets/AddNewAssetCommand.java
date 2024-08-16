@@ -36,7 +36,6 @@ import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.netbeans.modules.cloud.oracle.steps.ItemTypeStep;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.steps.DatabaseConnectionStep;
-import org.netbeans.modules.cloud.oracle.steps.ItemCreationDecisionStep;
 import org.netbeans.modules.cloud.oracle.steps.TenancyStep;
 import org.netbeans.spi.lsp.CommandProvider;
 import org.openide.util.lookup.Lookups;
@@ -78,14 +77,8 @@ public class AddNewAssetCommand implements CommandProvider {
                         }
                         return new TenancyStep();
                     }).stepForClass(TenancyStep.class, (s) -> new CompartmentStep())
-                    .stepForClass(CompartmentStep.class, (s) -> new ItemCreationDecisionStep())
-                    .stepForClass(ItemCreationDecisionStep.class, (s) -> {
-                        if (ItemCreationDecisionStep.CREATE_NEW_OPTION.equals(s.getValue())) {
-                            return null;
-                        }
-                        return new SuggestedStep(null);
-                    })
-                    .stepForClass(SuggestedStep.class, (s) -> new ProjectStep())
+                    .stepForClass(CompartmentStep.class, (s) -> new SuggestedStep(null))
+                    .stepForClass(SuggestedStep.class, (s) ->  new ProjectStep())
                     .build();
         
         Steps.getDefault()
@@ -101,15 +94,6 @@ public class AddNewAssetCommand implements CommandProvider {
                         } else {
                             item = CompletableFuture.completedFuture(i);
                         }
-                    } else if (ItemCreationDecisionStep.CREATE_NEW_OPTION.equals(values.getValueForStep(ItemCreationDecisionStep.class))) { //NOI18N
-                        OCIItemCreator creator = OCIItemCreator.getCreator(itemType);
-                        if (creator != null) {
-                            CompletableFuture<Map<String, Object>> vals = creator.steps();
-                            item = vals.thenCompose(params -> {
-                                return creator.create(values, params);
-                            });
-                        }
-    
                     } else {
                         OCIItem i = values.getValueForStep(SuggestedStep.class);
                         if (i == null) {
@@ -117,6 +101,16 @@ public class AddNewAssetCommand implements CommandProvider {
                             return;
                         } else {
                             item = CompletableFuture.completedFuture(i);
+                        }
+                    }
+                    
+                    if (values.getValueForStep(SuggestedStep.class) instanceof CreateNewResourceItem) {
+                        OCIItemCreator creator = OCIItemCreator.getCreator(itemType);
+                        if (creator != null) {
+                            CompletableFuture<Map<String, Object>> vals = creator.steps();
+                            item = vals.thenCompose(params -> {
+                                return creator.create(values, params);
+                            });
                         }
                     }
                     

@@ -15,16 +15,4 @@
 # specific language governing permissions and limitations
 # under the License.
 
-[org.netbeans.modules.cloud.=]
-org.netbeans.modules.cloud.oracle.database.DatabaseItem
-org.netbeans.modules.cloud.oracle.compartment.CompartmentItem
-org.netbeans.modules.cloud.oracle.items.OCIItem
-org.netbeans.modules.cloud.oracle.devops.BuildPipelineItem
-org.netbeans.modules.cloud.oracle.devops.DevopsProjectItem
-org.netbeans.modules.cloud.oracle.assets.SuggestedItem
-org.netbeans.modules.cloud.oracle.compute.ClusterItem
-org.netbeans.modules.cloud.oracle.compute.ComputeInstanceItem
-org.netbeans.modules.cloud.oracle.bucket.BucketItem
-org.netbeans.modules.cloud.oracle.vault.VaultItem
-org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryItem
-org.netbeans.modules.cloud.oracle.developer.ContainerTagItem
+8096EBF722902E75FBD4F532A751E514F02E1EB7 org.glassfish.hk2.external:jakarta.inject:2.6.1

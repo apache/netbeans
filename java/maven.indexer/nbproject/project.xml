@@ -113,6 +113,19 @@
                         <specification-version>8.0</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.javax.inject</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.61</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>slf4j.api</code-name-base>
+                    <run-dependency/>
+                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>

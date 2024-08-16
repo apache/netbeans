@@ -280,6 +280,7 @@ function wrapCommandWithProgress(lsCommand : string, title : string, log? : vsco
     return window.withProgress({ location: ProgressLocation.Window }, p => {
         return new Promise(async (resolve, reject) => {
             let c : LanguageClient = await client;
+            await vscode.commands.executeCommand('workbench.action.files.saveAll');
             const commands = await vscode.commands.getCommands();
             if (commands.includes(lsCommand)) {
                 p.report({ message: title });
@@ -618,6 +619,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.project.clean', (args) => {
         wrapProjectActionWithProgress('clean', undefined, 'Cleaning...', log, true, args);
+    }));
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.project.buildPushImage', () => {
+        wrapCommandWithProgress(COMMAND_PREFIX + '.cloud.assets.buildPushImage', 'Building and pushing container image', log, true);
     }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.open.type', () => {
         wrapCommandWithProgress(COMMAND_PREFIX + '.quick.open', 'Opening type...', log, true).then(() => {

@@ -203,6 +203,15 @@ public final class CloudAssets {
     public Collection<OCIItem> getAssignedItems() {
         return Collections.unmodifiableCollection(items);
     }
+    
+    public <T extends OCIItem> T getItem(Class<T> clazz) {
+        for (OCIItem item : items) {
+            if (clazz.isInstance(item)) {
+                return (T) item;
+            } 
+        }
+        return null;
+    } 
 
     public boolean setReferenceName(OCIItem item, String refName) {
         Parameters.notNull("refName", refName); //NOI18N

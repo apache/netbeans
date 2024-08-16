@@ -820,21 +820,23 @@ public class PluginPropertyUtils {
 
             requiredArtifacts.add( artifact );
 
-            ArtifactResolutionRequest request = new ArtifactResolutionRequest()
-                            .setArtifact( requiredArtifacts.iterator().next() )
-                            .setResolveRoot(true)
-                            .setResolveTransitively(true)
-                            .setArtifactDependencies(requiredArtifacts)
-                            .setLocalRepository(projectImpl.getEmbedder().getLocalRepository())
-                            .setRemoteRepositories( mavenProject.getRemoteArtifactRepositories() );
+            if (transitiveDependencies) {
+                ArtifactResolutionRequest request = new ArtifactResolutionRequest()
+                                .setArtifact( requiredArtifacts.iterator().next() )
+                                .setResolveRoot(true)
+                                .setResolveTransitively(true)
+                                .setArtifactDependencies(requiredArtifacts)
+                                .setLocalRepository(projectImpl.getEmbedder().getLocalRepository())
+                                .setRemoteRepositories( mavenProject.getRemoteArtifactRepositories() );
 
-            ArtifactResolutionResult resolutionResult = repos.resolve(request);
-            // END:copied from maven-compiler-plugin + adapted
-            if (errorsOpt != null) {
-                errorsOpt.addAll(resolutionResult.getMetadataResolutionExceptions());
-                errorsOpt.addAll(resolutionResult.getErrorArtifactExceptions());
+                ArtifactResolutionResult resolutionResult = repos.resolve(request);
+                // END:copied from maven-compiler-plugin + adapted
+                if (errorsOpt != null) {
+                    errorsOpt.addAll(resolutionResult.getMetadataResolutionExceptions());
+                    errorsOpt.addAll(resolutionResult.getErrorArtifactExceptions());
+                }
+                requiredArtifacts.addAll(resolutionResult.getArtifacts());
             }
-            requiredArtifacts.addAll(resolutionResult.getArtifacts());
         }
         return new ArrayList<>(requiredArtifacts);
     }

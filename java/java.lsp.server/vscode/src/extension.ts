@@ -1414,6 +1414,11 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 }
                 return item;
             }
+            const lifecycleState: String = getValueAfterPrefix(item.contextValue, "lifecycleState:");
+            if (lifecycleState) {
+                item.description = lifecycleState === "PENDING_DELETION" ? '(pending deletion)' : undefined;
+            }
+
             return item;
         }
 

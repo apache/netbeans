@@ -159,7 +159,7 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
                     ProjectReload.Quality.BROKEN:
                     ProjectReload.Quality.NONE;
         }
-        if (!MavenProjectCache.getFakedArtifacts(mp).isEmpty()) {
+        if (!MavenProjectCache.getPlaceholderArtifacts(mp).isEmpty()) {
             return ProjectReload.Quality.LOADED;
         }
         return ProjectReload.Quality.RESOLVED;

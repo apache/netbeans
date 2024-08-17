@@ -365,25 +365,25 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
         List<Artifact> missingJars = new ArrayList<Artifact>();
         List<Artifact> artifactsToCheck = new ArrayList<>(project.getArtifacts());
         MavenProject partial = MavenProjectCache.getPartialProject(project);
-        Collection<Artifact> fakes = (Collection<Artifact>)project.getContextValue("NB_FakedArtifacts");
+        Collection<Artifact> placeholders = MavenProjectCache.getPlaceholderArtifacts(project);
         if (LOG.isLoggable(Level.FINER)) {
             LOG.log(Level.FINER, "Checking artifacts: {0}", artifactsToCheck);
             if (partial != null && partial != project) {
-                Collection<Artifact> partialFakes = (Collection<Artifact>)partial.getContextValue("NB_FakedArtifacts");
-                LOG.log(Level.FINER, "Partial project for {0}@{1} is: {2}@{3}, fake artifacts: {4}", new Object[] { 
-                    project, System.identityHashCode(project), partial, System.identityHashCode(partial), partialFakes
+                Collection<Artifact> partialPlaceholders = MavenProjectCache.getPlaceholderArtifacts(partial);
+                LOG.log(Level.FINER, "Partial project for {0}@{1} is: {2}@{3}, placeholder artifacts: {4}", new Object[] { 
+                    project, System.identityHashCode(project), partial, System.identityHashCode(partial), partialPlaceholders
                 });
             }
-            LOG.log(Level.FINER, "Fake artifacts for {0}@{1}: {2}", new Object[] { 
-                project, System.identityHashCode(project), fakes
+            LOG.log(Level.FINER, "Placeholder artifacts for {0}@{1}: {2}", new Object[] { 
+                project, System.identityHashCode(project), placeholders
             });
         }
         
         Collection<Artifact> toCheck = new HashSet<>(project.getArtifacts());
-        if (fakes != null) {
-            // the fake artifacts are typically without a scope, so ignore scope when merging with other reported pieces.
+        if (placeholders != null) {
+            // the placeholder artifacts are typically without a scope, so ignore scope when merging with other reported pieces.
             Set<String> ids = toCheck.stream().map(MavenModelProblemsProvider::artifactId).collect(Collectors.toSet());
-            fakes.stream().filter(a -> !ids.contains(artifactId(a))).forEach(toCheck::add);
+            placeholders.stream().filter(a -> !ids.contains(artifactId(a))).forEach(toCheck::add);
         }
         
         for (Artifact art : toCheck) {

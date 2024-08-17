@@ -46,10 +46,15 @@ import org.openide.util.lookup.Lookups;
 
 /**
  * This class steps in, if the requested quality is higher than LOAD and the 
- * MavenProject loaded by the base implementation contains fake artifacts.
+ * MavenProject loaded by the base implementation contains placeholder artifacts.
+ * Placeholder artifacts are created by org.netbeans.modules.maven.NbArtifactFixer for POM artifacts that
+ * are not present in the local repository, i.e. library POMs, that would otherwise fail the model building process,
+ * if the resolver reported them as missing. They are just empty placeholders that satisfy Maven implementation, but
+ * naturally do not contain any further dependency info, so the complete project model is not complete.
+ * 
  * If RESOLVED is requested, the implementation runs a priming build and then restarts the reload
  * operation, so that base maven impl will re-read the project.
- * To avoid reloading loops, the faked artifacts are stored between reloads. If the reported fake artifacts
+ * To avoid reloading loops, the placeholder artifacts are stored between reloads. If the reported placeholder artifacts
  * are all already known - that is,they were not resolved by the priming build, the implementation ends
  * with an error, the project is not correctable.
  * @author sdedic
@@ -60,11 +65,11 @@ import org.openide.util.lookup.Lookups;
 })
 public class MavenPrimingReloadImplementation implements ProjectReloadImplementation {
     /**
-     * Names of artifacts that were faked. It's not productive to run a priming build to fix this known set of artifacts,
+     * Names of artifacts that were injected by NbArtifactFixer. It's not productive to run a priming build to fix this known set of artifacts,
      * unless "force" is in effect - they are unlikely to be retrieved, since they already failed.
      */
     // @GuardedBy(this)
-    private Set<String> fakeArtifactNames = new HashSet<>();
+    private Set<String> placeholderArtifactNames = new HashSet<>();
 
     
     private Reference<ProjectStateData> lastData = new WeakReference<>(null);
@@ -93,7 +98,7 @@ public class MavenPrimingReloadImplementation implements ProjectReloadImplementa
                     ProjectReload.Quality.BROKEN:
                     ProjectReload.Quality.NONE;
         }
-        if (!MavenProjectCache.getFakedArtifacts(mp).isEmpty()) {
+        if (!MavenProjectCache.getPlaceholderArtifacts(mp).isEmpty()) {
             return ProjectReload.Quality.LOADED;
         }
         return ProjectReload.Quality.RESOLVED;
@@ -132,7 +137,7 @@ public class MavenPrimingReloadImplementation implements ProjectReloadImplementa
 
     static boolean checkForMissingArtifacts(MavenProject p) {       
         return p == null || !MavenProjectCache.isIncompleteProject(p) ||
-               MavenProjectCache.getFakedArtifacts(p).isEmpty();
+               MavenProjectCache.getPlaceholderArtifacts(p).isEmpty();
     }
 
     static String artifactGav(Artifact a) {
@@ -152,7 +157,7 @@ public class MavenPrimingReloadImplementation implements ProjectReloadImplementa
         boolean ok = checkForMissingArtifacts(p);
         if (ok) {
             synchronized (this) {
-                fakeArtifactNames.clear();
+                placeholderArtifactNames.clear();
             }
             context.saveLoadContext(this);
             return CompletableFuture.completedFuture(null);
@@ -163,9 +168,9 @@ public class MavenPrimingReloadImplementation implements ProjectReloadImplementa
             return CompletableFuture.completedFuture(null);
         }
 
-        Collection<Artifact> faked = MavenProjectCache.getFakedArtifacts(p);
+        Collection<Artifact> placeholders = MavenProjectCache.getPlaceholderArtifacts(p);
         Set<String> gavs = new HashSet<>();
-        faked.forEach(a -> gavs.add(artifactGav(a)));
+        placeholders.forEach(a -> gavs.add(artifactGav(a)));
         String parentGav = artifactGav(p.getParentArtifact());
         
         CompletableFuture<ProjectStateData> future = new CompletableFuture<>();
@@ -196,12 +201,12 @@ public class MavenPrimingReloadImplementation implements ProjectReloadImplementa
         }
         
         synchronized (this) {
-            if (!lc.firstRun && fakeArtifactNames.containsAll(gavs) && !request.isForceReload()) {
+            if (!lc.firstRun && placeholderArtifactNames.containsAll(gavs) && !request.isForceReload()) {
                 // no point in running priming build again, when the artifacts are known to be broken.
                 future.complete(createStateData(p));
                 return future;
             }
-            fakeArtifactNames = gavs;
+            placeholderArtifactNames = gavs;
         }
 
         lc.firstRun = false;

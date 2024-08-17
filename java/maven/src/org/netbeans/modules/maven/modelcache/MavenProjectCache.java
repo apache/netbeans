@@ -73,9 +73,9 @@ public final class MavenProjectCache {
     private static final String CONTEXT_EXECUTION_RESULT = "NB_Execution_Result";
     
     /**
-     * The value contains the set of artifacts, that have been faked during the reading operation.
+     * The value contains the set of placeholder artifacts, that have been injected during the reading operation.
      */
-    private static final String CONTEXT_FAKED_ARTIFACTS = "NB_FakedArtifacts";
+    private static final String CONTEXT_PLACEHOLDER_ARTIFACTS = "NB_PlaceholderArtifacts";
     
     /**
      * Timestamp of the project model load.
@@ -191,13 +191,13 @@ public final class MavenProjectCache {
     }
     
     /**
-     * Extracts the set of artifacts not present in the local repository and 'faked' during the
-     * project load.
+     * Extracts the set of artifacts not present in the local repository and 'injected' during the
+     * project load by NbArtifactFixer.
      * @param p project
-     * @return set of faked artifacts.
+     * @return set of placeholder artifacts.
      */
-    public static Collection<Artifact> getFakedArtifacts(MavenProject p) {
-        Object o = p.getContextValue(CONTEXT_FAKED_ARTIFACTS);
+    public static Collection<Artifact> getPlaceholderArtifacts(MavenProject p) {
+        Object o = p.getContextValue(CONTEXT_PLACEHOLDER_ARTIFACTS);
         return o instanceof Collection ? (Collection)o : Collections.emptySet();
     }
     
@@ -231,14 +231,14 @@ public final class MavenProjectCache {
         File pomFile = req.getPom();
         
         MavenExecutionResult res = null;
-        Set<Artifact> fakes = new HashSet<>();
+        Set<Artifact> placeholders = new HashSet<>();
         long startLoading = System.currentTimeMillis();
         
         try {
-            res = NbArtifactFixer.collectFallbackArtifacts(() -> projectEmbedder.readProjectWithDependencies(req, true), (c) -> 
+            res = NbArtifactFixer.collectPlaceholderArtifacts(() -> projectEmbedder.readProjectWithDependencies(req, true), (c) -> 
                 c.forEach(a -> {
-                    // artifact fixer only fakes POMs.
-                    fakes.add(projectEmbedder.createArtifactWithClassifier(a.getGroupId(), a.getArtifactId(), a.getVersion(), a.getExtension(), a.getClassifier())); // NOI18N
+                    // artifact fixer only injects POMs.
+                    placeholders.add(projectEmbedder.createArtifactWithClassifier(a.getGroupId(), a.getArtifactId(), a.getVersion(), a.getExtension(), a.getClassifier())); // NOI18N
                 }
             ));
             newproject = res.getProject();
@@ -317,13 +317,13 @@ public final class MavenProjectCache {
                     LOG.log(Level.FINE, "Maven reported:", t);
                 }
             }
-            LOG.log(Level.FINE, "Loaded project flags - incomplete {0}, fake count {1}", new Object[] { isIncompleteProject(newproject), fakes.size() });
-            if (!fakes.isEmpty()) {
-                LOG.log(Level.FINE, "Incomplete artifact encountered during loading the project: {0}", fakes);
+            LOG.log(Level.FINE, "Loaded project flags - incomplete {0}, placeholder count {1}", new Object[] { isIncompleteProject(newproject), placeholders.size() });
+            if (!placeholders.isEmpty()) {
+                LOG.log(Level.FINE, "Incomplete artifact encountered during loading the project: {0}", placeholders);
                 if (!isIncompleteProject(newproject)) {
                     newproject.setContextValue(CONTEXT_PARTIAL_PROJECT, Boolean.TRUE);
                 }
-                newproject.setContextValue(CONTEXT_FAKED_ARTIFACTS, fakes);
+                newproject.setContextValue(CONTEXT_PLACEHOLDER_ARTIFACTS, placeholders);
             }
         }
         newproject.setContextValue(CONTEXT_LOAD_TIMESTAMP, startLoading);

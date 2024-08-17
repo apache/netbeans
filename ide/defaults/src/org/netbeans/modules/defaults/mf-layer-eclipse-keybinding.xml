@@ -119,7 +119,7 @@
     <file name="S-F2.shadow">
         <attr name="originalFile" stringvalue="Actions/Edit/bookmark-history-popup-previous.instance"/>
     </file>
-<!--    <file name="D-F2.shadow">
+    <!--    <file name="D-F2.shadow">
         <attr name="originalFile" stringvalue="Actions/Edit/bookmark-toggle.instance"/>
     </file>-->
     <file name="D-F11.shadow">
@@ -131,10 +131,10 @@
     <file name="CS-8.shadow">
         <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-modules-palette-ShowPaletteAction.instance"/>
     </file>
-<!--    <file name="D-7.shadow">
+    <!--    <file name="D-7.shadow">
         <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-modules-navigator-ShowNavigatorAction.instance"/>
     </file>-->
-<!--    <file name="D-3.shadow">
+    <!--    <file name="D-3.shadow">
         <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-modules-favorites-View.instance"/>
     </file>-->
     <file name="D-5.shadow">
@@ -143,7 +143,7 @@
     <file name="CS-F.shadow">
         <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-ReplaceAction.instance"/>
     </file>
-<!--    <file name="C-L.shadow">
+    <!--    <file name="C-L.shadow">
         <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-GotoAction.instance"/>
     </file>-->
     <file name="DELETE.shadow">
@@ -188,7 +188,7 @@
     <file name="CS-W.shadow">
         <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseAllDocumentsAction.instance"/>
     </file>
-<!--    <file name="C-F6.shadow">
+    <!--    <file name="C-F6.shadow">
         <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-RecentViewListAction.instance"/>
     </file>-->
     <file name="COPY.shadow">
@@ -263,10 +263,10 @@
     <file name="D-H.shadow">
         <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-search-FindInFilesAction.instance"/>
     </file>
-<!--    <file name="DO-H.shadow">
+    <!--    <file name="DO-H.shadow">
         <attr name="originalFile" stringvalue="Actions/Refactoring/org-netbeans-modules-refactoring-api-ui-WhereUsedAction.instance"/>
     </file>-->
-<!--    <file name="OS-D.shadow">
+    <!--    <file name="OS-D.shadow">
         <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugMainProjectAction.instance"/>
     </file>-->
     <file name="OS-R.shadow">
@@ -275,18 +275,18 @@
     <file name="D-1.shadow">
         <attr name="originalFile" stringvalue="Actions/Source/org-netbeans-modules-editor-hints-FixAction.instance"/>
     </file>
-    
+
     <file name="DS-O.removed"/>
     <file name="C-Q.removed"/>
-    
+
     <file name="D-2.removed"/>
     <file name="OS-D.removed"/>
     <file name="OS-X.removed"/>
     <file name="AS-X.removed"/>
-    
+
     <file name="SO-L.removed"/>
     <file name="OS-L.removed"/>
-    
+
     <file name="D-F6.shadow">
         <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-NextTabAction.instance"/>
     </file>

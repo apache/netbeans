@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE bindings PUBLIC "-//NetBeans//DTD Editor KeyBindings settings 1.1//EN" "http://www.netbeans.org/dtds/EditorKeyBindings-1_1.dtd">
+
+<bindings>
+  <!-- Basic Editing -->
+  <bind actionName="cut-to-clipboard" key="⌘X"/>
+  <bind actionName="copy-to-clipboard" key="⌘C"/>
+  <bind actionName="move-line-down" key="⌥↓"/>
+  <bind actionName="move-line-up" key="⌥↑"/>
+  <bind actionName="copy-line-down" key="⇧⌥↓"/>
+  <bind actionName="copy-line-up" key="⇧⌥↑"/>
+  <bind actionName="delete-line" key="⇧⌘K"/>
+  <bind actionName="insert-line-below" key="⌘Enter"/>
+  <bind actionName="insert-line-above" key="⇧⌘Enter"/>
+  <bind actionName="jump-to-matching-bracket" key="⇧⌘\"/>
+  <bind actionName="indent-line" key="⌘]"/>
+  <bind actionName="outdent-line" key="⌘["/>
+  <bind actionName="go-to-beginning-of-line" key="Home"/>
+  <bind actionName="go-to-end-of-line" key="End"/>
+  <bind actionName="go-to-beginning-of-file" key="⌘↑"/>
+  <bind actionName="go-to-end-of-file" key="⌘↓"/>
+  <bind actionName="scroll-line-up" key="⌃PgUp"/>
+  <bind actionName="scroll-line-down" key="⌃PgDn"/>
+  <bind actionName="scroll-page-up" key="⌘PgUp"/>
+  <bind actionName="scroll-page-down" key="⌘PgDn"/>
+  <bind actionName="fold-region" key="⌥⌘["/>
+  <bind actionName="unfold-region" key="⌥⌘]"/>
+  <bind actionName="fold-all-subregions" key="⌘K ⌘["/>
+  <bind actionName="unfold-all-subregions" key="⌘K ⌘]"/>
+  <bind actionName="fold-all-regions" key="⌘K ⌘0"/>
+  <bind actionName="unfold-all-regions" key="⌘K ⌘J"/>
+  <bind actionName="add-line-comment" key="⌘K ⌘C"/>
+  <bind actionName="remove-line-comment" key="⌘K ⌘U"/>
+  <bind actionName="toggle-line-comment" key="⌘/"/>
+  <bind actionName="toggle-block-comment" key="⇧⌥A"/>
+  <bind actionName="toggle-word-wrap" key="⌥Z"/>
+
+  <!-- Multi-cursor and Selection -->
+  <bind actionName="add-caret" key="⌥ + click"/>
+  <bind actionName="add-caret-above" key="⌥⌘↑"/>
+  <bind actionName="add-caret-below" key="⌥⌘↓"/>
+  <bind actionName="undo-last-caret-operation" key="⌘U"/>
+  <bind actionName="add-caret-to-end-of-lines" key="⇧⌥I"/>
+  <bind actionName="select-current-line" key="⌘L"/>
+  <bind actionName="select-all-occurrences-of-selection" key="⇧⌘L"/>
+  <bind actionName="select-all-occurrences-of-word" key="⌘F2"/>
+  <bind actionName="expand-selection" key="⌃⇧⌘→"/>
+  <bind actionName="shrink-selection" key="⌃⇧⌘←"/>
+  <bind actionName="column-selection" key="⇧⌥ + drag mouse"/>
+  <bind actionName="column-selection-up" key="⇧⌥⌘↑"/>
+  <bind actionName="column-selection-down" key="⇧⌥⌘↓"/>
+  <bind actionName="column-selection-left" key="⇧⌥⌘←"/>
+  <bind actionName="column-selection-right" key="⇧⌥⌘→"/>
+  <bind actionName="column-selection-page-up" key="⇧⌥⌘PgUp"/>
+  <bind actionName="column-selection-page-down" key="⇧⌥⌘PgDn"/>
+
+  <!-- Search and Replace -->
+  <bind actionName="find" key="⌘F"/>
+  <bind actionName="replace" key="⌥⌘F"/>
+  <bind actionName="find-next" key="⌘G"/>
+  <bind actionName="find-previous" key="⇧⌘G"/>
+  <bind actionName="select-all-occurrences-of-find-match" key="⌥Enter"/>
+  <bind actionName="add-selection-to-next-find-match" key="⌘D"/>
+  <bind actionName="move-last-selection-to-next-find-match" key="⌘K ⌘D"/>
+
+  <!-- Rich Languages Editing -->
+  <bind actionName="trigger-suggestion" key="⌃Space"/>
+  <bind actionName="trigger-parameter-hints" key="⌘I"/>
+  <bind actionName="format-document" key="⇧⌥F"/>
+  <bind actionName="format-selection" key="⌘K ⌘F"/>
+  <bind actionName="go-to-definition" key="F12"/>
+  <bind actionName="peek-definition" key="⌥F12"/>
+  <bind actionName="open-definition-to-the-side" key="⌘K F12"/>
+  <bind actionName="quick-fix" key="⌘."/>
+  <bind actionName="show-references" key="⇧F12"/>
+  <bind actionName="rename-symbol" key="F2"/>
+  <bind actionName="trim-trailing-whitespace" key="⌘K ⌘X"/>
+  <bind actionName="change-file-language" key="⌘K M"/>
+
+  <!-- Navigation -->
+  <bind actionName="show-all-symbols" key="⌘T"/>
+  <bind actionName="go-to-line" key="⌃G"/>
+  <bind actionName="go-to-file" key="⌘P"/>
+  <bind actionName="go-to-symbol" key="⇧⌘O"/>
+  <bind actionName="show-problems-panel" key="⇧⌘M"/>
+  <bind actionName="go-to-next-error-or-warning" key="F8"/>
+  <bind actionName="go-to-previous-error-or-warning" key="⇧F8"/>
+  <bind actionName="navigate-editor-group-history" key="⌃⇧Tab"/>
+  <bind actionName="go-back" key="⌃-"/>
+  <bind actionName="go-forward" key="⌃⇧-"/>
+  <bind actionName="toggle-tab-focus" key="⌃⇧M"/>
+
+  <!-- Editor Management -->
+  <bind actionName="close-editor" key="⌘W"/>
+  <bind actionName="close-folder" key="⌘K F"/>
+  <bind actionName="split-editor" key="⌘"/>
+  <bind actionName="focus-editor-group-1" key="⌘1"/>
+  <bind actionName="focus-editor-group-2" key="⌘2"/>
+  <bind actionName="focus-editor-group-3" key="⌘3"/>
+  <bind actionName="focus-previous-editor-group" key="⌘K ⌘←"/>
+  <bind actionName="focus-next-editor-group" key="⌘K ⌘→"/>
+  <bind actionName="move-editor-left" key="⌘K ⇧⌘←"/>
+  <bind actionName="move-editor-right" key="⌘K ⇧⌘→"/>
+  <bind actionName="move-active-editor-group-left" key="⌘K ←"/>
+  <bind actionName="move-active-editor-group-right" key="⌘K →"/>
+
+  <!-- File Management -->
+  <bind actionName="new-file" key="⌘N"/>
+  <bind actionName="open-file" key="⌘O"/>
+  <bind actionName="save" key="⌘S"/>
+  <bind actionName="save-as" key="⇧⌘S"/>
+  <bind actionName="save-all" key="⌥⌘S"/>
+  <bind actionName="close-file" key="⌘W"/>
+  <bind actionName="close-all-files" key="⌘K ⌘W"/>
+  <bind actionName="reopen-closed-editor" key="⇧⌘T"/>
+  <bind actionName="keep-preview-mode-editor-open" key="⌘K Enter"/>
+  <bind actionName="open-next" key="⌃Tab"/>
+  <bind actionName="open-previous" key="⌃⇧Tab"/>
+  <bind actionName="copy-path-of-active-file" key="⌘K P"/>
+  <bind actionName="reveal-active-file-in-finder" key="⌘K R"/>
+  <bind actionName="show-active-file-in-new-window" key="⌘K O"/>
+
+  <!-- Display -->
+  <bind actionName="toggle-full-screen" key="⌃⌘F"/>
+  <bind actionName="toggle-editor-layout" key="⌥⌘0"/>
+  <bind actionName="zoom-in" key="⌘="/>
+  <bind actionName="zoom-out" key="⇧⌘-"/>
+  <bind actionName="toggle-sidebar-visibility" key="⌘B"/>
+  <bind actionName="show-explorer" key="⇧⌘E"/>
+  <bind actionName="show-search" key="⇧⌘F"/>
+  <bind actionName="show-source-control" key="⌃⇧G"/>
+  <bind actionName="show-debug" key="⇧⌘D"/>
+  <bind actionName="show-extensions" key="⇧⌘X"/>
+  <bind actionName="replace-in-files" key="⇧⌘H"/>
+  <bind actionName="toggle-search-details" key="⇧⌘J"/>
+  <bind actionName="show-output-panel" key="⇧⌘U"/>
+  <bind actionName="open-markdown-preview" key="⇧⌘V"/>
+  <bind actionName="open-markdown-preview-to-the-side" key="⌘K V"/>
+  <bind actionName="zen-mode" key="⌘K Z"/>
+
+  <!-- Debug -->
+  <bind actionName="toggle-breakpoint" key="F9"/>
+  <bind actionName="start-continue" key="F5"/>
+  <bind actionName="stop" key="⇧F5"/>
+  <bind actionName="step-into" key="F11"/>
+  <bind actionName="step-out" key="⇧F11"/>
+  <bind actionName="step-over" key="F10"/>
+  <bind actionName="show-hover" key="⌘K ⌘I"/>
+
+  <!-- Integrated Terminal -->
+  <bind actionName="show-integrated-terminal" key="⌃`"/>
+  <bind actionName="create-new-terminal" key="⌃⇧`"/>
+  <bind actionName="copy-selection" key="⌘C"/>
+  <bind actionName="scroll-up" key="⌘↑"/>
+  <bind actionName="scroll-down" key="⌘↓"/>
+  <bind actionName="scroll-page-up" key="PgUp"/>
+  <bind actionName="scroll-page-down" key="PgDn"/>
+  <bind actionName="scroll-to-top" key="⌘Home"/>
+  <bind actionName="scroll-to-bottom" key="⌘End"/>
+</bindings>

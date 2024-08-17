@@ -38,6 +38,7 @@ import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.modelcache.MavenProjectCache;
 import org.netbeans.modules.project.dependency.ProjectReload;
+import org.netbeans.modules.project.dependency.ProjectReload.Quality;
 import org.netbeans.modules.project.dependency.ProjectReload.StateRequest;
 import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation;
 import org.netbeans.spi.project.LookupProvider;
@@ -152,12 +153,15 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
     private static class CF extends CompletableFuture<ProjectStateData<MavenProject>> {}
 
     static ProjectReload.Quality getProjectQuality(MavenProject mp) {
+        if (mp == null) {
+            return ProjectReload.Quality.NONE;
+        }
         if (MavenProjectCache.isFallbackproject(mp)) {
             // could not load at all.
             MavenProject fallback = MavenProjectCache.getPartialProject(mp);
             return fallback != null ? 
                     ProjectReload.Quality.BROKEN:
-                    ProjectReload.Quality.NONE;
+                    ProjectReload.Quality.FALLBACK;
         }
         if (!MavenProjectCache.getPlaceholderArtifacts(mp).isEmpty()) {
             return ProjectReload.Quality.LOADED;
@@ -165,10 +169,14 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
         return ProjectReload.Quality.RESOLVED;
     }
     
-    private ProjectStateData createStateData(MavenProject mp) {
+    private ProjectStateData createStateData(MavenProject mp, Quality q) {
         ProjectStateData d;
         
-        ProjectStateBuilder builder = ProjectStateData.builder(getProjectQuality(mp)).
+        if (q == null) {
+            q = getProjectQuality(mp);
+        }
+        
+        ProjectStateBuilder builder = ProjectStateData.builder(q).
                 files(findProjectFiles()).
                 timestamp(MavenProjectCache.getLoadTimestamp(mp));
         builder.data(mp);
@@ -222,7 +230,7 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
             ProjectReload.Quality q = getProjectQuality(p);
             if (q.isAtLeast(request.getMinQuality())) {
                 if (!request.isConsistent()) {
-                    future.complete(createStateData(p));
+                    future.complete(createStateData(p, null));
                     return;
                 }
 
@@ -236,7 +244,7 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
                     }
                 }
                 if (!obsolete) {
-                    future.complete(createStateData(p));
+                    future.complete(createStateData(p, null));
                     return;
                 }
             }
@@ -246,6 +254,7 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
     
     private void loadMavenProject3(CF future) {
         NbMavenProjectImpl nbImpl = project.getLookup().lookup(NbMavenProjectImpl.class);
+        MavenProject current = nbImpl.getOriginalMavenProjectOrNull();
         RequestProcessor.Task t = nbImpl.fireProjectReload(true);
         t.addTaskListener(new TaskListener() {
             @Override
@@ -253,7 +262,17 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
                 task.removeTaskListener(this);
                 // retain initial = true for the first project load.
                 nbImpl.getFreshOriginalMavenProject().thenAccept((mp) -> {
-                    future.complete(createStateData(mp));
+                    future.complete(createStateData(mp, null));
+                }).exceptionally(ex -> {
+                    MavenProject renewed = nbImpl.getOriginalMavenProjectOrNull();
+                    if (renewed == current) {
+                        ProjectStateData sd = createStateData(current, Quality.BROKEN);
+                        sd.fireChanged(false, true);
+                        future.complete(sd);
+                    } else {
+                        future.complete(createStateData(renewed, Quality.BROKEN));
+                    }
+                    return null;
                 });
             }
         });

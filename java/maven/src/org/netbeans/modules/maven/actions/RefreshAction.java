@@ -21,14 +21,18 @@ package org.netbeans.modules.maven.actions;
 
 import java.awt.event.ActionEvent;
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import static org.netbeans.modules.maven.actions.Bundle.*;
-import org.netbeans.modules.maven.api.NbMavenProject;
+import org.netbeans.modules.project.dependency.ProjectReload;
+import org.netbeans.modules.project.dependency.ProjectReload.ProjectState;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
+import org.openide.awt.StatusDisplayer;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -37,7 +41,7 @@ import org.openide.util.NbBundle.Messages;
 @ActionID(id = "org.netbeans.modules.maven.refresh", category = "Project")
 @ActionRegistration(displayName = "#ACT_Reload_Project", lazy=false)
 @ActionReference(position = 1700, path = "Projects/org-netbeans-modules-maven/Actions")
-@Messages("ACT_Reload_Project=Reload POM")
+@Messages("ACT_Reload_Project=Reload Project")
 public class RefreshAction extends AbstractAction implements ContextAwareAction {
 
     private final Lookup context;
@@ -59,11 +63,18 @@ public class RefreshAction extends AbstractAction implements ContextAwareAction 
     @Override public void actionPerformed(ActionEvent event) {
         // #166919 - need to run in RP to prevent RPing later in fireProjectReload()
         //since #227101 fireMavenProjectReload() always posts to the RP... 
-                //#211217 in 3.x should not be necessary.. 
-                //EmbedderFactory.resetCachedEmbedders();
-                for (NbMavenProjectImpl prj : context.lookupAll(NbMavenProjectImpl.class)) {
-                    NbMavenProject.fireMavenProjectReload(prj);
+        for (NbMavenProjectImpl prj : context.lookupAll(NbMavenProjectImpl.class)) {
+            CompletableFuture<ProjectState> f = ProjectReload.withProjectState(prj, 
+                    ProjectReload.StateRequest.reload().saveModifications().toQuality(ProjectReload.Quality.SIMPLE));
+            f.whenComplete((s, err) -> {
+                if (err instanceof CompletionException) {
+                    err = err.getCause();
                 }
+                if (err != null) {
+                    StatusDisplayer.getDefault().setStatusText(err.getMessage());
+                }
+            });
+        }
     }
 
     @Override public Action createContextAwareInstance(Lookup actionContext) {

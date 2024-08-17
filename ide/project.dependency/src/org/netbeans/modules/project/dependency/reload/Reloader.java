@@ -556,6 +556,11 @@ public final class Reloader {
     }
 
     private CompletableFuture<ProjectReload.ProjectState> loadStepDone(ProjectStateData<?> state, LoadContextImpl fd, Throwable t) {
+        loadStepDone1(state, fd, t);
+        return processOne();
+    }
+
+    private void loadStepDone1(ProjectStateData<?> state, LoadContextImpl fd, Throwable t) {
         // record the returned data for subsequent rounds:
         if (t != null) {
             fd.reloadError = t;
@@ -571,7 +576,6 @@ public final class Reloader {
         LOG.log(Level.FINE, "{0} {1} loaded {2} with load-private data {3}", new Object[]{this, fd.impl, state, fd.contextData});
         currentStage = null;
         currentStageContext = null;
-        return processOne();
     }
 
     /**
@@ -656,6 +660,7 @@ public final class Reloader {
                 LOG.log(Level.FINE, "{0}: {1} rejected by {2}", new Object[]{this, d.loadedData, d.impl});
                 break;
             }
+            loadStepDone1(d.loadedData, d, null);
         }
         final LoadContextImpl fd = d;
         try {

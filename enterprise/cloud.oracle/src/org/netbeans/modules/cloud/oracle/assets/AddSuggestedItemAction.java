@@ -31,7 +31,6 @@ import org.netbeans.modules.cloud.oracle.steps.DatabaseConnectionStep;
 import org.netbeans.modules.cloud.oracle.steps.TenancyStep;
 import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import org.netbeans.modules.cloud.oracle.steps.ItemCreationDecisionStep;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Lookup;
@@ -85,18 +84,12 @@ public class AddSuggestedItemAction implements ActionListener {
         }
         Steps.NextStepProvider nsProvider = Steps.NextStepProvider.builder()
                 .stepForClass(TenancyStep.class, (s) -> new CompartmentStep())
-                .stepForClass(CompartmentStep.class, (s) -> new ItemCreationDecisionStep(context.getPath()))
-                .stepForClass(ItemCreationDecisionStep.class, (s) -> {
-                    if (ItemCreationDecisionStep.CREATE_NEW_OPTION.equals(s.getValue())) {
-                        return null;
-                    }
-                    return new SuggestedStep(context.getPath());
-                })
+                .stepForClass(CompartmentStep.class, (s) -> new SuggestedStep(context.getPath()))
                 .build();
         Lookup lookup = Lookups.fixed(nsProvider);
         Steps.getDefault().executeMultistep(new TenancyStep(), lookup)
                 .thenAccept(values -> {
-                    if (ItemCreationDecisionStep.CREATE_NEW_OPTION.equals(values.getValueForStep(ItemCreationDecisionStep.class))) { //NOI18N
+                    if (values.getValueForStep(SuggestedStep.class) instanceof CreateNewResourceItem) {
                         OCIItemCreator creator = OCIItemCreator.getCreator(context.getPath());
                         if (creator != null) {
                             CompletableFuture<Map<String, Object>> vals = creator.steps();

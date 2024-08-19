@@ -19,6 +19,7 @@
 package org.netbeans.modules.cloud.oracle.steps;
 
 import com.oracle.bmc.model.BmcException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.cloud.oracle.assets.AbstractStep;
+import org.netbeans.modules.cloud.oracle.assets.CreateNewResourceItem;
 import org.netbeans.modules.cloud.oracle.assets.Steps;
 import org.netbeans.modules.cloud.oracle.assets.Steps.Values;
 import org.netbeans.modules.cloud.oracle.bucket.BucketNode;
@@ -124,7 +126,7 @@ public class SuggestedStep extends AbstractStep<OCIItem> {
      * @return  List of items found
      */
     protected static List<? extends OCIItem> getItemsByPath(CompartmentItem parent, String path) {
-        Map<String, OCIItem> items = new HashMap<>();
+        List<OCIItem> items = new ArrayList<>();
         try {
             switch (path) {
                 case "Databases": //NOI18N
@@ -138,7 +140,9 @@ public class SuggestedStep extends AbstractStep<OCIItem> {
                 case "ComputeInstance": //NOI18N
                     return ComputeInstanceNode.getComputeInstances().apply(parent);
                 case "ContainerRepository": //NOI18N
-                    return ContainerRepositoryNode.getContainerRepositories().apply(parent);
+                    items.add(new CreateNewResourceItem());
+                    items.addAll(ContainerRepositoryNode.getContainerRepositories().apply(parent));
+                    return items;
                 default:
                     return Collections.emptyList();
             }

@@ -57,6 +57,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
     private String tooltipText = ""; // NOI18N
     private FileObject goToFile;
     private int goToOffset = 0;
+    public static final String FILE_TITLE = "Blade Template File";
 
     public enum DeclarationType {
         VIEW_PATH;
@@ -134,7 +135,8 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
                         for (FileObject includedFile : includedFiles) {
                             goToFile = includedFile;
-                            tooltipText = "Blade Template File : <b>" + viewPath // NOI18N
+                            tooltipText = FILE_TITLE 
+                                    + " : <b>" + viewPath // NOI18N
                                     + "</b><br><br><i style='margin-left:20px;'>" + identifiableText + "</i>"; // NOI18N
                             goToOffset = 0;
                             break;

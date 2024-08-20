@@ -46,7 +46,7 @@ public final class BladeProjectProperties {
 
     private DefaultListModel<String> directiveCustomizerPathList = new DefaultListModel();
     private DefaultListModel<String> viewsPathList = new DefaultListModel();
-    // declaration finder outside of framework plugin
+    // enable declaration finder outside of framework plugin
     private final AtomicBoolean nonLaravelDeclFinder = new AtomicBoolean(false);
 
     private BladeProjectProperties(Project project) {
@@ -67,8 +67,10 @@ public final class BladeProjectProperties {
     }
 
     public static void closeProject(Project project) {
-        if (INSTANCES.containsKey(project)) {
-            INSTANCES.remove(project);
+        synchronized (INSTANCES) {
+            if (INSTANCES.containsKey(project)) {
+                INSTANCES.remove(project);
+            }
         }
     }
 

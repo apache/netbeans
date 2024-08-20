@@ -213,8 +213,10 @@ public class AddADBAction implements ActionListener {
                             (String) result.get(USERNAME),
                             ((String) result.get(PASSWORD)).toCharArray(),
                             selectedDatabase);
-                    action.addConnection(info);
-                    future.complete(selectedDatabase);
+                    RP.post(() -> {
+                        action.addConnection(info);
+                        future.complete(selectedDatabase);
+                    });
                 } catch (IOException ex) {
                     future.completeExceptionally(exception);
                 }

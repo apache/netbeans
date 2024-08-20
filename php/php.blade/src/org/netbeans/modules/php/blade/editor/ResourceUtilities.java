@@ -35,7 +35,6 @@ public final class ResourceUtilities {
     public static final String LAYOUT_IDENTIFIER = ICON_BASE + "icons/layout.png"; //NOI18N
     public static final String COMPONENT_TAG = "org/netbeans/modules/html/custom/resources/custom_html_element.png"; //NOI18N
     
-    
     private ResourceUtilities() {
         
     }

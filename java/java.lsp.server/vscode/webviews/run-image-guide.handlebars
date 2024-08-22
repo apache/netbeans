@@ -128,9 +128,20 @@ under the License.
                             <li>Verify Docker installation with: <span class="propertyValue">docker --version</span></li>
                             {{#if isRepositoryPrivate}}
                             <li>Authenticate Docker client with a Docker registry: <span class="propertyValue">docker login {{ registryUrl }}</span></li>
+                            <li>When prompted for <b>Username</b> enter the name of the user you will be using in the format: <span class="propertyValue">&lt;tenancy-namespace&gt;/&lt;username&gt;</span></li>
+                            <li>When prompted for <b>Password</b> enter the user's Oracle Cloud Infrastructure auth token</li>
                             {{/if}}
                         </ul>
                     </div>
+
+                    <div class="subtitle">
+                        <p>References:
+                            <a href="https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/accessinginstance.htm" title="Connecting to an Compute Instance">Connecting to an Compute Instance</a>,
+                            <a href="https://docs.oracle.com/en-us/iaas/Content/Network/Concepts/securitylists.htm" title="Security lists">Security lists</a>,
+                            <a href="https://docs.oracle.com/en-us/iaas/Content/Functions/Tasks/functionslogintoocir.htm" title="Logging in to Oracle Cloud Infrastructure Registry">Logging in to Oracle Cloud Infrastructure Registry</a>
+                        </p>
+                    </div>
+
                 </div>
                 <div class="footer">
                     <p class="guideControl">

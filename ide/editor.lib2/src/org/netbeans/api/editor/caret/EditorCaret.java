@@ -1119,8 +1119,13 @@ public final class EditorCaret implements Caret {
                                 break;
 
                             case THIN_LINE_CARET:
-                                int upperX = caretBounds.x;
-                                g.drawLine((int) upperX, caretBounds.y, caretBounds.x, (caretBounds.y + caretBounds.height - 1));
+                                /* "For horizontal or vertical 1-pixel wide line fills, it is generally better to use fillRect
+                                rather than drawLine. The rounding of the drawLine method moves lines by half a device pixel."
+                                The latter has become relevant now that Graphics2D instances may include a HiDPI/Retina scaling
+                                transform. Being off by 0.5 pixel can sometimes cause the caret to leave "droppings", if it is
+                                painted outside the repaint rectangle.
+                                https://web.archive.org/web/20070223151745/http://java.sun.com/products/java-media/2D/reference/faqs/index.html */
+                                g.fillRect(caretBounds.x, caretBounds.y, 1, caretBounds.height - 1);
                                 painted = true;
                                 break;
 

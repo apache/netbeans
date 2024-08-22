@@ -19,7 +19,21 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="ide/extexecution.process.jdk9">
-    <description>Builds, tests, and runs the project org.netbeans.modules.extexecution.process.jdk9</description>
-    <import file="../../nbbuild/templates/projectized.xml"/>
-</project>
+
+<!DOCTYPE transformations PUBLIC "-//NetBeans//DTD Module Automatic Dependencies 1.0//EN" "http://www.netbeans.org/dtds/module-auto-deps-1_0.dtd">
+
+<transformations version="1.0">
+    <transformationgroup>
+        <description>Merged o.n.m.extexecution.process.jdk9 into o.n.m.extexecution.process</description>
+        <transformation>
+            <trigger-dependency type="cancel">
+                <module-dependency codenamebase="org.netbeans.modules.extexecution.process.jdk9"/>
+            </trigger-dependency>
+            <implies>
+                <result>
+                    <module-dependency codenamebase="org.netbeans.modules.extexecution.process" spec="1.54"/>
+                </result>
+            </implies>
+        </transformation>
+    </transformationgroup>
+</transformations>

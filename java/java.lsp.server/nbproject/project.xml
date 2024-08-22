@@ -757,10 +757,6 @@
                         <recursive/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.extexecution.process.jdk9</code-name-base>
-                        <recursive/>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.netbeans.modules.java.hints.declarative</code-name-base>
                         <compile-dependency/>
                     </test-dependency>

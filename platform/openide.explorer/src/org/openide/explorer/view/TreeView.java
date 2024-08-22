@@ -74,6 +74,7 @@ import javax.accessibility.AccessibleContext;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
@@ -306,6 +307,10 @@ public abstract class TreeView extends JScrollPane {
         defaultActionListener = new PopupSupport();
         getInputMap( JTree.WHEN_FOCUSED ).put( 
                 KeyStroke.getKeyStroke( KeyEvent.VK_F10, KeyEvent.SHIFT_DOWN_MASK ), "org.openide.actions.PopupAction" );
+        if (Utilities.isMac()) {
+            // On Windows, this shortcut is already present in JTree's InputMap.
+            tree.getInputMap( JTree.WHEN_FOCUSED ).put(Utilities.stringToKey("F2"), "startEditing");
+        }
         getActionMap().put("org.openide.actions.PopupAction", defaultActionListener.popup);
         tree.addFocusListener(defaultActionListener);
         tree.addMouseListener(defaultActionListener);

@@ -212,7 +212,14 @@ public final class SourceCache {
     ) throws ParseException {
         assert TaskProcessor.holdsParserLock();
         Parser _parser = getParser ();
-        if (_parser == null) return null;
+        if (_parser == null) {
+            final Snapshot _snapshot = getSnapshot();
+            return snapshot != null ? new Result(_snapshot) {
+                @Override
+                protected void invalidate() {
+                }
+            } : null;
+        }
         boolean _parsed;
         synchronized (TaskProcessor.INTERNAL_LOCK) {
             _parsed = this.parsed;

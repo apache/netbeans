@@ -244,4 +244,4 @@
 <!-- deprecated not linked-->
 <!-- replacefilter token="@org-openide-compat@" value="${javadoc.docs.org-openide-compat}"/ -->
 <!-- replacefilter token="@org-openide-options@" value="${javadoc.docs.org-openide-options}"/ -->
-<!-- unsorted filter -->
+<!-- unsorted filter --><replacefilter token="@org-netbeans-modules-project-dependency@" value="${javadoc.docs.org-netbeans-modules-project-dependency}"/>

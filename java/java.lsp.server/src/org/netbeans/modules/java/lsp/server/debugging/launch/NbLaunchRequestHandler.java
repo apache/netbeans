@@ -187,11 +187,14 @@ public final class NbLaunchRequestHandler {
         }
 
         if (!isNative) {
-            if (StringUtils.isBlank((String)launchArguments.get("vmArgs"))) {
+            List<String> vmArgList = NbLaunchDelegate.argsToStringList(launchArguments.get("vmArgs"));
+            if (vmArgList.isEmpty()) {
                 launchArguments.put("vmArgs", String.format("-Dfile.encoding=%s", context.getDebuggeeEncoding().name()));
             } else {
+                vmArgList = new ArrayList<>(vmArgList);
+                vmArgList.add(String.format("-Dfile.encoding=%s", context.getDebuggeeEncoding().name()));
                 // if vmArgs already has the file.encoding settings, duplicate options for jvm will not cause an error, the right most value wins
-                launchArguments.put("vmArgs", String.format("%s -Dfile.encoding=%s", launchArguments.get("vmArgs"), context.getDebuggeeEncoding().name()));
+                launchArguments.put("vmArgs", vmArgList);
             }
         }
         context.setDebugMode(!noDebug);

@@ -468,19 +468,18 @@ public abstract class NbLaunchDelegate {
     }
 
     @NonNull
-    private static List<String> argsToStringList(Object o) {
+    static List<String> argsToStringList(Object o) {
         if (o == null) {
             return Collections.emptyList();
         }
         if (o instanceof List) {
             for (Object item : (List)o) {
-                if (!(o instanceof String)) {
+                if (!(item instanceof String)) {
                     throw new IllegalArgumentException("Only string parameters expected");
                 }
             }
             return (List<String>)o;
         } else if (o instanceof String) {
-            List<String> res = new ArrayList<>();
             return Arrays.asList(BaseUtilities.parseParameters(o.toString()));
         } else {
             throw new IllegalArgumentException("Expected String or String list");

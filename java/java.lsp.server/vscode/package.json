@@ -322,8 +322,13 @@
 							"vmArgs": {
 								"type": [
 									"string",
+									"array",
 									"null"
 								],
+								"items": {
+									"type": "string",
+									"description": "Single argument to the VM"
+								},
 								"description": "Arguments for the Java VM",
 								"default": null
 							},
@@ -618,7 +623,7 @@
 			{
 				"command": "nbls.project.buildPushImage",
 				"title": "Build and Push container image",
-                                "icon": "$(live-share)"
+				"icon": "$(live-share)"
 			},
 			{
 				"command": "cloud.assets.policy.create",
@@ -1082,7 +1087,7 @@
 					"when": "viewItem =~ /publicIp:.*/ && viewItem =~ /imageUrl:.*/",
 					"group": "inline@10"
 				},
-                                {
+				{
 					"command": "nbls.project.buildPushImage",
 					"when": "viewItem =~ /class:oracle.developer.ContainerRepositoryItem/",
 					"group": "inline@9"

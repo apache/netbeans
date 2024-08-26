@@ -1278,6 +1278,21 @@ public final class TreeMaker {
     }
     
     /**
+     * Creates a new VariableTree for a record component.
+     *
+     * @param modifiers the modifiers of this record component.
+     * @param name the name of the record component.
+     * @param type the type of this record component.
+     * @see com.sun.source.tree.VariableTree
+     * @since 2.70
+     */
+    public VariableTree RecordComponent(ModifiersTree modifiers,
+                          CharSequence name,
+                          Tree type) {
+        return delegate.RecordComponent(modifiers, name, type);
+    }
+
+    /**
      * Creates a new BindingPatternTree.
      * @deprecated
      * @param name name of the binding variable

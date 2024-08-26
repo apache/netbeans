@@ -235,7 +235,7 @@ public final class ElementHandle<T extends Element> {
             }
             case PARAMETER:
             {
-                assert signatures.length == 3;
+                assert signatures.length == 4;
                 final Element type = getTypeElementByBinaryName (module, signatures[0], jt);
                 if (type instanceof TypeElement) {
                     final List<? extends Element> members = type.getEnclosedElements();
@@ -526,7 +526,12 @@ public final class ElementHandle<T extends Element> {
                 ElementKind eek = ee.getKind();
                 if (eek == ElementKind.METHOD || eek == ElementKind.CONSTRUCTOR) {
                     assert ee instanceof ExecutableElement;
-                    String[] _sigs = ClassFileUtil.createExecutableDescriptor((ExecutableElement)ee);
+                    ExecutableElement eel = (ExecutableElement)ee;
+                    if (!eel.getParameters().contains(element)) {
+                        //may be e.g. a lambda parameter:
+                        throw new IllegalArgumentException("Not a parameter for a method or a constructor.");
+                    }
+                    String[] _sigs = ClassFileUtil.createExecutableDescriptor(eel);
                     signatures = new String[_sigs.length + 1];
                     System.arraycopy(_sigs, 0, signatures, 0, _sigs.length);
                     signatures[_sigs.length] = element.getSimpleName().toString();

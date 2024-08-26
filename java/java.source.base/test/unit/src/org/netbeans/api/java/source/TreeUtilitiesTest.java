@@ -18,6 +18,7 @@
  */
 package org.netbeans.api.java.source;
 
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
@@ -53,6 +54,7 @@ import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.Comment.Style;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.TestUtilities.TestInput;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -144,6 +146,54 @@ public class TreeUtilitiesTest extends NbTestCase {
         assertTrue(info.getTreeUtilities().isSynthetic(new TreePath(new TreePath(tp, nct.getClassBody()), nct.getClassBody().getExtendsClause())));
         assertFalse(info.getTreeUtilities().isSynthetic(new TreePath(new TreePath(tp, nct.getClassBody()), nct.getClassBody().getMembers().get(1))));
         assertFalse(info.getTreeUtilities().isSynthetic(new TreePath(tp, nct.getIdentifier())));
+    }
+
+    public void testIsSyntheticCompactConstructorParams() throws Exception {
+        TestInput input = TestUtilities.splitCodeAndPos("""
+                                                        package t;
+                                                        public record R(String component) {
+                                                            public R| {
+                                                            }
+                                                        }
+                                                        """);
+        prepareTest("Test", input.code());
+
+        TreePath tp = info.getTreeUtilities().pathFor(input.pos());
+        MethodTree mt = (MethodTree) tp.getLeaf();
+
+        assertTrue(info.getTreeUtilities().isSynthetic(new TreePath(tp, mt.getParameters().get(0))));
+    }
+
+    public void testIsNotSyntheticExplicitConstructorParams() throws Exception {
+        TestInput input = TestUtilities.splitCodeAndPos("""
+                                                        package t;
+                                                        public record R(String component) {
+                                                            public R|(String component) {
+                                                            }
+                                                        }
+                                                        """);
+        prepareTest("Test", input.code());
+
+        TreePath tp = info.getTreeUtilities().pathFor(input.pos());
+        MethodTree mt = (MethodTree) tp.getLeaf();
+
+        assertFalse(info.getTreeUtilities().isSynthetic(new TreePath(tp, mt.getParameters().get(0))));
+    }
+
+    public void testIsNotSyntheticImplicitValueAttributeAssignment() throws Exception {
+        TestInput input = TestUtilities.splitCodeAndPos("""
+                                                        package t;
+                                                        @An|n(1)
+                                                        public @interface Ann {
+                                                            public int value();
+                                                        }
+                                                        """);
+        prepareTest("Test", input.code());
+
+        TreePath tp = info.getTreeUtilities().pathFor(input.pos());
+        AnnotationTree at = (AnnotationTree) tp.getParentPath().getLeaf();
+
+        assertFalse(info.getTreeUtilities().isSynthetic(new TreePath(tp, at.getArguments().get(0))));
     }
 
     public void testIsSyntheticNewClassImplements() throws Exception {

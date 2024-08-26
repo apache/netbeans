@@ -19,14 +19,14 @@
 package org.netbeans.modules.maven.refactoring.dependency;
 
 import java.util.Collections;
-import java.util.Optional;
-import static junit.framework.TestCase.assertNotNull;
 import org.apache.maven.project.MavenProject;
+import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.Dependency;
 import org.netbeans.modules.project.dependency.DependencyChange;
+import org.netbeans.modules.project.dependency.DependencyChangeException;
 import org.netbeans.modules.project.dependency.DependencyChangeRequest;
 import org.netbeans.modules.project.dependency.DependencyResult;
 import org.netbeans.modules.project.dependency.ProjectDependencies;
@@ -37,81 +37,79 @@ import org.netbeans.modules.project.dependency.Scopes;
  *
  * @author sdedic
  */
-public class MavenDependencyModifierImplTest extends MavenDependencyModifierImplTestBase {
+public class MavenDependencyModifierImplTest2 extends MavenDependencyModifierImplTestBase {
 
-    public MavenDependencyModifierImplTest(String name) {
+    public MavenDependencyModifierImplTest2(String name) {
         super(name);
     }
     
-    public void testSimpleAdd() throws Exception {
-        makeProject("simpleProject", null);
-        
-        DependencyResult res = ProjectDependencies.findDependencies(project, ProjectDependencies.newQuery(Scopes.DECLARED));
-        assertNotNull(res);
+    /**
+     * Must run as a module suite, since Maven Indexer includes Lucene 9.x, while Parsing API 
+     * transitively depends on Lucene 3.x. Module system isolates the incompatible libraries from each other.
+     * Bad day.
+     */
+    public static junit.framework.Test suite() {
+        return NbModuleSuite.createConfiguration(MavenDependencyModifierImplTest2.class).
+            gui(false).
+            enableModules("org.netbeans.modules.maven.refactoring").
+            honorAutoloadEager(true).
+            suite();
+    }
 
-        ArtifactSpec art = ArtifactSpec.make("io.micronaut", "micronaut-router", "4.1.12");
-        Dependency toAdd = Dependency.make(art, Scopes.COMPILE);
+    public void testAddAnnotationProcessor() throws Exception {
+        makeProject("simpleProject", null);
+        ArtifactSpec art = ArtifactSpec.make("io.micronaut.data", "micronaut-data-processor");
+        Dependency toAdd = Dependency.make(art, Scopes.PROCESS);
         DependencyChange change = DependencyChange.builder(DependencyChange.Kind.ADD).
                 dependency(toAdd).
                 create();
+        
         ProjectModificationResult mod = ProjectDependencies.modifyDependencies(project, new DependencyChangeRequest(Collections.singletonList(change)));
         mod.commit();
         
         NbMavenProjectImpl impl = project.getLookup().lookup(NbMavenProjectImpl.class);
         impl.fireProjectReload().waitFinished();
-        
         NbMavenProject mp = project.getLookup().lookup(NbMavenProject.class);
         MavenProject p = mp.getMavenProject();
-        Optional<org.apache.maven.model.Dependency> opt = p.getDependencies().stream().filter(d -> "micronaut-router".equals(d.getArtifactId())).findAny();
-        assertTrue(opt.isPresent());
-        
-        org.apache.maven.model.Dependency d = opt.get();
-        assertEquals("compile", d.getScope());
     }
     
-    public void testAddRuntime() throws Exception {
-        makeProject("simpleProject", null);
-        ArtifactSpec art = ArtifactSpec.make("io.micronaut", "micronaut-router", "4.1.12");
-        Dependency toAdd = Dependency.make(art, Scopes.RUNTIME);
+    public void testAddAnnotationProcessorToExistingConfig() throws Exception {
+        makeProject("simpleProject", "pom-with-processor.xml");
+        ArtifactSpec art = ArtifactSpec.make("io.micronaut.data", "micronaut-data-processor", "4.50");
+        Dependency toAdd = Dependency.make(art, Scopes.PROCESS);
         DependencyChange change = DependencyChange.builder(DependencyChange.Kind.ADD).
                 dependency(toAdd).
                 create();
+        
         ProjectModificationResult mod = ProjectDependencies.modifyDependencies(project, new DependencyChangeRequest(Collections.singletonList(change)));
         mod.commit();
         
         NbMavenProjectImpl impl = project.getLookup().lookup(NbMavenProjectImpl.class);
         impl.fireProjectReload().waitFinished();
-        
         NbMavenProject mp = project.getLookup().lookup(NbMavenProject.class);
         MavenProject p = mp.getMavenProject();
-        Optional<org.apache.maven.model.Dependency> opt = p.getDependencies().stream().filter(d -> "micronaut-router".equals(d.getArtifactId())).findAny();
-        org.apache.maven.model.Dependency d = opt.get();
-        assertEquals("runtime", d.getScope());
+        DependencyResult res = ProjectDependencies.findDependencies(project, ProjectDependencies.newQuery(Scopes.PROCESS));
+        
+        Dependency dep = res.getRoot().getChildren().stream().filter(d -> d.getArtifact().getArtifactId().equals("micronaut-data-processor")).findAny().orElse(null);
+        assertNotNull(dep);
     }
-    
-    public void testAddMultiple() throws Exception {
-        makeProject("simpleProject", null);
-        ArtifactSpec art = ArtifactSpec.make("io.micronaut", "micronaut-router", "4.1.12");
-        ArtifactSpec art2 = ArtifactSpec.make("io.micronaut", "micronaut-websocket", "4.1.12");
-        Dependency toAdd = Dependency.make(art, Scopes.RUNTIME);
-        Dependency toAdd2 = Dependency.make(art2, Scopes.RUNTIME);
-        DependencyChange change = DependencyChange.builder(DependencyChange.Kind.ADD).
-                dependency(toAdd, toAdd2).
-                create();
 
-        ProjectModificationResult mod = ProjectDependencies.modifyDependencies(project, new DependencyChangeRequest(Collections.singletonList(change)));
-        mod.commit();
+    public void testAddAnnotationProcessorAlreadyExists() throws Exception {
+        makeProject("simpleProject", "pom-with-processor.xml");
+        ArtifactSpec art = ArtifactSpec.make("nbtest.grp", "test-processor");
+        Dependency toAdd = Dependency.make(art, Scopes.PROCESS);
+        DependencyChange change = DependencyChange.builder(DependencyChange.Kind.ADD).
+                dependency(toAdd).
+                create();
         
-        NbMavenProjectImpl impl = project.getLookup().lookup(NbMavenProjectImpl.class);
-        impl.fireProjectReload().waitFinished();
-        
-        NbMavenProject mp = project.getLookup().lookup(NbMavenProject.class);
-        MavenProject p = mp.getMavenProject();
-        Optional<org.apache.maven.model.Dependency> opt = p.getDependencies().stream().filter(d -> "micronaut-router".equals(d.getArtifactId())).findAny();
-        Optional<org.apache.maven.model.Dependency> opt2 = p.getDependencies().stream().filter(d -> "micronaut-websocket".equals(d.getArtifactId())).findAny();
-        org.apache.maven.model.Dependency d = opt.get();
-        org.apache.maven.model.Dependency d2 = opt2.get();
-        assertEquals("runtime", d.getScope());
-        assertEquals("runtime", d2.getScope());
+        try {
+            ProjectModificationResult mod = ProjectDependencies.modifyDependencies(project, new DependencyChangeRequest(Collections.singletonList(change)));
+            fail("Should have failed");
+        } catch (DependencyChangeException ex) {
+            assertSame(DependencyChangeException.Reason.CONFLICT, ex.getReason());
+            Dependency conflict = ex.getConflictSource(toAdd);
+            assertNotNull(conflict);
+            assertEquals("12.6", conflict.getArtifact().getVersionSpec());
+        }
     }
 }

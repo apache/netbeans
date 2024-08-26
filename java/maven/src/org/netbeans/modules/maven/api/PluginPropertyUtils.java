@@ -30,6 +30,7 @@ import java.util.Properties;
 import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.InvalidArtifactRTException;
 import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
@@ -802,16 +803,29 @@ public class PluginPropertyUtils {
             // BEGIN:copied from maven-compiler-plugin + adapted
             Artifact artifact;
             try {
-                artifact = new DefaultArtifact(
-                     coord.getGroupId(),
-                     coord.getArtifactId(),
-                     VersionRange.createFromVersionSpec( coord.getVersion() ),
-                     coord.getScope() == null ? query.getDefaultScope() : coord.getScope(),
-                     coord.getType(),
-                     coord.getClassifier(),
-                     handler,
-                     false );
-            } catch (InvalidVersionSpecificationException ex) {
+                VersionRange rng = VersionRange.createFromVersionSpec( coord.getVersion() );
+                if (rng != null) {
+                    artifact = new DefaultArtifact(
+                         coord.getGroupId(),
+                         coord.getArtifactId(),
+                         VersionRange.createFromVersionSpec( coord.getVersion() ),
+                         coord.getScope() == null ? query.getDefaultScope() : coord.getScope(),
+                         coord.getType(),
+                         coord.getClassifier(),
+                         handler,
+                         false );
+                } else {
+                    artifact = new DefaultArtifact(
+                         coord.getGroupId(),
+                         coord.getArtifactId(),
+                         "",
+                         coord.getScope() == null ? query.getDefaultScope() : coord.getScope(),
+                         coord.getType(),
+                         coord.getClassifier(),
+                         handler
+                    );
+                }
+            } catch (InvalidVersionSpecificationException | InvalidArtifactRTException ex) {
                 errorsOpt.add(new ArtifactResolutionException(ex.getMessage(), 
                         coord.getGroupId(), coord.getArtifactId(), coord.getVersion(), 
                         coord.getType(), coord.getClassifier(), ex));
@@ -820,21 +834,23 @@ public class PluginPropertyUtils {
 
             requiredArtifacts.add( artifact );
 
-            ArtifactResolutionRequest request = new ArtifactResolutionRequest()
-                            .setArtifact( requiredArtifacts.iterator().next() )
-                            .setResolveRoot(true)
-                            .setResolveTransitively(true)
-                            .setArtifactDependencies(requiredArtifacts)
-                            .setLocalRepository(projectImpl.getEmbedder().getLocalRepository())
-                            .setRemoteRepositories( mavenProject.getRemoteArtifactRepositories() );
+            if (transitiveDependencies) {
+                ArtifactResolutionRequest request = new ArtifactResolutionRequest()
+                                .setArtifact( requiredArtifacts.iterator().next() )
+                                .setResolveRoot(true)
+                                .setResolveTransitively(true)
+                                .setArtifactDependencies(requiredArtifacts)
+                                .setLocalRepository(projectImpl.getEmbedder().getLocalRepository())
+                                .setRemoteRepositories( mavenProject.getRemoteArtifactRepositories() );
 
-            ArtifactResolutionResult resolutionResult = repos.resolve(request);
-            // END:copied from maven-compiler-plugin + adapted
-            if (errorsOpt != null) {
-                errorsOpt.addAll(resolutionResult.getMetadataResolutionExceptions());
-                errorsOpt.addAll(resolutionResult.getErrorArtifactExceptions());
+                ArtifactResolutionResult resolutionResult = repos.resolve(request);
+                // END:copied from maven-compiler-plugin + adapted
+                if (errorsOpt != null) {
+                    errorsOpt.addAll(resolutionResult.getMetadataResolutionExceptions());
+                    errorsOpt.addAll(resolutionResult.getErrorArtifactExceptions());
+                }
+                requiredArtifacts.addAll(resolutionResult.getArtifacts());
             }
-            requiredArtifacts.addAll(resolutionResult.getArtifacts());
         }
         return new ArrayList<>(requiredArtifacts);
     }

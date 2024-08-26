@@ -397,4 +397,16 @@ public class DependencyModifierImplTest extends NbTestCase {
         // dependency is NOT listed for compile
         assertContainsDependency(false, Scopes.COMPILE, art);
     }
+    
+    public void testAddAnnotationProcessor() throws Exception {
+        makeProject("projects/micronaut", "build2.gradle");
+        ArtifactSpec art = ArtifactSpec.make("io.micronaut.data", "micronaut-data-processor");
+        Dependency toAdd = Dependency.make(art, Scopes.PROCESS);
+        DependencyChange change = DependencyChange.builder(DependencyChange.Kind.ADD).
+                dependency(toAdd).
+                create();
+        executeChangeAndWait(change);
+        // dependency is listed for runtime
+        assertContainsDependency(true, Scopes.PROCESS, art);
+    }
 }

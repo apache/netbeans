@@ -81,10 +81,14 @@ public class MicronautSymbolSearcher implements IndexSearcher {
         if (textForQuery.equals("@/")) {
             RequestProcessor.getDefault().post(() -> {
                 try {
+                    Diagnostic.ReporterControl control = Diagnostic.findReporterControl(Lookup.getDefault(), project.getProjectDirectory());
                     Set<FileObject> duplicates = getSymbolsWithPathDuplicates(project, null).stream().map(descriptor -> descriptor.getFileObject()).collect(Collectors.toSet());
                     if (!duplicates.isEmpty()) {
-                        Diagnostic.ReporterControl control = Diagnostic.findReporterControl(Lookup.getDefault(), project.getProjectDirectory());
                         control.diagnosticChanged(duplicates, "text/x-java");
+                    }
+                    Set<FileObject> errs = getResourcesWithErrors(project);
+                    if (!errs.isEmpty()) {
+                        control.diagnosticChanged(errs, null);
                     }
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
@@ -123,6 +127,35 @@ public class MicronautSymbolSearcher implements IndexSearcher {
             }, true);
         }
         return duplicates;
+    }
+
+    private static Set<FileObject> getResourcesWithErrors(Project project) {
+        Set<FileObject> files = new HashSet<>();
+        for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES)) {
+            try {
+                FileObject root = sg.getRootFolder();
+                FileObject cacheRoot = getCacheRoot(root.toURL());
+                if (cacheRoot != null) {
+                    cacheRoot.refresh();
+                    Enumeration<? extends FileObject> children = cacheRoot.getChildren(true);
+                    while (children.hasMoreElements()) {
+                        FileObject child = children.nextElement();
+                        if (child.hasExt("err")) { //NOI18N
+                            String path = FileUtil.getRelativePath(cacheRoot, child);
+                            if (path != null) {
+                                FileObject fo = root.getFileObject(path.substring(0, path.length() - 4));
+                                if (fo != null) {
+                                    files.add(fo);
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        return files;
     }
 
     private static Set<SymbolDescriptor> getSymbols(Project project, String textForQuery) {

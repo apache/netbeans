@@ -215,14 +215,20 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
         private final Set<String> problems;
         private final Set<Report> reports;
         private final String gradleException;
+        private final long timestamp;
 
-        public QualifiedProjectInfo(Quality quality, NbProjectInfo pinfo) {
+        public QualifiedProjectInfo(Quality quality, NbProjectInfo pinfo, long timestamp) {
             this.quality = quality;
             info = new TreeMap<>(pinfo.getInfo());
             ext = new TreeMap<>(pinfo.getExt());
             problems = new LinkedHashSet<>(pinfo.getProblems());
             gradleException = pinfo.getGradleException();
             reports = makeReports(pinfo.getReports());
+            this.timestamp = timestamp;
+        }
+
+        public long getTimestamp() {
+            return timestamp;
         }
 
         @Override

@@ -57,7 +57,7 @@ public class DiskCacheProjectLoader extends AbstractProjectLoader {
 
     @Override
     boolean isEnabled() {
-        return ctx.aim.betterThan(FALLBACK) && !GradleExperimentalSettings.getDefault().isCacheDisabled();
+        return ctx.getAim().betterThan(FALLBACK) && !GradleExperimentalSettings.getDefault().isCacheDisabled();
     }
 
     @Override

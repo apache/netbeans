@@ -203,6 +203,14 @@ public final class NbMavenProject {
         return MavenProjectCache.isFallbackproject(getMavenProject());
     }
     
+    /**
+     * Returns timestamp of project (metadata) load. Returns negative number,
+     * if the timestamp is not known or project is not loaded.
+     * @return timestamp.
+     */
+    public long getLoadTimestamp() {
+        return project.getLoadTimestamp();
+    }
 
     @Messages({
         "Progress_Download=Downloading Maven dependencies", 

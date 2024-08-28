@@ -18,10 +18,12 @@
  */
 package org.netbeans.modules.java.source.ui;
 
+import com.sun.source.tree.Tree;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
 import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ui.ElementOpen;
 
@@ -42,6 +44,7 @@ public abstract class ElementOpenAccessor {
     }
     
     public abstract Object[] getOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, AtomicBoolean cancel);
+    public abstract void fillInTreePositions(CompilationInfo info, Tree forTree, Object[] target);
     
     public abstract CompletableFuture<Object[]> getOpenInfoFuture(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String nameOpt, AtomicBoolean cancel, boolean acquire);
 

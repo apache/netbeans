@@ -557,32 +557,38 @@ public final class ElementOpen {
                     }
 
                     if (elTree != null) {
-                        result[1] = (int)info.getTrees().getSourcePositions().getStartPosition(cu, elTree);
-                        result[2] = (int)info.getTrees().getSourcePositions().getEndPosition(cu, elTree);
-                        int[] span = null;
-                        switch(elTree.getKind()) {
-                            case CLASS:
-                            case INTERFACE:
-                            case ENUM:
-                            case ANNOTATION_TYPE:
-                                span = info.getTreeUtilities().findNameSpan((ClassTree)elTree);
-                                break;
-                            case METHOD:
-                                span = info.getTreeUtilities().findNameSpan((MethodTree)elTree);
-                                break;
-                            case VARIABLE:
-                                span = info.getTreeUtilities().findNameSpan((VariableTree)elTree);
-                                break;
-                        }
-                        if (span != null) {
-                            result[3] = span[0];
-                            result[4] = span[1];
-                        }
+                        fillInTreePositions(info, elTree, result);
                     }
                 }
             };
 
             js.runUserActionTask(t, true);
+        }
+    }
+
+    static void fillInTreePositions(CompilationInfo info, Tree forTree, Object[] target) {
+        CompilationUnitTree cu = info.getCompilationUnit();
+        target[1] = (int)info.getTrees().getSourcePositions().getStartPosition(cu, forTree);
+        target[2] = (int)info.getTrees().getSourcePositions().getEndPosition(cu, forTree);
+        int[] span = null;
+        switch(forTree.getKind()) {
+            case CLASS:
+            case INTERFACE:
+            case ENUM:
+            case ANNOTATION_TYPE:
+            case RECORD:
+                span = info.getTreeUtilities().findNameSpan((ClassTree)forTree);
+                break;
+            case METHOD:
+                span = info.getTreeUtilities().findNameSpan((MethodTree)forTree);
+                break;
+            case VARIABLE:
+                span = info.getTreeUtilities().findNameSpan((VariableTree)forTree);
+                break;
+        }
+        if (span != null) {
+            target[3] = span[0];
+            target[4] = span[1];
         }
     }
 
@@ -642,6 +648,11 @@ public final class ElementOpen {
             @Override
             public Object[] getOpenInfo(ClasspathInfo cpInfo, ElementHandle<? extends Element> el, AtomicBoolean cancel) {
                 return ElementOpen.getOpenInfo(cpInfo, el, null, cancel);
+            }
+
+            @Override
+            public void fillInTreePositions(CompilationInfo info, Tree forTree, Object[] target) {
+                ElementOpen.fillInTreePositions(info, forTree, target);
             }
 
             @Override

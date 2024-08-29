@@ -242,6 +242,7 @@ import org.netbeans.modules.editor.indent.api.Reformat;
 import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.netbeans.modules.java.lsp.server.ui.AbstractJavaPlatformProviderOverride;
 import org.netbeans.modules.parsing.impl.SourceAccessor;
+import org.netbeans.modules.sampler.Sampler;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.lsp.CallHierarchyProvider;
@@ -344,6 +345,29 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
+        AtomicBoolean done = new AtomicBoolean();
+        AtomicReference<Sampler> samplerRef = new AtomicReference<>();
+        WORKER.post(() -> {
+            if (!done.get()) {
+                for (StackTraceElement[] traces : Thread.getAllStackTraces().values()) {
+                    System.err.println("thread");
+                    for (StackTraceElement el : traces) {
+                        System.err.println(el);
+                    }
+                }
+                Sampler sampler = Sampler.createSampler("completion");
+                if (sampler != null) {
+                    System.err.println("sampler class: " + sampler.getClass());
+                    sampler.start();
+                    samplerRef.set(sampler);
+                    if (done.get()) {
+                        sampler.stop();
+                    }
+                }
+            }
+        }, 1000);
+        long s = System.currentTimeMillis();
+
         lastCompletions = new ArrayList<>();
         AtomicInteger index = new AtomicInteger(0);
         final CompletionList completionList = new CompletionList();
@@ -446,6 +470,16 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         prefs.put("classMemberInsertionPoint", point);
                     } else {
                         prefs.remove("classMemberInsertionPoint");
+                    }
+
+                    done.set(true);
+                    long e = System.currentTimeMillis();
+                    System.err.println("completion took: " + (e - s) + "ms");
+                    Sampler sampler = samplerRef.get();
+                    if (sampler != null) {
+                        new Thread(() -> {
+                            sampler.stop();
+                        }).start();
                     }
                 }
                 completionList.setItems(items);

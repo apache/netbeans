@@ -21,6 +21,9 @@
 -->
 <project basedir="." default="netbeans" name="java/java.lsp.server">
     <description>Builds, tests, and runs the project org.netbeans.modules.java.lsp.server</description>
+    <condition property="cmd.suffix" value=".cmd" else="">
+        <os family="windows"/>
+    </condition>
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="proxy-setup" depends="test-init">
         <taskdef name="autoupdate" classname="org.netbeans.nbbuild.AutoUpdate" classpath="${nbantext.jar}"/>
@@ -77,17 +80,17 @@
         </condition>
         <property name="vsix.version" value="0.1.0"/>
 
-        <exec executable="npm" failonerror="true" dir="vscode">
+        <exec executable="npm${cmd.suffix}" failonerror="true" dir="vscode">
             <arg value="--allow-same-version"/>
             <arg value="version" />
             <arg value="${vsix.version}" />
         </exec>
 
-        <exec executable="npm" failonerror="true" dir="vscode">
+        <exec executable="npm${cmd.suffix}" failonerror="true" dir="vscode">
             <arg value="install" />
         </exec>
 
-        <exec executable="npm" failonerror="true" dir="vscode">
+        <exec executable="npm${cmd.suffix}" failonerror="true" dir="vscode">
             <arg value="run" />
             <arg value="compile" />
         </exec>
@@ -97,7 +100,7 @@
         <copy file="vscode/package.json" todir="${build.dir}/bundles/package" />
         <copy file="vscode/package-lock.json" todir="${build.dir}/bundles/package" />
 
-        <exec executable="mvn" failonerror="true" dir="${nb_all}/nbbuild/misc/prepare-bundles">
+        <exec executable="mvn${cmd.suffix}" failonerror="true" dir="${nb_all}/nbbuild/misc/prepare-bundles">
             <arg value="package" />
             <arg value="exec:java" />
             <arg value="-Dexec.mainClass=org.netbeans.prepare.bundles.PrepareBundles" />
@@ -105,7 +108,7 @@
         </exec>
  
         <mkdir dir="${build.dir}/vsce" />
-        <exec executable="npm" failonerror="true" dir="${build.dir}/vsce">
+        <exec executable="npm${cmd.suffix}" failonerror="true" dir="${build.dir}/vsce">
             <arg value="install" />
             <arg value="--save" />
             <arg value="@vscode/vsce@2.19.0" />
@@ -152,12 +155,12 @@
     </target>
 
     <target name="test-vscode-ext" depends="test-lsp-server" description="Tests the Visual Studio Code extension built by 'build-vscode-ext' target.">
-        <exec executable="npm" failonerror="true" dir="vscode">
+        <exec executable="npm${cmd.suffix}" failonerror="true" dir="vscode">
             <arg value="--allow-same-version"/>
             <arg value="run" />
             <arg value="test" />
         </exec>
-        <exec executable="npm" failonerror="true" dir="vscode">
+        <exec executable="npm${cmd.suffix}" failonerror="true" dir="vscode">
             <arg value="--allow-same-version"/>
             <arg value="run" />
             <arg value="apisupport" />

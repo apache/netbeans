@@ -583,6 +583,18 @@ public class GeneratorUtilitiesTest extends NbTestCase {
         }, false);
     }
 
+    public void testAddImports14() throws Exception {
+        performTest("test/Process.java", "package test;\nimport java.util.Collections;\npublic class Process {\npublic static void main(String... args) {\n" +
+        "Collections.singleton(Process.class).forEach(System.out::println);\n}\n}", "1.5", new AddImportsTask("test.Process"), new Validator() {
+            public void validate(CompilationInfo info) {
+                assertEquals(0, info.getDiagnostics().size());
+                List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
+                assertEquals(1, imports.size());
+                assertEquals("java.util.Collections", imports.get(0).getQualifiedIdentifier().toString());
+            }
+        }, false);
+    }
+
     public void testAddImportsIncrementallyWithStatic_JIRA3019() throws Exception {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performTest("package test;\npublic class Test { public static final String CONST = null; }\n", "11", new AddImportsTask(true, "test.Test.CONST", "java.util.List"), new Validator() {

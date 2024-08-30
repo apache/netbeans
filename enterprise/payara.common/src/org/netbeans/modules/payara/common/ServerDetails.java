@@ -407,7 +407,7 @@ public enum ServerDetails implements PayaraPlatformVersionAPI {
     }
 
     @Override
-    public short getBuild() {
+    public String getBuild() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

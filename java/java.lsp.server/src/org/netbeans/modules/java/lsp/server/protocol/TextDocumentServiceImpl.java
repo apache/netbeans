@@ -32,16 +32,19 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -257,6 +260,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
+import org.openide.modules.Places;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
 import org.openide.util.BaseUtilities;
@@ -343,11 +347,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private final AtomicInteger javadocTimeout = new AtomicInteger(-1);
     private List<Completion> lastCompletions = null;
 
+    private static final RequestProcessor COMPLETION_SAMPLER_WORKER = new RequestProcessor("java-lsp-completion-sampler", 1, false, false);
+
     @Override
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
         AtomicBoolean done = new AtomicBoolean();
         AtomicReference<Sampler> samplerRef = new AtomicReference<>();
-        WORKER.post(() -> {
+        COMPLETION_SAMPLER_WORKER.post(() -> {
             if (!done.get()) {
                 for (StackTraceElement[] traces : Thread.getAllStackTraces().values()) {
                     System.err.println("thread");
@@ -357,7 +363,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
                 Sampler sampler = Sampler.createSampler("completion");
                 if (sampler != null) {
-                    System.err.println("sampler class: " + sampler.getClass());
                     sampler.start();
                     samplerRef.set(sampler);
                     if (done.get()) {
@@ -478,7 +483,17 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     Sampler sampler = samplerRef.get();
                     if (sampler != null) {
                         new Thread(() -> {
-                            sampler.stop();
+                            Path logDir = Places.getUserDirectory().toPath().resolve("var/log");
+                            try {
+                                Path target = Files.createTempFile(logDir, "completion-sampler", ".npss");
+                                try (OutputStream out = Files.newOutputStream(target);
+                                     DataOutputStream dos = new DataOutputStream(out)) {
+                                    sampler.stopAndWriteTo(dos);
+                                    System.err.println("wrote completion sample to: " + target.toAbsolutePath());
+                                }
+                            } catch (IOException ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
                         }).start();
                     }
                 }

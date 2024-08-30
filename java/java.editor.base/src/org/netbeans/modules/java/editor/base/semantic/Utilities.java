@@ -268,16 +268,24 @@ public class Utilities {
         
         if (class2Kind.get(MethodTree.class).contains(leaf.getKind())) {
             MethodTree method = (MethodTree) leaf;
+            TreePath parentPath = decl.getParentPath();
             List<Tree> rightTrees = new ArrayList<Tree>();
 
-            rightTrees.addAll(method.getParameters());
+            boolean ignoreParameters = parentPath.getLeaf().getKind() == Kind.RECORD &&
+                                       !method.getParameters().isEmpty() &&
+                                       info.getTreeUtilities().isSynthetic(new TreePath(decl, method.getParameters().get(0)));
+
+            if (!ignoreParameters) {
+                rightTrees.addAll(method.getParameters());
+            }
+
             rightTrees.addAll(method.getThrows());
             rightTrees.add(method.getBody());
 
             Name name = method.getName();
             
             if (method.getReturnType() == null)
-                name = ((ClassTree) decl.getParentPath().getLeaf()).getSimpleName();
+                name = ((ClassTree) parentPath.getLeaf()).getSimpleName();
             
             return findIdentifierSpanImpl(info, leaf, method.getReturnType(), rightTrees, name.toString(), info.getCompilationUnit(), info.getTrees().getSourcePositions());
         }

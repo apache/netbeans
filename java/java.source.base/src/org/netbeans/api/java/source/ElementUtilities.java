@@ -60,6 +60,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -928,7 +929,143 @@ public final class ElementUtilities {
         }
         return null;
     }
-    
+
+    /**
+     * Find all elements that are linked record elements for the given input. Will
+     * return the record component element, field, accessor method, and canonical constructor
+     * parameters.
+     *
+     * This method can be called on any {@code Element}, and will return a collection
+     * with a single entry if the provided element is not a record element.
+     *
+     * @param forElement for which the linked elements should be found
+     * @return a collection containing the provided element, plus any additional elements
+     *         that are linked to it by the Java record specification
+     * @since 2.70
+     */
+    public Collection<? extends Element> getLinkedRecordElements(Element forElement) {
+        Parameters.notNull("forElement", forElement);
+
+        TypeElement record = null;
+        Name componentName = null;
+
+        switch (forElement.getKind()) {
+            case FIELD -> {
+                Element enclosing = forElement.getEnclosingElement();
+                if (enclosing.getKind() == ElementKind.RECORD) {
+                    record = (TypeElement) enclosing;
+                    componentName = forElement.getSimpleName();
+                }
+            }
+            case PARAMETER -> {
+                Element enclosing = forElement.getEnclosingElement();
+                if (enclosing.getKind() == ElementKind.CONSTRUCTOR) {
+                    Element enclosingType = enclosing.getEnclosingElement();
+                    if (enclosingType.getKind() == ElementKind.RECORD) {
+                        TypeElement recordType = (TypeElement) enclosingType;
+                        ExecutableElement constructor = recordCanonicalConstructor(recordType);
+                        if (constructor != null && constructor.equals(enclosing)) {
+                            int idx = constructor.getParameters().indexOf(forElement);
+                            if (idx >= 0 && idx < recordType.getRecordComponents().size()) {
+                                RecordComponentElement component = recordType.getRecordComponents().get(idx);
+                                if (component.getSimpleName().equals(forElement.getSimpleName())) {
+                                    record = recordType;
+                                    componentName = component.getSimpleName();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            case METHOD -> {
+                Element enclosing = forElement.getEnclosingElement();
+                ExecutableElement method = (ExecutableElement) forElement;
+                if (method.getParameters().isEmpty() && enclosing.getKind() == ElementKind.RECORD) {
+                    TypeElement recordType = (TypeElement) enclosing;
+                    for (RecordComponentElement component : recordType.getRecordComponents()) {
+                        if (forElement.equals(component.getAccessor())) {
+                            record = recordType;
+                            componentName = component.getSimpleName();
+                        }
+                    }
+                }
+            }
+            case RECORD_COMPONENT -> {
+                record = (TypeElement) forElement.getEnclosingElement();
+                componentName = forElement.getSimpleName();
+            }
+        }
+
+        if (record == null) {
+            return Collections.singleton(forElement);
+        }
+
+        RecordComponentElement component = null;
+        int componentIdx = 0;
+
+        for (RecordComponentElement c : record.getRecordComponents()) {
+            if (c.getSimpleName().equals(componentName)) {
+                component = c;
+                break;
+            }
+            componentIdx++;
+        }
+
+        if (component == null) {
+            //erroneous state(?), ignore:
+            return Collections.singleton(forElement);
+        }
+
+        Set<Element> result = new HashSet<>();
+
+        result.add(component);
+        result.add(component.getAccessor());
+
+        for (Element el : record.getEnclosedElements()) {
+            if (el.getKind() == ElementKind.FIELD && el.getSimpleName().equals(componentName)) {
+                result.add(el);
+                break;
+            }
+        }
+
+        ExecutableElement canonicalConstructor = recordCanonicalConstructor(record);
+        if (canonicalConstructor != null && componentIdx < canonicalConstructor.getParameters().size()) {
+            result.add(canonicalConstructor.getParameters().get(componentIdx));
+        }
+
+        return result;
+    }
+
+    private ExecutableElement recordCanonicalConstructor(TypeElement recordType) {
+        Supplier<ExecutableElement> fallback =
+                () -> {
+                          List<? extends RecordComponentElement> recordComponents = recordType.getRecordComponents();
+                          for (ExecutableElement c : ElementFilter.constructorsIn(recordType.getEnclosedElements())) {
+                              if (recordComponents.size() == c.getParameters().size()) {
+                                  Iterator<? extends RecordComponentElement> componentIt = recordComponents.iterator();
+                                  Iterator<? extends VariableElement> parameterIt = c.getParameters().iterator();
+                                  boolean componentMatches = true;
+
+                                  while (componentIt.hasNext() && parameterIt.hasNext() && componentMatches) {
+                                      TypeMirror componentType = componentIt.next().asType();
+                                      TypeMirror parameterType = parameterIt.next().asType();
+
+                                      componentMatches &= info.getTypes().isSameType(componentType, parameterType);
+                                  }
+                                  if (componentMatches) {
+                                      return c;
+                                  }
+                             }
+                          }
+                         return null;
+                    };
+        return ElementFilter.constructorsIn(recordType.getEnclosedElements())
+                            .stream()
+                            .filter(info.getElements()::isCanonicalConstructor)
+                            .findAny()
+                            .orElseGet(fallback);
+    }
+
     // private implementation --------------------------------------------------
 
     private static final Set<Modifier> NOT_OVERRIDABLE = EnumSet.of(Modifier.STATIC, Modifier.FINAL, Modifier.PRIVATE);

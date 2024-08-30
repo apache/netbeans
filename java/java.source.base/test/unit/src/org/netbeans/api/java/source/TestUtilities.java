@@ -304,4 +304,15 @@ public final class TestUtilities {
         return null;
     }
     
+    public static TestInput splitCodeAndPos(String input) {
+        int pos = input.indexOf('|');
+
+        if (pos == (-1)) {
+            throw new IllegalArgumentException("Does not specify a caret position: " + input);
+        }
+
+        return new TestInput(input.substring(0, pos) + input.substring(pos + 1), pos);
+    }
+
+    public record TestInput(String code, int pos) {}
 }

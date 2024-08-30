@@ -297,6 +297,16 @@ public class InstantRenameActionTest extends NbTestCase {
         validateChangePoints(changePoints, 87, 93);
     }
     
+    public void testNoInstanceRenameForRecordComponents() throws Exception {
+        sourceLevel = "17";
+
+        boolean[] wasResolved = new boolean[1];
+        Collection<Token> changePoints = performTest("package test; public class Test { private record Rec(String component) { } }", 120 - 55, wasResolved);
+
+        assertNull(changePoints);
+        assertTrue(wasResolved[0]);
+    }
+
     private void validateChangePoints(Collection<Token> changePoints, int... origs) {
         Set<Pair> awaited = new HashSet<Pair>();
         
@@ -345,6 +355,7 @@ public class InstantRenameActionTest extends NbTestCase {
     }
     
     private FileObject source;
+    private String sourceLevel;
     
     private Collection<Token> performTest(String sourceCode, final int offset, boolean[] wasResolved) throws Exception {
         FileObject root = makeScratchDir(this);
@@ -358,7 +369,11 @@ public class InstantRenameActionTest extends NbTestCase {
         writeIntoFile(source, sourceCode);
         
         SourceUtilsTestUtil.prepareTest(sourceDir, buildDir, cacheDir, new FileObject[0]);
-        
+
+        if (sourceLevel != null) {
+            SourceUtilsTestUtil.setSourceLevel(sourceDir, sourceLevel);
+        }
+
         DataObject od = DataObject.find(source);
         EditorCookie ec = od.getCookie(EditorCookie.class);
         Document doc = ec.openDocument();

@@ -56,7 +56,9 @@ import org.openide.util.LookupListener;
  * @author lahvac
  */
 public class InstantRenamePerformerTest extends NbTestCase {
-    
+
+    private String sourceLevel;
+
     public InstantRenamePerformerTest(String testName) {
         super(testName);
     }            
@@ -193,6 +195,13 @@ public class InstantRenamePerformerTest extends NbTestCase {
         performTest("package test; public class Test { public void test(Object o) {boolean b = o instanceof String s|tr && str.isEmpty(); } }", 117 - 22, ke, "package test; public class Test { public void test(Object o) {boolean b = o instanceof String satr && satr.isEmpty(); } }", true);
     }
 
+    public void testRecordWithCompactConstructor1() throws Exception {
+        sourceLevel = "17";
+
+        KeyEvent ke = new KeyEvent(new JFrame(), KeyEvent.KEY_TYPED, 0, 0, KeyEvent.VK_UNDEFINED, 'e');
+        performTest("package test; public class Test { private record R|c(String str) { public Rc {} } }", 72 - 22, ke, - 1, "package test; public class Test { private record Rec(String str) { public Rec {} } }", true);
+    }
+
     private void performTest(String sourceCode, int offset, KeyEvent ke, String golden, boolean stillInRename) throws Exception {
         performTest(sourceCode, offset, ke, -1, golden, stillInRename);
     }
@@ -217,6 +226,9 @@ public class InstantRenamePerformerTest extends NbTestCase {
         TestUtilities.copyStringToFile(source, sourceCode.replaceFirst(Pattern.quote("|"), ""));
         
         SourceUtilsTestUtil.prepareTest(sourceDir, buildDir, cacheDir, new FileObject[0]);
+        if (sourceLevel != null) {
+            SourceUtilsTestUtil.setSourceLevel(sourceDir, sourceLevel);
+        }
         SourceUtilsTestUtil.compileRecursively(sourceDir);
         
         DataObject od = DataObject.find(source);

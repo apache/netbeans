@@ -874,11 +874,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     @Override
     public GrammarQuery getGrammar(GrammarEnvironment ctx) {
         UserCatalog catalog = UserCatalog.getDefault();
-        ///System.out.println("bbb");
         InputSource is= ctx.getInputSource();
-        //System.out.println(is.getPublicId());
-        //System.out.println(is.getSystemId());
-        //System.out.println(is);
         if (catalog != null) {
 
             EntityResolver resolver = catalog.getEntityResolver();
@@ -1048,7 +1044,6 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                     }
 
                     if (is.getSystemId().endsWith("webservices.xml") ) {  // NOI18N
-                        // System.out.println("webservices tag");
                         inputSource = resolver.resolveEntity(WEBSERVICES_1_1_ID, "");
                         if (inputSource!=null) {
                             return DTDUtil.parseDTD(true, inputSource);
@@ -1057,7 +1052,6 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
 
                 } catch(SAXException e) {
                 } catch(java.io.IOException e) {
-                    //System.out.println("eeee");
                     LOGGER.log(Level.WARNING, null, e);
                 }
             }
@@ -1073,7 +1067,6 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
      */
     @Override
     public String resolveURI(String name) {
-        // System.out.println("resolveURI(String name)="+name);
         if (platformRootDir == null) {
             return null;
         }

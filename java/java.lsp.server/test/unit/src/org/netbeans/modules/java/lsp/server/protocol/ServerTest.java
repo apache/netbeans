@@ -3794,6 +3794,13 @@ public class ServerTest extends NbTestCase {
                          Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
                          Set<String> expected = new HashSet<>(Arrays.asList("Test2.java:[0:27-0:31=>TestNew, 1:4-1:8=>TestNew, 2:11-2:15=>TestNew]", "Test.java:[0:13-0:17=>TestNew]", "Test.java=>TestNew.java"));
                          assertEquals(expected, actual);
+                     },
+                     cf -> {
+                         WorkspaceEdit edit = cf.get();
+                         assertTrue(edit.getChanges().isEmpty());
+                         Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
+                         Set<String> expected = new HashSet<>(Arrays.asList("Test3.java:[3:14-3:22=>arg, 6:36-6:44=>arg, 7:27-7:35=>arg]"));
+                         assertEquals(expected, actual);
                      });
     }
     
@@ -3818,12 +3825,20 @@ public class ServerTest extends NbTestCase {
                          Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
                          Set<String> expected = new HashSet<>(Arrays.asList("Test2.java:[0:27-0:31=>TestNew, 1:4-1:8=>TestNew, 2:11-2:15=>TestNew]", "Test.java:[0:13-0:17=>TestNew]", "Test.java=>TestNew.java"));
                          assertEquals(expected, actual);
+                     },
+                     cf -> {
+                         WorkspaceEdit edit = cf.get();
+                         assertTrue(edit.getChanges().isEmpty());
+                         Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
+                         Set<String> expected = new HashSet<>(Arrays.asList("Test3.java:[3:14-3:22=>arg, 6:36-6:44=>arg, 7:27-7:35=>arg]"));
+                         assertEquals(expected, actual);
                      });
     }
     
     private void doTestRename(Consumer<InitializeParams> settings,
                               Validator<CompletableFuture<WorkspaceEdit>> validateFieldRename,
-                              Validator<CompletableFuture<WorkspaceEdit>> validateClassRename) throws Exception {
+                              Validator<CompletableFuture<WorkspaceEdit>> validateClassRename,
+                              Validator<CompletableFuture<WorkspaceEdit>> validateArgumentRename) throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
         try (Writer w = new FileWriter(new File(src.getParentFile(), ".test-project"))) {}
@@ -3841,6 +3856,20 @@ public class ServerTest extends NbTestCase {
                        "}\n";
         try (Writer w = new FileWriter(src2)) {
             w.write(code2);
+        }
+        File src3 = new File(getWorkDir(), "Test3.java");
+        String code3 =  "public class Test3 {\n" +
+                        "    /**\n" +
+                        "     * They had an argument\n" +
+                        "     * @param argument\n" +
+                        "     *\n" +
+                        "     */\n" +
+                        "    public static void greet(String argument){\n" +
+                        "        System.out.println(argument);\n" +
+                        "    }\n" +
+                        "}";
+        try (Writer w = new FileWriter(src3)) {
+            w.write(code3);
         }
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
@@ -3898,6 +3927,14 @@ public class ServerTest extends NbTestCase {
                                                    "TestNew");
 
             validateClassRename.validate(server.getTextDocumentService().rename(params));
+        }
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src3), "java", 0, code3)));
+        {
+            RenameParams params = new RenameParams(new TextDocumentIdentifier(src3.toURI().toString()),
+                                                   new Position(6, 37),
+                                                   "arg");
+
+            validateArgumentRename.validate(server.getTextDocumentService().rename(params));
         }
     }
 

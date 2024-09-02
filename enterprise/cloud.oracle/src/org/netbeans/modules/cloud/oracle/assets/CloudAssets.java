@@ -234,6 +234,11 @@ public final class CloudAssets {
         return refNames.get(item);
     }
 
+    public List<String> getReferenceNamesByClass(Class<? extends OCIItem> cls) {
+        return refNames.entrySet().stream().filter(entry -> cls.isInstance(entry.getKey()))
+                .map(entry -> entry.getValue()).collect(Collectors.toList());
+    }
+
     private void setReferenceName(String ocid, String refName) {
         for (OCIItem item : items) {
             if (item.getKey().getValue().equals(ocid)) {

@@ -34,7 +34,8 @@ import org.openide.util.NbBundle;
     "SelectBucket=Select Object Storage Bucket",
     "SelectCluster=Select Oracle Container Engine for Kubernetes",
     "SelectCompute=Select Compute Instance",
-    "SelectContainerRepository=Select Container Repository"
+    "SelectContainerRepository=Select Container Repository",
+    "SelectMetricsNamespace=Select Metrics Namespace"
 })
 public final class SuggestedItem extends OCIItem {
 
@@ -69,6 +70,8 @@ public final class SuggestedItem extends OCIItem {
                 return new SuggestedItem("ComputeInstance", Bundle.SelectCompute(), Collections.singleton("Cluster")); //NOI18N
             case "ContainerRepository": //NOI18N
                 return new SuggestedItem("ContainerRepository", Bundle.SelectContainerRepository(), Collections.singleton("ContainerRepository")); //NOI18N
+            case "MetricsNamespace": //NOI18N
+                return new SuggestedItem("MetricsNamespace", Bundle.SelectMetricsNamespace(), Collections.singleton("MetricsNamespace")); //NOI18N
             default:
                 throw new IllegalArgumentException("");
         }

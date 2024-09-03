@@ -570,6 +570,11 @@
 				"icon": "$(add)"
 			},
 			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.adm.ShowInBrowserAction",
+				"title": "Open In Browser",
+				"icon": "$(link-external)"
+			},
+			{
 				"command": "nbls.db.add.connection",
 				"title": "Add JDBC Database Connection"
 			},
@@ -865,6 +870,10 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.adm.ShowInBrowserAction",
+					"when": "false"
+				},
+				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddRepository",
 					"when": "false"
 				},
@@ -1078,6 +1087,11 @@
 					"group": "oci@1000"
 				},
 				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.adm.ShowInBrowserAction",
+					"when": "viewItem =~ /class:oracle.developer.MetricsItem/",
+					"group": "inline@10"
+				},
+				{
 					"command": "nbls.cloud.computeInstance.ssh",
 					"when": "viewItem =~ /publicIp:.*/ && viewItem =~ /^(?!.*imageUrl:).*/",
 					"group": "inline@10"
@@ -1104,7 +1118,7 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddToProject",
-					"when": "viewItem =~ /(ComputeInstanceItem|ClusterItem|BucketItem|DatabaseItem|VaultItem|ContainerRepositoryItem)/ && view != cloud.assets",
+					"when": "viewItem =~ /(ComputeInstanceItem|ClusterItem|BucketItem|DatabaseItem|VaultItem|ContainerRepositoryItem|MetricsNamespaceItem)/ && view != cloud.assets",
 					"group": "inline@14"
 				},
 				{
@@ -1222,6 +1236,14 @@
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/bucket.svg",
 				"codeicon": "archive"
 			},
+			{
+                "uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/metrics.svg",
+                "codeicon": "graph-line"
+            },
+            {
+                "uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/metrics_namespace.svg",
+                "codeicon": "symbol-namespace"
+            },
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/computeinstance.svg",
 				"codeicon": "server-environment"

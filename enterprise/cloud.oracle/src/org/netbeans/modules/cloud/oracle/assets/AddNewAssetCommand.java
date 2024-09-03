@@ -59,9 +59,17 @@ public class AddNewAssetCommand implements CommandProvider {
             put("Databases", new String[]{"io.micronaut.oraclecloud", "micronaut-oraclecloud-atp"}); //NOI18N
             put("Bucket", new String[]{"io.micronaut.objectstorage", "micronaut-object-storage-oracle-cloud"}); //NOI18N
             put("Vault", new String[]{"io.micronaut.oraclecloud", "micronaut-oraclecloud-vault"}); //NOI18N
+            put("MetricsNamespace", new String[]{"io.micronaut.oraclecloud", "micronaut-oraclecloud-micrometer"}); //NOI18N
         }
     };
 
+    private static final Map<String, String[]> ANNOTATION_PROCESSOR_MAP = new HashMap() {
+        {
+            put("MetricsNamespace", new String[]{"io.micronaut.micrometer", "micronaut-micrometer-annotation"}); //NOI18N
+        }
+    };
+
+        
     @Override
     public Set<String> getCommands() {
         return Collections.unmodifiableSet(COMMANDS);
@@ -78,16 +86,15 @@ public class AddNewAssetCommand implements CommandProvider {
                         return new TenancyStep();
                     }).stepForClass(TenancyStep.class, (s) -> new CompartmentStep())
                     .stepForClass(CompartmentStep.class, (s) -> new SuggestedStep(null))
-                    .stepForClass(SuggestedStep.class, (s) ->  new ProjectStep())
+                    .stepForClass(SuggestedStep.class, (s) -> new ProjectStep())
                     .build();
-        
         Steps.getDefault()
                 .executeMultistep(new ItemTypeStep(), Lookups.fixed(nsProvider))
                 .thenAccept(values -> {
                     Project project = values.getValueForStep(ProjectStep.class);
                     CompletableFuture<? extends OCIItem> item = null;
                     String itemType = values.getValueForStep(ItemTypeStep.class);
-                    if ("Databases".equals(itemType)) { 
+                    if ("Databases".equals(itemType)) {
                         DatabaseItem i = values.getValueForStep(DatabaseConnectionStep.class);
                         if (i == null) {
                             item = new AddADBAction().addADB();
@@ -117,15 +124,20 @@ public class AddNewAssetCommand implements CommandProvider {
                     item.thenAccept(i -> {
                         CloudAssets.getDefault().addItem(i);
                         String[] art = DEP_MAP.get(i.getKey().getPath());
+                        String[] processor = ANNOTATION_PROCESSOR_MAP.get(i.getKey().getPath());
                         try {
-                            DependencyUtils.addDependency(project, art[0], art[1]);
-                            future.complete(null);
+                            if (art != null && art.length > 1) {
+                                DependencyUtils.addDependency(project, art[0], art[1]);
+                            }
+                            if (processor != null && processor.length > 1) {
+                                DependencyUtils.addAnnotationProcessor(project, processor[0], processor[1]);
+                            }
                         } catch (IllegalStateException e) {
                             future.completeExceptionally(e);
                         }
+                        future.complete(null);
                     });
                 });
         return future;
     }
-    
 }

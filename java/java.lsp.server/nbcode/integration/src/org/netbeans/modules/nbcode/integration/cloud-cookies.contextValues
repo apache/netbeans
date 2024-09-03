@@ -28,3 +28,5 @@ org.netbeans.modules.cloud.oracle.bucket.BucketItem
 org.netbeans.modules.cloud.oracle.vault.VaultItem
 org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryItem
 org.netbeans.modules.cloud.oracle.developer.ContainerTagItem
+org.netbeans.modules.cloud.oracle.developer.MetricsNamespaceItem
+org.netbeans.modules.cloud.oracle.developer.MetricsItem

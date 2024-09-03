@@ -39,7 +39,8 @@ import org.openide.util.NbBundle;
  */
 @NbBundle.Messages({
     "SelectDBConnection=Select Database Connection",
-    "AddNewConnection=<Add a new Connection>"
+    "AddNewConnection=<Add a new Connection>",
+    "OADB=Oracle Autonomous Database"
 })
 public final class DatabaseConnectionStep extends AbstractStep<DatabaseItem> {
 
@@ -68,7 +69,7 @@ public final class DatabaseConnectionStep extends AbstractStep<DatabaseItem> {
         List<QuickPick.Item> items = new LinkedList<>();
         items.add(new QuickPick.Item(Bundle.AddNewConnection(), Bundle.AddNewConnection()));
         for (Entry<String, DatabaseItem> adbConnection : adbConnections.entrySet()) {
-            items.add(new QuickPick.Item(adbConnection.getKey(), "Connection " + adbConnection.getValue()));
+            items.add(new QuickPick.Item(adbConnection.getKey(), Bundle.OADB()));
         }
         return new NotifyDescriptor.QuickPick(Bundle.SelectDBConnection(), Bundle.SelectDBConnection(), items, false);
     }

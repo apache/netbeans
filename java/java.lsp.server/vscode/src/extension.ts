@@ -972,8 +972,35 @@ function openSSHSession(username: string, host: string, name?: string) {
     terminal.show();
 }
 
-function runDockerSSH(username: string, host: string, dockerImage: string) {
-   const sshCommand = `ssh ${username}@${host} "docker pull ${dockerImage} && docker run -p 8080:8080 -it ${dockerImage}"`;
+interface ConfigFiles {
+    applicationProperties : string | null;
+    bootstrapProperties: string | null;
+}
+
+async function runDockerSSH(username: string, host: string, dockerImage: string) {
+    const configFiles: ConfigFiles = await vscode.commands.executeCommand('nbls.config.file.path') as ConfigFiles;
+    const { applicationProperties, bootstrapProperties } = configFiles;
+
+    const applicationPropertiesRemotePath = `/home/${username}/application.properties`;
+    const bootstrapPropertiesRemotePath = `/home/${username}/bootstrap.properties`;
+    const applicationPropertiesContainerPath = "/home/app/application.properties";
+    const bootstrapPropertiesContainerPath = "/home/app/bootstrap.properties";
+
+    let sshCommand = "";
+    let mountVolume = "";
+    let micronautConfigFilesEnv = "";
+    if (bootstrapProperties) {
+        sshCommand = `scp "${bootstrapProperties}" ${username}@${host}:${bootstrapPropertiesRemotePath} && `;
+        mountVolume = `-v ${bootstrapPropertiesRemotePath}:${bootstrapPropertiesContainerPath}:Z `;
+        micronautConfigFilesEnv = `${bootstrapPropertiesContainerPath}`;
+    }
+
+    if (applicationProperties) {
+        sshCommand += `scp "${applicationProperties}" ${username}@${host}:${applicationPropertiesRemotePath} && `;
+        mountVolume += ` -v ${applicationPropertiesRemotePath}:${applicationPropertiesContainerPath}:Z`;
+        micronautConfigFilesEnv += `${bootstrapProperties ? "," : ""}${applicationPropertiesContainerPath}`;
+    } 
+    sshCommand += `ssh ${username}@${host} "docker pull ${dockerImage} && docker run -p 8080:8080 ${mountVolume} -e MICRONAUT_CONFIG_FILES=${micronautConfigFilesEnv} -it ${dockerImage}"`;
 
     const terminal = vscode.window.createTerminal('Remote Docker');
     terminal.sendText(sshCommand);

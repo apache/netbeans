@@ -19,35 +19,15 @@
 package org.netbeans.modules.cloud.oracle.assets;
 
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.attribute.AclEntry;
-import java.nio.file.attribute.AclEntryPermission;
-import static java.nio.file.attribute.AclEntryPermission.*;
-import java.nio.file.attribute.AclFileAttributeView;
-import java.nio.file.attribute.DosFileAttributeView;
-import java.nio.file.attribute.FileAttribute;
-import java.nio.file.attribute.PosixFileAttributeView;
-import java.nio.file.attribute.PosixFilePermission;
-import static java.nio.file.attribute.PosixFilePermission.*;
-import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.spi.lsp.CommandProvider;
@@ -59,22 +39,12 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = CommandProvider.class)
 public class OCIPropertiesProvider implements CommandProvider {
-    private static final Logger LOG = Logger.getLogger(OCIPropertiesProvider.class.getName());
     private static final String  GET_DB_CONNECTION = "nbls.db.connection"; //NOI18N
 
-    private static final boolean POSIX = FileSystems.getDefault().supportedFileAttributeViews().contains("posix");  // NOI18N
-    private static final EnumSet<PosixFilePermission> readWritePosix = EnumSet.of(OWNER_READ, OWNER_WRITE);
-    private static final EnumSet<AclEntryPermission> readOnlyAcl = EnumSet.of(READ_ACL, READ_ATTRIBUTES, WRITE_ATTRIBUTES, READ_DATA, READ_NAMED_ATTRS, DELETE, SYNCHRONIZE);
-
-    // temporary directory location
-    private static final Path tmpdir = Path.of(System.getProperty("java.io.tmpdir"));       // NOI18N
+    private final ConfigFileGenerator configFileGenerator;
 
     public OCIPropertiesProvider() {
-        try {
-            deleteOldFiles(generateDirPath());
-        } catch (IOException ex) {
-            LOG.log(Level.SEVERE, "deleteOldFiles", ex);
-        }
+        this.configFileGenerator = new ConfigFileGenerator("db-", ".properties", GET_DB_CONNECTION, true); // NOI18N
     }
 
     @Override
@@ -99,80 +69,15 @@ public class OCIPropertiesProvider implements CommandProvider {
             }
         }
         if (!dbProps.isEmpty()) {
-            Path temp = null;
-            Path dir = generateDirPath();
-
             try {
-                if (!Files.isDirectory(dir, LinkOption.NOFOLLOW_LINKS)) {
-                    Files.createDirectory(dir);
-                }
-                if (POSIX) {
-                    FileAttribute<?> readWriteAttribs = PosixFilePermissions.asFileAttribute(readWritePosix);
-                    temp = Files.createTempFile(dir, "db-", ".properties", readWriteAttribs);       // NOI18N
-                } else {
-                    temp = Files.createTempFile(dir, "db-", ".properties");                         // NOI18N
-                    AclFileAttributeView acl = Files.getFileAttributeView(temp, AclFileAttributeView.class);
-                    AclEntry ownerEntry = null;
-                    for(AclEntry e : acl.getAcl()) {
-                        if (e.principal().equals(acl.getOwner())) {
-                            ownerEntry = e;
-                            break;
-                        }
-                    }
-                    if (ownerEntry != null) {
-                        acl.setAcl(Collections.singletonList(ownerEntry));
-                    } else {
-                        deleteTempFile(temp);
-                        ret.completeExceptionally(new IOException("Owner missing, file:"+temp.toString())); // NOI18N
-                        return ret;
-                    }
-                }
+                Path temp = configFileGenerator.writePropertiesFile(dbProps);
+                result.put("MICRONAUT_CONFIG_FILES", temp.toAbsolutePath().toString()); // NOI18N
+                ret.complete(result);
             } catch (IOException ex) {
-                deleteTempFile(temp);
-                ret.completeExceptionally(ex);
-                return ret;
-            }
-
-            try (Writer writer = new FileWriter(temp.toFile(), Charset.defaultCharset());) {
-                dbProps.store(writer, "");
-                if (POSIX) {
-                    PosixFileAttributeView attribs = Files.getFileAttributeView(temp, PosixFileAttributeView.class);
-                    attribs.setPermissions(EnumSet.of(OWNER_READ));
-                } else {
-                    DosFileAttributeView attribs = Files.getFileAttributeView(temp, DosFileAttributeView.class);
-                    attribs.setReadOnly(true);
-                    AclFileAttributeView acl = Files.getFileAttributeView(temp, AclFileAttributeView.class);
-                    AclEntry ownerEntry = null;
-                    if (acl.getAcl().size() != 1) {
-                        deleteTempFile(temp);
-                        ret.completeExceptionally(new IOException("Too many Acls, file:"+temp.toString()));     // NOI18N
-                        return ret;
-                    }
-                    for(AclEntry e : acl.getAcl()) {
-                        if (e.principal().equals(acl.getOwner())) {
-                            ownerEntry = e;
-                            break;
-                        }
-                    }
-                    if (ownerEntry != null) {
-                        AclEntry readOnly = AclEntry.newBuilder(ownerEntry).setPermissions(readOnlyAcl).build();
-                        acl.setAcl(Collections.singletonList(readOnly));
-                    } else {
-                        deleteTempFile(temp);
-                        ret.completeExceptionally(new IOException("Owner missing, file:"+temp.toString()));     // NOI18N
-                        return ret;
-                    }
-                }
-                temp.toFile().deleteOnExit();
-                result.put("MICRONAUT_CONFIG_FILES", temp.toAbsolutePath().toString());     // NOI18N
-            } catch (IOException ex) {
-                deleteTempFile(temp);
                 ret.completeExceptionally(ex);
                 return ret;
             }
         }
-
-        ret.complete(result);
         return ret;
     }
 
@@ -180,38 +85,4 @@ public class OCIPropertiesProvider implements CommandProvider {
     public Set<String> getCommands() {
         return Collections.singleton(GET_DB_CONNECTION);
     }
-
-    private static Path generateDirPath() {
-        String s = GET_DB_CONNECTION + "_" + System.getProperty("user.name");       // NOI18N
-        Path name = tmpdir.getFileSystem().getPath(s);
-        return tmpdir.resolve(name);
-    }
-
-    private static void deleteOldFiles(Path dir) throws IOException {
-        if (Files.isDirectory(dir, LinkOption.NOFOLLOW_LINKS)) {
-            try (DirectoryStream<Path> stream  = Files.newDirectoryStream(dir)) {
-                for (Path f : stream) {
-                    deleteTempFile(f);
-                }
-            }
-        }
-    }
-
-    private static void deleteTempFile(Path temp) {
-        if (temp != null && Files.isRegularFile(temp, LinkOption.NOFOLLOW_LINKS)) {
-            try {
-                if (POSIX) {
-                    PosixFileAttributeView attribs = Files.getFileAttributeView(temp, PosixFileAttributeView.class);
-                    attribs.setPermissions(readWritePosix);
-                } else {
-                    DosFileAttributeView attribs = Files.getFileAttributeView(temp, DosFileAttributeView.class);
-                    attribs.setReadOnly(false);
-                }
-                Files.delete(temp);
-            } catch (IOException ex) {
-                LOG.log(Level.WARNING, "deleteTempFile", ex);
-            }
-        }
-    }
-    
 }

@@ -64,6 +64,16 @@ public class ErrorsCache {
         return Collections.unmodifiableCollection(TaskCache.getDefault().getAllFilesInError(root));
     }
 
+    /**Return all files with error or warning badge under the given source root
+     *
+     * @param root source root to test
+     * @return all files with error or warning badge under the given root
+     * @since 9.36
+     */
+    public static Collection<? extends URL> getAllFilesWithRecord(URL root) throws IOException {
+        return Collections.unmodifiableCollection(TaskCache.getDefault().getAllFilesWithRecord(root));
+    }
+
     /**Getter for properties of the given error description.
      */
     public static interface Convertor<T> {

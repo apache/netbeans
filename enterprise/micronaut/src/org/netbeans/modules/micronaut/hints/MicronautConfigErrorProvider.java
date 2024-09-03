@@ -18,12 +18,6 @@
  */
 package org.netbeans.modules.micronaut.hints;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,10 +41,10 @@ import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.indexing.CustomIndexer;
 import org.netbeans.modules.parsing.spi.indexing.CustomIndexerFactory;
+import org.netbeans.modules.parsing.spi.indexing.ErrorsCache;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.spi.lsp.ErrorProvider;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -61,6 +55,8 @@ import org.openide.util.NbBundle;
 public class MicronautConfigErrorProvider extends CustomIndexer implements ErrorProvider {
 
     private static final MicronautConfigErrorProvider INSTANCE = new MicronautConfigErrorProvider();
+    private static final ErrorsCache.Convertor<Diagnostic> ERROR_CONVERTOR = new ErrorConvertorImpl();
+    private static final String ERR_CODE_PREFIX = "WARN_PropertyWithoutValue:";
 
     @MimeRegistrations({
         @MimeRegistration(mimeType = MicronautConfigUtilities.YAML_MIME, service = ErrorProvider.class),
@@ -90,7 +86,7 @@ public class MicronautConfigErrorProvider extends CustomIndexer implements Error
         for (Indexable file : files) {
             FileObject fo = root.getFileObject(file.getRelativePath());
             if (fo != null && MicronautConfigUtilities.isMicronautConfigFile(fo)) {
-                store(context.getIndexFolder(), file.getRelativePath(), computeErrors(fo));
+                ErrorsCache.setErrors(context.getRootURI(), file, computeErrors(fo), ERROR_CONVERTOR);
             }
         }
     }
@@ -109,12 +105,13 @@ public class MicronautConfigErrorProvider extends CustomIndexer implements Error
                             if (language != null) {
                                 StructureScanner scanner = language.getStructure();
                                 if (scanner != null && result instanceof ParserResult) {
-                                    scan(snapshot.getText().toString(), scanner.scan((ParserResult) result), structure -> {
+                                    String text = snapshot.getText().toString();
+                                    scan(text, scanner.scan((ParserResult) result), structure -> {
                                         int start = (int) structure.getPosition();
                                         int end = (int) structure.getEndPosition();
                                         diags.add(Diagnostic.Builder.create(() -> start, () -> end, Bundle.ERR_PropertyWithoutValue())
                                                 .setSeverity(Diagnostic.Severity.Warning)
-                                                .setCode("WARN_PropertyWithoutValue " + start + " - " + end)
+                                                .setCode(ERR_CODE_PREFIX + text.substring(0, start).split("\n").length)
                                                 .build());
                                     });
                                 }
@@ -127,7 +124,9 @@ public class MicronautConfigErrorProvider extends CustomIndexer implements Error
             }
         } else {
             int offset = 0;
-            for(String line : Source.create(fo).createSnapshot().getText().toString().split("\n")) {
+            String[] lines = Source.create(fo).createSnapshot().getText().toString().split("\n");
+            for (int i = 0; i < lines.length; i++) {
+                String line = lines[i];
                 if (line.length() > 0 && !line.startsWith("#") && !line.startsWith("!")) {
                     int eqIdx = line.indexOf('=');
                     if (eqIdx > 0) {
@@ -136,7 +135,7 @@ public class MicronautConfigErrorProvider extends CustomIndexer implements Error
                             int end = offset + line.length();
                             diags.add(Diagnostic.Builder.create(() -> start, () -> end, Bundle.ERR_PropertyWithoutValue())
                                     .setSeverity(Diagnostic.Severity.Warning)
-                                    .setCode("WARN_PropertyWithoutValue " + start + " - " + end)
+                                    .setCode(ERR_CODE_PREFIX + (i + 1))
                                     .build());
                         }
                     }
@@ -145,29 +144,6 @@ public class MicronautConfigErrorProvider extends CustomIndexer implements Error
             }
         }
         return diags;
-    }
-
-    private void store(FileObject indexFolder, String resourceName, List<? extends Diagnostic> diags) {
-        File cacheRoot = FileUtil.toFile(indexFolder);
-        File output = new File(cacheRoot, resourceName + ".err"); //NOI18N
-        if (diags.isEmpty()) {
-            if (output.exists()) {
-                output.delete();
-            }
-        } else {
-            output.getParentFile().mkdirs();
-            try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), StandardCharsets.UTF_8))) {
-                for (Diagnostic diag : diags) {
-                    pw.print(diag.getCode());
-                    pw.print(':'); //NOI18N
-                    pw.print(diag.getStartPosition().getOffset());
-                    pw.print('-'); //NOI18N
-                    pw.println(diag.getEndPosition().getOffset());
-                }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
     }
 
     private static void scan(String sourceText, List<? extends StructureItem> structures, Consumer<StructureItem> callback) {
@@ -219,6 +195,21 @@ public class MicronautConfigErrorProvider extends CustomIndexer implements Error
         @Override
         public int getIndexVersion() {
             return MicronautSymbolFinder.VERSION;
+        }
+    }
+
+    private static final class ErrorConvertorImpl implements ErrorsCache.Convertor<Diagnostic> {
+        @Override
+        public ErrorsCache.ErrorKind getKind(Diagnostic t) {
+            return t.getSeverity() == Diagnostic.Severity.Error ? ErrorsCache.ErrorKind.ERROR : ErrorsCache.ErrorKind.WARNING;
+        }
+        @Override
+        public int getLineNumber(Diagnostic t) {
+            return Integer.parseInt(t.getCode().substring(ERR_CODE_PREFIX.length()));
+        }
+        @Override
+        public String getMessage(Diagnostic t) {
+            return t.getDescription();
         }
     }
 }

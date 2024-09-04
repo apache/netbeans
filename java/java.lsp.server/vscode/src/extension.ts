@@ -280,7 +280,10 @@ function wrapCommandWithProgress(lsCommand : string, title : string, log? : vsco
     return window.withProgress({ location: ProgressLocation.Window }, p => {
         return new Promise(async (resolve, reject) => {
             let c : LanguageClient = await client;
-            await vscode.commands.executeCommand('workbench.action.files.saveAll');
+            const docsTosave : Thenable<boolean>[]= vscode.workspace.textDocuments.
+                filter(d => fs.existsSync(d.uri.fsPath)).
+                map(d => d.save());
+            await Promise.all(docsTosave);
             const commands = await vscode.commands.getCommands();
             if (commands.includes(lsCommand)) {
                 p.report({ message: title });

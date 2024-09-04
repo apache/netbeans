@@ -104,7 +104,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         String focusedText = currentToken.text().toString();
 
         //2 char config are not that relevant
-        //quote x 2 + min 3 length config
+        //2 qoute char an 3 char minimum length text
         if (focusedText.length() < 5 || !EditorStringUtils.isQuotedString(focusedText)) {
             return null;
         }

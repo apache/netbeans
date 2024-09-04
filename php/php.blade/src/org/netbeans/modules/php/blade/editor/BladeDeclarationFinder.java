@@ -21,6 +21,7 @@ package org.netbeans.modules.php.blade.editor;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -85,7 +86,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
             String text = baseDoc.getText(0, baseDoc.getLength());
             tokens = new AntlrTokenSequence(new BladeAntlrLexer(CharStreams.fromString(text)));
         } catch (BadLocationException ex) {
-            LOGGER.warning(ex.getMessage());
+            LOGGER.log(Level.WARNING, "Invalid offset: {0}", ex.offsetRequested()); // NOI18N
         }
 
         if (tokens == null || tokens.isEmpty()) {

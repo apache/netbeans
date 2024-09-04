@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.editor.BaseDocument;
 import javax.swing.text.Document;
@@ -113,23 +112,15 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
                 return CodeCompletionResult.NONE;
             }
             switch (currentToken.getType()) {
-                case PHP_IDENTIFIER:
-                case PHP_NAMESPACE_PATH:
-                    PhpCodeCompletionService.completePhpCode(completionProposals, parserResult, offset, prefix);
-                    break;
-                case PHP_EXPRESSION:
-                    completePhpSnippet(completionProposals, offset, currentToken);
-                    break;
-                case PHP_VARIABLE:
-                    completeScopedVariables(completionProposals, completionContext, parserResult, currentToken);
-                    break;
-                case CONTENT_TAG_OPEN:
-                case RAW_TAG_OPEN:
+                case PHP_IDENTIFIER, PHP_NAMESPACE_PATH -> PhpCodeCompletionService.completePhpCode(completionProposals, parserResult, offset, prefix);
+                case PHP_EXPRESSION -> completePhpSnippet(completionProposals, offset, currentToken);
+                case PHP_VARIABLE -> completeScopedVariables(completionProposals, completionContext, parserResult, currentToken);
+                case CONTENT_TAG_OPEN, RAW_TAG_OPEN -> {
                     //{{ | {!!
                     if (!ModulePreferences.isAutoTagCompletionEnabled()) {
                         completeBladeTags(completionProposals, completionContext, currentToken);
                     }
-                    break;
+                }
             }
         }
 
@@ -139,7 +130,7 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
 
         long time = System.currentTimeMillis() - startTime;
         if (time > 2000){
-            LOGGER.info(String.format("complete() with results took %d ms", time));
+            LOGGER.info(String.format("complete() with results took %d ms", time)); // NOI18N
         }
         return new DefaultCompletionResult(completionProposals, false);
     }

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.blade.editor;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -27,7 +28,6 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.spi.CommentHandler;
 import org.netbeans.modules.php.blade.editor.lexer.BladeTokenId;
-import org.openide.util.Exceptions;
 
 /**
  * known issues 
@@ -38,8 +38,8 @@ import org.openide.util.Exceptions;
  */
 public class BladeCommentHandler extends CommentHandler.DefaultCommentHandler {
 
-    private static final String COMMENT_START_DELIMITER = "{{--"; //NOI18N
-    private static final String COMMENT_END_DELIMITER = "--}}"; //NOI18N
+    public static final String COMMENT_START_DELIMITER = "{{--"; //NOI18N
+    public static final String COMMENT_END_DELIMITER = "--}}"; //NOI18N
     
     private static final Logger LOGGER = Logger.getLogger(BladeCommentHandler.class.getName());
 
@@ -96,7 +96,7 @@ public class BladeCommentHandler extends CommentHandler.DefaultCommentHandler {
                                 bounds[0] = 0;
                                 bounds[1] = 0;
                             } catch (BadLocationException ex) {
-                                LOGGER.warning(ex.getMessage());
+                                LOGGER.log(Level.WARNING, "Invalid offset: {0}", ex.offsetRequested()); // NOI18N
                             }
                         }
 

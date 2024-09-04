@@ -79,8 +79,8 @@ public class BladeParserResult extends ParserResult {
     public final Map<OffsetRange, Set<String>> loopScopedVariables = new TreeMap<>();
     public final List<BladeStructureItem> structure = new ArrayList<>();
     public final List<OffsetRange> folds = new ArrayList<>();
-    volatile boolean finished = false;
-    volatile boolean debugMode = false;
+    volatile private boolean finished = false;
+    volatile private boolean debugMode = false;
 
     public enum ReferenceType {
         YIELD, STACK, SECTION, PUSH, PUSH_IF, PREPEND, INCLUDE, INCLUDE_IF,
@@ -112,7 +112,6 @@ public class BladeParserResult extends ParserResult {
         if (!finished) {
             BladeAntlrParser parser = createParser(getSnapshot());
             parser.setBuildParseTree(false);
-            //LOGGER.info(String.format("parser created in %d ms", System.currentTimeMillis() - startTime));
             parser.addErrorListener(createErrorListener());
             parser.addParseListener(createDeclarationReferencesListener());
             parser.addParseListener(createPhpElementsOccurencesListener());

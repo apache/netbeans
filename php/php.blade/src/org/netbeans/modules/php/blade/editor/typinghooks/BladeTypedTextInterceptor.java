@@ -29,7 +29,10 @@ import org.netbeans.api.editor.mimelookup.MimeRegistrations;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.php.blade.editor.BladeCommentHandler;
 import org.netbeans.modules.php.blade.editor.lexer.BladeTokenId;
+import static org.netbeans.modules.php.blade.editor.lexer.BladeTokenId.HTML;
+import static org.netbeans.modules.php.blade.editor.lexer.BladeTokenId.BLADE_COMMENT;
 import org.netbeans.modules.php.blade.editor.preferences.ModulePreferences;
 import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
 
@@ -40,13 +43,14 @@ import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
  */
 public class BladeTypedTextInterceptor implements TypedTextInterceptor {
 
-    static final Map<Character, Character> CHAR_PAIR = new WeakHashMap<>();
+    private static final Map<Character, Character> CHAR_PAIR = new WeakHashMap<>();
 
     public static enum TagType {
         CONTENT,
         RAW,
         COMMENT
     }
+
     /**
      * auto complete char pair
      */
@@ -75,29 +79,24 @@ public class BladeTypedTextInterceptor implements TypedTextInterceptor {
             return;
         }
 
-        if (!isAutoTagCompletionEnabled()){
+        if (!isAutoTagCompletionEnabled()) {
             return;
         }
-        
-        String typedText =  context.getText();
-        
-        Map<String, TagType> TagParts = new WeakHashMap<>();
-        TagParts.put("{", TagType.CONTENT);
-        TagParts.put("!", TagType.RAW);
-        TagParts.put("-", TagType.CONTENT);
-        
-        TagType tagType = TagParts.get(typedText);
-        
-        if (tagType == null){
+
+        String typedText = context.getText();
+
+        TagType tagType = getTagType(typedText);
+
+        if (tagType == null) {
             return;
         }
-        
+
         int offset = context.getOffset();
-        
-        if (offset < 2){
+
+        if (offset < 2) {
             return;
         }
-        
+
         Document document = context.getDocument();
         TokenHierarchy th = TokenHierarchy.get(document);
         TokenSequence<?> ts = th.tokenSequence();
@@ -105,25 +104,17 @@ public class BladeTypedTextInterceptor implements TypedTextInterceptor {
         ts.moveNext();
 
         Token<?> token = ts.token();
-        
-        if (token == null || !(token.id() instanceof BladeTokenId)){
+
+        if (token == null || !(token.id() instanceof BladeTokenId)) {
             return;
         }
-        
+
         BladeTokenId bladeToken = (BladeTokenId) token.id();
-        
+
         String tokenText = token.text().toString();
-        
-        switch (bladeToken) {
-            case HTML:
-                if (tokenText.equals("{") && tagType == TagType.CONTENT){
-                    context.setText("{ }}", 1);
-                } else if (tokenText.equals("{!")  && tagType == TagType.RAW ){
-                    context.setText("! !!}", 1);
-                } else if (tokenText.equals("{{-")  && tagType == TagType.COMMENT ){
-                    context.setText("- --}}", 1);
-                }
-                break;
+
+        if (bladeToken.equals(HTML)) {
+            completeFromHtmlFragments(tokenText, context, tagType);
         }
     }
 
@@ -151,9 +142,55 @@ public class BladeTypedTextInterceptor implements TypedTextInterceptor {
     public void cancelled(Context cntxt) {
 
     }
-    
-    public boolean isAutoTagCompletionEnabled(){
+
+    public boolean isAutoTagCompletionEnabled() {
         return ModulePreferences.isAutoTagCompletionEnabled();
+    }
+
+    private TagType getTagType(String typedText) {
+
+        return switch (typedText) {
+            case "{" -> // NOI18N
+                TagType.CONTENT;
+            case "!" -> // NOI18N  
+                TagType.RAW;
+            case "-" -> // NOI18N 
+                TagType.COMMENT;
+            default ->
+                null;
+        };
+    }
+
+    private void completeFromHtmlFragments(String tokenText, MutableContext context, TagType tagType) {
+        switch (tokenText) {
+            case "{" -> // NOI18N 
+                completeContentTag(context, tagType);
+            case "{!" -> // NOI18N 
+                completeRawContentTag(context, tagType);
+            case "{{-" -> // NOI18N 
+                completeCommenTag(context, tagType);
+        }
+    }
+
+    private void completeContentTag(MutableContext context, TagType tagType) {
+        if (tagType != TagType.CONTENT) {
+            return;
+        }
+        context.setText("{ }}", 1);// NOI18N
+    }
+
+    private void completeRawContentTag(MutableContext context, TagType tagType) {
+        if (tagType != TagType.RAW) {
+            return;
+        }
+        context.setText("! !!}", 1);// NOI18N
+    }
+
+    private void completeCommenTag(MutableContext context, TagType tagType) {
+        if (tagType != TagType.COMMENT) {
+            return;
+        }
+        context.setText("- --}}", 1);// NOI18N
     }
 
     /**

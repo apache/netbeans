@@ -18,9 +18,6 @@
  */
 package org.netbeans.modules.php.blade.editor.parser;
 
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
-import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
@@ -28,16 +25,15 @@ import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
-import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author bhaidu
  */
 public class BladeParser extends org.netbeans.modules.parsing.spi.Parser {
+
     private static final Logger LOGGER = Logger.getLogger(BladeParser.class.getName());
-    BladeParserResult lastResult;
-    private static final WeakHashMap<FileObject, Reference<BladeParserResult>> CACHE = new WeakHashMap<>();
+    private BladeParserResult lastResult;
 
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException {
@@ -45,25 +41,16 @@ public class BladeParser extends org.netbeans.modules.parsing.spi.Parser {
             return;
         }
         LOGGER.info(String.format("Parsing request for for " + task.getClass().getName() + " event changed : " + event.sourceChanged()));
-        if (task.getClass().getName().contains("HtmlCssIndexContributor")){
+        if (task.getClass().getName().contains("HtmlCssIndexContributor")) {
             LOGGER.log(Level.INFO, "Skipped parsing for {0}", task.getClass().getName());
             return;
         }
-        long startTime = System.currentTimeMillis();
         BladeParserResult parserResult = createParserResult(snapshot);
 
         BladeParserResult parsed = parserResult.get(task.getClass().getName());
-        //cacheResult(snapshot.getSource().getFileObject(), parsed);
         lastResult = parsed;
-        //LOGGER.info(String.format("Finished parsing for " + task.getClass().getName() + ". Time : %d ms", System.currentTimeMillis() - startTime));
     }
-    
-    private static void cacheResult(FileObject fo, BladeParserResult result) {
-        synchronized (CACHE) {
-            CACHE.put(fo, new WeakReference<>(result));
-        }
-    }
-    
+
     @Override
     public Result getResult(Task task) throws ParseException {
         assert lastResult != null;

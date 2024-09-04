@@ -57,20 +57,13 @@ public final class BladeProjectProperties {
     @CheckForNull
     public static BladeProjectProperties getInstance(Project project) {
         synchronized (INSTANCES) {
-            if (INSTANCES.containsKey(project)) {
-                return INSTANCES.get(project);
-            }
-            BladeProjectProperties instance = new BladeProjectProperties(project);
-            INSTANCES.put(project, instance);
-            return instance;
+            return INSTANCES.computeIfAbsent(project, k -> new BladeProjectProperties(project));
         }
     }
 
     public static void closeProject(Project project) {
         synchronized (INSTANCES) {
-            if (INSTANCES.containsKey(project)) {
-                INSTANCES.remove(project);
-            }
+            INSTANCES.remove(project);
         }
     }
 

@@ -79,7 +79,7 @@ import org.netbeans.modules.php.blade.editor.parser.BladeParserResult;
     @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"), path = ACTIONS, position = 1600),
     @ActionReference(id = @ActionID(category = "TemplateActions", id = "org.netbeans.modules.php.blade.editor.actions.FindUsage"),
             path = ACTIONS, separatorBefore = 1700, position = 1800),
-    @ActionReference(id = @ActionID(category = "System", id = "org.netbeans.modules.php.blade.editor.actions.AntlrDebug"), path = ACTIONS, position = 1900), //    @ActionReference(id = @ActionID(category = "DebugAntlrActions", id = "org.netbeans.modules.php.blade.editor.actions.ViewAntlrLexerTokens"), path = ACTIONS, position = 2000),
+    @ActionReference(id = @ActionID(category = "System", id = "org.netbeans.modules.php.blade.editor.actions.AntlrDebug"), path = ACTIONS, position = 1900), 
 }
 )
 public class BladeLanguage extends DefaultLanguageConfig {

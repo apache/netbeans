@@ -51,6 +51,7 @@ import org.netbeans.modules.php.blade.editor.EditorStringUtils;
 import org.netbeans.modules.php.blade.editor.navigator.BladeStructureItem;
 import org.netbeans.modules.php.blade.editor.navigator.BladeStructureItem.DirectiveBlockStructureItem;
 import org.netbeans.modules.php.blade.editor.navigator.BladeStructureItem.DirectiveInlineStructureItem;
+import org.netbeans.modules.php.blade.syntax.BladeDirectivesUtils;
 import org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrLexer;
 import static org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrLexer.*;
 import org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrParser;
@@ -107,7 +108,7 @@ public class BladeParserResult extends ParserResult {
     public BladeParserResult get(String taskClass) {
         long startTime = System.currentTimeMillis();
         if (debugMode){
-            LOGGER.log(Level.INFO, "PARSER TRIGGERED BY {0}", taskClass);
+            LOGGER.log(Level.INFO, "PARSER TRIGGERED BY {0}", taskClass); // NOI18N
         }
         if (!finished) {
             BladeAntlrParser parser = createParser(getSnapshot());
@@ -116,25 +117,25 @@ public class BladeParserResult extends ParserResult {
             parser.addParseListener(createDeclarationReferencesListener());
             parser.addParseListener(createPhpElementsOccurencesListener());
 
-            if (taskClass.toLowerCase().contains("completion")) {
+            if (taskClass.toLowerCase().contains("completion")) { // NOI18N
                 parser.addParseListener(createVariableListener());
             }
 
             parser.addParseListener(createStructureListener());
 
-            if (taskClass.toLowerCase().contains("hints")) {
+            if (taskClass.toLowerCase().contains("hints")) { // NOI18N
                 parser.addParseListener(createSemanticsListener());
             }
             evaluateParser(parser);
             if (debugMode){
-                LOGGER.info(String.format("Parser evaluated in %d ms " + taskClass + " | " + this.getFileObject().getNameExt(), System.currentTimeMillis() - startTime));
+                LOGGER.info(String.format("Parser evaluated in %d ms " + taskClass + " | " + this.getFileObject().getNameExt(), System.currentTimeMillis() - startTime)); // NOI18N
             }
             finished = true;
         }
         long time = System.currentTimeMillis() - startTime;
         
         if (debugMode){
-            LOGGER.info(String.format("finished parser took %d ms " + this.getFileObject().getNameExt(), time));
+            LOGGER.info(String.format("finished parser took %d ms " + this.getFileObject().getNameExt(), time)); // NOI18N
         }
         return this;
     }
@@ -244,12 +245,8 @@ public class BladeParserResult extends ParserResult {
 
                 //used for indexing
                 switch (directive.getType()) {
-                    case D_STACK:
-                        addStackReference(ReferenceType.STACK, bladeParamText, range);
-                        break;
-                    case D_YIELD:
-                        addYieldReference(ReferenceType.YIELD, bladeParamText, range);
-                        break;
+                    case D_STACK -> addStackReference(ReferenceType.STACK, bladeParamText, range);
+                    case D_YIELD -> addYieldReference(ReferenceType.YIELD, bladeParamText, range);
                 }
 
                 ReferenceType type = getReferenceType(directive.getType());
@@ -260,7 +257,7 @@ public class BladeParserResult extends ParserResult {
 
                 Reference ref;
                 if (type.equals(ReferenceType.USE) || type.equals(ReferenceType.INJECT)) {
-                    int lastSlashPos = bladeParamText.lastIndexOf("\\");
+                    int lastSlashPos = bladeParamText.lastIndexOf(EditorStringUtils.NAMESPACE_SEPARATOR);
                     if (lastSlashPos < 0 || lastSlashPos >= bladeParamText.length() - 1) {
                         return;
                     }
@@ -274,18 +271,13 @@ public class BladeParserResult extends ParserResult {
                 occurancesForDeclaration.put(range, ref);
 
                 switch (directive.getType()) {
-                    case D_EACH:
-                    case D_INCLUDE_WHEN:
-                    case D_INCLUDE_UNLESS:
-                    case D_INCLUDE:
-                    case D_INCLUDE_IF:
-                    case D_INCLUDE_FIRST:
-                        if (bladeParamText.contains("::")) {
+                    case D_EACH, D_INCLUDE_WHEN, D_INCLUDE_UNLESS, D_INCLUDE, D_INCLUDE_IF, D_INCLUDE_FIRST -> {
+                        if (bladeParamText.contains("::")) { // NOI18N
                             //don't include package resources
                             break;
                         }
                         markIncludeBladeOccurrence(bladeParamText, range);
-                        break;
+                    }
                 }
             }
             
@@ -627,7 +619,7 @@ public class BladeParserResult extends ParserResult {
 
                 blockItem.nestedItems.addAll(lexerStructure);
                 lexerStructure.clear();
-                if (blockBalance > 0 && !directiveName.startsWith("@else")) {
+                if (blockBalance > 0 && !directiveName.startsWith(BladeDirectivesUtils.DIRECTIVE_ELSE)) {
                     lexerStructure.add(blockItem);
                 } else {
                     structure.add(blockItem);
@@ -648,34 +640,21 @@ public class BladeParserResult extends ParserResult {
     }
 
     private ReferenceType getReferenceType(int type) {
-        switch (type) {
-            case D_INCLUDE:
-                return ReferenceType.INCLUDE;
-            case D_INCLUDE_IF:
-                return ReferenceType.INCLUDE_IF;
-            case D_EXTENDS:
-                return ReferenceType.EXTENDS;
-            case D_USE:
-                return ReferenceType.USE;
-            case D_INJECT:
-                return ReferenceType.INJECT;
-            case D_SECTION:
-                return ReferenceType.SECTION;
-            case D_HAS_SECTION:
-                return ReferenceType.HAS_SECTION;
-            case D_SECTION_MISSING:
-                return ReferenceType.SECTION_MISSING;
-            case D_PUSH:
-                return ReferenceType.PUSH;
-            case D_PUSH_IF:
-                return ReferenceType.PUSH_IF;
-            case D_PREPEND:
-                return ReferenceType.PREPEND;
-            case D_EACH:
-                return ReferenceType.EACH;
-            default:
-                return null;
-        }
+        return switch (type) {
+            case D_INCLUDE -> ReferenceType.INCLUDE;
+            case D_INCLUDE_IF -> ReferenceType.INCLUDE_IF;
+            case D_EXTENDS -> ReferenceType.EXTENDS;
+            case D_USE -> ReferenceType.USE;
+            case D_INJECT -> ReferenceType.INJECT;
+            case D_SECTION -> ReferenceType.SECTION;
+            case D_HAS_SECTION -> ReferenceType.HAS_SECTION;
+            case D_SECTION_MISSING -> ReferenceType.SECTION_MISSING;
+            case D_PUSH -> ReferenceType.PUSH;
+            case D_PUSH_IF -> ReferenceType.PUSH_IF;
+            case D_PREPEND -> ReferenceType.PREPEND;
+            case D_EACH -> ReferenceType.EACH;
+            default -> null;
+        };
     }
 
     /**
@@ -899,8 +878,7 @@ public class BladeParserResult extends ParserResult {
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
                 int errorPosition = 0;
-                if (offendingSymbol instanceof Token) {
-                    Token offendingToken = (Token) offendingSymbol;
+                if (offendingSymbol instanceof Token offendingToken) {
                     errorPosition = offendingToken.getStartIndex();
                 }
                 errors.add(new BladeError(null, msg, null, getFileObject(), errorPosition, errorPosition, Severity.ERROR));
@@ -975,13 +953,11 @@ public class BladeParserResult extends ParserResult {
         public String itemVariable;
     }
 
-    /**
-     * seems that java caches only this class ? BladeError is not found in some
-     * occasions
-     */
     public static class BladeError extends DefaultError implements org.netbeans.modules.csl.api.Error.Badging {
 
-        public BladeError(@NullAllowed String key, @NonNull String displayName, @NullAllowed String description, @NonNull FileObject file, @NonNull int start, @NonNull int end, @NonNull Severity severity) {
+        public BladeError(@NullAllowed String key, @NonNull String displayName,
+                @NullAllowed String description, @NonNull FileObject file,
+                @NonNull int start, @NonNull int end, @NonNull Severity severity) {
             super(key, displayName, description, file, start, end, severity);
         }
 

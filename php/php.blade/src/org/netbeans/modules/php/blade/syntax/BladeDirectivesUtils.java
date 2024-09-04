@@ -36,6 +36,7 @@ public final class BladeDirectivesUtils {
     public static final String DIRECTIVE_STOP = "@stop"; // NOI18N
     public static final String DIRECTIVE_APPEND = "@append"; // NOI18N
     public static final String DIRECTIVE_IF = "@if"; // NOI18N
+    public static final String DIRECTIVE_ELSE = "@else"; // NOI18N
     public static final String DIRECTIVE_ENDIF = "@endif"; // NOI18N
     
     public static String[] directiveStart2EndPair(String directive){

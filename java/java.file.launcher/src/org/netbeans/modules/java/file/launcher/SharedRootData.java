@@ -21,10 +21,12 @@ package org.netbeans.modules.java.file.launcher;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.java.file.launcher.api.SourceLauncher;
 import org.openide.filesystems.FileAttributeEvent;
@@ -45,7 +47,13 @@ public class SharedRootData {
     private static final Map<FileObject, SharedRootData> root2Data = new HashMap<>();
 
     public static synchronized void ensureRootRegistered(FileObject root) {
-        root2Data.computeIfAbsent(root, r -> new SharedRootData(r));
+        if (root2Data.get(root) != null) {
+            return ;
+        }
+
+        SharedRootData data = root2Data.computeIfAbsent(root, r -> new SharedRootData(r));
+
+        data.init();
     }
 
     public static synchronized @CheckForNull SharedRootData getDataForRoot(FileObject root) {
@@ -53,18 +61,18 @@ public class SharedRootData {
     }
 
     private final FileObject root;
-    private final Map<String, String> options = new TreeMap<>();
+    private final Map<String, FileProperties> properties = new TreeMap<>();
     private final FileChangeListener listener = new FileChangeAdapter() {
         @Override
         public void fileAttributeChanged(FileAttributeEvent fe) {
-            Map<String, String> newProperties = new HashMap<>();
+            Map<String, FileProperties> newProperties = new HashMap<>();
 
             addPropertiesFor(fe.getFile(), newProperties);
             setNewProperties(newProperties);
         }
         @Override
         public void fileDeleted(FileEvent fe) {
-            Map<String, String> newProperties = new HashMap<>();
+            Map<String, FileProperties> newProperties = new HashMap<>();
 
             newProperties.put(FileUtil.getRelativePath(root, fe.getFile()), null);
             setNewProperties(newProperties);
@@ -73,9 +81,12 @@ public class SharedRootData {
 
     private SharedRootData(FileObject root) {
         this.root = root;
+    }
+
+    private void init() {
         root.addRecursiveListener(listener);
         Enumeration<? extends FileObject> todo = root.getChildren(true);
-        Map<String, String> newProperties = new HashMap<>();
+        Map<String, FileProperties> newProperties = new HashMap<>();
         while (todo.hasMoreElements()) {
             FileObject current = todo.nextElement();
             addPropertiesFor(current, newProperties);
@@ -83,25 +94,32 @@ public class SharedRootData {
         setNewProperties(newProperties);
     }
 
-    private void addPropertiesFor(FileObject file, Map<String, String> newProperties) {
+    private void addPropertiesFor(FileObject file, Map<String, FileProperties> newProperties) {
         if (file.isData() && "text/x-java".equals(file.getMIMEType())) {
-            newProperties.put(FileUtil.getRelativePath(root, file), (String) file.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS));
+            newProperties.put(FileUtil.getRelativePath(root, file), new FileProperties((String) file.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS),
+                                                                                       SingleSourceFileUtil.isTrue(file.getAttribute(SingleSourceFileUtil.FILE_REGISTER_ROOT))));
         }
     }
 
-    private synchronized void setNewProperties(Map<String, String> newProperties) {
+    private synchronized void setNewProperties(Map<String, FileProperties> newProperties) {
         if (newProperties.isEmpty()) {
             return ;
         }
         for (String key : newProperties.keySet()) {
-            String value = newProperties.get(key);
-            if (value == null) {
-                options.remove(key);
+            FileProperties fileProperties = newProperties.get(key);
+            if (fileProperties == null) {
+                properties.remove(key);
             } else {
-                options.put(key, value);
+                properties.put(key, fileProperties);
             }
         }
-        String joinedCommandLine = SourceLauncher.joinCommandLines(options.values());
+
+        List<String> vmOptions = properties.values()
+                                           .stream()
+                                           .map(p -> p.vmOptions)
+                                           .filter(p -> p != null)
+                                           .collect(Collectors.toList());
+        String joinedCommandLine = SourceLauncher.joinCommandLines(vmOptions);
         try {
             if (!joinedCommandLine.equals(root.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS))) {
                 root.setAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS, joinedCommandLine);
@@ -109,6 +127,21 @@ public class SharedRootData {
         } catch (IOException ex) {
             LOG.log(Level.INFO, "Failed to set " + SingleSourceFileUtil.FILE_VM_OPTIONS + " for " + root.getPath(), ex);
         }
+        Boolean registerRoot = properties.values()
+                                         .stream()
+                                         .map(p -> p.registerRoot)
+                                         .filter(r -> r)
+                                         .findAny()
+                                         .isPresent();
+        try {
+            if (!registerRoot.equals(root.getAttribute(SingleSourceFileUtil.FILE_REGISTER_ROOT))) {
+                root.setAttribute(SingleSourceFileUtil.FILE_REGISTER_ROOT, registerRoot);
+            }
+        } catch (IOException ex) {
+            LOG.log(Level.INFO, "Failed to set " + SingleSourceFileUtil.FILE_REGISTER_ROOT + " for " + root.getPath(), ex);
+        }
     }
+
+    record FileProperties(String vmOptions, boolean registerRoot) {}
 
 }

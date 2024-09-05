@@ -118,7 +118,8 @@ public abstract class SingleFileOptionsQueryImpl implements SingleFileOptionsQue
 
         @Override
         public String getOptions() {
-            return workspaceSettings.getOptions();
+            String options = workspaceSettings.getOptions();
+            return options != null ? options : "";
         }
 
         @Override
@@ -127,6 +128,11 @@ public abstract class SingleFileOptionsQueryImpl implements SingleFileOptionsQue
             FileObject workDir = cwd != null ? FileUtil.toFileObject(new File(cwd))
                                              : workspaceFolder;
             return workDir.toURI();
+        }
+
+        @Override
+        public boolean registerRoot() {
+            return true;
         }
 
         @Override

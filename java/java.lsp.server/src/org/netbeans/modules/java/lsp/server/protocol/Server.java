@@ -49,7 +49,6 @@ import com.google.gson.JsonPrimitive;
 import java.util.prefs.Preferences;
 import java.util.LinkedHashSet;
 import java.util.Objects;
-import java.util.WeakHashMap;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -161,6 +160,7 @@ import org.openide.util.lookup.ProxyLookup;
 public final class Server {
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
     private static final LspServerTelemetryManager LSP_SERVER_TELEMETRY = new LspServerTelemetryManager();
+    private static final ErrorsNotifier ERR_NOTIFIER = new ErrorsNotifier();
     
     private Server() {
     }
@@ -183,7 +183,8 @@ public final class Server {
         ((LanguageClientAware) server).connect(remote);
         msgProcessor.attachClient(server.client);
         Future<Void> runningServer = serverLauncher.startListening();
-        LSP_SERVER_TELEMETRY.connect(server.client, runningServer);        
+        LSP_SERVER_TELEMETRY.connect(server.client, runningServer);
+        ERR_NOTIFIER.connect(server, runningServer);
         return new NbLspServer(server, runningServer);
     }
     
@@ -1405,13 +1406,14 @@ public final class Server {
 
         @Override
         public synchronized boolean scanStarted(Context context) {
-           LSP_SERVER_TELEMETRY.sendTelemetry(new TelemetryEvent(MessageType.Info.toString(), LSP_SERVER_TELEMETRY.SCAN_START_EVT, "nbls.scanStarted")); 
-	   return true;
+            LSP_SERVER_TELEMETRY.sendTelemetry(new TelemetryEvent(MessageType.Info.toString(), LSP_SERVER_TELEMETRY.SCAN_START_EVT, "nbls.scanStarted")); 
+	    return true;
         }
 
         @Override
         public synchronized void scanFinished(Context context) {
-        LSP_SERVER_TELEMETRY.sendTelemetry(new TelemetryEvent(MessageType.Info.toString(),LSP_SERVER_TELEMETRY.SCAN_END_EVT,"nbls.scanFinished"));
+            LSP_SERVER_TELEMETRY.sendTelemetry(new TelemetryEvent(MessageType.Info.toString(),LSP_SERVER_TELEMETRY.SCAN_END_EVT,"nbls.scanFinished"));
+            ERR_NOTIFIER.notifyErrors(context.getRootURI());
         }
 
         @Override

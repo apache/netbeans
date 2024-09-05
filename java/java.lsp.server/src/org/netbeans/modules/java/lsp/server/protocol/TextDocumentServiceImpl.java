@@ -2175,7 +2175,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 try {
                     String uriString = url.toURI().toString();
                     String lspUri = URITranslator.getDefault().uriToLSP(uriString);
-                    runDiagnosticTasks(lspUri);
+                    server.asyncOpenFileOwner(f).thenRun(() -> {
+                        Lookups.executeWith(new ProxyLookup(Lookups.singleton(client), Lookup.getDefault()), () -> {
+                            runDiagnosticTasks(lspUri);
+                        });
+                    });
                 } catch (URISyntaxException ex) {
                     // should not happen
                 }

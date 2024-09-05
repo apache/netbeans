@@ -87,6 +87,20 @@ is the proper place.
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="ErrorsCache.getAllFilesWithRecord">
+          <api name="IndexingAPI"/>
+          <summary>Added method to ErrorsCache to return all files with error or warning</summary>
+          <version major="9" minor="36"/>
+          <date day="3" month="9" year="2024"/>
+          <author login="dbalek"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
+          <description>
+              <p>
+                  Added the <a href="@TOP@/org/netbeans/modules/parsing/spi/indexing/ErrorsCache.html#getAllFilesWithRecord-java.net.URL-">getAllFilesWithRecord()</a> method to return all files with error or warning.
+              </p>
+          </description>
+          <class package="org.netbeans.modules.parsing.spi.indexing" name="ErrorsCache"/>
+      </change>
       <change id="IndexabilityQuery">
           <api name="IndexingAPI"/>
           <summary>Allow plugins to exclude files from being indexed.</summary>

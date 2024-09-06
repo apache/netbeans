@@ -194,7 +194,7 @@ public class PluginPropertyUtils {
         T build(Xpp3Dom configRoot, ExpressionEvaluator eval);
     }
     
-    private static ExpressionEvaluator DUMMY_EVALUATOR = new ExpressionEvaluator() {
+    static ExpressionEvaluator DUMMY_EVALUATOR = new ExpressionEvaluator() {
 
         @Override
         public Object evaluate(String string) throws ExpressionEvaluationException {
@@ -610,18 +610,14 @@ public class PluginPropertyUtils {
         private static final String PROP_VERSION = "version"; // NOI18N
         private static final String PROP_SCOPE = "scope"; // NOI18N
         
-        private final MavenProject mvnProject;
         private final String multiPropertyName;
-        private final String propertyItemName;
         private final String filterType;
-        
-        public DependencyListBuilder(MavenProject mvnProject, String multiPropertyName, String propertyItemName, String filterType) {
-            this.mvnProject = mvnProject;
+
+        public DependencyListBuilder(String multiPropertyName, String filterType) {
             this.multiPropertyName = multiPropertyName;
-            this.propertyItemName = propertyItemName;
             this.filterType = filterType;
         }
-        
+
         @Override
         public List<Dependency> build(Xpp3Dom configRoot, ExpressionEvaluator eval) {
             if (configRoot == null) {
@@ -632,7 +628,7 @@ public class PluginPropertyUtils {
             if (source == null) {
                 return null;
             }
-            for (Xpp3Dom ch : source.getChildren(propertyItemName)) {
+            for (Xpp3Dom ch : source.getChildren()) {
                 Xpp3Dom a = ch.getChild(PROP_ARTIFACT_ID);
                 Xpp3Dom g = ch.getChild(PROP_GROUP_ID);
                 Xpp3Dom v = ch.getChild(PROP_VERSION);
@@ -693,16 +689,31 @@ public class PluginPropertyUtils {
 
         /**
          * Creates a query instance with mandatory parameters
+         *
          * @param pluginGroupId plugin's group ID
          * @param pluginArtifactId plugin's artifact ID
-         * @param pathProperty name of the property (the property should contain a list of items)
-         * @param pathItemName name of the single item's element
+         * @param pathProperty name of the property (the property should contain
+         * a list of items)
          */
-        public PluginConfigPathParams(String pluginGroupId, String pluginArtifactId, String pathProperty, String pathItemName) {
+        public PluginConfigPathParams(String pluginGroupId, String pluginArtifactId, String pathProperty) {
             this.pluginGroupId = pluginGroupId;
             this.pluginArtifactId = pluginArtifactId;
             this.pathProperty = pathProperty;
-            this.pathItemName = pathItemName;
+            this.pathItemName = null;
+        }
+
+        /**
+         * Creates a query instance with mandatory parameters
+         * 
+         * @deprecated List items can have arbitrary names, use {@link #PluginConfigPathParams(java.lang.String, java.lang.String, java.lang.String)} instead.
+         * @param pluginGroupId plugin's group ID
+         * @param pluginArtifactId plugin's artifact ID
+         * @param pathProperty name of the property (the property should contain a list of items)
+         * @param pathItemName name of the single item's element (ignored)
+         */
+        @Deprecated
+        public PluginConfigPathParams(String pluginGroupId, String pluginArtifactId, String pathProperty, String pathItemName) {
+            this(pluginGroupId, pluginArtifactId, pathProperty);
         }
 
         /**
@@ -741,6 +752,10 @@ public class PluginPropertyUtils {
             return pathProperty;
         }
 
+        /**
+         * Returns null.
+         */
+        @Deprecated
         public String getPathItemName() {
             return pathItemName;
         }
@@ -777,7 +792,7 @@ public class PluginPropertyUtils {
         }
         
         MavenProject mavenProject = projectImpl.getOriginalMavenProject();
-        DependencyListBuilder bld = new DependencyListBuilder(mavenProject, query.getPathProperty(), query.getPathItemName(), query.getArtifactType());
+        DependencyListBuilder bld = new DependencyListBuilder(query.getPathProperty(), query.getArtifactType());
         List<Dependency> coordinates = PluginPropertyUtils.getPluginPropertyBuildable(mavenProject, query.getPluginGroupId(), query.getPluginArtifactId(), query.getGoal(), bld);
         if (coordinates == null) {
             return null;

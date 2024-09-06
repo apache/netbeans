@@ -3,7 +3,7 @@ Description: Part of Apache Maven Distribution
 Version: 1.7.36
 License: MIT-slf4j-22
 Origin: Apache Software Foundation
-Files: apache-maven-3.9.8-bin.zip!/apache-maven-3.9.8/lib/slf4j-api-1.7.36.jar
+Files: apache-maven-3.9.9-bin.zip!/apache-maven-3.9.9/lib/slf4j-api-1.7.36.jar
 
 Copyright (c) 2004-2022 QOS.ch Sarl (Switzerland)
 All rights reserved.

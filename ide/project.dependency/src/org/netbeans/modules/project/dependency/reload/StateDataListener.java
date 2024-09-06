@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.project.dependency.ProjectReload;
+import org.netbeans.modules.project.dependency.ProjectReload.ProjectState;
 import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation;
 import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation.ProjectStateData;
 import org.openide.cookies.SaveCookie;
@@ -188,6 +189,10 @@ class StateDataListener extends FileChangeAdapter implements ProjectStateListene
 
     private void reportFile(FileObject f, long t) {
         ProjectReload.ProjectState state = this.tracker.get();
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "{0} received file report: {1}, time {2}, file time {4}, state time: {3}", new Object[] { state == null ? "null" : state.toString(), f, t, 
+                state == null ? -3 : state.getTimestamp(), f.lastModified().getTime() });
+        }
         if (state == null) {
             detachListeners();
             return;
@@ -199,17 +204,20 @@ class StateDataListener extends FileChangeAdapter implements ProjectStateListene
         ReloadApiAccessor.get().updateProjectState(state, true, false, Collections.singleton(f), null, null);
         watchedFiles.getOrDefault(f, Collections.emptyList()).forEach(d -> d.fireChanged(false, true));
     }
-
+    
     @Override
     public void stateChanged(ChangeEvent e) {
         ProjectReload.ProjectState state = this.tracker.get();
-        if (state == null) {
-            detachListeners();
-            return;
-        }
         ProjectReloadImplementation.ProjectStateData d = (ProjectReloadImplementation.ProjectStateData) e.getSource();
         boolean c = d.isConsistent();
         boolean v = d.isValid();
+        if (state == null) {
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "DETACHING on stateData from {1}", new Object[] { d.toString() });
+            }
+            detachListeners();
+            return;
+        }
         Collection<FileObject> obs = new HashSet<>(d.getFiles());
         boolean fire = false;
         boolean invalid = false;
@@ -240,7 +248,9 @@ class StateDataListener extends FileChangeAdapter implements ProjectStateListene
             // invalid states
             detachListeners();
         }
-        LOG.log(Level.FINE, "Got state change on {0}, firing change: {1}", new Object[]{d, fire});
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "{0} received stateData from {1}, updating: {2}", new Object[] { state.toString(), d.toString(), fire });
+        }
         if (fire) {
             ReloadApiAccessor.get().updateProjectState(state, inconsistent, invalid, setModified, null, null);
         }
@@ -270,6 +280,9 @@ class StateDataListener extends FileChangeAdapter implements ProjectStateListene
         Lookup.Result lr = (Lookup.Result) ev.getSource();
         if (!lr.allItems().isEmpty()) {
             Set<FileObject> ed = new HashSet<>(state.getEditedFiles());
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "{0} received SaveCookie on file {1}; present {2}", new Object[] { state.toString(), f, ed.contains(f) });
+            }
             if (ed.add(f)) {
                 Set<FileObject> ch = new HashSet<>(state.getChangedFiles());
                 if (!ch.add(f)) {

@@ -33,6 +33,8 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -42,7 +44,9 @@ import org.netbeans.modules.project.dependency.ProjectReload;
 import org.netbeans.modules.project.dependency.ProjectReload.ProjectState;
 import org.netbeans.modules.project.dependency.ProjectReload.StateRequest;
 import org.netbeans.modules.project.dependency.ProjectReload.Quality;
+import org.netbeans.modules.project.dependency.reload.ProjectReloadInternal;
 import org.netbeans.modules.project.dependency.reload.ProjectStateListener;
+import org.netbeans.modules.project.dependency.reload.Reloader;
 import org.netbeans.modules.project.dependency.reload.Reloader.LoadContextImpl;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Cancellable;
@@ -132,6 +136,8 @@ public interface ProjectReloadImplementation<D> {
      * SPI to API utility methods.
      */
     public final class ProjectStateData<D> {
+        private static final Logger LOG = ProjectReloadInternal.LOG;
+        
         private final Collection<FileObject> files;
         private final Quality quality;
         private final long timestamp;
@@ -143,9 +149,11 @@ public interface ProjectReloadImplementation<D> {
         private Throwable error;
 
         // The following fields are updated by fire* methods.
-        private boolean consistent = true;
-        private boolean valid;
-        private Collection<FileObject> changedFiles;
+        // @GuardedBy(this)
+        private volatile boolean consistent = true;
+        private volatile boolean valid;
+        private volatile Collection<FileObject> changedFiles;
+        // @GuardedBy(this)
         private Set<Class> inconsistencies;
         
         private final List<ProjectStateListener> listeners = new ArrayList<>();
@@ -158,6 +166,10 @@ public interface ProjectReloadImplementation<D> {
             this.timestamp = timestamp;
             this.projectData = projectData;
             this.error = error;
+            if (!valid && LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, "Created invalid state data {0}", toString());
+                LOG.log(Level.FINER, "Origin", new Throwable());
+            }
         }
 
         /**
@@ -242,6 +254,10 @@ public interface ProjectReloadImplementation<D> {
             if (this.files != null && files.containsAll(this.files) && this.files.size() == files.size()) {
                 return;
             }
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, "{0} got file set changed: {1}", new Object[] { toString(), files });
+                LOG.log(Level.FINEST, "Origin:", new Throwable());
+            }
             Set<FileObject> n = new HashSet<>(files);
             n.removeAll(this.files);
             if (n.isEmpty()) {
@@ -282,6 +298,10 @@ public interface ProjectReloadImplementation<D> {
          * @param dataClass data that should be made inconsistent.
          */
         public void fireDataInconsistent(Class dataClass) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, "{0} got data inconsistent: {1}", new Object[] { toString(), dataClass });
+                LOG.log(Level.FINEST, "Origin:", new Throwable());
+            }
             synchronized (this) {
                 // during initial data collection and before ProjectState is formed, the inconsistencies
                 // must be buffered.
@@ -310,6 +330,10 @@ public interface ProjectReloadImplementation<D> {
          * @param inconsistent true, to mark the data inconsistent. 
       */
         public void fireChanged(boolean invalidate, boolean inconsistent) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, "{0} got state change: invalidate={1}, inconsistent={2}", new Object[] { toString(), invalidate, inconsistent });
+                LOG.log(Level.FINEST, "Origin:", new Throwable());
+            }
             if (invalidate) {
                 this.valid = false;
             }
@@ -350,11 +374,12 @@ public interface ProjectReloadImplementation<D> {
             this.lookup = null;
             this.projectData = null;
             this.valid = false;
+            LOG.log(Level.FINER, "{0}: cleared.", toString());
             this.listeners.clear();
         }
         
         public String toString() {
-            return "[quality=" + quality + ", consistent=" + consistent + ", valid=" + valid + ", files: " + this.files + "]";
+            return "StateData@" + Integer.toHexString(System.identityHashCode(this))+ "[quality=" + quality + ", consistent=" + consistent + ", valid=" + valid + ", timestamp: " + timestamp + ", files: " + this.files + "]";
         }
         
         public static ProjectStateBuilder builder(Quality q) {
@@ -475,6 +500,12 @@ public interface ProjectReloadImplementation<D> {
         
         public ProjectStateData build() {
             ProjectStateData d = new ProjectStateData(files == null ? Collections.emptyList() : files, valid, q, time, lkp, error, data);
+            if (!d.isValid() || !d.isConsistent()) {
+                if (Reloader.LOG.isLoggable(Level.FINER)) {
+                    Reloader.LOG.log(Level.FINER, "Creating obsolete StateData: {0}", d.toString());
+                    Reloader.LOG.log(Level.FINER, "Origin:", new Throwable());
+                }
+            }
             if (privateDataSupplier != null) {
                 d.privateData = privateDataSupplier.apply(d);
             }

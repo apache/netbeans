@@ -1763,14 +1763,20 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public void didSave(DidSaveTextDocumentParams savedParams) {
-        LOG.log(Level.FINER, "didSave: {0}", savedParams);
+        LOG.log(Level.FINE, "didSave: {0}", savedParams.getTextDocument().getUri());
         FileObject file = fromURI(savedParams.getTextDocument().getUri());
         if (file == null) {
             return;
         }
         // refresh the file systems, potentially fire events
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Refreshing file {0}, timestamp {1}", new Object[] { file, file.lastModified().getTime() });
+        }
         file.refresh();
         EditorCookie cake = file.getLookup().lookup(EditorCookie.class);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Refresh done on {0}, timestamp {1}, existing editor: {2}", new Object[] { file, file.lastModified().getTime(), cake });
+        }
         if (cake == null) {
             return;
         }

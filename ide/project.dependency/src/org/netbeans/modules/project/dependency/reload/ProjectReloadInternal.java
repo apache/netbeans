@@ -80,7 +80,7 @@ import org.openide.util.RequestProcessor;
  * @author sdedic
  */
 public class ProjectReloadInternal {
-    private static final Logger LOG = Logger.getLogger(ProjectReloadInternal.class.getName());
+    public static final Logger LOG = Logger.getLogger(ProjectReloadInternal.class.getName());
     
     /**
      * Default concurrency
@@ -198,7 +198,10 @@ public class ProjectReloadInternal {
             }
             if (o != null) {
                 long m = System.currentTimeMillis();
-                LOG.log(Level.FINER, "Project touched: {0}@{3} at {1}, lastAccessed = {2}", new Object[] { o, m, lastAccessed, System.identityHashCode(this) });
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, "Project touched: {0}@{3} at {1}, lastAccessed = {2}", new Object[] { o.toString(), m, lastAccessed, 
+                        Integer.toHexString(System.identityHashCode(this)) });
+                }
                 hard = o;
                 if (lastAccessed == 0) {
                     evictTask.schedule(STATE_TIMEOUT_MS);
@@ -221,11 +224,11 @@ public class ProjectReloadInternal {
                 }
                 synchronized (this) {
                     if (toDetach == null) {
-                        LOG.log(Level.FINER, "Project state GCed: {0}", System.identityHashCode(this));
+                        LOG.log(Level.FINER, "Project state GCed: {0}", Integer.toHexString(System.identityHashCode(this)));
                         return;
                     }
                 }
-                LOG.log(Level.FINER, "Project state {0}: detaching listeners", System.identityHashCode(this));
+                LOG.log(Level.FINER, "Project state {0}: detaching listeners", Integer.toHexString(System.identityHashCode(this)));
                 toDetach.detachListeners();
             } else {
                 long unused = System.currentTimeMillis() - lastAccessed;
@@ -315,6 +318,11 @@ public class ProjectReloadInternal {
             if (time < timestamp) {
                 timestamp = time;
             }
+            if (!data.isValid()) {
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, "New state invalid because of {0}", data.toString());
+                }
+            }
             valid &= data.isValid();
         }
 
@@ -322,10 +330,14 @@ public class ProjectReloadInternal {
             long t = f.lastModified().getTime();
             if (f.getLookup().lookup(SaveCookie.class) != null) {
                 edited.add(f);
+                LOG.log(Level.FINER, "New state inconsistent because of {0} is edited", f);
                 consistent = false;
                 break;
             }
             if (timestamp > 0 && t > timestamp) {
+                LOG.log(Level.FINER, "New state inconsistent because of {0} is newer: file time: {1}, timestamp: {2}", new Object[] { 
+                    f, t, timestamp
+                });
                 consistent = false;
                 modified.add(f);
             }
@@ -335,7 +347,11 @@ public class ProjectReloadInternal {
             timestamp = -1;
         }
         Quality tq = req == null ? status : req.getTargetQuality();
-        return ReloadApiAccessor.get().createState(p, timestamp, parts, status, tq, consistent, valid, loadedFiles, modified, edited, ids);
+        ProjectState ps = ReloadApiAccessor.get().createState(p, timestamp, parts, status, tq, consistent, valid, loadedFiles, modified, edited, ids);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Created state {0} from {1}", new Object[] { ps.toString(), parts.toString() });
+        }
+        return ps;
     }
     
     boolean mergeStates(ProjectReload.ProjectState cached, ProjectReload.ProjectState now, StateParts parts, StateRequest req) {
@@ -380,10 +396,14 @@ public class ProjectReloadInternal {
                 cur = oldRef.get();
                 if (cur != null) {
                     if (mergeStates(cur, state, parts, req)) {
-                        LOG.log(Level.FINE, "Project {0}: reused & merged state {1} in place of {2}", new Object[] { p, cur, state });
+                        if (LOG.isLoggable(Level.FINE)) {
+                            LOG.log(Level.FINE, "Project {0}: reused & merged state {1} in place of {2}", new Object[] { p, cur.toString(), state.toString() });
+                        }
                         return Pair.of(oldRef, cur);
                     }
-                    LOG.log(Level.FINE, "Project {0}: obsolete state {1}", new Object[] { p, cur });
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.log(Level.FINE, "Project {0}: obsolete state {1}", new Object[] { p, cur.toString() });
+                    }
                     ReloadApiAccessor.get().chainPrevious(state, cur, obsolete);
                 }
             }
@@ -396,14 +416,18 @@ public class ProjectReloadInternal {
             if (!parts.isEmpty()) {
                 l.init();
             }
-            if (cur != previous) {
-                LOG.log(Level.FINE, "Project {0}: obsolete previous state {1}", new Object[] { p, previous });
+            if (cur != previous && previous != null) {
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "Project {0}: obsolete previous state {1}", new Object[] { p, previous.toString() });
+                }
                 ReloadApiAccessor.get().chainPrevious(state, previous, obsolete);
             }
             STATE_CACHE.put(variant, ref);
         }
         if (!obsolete.isEmpty() && LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Project {0}: invalidate states", new Object[] { p, obsolete });
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Project {0}: invalidate states", new Object[] { p, obsolete.toString() });
+            }
         }
         // new changes on the current state will fire events on the 'forgotten' ones,
         // but now we need to invalidate+fire them manually.
@@ -433,7 +457,9 @@ public class ProjectReloadInternal {
                 // invalidate obsolete state part data, if the implementation did not do it itself.
                 if (od != null) {
                     if (od.isValid()) {
-                        LOG.log(Level.FINER, "Invalidate project state {0}", od);
+                        if (LOG.isLoggable(Level.FINE)) {
+                            LOG.log(Level.FINER, "Invalidate project state {0}", od.toString());
+                        }
                     }
                     od.fireChanged(true, false);
                 }
@@ -444,7 +470,9 @@ public class ProjectReloadInternal {
                 ProjectStateData od = oparts.get(k);
                 if (od != null) {
                     if (od.isValid()) {
-                        LOG.log(Level.FINER, "Invalidate project state {0}", od);
+                        if (LOG.isLoggable(Level.FINE)) {
+                            LOG.log(Level.FINER, "Invalidate project state {0}", od.toString());
+                        }
                     }
                     od.fireChanged(true, false);
                 }
@@ -514,14 +542,16 @@ public class ProjectReloadInternal {
                     oldS = ref.touch();
                 }
                 if (oldS != null) {
-                    LOG.log(Level.FINE, "Project {0}: cached state returned: {1}", new Object[] { p, oldS });
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.log(Level.FINE, "STATE: project {0}: cached state returned: {1}", new Object[] { p, oldS.toString() });
+                    }
                     return Pair.of(ref, oldS);
                 } else if (nullIfUnknown) {
                     return null;
                 }
                 ProjectState none = createNoneState(p);
                 ref = new StateRef(variant, none);
-                LOG.log(Level.FINE, "Project {0}: NONE state created: {1}", new Object[] { p, none });
+                LOG.log(Level.FINE, "STATE: Project {0}: NONE state created: {1}", new Object[] { p, none });
                 STATE_CACHE.put(variant, ref);
                 return Pair.of(ref, none);
             }
@@ -540,18 +570,24 @@ public class ProjectReloadInternal {
         boolean doReload = !ps.isValid() || stateRequest.isForceReload();
 
         if (stateRequest.isConsistent() && !ps.isConsistent()) {
-            LOG.log(Level.FINER, "RELOAD: State inconsistent: {0}", ps);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINER, "{0}: CHECK: State inconsistent: {1}", new Object[] { stateRequest, ps.toString() });
+            }
             doReload = true;
         }
         if (ps.getQuality().isWorseThan(stateRequest.getMinQuality())) {
-            LOG.log(Level.FINER, "RELOAD: State low quality (required: {1}): {0}", new Object[] { ps, stateRequest.getMinQuality() });
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINER, "{0}: CHECK:State low quality: {1}", new Object[] { stateRequest, ps.toString() });
+            }
             doReload = true;
         }
         if (!doReload) {
             for (ProjectReloadImplementation pi : parts.keySet()) {
                 ProjectStateData psd = parts.get(pi);
                 if (pi instanceof ExtendedQuery && !((ExtendedQuery)pi).checkState(stateRequest, psd)) {
-                    LOG.log(Level.FINER, "RELOAD: state data rejected: {0} / {1}", new Object[] { ps, psd });
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.log(Level.FINER, "{0} CHECK: state data rejected: {0} / {1}", new Object[] { stateRequest, ps.toString(), psd.toString() });
+                    }
                     return false;
                 }
             }
@@ -560,10 +596,10 @@ public class ProjectReloadInternal {
     }
 
     private static boolean satisfies(Project p, StateRequest next, StateRequest pending, ProjectState state) {
-        if (pending.isForceReload() && !pending.isForceReload()) {
+        if (next.isForceReload()) {
             return false;
         }
-        if (!pending.isOfflineOperation() && pending.isOfflineOperation()) {
+        if (!next.isOfflineOperation() && pending.isOfflineOperation()) {
             return false;
         }
         if (next.isSaveModifications() && !pending.isSaveModifications()) {
@@ -577,7 +613,7 @@ public class ProjectReloadInternal {
 
         for (ProjectReloadImplementation impl : p.getLookup().lookupAll(ProjectReloadImplementation.class)) {
             if ((impl instanceof ExtendedQuery) && !((ExtendedQuery)impl).satisfies(pending, next)) {
-                LOG.log(Level.FINER, "REQUEST: pending rejected: {0} / {1}", new Object[] { pending, next });
+                LOG.log(Level.FINER, "CHECK: pending rejected: {0} / {1}", new Object[] { pending, next });
                 return false;
             }
         }
@@ -644,11 +680,10 @@ public class ProjectReloadInternal {
             synchronized (this) {
                 // PENDING: maybe take this add out of the synchronized block, so satisfies() check need not to be done under the lock.
                 op.pendingReloads.add(reload);
-                LOG.log(Level.FINE, "Starting project {0} load with request {1}", new Object[] { p, stateRequest });
+                LOG.log(Level.FINE, "START: project {0} load with request {1}, reload {2}", new Object[] { p, stateRequest, reload });
             }
             return reload.clientFuture;
         } finally {
-            LOG.log(Level.FINE, "Failed to load project {0} with request {1}", new Object[] { p, stateRequest });
             endOperation(p, null, null);
         }
     }
@@ -733,7 +768,7 @@ public class ProjectReloadInternal {
         synchronized (this) {
             op = pendingOperations.get(p);
             if (op != null && op.usage > 0) {
-                LOG.log(Level.FINE, "Postponed action: {0}/{1}", new Object[] { p, r });
+                LOG.log(Level.FINE, "ACTION: Postponed {0} / {1}", new Object[] { p, r });
                 op.postponedActions.add(r);
                 return;
             }
@@ -781,6 +816,9 @@ public class ProjectReloadInternal {
     private void notityReleased(IdentityHolder h) {
         ProjectStateData d = h.state.get();
         if (d != null) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, "CLEAN: Cleaning state: {0} with impl {1}", new Object[] { d.toString(), h.impl });
+            }
             h.impl.projectDataReleased(d);
             ReloadSpiAccessor.get().release(d);
         }
@@ -833,7 +871,7 @@ public class ProjectReloadInternal {
             }
             terminatingOperations.add(op);
         }
-        LOG.log(Level.FINE, "Project {0}: releasing postponed actions", p);
+        LOG.log(Level.FINE, "ACTION: {0}: processing postponed actions", p);
         
         // note: this will eventually queue the cleanup again, if the project enter locked operation in the meantime.
         releases.forEach(this::notityReleased);
@@ -877,7 +915,7 @@ public class ProjectReloadInternal {
         Reloader fNextReloader = nextReloader;
         
         // start (first or next) project reload
-        LOG.log(Level.FINE, "Project {0}: starting reload", nextReloader);
+        LOG.log(Level.FINE, "RELOAD-START: Project {0}: starting reload {1} with request {2}", new Object[] { p, nextReloader, nextReloader.request });
         dispatcher.post(() -> {
             RequestProcessor loader = null;
             while (loader == null) {
@@ -894,10 +932,14 @@ public class ProjectReloadInternal {
                     thenCompose((v) -> fNextReloader.start(floader));
             // run this cleanup in the dispatcher thread
             f.whenCompleteAsync((result, err) -> {
-                LOG.log(Level.FINER, "Return RP to the pool", new Object[] { floader });
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, "ACTION: Return RP {0} to the pool after {1}", new Object[] { floader, fNextReloader });
+                }
                 loaderProcessors.offer(floader);
                 try {
-                    LOG.log(Level.FINE, "Load end project {0} with request {1}", new Object[] { fNextReloader.project, fNextReloader.request });
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.log(Level.FINE, "COMPLETING: project {0} with request {1}, loader {2}", new Object[] { fNextReloader.project, fNextReloader.request, fNextReloader });
+                    }
                     // postpone event delivery so that the events observers see the Future as completed.
                     endOperation(fNextReloader.project, fNextReloader, () -> {
                         if (err == null) {
@@ -934,11 +976,15 @@ public class ProjectReloadInternal {
             ProjectOperations op = pendingOperations.get(h.project);
             if (op != null && op.usage > 0) {
                 op.releases.add(h);
-                LOG.log(Level.FINER, "Postponing state cleanup: {0} with impl {1}", new Object[] { d, h.impl });
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, "ACTION: Postponing cleanup: {0} with impl {1}", new Object[] { d.toString(), h.impl });
+                }
                 return;
             }
         }
-        LOG.log(Level.FINER, "Cleaning state: {0} with impl {1}", new Object[] { d, h.impl });
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.log(Level.FINER, "ACTION: cleaning {0} with impl {1}", new Object[] { d.toString(), h.impl });
+        }
         // proceed with the release operation
         h.impl.projectDataReleased(d);
         ReloadSpiAccessor.get().release(d);

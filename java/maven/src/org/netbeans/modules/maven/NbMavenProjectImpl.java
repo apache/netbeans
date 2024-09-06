@@ -141,7 +141,7 @@ public final class NbMavenProjectImpl implements Project {
                     x = project == null ? null : project.get();
                 }
                 LOG.log(Level.FINE, "Project {0} starting reload. Currentproject is: {1}", 
-                        new Object[] { System.identityHashCode(x == null ? this : x ), x });
+                        new Object[] { Integer.toHexString(System.identityHashCode(x)), x });
             }
             problemReporter.clearReports(); //#167741 -this will trigger node refresh?
             MavenProject prj = loadOriginalMavenProject(true);
@@ -149,7 +149,7 @@ public final class NbMavenProjectImpl implements Project {
             synchronized (NbMavenProjectImpl.this) {
                 old = project == null ? null : project.get();
                 LOG.log(Level.FINE, "Project {0} reloaded. Old project is: {1}, new project {2}", 
-                        new Object[] { prj, System.identityHashCode(old == null ? this : old), System.identityHashCode(prj) });
+                        new Object[] { prj, Integer.toHexString(System.identityHashCode(old)), Integer.toHexString(System.identityHashCode(prj)) });
                 if (old != null && MavenProjectCache.isFallbackproject(prj)) {
                     prj.setPackaging(old.getPackaging()); //#229366 preserve packaging for broken projects to avoid changing lookup.
                 }
@@ -486,6 +486,7 @@ public final class NbMavenProjectImpl implements Project {
             LOG.log(Level.FINE, "Asked for project {0} being updated, waiting for the refresh to complete.", projectFile);
             CompletableFuture<MavenProject> f = new CompletableFuture<>();
             reloadTask.addTaskListener((e) -> {
+                 // TODO: must remove the listener, it is one shot !
                 LOG.log(Level.FINE, "Project {0} update done.", projectFile);
                 f.complete(getOriginalMavenProject());
             });

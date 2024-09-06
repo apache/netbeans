@@ -28,6 +28,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.project.MavenProject;
@@ -62,6 +64,8 @@ import org.openide.util.lookup.Lookups;
     
 })
 public class MavenReloadImplementation implements ProjectReloadImplementation, PropertyChangeListener {
+    private static final Logger LOG = Logger.getLogger(MavenReloadImplementation.class.getName());
+    
     private final Project project;
     private volatile Reference<ProjectStateData> lastData = new WeakReference<>(null);
 
@@ -72,7 +76,7 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
                 WeakListeners.propertyChange(this, project)
         );
     }
-    
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName() == null) {
@@ -217,6 +221,9 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
             } else {
                 MavenProject mp = nbImpl.getOriginalMavenProjectOrNull();
                 if (mp != null) {
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.log(Level.FINE, "Got already loaded Maven project {0}@{1}", new Object[] { mp, Integer.toHexString(System.identityHashCode(mp)) });
+                    }
                     loadMavenProject2(mp, request, future);
                 }
             }
@@ -228,6 +235,8 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
     private void loadMavenProject2(MavenProject p, StateRequest request, CF future) {
         if (p != null) {
             ProjectReload.Quality q = getProjectQuality(p);
+            long ts = MavenProjectCache.getLoadTimestamp(p);
+            LOG.log(Level.FINE, "Got Maven Project {0}@{1}, with quality {2}, timestamp {3}", new Object[] { p, Integer.toHexString(System.identityHashCode(p)), q, ts });
             if (q.isAtLeast(request.getMinQuality())) {
                 if (!request.isConsistent()) {
                     future.complete(createStateData(p, null));
@@ -235,11 +244,11 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
                 }
 
                 // check that the project is consistent with known files:
-                long ts = MavenProjectCache.getLoadTimestamp(p);
                 Collection<FileObject> fos = findProjectFiles0(p);
                 boolean obsolete = false;
                 for (FileObject f : fos) {
                     if (f.lastModified().getTime() > ts) {
+                        LOG.log(Level.FINE, "Maven Project {0}@{1} is obsolete because of {2}, file stamp: {3}", new Object[] { p, Integer.toHexString(System.identityHashCode(p)),  f, f.lastModified().getTime() });
                         obsolete = true;
                     }
                 }
@@ -256,15 +265,22 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
         NbMavenProjectImpl nbImpl = project.getLookup().lookup(NbMavenProjectImpl.class);
         MavenProject current = nbImpl.getOriginalMavenProjectOrNull();
         RequestProcessor.Task t = nbImpl.fireProjectReload(true);
+        LOG.log(Level.FINE, "Scheduled project reload: {0}", t);
         t.addTaskListener(new TaskListener() {
             @Override
             public void taskFinished(Task task) {
                 task.removeTaskListener(this);
                 // retain initial = true for the first project load.
                 nbImpl.getFreshOriginalMavenProject().thenAccept((mp) -> {
+                    if (LOG.isLoggable(Level.FINE)) {
+                        ProjectReload.Quality q = getProjectQuality(mp);
+                        long ts = MavenProjectCache.getLoadTimestamp(mp);
+                        LOG.log(Level.FINE, "Reloaded Maven project {0}@{1}, with quality {2}, timestamp {3}", new Object[] { mp, Integer.toHexString(System.identityHashCode(mp)), q, ts });
+                    }
                     future.complete(createStateData(mp, null));
                 }).exceptionally(ex -> {
                     MavenProject renewed = nbImpl.getOriginalMavenProjectOrNull();
+                    LOG.log(Level.FINE, "Failed to load maven project, got {0}, previous {1}", new Object[] { renewed, current });
                     if (renewed == current) {
                         ProjectStateData sd = createStateData(current, Quality.BROKEN);
                         sd.fireChanged(false, true);

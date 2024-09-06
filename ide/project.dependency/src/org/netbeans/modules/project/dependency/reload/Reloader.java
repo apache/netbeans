@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -43,6 +44,7 @@ import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation;
 import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation.ExtendedQuery;
 import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation.LoadContext;
 import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation.ProjectStateData;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Cancellable;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -63,7 +65,7 @@ import org.openide.util.lookup.Lookups;
  */
 public final class Reloader {
 
-    static final Logger LOG = Logger.getLogger(Reloader.class.getName());
+    public static final Logger LOG = Logger.getLogger(Reloader.class.getName());
 
     final Project project;
     final StateRequest request;
@@ -274,7 +276,7 @@ public final class Reloader {
             this.inconsistencies = null;
             this.cancel = null;
             this.cancellable = null;
-            LOG.log(Level.FINER, "Project {0}: Load context reset for {1}", new Object[]{project, impl});
+            LOG.log(Level.FINER, "{0}: Load context reset for {1}", new Object[] { this, impl});
         }
 
         public CancellationException getCancelled() {
@@ -331,7 +333,7 @@ public final class Reloader {
                 return partialState;
             }
             if (LOG.isLoggable(Level.FINER)) {
-                LOG.log(Level.FINER, "Project {0}: Partial state created for {1}", new Object[]{project, parts.keySet().stream().map(i -> i.getClass().getName()).collect(Collectors.joining(", "))});
+                LOG.log(Level.FINER, "{0}: Partial state created for {1}", new Object[]{ this, parts.keySet().stream().map(i -> i.getClass().getName()).collect(Collectors.joining(", "))});
             }
             partialState = registry.doCreateState(project, parts, request);
             return partialState;
@@ -342,7 +344,7 @@ public final class Reloader {
          */
         public void retryReloadImpl() {
             this.reloadRequested = true;
-            LOG.log(Level.FINE, "Project {0}: Reload requested by {1}", new Object[]{project, impl});
+            LOG.log(Level.FINE, "{0}: Reload requested by {1}", new Object[]{ this, impl});
         }
 
         public void markForReload(Class c) {
@@ -350,7 +352,7 @@ public final class Reloader {
                 inconsistencies = new HashSet<>();
             }
             inconsistencies.add(c);
-            LOG.log(Level.FINE, "Project {0}: Inconsistency {1} recorded by {2}", new Object[]{project, c, impl});
+            LOG.log(Level.FINE, "{0}: Inconsistency {1} recorded by {2}", new Object[]{ this, c, impl});
         }
 
     }
@@ -369,7 +371,9 @@ public final class Reloader {
                 continue;
             }
             if (!d.isValid() || (!d.isConsistent() && request.isConsistent())) {
-                LOG.log(Level.FINE, "{0}: part {1} loaded inconsistent, implies reload", new Object[]{this, d});
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "{0}: part {1} loaded inconsistent, implies reload", new Object[]{ this, d.toString()});
+                }
                 ctx.reloadRequested = true;
             }
         }
@@ -399,7 +403,9 @@ public final class Reloader {
                         }
                         if (d2.isConsistent() && d2.isValid()) {
                             if (c.isInstance(d2.getProjectData()) || (d2.getLookup() != null && d2.getLookup().lookupItem(t) != null)) {
-                                LOG.log(Level.FINE, "{0}: part {1} provides {2}, mark inconsistent and reload", new Object[]{this, d2, c});
+                                if (LOG.isLoggable(Level.FINE)) {
+                                    LOG.log(Level.FINE, "{0}: part {1} provides {2}, mark inconsistent and reload", new Object[]{this, d2.toString(), c});
+                                }
                                 ctx.reloadRequested = true;
                                 d2.fireChanged(false, true);
                             }
@@ -417,7 +423,9 @@ public final class Reloader {
         markInconsistentParts();
         retries = loadData.stream().filter(d -> d.reloadRequested).collect(Collectors.toList());
         Throwable error = null;
-        LOG.log(Level.FINE, "{0} load round completed.");
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "{0} load round completed.", toString());
+        }
         if (!retries.isEmpty()) {
             // let's allow the reload if at least of the last reloaders was 'satisfied' this time.
             if (!lastRetries.isEmpty() && retries.containsAll(lastRetries)) {
@@ -429,7 +437,9 @@ public final class Reloader {
             } else {
                 if (LOG.isLoggable(Level.FINE)) {
                     String s = retries.stream().map(c -> c.impl.getClass().getName()).collect(Collectors.joining(", "));
-                    LOG.log(Level.FINE, "{0} reloads again because of {1}", new Object[]{this, s});
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.log(Level.FINE, "{0} reloads again because of {1}", new Object[]{toString(), s});
+                    }
                 }
                 this.lastRetries = retries;
                 initRound();
@@ -454,7 +464,9 @@ public final class Reloader {
             }
             // post-check the result's quality and consistency to match the request
             if ((!result.isConsistent()) && request.isConsistent()) {
-                LOG.log(Level.INFO, "{0} loaded as inconsistent, failing operation", this);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.INFO, "{0} loaded as inconsistent, failing operation", toString());
+                }
                 ProjectOperationException ex = new ProjectOperationException(project, ProjectOperationException.State.OUT_OF_SYNC, Bundle.ERR_ProjectModifiedWhileLoading(ProjectUtils.getInformation(project).getDisplayName()));
                 error = ex;
             } else if (result.getQuality().isWorseThan(request.getMinQuality())) {
@@ -484,8 +496,10 @@ public final class Reloader {
                     }
                 }
                 error = ex;
-                LOG.log(Level.FINE, "{0} loaded as low quality ({1}/{2}), failing operation", new Object[]{this, result.getQuality(), request.getMinQuality()});
-                LOG.log(Level.FINE, "Error is: {0}", error);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "{0} loaded as low quality ({1}/{2}), failing operation", new Object[]{toString(), result.getQuality(), request.getMinQuality()});
+                    LOG.log(Level.FINE, "Error is: {0}", error);
+                }
             }
             if (error != null) {
                 return CompletableFuture.failedFuture(error);
@@ -499,7 +513,9 @@ public final class Reloader {
             for (Iterator<Pair<ProjectReloadImplementation<?>, ProjectReloadImplementation.ProjectStateData>> it = reportedStates.iterator(); it.hasNext();) {
                 Pair<ProjectReloadImplementation<?>, ProjectReloadImplementation.ProjectStateData> pair = it.next();
                 if (parts.get(pair.first()) != pair.second()) {
-                    LOG.log(Level.FINE, "{0}: Invalidating state {1}, final state has different instance", new Object[]{this, pair.second()});
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.log(Level.FINE, "{0}: Invalidating state {1}, final state has different instance", new Object[]{toString(), pair.second().toString()});
+                    }
                     pair.second().fireChanged(true, false);
                 }
                 if (registry.hasIdentity(pair.second())) {
@@ -509,15 +525,19 @@ public final class Reloader {
             // run a delayed cleanup action for each of unknown states.
             if (!reportedStates.isEmpty()) {
                 if (LOG.isLoggable(Level.FINE)) {
-                    LOG.log(Level.FINE, "{0}: Scheduling cleanup of dangling states", new Object[]{this,
-                        reportedStates.stream().map(p -> p.second().toString()).collect(Collectors.joining(", "))
-                    });
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.log(Level.FINE, "{0}: Scheduling cleanup of dangling states", new Object[]{toString(),
+                            reportedStates.stream().map(p -> p.second().toString()).collect(Collectors.joining(", "))
+                        });
+                    }
                 }
                 registry.runProjectAction(project, () -> {
                     reportedStates.forEach(pair -> {
-                        LOG.log(Level.FINE, "{0}: Releasing dangling states");
-                        pair.first().projectDataReleased(pair.second());
-                        ReloadSpiAccessor.get().release(pair.second());
+                        if (LOG.isLoggable(Level.FINE)) {
+                            LOG.log(Level.FINE, "{0}: Releasing dangling states", toString());
+                            pair.first().projectDataReleased(pair.second());
+                            ReloadSpiAccessor.get().release(pair.second());
+                        }
                     });
                 });
             }
@@ -529,7 +549,9 @@ public final class Reloader {
      * iterator.
      */
     synchronized void initRound() {
-        LOG.log(Level.FINE, "Initializing loader {0}", this);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Initializing loader {0}", toString());
+        }            
         implIter = loadData.iterator();
         parts = new ProjectReloadInternal.StatePartsImpl();
         loadData.forEach(c -> c.reinit(parts));
@@ -538,8 +560,10 @@ public final class Reloader {
     }
 
     public void cancel(CancellationException cancelled) {
-        LOG.log(Level.FINE, "{0}: Cancelled", this);
-        LOG.log(Level.FINE, "Stacktrace: ", cancelled);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "{0}: Cancelled", toString());
+            LOG.log(Level.FINE, "Stacktrace: ", cancelled);
+        }
 
         LoadContextImpl c;
 
@@ -573,7 +597,9 @@ public final class Reloader {
                 reportedStates.add(Pair.of(fd.impl, state));
             }
         }
-        LOG.log(Level.FINE, "{0} {1} loaded {2} with load-private data {3}", new Object[]{this, fd.impl, state, fd.contextData});
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "{0} {1} loaded {2} with load-private data {3}", new Object[]{toString(), fd.impl, state == null ? "null" : state.toString(), fd.contextData});
+        }
         currentStage = null;
         currentStageContext = null;
     }
@@ -593,8 +619,10 @@ public final class Reloader {
         }
         currentStage = null;
         currentStageContext = null;
-        LOG.log(Level.FINE, "{0}: got cancel", this);
-        LOG.log(Level.FINE, "Stacktrace: ", cancelled);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "{0}: got cancel", toString());
+            LOG.log(Level.FINE, "Stacktrace: ", cancelled);
+        }
         Forwarder.create(originalState, parts, null, false);
         return CompletableFuture.failedFuture(cancelled);
     }
@@ -637,16 +665,22 @@ public final class Reloader {
             }
             d = implIter.next();
             if (forcedRound) {
-                LOG.log(Level.FINE, "{0}: This round is forced: loading {0}", new Object[]{this, d.impl});
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "{0}: This round is forced: loading {0}", new Object[]{toString(), d.impl});
+                }
                 break;
             }
             // force load will only affect the 1st reload.
             if (d.loadedData == null || (forced && !d.loadedOnce)) {
-                LOG.log(Level.FINE, "{0}: {1} data: {1}, once: {2}, force: {3}", new Object[]{this, d.impl, d.loadedOnce, forced});
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "{0}: need to execute: {1} prev data: {2}, once: {3}, force: {4}", new Object[]{toString(), d.impl, Objects.toString(d.loadedData), d.loadedOnce, forced});
+                }
                 break;
             }
             ProjectReload.Quality q = d.loadedData.getQuality();
-            LOG.log(Level.FINE, "{0}: Checking cached data {1}, request {2}", new Object[]{this, d.loadedData, request});
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "CHECK: {0}: cached data {1}, request {2}", new Object[]{toString(), Objects.toString(d.loadedData), request});
+            }
             if (q != null && q.isWorseThan(request.getMinQuality())) {
                 break;
             }
@@ -654,18 +688,28 @@ public final class Reloader {
                 break;
             }
             if (lastRetries.contains(d)) {
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "CHECK: {0}: implementation requested load retry {1}", new Object[]{toString(), d.impl});
+                }
                 break;
             }
             if ((d.impl instanceof ExtendedQuery) && !((ExtendedQuery) d.impl).checkState(request, d.loadedData)) {
-                LOG.log(Level.FINE, "{0}: {1} rejected by {2}", new Object[]{this, d.loadedData, d.impl});
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "{0}: {1} rejected by {2}", new Object[]{toString(), Objects.toString(d.loadedData), d.impl});
+                }
                 break;
+            }
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "CHECK: {0}: cached data {1} accepted", new Object[]{toString(), Objects.toString(d.loadedData), request});
             }
             loadStepDone1(d.loadedData, d, null);
         }
         final LoadContextImpl fd = d;
         try {
             CompletableFuture<ProjectReloadImplementation.ProjectStateData<?>> newData;
-            LOG.log(Level.FINE, "{0} loading through {1}, last state {2}, load data {3}", new Object[]{this, d.impl, d.loadedData, d.contextData});
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "{0} loading through {1}, last data {2}, context {3}", new Object[]{toString(), d.impl, Objects.toString(d.loadedData), d.contextData});
+            }
             currentStageContext = d;
             if (cancelled != null) {
                 return cancelLoadInProgress();
@@ -682,8 +726,10 @@ public final class Reloader {
             // refire all file and validity changes.
             // this will keep the listener alive :-/
             CompletableFuture<ProjectReloadImplementation.ProjectStateData<?>> res = exceptionallyMaybeAsync(newData, t -> {
-                LOG.log(Level.FINE, "{0} got exceptional result from {1}", new Object[]{this, fd.impl});
-                LOG.log(Level.FINE, "Stacktrace: ", t);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "{0} got exceptional result from {1}", new Object[]{toString(), fd.impl});
+                    LOG.log(Level.FINE, "Stacktrace: ", t);
+                }
                 if (t instanceof CompletionException) {
                     t = t.getCause();
                 }
@@ -745,8 +791,10 @@ public final class Reloader {
             });
             return res2;
         } catch (ProjectReloadImplementation.PartialLoadException ex) {
-            LOG.log(Level.FINE, "{0} got PartialLoadException", this);
-            LOG.log(Level.FINE, "Stacktrace", ex);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "{0} got PartialLoadException", toString());
+                LOG.log(Level.FINE, "Stacktrace", ex);
+            }
             ProjectReloadImplementation.PartialLoadException ple = (ProjectReloadImplementation.PartialLoadException) ex;
             return loadStepDone(ple.getPartialData(), fd, ple);
         }

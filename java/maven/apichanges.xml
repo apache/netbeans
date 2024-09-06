@@ -83,6 +83,27 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="pluginconfigpathparams-pathitem-name-null">
+            <api name="general"/>
+            <summary>Enable using PluginConfigPathParams with null valued pathItemName</summary>
+            <version major="2" minor="164"/>
+            <date day="10" month="8" year="2024"/>
+            <author login="matthiasblaesing"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                Maven <a href="https://maven.apache.org/guides/mini/guide-configuring-plugins.html#mapping-collections-and-arrays"
+                >documentation for plugin configuration</a> declares, that for
+                list and array typed configuration plugins, the name of the
+                single entry element does not matter, only the name of the
+                wrapping element is relevant. This change modifies
+                <pre>PluginPropertyUtils.PluginConfigPathParams</pre> to always
+                report <pre>null</pre> for <pre>pathItemName</pre> and adds a
+                constructor without that parameter, deprecating the original
+                constructor.
+            </description>
+            <class package="org.netbeans.modules.maven.api" name="PluginPropertyUtils"/>
+            <issue number="GITHUB-7658" />
+        </change>
         <change id="partial-maven-project">
             <api name="general"/>
             <summary>Support for partially loaded projects</summary>

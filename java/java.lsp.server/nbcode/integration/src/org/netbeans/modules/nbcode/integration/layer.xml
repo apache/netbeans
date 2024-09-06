@@ -176,17 +176,4 @@
             </folder>
         </folder>
     </folder>
-    <folder name="Editors">
-        <file name="org-netbeans-modules-editor-hints-lsp-HintsDiagnosticsProvider.instance">
-            <!--org.netbeans.modules.editor.hints.lsp.HintsDiagnosticsProvider-->
-            <attr name="instanceOf" stringvalue="org.netbeans.spi.lsp.ErrorProvider"/>
-        </file>
-        <folder name="text">
-            <folder name="x-java">
-                <file name="org-netbeans-modules-java-hints-infrastructure-JavaErrorProvider.instance">
-                    <attr name="instanceOf" stringvalue="org.netbeans.spi.lsp.ErrorProvider"/>
-                </file>
-            </folder>
-        </folder>
-    </folder>
 </filesystem>

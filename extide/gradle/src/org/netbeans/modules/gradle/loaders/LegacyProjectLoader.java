@@ -19,6 +19,7 @@
 package org.netbeans.modules.gradle.loaders;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -625,21 +626,24 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         
         OutputStream logStream = null;
         try {
-            if (LOG.isLoggable(Level.FINER)) {
-                if (LOG.isLoggable(Level.FINEST)) {
-                    action.addArguments("--debug"); // NOI18N
-                }
-                PipedOutputStream pos = new ImmediatePipedOutputStream();
-                try {
-                    logStream = pos;
-                    DAEMON_LOG_RP.post(new LogDelegate(new PipedInputStream(pos)));
-                } catch (IOException ex) {
-                    throw new IllegalStateException(ex);
-                }
-                action.setStandardOutput(pos);
-                action.setStandardError(pos);
+            // no input will be ever given ...
+            InputStream emptyIs = new ByteArrayInputStream(new byte[0]);
+            // Github #7606: although the content of the OuptutStream will not be printed unless LOG is >= FINER,
+            // for some reason gradle daemon blocks on (empty) stdin if the output is not read+processed.
+            // So attaching the daemon + output stream handler unconditionally.
+            if (LOG.isLoggable(Level.FINEST)) {
+                action.addArguments("--debug"); // NOI18N
             }
-        
+            PipedOutputStream pos = new ImmediatePipedOutputStream();
+            try {
+                logStream = pos;
+                DAEMON_LOG_RP.post(new LogDelegate(new PipedInputStream(pos)));
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+            action.setStandardOutput(pos);
+            action.setStandardError(pos);
+            action.setStandardInput(emptyIs);
             return action.run(); 
         } finally {
             if (logStream != null) {

@@ -24,14 +24,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.text.Document;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -49,12 +55,17 @@ import org.netbeans.modules.project.dependency.ProjectReload.ProjectState;
 import org.netbeans.modules.project.dependency.ProjectReload.Quality;
 import org.netbeans.modules.project.dependency.ProjectReload.StateRequest;
 import org.netbeans.modules.project.dependency.reload.ProjectReloadInternal;
+import org.netbeans.modules.project.dependency.reload.Reloader;
+import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation;
+import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation.ProjectStateData;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.DummyInstalledFileLocator;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.windows.IOProvider;
@@ -69,6 +80,8 @@ public class MavenReloadImplementationTest extends NbTestCase {
     private FileObject repoFO;
     private FileObject dataFO;
 
+    Collection<Logger> loggers = new ArrayList<>();
+    
     public MavenReloadImplementationTest(String name) {
         super(name);
     }
@@ -101,11 +114,26 @@ public class MavenReloadImplementationTest extends NbTestCase {
         File destDirF = getTestNBDestDir();
         DummyInstalledFileLocator.registerDestDir(destDirF);
         
+        /*
         System.err.println("*** Running: " + getName());
+
+        loggers.add(Logger.getLogger(ProjectReloadInternal.class.getName()));
+        loggers.add(Logger.getLogger(Reloader.class.getName()));
+        loggers.forEach(logger -> {
+            logger.setLevel(Level.FINER);
+
+            ConsoleHandler h = new ConsoleHandler();
+            h.setLevel(Level.FINER);
+            if (!Arrays.asList(logger.getHandlers()).stream().anyMatch(x -> x instanceof ConsoleHandler)) {
+                logger.addHandler(h);
+            }
+        });
+        */
     }
 
     @Override
     protected void tearDown() throws Exception {
+        MonitoringReloadImplementation.INSTANCE.enabled = false;
         OpenProjects.getDefault().close(OpenProjects.getDefault().getOpenProjects());
         ProjectReloadInternal.getInstance().assertNoOperations();
         super.tearDown(); 
@@ -597,5 +625,227 @@ public class MavenReloadImplementationTest extends NbTestCase {
             long time = MavenProjectCache.getLoadTimestamp(newProject);
             assertEquals(time, s.getTimestamp());
         }).get();
+    }
+    
+    class Blocker implements Runnable {
+        CountDownLatch unblock = new CountDownLatch(1);
+
+        @Override
+        public void run() {
+            try {
+                unblock.await();
+            } catch (InterruptedException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    }
+    /**
+     * Simulates that a Maven project load is scheduled after a file change, but 
+     * Reload API is invoked BEFORE that load completes. The cached Maven project
+     * exists, but with an old timestamp. getProjectState() should return
+     * inconsistent even in this case.
+     * 
+     * @throws Exception 
+     */
+    public void testInitialLoadObsoleteProject() throws Exception {
+        setupMicronautProject();
+        primeProject();
+
+        FileObject pom = oci.getProjectDirectory().getFileObject("pom.xml");
+        Path pomPath = FileUtil.toFile(pom).toPath();
+        
+        Blocker blocker = new Blocker();
+        
+        NbMavenProjectImpl.RELOAD_RP.post(blocker);
+        try {
+            Files.setLastModifiedTime(pomPath, FileTime.from(Instant.now()));
+            pom.refresh();
+
+            ProjectState ps = ProjectReload.getProjectState(oci, true);
+
+            assertFalse(ps.isConsistent());
+            MavenReloadImplementation mri = (MavenReloadImplementation)oci.getLookup().lookupAll(ProjectReloadImplementation.class).stream().
+                    filter(i -> i instanceof MavenReloadImplementation).findFirst().get();
+            ProjectStateData psd = mri.getLastCachedData();
+            assertFalse(psd.isConsistent());
+        } finally {
+            blocker.unblock.countDown();
+        }        
+    }
+    
+    /**
+     * Checks that if a project becomes inconsistent during the state load, the state will internally
+     * reload before returning the result.
+     * 
+     * @throws Exception 
+     */
+    public void testProjectObsoletesDuringLoad() throws Exception {
+        setupMicronautProject();
+        primeProject();
+
+        FileObject pom = oci.getProjectDirectory().getFileObject("pom.xml");
+        Path pomPath = FileUtil.toFile(pom).toPath();
+        
+        ProjectState ps = ProjectReload.getProjectState(oci, true);
+        
+        MavenReloadImplementation mri = (MavenReloadImplementation)oci.getLookup().lookupAll(ProjectReloadImplementation.class).stream().
+                filter(i -> i instanceof MavenReloadImplementation).findFirst().get();
+
+        MonitoringReloadImplementation.INSTANCE.enabled = true;
+
+        Thread.sleep(2000);
+        Files.setLastModifiedTime(pomPath, FileTime.from(Instant.now()));
+        pom.refresh();
+        
+        MonitoringReloadImplementation.INSTANCE.counter.set(0);
+        MonitoringReloadImplementation.INSTANCE.reloadReached1.drainPermits();
+        MonitoringReloadImplementation.INSTANCE.proceed.drainPermits();
+
+        CompletableFuture<ProjectState> newState = ProjectReload.withProjectState(oci, StateRequest.refresh());
+        
+        MonitoringReloadImplementation.INSTANCE.reloadReached1.acquire();
+        assertFalse(newState.isDone());
+        int cnt = MonitoringReloadImplementation.INSTANCE.counter.get();
+        ProjectStateData firstRound = mri.getLastCachedData();
+        
+        Thread.sleep(2000);
+        Files.setLastModifiedTime(pomPath, FileTime.from(Instant.now()));
+        // deliberately not calling refresh().
+        
+        MonitoringReloadImplementation.INSTANCE.proceed.release(100);
+        
+        ProjectState ps2 = newState.get();
+        
+        assertTrue(ps2.isValid());
+        assertTrue(ps2.isConsistent());
+        
+        ProjectStateData secondRound = mri.getLastCachedData();
+        assertNotSame(firstRound, secondRound);
+        
+        // one reload happened.
+        assertEquals(2, MonitoringReloadImplementation.INSTANCE.counter.get());
+    }
+    
+    /**
+     * Checks that repeated file changes will not loop the reloads, but fail.
+     * 
+     * @throws Exception 
+     */
+    public void testRepeatedChangesErrorOut() throws Exception {
+        setupMicronautProject();
+        primeProject();
+
+        FileObject pom = oci.getProjectDirectory().getFileObject("pom.xml");
+        Path pomPath = FileUtil.toFile(pom).toPath();
+        
+        ProjectState ps = ProjectReload.getProjectState(oci, true);
+        
+        MavenReloadImplementation mri = (MavenReloadImplementation)oci.getLookup().lookupAll(ProjectReloadImplementation.class).stream().
+                filter(i -> i instanceof MavenReloadImplementation).findFirst().get();
+
+        MonitoringReloadImplementation.INSTANCE.enabled = true;
+
+        Blocker blocker = new Blocker();
+        
+        Instant baseMod = Instant.now();
+        Files.setLastModifiedTime(pomPath, FileTime.from(baseMod));
+        pom.refresh();
+        
+        MonitoringReloadImplementation.INSTANCE.counter.set(0);
+        MonitoringReloadImplementation.INSTANCE.reloadReached1.drainPermits();
+        MonitoringReloadImplementation.INSTANCE.proceed.drainPermits();
+
+        CompletableFuture<ProjectState> newState = ProjectReload.withProjectState(oci, StateRequest.refresh());
+        
+        // 1st reload
+        MonitoringReloadImplementation.INSTANCE.reloadReached1.acquire();
+        
+        assertFalse(newState.isDone());
+        int cnt = MonitoringReloadImplementation.INSTANCE.counter.get();
+        ProjectStateData firstRound = mri.getLastCachedData();
+        assertTrue(firstRound.isConsistent());
+        
+        Thread.sleep(2000);
+
+        // prevent Maven from reloading the project
+        NbMavenProjectImpl.RELOAD_RP.post(blocker);
+
+        Instant firstMod = Instant.now();
+        Files.setLastModifiedTime(pomPath, FileTime.from(firstMod));
+        // deliberately not calling refresh().
+        
+        MonitoringReloadImplementation.INSTANCE.proceed.release(1);
+        
+        blocker.unblock.countDown();
+        
+        // 2nd reload
+        MonitoringReloadImplementation.INSTANCE.reloadReached1.acquire();
+        ProjectStateData secondRound = mri.getLastCachedData();
+        // new state is OK, but the previous should be obsoleted.
+        assertNotSame(secondRound, firstRound);
+        assertTrue(secondRound.isConsistent());
+        assertFalse(firstRound.isConsistent());
+        
+        Thread.sleep(2000);
+        Instant secondMod = Instant.now();
+        Files.setLastModifiedTime(pomPath, FileTime.from(secondMod));
+        
+        MonitoringReloadImplementation.INSTANCE.proceed.release(100);
+
+        try {
+            ProjectState ps2 = newState.get();
+            fail("Should report an exception");
+        } catch (ExecutionException ex) {
+            assertTrue(ex.getCause() instanceof ProjectOperationException);
+            ProjectOperationException pex = (ProjectOperationException)ex.getCause();
+            assertSame(ProjectOperationException.State.OUT_OF_SYNC, pex.getState());
+        }
+        
+        ProjectState ps2 = ProjectReload.getProjectState(oci);
+        // may be valid or not, since Maven internally reloads the project independently, and
+        // will invalidate the state after load.
+        assertFalse(ps2.isConsistent());
+        
+        assertTrue(ps2.getTimestamp() > baseMod.toEpochMilli());
+        // will be at least the 1st modification
+        assertTrue(ps2.getTimestamp() >= firstMod.toEpochMilli());
+        // and NOT the 2nd modification (modified twice -> error)
+        assertTrue(ps2.getTimestamp() < secondMod.toEpochMilli());
+        
+        ProjectState ps3 = ProjectReload.withProjectState(oci, StateRequest.refresh()).get();
+        assertTrue(ps3.isValid());
+        assertTrue(ps3.isConsistent());
+        assertTrue(ps3.getTimestamp() >= secondMod.toEpochMilli());
+    }
+    
+    @ProjectServiceProvider(service = ProjectReloadImplementation.class, projectType = NbMavenProject.TYPE)
+    public static class MonitoringReloadImplementation implements ProjectReloadImplementation {
+        static MonitoringReloadImplementation INSTANCE;
+        final Semaphore proceed = new Semaphore(0);
+        final Semaphore reloadReached1 = new Semaphore(0);
+        final Semaphore reloadReached2 = new Semaphore(0);
+        volatile boolean enabled;
+        AtomicInteger counter = new AtomicInteger();
+        
+        public MonitoringReloadImplementation() {
+            INSTANCE = this;
+        }
+        
+        
+        @Override
+        public CompletableFuture reload(Project project, StateRequest request, LoadContext context) {
+            if (!enabled) {
+                return null;
+            }
+            reloadReached1.release();
+            try {
+                proceed.acquire();
+                counter.incrementAndGet();
+            } catch (InterruptedException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            reloadReached2.release();
+            return null;
+        }
     }
 }

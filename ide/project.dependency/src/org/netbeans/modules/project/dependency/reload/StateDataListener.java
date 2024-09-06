@@ -93,6 +93,28 @@ class StateDataListener extends FileChangeAdapter implements ProjectStateListene
         for (ProjectReloadImplementation.ProjectStateData<?> d : parts.values()) {
             ReloadSpiAccessor.get().addProjectStateListener(d, this);
         }
+        checkFileTimestamps();
+        checkInconsistencies();
+    }
+
+
+    public void checkFileTimestamps() {
+        ProjectState s = tracker.get();
+        if (s == null) {
+            return;
+        }
+        Map<FileObject, Collection<ProjectStateData>> wf = watchedFiles;
+        Reloader.checkFileTimestamps(s, wf);
+    }
+
+    void checkInconsistencies() {
+        ProjectState s = tracker.get();
+        if (s == null) {
+            return;
+        }
+        for (ProjectStateData d : parts.values()) {
+            Reloader.markInconsistencies(d, null, parts, s);
+        }
     }
 
     @Override
@@ -263,7 +285,7 @@ class StateDataListener extends FileChangeAdapter implements ProjectStateListene
 
     @Override
     public void fileChanged(FileEvent fe) {
-        reportFile(fe.getFile(), -1);
+        reportFile(fe.getFile(), fe.getFile().lastModified().getTime());
     }
 
     @Override
@@ -290,8 +312,8 @@ class StateDataListener extends FileChangeAdapter implements ProjectStateListene
                 }
                 ReloadApiAccessor.get().updateProjectState(state, true, false, ch, ed, null);
             }
+            watchedFiles.getOrDefault(f, Collections.emptyList()).forEach(d -> d.fireChanged(false, true));
         }
-        watchedFiles.getOrDefault(f, Collections.emptyList()).forEach(d -> d.fireChanged(false, true));
     }
     
 }

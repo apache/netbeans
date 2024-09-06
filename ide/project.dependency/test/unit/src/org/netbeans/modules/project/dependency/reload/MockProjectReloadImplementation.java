@@ -58,6 +58,7 @@ public class MockProjectReloadImplementation implements ProjectReloadImplementat
     
     public static class ProjectData {
         public String contents;
+        public volatile int counter;
 
         public ProjectData(String s) {
             this.contents = s;
@@ -118,10 +119,13 @@ public class MockProjectReloadImplementation implements ProjectReloadImplementat
     
     Reference<ProjectStateData> sdRef = new WeakReference<>(null);
     
+    volatile ProjectData loadProjectData;
+    
     protected ProjectStateData doCreateStateData(Project project, ProjectReload.StateRequest request, LoadContext<ProjectData> context) {
         ProjectStateBuilder<ProjectData> b = ProjectStateData.builder(
                 request.getMinQuality().isAtLeast(ProjectReload.Quality.LOADED) ? request.getMinQuality() : ProjectReload.Quality.LOADED);
         b.timestamp(Instant.now().toEpochMilli());
+        loadProjectData = context.getLoadContext(ProjectData.class);
         ProjectStateData<ProjectData> psd = createStateData(b, request).
                 privateData(
                     (d) -> {

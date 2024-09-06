@@ -159,7 +159,6 @@ public class MavenPrimingReloadImplementation implements ProjectReloadImplementa
             synchronized (this) {
                 placeholderArtifactNames.clear();
             }
-            context.saveLoadContext(this);
             return CompletableFuture.completedFuture(null);
         } 
         

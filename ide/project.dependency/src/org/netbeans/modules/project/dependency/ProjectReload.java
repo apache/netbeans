@@ -965,7 +965,9 @@ public final class ProjectReload {
         // special case if the state matches & is consistent: if the attempted quality is LESS 
         // than this request's target, the ReloadImplementation might give up 
         if (!doReload && lastKnown.target.isAtLeast(stateRequest.getTargetQuality())) {
-            LOG.log(Level.FINE, "FINISHED: Reload {0}, request: {1}, state {2} - NOOP, finished", new Object[] { p, stateRequest, lastKnown.toString() });
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "FINISHED: Reload {0}, request: {1}, state {2} - NOOP, finished", new Object[] { p, stateRequest, lastKnown.toString() });
+            }
             return CompletableFuture.completedFuture(lastKnown);
         }
         String reason = stateRequest.getReason();

@@ -74,6 +74,11 @@ public class GradleReloadImplementation implements ProjectReloadImplementation {
         gp.addPropertyChangeListener(WeakListeners.propertyChange(reloadL, gp));
     }
     
+    // tests only
+    public ProjectStateData getLastCachedData() {
+        return last.get();
+    }
+    
     private static void includeFile(File f, Collection<FileObject> into) {
         if (f == null) {
             return;
@@ -151,15 +156,9 @@ public class GradleReloadImplementation implements ProjectReloadImplementation {
         ProjectStateData sd = ProjectStateData.builder(q).
                 files(files).
                 attachLookup(NbGradleProject.get(project).curretLookup()).
+                timestamp(time).
                 build();
-        /*
-        ProjectStateControl track = new ProjectStateControl(
-                "gradle", null, files, pq == NbGradleProject.Quality.FALLBACK || pq.betterThan(NbGradleProject.Quality.EVALUATED), 
-                q, time, NbGradleProject.get(project).projectDataLookup()
-        );
-        */
         synchronized (this) {
-//            states.add(new WeakReference<>(track));
             last = new WeakReference<>(sd);
         }
         return sd;

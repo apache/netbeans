@@ -1792,7 +1792,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             org.openide.util.Task t = (org.openide.util.Task)reload.invoke(cake);
             // wait for a limited time, this could be enough for the reload to complete, blocking LSP queue. We do not want to block LSP queue indefinitely:
             // in case of an error, the server could become unresponsive.
-            t.waitFinished(300);
+            if (!t.waitFinished(300)) {
+                LOG.log(Level.WARNING, "{0}: document reload did not finish in 300ms", file);
+            }
         } catch (ReflectiveOperationException | InterruptedException | SecurityException ex) {
             // nop 
         }

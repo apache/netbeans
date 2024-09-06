@@ -78,6 +78,18 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
     }
 
     @Override
+    public void projectDataReleased(ProjectStateData data) {
+        if (lastData.get() == data) {
+            lastData.clear();
+        }
+    }
+    
+    // test only
+    ProjectStateData getLastCachedData() {
+        return lastData.get();
+    }
+
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName() == null) {
             return;
@@ -260,7 +272,7 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
         }
         loadMavenProject3(future);
     }
-    
+        
     private void loadMavenProject3(CF future) {
         NbMavenProjectImpl nbImpl = project.getLookup().lookup(NbMavenProjectImpl.class);
         MavenProject current = nbImpl.getOriginalMavenProjectOrNull();

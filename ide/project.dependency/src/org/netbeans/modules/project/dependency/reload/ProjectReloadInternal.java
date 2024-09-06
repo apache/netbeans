@@ -261,6 +261,8 @@ public class ProjectReloadInternal {
         }
     }
     
+    public static final StateParts EMPTY_PARTS = new StatePartsImpl();
+    
     static Collection variantKey(Project p, StateParts parts, Lookup context) {
         Collection c = new HashList();
         c.add(p);
@@ -383,7 +385,7 @@ public class ProjectReloadInternal {
     }
 
     Pair<StateRef, ProjectState> createState(ProjectReload.ProjectState previous, Project p, Collection variant, StateParts parts,
-            boolean force, StateRequest req) {
+            boolean rejectInconsistent, StateRequest req) {
         ProjectReload.ProjectState state = doCreateState(p, parts, req);
 
         ProjectReload.ProjectState cur = null;
@@ -415,6 +417,9 @@ public class ProjectReloadInternal {
             // registered in Implementations.
             if (!parts.isEmpty()) {
                 l.init();
+            }
+            if (!state.isConsistent() && rejectInconsistent) {
+                return Pair.of(null, state);
             }
             if (cur != previous && previous != null) {
                 if (LOG.isLoggable(Level.FINE)) {
@@ -526,7 +531,7 @@ public class ProjectReloadInternal {
             }
         }
         
-        StateRef ref;
+        StateRef ref = null;
         
         // try to keep alive for the length of the operation.
         ProjectState oldS = null;
@@ -556,11 +561,9 @@ public class ProjectReloadInternal {
                 return Pair.of(ref, none);
             }
         } finally {
-            if (oldS != null) {
-                // some harmless thing that the optimizer cannot throw away and GC oldS prematurely.
-                synchronized (oldS) {
-                    oldS.notify();
-                }
+            if (oldS != null && ref.toDetach != null) {
+                // assume ref must not be null
+                ref.toDetach.checkFileTimestamps();
             }
             endOperation(p, null, null);
         }

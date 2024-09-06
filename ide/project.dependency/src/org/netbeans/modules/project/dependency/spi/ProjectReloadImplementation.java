@@ -166,7 +166,7 @@ public interface ProjectReloadImplementation<D> {
             this.timestamp = timestamp;
             this.projectData = projectData;
             this.error = error;
-            if (!valid && LOG.isLoggable(Level.FINER)) {
+            if (!valid && quality != Quality.NONE && LOG.isLoggable(Level.FINER)) {
                 LOG.log(Level.FINER, "Created invalid state data {0}", toString());
                 LOG.log(Level.FINER, "Origin", new Throwable());
             }
@@ -334,17 +334,24 @@ public interface ProjectReloadImplementation<D> {
                 LOG.log(Level.FINER, "{0} got state change: invalidate={1}, inconsistent={2}", new Object[] { toString(), invalidate, inconsistent });
                 LOG.log(Level.FINEST, "Origin:", new Throwable());
             }
-            if (invalidate) {
-                this.valid = false;
+            boolean changed = false;
+            synchronized (this) {
+                if (invalidate && this.valid) {
+                    this.valid = false;
+                    changed = true;
+                }
+                if (inconsistent && this.consistent) {
+                    changed = true;
+                    this.consistent = false;
+                }
             }
-            if (inconsistent) {
-                this.consistent = false;
+            if (changed) {
+                fire();
             }
-            fire();
         }
         
         Set<Class> getInconsistencies() {
-            return inconsistencies;
+            return inconsistencies == null ? Collections.emptySet() : new HashSet<>(inconsistencies);
         }
 
         synchronized void addListener(ProjectStateListener l) {
@@ -368,12 +375,14 @@ public interface ProjectReloadImplementation<D> {
                 }
             }
             
-            this.projectData = null;
-            this.changedFiles = null;
-            this.privateData = null;
-            this.lookup = null;
-            this.projectData = null;
-            this.valid = false;
+            synchronized (this) {
+                this.projectData = null;
+                this.changedFiles = null;
+                this.privateData = null;
+                this.lookup = null;
+                this.projectData = null;
+                this.valid = false;
+            }
             LOG.log(Level.FINER, "{0}: cleared.", toString());
             this.listeners.clear();
         }
@@ -500,6 +509,10 @@ public interface ProjectReloadImplementation<D> {
         
         public ProjectStateData build() {
             ProjectStateData d = new ProjectStateData(files == null ? Collections.emptyList() : files, valid, q, time, lkp, error, data);
+            if (!consistent) {
+                // make inconsistent
+                d.fireChanged(false, true);
+            }
             if (!d.isValid() || !d.isConsistent()) {
                 if (Reloader.LOG.isLoggable(Level.FINER)) {
                     Reloader.LOG.log(Level.FINER, "Creating obsolete StateData: {0}", d.toString());
@@ -754,7 +767,8 @@ public interface ProjectReloadImplementation<D> {
         }
         
         public <T> T ensureLoadContext(Class<T> clazz, Supplier<T> factory) {
-            if (loadContext == null) {
+            T lc = getLoadContext(clazz);
+            if (lc == null) {
                 loadContext = factory.get();
             }
             return (T)loadContext;

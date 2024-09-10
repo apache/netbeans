@@ -163,7 +163,11 @@ The default userdir location is inside the **global** vscode settings location:
 When the environment variable `nbcode_userdir` (to e.g. `/tmp/foo`) is set when starting vscode or nbcode (npm run nbcode), the userdir will point to `/tmp/foo/userdir`.
 
 ### Debug output 
-_Standalone NBLS_ can be instructed to print messages (stderr, out) to the console: add `-J-Dnetbeans.logger.console=true` to the npm commandline. This has the same effect as `netbeans.verbose = true` settings in the vscode. Messages from the LSP protocol can be displayed in vscode by setting `java.trace.server = verbose` setting in vscode JSON settings.
+_Standalone NBLS_ can be instructed to print messages (stderr, out) to the console: add `-J-Dnetbeans.logger.console=true` to the npm commandline. This has the same effect as `netbeans.verbose = true` settings in the vscode. 
+
+### LSP protocol tracing
+Messages from the LSP protocol can be displayed in vscode by setting `java.trace.server = verbose` setting in vscode JSON settings. Sometimes it may be needed to record LSP requests and responses in the debug output log stream from the Apache NetBeans language server so that requests are properly ordered with logs from executed actions. This can be enabled on language server startup by adding `-J-Dorg.netbeans.modules.java.lsp.server.lsptrace.level=FINEST`
+to the NBLS commandline.
 
 ### Debugging separately from global NBLS
 By default the extension uses **global** userdir of the **global** vscode instance and uses NBLS data in there. In case this is not desired, the `launch.json` must be changed:

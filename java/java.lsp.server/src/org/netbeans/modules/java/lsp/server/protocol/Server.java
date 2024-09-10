@@ -159,6 +159,10 @@ import org.openide.util.lookup.ProxyLookup;
  */
 public final class Server {
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
+    /**
+     * Special logger that logs LSP in/out messages.
+     */
+    private static final Logger LSP_LOG = Logger.getLogger("org.netbeans.modules.java.lsp.server.lsptrace"); // NOI18N
     private static final LspServerTelemetryManager LSP_SERVER_TELEMETRY = new LspServerTelemetryManager();
     private static final ErrorsNotifier ERR_NOTIFIER = new ErrorsNotifier();
     
@@ -266,7 +270,17 @@ public final class Server {
             // PENDING: allow for message consumer wrappers to be registered to add pre/post processing for
             // the request plus build the request's default Lookup contents.
             if (!(delegate instanceof Endpoint)) {
-                return delegate; 
+                return new MessageConsumer() {
+                    @Override
+                    public void consume(Message msg) throws MessageIssueException, JsonRpcException {
+                        if (LSP_LOG.isLoggable(Level.FINEST)) {
+                            LSP_LOG.log(Level.FINEST, "OUT: {0}", 
+                                    msg.toString().replace("\n", "\n\t"));
+                        }
+                        delegate.consume(msg);
+                    }
+                
+                };
             }
             return new MessageConsumer() {
                 @Override
@@ -275,6 +289,10 @@ public final class Server {
                     ProxyLookup ll = new ProxyLookup(new AbstractLookup(ic), sessionLookup);
                     final OperationContext ctx;
 
+                    if (LSP_LOG.isLoggable(Level.FINEST)) {
+                        LSP_LOG.log(Level.FINEST, "IN : {0}", 
+                                msg.toString().replace("\n", "\n\t"));
+                    }
                     // Intercept client REQUESTS; take the progress token from them, if it is
                     // attached.
                     Runnable r;

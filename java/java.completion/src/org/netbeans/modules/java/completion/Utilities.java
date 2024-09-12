@@ -51,6 +51,8 @@ public final class Utilities {
     private static final String ERROR = "<error>"; //NOI18N
     private static final String COMPLETION_CASE_SENSITIVE = "completion-case-sensitive"; // NOI18N
     private static final boolean COMPLETION_CASE_SENSITIVE_DEFAULT = true;
+    private static final String COMPLETION_INSERT_TEXT_PARAMETERS = "completion-insert-text-parameters"; // NOI18N
+    private static final boolean COMPLETION_INSERT_TEXT_PARAMETERS_DEFAULT = true;
     private static final String SHOW_DEPRECATED_MEMBERS = "show-deprecated-members"; // NOI18N
     private static final boolean SHOW_DEPRECATED_MEMBERS_DEFAULT = true;
     private static final String JAVA_COMPLETION_WHITELIST = "javaCompletionWhitelist"; //NOI18N
@@ -62,6 +64,7 @@ public final class Utilities {
     private static final boolean JAVA_COMPLETION_SUBWORDS_DEFAULT = false;
 
     private static boolean caseSensitive = COMPLETION_CASE_SENSITIVE_DEFAULT;
+    private static boolean completionInsertTextParameters = COMPLETION_INSERT_TEXT_PARAMETERS_DEFAULT;
     private static boolean showDeprecatedMembers = SHOW_DEPRECATED_MEMBERS_DEFAULT;
     private static boolean javaCompletionExcluderMethods = JAVA_COMPLETION_EXCLUDER_METHODS_DEFAULT;
     private static boolean javaCompletionSubwords = JAVA_COMPLETION_SUBWORDS_DEFAULT;
@@ -91,6 +94,9 @@ public final class Utilities {
             }
             if (settingName == null || JAVA_COMPLETION_SUBWORDS.equals(settingName)) {
                 javaCompletionSubwords = preferences.getBoolean(JAVA_COMPLETION_SUBWORDS, JAVA_COMPLETION_SUBWORDS_DEFAULT);
+            }
+            if (settingName == null || COMPLETION_INSERT_TEXT_PARAMETERS.equals(settingName)) {
+                completionInsertTextParameters = preferences.getBoolean(COMPLETION_INSERT_TEXT_PARAMETERS, COMPLETION_INSERT_TEXT_PARAMETERS_DEFAULT);
             }
         }
     };
@@ -206,6 +212,11 @@ public final class Utilities {
     public static boolean isShowDeprecatedMembers() {
         lazyInit();
         return showDeprecatedMembers;
+    }
+
+    public static boolean isCompletionInsertTextParameters() {
+        lazyInit();
+        return completionInsertTextParameters;
     }
 
     private static final AtomicReference<Collection<String>> excludeRef = new AtomicReference<>();

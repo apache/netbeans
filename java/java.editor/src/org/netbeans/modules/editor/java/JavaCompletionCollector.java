@@ -482,28 +482,28 @@ public class JavaCompletionCollector implements CompletionCollector {
         }
 
         @Override
-        public Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
-            return createExecutableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef);
+        public Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
+            return createExecutableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef, insertTextParams);
         }
 
         @Override
-        public Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef) {
-            return createExecutableItem(info, elem, type, null, null, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, afterConstructorTypeParams, smartType, assignToVarOffset, memberRef);
+        public Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
+            return createExecutableItem(info, elem, type, null, null, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, afterConstructorTypeParams, smartType, assignToVarOffset, memberRef, insertTextParams);
         }
 
         @Override
-        public Completion createTypeCastableExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
-            return createExecutableItem(info, elem, type, null, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef);
+        public Completion createTypeCastableExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
+            return createExecutableItem(info, elem, type, null, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef, insertTextParams);
         }
 
         @Override
-        public Completion createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name) {
-            return createExecutableItem(info, elem, type, name, null, substitutionOffset, null, false, isDeprecated, false, false, false, false, -1, false);
+        public Completion createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name, boolean insertTextParams) {
+            return createExecutableItem(info, elem, type, name, null, substitutionOffset, null, false, isDeprecated, false, false, false, false, -1, false, insertTextParams);
         }
 
         @Override
         public Completion createOverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement) {
-            Completion item = createExecutableItem(info, elem, type, substitutionOffset, null, false, false, false, false, false, -1, false);
+            Completion item = createExecutableItem(info, elem, type, substitutionOffset, null, false, false, false, false, false, -1, false, true);
             CompletionCollector.Builder builder = CompletionCollector.newBuilder(item.getLabel())
                     .kind(elementKind2CompletionItemKind(elem.getKind()))
                     .labelDetail(String.format("%s - %s", item.getLabelDetail(), implement ? "implement" : "override"))
@@ -594,7 +594,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     } else {
                         insertText.append("\n{\n$0}");
                     }
-                    builder.command(new Command("Complete Abstract Methods", "java.complete.abstract.methods"));
+                    builder.command(new Command("Complete Abstract Methods", "nbls.java.complete.abstract.methods"));
                 } catch (IOException ioe) {
                 }
                 builder.insertTextFormat(Completion.TextFormat.Snippet);
@@ -1065,7 +1065,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             return builder.build();
         }
 
-        private Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, String name, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef) {
+        private Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, String name, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
             String simpleName = name != null ? name : (elem.getKind() == ElementKind.METHOD ? elem : elem.getEnclosingElement()).getSimpleName().toString();
             Iterator<? extends VariableElement> it = elem.getParameters().iterator();
             Iterator<? extends TypeMirror> tIt = type.getParameterTypes().iterator();
@@ -1090,7 +1090,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     break;
                 }
                 if (!inImport && !memberRef && cnt == 0 && cs.spaceWithinMethodCallParens()) {
-                    insertText.append(' ');
+                    if (insertTextParams) insertText.append(' ');
                 }
                 cnt++;
                 String paramTypeName = Utilities.getTypeName(info, tm, false, elem.isVarArgs() && !tIt.hasNext()).toString();
@@ -1099,7 +1099,8 @@ public class JavaCompletionCollector implements CompletionCollector {
                 sortParams.append(paramTypeName);
                 if (!inImport && !memberRef) {
                     VariableElement inst = instanceOf(tm, paramName);
-                    insertText.append("${").append(cnt).append(":").append(inst != null ? inst.getSimpleName() : paramName).append("}");
+                    if (insertTextParams) insertText.append("${").append(cnt).append(":").append(inst != null ? inst.getSimpleName() : paramName).append("}");
+                    else if (cnt == 1) insertText.append("$1");
                     asTemplate = true;
                 }
                 if (tIt.hasNext()) {
@@ -1107,15 +1108,15 @@ public class JavaCompletionCollector implements CompletionCollector {
                     sortParams.append(',');
                     if (!inImport && !memberRef) {
                         if (cs.spaceBeforeComma()) {
-                            insertText.append(' ');
+                            if (insertTextParams) insertText.append(' ');
                         }
-                        insertText.append(',');
+                        if (insertTextParams) insertText.append(',');
                         if (cs.spaceAfterComma()) {
-                            insertText.append(' ');
+                            if (insertTextParams) insertText.append(' ');
                         }
                     }
                 } else if (!inImport && !memberRef && cs.spaceWithinMethodCallParens()) {
-                    insertText.append(' ');
+                    if (insertTextParams) insertText.append(' ');
                 }
             }
             sortParams.append(')');
@@ -1137,7 +1138,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     } else {
                         insertText.append("\n{\n$0}");
                     }
-                    command = new Command("Complete Abstract Methods", "java.complete.abstract.methods");
+                    command = new Command("Complete Abstract Methods", "nbls.java.complete.abstract.methods");
                     asTemplate = true;
                 } else if (asTemplate) {
                     insertText.append("$0");
@@ -1185,6 +1186,12 @@ public class JavaCompletionCollector implements CompletionCollector {
             }
             if (isDeprecated) {
                 builder.addTag(Completion.Tag.Deprecated);
+            }
+            if (command == null && !insertTextParams && cnt > 0) {
+                command = new Command("Show Signature Help", "editor.action.triggerParameterHints");
+            }
+            if (command != null) {
+                builder.command(command);
             }
             return builder.build();
         }

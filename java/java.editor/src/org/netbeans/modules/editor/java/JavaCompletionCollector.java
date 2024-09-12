@@ -1089,8 +1089,8 @@ public class JavaCompletionCollector implements CompletionCollector {
                 if (tm == null) {
                     break;
                 }
-                if (!inImport && !memberRef && cnt == 0 && cs.spaceWithinMethodCallParens()) {
-                    if (insertTextParams) insertText.append(' ');
+                if (!inImport && !memberRef && insertTextParams && cnt == 0 && cs.spaceWithinMethodCallParens()) {
+                    insertText.append(' ');
                 }
                 cnt++;
                 String paramTypeName = Utilities.getTypeName(info, tm, false, elem.isVarArgs() && !tIt.hasNext()).toString();
@@ -1098,25 +1098,29 @@ public class JavaCompletionCollector implements CompletionCollector {
                 labelDetail.append(paramTypeName).append(' ').append(paramName);
                 sortParams.append(paramTypeName);
                 if (!inImport && !memberRef) {
-                    VariableElement inst = instanceOf(tm, paramName);
-                    if (insertTextParams) insertText.append("${").append(cnt).append(":").append(inst != null ? inst.getSimpleName() : paramName).append("}");
-                    else if (cnt == 1) insertText.append("$1");
                     asTemplate = true;
+                    if (insertTextParams) {
+                        VariableElement inst = instanceOf(tm, paramName);
+                        insertText.append("${").append(cnt).append(":").append(inst != null ? inst.getSimpleName() : paramName).append("}");
+                    } else if (cnt == 1) {
+                        // Ensure that the cursor is placed in-between the inserted parentheses i.e. "(|)"
+                        insertText.append("$1");
+                    }
                 }
                 if (tIt.hasNext()) {
                     labelDetail.append(", ");
                     sortParams.append(',');
-                    if (!inImport && !memberRef) {
+                    if (!inImport && !memberRef && insertTextParams) {
                         if (cs.spaceBeforeComma()) {
-                            if (insertTextParams) insertText.append(' ');
+                            insertText.append(' ');
                         }
-                        if (insertTextParams) insertText.append(',');
+                        insertText.append(',');
                         if (cs.spaceAfterComma()) {
-                            if (insertTextParams) insertText.append(' ');
+                            insertText.append(' ');
                         }
                     }
-                } else if (!inImport && !memberRef && cs.spaceWithinMethodCallParens()) {
-                    if (insertTextParams) insertText.append(' ');
+                } else if (!inImport && !memberRef && insertTextParams && cs.spaceWithinMethodCallParens()) {
+                    insertText.append(' ');
                 }
             }
             sortParams.append(')');

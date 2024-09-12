@@ -1838,7 +1838,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private CharSequence castText;
         private int startOffset;
         private CharSequence assignToVarText;
-        private boolean substituteTextParams;
+        private final boolean substituteTextParams;
 
         private MethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean substituteTextParams, WhiteListQuery.WhiteList whiteList) {
             super(substitutionOffset, ElementHandle.create(elem), whiteList);
@@ -2070,6 +2070,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                         }
                         sb.append('('); //NOI18N
                         if (params.isEmpty() || !substituteTextParams) {
+                            // Ensure that the cursor is placed in-between the inserted parentheses i.e. "(|)"
                             sb.append("${cursor}"); //NOI18N
                         } else {
                             boolean guessArgs = Utilities.guessMethodArguments();
@@ -2497,7 +2498,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private boolean insertName;
         private String sortText;
         private String leftText;
-        private boolean substituteTextParams;
+        private final boolean substituteTextParams;
 
         private ConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, boolean afterConstructorTypeParams, boolean smartType, String name, boolean substituteTextParams, WhiteListQuery.WhiteList whiteList) {
             super(substitutionOffset, ElementHandle.create(elem), whiteList);
@@ -2706,7 +2707,8 @@ public abstract class JavaCompletionItem implements CompletionItem {
                                     }
                                 }
                             } else {
-                                sb.append("${cursor}");
+                                // Ensure that the cursor is placed in-between the inserted parentheses i.e. "(|)"
+                                sb.append("${cursor}"); //NOI18N
                             }
                             c.select(startPos.getOffset() + (insertName ? text.length() : 0) + toAddText.indexOf('(') + 1, endPos.getOffset());
                             sb.append(c.getSelectedText());

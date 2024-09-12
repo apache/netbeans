@@ -295,7 +295,7 @@ public final class SimpleValueNames {
     public static final String COMPLETION_AUTO_POPUP = "completion-auto-popup"; // NOI18N
 
     /**
-     * Whether the code completion query search will be case-sensitive
+     * Whether the code completion query search will be case  sensitive
      * Values: java.lang.Boolean
      */
     public static final String COMPLETION_CASE_SENSITIVE = "completion-case-sensitive"; // NOI18N

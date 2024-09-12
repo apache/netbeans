@@ -4069,7 +4069,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             switch (e.getKind()) {
                 case METHOD:
                     ExecutableType et = (ExecutableType) asMemberOf(e, type, types);
-                    results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), false, false, isOfSmartType(env, et, smartTypes), env.assignToVarPos(), true, false));
+                    results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), false, false, isOfSmartType(env, et, smartTypes), env.assignToVarPos(), true, false));  // insertTextParams is hard-coded to false because memberRef is true for method-references, thus, irrelevant.
                     break;
             }
         }

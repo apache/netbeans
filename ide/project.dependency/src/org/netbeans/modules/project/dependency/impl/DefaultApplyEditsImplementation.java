@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.project.dependency;
+package org.netbeans.modules.project.dependency.impl;
 
 import java.io.IOException;
 import java.net.URI;
@@ -34,7 +34,6 @@ import org.netbeans.api.lsp.ResourceModificationException;
 import org.netbeans.api.lsp.ResourceOperation;
 import org.netbeans.api.lsp.TextDocumentEdit;
 import org.netbeans.api.lsp.WorkspaceEdit;
-import org.netbeans.modules.project.dependency.impl.TextDocumentEditProcessor;
 import org.netbeans.spi.lsp.ApplyEditsImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;

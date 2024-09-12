@@ -69,7 +69,12 @@ public class PrepareBundles {
 
         Path targetDir = Paths.get(args[0]);
         Path packagesDir = targetDir.resolve("package");
-        new ProcessBuilder("npm", "install").directory(packagesDir.toFile()).inheritIO().start().waitFor();
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("windows")) {
+            new ProcessBuilder("npm.cmd", "install").directory(packagesDir.toFile()).inheritIO().start().waitFor();
+        } else{
+            new ProcessBuilder("npm", "install").directory(packagesDir.toFile()).inheritIO().start().waitFor();   
+        }
         Path bundlesDir = targetDir.resolve("bundles");
         Files.createDirectories(bundlesDir);
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(bundlesDir)) {

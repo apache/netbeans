@@ -39,6 +39,7 @@ import java.time.Instant;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -77,6 +78,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.swing.JEditorPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -247,6 +249,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
+import org.openide.text.CloneableEditorSupport;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
 import org.openide.util.BaseUtilities;
@@ -1759,9 +1762,34 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public void didSave(DidSaveTextDocumentParams arg0) {
-        //TODO: nothing for now?
-        LOG.log(Level.FINER, "didSave: {0}", arg0);
+    public void didSave(DidSaveTextDocumentParams savedParams) {
+        LOG.log(Level.FINER, "didSave: {0}", savedParams);
+        FileObject file = fromURI(savedParams.getTextDocument().getUri());
+        if (file == null) {
+            return;
+        }
+        // refresh the file systems, potentially fire events
+        file.refresh();
+        EditorCookie cake = file.getLookup().lookup(EditorCookie.class);
+        if (cake == null) {
+            return;
+        }
+        StyledDocument alreadyLoaded = cake.getDocument();
+        if (alreadyLoaded == null) {
+            return;
+        }
+        try {
+            // if the FileObject.refresh() only now discovered a change, it have fired an event and initiated a reload, which might
+            // be still pending. Grab the reload task and wait for it:
+            Method reload = CloneableEditorSupport.class.getDeclaredMethod("reloadDocument");
+            reload.setAccessible(true);
+            org.openide.util.Task t = (org.openide.util.Task)reload.invoke(cake);
+            // wait for a limited time, this could be enough for the reload to complete, blocking LSP queue. We do not want to block LSP queue indefinitely:
+            // in case of an error, the server could become unresponsive.
+            t.waitFinished(300);
+        } catch (ReflectiveOperationException | InterruptedException | SecurityException ex) {
+            // nop 
+        }
     }
 
     CompletableFuture<List<? extends Location>> superImplementations(String uri, Position position) {

@@ -70,6 +70,7 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.RenameOptions;
+import org.eclipse.lsp4j.SaveOptions;
 import org.eclipse.lsp4j.SemanticTokensCapabilities;
 import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.ServerCapabilities;
@@ -866,6 +867,9 @@ public final class Server {
                 textDocumentSyncOptions.setChange(TextDocumentSyncKind.Incremental);
                 textDocumentSyncOptions.setOpenClose(true);
                 textDocumentSyncOptions.setWillSaveWaitUntil(true);
+                // TODO: we now do not request to send saved contents, but in case of client side applied text edits, it could be cool to 
+                // receive the current document contents at a savepoint.
+                textDocumentSyncOptions.setSave(new SaveOptions(false));
                 capabilities.setTextDocumentSync(textDocumentSyncOptions);
                 CompletionOptions completionOptions = new CompletionOptions();
                 completionOptions.setResolveProvider(true);

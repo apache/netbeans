@@ -18,20 +18,64 @@
  */
 package org.netbeans.modules.cloud.oracle.policy;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import org.netbeans.modules.cloud.oracle.assets.SuggestedItem;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 
 /**
- * Creates application.properties, bootstrap.properties and OCI Vault secrets from current contents of the {@link CloudAssets}.
+ * Creates OCI policies that will allow access to Cloud Assets.
  * 
  * @author Jan Horvath
  */
 public class PolicyGenerator {
-
-    public static String createPolicies(Collection<OCIItem> items) {
+        
+    public static List<String> getPolicyStatementsFor(Collection<OCIItem> items) {   
+        OCIItem execution = getExecutionEnvironment(items);
+        if (execution == null) {
+            return List.of();
+        }
+        
+        String principalType = getPrincipalType(execution);
+        List<String> result = new ArrayList();
+        for (OCIItem item : items) {
+            switch (item.getKey().getPath()) {
+                case "Databases": //NOI18N
+                    result.add("Allow any-user to manage autonomous-database-family" //NOI18N
+                            + " in compartment id " + item.getCompartmentId() //NOI18N
+                            + " where ALL {" //NOI18N
+                            + " request.principal.type = '" + principalType + "'," //NOI18N
+                            + " request.principal.compartment.id = '" + execution.getCompartmentId() + "' }"); //NOI18N
+                    break;
+                case "Bucket": //NOI18N
+                    result.add("Allow any-user to manage object-family" //NOI18N
+                            + " in compartment id " + item.getCompartmentId() //NOI18N
+                            + " where ALL {" //NOI18N
+                            + " request.principal.type = '" + principalType + "'," //NOI18N
+                            + " request.principal.compartment.id = '" + execution.getCompartmentId() + "' }"); //NOI18N
+                    break;
+                case "Vault": //NOI18N
+                    result.add("Allow any-user to read secret-family" //NOI18N
+                            + " in compartment id " + item.getCompartmentId() //NOI18N
+                            + " where ALL {" //NOI18N
+                            + " request.principal.type = '" + principalType + "'," //NOI18N
+                            + " request.principal.compartment.id = '" + execution.getCompartmentId() + "' }"); //NOI18N
+                    break;
+            }
+        }
+        return result;
+    }
+    
+    private static String getPrincipalType(OCIItem executionEnvironment) {
+        if ("ComputeInstance".equals(executionEnvironment.getKey().getPath())) { //NOI18N
+            return "instance"; //NOI18N
+        }
+        return "cluster"; //NOI18N
+    }
+    
+    private static OCIItem getExecutionEnvironment(Collection<OCIItem> items) {
         OCIItem execution = null;
-        String principalType;
         for (OCIItem item : items) {
             if ("Cluster".equals(item.getKey().getPath()) //NOI18N
                     || "ComputeInstance".equals(item.getKey().getPath())) { //NOI18N
@@ -42,52 +86,43 @@ public class PolicyGenerator {
                 }
             }
         }
-        if (execution == null) {
-            return "# Resolve execution environment suggestion"; //NOI18N
-        }
-        if ("ComputeInstance".equals(execution.getKey().getPath())) { //NOI18N
-            principalType = "instance"; //NOI18N
-        } else {
-            principalType = "cluster"; //NOI18N
-        }
-        StringBuilder result = new StringBuilder();
-        for (OCIItem item : items) {
-            switch (item.getKey().getPath()) {
-                case "Databases": //NOI18N
-                    result.append("Allow any-user to manage autonomous-database-family \n" //NOI18N
-                            + "in compartment id " + item.getCompartmentId() //NOI18N
-                            + "\n" //NOI18N
-                            + "where ALL { \n" //NOI18N
-                            + "    target.autonomous-database.id = '" + item.getKey().getValue() + "',\n" //NOI18N
-                            + "    request.principal.type = '" + principalType + "',\n" //NOI18N
-                            + "    request.principal.compartment.id = '" + execution.getCompartmentId() + "'\n" //NOI18N
-                            + "}\n\n"); //NOI18N
-                    break;
-                case "Bucket": //NOI18N
-                    result.append("Allow any-user to manage object-family \n" //NOI18N
-                            + "in compartment id " + item.getCompartmentId() //NOI18N
-                            + "\n" //NOI18N
-                            + "where ALL {\n" //NOI18N
-                            + "    request.principal.type = '" + principalType + "',\n" //NOI18N
-                            + "    request.principal.compartment.id = '" + execution.getCompartmentId() + "'\n" //NOI18N
-                            + "}\n\n"); //NOI18N
-                    break;
-                case "Vault": //NOI18N
-                    result.append("Allow any-user to read secret-family \n" //NOI18N
-                            + "in compartment id " + item.getCompartmentId() //NOI18N
-                            + "\n" //NOI18N
-                            + "where ALL {\n" //NOI18N
-                            + "    request.principal.type = '" + principalType + "',\n" //NOI18N
-                            + "    request.principal.compartment.id = '" + execution.getCompartmentId() + "'\n" //NOI18N
-                            + "}"); //NOI18N
-                    break;
-                case "Suggested": //NOI18N
-                    result.append("# Resolve suggestion:" + ((SuggestedItem) item).getPath() + "'\n"); //NOI18N
-                    break;
-            }
-
-        }
-        return result.toString();
+        return execution;
     }
 
+    public static String createPolicies(Collection<OCIItem> items) {
+        List<String> statements = getPolicyStatementsFor(items);
+        if (statements.isEmpty()) {
+            return "# Resolve execution environment suggestion"; //NOI18N
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(prettyPrintStatements(statements));
+        sb.append(resolveSuggestions(items));
+        return sb.toString();
+    }
+
+    private static String prettyPrintStatements(List<String> statements) {
+        String[] newLineBefore = {"in ", "where ", "}"}; // NOI18N
+        String[] newLineAfter = {"\\{", ",", "}"}; // NOI18N
+
+        String result = String.join("\n", statements); // NOI18N
+        for (String keyword : newLineBefore) {
+            result = result.replaceAll(keyword, "\n" + keyword); // NOI18N
+        }
+        for (String keyword : newLineAfter) {
+            result = result.replaceAll(keyword, keyword + "\n"); // NOI18N
+        }
+        
+        return result;
+    }
+
+    private static String resolveSuggestions(Collection<OCIItem> items) {
+        StringBuilder sb = new StringBuilder();
+        items.stream()
+                .filter(item -> "Suggested".equals(item.getKey().getPath())) // NOI18N
+                .forEach(item -> sb
+                        .append("# Resolve suggestion:") // NOI18N
+                        .append(((SuggestedItem) item).getPath())
+                        .append("\n")); // NOI18N
+        return sb.toString();
+    }
 }

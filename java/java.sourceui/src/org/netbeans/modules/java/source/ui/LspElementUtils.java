@@ -19,8 +19,10 @@
 package org.netbeans.modules.java.source.ui;
 
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import java.io.IOException;
@@ -35,6 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
@@ -55,6 +58,7 @@ import org.netbeans.api.java.source.ui.ElementHeaders;
 import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.spi.lsp.StructureProvider;
 import org.openide.filesystems.FileObject;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
@@ -62,9 +66,9 @@ import org.openide.filesystems.FileObject;
  */
 public class LspElementUtils {
     
-    public static StructureElement element2StructureElement(CompilationInfo info, Element el, ElementAcceptor childAcceptor, 
+    public static StructureElement element2StructureElement(CompilationInfo info, Element el, TreePath elPath, ElementAcceptor childAcceptor,
             boolean allowResources, boolean bypassOpen, FileObject parentFile) {
-        TreePath path = info.getTrees().getPath(el);
+        TreePath path = elPath != null ? elPath : info.getTrees().getPath(el);
         if (!allowResources) {
             if (path == null) {
                 return null;
@@ -80,10 +84,8 @@ public class LspElementUtils {
         FileObject f = null;
         FileObject owner = null;
         if (!bypassOpen) {
-            Object[] oi = setOffsets(info, el, builder);
-            if (oi != null) {
-                owner = f = (FileObject)oi[0]; 
-            }
+            FileObject file = setOffsets(info, el, path, builder);
+            owner = f = file;
         } else {
             f = null;
             owner = parentFile;
@@ -100,7 +102,7 @@ public class LspElementUtils {
 
         if (childAcceptor != null) {
             for (Element child : el.getEnclosedElements()) {
-                TreePath p = info.getTrees().getPath(child);
+                TreePath p = getChildPath(info, child, path);
                 if (!allowResources) {
                     if (p == null) {
                         continue;
@@ -108,7 +110,7 @@ public class LspElementUtils {
                 }
                 TypeMirror m = child.asType();
                 if (childAcceptor.accept(child, m)) {
-                    StructureElement jse = element2StructureElement(info, child, childAcceptor, allowResources, f == null, owner);
+                    StructureElement jse = element2StructureElement(info, child, p, childAcceptor, allowResources, f == null, owner);
                     if (jse != null) {
                         builder.children(jse);
                     }
@@ -125,8 +127,25 @@ public class LspElementUtils {
         return builder.build();
     }
     
+    private static TreePath getChildPath(CompilationInfo ci, Element child, TreePath parentPath) {
+        if (parentPath != null && child != null &&
+            TreeUtilities.CLASS_TREE_KINDS.contains(parentPath.getLeaf().getKind())) {
+            ClassTree ct = (ClassTree) parentPath.getLeaf();
+
+            for (Tree member : ct.getMembers()) {
+                TreePath memberPath = new TreePath(parentPath, member);
+
+                if (child.equals(ci.getTrees().getElement(memberPath))) {
+                    return memberPath;
+                }
+            }
+        }
+
+        return ci.getTrees().getPath(child);
+    }
+
     public static StructureElement element2StructureElement(CompilationInfo info, Element el, ElementAcceptor childAcceptor) {
-        return element2StructureElement(info, el, childAcceptor, false, false, null);
+        return element2StructureElement(info, el, null, childAcceptor, false, false, null);
     }
     
     static FileObject findOwnerResource(CompilationInfo info, Element el) {
@@ -166,7 +185,7 @@ public class LspElementUtils {
     }
     
     public  static StructureElement describeElement(CompilationInfo info, Element el, ElementAcceptor childAcceptor, boolean allowBinary) {
-        return element2StructureElement(info, el, childAcceptor, allowBinary, false, null);
+        return element2StructureElement(info, el, null, childAcceptor, allowBinary, false, null);
     }
     
     public static CompletableFuture<StructureElement> createStructureElement(CompilationInfo info, Element el, boolean resolveSources) {
@@ -199,6 +218,7 @@ public class LspElementUtils {
         return setFutureOffsets(info, el, builder, cancel, acquire);
     }
     
+    @Messages("LBL_AnonymousClass=<anonymous class based on {0}>")
     private static String createName(CompilationInfo ci, Element original) {
         switch (original.getKind()) {
             case PACKAGE:
@@ -211,7 +231,13 @@ public class LspElementUtils {
             case RECORD:
                 TypeElement te = (TypeElement) original;
                 StringBuilder sb = new StringBuilder();
-                sb.append(te.getSimpleName());
+                if (te.getNestingKind() == NestingKind.ANONYMOUS) {
+                    String name = te.getInterfaces().isEmpty() ? te.getSuperclass().toString()
+                                                               : te.getInterfaces().get(0).toString();
+                    sb.append(Bundle.LBL_AnonymousClass(name));
+                } else {
+                    sb.append(te.getSimpleName());
+                }
                 List<? extends TypeParameterElement> typeParams = te.getTypeParameters();
                 if (typeParams != null && !typeParams.isEmpty()) {
                     sb.append("<"); // NOI18N
@@ -299,14 +325,6 @@ public class LspElementUtils {
         if (info == null) {
             return builder;
         }
-        int selStart = (int)info[3];
-        if (selStart < 0) {
-            selStart = (int)info[1];
-        }
-        int selEnd = (int)info[4];
-        if (selEnd < 0) {
-            selEnd = (int)info[2];
-        }
         TreePathHandle pathHandle = (TreePathHandle)info[6];
         FileObject f = (FileObject)info[0];
         boolean[] synthetic = new boolean[] { false };
@@ -330,9 +348,21 @@ public class LspElementUtils {
         if (synthetic[0]) {
             return null;
         }
+        fillInPositions(info, builder);
+        return builder;
+    }
+
+    private static void fillInPositions(Object[] info, StructureProvider.Builder builder) {
+        int selStart = (int)info[3];
+        if (selStart < 0) {
+            selStart = (int)info[1];
+        }
+        int selEnd = (int)info[4];
+        if (selEnd < 0) {
+            selEnd = (int)info[2];
+        }
         builder.expandedStartOffset((int)info[1]).expandedEndOffset((int)info[2]);
         builder.selectionStartOffset(selStart).selectionEndOffset(selEnd);
-        return builder;
     }
     
     private static CompletableFuture<StructureProvider.Builder> setFutureOffsets(CompilationInfo ci, Element original, 
@@ -354,11 +384,21 @@ public class LspElementUtils {
             info -> processOffsetInfo(info, builder));
     }
     
-    private static Object[] setOffsets(CompilationInfo ci, Element original, StructureProvider.Builder builder) {
+    private static FileObject setOffsets(CompilationInfo ci, Element original, TreePath originalPath, StructureProvider.Builder builder) {
+        if (originalPath != null && originalPath.getCompilationUnit() == ci.getCompilationUnit()) {
+            Object[] positions = new Object[] {null, -1, -1, -1, -1};
+            builder.file(ci.getFileObject());
+            if (ci.getTreeUtilities().isSynthetic(originalPath)) {
+                return null;
+            }
+            ElementOpenAccessor.getInstance().fillInTreePositions(ci, originalPath.getLeaf(), positions);
+            fillInPositions(positions, builder);
+            return ci.getFileObject();
+        }
         ElementHandle<Element> h = ElementHandle.create(original);
         Object[] openInfo = ElementOpenAccessor.getInstance().getOpenInfo(ci.getClasspathInfo(), h, new AtomicBoolean());
         processOffsetInfo(openInfo, builder);
-        return openInfo;
+        return (FileObject) openInfo[0];
     }
     
     private static void getAnonymousInnerClasses(CompilationInfo info, TreePath path, StructureProvider.Builder builder, ElementAcceptor childAcceptor) {
@@ -366,18 +406,14 @@ public class LspElementUtils {
             @Override
             public Void visitNewClass(NewClassTree node, Void p) {
                 if (node.getClassBody() != null) {
-                    Element e = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getClassBody()));
-                    if (e != null) {
-                        TreePath path = new TreePath(getCurrentPath(), node.getIdentifier());
-                        TypeMirror m = info.getTrees().getTypeMirror(path);
-                        Element te = info.getTrees().getElement(path);
-                        if (te != null & childAcceptor.accept(te, m)) {
-                            StructureElement jse = element2StructureElement(info, te, childAcceptor);
-                            if (jse != null) {
-                                builder.children(jse);
-                            }
+                    TreePath bodyPath = new TreePath(getCurrentPath(), node.getClassBody());
+                    Element e = info.getTrees().getElement(bodyPath);
+                    if (e != null && childAcceptor.accept(e, e.asType())) {
+                        StructureElement jse = element2StructureElement(info, e, bodyPath, childAcceptor, false, false, null);
+                        if (jse != null) {
+                            builder.children(jse);
                         }
-                    }
+                }
                 }
                 return null;
             }
@@ -387,7 +423,7 @@ public class LspElementUtils {
                 Element e = info.getTrees().getElement(getCurrentPath());
                 TypeMirror m = info.getTrees().getTypeMirror(getCurrentPath());
                 if (e != null & childAcceptor.accept(e, m)) {
-                    StructureElement jse = element2StructureElement(info, e, childAcceptor);
+                    StructureElement jse = element2StructureElement(info, e, getCurrentPath(), childAcceptor, false, false, null);
                     if (jse != null) {
                         builder.children(jse);
                     }

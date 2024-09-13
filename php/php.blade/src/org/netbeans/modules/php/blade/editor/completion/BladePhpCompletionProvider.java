@@ -333,7 +333,7 @@ public class BladePhpCompletionProvider implements CompletionProvider {
 
         String filePath = originFile.getPath();
 
-        BladeCompletionItem item = BladeCompletionItem.createViewPath(
+        BladeCompletionItem item = BladeCompletionBuilder.createViewPath(
                 bladePath, caretOffset, originFile.isFolder(), filePath);
         resultSet.addItem(item);
     }

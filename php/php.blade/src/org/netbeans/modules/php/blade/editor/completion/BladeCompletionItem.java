@@ -26,10 +26,12 @@ import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.lib.editor.codetemplates.api.CodeTemplateManager;
 import org.netbeans.modules.php.blade.editor.ResourceUtilities;
+import org.netbeans.modules.php.blade.syntax.BladeDirectivesUtils;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionTask;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
@@ -39,43 +41,29 @@ import org.openide.util.ImageUtilities;
  *
  * @author bhaidu
  */
-public class BladeCompletionItem implements CompletionItem {
+public abstract class BladeCompletionItem implements CompletionItem {
 
     protected static final int DEFAULT_SORT_PRIORITY = 20;
-    protected int substitutionOffset;
-    protected String text;
-    protected boolean shift;
+    private final int substitutionOffset;
+    private final String name;
+    @NullAllowed
+    private final String description;
+    private boolean shift;
 
-    //----------- Factory methods --------------
-    public static BladeCompletionItem createTag(String name, int substitutionOffset) {
-        return new BladeTag(name, substitutionOffset);
+    BladeCompletionItem(String name, int substitutionOffset, String description) {
+        this.name = name;
+        this.substitutionOffset = substitutionOffset;
+        this.description = description;
     }
 
-    public static BladeCompletionItem createViewPath(String name,
-            int substitutionOffset, boolean isFolder, String path) {
-        return new ViewPath(name, substitutionOffset, isFolder, path);
+    public String getName() {
+        return this.name;
     }
 
-    public static BladeCompletionItem createInlineDirective(String directive,
-            int substitutionOffset, String description) {
-        return new InlineDirective(directive, substitutionOffset, description);
+    public String getDescription() {
+        return this.description;
     }
 
-    public static BladeCompletionItem createDirectiveWithArg(String directive,
-            int substitutionOffset, String description) {
-        return new DirectiveWithArg(directive, substitutionOffset, description);
-    }
-
-    public static BladeCompletionItem createBlockDirective(String directive,
-            String endTag, int substitutionOffset, String description) {
-        return new BlockDirective(directive, endTag, substitutionOffset, description);
-    }
-
-    public static BladeCompletionItem createBlockDirectiveWithArg(String directive,
-            String endTag, int substitutionOffset, String description) {
-        return new BlockDirectiveWithArg(directive, endTag, substitutionOffset, description);
-    }
-    
     @Override
     public void defaultAction(JTextComponent component) {
         if (component != null) {
@@ -101,22 +89,11 @@ public class BladeCompletionItem implements CompletionItem {
         return CompletionUtilities.getPreferredWidth(getLeftHtmlText(), getRightHtmlText(), grphcs, font);
     }
 
-    protected String getLeftHtmlText() {
-        return text;
-    }
-
-    protected String getRightHtmlText() {
-        return null;
-    }
-
     @Override
     public void render(Graphics g, Font defaultFont, Color defaultColor, Color backgroundColor, int width, int height, boolean selected) {
         CompletionUtilities.renderHtml(getIcon(), getLeftHtmlText(), getRightHtmlText(), g, defaultFont, defaultColor, width, height, selected);
     }
 
-    protected ImageIcon getIcon() {
-        return null;
-    }
 
     @Override
     public CompletionTask createDocumentationTask() {
@@ -160,13 +137,25 @@ public class BladeCompletionItem implements CompletionItem {
     public CharSequence getInsertPrefix() {
         return getItemText();
     }
+    
+    protected ImageIcon getIcon() {
+        return null;
+    }
+    
+    protected String getLeftHtmlText() {
+        return name;
+    }
+
+    protected String getRightHtmlText() {
+        return null;
+    }
 
     protected String getSubstituteText() {
         return getItemText();
     }
 
     public String getItemText() {
-        return text;
+        return name;
     }
 
     private boolean substituteText(JTextComponent component, int len) {
@@ -222,25 +211,20 @@ public class BladeCompletionItem implements CompletionItem {
     public static class BladeTag extends BladeCompletionItem {
 
         public BladeTag(String name, int substitutionOffset) {
-            this.text = name;
-            this.substitutionOffset = substitutionOffset;
+            super(name, substitutionOffset, null);
         }
     }
 
     public static class InlineDirective extends BladeCompletionItem {
 
-        protected String description;
-
         public InlineDirective(String directive, int substitutionOffset,
                 String description) {
-            this.text = directive;
-            this.substitutionOffset = substitutionOffset;
-            this.description = description;
+            super(directive, substitutionOffset, description);
         }
 
         @Override
         protected String getRightHtmlText() {
-            return description;
+            return getDescription();
         }
 
         @Override
@@ -260,18 +244,17 @@ public class BladeCompletionItem implements CompletionItem {
         @Override
         protected String getSubstituteText() {
             String template = getItemText() + "($$${arg})"; // NOI18N
-            switch (text){
-                case "@include": // NOI18N
-                case "@extends": // NOI18N   
+            switch (getName()) {
+                case BladeDirectivesUtils.DIRECTIVE_INCLUDE,
+                        BladeDirectivesUtils.DIRECTIVE_EXTENDS ->
                     template = getItemText() + "('${path}')"; // NOI18N
-                    break;
             }
             return template;
         }
 
         @Override
         protected String getLeftHtmlText() {
-            return text + "()";
+            return getName() + "()"; // NOI18N
         }
 
         @Override
@@ -284,30 +267,27 @@ public class BladeCompletionItem implements CompletionItem {
 
     public static class BlockDirective extends BladeCompletionItem {
 
-        protected String description;
-        protected String endTag;
+        private final String endTag;
 
         public BlockDirective(String directive, String endTag, int substitutionOffset,
                 String description) {
-            this.text = directive;
-            this.substitutionOffset = substitutionOffset;
-            this.description = description;
+            super(directive, substitutionOffset, description);
             this.endTag = endTag;
         }
 
         @Override
         protected String getSubstituteText() {
-            return getItemText() + "\n${selection}${cursor}\n" + endTag;
+            return getItemText() + "\n${selection}${cursor}\n" + endTag; // NOI18N
         }
 
         @Override
         protected String getLeftHtmlText() {
-            return text + " ... " + endTag;
+            return getName() + " ... " + endTag; // NOI18N
         }
 
         @Override
         protected String getRightHtmlText() {
-            return description;
+            return getDescription();
         }
 
         @Override
@@ -322,8 +302,12 @@ public class BladeCompletionItem implements CompletionItem {
             ctx.setCaretPosition(substitutionOffset);
             CodeTemplateManager.get(doc).createTemporary(substituteText).insert(ctx);
         }
+
+        public String getEndTag() {
+            return endTag;
+        }
     }
-    
+
     public static class BlockDirectiveWithArg extends BlockDirective {
 
         public BlockDirectiveWithArg(String directive, String endTag, int substitutionOffset, String description) {
@@ -332,33 +316,31 @@ public class BladeCompletionItem implements CompletionItem {
 
         @Override
         protected String getSubstituteText() {
-            String template = getItemText() + "($$${arg})\n\n${selection}${cursor}\n" + endTag; // NOI18N
-            
-            switch (text){
-                case "@foreach":
-                    template = getItemText() + "($$${array} as $$${item})\n${selection}${cursor}\n" + endTag; // NOI18N
-                    break;
+            String template = getItemText() + "($$${arg})\n\n${selection}${cursor}\n" + getEndTag(); // NOI18N
+
+            switch (getName()) {
+                case BladeDirectivesUtils.DIRECTIVE_FOREACH ->
+                    template = getItemText() + "($$${array} as $$${item})\n${selection}${cursor}\n" + getEndTag(); // NOI18N
             }
-            
+
             return template;
         }
 
         @Override
         protected String getLeftHtmlText() {
-            return text + "() ... " + endTag;
+            return getName() + "() ... " + getEndTag(); // NOI18N
         }
 
     }
 
     public static class ViewPath extends BladeCompletionItem {
 
-        protected boolean isFolder;
-        protected String filePath;
+        private final boolean isFolder;
+        private final String filePath;
 
         public ViewPath(String name, int substitutionOffset,
                 boolean isFolder, String filePath) {
-            this.text = name;
-            this.substitutionOffset = substitutionOffset;
+            super(name, substitutionOffset, null);
             this.isFolder = isFolder;
             this.filePath = filePath;
         }

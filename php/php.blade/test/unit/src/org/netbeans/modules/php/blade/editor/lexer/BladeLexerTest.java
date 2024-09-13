@@ -42,11 +42,32 @@ public class BladeLexerTest extends BladeLexerTestBase {
     public void testContentTag_01() throws Exception {
         performTest("content_tag");
     }
+    
+    public void testContentTag_tertiary_expr() throws Exception {
+        performTest("content_tag_tertiary_expr");
+    }
 
     public void testEscapedTag_01() throws Exception {
         performTest("escaped_tag");
     }
+    
+    public void testEscapedDirective() throws Exception {
+        performTest("escaped_directive");
+    }
+    
+    public void testInclude_01() throws Exception {
+        performTest("include_01");
+    }
+    
+    
+    public void testCssAtRules_01() throws Exception {
+        performTest("css_at_rules");
+    }
 
+    public void testHtmlJavascript_01() throws Exception {
+        performTest("html_javascript_01");
+    }
+    
     @Override
     protected String getTestResult(String filename) throws Exception {
         String content = BladeUtils.getFileContent(new File(getDataDir(), "testfiles/lexer/blade/" + filename + ".blade.php"));

@@ -66,19 +66,13 @@ D_ESCAPES
       '{{{'
     |  '@@' '@'?
     | '@{' '{'?
-    | '@media' [ ]* '('?
-    | '@charset' [ ]*
-    | '@import' [ ]*
-    | '@namespace' [ ]*
-    | '@document' [ ]*
-    | '@font-face' [ ]*
-    | '@page' [ ]*
-    | '@supports' [ ]*
-    | '@layer' [ ]*
-    | '@tailwind' [ ]*
-    | '@apply'  [ ]*
-    | '@-webkit-keyframes' [ ]*
-    | '@keyframes' [ ]*
+    | '@media' [ ]+ ('screen' [ ]+ 'and'?)?
+    | ( '@charset' | '@import' | '@namespace' | '@document' | '@font-face'
+       | '@page' | '@layer' | '@supports' | '@tailwind' | '@apply' | '@-webkit-keyframes' 
+       | '@keyframes' | '@counter-style' | '@font-feature-values' | '@property'
+       | '@scope' | '@starting-style' | '@supports' | '@view-transition'
+       | '@container' | '@color-profile' | '@styleset' | '@font-palette-values' | '@media'
+      ) [ ]*
     )->type(HTML);
 
 mode INSIDE_BLADE_COMMENT;

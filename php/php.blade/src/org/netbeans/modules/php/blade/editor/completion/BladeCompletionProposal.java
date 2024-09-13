@@ -40,7 +40,6 @@ import org.openide.util.ImageUtilities;
  */
 public class BladeCompletionProposal implements CompletionProposal {
 
-    //@StaticResource
     final CompletionRequest request;
     protected final ElementHandle element;
     final String previewValue;

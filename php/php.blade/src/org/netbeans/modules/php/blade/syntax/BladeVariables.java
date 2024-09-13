@@ -16,25 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.blade.editor.completion;
-
-import org.netbeans.modules.php.blade.editor.BladeTestBase;
+package org.netbeans.modules.php.blade.syntax;
 
 /**
  *
  * @author bogdan
  */
-public class BladeCompletionTest extends BladeTestBase {
+public final class BladeVariables {
 
-    public BladeCompletionTest(String testName) {
-        super(testName);
-    }
+    public static final String LOOP_VAR = "$loop"; // NOI18N
     
-    public void testCompletion_01() throws Exception {
-        checkCompletion("testfiles/completion/testCompletion_01.blade.php", "@^", false);
-    }
-    
-    public void testCompletion_loop_endtag_01() throws Exception {
-        checkCompletion("testfiles/completion/testCompletion_loop_endtag_01.blade.php", "@endfor^", false);
+    private BladeVariables(){
+        
     }
 }

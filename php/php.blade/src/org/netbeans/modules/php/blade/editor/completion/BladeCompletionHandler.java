@@ -52,6 +52,7 @@ import org.netbeans.modules.php.blade.editor.parser.BladeParserResult;
 import org.netbeans.modules.php.blade.editor.preferences.ModulePreferences;
 import org.netbeans.modules.php.blade.project.ProjectUtils;
 import org.netbeans.modules.php.blade.syntax.BladeTags;
+import org.netbeans.modules.php.blade.syntax.BladeVariables;
 import org.netbeans.modules.php.blade.syntax.annotation.Directive;
 import org.netbeans.modules.php.blade.syntax.annotation.Tag;
 import org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrUtils;
@@ -165,8 +166,8 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
             request.anchorOffset = completionContext.getCaretOffset() - variablePrefix.length();
             request.carretOffset = completionContext.getCaretOffset();
             request.prefix = variablePrefix;
-            if ("$loop".startsWith(variablePrefix)) {
-                String variableName = "$loop"; // NOI18N
+            if (BladeVariables.LOOP_VAR.startsWith(variablePrefix)) {
+                String variableName = BladeVariables.LOOP_VAR; 
                 NamedElement variableElement = new NamedElement(variableName, fo, ElementType.VARIABLE);
                 completionProposals.add(new BladeCompletionProposal.BladeVariableItem(variableElement, request, variableName));
             }
@@ -274,12 +275,10 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
 
         char lastChar = typedText.charAt(typedText.length() - 1);
 
-        switch (lastChar) {
-            case '\n':
-                return CodeCompletionHandler.QueryType.STOP;
-            default:
-                return CodeCompletionHandler.QueryType.ALL_COMPLETION;
-        }
+        return switch (lastChar) {
+            case '\n' -> CodeCompletionHandler.QueryType.STOP;
+            default -> CodeCompletionHandler.QueryType.ALL_COMPLETION;
+        };
     }
 
     @Override
@@ -309,12 +308,12 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
     @Override
     public Documentation documentElement(ParserResult parserResult, ElementHandle elementHandle, Callable<Boolean> cancel) {
         Documentation result = null;
-        if (elementHandle instanceof PhpFunctionElement) {
-            return TooltipDoc.generateFunctionDoc((PhpFunctionElement) elementHandle);
+        if (elementHandle instanceof PhpFunctionElement phpFunctionElement) {
+            return TooltipDoc.generateFunctionDoc(phpFunctionElement);
         } else if (elementHandle instanceof DirectiveElement) {
             return result;
-        } else if (elementHandle instanceof NamedElement) {
-            return TooltipDoc.generateDoc((NamedElement) elementHandle);
+        } else if (elementHandle instanceof NamedElement namedElement) {
+            return TooltipDoc.generateDoc(namedElement);
         }
         return result;
     }

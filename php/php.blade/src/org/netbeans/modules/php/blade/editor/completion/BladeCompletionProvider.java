@@ -38,6 +38,7 @@ import org.netbeans.modules.php.blade.editor.components.ComponentsCompletionServ
 import org.netbeans.modules.php.blade.editor.directives.CustomDirectives;
 import org.netbeans.modules.php.blade.editor.directives.CustomDirectives.CustomDirective;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexResult;
+import org.netbeans.modules.php.blade.project.ComponentsSupport;
 import org.netbeans.modules.php.blade.project.ProjectUtils;
 import org.netbeans.modules.php.blade.syntax.StringUtils;
 import org.netbeans.modules.php.blade.syntax.annotation.Directive;
@@ -163,30 +164,24 @@ public class BladeCompletionProvider implements CompletionProvider {
                 }
 
                 switch (currentToken.getType()) {
-                    case HTML_IDENTIFIER:
-                        completeAttributes(currentToken.getText(), caretOffset, resultSet);
-                        break;
-                    case HTML:
+                    case HTML_IDENTIFIER -> completeAttributes(currentToken.getText(), caretOffset, resultSet);
+                    case HTML -> {
                         String nText = currentToken.getText();
-                        if ("livewire".startsWith(nText)) {
-                            //quick implementation
-                            //??
-                            addHtmlTagCompletionItem(nText, "livewire", "livewire", caretOffset, resultSet); // NOI18N
+                        if (ComponentsSupport.LIVEWIRE_NAME.startsWith(nText)) {
+                            addHtmlTagCompletionItem(nText, ComponentsSupport.LIVEWIRE_NAME, caretOffset, resultSet);
                         }
-                        break;
-                    case HTML_COMPONENT_PREFIX:
+                    }
+                    case HTML_COMPONENT_PREFIX -> {
                         String compPrefix = currentToken.getText().length() > 3 ? StringUtils.kebabToCamel(currentToken.getText().substring(3)) : "";
                         completeComponents(compPrefix, fo, caretOffset, resultSet);
-                        break;
-                    case D_UNKNOWN_ATTR_ENC:
-                        completeDirectives(currentToken.getText(), doc, caretOffset, resultSet);
-                        break;
-                    default:
-                        break;
+                    }
+                    case D_UNKNOWN_ATTR_ENC -> completeDirectives(currentToken.getText(), doc, caretOffset, resultSet);
+                    default -> {
+                    }
                 }
             } finally {
                 long time = System.currentTimeMillis() - startTime;
-                if (time > 2000){
+                if (time > 2000) {
                     LOGGER.log(Level.INFO, "Slow completion time detected. {0}ms", time);
                 }
                 resultSet.finish();
@@ -229,19 +224,21 @@ public class BladeCompletionProvider implements CompletionProvider {
                 if (customDirective.name.startsWith(prefix)) {
                     resultSet.addItem(DirectiveCompletionBuilder.itemWithArg(
                             startOffset, carretOffset, prefix, customDirective.name,
-                            "custom directive", doc, file));
+                            "custom directive", doc, file)); // NOI18N
                 }
             }
         });
     }
-    
+
     private void completeComponents(String prefixIdentifier, FileObject fo,
             int caretOffset, CompletionResultSet resultSet) {
 
         int insertOffset = caretOffset - prefixIdentifier.length();
         ComponentsCompletionService componentComplervice = new ComponentsCompletionService();
         Collection<PhpIndexResult> indexedReferences = componentComplervice.queryComponents(prefixIdentifier, fo);
-
+        if (indexedReferences == null) {
+            return;
+        }
         for (PhpIndexResult indexReference : indexedReferences) {
             addComponentIdCompletionItem(indexReference,
                     insertOffset, resultSet);
@@ -259,8 +256,7 @@ public class BladeCompletionProvider implements CompletionProvider {
         }
     }
 
-    //??
-    private void addHtmlTagCompletionItem(String prefix, String tagName, String plugin,
+    private void addHtmlTagCompletionItem(String prefix, String tagName,
             int caretOffset, CompletionResultSet resultSet) {
 
         int insertOffset = caretOffset - prefix.length();
@@ -293,13 +289,14 @@ public class BladeCompletionProvider implements CompletionProvider {
     }
 
     private static String getReferenceIcon(CompletionType type) {
-        switch (type) {
-            case HTML_COMPONENT_TAG:
-                return ResourceUtilities.COMPONENT_TAG;
-            case YIELD_ID:
-                return ResourceUtilities.LAYOUT_IDENTIFIER;
-        }
-        return ResourceUtilities.DIRECTIVE_ICON;
+        return switch (type) {
+            case HTML_COMPONENT_TAG ->
+                ResourceUtilities.COMPONENT_TAG;
+            case YIELD_ID ->
+                ResourceUtilities.LAYOUT_IDENTIFIER;
+            default ->
+                ResourceUtilities.DIRECTIVE_ICON;
+        };
     }
 
 }

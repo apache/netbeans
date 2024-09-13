@@ -38,6 +38,9 @@ public final class BladeDirectivesUtils {
     public static final String DIRECTIVE_IF = "@if"; // NOI18N
     public static final String DIRECTIVE_ELSE = "@else"; // NOI18N
     public static final String DIRECTIVE_ENDIF = "@endif"; // NOI18N
+    public static final String DIRECTIVE_FOREACH = "@foreach"; // NOI18N
+    public static final String DIRECTIVE_INCLUDE = "@include"; // NOI18N
+    public static final String DIRECTIVE_EXTENDS = "@extends"; // NOI18N
     
     public static String[] directiveStart2EndPair(String directive){
         if (directive.equals(DIRECTIVE_SECTION)){

@@ -31,14 +31,14 @@ public class DirectiveCompletionBuilder {
     public static CompletionItem simpleItem(int startOffset, String directive,
             String description) {
 
-        return BladeCompletionItem.createInlineDirective(directive, startOffset, description);
+        return BladeCompletionBuilder.createInlineDirective(directive, startOffset, description);
     }
 
     public static CompletionItem simpleItem(int startOffset, int carretOffset,
             String prefix, String directive, String endtag,
             String description, Document doc) {
 
-        return BladeCompletionItem.createBlockDirective(
+        return BladeCompletionBuilder.createBlockDirective(
                 directive, endtag, startOffset, description);
     }
 
@@ -46,14 +46,14 @@ public class DirectiveCompletionBuilder {
             String prefix, String directive,
             String description, Document doc) {
 
-        return BladeCompletionItem.createDirectiveWithArg(directive, startOffset, description);
+        return BladeCompletionBuilder.createDirectiveWithArg(directive, startOffset, description);
     }
 
     public static CompletionItem itemWithArg(int startOffset, int carretOffset,
             String prefix, String directive, String endtag,
             String description, Document doc) {
 
-        return BladeCompletionItem.createBlockDirectiveWithArg(
+        return BladeCompletionBuilder.createBlockDirectiveWithArg(
                 directive, endtag, startOffset, description);
     }
 
@@ -61,6 +61,6 @@ public class DirectiveCompletionBuilder {
             String prefix, String directive,
             String description, Document doc,
             FileObject file) {
-        return BladeCompletionItem.createDirectiveWithArg(directive, startOffset, description);
+        return BladeCompletionBuilder.createDirectiveWithArg(directive, startOffset, description);
     }
 }

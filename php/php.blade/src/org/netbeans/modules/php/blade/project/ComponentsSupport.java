@@ -38,6 +38,8 @@ import org.openide.filesystems.FileObject;
     @Namespace(path = "BladeUIKit\\Components", packageName = "blade-ui-kit/blade-ui-kit"),}) // NOI18N
 public class ComponentsSupport {
 
+    public static final String LIVEWIRE_NAME = "livewire";  // NOI18N
+    
     private static final Map<Project, ComponentsSupport> INSTANCES = new HashMap<>();
     private final Map<FileObject, Namespace> installedComponentNamespace = new HashMap<>();
     private boolean scanned = false;

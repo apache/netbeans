@@ -40,8 +40,8 @@ public class BladeParser extends org.netbeans.modules.parsing.spi.Parser {
         if (snapshot == null) {
             return;
         }
-        LOGGER.info(String.format("Parsing request for for " + task.getClass().getName() + " event changed : " + event.sourceChanged()));
-        if (task.getClass().getName().contains("HtmlCssIndexContributor")) {
+
+        if (task.getClass().getName().contains("HtmlCssIndexContributor")) { // NOI18N
             LOGGER.log(Level.INFO, "Skipped parsing for {0}", task.getClass().getName());
             return;
         }

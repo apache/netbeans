@@ -59,9 +59,9 @@ import org.openide.modules.Places;
  *
  * @author Dusan Petrovic
  */
-public class ConfigFileGenerator {
+public class TempFileGenerator {
     
-    private static final Logger LOG = Logger.getLogger(ConfigFileGenerator.class.getName());
+    private static final Logger LOG = Logger.getLogger(TempFileGenerator.class.getName());
 
     private static final boolean POSIX = FileSystems.getDefault().supportedFileAttributeViews().contains("posix");  // NOI18N
     private static final EnumSet<PosixFilePermission> readWritePosix = EnumSet.of(OWNER_READ, OWNER_WRITE);
@@ -92,7 +92,7 @@ public class ConfigFileGenerator {
     private final String fileSufix;
     private final String configPath;
 
-    public ConfigFileGenerator(String filePrefix, String fileSufix, String configPath, boolean readOnly) {
+    public TempFileGenerator(String filePrefix, String fileSufix, String configPath, boolean readOnly) {
         this.readOnly = readOnly;
         this.configPath = configPath;
         this.filePrefix = filePrefix;
@@ -100,16 +100,31 @@ public class ConfigFileGenerator {
     }
     
     public Path writePropertiesFile(Properties props) throws IOException {
+        return writeToNewTempFile(w -> props.store(w, ""));
+    }
+    
+    public Path writeTextFile(String text) throws IOException {
+        return writeToNewTempFile(w -> w.write(text));
+    }
+    
+    private Path writeToNewTempFile(WriterConsumer c) throws IOException {
         Path temp = null;
         try {
             temp = generateConfigFile();
-            writePropertiesToFile(props, temp);
+            writeToFile(c, temp);
         } catch (IOException ex) {
             deleteTempFile(temp);
             throw ex;
         }
         
         return temp;
+    }
+    
+    @FunctionalInterface
+    private static interface WriterConsumer {
+
+        public void accept(Writer t) throws IOException;
+        
     }
     
     private Path generateConfigFile() throws IOException {
@@ -127,9 +142,9 @@ public class ConfigFileGenerator {
         return temp;
     }
     
-    private void writePropertiesToFile(Properties props, Path filePath) throws IOException {
+    private void writeToFile(WriterConsumer c, Path filePath) throws IOException {
         try (Writer writer = new FileWriter(filePath.toFile(), Charset.defaultCharset());) {
-            props.store(writer, "");
+            c.accept(writer);
             if (POSIX) {
                 setFilePermissionPosix(filePath);
             } else {

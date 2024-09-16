@@ -37,12 +37,12 @@ import org.openide.util.lookup.ServiceProvider;
 public class ConfigFileProvider implements CommandProvider {
     private static final String GET_CONFIG_FILE_PATH = "nbls.config.file.path"; //NOI18N
 
-    private final ConfigFileGenerator applicationPropertiesFileGenerator;
-    private final ConfigFileGenerator bootstrapPropertiesFileGenerator;
+    private final TempFileGenerator applicationPropertiesFileGenerator;
+    private final TempFileGenerator bootstrapPropertiesFileGenerator;
 
     public ConfigFileProvider() {
-        this.applicationPropertiesFileGenerator = new ConfigFileGenerator("application-", ".properties", GET_CONFIG_FILE_PATH, false); // NOI18N
-        this.bootstrapPropertiesFileGenerator = new ConfigFileGenerator("bootstrap-", ".properties", GET_CONFIG_FILE_PATH, false); // NOI18N
+        this.applicationPropertiesFileGenerator = new TempFileGenerator("application-", ".properties", GET_CONFIG_FILE_PATH, false); // NOI18N
+        this.bootstrapPropertiesFileGenerator = new TempFileGenerator("bootstrap-", ".properties", GET_CONFIG_FILE_PATH, false); // NOI18N
     }
     
     @Override

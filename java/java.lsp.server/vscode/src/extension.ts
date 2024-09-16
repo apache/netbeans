@@ -313,6 +313,7 @@ function wrapCommandWithProgress(lsCommand : string, title : string, log? : vsco
                     if (log) {
                         handleLog(log, `command ${lsCommand} executed with error: ${JSON.stringify(err)}`);
                     }
+                    reject(err && typeof err.message === 'string' ? err.message : "Error");
                 }
             } else {
                 reject(`cannot run ${lsCommand}; client is ${c}`);
@@ -883,7 +884,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 });
             }
 
-            runDockerSSH("opc", publicIp, imageUrl);
+            runDockerSSH("opc", publicIp, imageUrl, isRepositoryPrivate);
         }
     ));
 
@@ -962,6 +963,23 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
     }
 }
 
+function runCommandInTerminal(command: string, name: string) {
+    const isWindows = process.platform === 'win32';
+
+    const defaultShell = isWindows
+      ? process.env.ComSpec || 'cmd.exe'
+      : process.env.SHELL || '/bin/bash';
+
+    const pauseCommand = 'echo "Press any key to close..."; node -e "process.stdin.setRawMode(true); process.stdin.resume(); process.stdin.on(\'data\', process.exit.bind(process, 0));"';
+    const commandWithPause = `${command} 2>&1; ${pauseCommand}`;
+    const terminal = vscode.window.createTerminal({
+      name: name,
+      shellPath: defaultShell,
+      shellArgs: isWindows ? ['/c', commandWithPause] : ['-c', commandWithPause],
+    });
+    terminal.show();
+}
+
 function openSSHSession(username: string, host: string, name?: string) {
     let sessionName;
     if (name === undefined) {
@@ -970,9 +988,9 @@ function openSSHSession(username: string, host: string, name?: string) {
         sessionName = name;
     }
 
-    const terminal = vscode.window.createTerminal(`SSH: ${username}@${host}`);
-    terminal.sendText(`ssh ${username}@${host}`);
-    terminal.show();
+    const sshCommand = `ssh ${username}@${host}`;
+
+    runCommandInTerminal(sshCommand, `SSH: ${username}@${host}`);
 }
 
 interface ConfigFiles {
@@ -980,20 +998,27 @@ interface ConfigFiles {
     bootstrapProperties: string | null;
 }
 
-async function runDockerSSH(username: string, host: string, dockerImage: string) {
+async function runDockerSSH(username: string, host: string, dockerImage: string, isRepositoryPrivate: boolean) {
     const configFiles: ConfigFiles = await vscode.commands.executeCommand('nbls.config.file.path') as ConfigFiles;
     const { applicationProperties, bootstrapProperties } = configFiles;
 
     const applicationPropertiesRemotePath = `/home/${username}/application.properties`;
     const bootstrapPropertiesRemotePath = `/home/${username}/bootstrap.properties`;
+    const bearerTokenRemotePath = `/home/${username}/token.txt`;
     const applicationPropertiesContainerPath = "/home/app/application.properties";
     const bootstrapPropertiesContainerPath = "/home/app/bootstrap.properties";
+    const ocirServer = dockerImage.split('/')[0];
 
     let sshCommand = "";
     let mountVolume = "";
     let micronautConfigFilesEnv = "";
+    if (isRepositoryPrivate) {
+        const bearerTokenFile = await commands.executeCommand(COMMAND_PREFIX + '.cloud.assets.createBearerToken', ocirServer);
+        sshCommand = `scp "${bearerTokenFile}" ${username}@${host}:${bearerTokenRemotePath} && `;
+    }
+
     if (bootstrapProperties) {
-        sshCommand = `scp "${bootstrapProperties}" ${username}@${host}:${bootstrapPropertiesRemotePath} && `;
+        sshCommand += `scp "${bootstrapProperties}" ${username}@${host}:${bootstrapPropertiesRemotePath} && `;
         mountVolume = `-v ${bootstrapPropertiesRemotePath}:${bootstrapPropertiesContainerPath}:Z `;
         micronautConfigFilesEnv = `${bootstrapPropertiesContainerPath}`;
     }
@@ -1003,11 +1028,16 @@ async function runDockerSSH(username: string, host: string, dockerImage: string)
         mountVolume += ` -v ${applicationPropertiesRemotePath}:${applicationPropertiesContainerPath}:Z`;
         micronautConfigFilesEnv += `${bootstrapProperties ? "," : ""}${applicationPropertiesContainerPath}`;
     } 
-    sshCommand += `ssh ${username}@${host} "docker pull ${dockerImage} && docker run -p 8080:8080 ${mountVolume} -e MICRONAUT_CONFIG_FILES=${micronautConfigFilesEnv} -it ${dockerImage}"`;
 
-    const terminal = vscode.window.createTerminal('Remote Docker');
-    terminal.sendText(sshCommand);
-    terminal.show();
+    let dockerPullCommand = "";
+    if (isRepositoryPrivate) {
+        dockerPullCommand = `cat ${bearerTokenRemotePath} | docker login --username=BEARER_TOKEN --password-stdin ${ocirServer} && `;
+    }
+    dockerPullCommand += `docker pull ${dockerImage} && `;
+
+    sshCommand += `ssh ${username}@${host} "${dockerPullCommand} docker run -p 8080:8080 ${mountVolume} -e MICRONAUT_CONFIG_FILES=${micronautConfigFilesEnv} -it ${dockerImage}"`;
+
+    runCommandInTerminal(sshCommand, `Container: ${username}@${host}`)
 }
 
 function killNbProcess(notifyKill : boolean, log : vscode.OutputChannel, specProcess?: ChildProcess) : Promise<void> {

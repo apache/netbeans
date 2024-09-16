@@ -39,6 +39,8 @@ import org.openide.util.Parameters;
 public class Utils {
     public static final String KEY_CCLS_PATH = "ccls";
     public static final String KEY_CLANGD_PATH = "clangd";
+    public static final String KEY_PREFFERED_LS = "preferredLS";
+    public static final String[] AVAILABLE_LS = new String[]{Utils.KEY_CCLS_PATH, Utils.KEY_CLANGD_PATH};
 
     private static final String[] CCLS_NAMES = new String[] {"ccls"};
     private static final String[] CLANGD_NAMES = new String[] {"clangd-10", "clangd", "clangd-9"};
@@ -81,6 +83,15 @@ public class Utils {
             return null;
         }
         return path;
+    }
+
+    public static String getPreferredLs() {
+        String preferredLs = Utils.settings().get(KEY_PREFFERED_LS, KEY_CCLS_PATH);
+        if(Arrays.stream(AVAILABLE_LS).anyMatch(s -> s.equals(preferredLs))) {
+            return preferredLs;
+        } else {
+            return KEY_CCLS_PATH;
+        }
     }
 
     //TODO: copied from webcommon/javascript.nodejs/src/org/netbeans/modules/javascript/nodejs/util/FileUtils.java:

@@ -81,6 +81,14 @@ import org.netbeans.modules.j2ee.persistence.wizard.fromdb.ProgressPanel;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.RelatedCMPHelper;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.RelatedCMPWizard;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.UpdateType;
+import org.netbeans.modules.project.dependency.ArtifactSpec;
+import org.netbeans.modules.project.dependency.Dependency;
+import org.netbeans.modules.project.dependency.DependencyChange;
+import org.netbeans.modules.project.dependency.DependencyChangeException;
+import org.netbeans.modules.project.dependency.ProjectDependencies;
+import org.netbeans.modules.project.dependency.ProjectOperationException;
+import org.netbeans.modules.project.dependency.Scopes;
+import org.netbeans.modules.refactoring.spi.ModificationResult;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -104,7 +112,7 @@ public class MicronautEntity extends RelatedCMPWizard {
 
     @NbBundle.Messages({
         "MSG_NoDbConn=No database connection found",
-        "MSG_NoDdSupport=No Micronaut Data support libraries found for {0}",
+        "MSG_NoDdSupport=No Micronaut Data support libraries found for {0}. Add this dependencies?",
         "MSG_NoProject=No project found for {0}",
         "MSG_NoSourceGroup=No source group found for {0}",
         "MSG_SelectTables=Select Database Tables",
@@ -138,7 +146,20 @@ public class MicronautEntity extends RelatedCMPWizard {
                         return Collections.emptyList();
                     }
                     if (!Utils.isDBSupported(sourceGroup) && !Utils.isJPASupported(sourceGroup)) {
-                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoDdSupport(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                        NotifyDescriptor.Confirmation msg = new NotifyDescriptor.Confirmation(Bundle.MSG_NoDdSupport(folder.getPath()),
+                                NotifyDescriptor.WARNING_MESSAGE, NotifyDescriptor.YES_NO_OPTION);
+                        Object choice = DialogDisplayer.getDefault().notify(msg);
+                        if (NotifyDescriptor.YES_OPTION.equals(choice)) {
+                            ArtifactSpec spec = ArtifactSpec.make("io.micronaut.data", "micronaut-data-jdbc"); //NOI18N
+                            Dependency dep = Dependency.make(spec, Scopes.COMPILE);
+                            DependencyChange change = DependencyChange.add(Collections.singletonList(dep), DependencyChange.Options.skipConflicts);
+                            try {
+                                ModificationResult mod = ProjectDependencies.modifyDependencies(project, change);
+                                mod.commit();
+                            } catch (IOException | DependencyChangeException | ProjectOperationException ex) {
+                                throw new IllegalStateException(ex);
+                            }
+                        }
                         return Collections.emptyList();
                     }
                     DatabaseConnection connection = ConnectionManager.getDefault().getPreferredConnection(true);

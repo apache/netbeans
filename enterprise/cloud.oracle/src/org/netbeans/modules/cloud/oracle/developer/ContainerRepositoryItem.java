@@ -68,4 +68,8 @@ public final class ContainerRepositoryItem extends OCIItem {
         return String.format("%s.ocir.io/%s/%s", getRegionCode(), getNamespace(), getName());
     }
     
+    public String getRegistry() {
+        return String.format("%s.ocir.io", getRegionCode());
+    }
+    
 }

@@ -88,7 +88,8 @@ public class LanguageServerImpl implements LanguageServerProvider {
         });
         String ccls = Utils.getCCLSPath();
         String clangd = Utils.getCLANGDPath();
-        if (ccls != null || clangd != null) {
+        if ((ccls != null && new File(ccls).canExecute())
+                || (clangd != null && new File(clangd).canExecute())) {
             Pair<Process, LanguageServerDescription> serverEntry = prj2Server.compute(prj, (p, pair) -> {
                 if (pair != null && pair.first().isAlive()) {
                     return pair;
@@ -108,7 +109,7 @@ public class LanguageServerImpl implements LanguageServerProvider {
                     File compileCommandDirs = getCompileCommandsDir(config);
 
                     if (compileCommandDirs != null) {
-                        if (ccls != null) {
+                        if (ccls != null && new File(ccls).canExecute()) {
                             command.add(ccls);
                             StringBuilder initOpt = new StringBuilder();
                             initOpt.append("--init={\"compilationDatabaseDirectory\":\"");

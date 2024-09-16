@@ -67,16 +67,21 @@ public class VaultNode extends OCINode {
                     .compartmentId(compartmentId.getKey().getValue())
                     .limit(88)
                     .build();
-                    
+
+            String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+            String regionCode = session.getRegion().getRegionCode();
+
             return client.listVaults(listVaultsRequest)
                     .getItems()
                     .stream()
                     .filter(v -> v.getLifecycleState().equals(VaultSummary.LifecycleState.Active))
                     .map(d -> new VaultItem(
-                                OCID.of(d.getId(), "Vault"), //NOI18N
-                                d.getCompartmentId(), //NOI18N
-                                d.getDisplayName(),
-                                d.getManagementEndpoint())
+                            OCID.of(d.getId(), "Vault"), //NOI18N
+                            d.getCompartmentId(), //NOI18N
+                            d.getDisplayName(),
+                            d.getManagementEndpoint(),
+                            tenancyId,
+                            regionCode)
                     )
                     .collect(Collectors.toList());
         };

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.cloud.oracle.developer;
 
+import com.oracle.bmc.Region;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -50,10 +51,10 @@ public class MetricsItem extends OCIItem implements URLProvider {
         super();
     }
 
-    public MetricsItem(String compartmentId, String name, String namespace, String region) {
-        super(OCID.of("MetricsNamespace/Metrics"), compartmentId, name);
+    public MetricsItem(String compartmentId, String name, String namespace, Region region, String tenancyId) {
+        super(OCID.of("MetricsNamespace/Metrics"), compartmentId, name, tenancyId, region.getRegionCode());
         this.namespace = namespace;
-        this.region = region;
+        this.region = region.getRegionId();
     }
     
     public String getNamespace() {

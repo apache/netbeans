@@ -470,7 +470,22 @@ public final class OCIManager {
         
         return new ArrayList<>(toReturn);
     }
-    
+
+    /**
+     * Returns the active profile based on OCI Item.
+     * @return
+     */
+    public OCIProfile getActiveProfile(OCIItem ociItem) {
+        List<OCIProfile> profiles = getConnectedProfiles();
+        return profiles.stream().filter(p -> isMatchingProfile(ociItem, p)).findFirst().orElse(null);
+    }
+
+    private static boolean isMatchingProfile(OCIItem ociItem, OCIProfile profile) {
+        if (profile.getTenancy().isEmpty()) return profile.getRegion().getRegionCode().equals(ociItem.getRegionCode());
+        return profile.getRegion().getRegionCode().equals(ociItem.getRegionCode()) &&
+                profile.getTenancy().get().getKey().getValue().equals(ociItem.getTenancyId());
+    }
+
     /**
      * Returns the active profile. 
      * @return 
@@ -488,7 +503,7 @@ public final class OCIManager {
             Preferences prefs = NbPreferences.forModule(OCIManager.class);
             String confPath = prefs.get("activeProfilePath", null);
             String id = null;
-            
+
             Path path = null;
             if (confPath != null) {
                 try {

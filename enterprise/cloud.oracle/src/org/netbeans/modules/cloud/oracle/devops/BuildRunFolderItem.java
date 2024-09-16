@@ -27,8 +27,8 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
  */
 public class BuildRunFolderItem extends OCIItem {
     
-    public BuildRunFolderItem(OCID project, String compartmentId, String name) {
-        super(project, compartmentId, name);
+    public BuildRunFolderItem(OCID project, String compartmentId, String name, String tenancyId, String regionCode) {
+        super(project, compartmentId, name, tenancyId, regionCode);
     }
     
 }

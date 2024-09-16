@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
+import org.netbeans.modules.cloud.oracle.OCIManager;
+import org.netbeans.modules.cloud.oracle.OCISessionInitiator;
 import org.netbeans.modules.cloud.oracle.assets.AbstractStep;
 import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
@@ -56,8 +58,12 @@ public final class DatabaseConnectionStep extends AbstractStep<DatabaseItem> {
             String compartmentId = connections[i].getConnectionProperties().getProperty("CompartmentOCID"); //NOI18N
             String description = connections[i].getConnectionProperties().getProperty("Description"); //NOI18N
             if (ocid != null && compartmentId != null) {
+                OCISessionInitiator session = OCIManager.getDefault().getActiveProfile();
+                String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+                String regionCode = session.getRegion().getRegionCode();
+
                 DatabaseItem dbItem
-                        = new DatabaseItem(OCID.of(ocid, "Databases"), compartmentId, name, null, name); //NOI18N
+                        = new DatabaseItem(OCID.of(ocid, "Databases"), compartmentId, name, null, name, tenancyId, regionCode); //NOI18N
                 dbItem.setDescription(description);
                 adbConnections.put(name, dbItem);
             }

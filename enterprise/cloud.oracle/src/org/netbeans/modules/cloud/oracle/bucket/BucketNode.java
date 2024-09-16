@@ -69,6 +69,9 @@ public class BucketNode extends OCINode {
                     .limit(88)
                     .build();
 
+            String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+            String regionCode = session.getRegion().getRegionCode();
+
             List<BucketItem> x = client.listBuckets(listBucketsRequest)
                     .getItems()
                     .stream()
@@ -76,7 +79,9 @@ public class BucketNode extends OCINode {
                             OCID.of(d.getName(), "Bucket"), //NOI18N
                             compartmentId.getKey().getValue(),
                             d.getName(),
-                            d.getNamespace())
+                            d.getNamespace(),
+                            tenancyId,
+                            regionCode)
                     )
                     .collect(Collectors.toList());
             return x;

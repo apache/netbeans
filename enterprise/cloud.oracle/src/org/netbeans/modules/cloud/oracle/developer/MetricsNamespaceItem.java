@@ -31,8 +31,8 @@ public class MetricsNamespaceItem extends OCIItem {
         super();
     }
     
-    public MetricsNamespaceItem(String compartmentId, String name) {
-        super(OCID.of("MetricsNamespace"), compartmentId, name);
+    public MetricsNamespaceItem(String compartmentId, String name, String tenancyId, String regionCode) {
+        super(OCID.of("MetricsNamespace"), compartmentId, name, tenancyId, regionCode);
     }
     
 }

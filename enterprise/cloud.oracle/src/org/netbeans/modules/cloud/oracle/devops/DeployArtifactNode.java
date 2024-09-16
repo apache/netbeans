@@ -53,20 +53,32 @@ public class DeployArtifactNode extends OCINode {
         return DeployArtifactNode::new;
     }
 
-    public static ChildrenProvider<DevopsProjectItem, DeployArtifactItem.DeployArtifactFolder> listDeployArtifacts() {
-        return project -> {
+    public static ChildrenProvider.SessionAware<DevopsProjectItem, DeployArtifactItem.DeployArtifactFolder> listDeployArtifacts() {
+        return (project, session) -> {
             try ( DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider())) {
                 ListDeployArtifactsRequest request = ListDeployArtifactsRequest.builder()
                         .projectId(project.getKey().getValue()).build();
                 ListDeployArtifactsResponse response = client.listDeployArtifacts(request);
                 List<DeployArtifactSummary> projects = response.getDeployArtifactCollection().getItems();
+
+                String tenancyId = session.getTenancy().isPresent() ?
+                        session.getTenancy().get().getKey().getValue() : null;
+                String regionCode = session.getRegion().getRegionCode();
+
                 return Collections.singletonList(
                         new DeployArtifactItem.DeployArtifactFolder(OCID.of(project.getKey().getValue(), "DeployArtifactFolder"),
                                 project.getCompartmentId(),
                                 Bundle.DeployArtifacts(),
                                 projects.stream()
-                                        .map(p -> new DeployArtifactItem(OCID.of(p.getId(), "DeployArtifact"), project.getCompartmentId(), p.getDisplayName()))
-                                        .collect(Collectors.toList()))
+                                        .map(p -> new DeployArtifactItem(
+                                                OCID.of(p.getId(), "DeployArtifact"),
+                                                project.getCompartmentId(),
+                                                p.getDisplayName(),
+                                                tenancyId,
+                                                regionCode))
+                                        .collect(Collectors.toList()),
+                                tenancyId,
+                                regionCode)
                 );
             }
         };

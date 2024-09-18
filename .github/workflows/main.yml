@@ -175,7 +175,7 @@ jobs:
         if: ${{ matrix.java == '17' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
         uses: actions/upload-artifact@v4
         with:
-          name: dev-build
+          name: dev-build_${{github.event.pull_request.number || github.run_id}}
           path: nbbuild/NetBeans-*.zip
           compression-level: 0
           retention-days: 7
@@ -2650,5 +2650,5 @@ jobs:
         uses: geekyeggo/delete-artifact@v5
         if: ${{ contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && cancelled() }}
         with:
-          name: dev-build
+          name: dev-build_${{github.event.pull_request.number || github.run_id}}
           useGlob: false

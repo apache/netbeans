@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,14 +33,19 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.Document;
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertNotSame;
+import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
 import org.gradle.tooling.internal.consumer.ConnectorServices;
 import org.netbeans.api.project.Project;
@@ -54,6 +60,9 @@ import org.netbeans.modules.project.dependency.ProjectOperationException;
 import org.netbeans.modules.project.dependency.ProjectReload;
 import org.netbeans.modules.project.dependency.ProjectReload.ProjectState;
 import org.netbeans.modules.project.dependency.ProjectReload.StateRequest;
+import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation;
+import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation.LoadContext;
+import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -61,6 +70,7 @@ import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.DummyInstalledFileLocator;
+import org.openide.util.Exceptions;
 import org.openide.util.test.MockLookup;
 import org.openide.windows.IOProvider;
 
@@ -595,5 +605,192 @@ public class GradleReloadImplementationTest extends NbTestCase {
         f.get();
         NbGradleProject gp = NbGradleProject.get(project);
         assertTrue(gp.getQuality().atLeast(NbGradleProject.Quality.EVALUATED));
+    }
+    
+    class Blocker implements Runnable {
+        CountDownLatch unblock = new CountDownLatch(1);
+
+        @Override
+        public void run() {
+            try {
+                unblock.await();
+            } catch (InterruptedException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    }
+    
+    /**
+     * Checks that if project data becomes obsolete during load (i.e. file modified),
+     * the reload API retries and produces a final state that is consistent.
+     */
+    public void testProjectObsoletesDuringLoad() throws Exception {
+        setupSimpleProject();
+        
+        FileObject script = prjDir.getFileObject("build.gradle");
+        Path scriptPath = FileUtil.toFile(script).toPath();
+        
+        ProjectState ps = ProjectReload.getProjectState(project, true);
+
+        GradleReloadImplementation mri = (GradleReloadImplementation)project.getLookup().lookupAll(ProjectReloadImplementation.class).stream().
+                filter(i -> i instanceof GradleReloadImplementation).findFirst().get();
+        
+        MonitoringReloadImplementation.INSTANCE.enabled = true;
+
+        Thread.sleep(2000);
+        Files.setLastModifiedTime(scriptPath, FileTime.from(Instant.now()));
+        script.refresh();
+
+        MonitoringReloadImplementation.INSTANCE.counter.set(0);
+        MonitoringReloadImplementation.INSTANCE.reloadReached1.drainPermits();
+        MonitoringReloadImplementation.INSTANCE.proceed.drainPermits();
+        
+        CompletableFuture<ProjectState> newState = ProjectReload.withProjectState(project, StateRequest.refresh());
+
+        MonitoringReloadImplementation.INSTANCE.reloadReached1.acquire();
+        
+        assertFalse(newState.isDone());
+        int cnt = MonitoringReloadImplementation.INSTANCE.counter.get();
+        ProjectReloadImplementation.ProjectStateData firstRound = mri.getLastCachedData();
+        
+        assertTrue(firstRound.isConsistent());
+
+        Thread.sleep(2000);
+
+        Instant firstMod = Instant.now();
+        Files.setLastModifiedTime(scriptPath, FileTime.from(firstMod));
+        // deliberately not calling refresh().
+        MonitoringReloadImplementation.INSTANCE.proceed.release(1);
+
+        // 2nd reload
+        MonitoringReloadImplementation.INSTANCE.reloadReached1.acquire();
+        ProjectReloadImplementation.ProjectStateData secondRound = mri.getLastCachedData();
+        // new state is OK, but the previous should be obsoleted.
+        assertNotSame(secondRound, firstRound);
+        assertTrue(secondRound.isConsistent());
+        assertFalse(firstRound.isConsistent());
+        
+        MonitoringReloadImplementation.INSTANCE.proceed.release(100);
+        ProjectState ps2 = newState.get();
+        
+        assertFalse(ps.isValid());
+        assertFalse(ps.isConsistent());
+        
+        assertTrue(ps2.isValid());
+        assertTrue(ps2.isConsistent());
+        assertTrue(ps2.getQuality().isAtLeast(ProjectReload.Quality.LOADED));
+    }
+
+    /**
+     * Checks that if a project is repeatedly changed during the load,
+     * the operation fails with OUT_OF_SYNC exception.
+     */
+    public void testRepeatedChangesErrorOut() throws Exception {
+        setupSimpleProject();
+        
+        FileObject script = prjDir.getFileObject("build.gradle");
+        Path scriptPath = FileUtil.toFile(script).toPath();
+        
+        ProjectState ps = ProjectReload.getProjectState(project, true);
+
+        GradleReloadImplementation gri = (GradleReloadImplementation)project.getLookup().lookupAll(ProjectReloadImplementation.class).stream().
+                filter(i -> i instanceof GradleReloadImplementation).findFirst().get();
+        
+        MonitoringReloadImplementation.INSTANCE.enabled = true;
+
+        Thread.sleep(2000);
+        Instant baseMod = Instant.now();
+        Files.setLastModifiedTime(scriptPath, FileTime.from(baseMod));
+        script.refresh();
+
+        MonitoringReloadImplementation.INSTANCE.counter.set(0);
+        MonitoringReloadImplementation.INSTANCE.reloadReached1.drainPermits();
+        MonitoringReloadImplementation.INSTANCE.proceed.drainPermits();
+        
+        CompletableFuture<ProjectState> newState = ProjectReload.withProjectState(project, StateRequest.refresh());
+
+        MonitoringReloadImplementation.INSTANCE.reloadReached1.acquire();
+        
+        assertFalse(newState.isDone());
+        int cnt = MonitoringReloadImplementation.INSTANCE.counter.get();
+        ProjectReloadImplementation.ProjectStateData firstRound = gri.getLastCachedData();
+        
+        assertTrue(firstRound.isConsistent());
+
+        Thread.sleep(2000);
+
+        Instant firstMod = Instant.now();
+        Files.setLastModifiedTime(scriptPath, FileTime.from(firstMod));
+        // deliberately not calling refresh().
+        MonitoringReloadImplementation.INSTANCE.proceed.release(1);
+
+        // 2nd reload
+        MonitoringReloadImplementation.INSTANCE.reloadReached1.acquire();
+        ProjectReloadImplementation.ProjectStateData secondRound = gri.getLastCachedData();
+        // new state is OK, but the previous should be obsoleted.
+        assertNotSame(secondRound, firstRound);
+        assertTrue(secondRound.isConsistent());
+        assertFalse(firstRound.isConsistent());
+        
+        Thread.sleep(2000);
+        Instant secondMod = Instant.now();
+        Files.setLastModifiedTime(scriptPath, FileTime.from(secondMod));
+        MonitoringReloadImplementation.INSTANCE.proceed.release(100);
+
+        try {
+            ProjectState ps2 = newState.get();
+            fail("Should report an exception");
+        } catch (ExecutionException ex) {
+            assertTrue(ex.getCause() instanceof ProjectOperationException);
+            ProjectOperationException pex = (ProjectOperationException)ex.getCause();
+            assertSame(ProjectOperationException.State.OUT_OF_SYNC, pex.getState());
+        }
+        
+        ProjectState ps2 = ProjectReload.getProjectState(project);
+        // may be valid or not, since Maven internally reloads the project independently, and
+        // will invalidate the state after load.
+        assertFalse(ps2.isConsistent());
+        
+        assertTrue(ps2.getTimestamp() > baseMod.toEpochMilli());
+        // will be at least the 1st modification
+        assertTrue(ps2.getTimestamp() >= firstMod.toEpochMilli());
+        // and NOT the 2nd modification (modified twice -> error)
+        assertTrue(ps2.getTimestamp() < secondMod.toEpochMilli());
+        
+        ProjectState ps3 = ProjectReload.withProjectState(project, StateRequest.refresh()).get();
+        assertTrue(ps3.isValid());
+        assertTrue(ps3.isConsistent());
+        assertTrue(ps3.getTimestamp() >= secondMod.toEpochMilli());
+    }
+
+    @ProjectServiceProvider(service = ProjectReloadImplementation.class, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
+    public static class MonitoringReloadImplementation implements ProjectReloadImplementation {
+        static MonitoringReloadImplementation INSTANCE;
+        final Semaphore proceed = new Semaphore(0);
+        final Semaphore reloadReached1 = new Semaphore(0);
+        final Semaphore reloadReached2 = new Semaphore(0);
+        volatile boolean enabled;
+        AtomicInteger counter = new AtomicInteger();
+        
+        public MonitoringReloadImplementation() {
+            INSTANCE = this;
+        }
+        
+        
+        @Override
+        public CompletableFuture reload(Project project, StateRequest request, LoadContext context) {
+            if (!enabled) {
+                return null;
+            }
+            reloadReached1.release();
+            try {
+                proceed.acquire();
+                counter.incrementAndGet();
+            } catch (InterruptedException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            reloadReached2.release();
+            return null;
+        }
     }
 }

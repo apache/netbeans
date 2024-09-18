@@ -438,7 +438,7 @@ public final class ProjectReload {
             sb.append(project).
             append("@").append(Integer.toHexString(System.identityHashCode(this))).
             append("[");
-            sb.append(", quality=").append(getQuality());
+            sb.append("quality=").append(getQuality());
             sb.append(", consistent=").append(isConsistent());
             sb.append(", valid=").append(isValid());
             sb.append(", loaded=").append(getLoadedFiles());
@@ -727,7 +727,8 @@ public final class ProjectReload {
         @Override
         public String toString() {
             return String.format(
-                "Reload[quality=%s, force=%b, consistent=%b, offline=%b, save=%b, reason:%s]",
+                "Request@%s[quality=%s, force=%b, consistent=%b, offline=%b, save=%b, reason:%s]",
+                    Integer.toHexString(System.identityHashCode(this)),
                     minQuality.name(), forceReload, consistent, offlineOperation, saveModifications, reason
             );
         }
@@ -954,7 +955,7 @@ public final class ProjectReload {
     public static CompletableFuture<ProjectState> withProjectState(Project p, final StateRequest stateRequest) {
         Throwable origin = new Throwable();
         
-        LOG.log(Level.FINE, "Reload {0}, request: {1}", new Object[] { p, stateRequest });
+        LOG.log(Level.FINE, "REQUESTED: Reload {0}, request: {1}", new Object[] { p, stateRequest });
         Pair<ProjectReloadInternal.StateRef, ProjectState> projectData = ProjectReloadInternal.getInstance().getProjectState0(p, 
                 stateRequest.getContext() == null ? Lookup.EMPTY : stateRequest.getContext(), false);
         ProjectState lastKnown = projectData.second();
@@ -964,7 +965,9 @@ public final class ProjectReload {
         // special case if the state matches & is consistent: if the attempted quality is LESS 
         // than this request's target, the ReloadImplementation might give up 
         if (!doReload && lastKnown.target.isAtLeast(stateRequest.getTargetQuality())) {
-            LOG.log(Level.FINE, "Reload {0}, request: {1}, state {2} - NOOP, finished", new Object[] { p, stateRequest, lastKnown });
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "FINISHED: Reload {0}, request: {1}, state {2} - NOOP, finished", new Object[] { p, stateRequest, lastKnown.toString() });
+            }
             return CompletableFuture.completedFuture(lastKnown);
         }
         String reason = stateRequest.getReason();
@@ -973,14 +976,20 @@ public final class ProjectReload {
             // configure a default reason, so it is always defined.
             stateRequest.reloadReason(reason);
         }
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Reload {0}, last known state: {1}", new Object[] { p, lastKnown == null ? "null" : lastKnown.toString() });
+        }
         
         if (lastKnown.getQuality() == Quality.NONE && stateRequest.isConsistent()) {
             // we do not have ANY state, but there may be files modified known to the project. Let's read to the lowest possible quality:
-            LOG.log(Level.FINE, "{0}: Have NONE but need to have files for consistency check", lastKnown);
+            LOG.log(Level.FINE, "Reload {0}: Have NONE but need to have files for consistency check", lastKnown);
             CompletableFuture<ProjectState> initialF = withProjectState1(p, StateRequest.load().toQuality(Quality.NONE).consistent(false).offline(), lastKnown, projectData, origin);
             AtomicReference<CompletableFuture> nested = new AtomicReference<>();
             
             CompletableFuture<ProjectState> toReturn = initialF.thenCompose(initS -> {
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "Reload {0}: got initial state {1}", new Object[] { p, initS.toString() });
+                }
                 CompletableFuture<ProjectState> n;
                 // if the project was loaded to better quality than NONE, retry the whole process, as that one will be returned from getProjectState0 now, and everything will be checked again.
                 if (Quality.NONE.isWorseThan(initS.getQuality())) {
@@ -1115,14 +1124,19 @@ public final class ProjectReload {
             final int id = eventId.incrementAndGet();
             @Override
             public void run() {
-                LOG.log(Level.FINE, "Firing state change {1} for {0}", new Object[] { s, this });
                 // Postpone the actual fire until after project is unlocked
+                boolean[] processed = new boolean[1];
                 ProjectReloadInternal.getInstance().runProjectAction(s.getProject(), () -> {
+                    processed[0] = true;
                     synchronized (notifiers) {
                         notifiers.remove(s, cur.get());
                     }
+                    LOG.log(Level.FINE, "Firing state change {1} for {0}", new Object[] { s, this });
                     ProjectReloadInternal.RELOAD_RP.post(s::fireChange);
                 });
+                if (!processed[0]) {
+                    LOG.log(Level.FINE, "Postponed state change {1} for {0}", new Object[] { s, this });
+                }
             }
             
             @Override
@@ -1198,6 +1212,9 @@ public final class ProjectReload {
              */
             @Override
             public void fireInvalid(ProjectState ps) {
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, "State " + ps + " invalidated", new Throwable());
+                }
                 ps.valid = false;
                 queueStateChange(ps);
             }
@@ -1228,6 +1245,9 @@ public final class ProjectReload {
                     }
                 }
                 if (fire) {
+                    if (LOG.isLoggable(Level.FINER)) {
+                        LOG.log(Level.FINER, "State {0} changed - consistent={1}, valid={2}", new Object[] { ps.toString(), ps.isConsistent(), ps.isValid() });
+                    }
                     queueStateChange(ps);
                 }
             }

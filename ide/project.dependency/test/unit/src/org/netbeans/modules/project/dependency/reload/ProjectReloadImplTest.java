@@ -55,6 +55,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.project.dependency.ProjectOperationException;
 import org.netbeans.modules.project.dependency.ProjectReload;
 import org.netbeans.modules.project.dependency.ProjectReload.ProjectState;
+import org.netbeans.modules.project.dependency.ProjectReload.Quality;
 import org.netbeans.modules.project.dependency.ProjectReload.StateRequest;
 import org.netbeans.modules.project.dependency.reload.MockProjectReloadImplementation.ProjectData;
 import org.netbeans.modules.project.dependency.reload.ProjectReloadImplTest.Mock1;
@@ -80,21 +81,24 @@ public class ProjectReloadImplTest extends NbTestCase {
         super(name);
     }
     
-    Logger logger;
+    Collection<Logger> loggers = new ArrayList<>();
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         clearWorkDir();
         
-        logger = Logger.getLogger(ProjectReloadInternal.class.getName());
-        logger.setLevel(Level.FINER);
-        
-        ConsoleHandler h = new ConsoleHandler();
-        h.setLevel(Level.FINER);
-        if (!Arrays.asList(logger.getHandlers()).stream().anyMatch(x -> x instanceof ConsoleHandler)) {
-            logger.addHandler(h);
-        }
+        loggers.add(Logger.getLogger(ProjectReloadInternal.class.getName()));
+        loggers.add(Logger.getLogger(Reloader.class.getName()));
+        loggers.forEach(logger -> {
+            logger.setLevel(Level.FINER);
+
+            ConsoleHandler h = new ConsoleHandler();
+            h.setLevel(Level.FINER);
+            if (!Arrays.asList(logger.getHandlers()).stream().anyMatch(x -> x instanceof ConsoleHandler)) {
+                logger.addHandler(h);
+            }
+        });
     }
     
     @Override
@@ -1400,6 +1404,9 @@ public class ProjectReloadImplTest extends NbTestCase {
          * Released when reload is reached, for test synchronization
          */
         Semaphore reloadReached = new Semaphore(0);
+        Semaphore afterReloadReached = new Semaphore(0);
+        
+        volatile StateRequest loadRequest;
         
         /**
          * Called will be used as a index to this
@@ -1416,6 +1423,7 @@ public class ProjectReloadImplTest extends NbTestCase {
 
         @Override
         public CompletableFuture<ProjectStateData<ProjectData>> reload(Project project, StateRequest request, ProjectReloadImplementation.LoadContext<ProjectData> context) {
+            this.loadRequest = request;
             synchronized (this) {
                 int n = called.getAndIncrement();
                 if (attemptReached != null && attemptReached.length > n) {
@@ -1424,6 +1432,7 @@ public class ProjectReloadImplTest extends NbTestCase {
             }
             reloadReached.release();
             CompletableFuture<ProjectStateData<ProjectData>> f = super.reload(project, request, context);
+            afterReloadReached.release();
             return f.thenCombine(CompletableFuture.runAsync(() -> {
                 try {
                     latch.acquire();
@@ -1600,5 +1609,68 @@ public class ProjectReloadImplTest extends NbTestCase {
         
         // wait a litte, as these postponed actions are executed after the reload Future completes
         assertTrue(m1.dataReleaseLatch.tryAcquire(2, TimeUnit.SECONDS));
+    }
+    
+
+    /**
+     * Checks that if a file is modified during reload, the API will not report
+     * a failure, but attempts to retry the load.
+     */
+    public void testFileModifiedDuringLoad() throws Exception {
+        FileObject wd = FileUtil.toFileObject(getWorkDir());
+        FileObject o = FileUtil.toFileObject(getDataDir()).getFileObject("reload/Simple1._test");
+        FileObject f = FileUtil.copyFile(o, wd, wd.getName());
+
+        class WM extends WaitMock {
+            public WM() {
+            }
+
+            @Override
+            protected ProjectStateData doCreateStateData(Project project, StateRequest request, LoadContext<ProjectData> context) {
+                context.ensureLoadContext(ProjectData.class, () -> new ProjectData("")).counter++;
+                return super.doCreateStateData(project, request, context);
+            }
+            
+            protected ProjectStateBuilder<ProjectData> createStateData(ProjectReloadImplementation.ProjectStateBuilder b, ProjectReload.StateRequest request) {
+                ProjectStateBuilder<ProjectData> b2 = super.createStateData(b, request);
+                return b2;
+            }
+        }
+
+        WM m1 = new WM();
+        
+        TestProjectFactory.addToProject(f, (p) -> {
+            m1.project = p;
+            return m1;
+        });
+        
+        Project p = ProjectManager.getDefault().findProject(f);
+        
+        CompletableFuture<ProjectState> future = ProjectReload.withProjectState(p, StateRequest.refresh());
+        
+        m1.afterReloadReached.acquire();
+        
+        FileObject pf = f.getFileObject("project.txt");
+        Thread.sleep(2000);
+        Files.setLastModifiedTime(FileUtil.toFile(pf).toPath(), FileTime.from(Instant.now()));
+        // continue loading, this release will serve for the INITIAL non-NONE load state
+        assertSame(Quality.NONE, m1.loadRequest.getMinQuality());
+        assertEquals(1, m1.loadProjectData.counter);
+        m1.latch.release();
+
+        m1.afterReloadReached.acquire();
+        Thread.sleep(2000);
+        Files.setLastModifiedTime(FileUtil.toFile(pf).toPath(), FileTime.from(Instant.now()));
+        assertEquals(1, m1.loadProjectData.counter);
+        m1.latch.release();
+        
+        m1.afterReloadReached.acquire();
+        assertEquals("The load goes through ReloadImplementation 2nd time", 2, m1.loadProjectData.counter);
+        m1.latch.release();
+        
+        ProjectState ps = future.get();
+        
+        assertTrue("The result is the most recent", ps.isValid());
+        assertTrue("Consistent after reload", ps.isConsistent());
     }
 }

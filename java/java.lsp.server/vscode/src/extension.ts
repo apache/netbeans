@@ -1333,12 +1333,25 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 // don't ask why vscode mangles URIs this way; in addition, it uses lowercase drive letter ???
                 return `file:///${re[1].toLowerCase()}%3A/${re[2]}`;
             });
+            let ok = true;
             for (let ed of workspace.textDocuments) {
-                if (uriList.includes(ed.uri.toString())) {
-                    return ed.save();
+                let uri = ed.uri.toString();
+
+                if (uriList.includes(uri)) {
+                    ed.save();
+                    continue;
+                } 
+                if (uri.startsWith("file:///")) {
+                    // make file:/// just file:/
+                    uri = "file:/" + uri.substring(8);
+                    if (uriList.includes(uri)) {
+                        ed.save();
+                        continue;
+                    }
                 }
+                ok = false;
             }
-            return false;
+            return ok;
         });
         c.onRequest(InputBoxRequest.type, async param => {
             return await window.showInputBox({ title: param.title, prompt: param.prompt, value: param.value, password: param.password });

@@ -72,12 +72,12 @@ public class OCIPropertiesProvider implements CommandProvider {
             try {
                 Path temp = configFileGenerator.writePropertiesFile(dbProps);
                 result.put("MICRONAUT_CONFIG_FILES", temp.toAbsolutePath().toString()); // NOI18N
-                ret.complete(result);
             } catch (IOException ex) {
                 ret.completeExceptionally(ex);
                 return ret;
             }
         }
+        ret.complete(result);
         return ret;
     }
 

@@ -256,9 +256,13 @@ public class Utilities {
             }
         } else {
             SaveCookie save = dobj.getLookup().lookup(SaveCookie.class);
+            EditorCookie ec = dobj.getLookup().lookup(EditorCookie.class);
             if (save != null) {
                 logger.log(Level.FINE, "saving changes in {0}", dobj);
                 save.save();
+                if(!ec.close()){
+                    throw new IOException("saving changes action failed");
+                }
             } else {
                 logger.log(Level.FINE, "no changes in {0} where modified={1}", new Object[] {dobj, dobj.isModified()});
             }

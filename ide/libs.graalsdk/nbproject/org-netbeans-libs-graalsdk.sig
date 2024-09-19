@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.25
+#Version 1.26
 
 CLSS public abstract interface java.io.Serializable
 
@@ -11,8 +11,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -21,6 +23,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -67,6 +70,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -133,6 +137,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public java.util.concurrent.atomic.AtomicLong
 cons public init()
 cons public init(long)
@@ -140,20 +147,34 @@ intf java.io.Serializable
 meth public double doubleValue()
 meth public final boolean compareAndSet(long,long)
 meth public final boolean weakCompareAndSet(long,long)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
+meth public final boolean weakCompareAndSetAcquire(long,long)
+meth public final boolean weakCompareAndSetPlain(long,long)
+meth public final boolean weakCompareAndSetRelease(long,long)
+meth public final boolean weakCompareAndSetVolatile(long,long)
 meth public final long accumulateAndGet(long,java.util.function.LongBinaryOperator)
 meth public final long addAndGet(long)
+meth public final long compareAndExchange(long,long)
+meth public final long compareAndExchangeAcquire(long,long)
+meth public final long compareAndExchangeRelease(long,long)
 meth public final long decrementAndGet()
 meth public final long get()
+meth public final long getAcquire()
 meth public final long getAndAccumulate(long,java.util.function.LongBinaryOperator)
 meth public final long getAndAdd(long)
 meth public final long getAndDecrement()
 meth public final long getAndIncrement()
 meth public final long getAndSet(long)
 meth public final long getAndUpdate(java.util.function.LongUnaryOperator)
+meth public final long getOpaque()
+meth public final long getPlain()
 meth public final long incrementAndGet()
 meth public final long updateAndGet(java.util.function.LongUnaryOperator)
 meth public final void lazySet(long)
 meth public final void set(long)
+meth public final void setOpaque(long)
+meth public final void setPlain(long)
+meth public final void setRelease(long)
 meth public float floatValue()
 meth public int intValue()
 meth public java.lang.String toString()
@@ -853,9 +874,9 @@ CLSS public final org.graalvm.options.OptionType<%0 extends java.lang.Object>
 cons public init(java.lang.String,java.util.function.Function<java.lang.String,{org.graalvm.options.OptionType%0}>)
 cons public init(java.lang.String,java.util.function.Function<java.lang.String,{org.graalvm.options.OptionType%0}>,java.util.function.Consumer<{org.graalvm.options.OptionType%0}>)
 cons public init(java.lang.String,{org.graalvm.options.OptionType%0},java.util.function.Function<java.lang.String,{org.graalvm.options.OptionType%0}>)
- anno 0 java.lang.Deprecated(null since="19.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="19.0")
 cons public init(java.lang.String,{org.graalvm.options.OptionType%0},java.util.function.Function<java.lang.String,{org.graalvm.options.OptionType%0}>,java.util.function.Consumer<{org.graalvm.options.OptionType%0}>)
- anno 0 java.lang.Deprecated(null since="19.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="19.0")
 meth public java.lang.String getName()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Object> org.graalvm.options.OptionType<{%%0}> defaultType(java.lang.Class<{%%0}>)
@@ -864,14 +885,14 @@ meth public void validate({org.graalvm.options.OptionType%0})
 meth public {org.graalvm.options.OptionType%0} convert(java.lang.Object,java.lang.String,java.lang.String)
 meth public {org.graalvm.options.OptionType%0} convert(java.lang.String)
 meth public {org.graalvm.options.OptionType%0} getDefaultValue()
- anno 0 java.lang.Deprecated(null since="19.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="19.0")
 supr java.lang.Object
 hfds DEFAULTTYPES,EMPTY_VALIDATOR,converter,isDefaultType,isOptionMap,name,validator
 hcls Converter
 
 CLSS public abstract interface org.graalvm.options.OptionValues
 meth public <%0 extends java.lang.Object> void set(org.graalvm.options.OptionKey<{%%0}>,{%%0})
- anno 0 java.lang.Deprecated(null since="22.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.0")
 meth public abstract <%0 extends java.lang.Object> {%%0} get(org.graalvm.options.OptionKey<{%%0}>)
 meth public abstract boolean hasBeenSet(org.graalvm.options.OptionKey<?>)
 meth public abstract org.graalvm.options.OptionDescriptors getDescriptors()
@@ -913,12 +934,12 @@ meth public org.graalvm.polyglot.Context$Builder allowCreateThread(boolean)
 meth public org.graalvm.polyglot.Context$Builder allowEnvironmentAccess(org.graalvm.polyglot.EnvironmentAccess)
 meth public org.graalvm.polyglot.Context$Builder allowExperimentalOptions(boolean)
 meth public org.graalvm.polyglot.Context$Builder allowHostAccess(boolean)
- anno 0 java.lang.Deprecated(null since="19.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="19.0")
 meth public org.graalvm.polyglot.Context$Builder allowHostAccess(org.graalvm.polyglot.HostAccess)
 meth public org.graalvm.polyglot.Context$Builder allowHostClassLoading(boolean)
 meth public org.graalvm.polyglot.Context$Builder allowHostClassLookup(java.util.function.Predicate<java.lang.String>)
 meth public org.graalvm.polyglot.Context$Builder allowIO(boolean)
- anno 0 java.lang.Deprecated(null since="23.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="23.0")
 meth public org.graalvm.polyglot.Context$Builder allowIO(org.graalvm.polyglot.io.IOAccess)
 meth public org.graalvm.polyglot.Context$Builder allowInnerContextOptions(boolean)
 meth public org.graalvm.polyglot.Context$Builder allowNativeAccess(boolean)
@@ -931,9 +952,9 @@ meth public org.graalvm.polyglot.Context$Builder environment(java.lang.String,ja
 meth public org.graalvm.polyglot.Context$Builder environment(java.util.Map<java.lang.String,java.lang.String>)
 meth public org.graalvm.polyglot.Context$Builder err(java.io.OutputStream)
 meth public org.graalvm.polyglot.Context$Builder fileSystem(org.graalvm.polyglot.io.FileSystem)
- anno 0 java.lang.Deprecated(null since="23.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="23.0")
 meth public org.graalvm.polyglot.Context$Builder hostClassFilter(java.util.function.Predicate<java.lang.String>)
- anno 0 java.lang.Deprecated(null since="19.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="19.0")
 meth public org.graalvm.polyglot.Context$Builder hostClassLoader(java.lang.ClassLoader)
 meth public org.graalvm.polyglot.Context$Builder in(java.io.InputStream)
 meth public org.graalvm.polyglot.Context$Builder logHandler(java.io.OutputStream)
@@ -1218,7 +1239,7 @@ meth public int getLineNumber(int)
 meth public int getLineStartOffset(int)
 meth public int hashCode()
 meth public java.io.InputStream getInputStream()
- anno 0 java.lang.Deprecated(null since="19.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="19.0")
 meth public java.io.Reader getReader()
 meth public java.lang.CharSequence getCharacters()
 meth public java.lang.CharSequence getCharacters(int)
@@ -1277,7 +1298,7 @@ meth public int getStartLine()
 meth public int hashCode()
 meth public java.lang.CharSequence getCharacters()
 meth public java.lang.CharSequence getCode()
- anno 0 java.lang.Deprecated(null since="19.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="19.0")
 meth public java.lang.String toString()
 meth public org.graalvm.polyglot.Source getSource()
 supr java.lang.Object
@@ -2062,7 +2083,7 @@ meth public java.nio.file.Path getTempDirectory()
 meth public java.nio.file.Path readSymbolicLink(java.nio.file.Path) throws java.io.IOException
 meth public static org.graalvm.polyglot.io.FileSystem allowInternalResourceAccess(org.graalvm.polyglot.io.FileSystem)
 meth public static org.graalvm.polyglot.io.FileSystem allowLanguageHomeAccess(org.graalvm.polyglot.io.FileSystem)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.graalvm.polyglot.io.FileSystem newDefaultFileSystem()
 meth public static org.graalvm.polyglot.io.FileSystem newFileSystem(java.nio.file.FileSystem)
 meth public static org.graalvm.polyglot.io.FileSystem newReadOnlyFileSystem(org.graalvm.polyglot.io.FileSystem)
@@ -2273,7 +2294,7 @@ meth public abstract boolean isNull()
 
 CLSS public abstract interface org.graalvm.word.WordBase
 meth public abstract boolean equals(java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract long rawValue()
 
 CLSS public final org.netbeans.libs.graalsdk.GraalSDK

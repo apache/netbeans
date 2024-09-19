@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.46.0
+#Version 2.47.0
 
 CLSS public java.io.IOException
 cons public init()
@@ -273,6 +273,7 @@ fld protected javax.net.SocketFactory _socketFactory_
 fld public final static java.lang.String NETASCII_EOL = "\r\n"
 meth protected int getReceiveBufferSize()
 meth protected int getSendBufferSize()
+meth protected java.io.OutputStream checkOpenOutputStream()
 meth protected java.net.InetSocketAddress getRemoteInetSocketAddress()
 meth protected org.apache.commons.net.ProtocolCommandSupport getCommandSupport()
 meth protected void _connectAction_() throws java.io.IOException
@@ -345,6 +346,7 @@ fld public final static int CARRIAGE_CONTROL_TEXT_FORMAT = 6
 fld public final static int COMPRESSED_TRANSFER_MODE = 12
 fld public final static int DEFAULT_DATA_PORT = 20
 fld public final static int DEFAULT_PORT = 21
+fld public final static int DEFLATE_TRANSFER_MODE = 13
 fld public final static int EBCDIC_FILE_TYPE = 1
 fld public final static int FILE_STRUCTURE = 7
 fld public final static int LOCAL_FILE_TYPE = 3
@@ -354,7 +356,7 @@ fld public final static int RECORD_STRUCTURE = 8
 fld public final static int REPLY_CODE_LEN = 3
 fld public final static int STREAM_TRANSFER_MODE = 10
 fld public final static int TELNET_TEXT_FORMAT = 5
-fld public final static java.lang.String DEFAULT_CONTROL_ENCODING = "ISO-8859-1"
+fld public final static java.lang.String DEFAULT_CONTROL_ENCODING
 meth protected org.apache.commons.net.ProtocolCommandSupport getCommandSupport()
 meth protected void __getReplyNoReport() throws java.io.IOException
 meth protected void __noop() throws java.io.IOException
@@ -431,7 +433,7 @@ meth public void setControlEncoding(java.lang.String)
 meth public void setStrictMultilineParsing(boolean)
 meth public void setStrictReplyParsing(boolean)
 supr org.apache.commons.net.SocketClient
-hfds modes,strictReplyParsing
+hfds MODES,strictReplyParsing
 
 CLSS public org.apache.commons.net.ftp.FTPClient
 cons public init()
@@ -892,7 +894,7 @@ meth protected java.net.Socket _openDataConnection_(int,java.lang.String) throws
 meth protected java.net.Socket _openDataConnection_(java.lang.String,java.lang.String) throws java.io.IOException
 meth public void connect(java.lang.String,int) throws java.io.IOException
 supr org.apache.commons.net.ftp.FTPClient
-hfds CRLF,charset,proxyHost,proxyPassword,proxyPort,proxyUsername,tunnelHost
+hfds CRLF,charset,proxyHost,proxyPassword,proxyPort,proxyUserName,tunnelHost
 
 CLSS public org.apache.commons.net.ftp.FTPListParseEngine
 cons public init(org.apache.commons.net.ftp.FTPFileEntryParser)
@@ -987,6 +989,14 @@ fld public static java.lang.String STORE_TYPE
  anno 0 java.lang.Deprecated()
 fld public static java.lang.String TRUSTSTORE_ALGORITHM
  anno 0 java.lang.Deprecated()
+meth protected boolean isClientMode()
+meth protected boolean isCreation()
+meth protected boolean isImplicit()
+meth protected boolean isNeedClientAuth()
+meth protected boolean isWantClientAuth()
+meth protected java.lang.String getProtocol()
+meth protected java.lang.String[] getProtocols()
+meth protected java.lang.String[] getSuites()
 meth protected java.net.Socket _openDataConnection_(int,java.lang.String) throws java.io.IOException
  anno 0 java.lang.Deprecated()
 meth protected java.net.Socket _openDataConnection_(java.lang.String,java.lang.String) throws java.io.IOException
@@ -1117,10 +1127,11 @@ meth public static java.lang.String encodeBase64StringUnChunked(byte[])
 meth public static java.lang.String encodeBase64URLSafeString(byte[])
 meth public static java.math.BigInteger decodeInteger(byte[])
 supr java.lang.Object
-hfds CHUNK_SEPARATOR,CHUNK_SIZE,DECODE_TABLE,DEFAULT_BUFFER_RESIZE_FACTOR,DEFAULT_BUFFER_SIZE,MASK_6BITS,MASK_8BITS,PAD,STANDARD_ENCODE_TABLE,URL_SAFE_ENCODE_TABLE,buffer,currentLinePos,decodeSize,encodeSize,encodeTable,eof,lineLength,lineSeparator,modulus,pos,readPos,x
+hfds CHUNK_SEPARATOR,CHUNK_SIZE,DECODE_TABLE,PAD,lineLength,lineSeparator,urlSafe
 
 CLSS public org.apache.commons.net.util.Charsets
 cons public init()
+ anno 0 java.lang.Deprecated()
 meth public static java.nio.charset.Charset toCharset(java.lang.String)
 meth public static java.nio.charset.Charset toCharset(java.lang.String,java.lang.String)
 supr java.lang.Object
@@ -1167,6 +1178,7 @@ cons public init(java.lang.String,java.lang.String)
 innr public final SubnetInfo
 meth public boolean isInclusiveHostCount()
 meth public final org.apache.commons.net.util.SubnetUtils$SubnetInfo getInfo()
+meth public java.lang.String toString()
 meth public org.apache.commons.net.util.SubnetUtils getNext()
 meth public org.apache.commons.net.util.SubnetUtils getPrevious()
 meth public void setInclusiveHostCount(boolean)
@@ -1197,6 +1209,7 @@ hfds UNSIGNED_INT_MASK
 
 CLSS public final org.apache.commons.net.util.TrustManagerUtils
 cons public init()
+ anno 0 java.lang.Deprecated()
 meth public static javax.net.ssl.X509TrustManager getAcceptAllTrustManager()
 meth public static javax.net.ssl.X509TrustManager getDefaultTrustManager(java.security.KeyStore) throws java.security.GeneralSecurityException
 meth public static javax.net.ssl.X509TrustManager getValidateServerCertificateTrustManager()

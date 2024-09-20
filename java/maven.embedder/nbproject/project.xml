@@ -322,7 +322,7 @@
                 <runtime-relative-path>ext/maven/maven-dependency-tree-2.2.jar</runtime-relative-path>
                 <binary-origin>external/maven-dependency-tree-2.2.jar</binary-origin>
             </class-path-extension>
-                <!-- TODO: DROP THIS END -->
+            <!-- TODO: DROP THIS END -->
             <class-path-extension>
                 <runtime-relative-path>ext/maven/jdom2-2.0.6.1.jar</runtime-relative-path>
                 <binary-origin>external/jdom2-2.0.6.1.jar</binary-origin>

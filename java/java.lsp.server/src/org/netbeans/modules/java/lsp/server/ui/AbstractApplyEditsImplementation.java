@@ -56,14 +56,7 @@ public class AbstractApplyEditsImplementation implements ApplyEditsImplementatio
             return null;
         }
         Worker wk = new Worker(client, edits, saveResources);
-        try {
-            wk.execute();
-            return CompletableFuture.completedFuture(wk.getProcessedResources());
-        } catch (ResourceModificationException ex) {
-            CompletableFuture failed = new CompletableFuture();
-            failed.completeExceptionally(ex);
-            return failed;
-        }
+        return wk.execute().thenApply(v -> wk.getProcessedResources());
     }
     
     final static class Worker {
@@ -148,8 +141,11 @@ public class AbstractApplyEditsImplementation implements ApplyEditsImplementatio
             }
         }
         
-        public void execute() throws ResourceModificationException {
+        public CompletableFuture<Void> execute() {
             CompletableFuture<Void> response = null;
+            if (edits.isEmpty()) {
+                return CompletableFuture.completedFuture(null);
+            }
             for (WorkspaceEdit e : edits) {
                 currentEdit = e;
                 
@@ -164,7 +160,13 @@ public class AbstractApplyEditsImplementation implements ApplyEditsImplementatio
             }
             
             if (doSave) {
-                client.requestDocumentSave(new SaveDocumentRequestParams(new ArrayList<>(processed)));
+                return response.thenCompose(v -> client.requestDocumentSave(new SaveDocumentRequestParams(new ArrayList<>(processed))))
+                    .thenApply(success -> {
+                        saved.addAll(processed);
+                        return null;
+                    });
+            } else {
+                return response;
             }
         }
     }

@@ -54,6 +54,7 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.api.lsp.WorkspaceEdit;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
@@ -86,9 +87,9 @@ import org.netbeans.modules.project.dependency.Dependency;
 import org.netbeans.modules.project.dependency.DependencyChange;
 import org.netbeans.modules.project.dependency.DependencyChangeException;
 import org.netbeans.modules.project.dependency.ProjectDependencies;
+import org.netbeans.modules.project.dependency.ProjectModificationResult;
 import org.netbeans.modules.project.dependency.ProjectOperationException;
 import org.netbeans.modules.project.dependency.Scopes;
-import org.netbeans.modules.refactoring.spi.ModificationResult;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -154,9 +155,9 @@ public class MicronautEntity extends RelatedCMPWizard {
                             Dependency dep = Dependency.make(spec, Scopes.COMPILE);
                             DependencyChange change = DependencyChange.add(Collections.singletonList(dep), DependencyChange.Options.skipConflicts);
                             try {
-                                ModificationResult mod = ProjectDependencies.modifyDependencies(project, change);
-                                mod.commit();
-                            } catch (IOException | DependencyChangeException | ProjectOperationException ex) {
+                                ProjectModificationResult mod = ProjectDependencies.modifyDependencies(project, change);
+                                WorkspaceEdit.applyEdits(Collections.singletonList(mod.getWorkspaceEdit()), true);
+                            } catch (DependencyChangeException | ProjectOperationException ex) {
                                 throw new IllegalStateException(ex);
                             }
                         }

@@ -379,6 +379,14 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     const providerRegistration = vscode.workspace.registerTextDocumentContentProvider(scheme, provider);
 
     context.subscriptions.push(vscode.commands.registerCommand('cloud.assets.policy.create', async function (viewItem) {
+            const POLICIES_PREVIEW = 'Open a preview of the OCI policies';
+            const POLICIES_UPLOAD = 'Upload the OCI Policies to OCI';
+            const selected: any = await window.showQuickPick([POLICIES_PREVIEW, POLICIES_UPLOAD], { placeHolder: 'Select a target for the OCI policies' });
+            if (selected == POLICIES_UPLOAD) {
+                await vscode.commands.executeCommand('nbls.cloud.assets.policy.upload');
+                return;
+            } 
+
             const content = await vscode.commands.executeCommand('nbls.cloud.assets.policy.create.local') as string;
             const document = vscode.Uri.parse(`${scheme}:policies.txt?${encodeURIComponent(content)}`);
             vscode.workspace.openTextDocument(document).then(doc => {

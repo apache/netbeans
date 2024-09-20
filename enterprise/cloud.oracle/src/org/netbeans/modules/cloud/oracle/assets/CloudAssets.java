@@ -44,6 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,6 +52,7 @@ import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
+import static org.netbeans.modules.cloud.oracle.NotificationUtils.showWarningMessage;
 import org.netbeans.modules.cloud.oracle.bucket.BucketItem;
 import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
 import org.netbeans.modules.cloud.oracle.compute.ComputeInstanceItem;
@@ -65,6 +67,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
 
 /**
@@ -73,6 +76,10 @@ import org.openide.util.Parameters;
  *
  * @author Jan Horvath
  */
+@NbBundle.Messages({
+    "MSG_TenancyNotCompatible=Tenancy must be the same accross all selected Cloud Assets",
+    "MSG_AddItemsAgain=Missing information. Please remove than add following items again: {0}",  
+})
 public final class CloudAssets {
 
     private static final Logger LOG = Logger.getLogger(CloudAssets.class.getName());
@@ -133,7 +140,7 @@ public final class CloudAssets {
         long presentCount = items.stream()
                 .filter(i -> i.getKey().getPath().equals(newItem.getKey().getPath()))
                 .count();
-        if (newItem.maxInProject() > presentCount) {
+        if (newItem.maxInProject() > presentCount && isTenancyCompatible(newItem, true)) {
             items.add(newItem);
             update();
             storeAssets();
@@ -159,6 +166,42 @@ public final class CloudAssets {
             SuggestionAnalyzer analyzer = new DependenciesAnalyzer();
             setSuggestions(analyzer.findSuggestions(projects));
         });
+    }
+    
+    public synchronized String getTenancyId() {
+        Optional<OCIItem> ociItem = items.stream().findFirst();
+        return ociItem == null || ociItem.isEmpty() ? null : ociItem.get().getTenancyId();
+    }
+    
+    public synchronized boolean isTenancyCompatible(OCIItem toCheck) {
+        return isTenancyCompatible(toCheck, false);
+    }
+    
+    public synchronized boolean isTenancyCompatible(OCIItem toCheck, boolean showWarning) {
+        List<OCIItem> itemsMissingInfo = new ArrayList();
+        for(OCIItem item: items) {
+            if (item != null && item.getTenancyId() == null) {
+                itemsMissingInfo.add(item);
+            } else if (itemsMissingInfo.isEmpty() && item != null && !toCheck.getTenancyId().equals(item.getTenancyId())) {
+                if (showWarning) {
+                    showWarningMessage(Bundle.MSG_TenancyNotCompatible());
+                }
+                return false;
+            }
+        }
+        if (!itemsMissingInfo.isEmpty()) {
+            suggestToAddItemsAgain(itemsMissingInfo);
+            return false;
+        }
+        
+        return true;
+    }
+
+    private void suggestToAddItemsAgain(List<OCIItem> itemsForRemoval) {
+        String itemNames = itemsForRemoval.stream()
+                .map(OCIItem::getName)
+                .collect(Collectors.joining(", "));
+        showWarningMessage(Bundle.MSG_AddItemsAgain(itemNames));
     }
 
     private synchronized void setSuggestions(Set<SuggestedItem> newSuggested) {

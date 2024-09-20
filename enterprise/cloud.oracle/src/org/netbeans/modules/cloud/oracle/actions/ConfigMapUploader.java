@@ -47,12 +47,9 @@ import org.netbeans.modules.cloud.oracle.steps.DevopsStep;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -70,9 +67,7 @@ import org.netbeans.modules.cloud.oracle.assets.PropertiesGenerator;
 import org.netbeans.modules.cloud.oracle.assets.Steps;
 import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.netbeans.modules.cloud.oracle.devops.DevopsProjectItem;
-import org.netbeans.modules.cloud.oracle.steps.DatasourceNameStep;
 import org.netbeans.modules.cloud.oracle.steps.KeyStep;
-import org.netbeans.modules.cloud.oracle.steps.OverwriteStep;
 import org.netbeans.modules.cloud.oracle.steps.PasswordStep;
 import org.netbeans.modules.cloud.oracle.steps.ProjectStep;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
@@ -80,13 +75,11 @@ import org.netbeans.modules.cloud.oracle.steps.CompartmentStep;
 import org.netbeans.modules.cloud.oracle.steps.TenancyStep;
 import org.netbeans.modules.cloud.oracle.vault.KeyItem;
 import org.netbeans.modules.cloud.oracle.vault.VaultItem;
-import org.netbeans.spi.lsp.CommandProvider;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Command that updates a ConfigMap with the current properties generated from the contents of {@link CloudAssets}.
@@ -98,26 +91,12 @@ import org.openide.util.lookup.ServiceProvider;
     "UpdatingConfigMap=Updating Config Map",
     "CMUpdated=ConfigMap in \"{0}\" project was updated"
 })
-@ServiceProvider(service = CommandProvider.class)
-public class ConfigMapCommand implements CommandProvider {
+public class ConfigMapUploader {
 
-    private static final Logger LOG = Logger.getLogger(ConfigMapCommand.class.getName());
+    private static final Logger LOG = Logger.getLogger(ConfigMapUploader.class.getName());
 
-    private static final String COMMAND_UPLOAD_TO_CONFIGMAP = "nbls.cloud.assets.configmap.upload"; //NOI18N
-
-    private static final Set COMMANDS = new HashSet<>(Arrays.asList(
-            COMMAND_UPLOAD_TO_CONFIGMAP
-    ));
-
-    @Override
-    public Set<String> getCommands() {
-        return Collections.unmodifiableSet(COMMANDS);
-    }
-
-    @Override
-    public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
+    public static void uploadConfigMap(CompletableFuture<Object> future) {
         Steps.NextStepProvider.Builder nsProviderBuilder = Steps.NextStepProvider.builder();
-        CompletableFuture future = new CompletableFuture();
         
         nsProviderBuilder.stepForClass(TenancyStep.class, (s) -> new CompartmentStep())
             .stepForClass(CompartmentStep.class, (s) -> new DevopsStep())
@@ -172,7 +151,7 @@ public class ConfigMapCommand implements CommandProvider {
                     if (vaultRef.get() != null) {
                         updateVault(h, key, vaultRef.get(), propGen, project);
                     }
-                    if (updateConfigMap(h, devopsProject, propGen, command)) {
+                    if (updateConfigMap(h, devopsProject, propGen)) {
                         NotifyDescriptor.Message msg = new NotifyDescriptor.Message(Bundle.CMUpdated(devopsProject.getName()), NotifyDescriptor.INFORMATION_MESSAGE);
                         DialogDisplayer.getDefault().notifyLater(msg);
                     } else {
@@ -191,10 +170,9 @@ public class ConfigMapCommand implements CommandProvider {
                     h.finish();
                 }
             });
-        return future;
     }
 
-    private boolean updateConfigMap(ProgressHandle h, DevopsProjectItem devopsProject, PropertiesGenerator propGen, String datasourceName) {
+    private static boolean updateConfigMap(ProgressHandle h, DevopsProjectItem devopsProject, PropertiesGenerator propGen) {
         // Add Vault to the ConfigMap artifact
         DevopsClient devopsClient = DevopsClient.builder().build(OCIManager.getDefault().getActiveProfile().getConfigProvider());
         ListDeployArtifactsRequest request = ListDeployArtifactsRequest.builder()
@@ -229,7 +207,7 @@ public class ConfigMapCommand implements CommandProvider {
         return found;
     }
 
-    private void updateVault(ProgressHandle h, KeyItem key, VaultItem vault, PropertiesGenerator propGen, Project project) {
+    private static void updateVault(ProgressHandle h, KeyItem key, VaultItem vault, PropertiesGenerator propGen, Project project) {
         h.progress(Bundle.UpdatingVault(vault.getName()));
         VaultsClient client = VaultsClient.builder().build(getDefault().getActiveProfile().getConfigProvider());
         ListSecretsRequest listSecretsRequest = ListSecretsRequest.builder()

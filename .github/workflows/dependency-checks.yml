@@ -54,7 +54,7 @@ jobs:
 
       - name: Check Dependencies
         run: |
-          DEPS=org.apache.maven:maven-artifact:3.9.8,org.apache.maven.indexer:search-backend-smo:7.1.4
+          DEPS=org.apache.maven:maven-artifact:3.9.9,org.apache.maven.indexer:search-backend-smo:7.1.5
           mvn eu.maveniverse.maven.plugins:toolbox:gav-copy-transitive -Dgav=$DEPS -DsinkSpec="flat(./lib)"
           echo "<pre>" >> $GITHUB_STEP_SUMMARY
           java -cp "lib/*" .github/scripts/BinariesListUpdates.java ./ | tee -a $GITHUB_STEP_SUMMARY

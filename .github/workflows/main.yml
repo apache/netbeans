@@ -124,7 +124,7 @@ jobs:
     timeout-minutes: 40
     strategy:
       matrix:
-        java: [ '17', '21', '23-ea' ]
+        java: [ '17', '21', '23' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
@@ -820,7 +820,7 @@ jobs:
     timeout-minutes: 50
     strategy:
       matrix:
-        java: [ '17', '21', '23-ea' ]
+        java: [ '17', '21', '23' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
@@ -1424,10 +1424,10 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '23-ea' ]
+        java: [ '17', '23' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '23-ea' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '23' }}
       fail-fast: false
     steps:
 
@@ -1477,7 +1477,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '21', '23-ea' ]
+        java: [ '17', '21', '23' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false

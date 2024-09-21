@@ -29,6 +29,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -79,6 +81,8 @@ import org.openide.xml.XMLUtil;
  */
 @MimeRegistration(mimeType="", service=CompletionProvider.class)
 public class CompletionProviderImpl implements CompletionProvider {
+
+    private static final Logger LOG = Logger.getLogger(CompletionProviderImpl.class.getName());
 
     @Override
     public CompletionTask createTask(int queryType, JTextComponent component) {
@@ -269,7 +273,7 @@ public class CompletionProviderImpl implements CompletionProvider {
                                             try {
                                                 temp = server.getTextDocumentService().resolveCompletionItem(i).get();
                                             } catch (InterruptedException | ExecutionException ex) {
-                                                Exceptions.printStackTrace(ex);
+                                                LOG.log(Level.INFO, "Failed to retrieve documentation data", ex);
                                                 temp = i;
                                             }
                                             resolved = temp;

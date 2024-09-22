@@ -86,10 +86,10 @@ public class AddNewAssetCommand implements CommandProvider {
                         return new TenancyStep();
                     }).stepForClass(TenancyStep.class, (s) -> new CompartmentStep())
                     .stepForClass(CompartmentStep.class, (s) -> new SuggestedStep(null))
-                    .stepForClass(SuggestedStep.class, (s) -> new ProjectStep())
+                    .stepForClass(ProjectStep.class, (s) -> new ItemTypeStep())
                     .build();
         Steps.getDefault()
-                .executeMultistep(new ItemTypeStep(), Lookups.fixed(nsProvider))
+                .executeMultistep(new ProjectStep(), Lookups.fixed(nsProvider))
                 .thenAccept(values -> {
                     Project project = values.getValueForStep(ProjectStep.class);
                     CompletableFuture<? extends OCIItem> item = null;

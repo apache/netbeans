@@ -221,7 +221,7 @@ public class AddDbConnectionToVault implements ActionListener {
             
             // Add Vault dependency to the project
             try {
-                DependencyUtils.addDependency(project, "io.micronaut.oraclecloud", "micronaut-oraclecloud-vault");
+                DependencyUtils.addDependency(project, new String[] {"io.micronaut.oraclecloud", "micronaut-oraclecloud-vault"});
             } catch (IllegalStateException e) {
                 LOG.log(Level.INFO, "Unable to add Vault dependency", e);
             }

@@ -19,7 +19,9 @@
 package org.netbeans.modules.cloud.oracle.assets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -41,13 +43,16 @@ import org.netbeans.modules.refactoring.spi.ModificationResult;
  */
 public class DependencyUtils {
 
-    public static void addDependency(Project project, String groupId, String artifactId) {
+    public static void addDependency(Project project, String[] pairs) {
         Project projectToModify = getProjectToModify(project, "oci");
         
         if (projectToModify != null) {
-            ArtifactSpec spec = ArtifactSpec.make(groupId, artifactId);
-            Dependency dep = Dependency.make(spec, Scopes.COMPILE);
-            DependencyChange change = DependencyChange.add(Collections.singletonList(dep), Options.skipConflicts);
+            List<Dependency> dependencies = new ArrayList<> ();
+            for (int i = 0; i < pairs.length - 1; i += 2) {
+                ArtifactSpec spec = ArtifactSpec.make(pairs[i], pairs[i + 1]);
+                dependencies.add(Dependency.make(spec, Scopes.COMPILE));
+            }
+            DependencyChange change = DependencyChange.add(dependencies, Options.skipConflicts);
             try {
                 ModificationResult mod = ProjectDependencies.modifyDependencies(projectToModify, change);
                 mod.commit();

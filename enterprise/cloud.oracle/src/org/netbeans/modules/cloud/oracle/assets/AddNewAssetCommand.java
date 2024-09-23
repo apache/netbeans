@@ -56,7 +56,8 @@ public class AddNewAssetCommand implements CommandProvider {
 
     private static final Map<String, String[]> DEP_MAP = new HashMap() {
         {
-            put("Databases", new String[]{"io.micronaut.oraclecloud", "micronaut-oraclecloud-atp"}); //NOI18N
+            put("Databases", new String[]{"io.micronaut.oraclecloud", "micronaut-oraclecloud-atp",
+                                            "io.micronaut.sql", "micronaut-jdbc-hikari"}); //NOI18N
             put("Bucket", new String[]{"io.micronaut.objectstorage", "micronaut-object-storage-oracle-cloud"}); //NOI18N
             put("Vault", new String[]{"io.micronaut.oraclecloud", "micronaut-oraclecloud-vault"}); //NOI18N
             put("MetricsNamespace", new String[]{"io.micronaut.oraclecloud", "micronaut-oraclecloud-micrometer"}); //NOI18N
@@ -127,7 +128,7 @@ public class AddNewAssetCommand implements CommandProvider {
                         String[] processor = ANNOTATION_PROCESSOR_MAP.get(i.getKey().getPath());
                         try {
                             if (art != null && art.length > 1) {
-                                DependencyUtils.addDependency(project, art[0], art[1]);
+                                DependencyUtils.addDependency(project, art);
                             }
                             if (processor != null && processor.length > 1) {
                                 DependencyUtils.addAnnotationProcessor(project, processor[0], processor[1]);

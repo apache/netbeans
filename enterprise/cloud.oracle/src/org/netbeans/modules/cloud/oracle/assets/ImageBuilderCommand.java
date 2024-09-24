@@ -70,9 +70,11 @@ public class ImageBuilderCommand implements CommandProvider {
     private static final Logger LOG = Logger.getLogger(ImageBuilderCommand.class.getName());
 
     private static final String COMMAND_BUILD_PUSH_IMAGE = "nbls.cloud.assets.buildPushImage"; //NOI18N
+    private static final String COMMAND_BUILD_PUSH_NATIVE_IMAGE = "nbls.cloud.assets.buildPushNativeImage"; //NOI18N
 
     private static final Set COMMANDS = new HashSet<>(Arrays.asList(
-            COMMAND_BUILD_PUSH_IMAGE
+            COMMAND_BUILD_PUSH_IMAGE,
+            COMMAND_BUILD_PUSH_NATIVE_IMAGE
     ));
 
     @Override
@@ -113,12 +115,16 @@ public class ImageBuilderCommand implements CommandProvider {
                         if (gradleBaseProject != null) {
                             version = gradleBaseProject.getVersion();
                         }
+                        if (COMMAND_BUILD_PUSH_NATIVE_IMAGE.equals(command)) {
+                            version += "-ni";
+                        }
                         confirmVersion(version).thenAccept(v -> {
                             try {
                                 if (!dockerLogin(repository)) {
                                     result.cancel(true);
                                     return;
                                 }
+                                
                                 Path tempFile = Files.createTempFile("init", ".gradle");
 
                                 String init = "allprojects {\n"
@@ -128,14 +134,20 @@ public class ImageBuilderCommand implements CommandProvider {
                                         + "        }\n"
                                         + "    }\n"
                                         + "}";
-
+                                
+                                String buildTarget;
+                                if (COMMAND_BUILD_PUSH_NATIVE_IMAGE.equals(command)) {
+                                    buildTarget = "dockerBuildNative";
+                                } else {
+                                    buildTarget = "dockerBuild";
+                                }
                                 Files.write(tempFile, init.getBytes(StandardCharsets.UTF_8));
                                 RunConfig runConfig = RunUtils.createRunConfig(
                                         project,
                                         "",
                                         "Build container image",
                                         Collections.emptySet(),
-                                        "--init-script", tempFile.toAbsolutePath().toString(), "dockerBuild", "dockerPush"
+                                        "--init-script", tempFile.toAbsolutePath().toString(), buildTarget, "dockerPush"
                                 );
                                 ExecutorTask task = RunUtils.executeGradle(runConfig, "");
                                 task.addTaskListener((t) -> {
@@ -171,16 +183,25 @@ public class ImageBuilderCommand implements CommandProvider {
 
                         nbMavenProject.getFreshProject().thenAccept(mvnProject -> {
                             String version = mvnProject.getVersion();
+                            if (COMMAND_BUILD_PUSH_NATIVE_IMAGE.equals(command)) {
+                                version += "-ni";
+                            }
                             confirmVersion(version).thenAccept(v -> {
                                 if (!dockerLogin(repository)) {
                                     result.cancel(true);
                                     return;
                                 }
+                                String packaging;
+                                if (COMMAND_BUILD_PUSH_NATIVE_IMAGE.equals(command)) {
+                                    packaging = "docker-native";
+                                } else {
+                                    packaging = "docker";
+                                }
                                 List<String> goals;
                                 if (isGdk) {
-                                    goals = List.of("compile", "deploy", "-pl", "oci", "-Dpackaging=docker", "-Djib.to.image=" + repository.getUrl() + ":" + v);
+                                    goals = List.of("deploy", "-pl", "oci", "-Dpackaging=" + packaging, "-Djib.to.image=" + repository.getUrl() + ":" + v);
                                 } else {
-                                    goals = List.of("compile", "deploy", "-Dpackaging=docker", "-Djib.to.image=" + repository.getUrl() + ":" + v);
+                                    goals = List.of("deploy", "-Dpackaging=" + packaging, "-Djib.to.image=" + repository.getUrl() + ":" + v);
                                 }
                                 //TODO Update when RunConfig.setReactorStyle(ALSO_MAKE) is available
                                 org.netbeans.modules.maven.api.execute.RunConfig runConfig = org.netbeans.modules.maven.api.execute.RunUtils.createRunConfig(

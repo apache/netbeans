@@ -243,13 +243,7 @@ public final class LibraryProvider {
         URL urlObject = URI.create(url).toURL();
         URLConnection urlConnection = urlObject.openConnection();
         try (InputStream input = urlConnection.getInputStream()) {
-            int index = fileName.lastIndexOf('.');
-            String prefix = (index == -1) ? fileName : fileName.substring(0,index);
-            if (prefix.length() < 3) {
-                prefix = "tmp" + prefix; // NOI18N
-            }
-            String suffix = (index == -1) ? "" : fileName.substring(index);
-            File file = Files.createTempFile(prefix, suffix).toFile();
+            File file = Files.createTempFile("cdjns-download-", "tmp").toFile();
             try (OutputStream output = new FileOutputStream(file)) {
                 FileUtil.copy(input, output);
                 return file;

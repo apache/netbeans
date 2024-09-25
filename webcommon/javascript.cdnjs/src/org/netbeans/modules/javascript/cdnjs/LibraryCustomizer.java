@@ -86,7 +86,7 @@ public class LibraryCustomizer implements ProjectCustomizer.CompositeCategoryPro
         return customizer;
     }
 
-    static class StoreListener implements ActionListener, Runnable {
+    private static class StoreListener implements ActionListener, Runnable {
 
         static final Logger LOGGER = Logger.getLogger(StoreListener.class.getName());
 
@@ -418,7 +418,7 @@ public class LibraryCustomizer implements ProjectCustomizer.CompositeCategoryPro
             }
 
             Library.Version versionToStore = newVersion.filterVersion(Collections.emptySet());
-            versionToStore.setFileInfo(fileList.toArray(new String[0]), localFileList.toArray(new String[0]));
+            versionToStore.setFileInfo(fileList.toArray(String[]::new), localFileList.toArray(String[]::new));
             return versionToStore;
         }
 
@@ -437,13 +437,14 @@ public class LibraryCustomizer implements ProjectCustomizer.CompositeCategoryPro
         }
 
         private void removeFile(File file) {
-            while (!webRoot.equals(file)) {
-                File parent = file.getParentFile();
-                if (!file.delete()) {
+            File targetFile = file;
+            while (!webRoot.equals(targetFile)) {
+                File parent = targetFile.getParentFile();
+                if (!targetFile.delete()) {
                     // We have reached a parent directory that is not empty
                     break;
                 }
-                file = parent;
+                targetFile = parent;
             }
         }
 

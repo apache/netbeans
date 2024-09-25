@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.25
+#Version 1.26
 
 CLSS public final com.oracle.truffle.api.ArrayUtils
 meth public !varargs static int indexOf(byte[],int,int,byte[])
@@ -142,7 +142,7 @@ intf java.lang.annotation.Annotation
 
 CLSS public abstract interface static !annotation com.oracle.truffle.api.HostCompilerDirectives$BytecodeInterpreterSwitchBoundary
  outer com.oracle.truffle.api.HostCompilerDirectives
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, CONSTRUCTOR])
 intf java.lang.annotation.Annotation
@@ -272,7 +272,7 @@ innr public final Builder
 intf java.lang.AutoCloseable
 meth public <%0 extends java.lang.Object, %1 extends java.lang.Object> {%%1} leaveAndEnter(com.oracle.truffle.api.nodes.Node,com.oracle.truffle.api.TruffleSafepoint$Interrupter,com.oracle.truffle.api.TruffleSafepoint$InterruptibleFunction<{%%0},{%%1}>,{%%0})
 meth public <%0 extends java.lang.Object> {%%0} leaveAndEnter(com.oracle.truffle.api.nodes.Node,java.util.function.Supplier<{%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean equals(java.lang.Object)
 meth public boolean initializeInternal(com.oracle.truffle.api.nodes.Node,java.lang.String)
 meth public boolean initializePublic(com.oracle.truffle.api.nodes.Node,java.lang.String)
@@ -404,7 +404,7 @@ meth public java.io.BufferedReader newBufferedReader() throws java.io.IOExceptio
 meth public java.io.BufferedReader newBufferedReader(java.nio.charset.Charset) throws java.io.IOException
 meth public java.lang.String detectMimeType()
 meth public java.lang.String getMimeType() throws java.io.IOException
- anno 0 java.lang.Deprecated(null since="20.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="20.2")
 meth public java.lang.String getName()
 meth public java.lang.String getPath()
 meth public java.lang.String toString()
@@ -458,18 +458,18 @@ meth protected boolean patchContext({com.oracle.truffle.api.TruffleLanguage%0},c
 meth protected com.oracle.truffle.api.CallTarget parse(com.oracle.truffle.api.TruffleLanguage$ParsingRequest) throws java.lang.Exception
 meth protected com.oracle.truffle.api.nodes.ExecutableNode parse(com.oracle.truffle.api.TruffleLanguage$InlineParsingRequest) throws java.lang.Exception
 meth protected final <%0 extends java.lang.Object> com.oracle.truffle.api.ContextLocal<{%%0}> createContextLocal(com.oracle.truffle.api.TruffleLanguage$ContextLocalFactory<{com.oracle.truffle.api.TruffleLanguage%0},{%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected final <%0 extends java.lang.Object> com.oracle.truffle.api.ContextThreadLocal<{%%0}> createContextThreadLocal(com.oracle.truffle.api.TruffleLanguage$ContextThreadLocalFactory<{com.oracle.truffle.api.TruffleLanguage%0},{%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected final int getAsynchronousStackDepth()
 meth protected final java.lang.String getLanguageHome()
 meth protected java.lang.Object getLanguageView({com.oracle.truffle.api.TruffleLanguage%0},java.lang.Object)
 meth protected java.lang.Object getScope({com.oracle.truffle.api.TruffleLanguage%0})
 meth protected org.graalvm.options.OptionDescriptors getOptionDescriptors()
 meth protected static <%0 extends com.oracle.truffle.api.TruffleLanguage<?>> {%%0} getCurrentLanguage(java.lang.Class<{%%0}>)
- anno 0 java.lang.Deprecated(null since="21.3")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="21.3")
 meth protected static <%0 extends java.lang.Object, %1 extends com.oracle.truffle.api.TruffleLanguage<{%%0}>> {%%0} getCurrentContext(java.lang.Class<{%%1}>)
- anno 0 java.lang.Deprecated(null since="21.3")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="21.3")
 meth protected void disposeContext({com.oracle.truffle.api.TruffleLanguage%0})
 meth protected void disposeThread({com.oracle.truffle.api.TruffleLanguage%0},java.lang.Thread)
 meth protected void exitContext({com.oracle.truffle.api.TruffleLanguage%0},com.oracle.truffle.api.TruffleLanguage$ExitMode,int)
@@ -536,7 +536,7 @@ meth public boolean isHostLookupAllowed()
 meth public boolean isHostObject(java.lang.Object)
 meth public boolean isHostSymbol(java.lang.Object)
 meth public boolean isIOAllowed()
- anno 0 java.lang.Deprecated(null since="23.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="23.0")
 meth public boolean isInnerContextOptionsAllowed()
 meth public boolean isMimeTypeSupported(java.lang.String)
 meth public boolean isNativeAccessAllowed()
@@ -546,7 +546,7 @@ meth public boolean isPreInitialization()
 meth public boolean isSocketIOAllowed()
 meth public com.oracle.truffle.api.TruffleContext getContext()
 meth public com.oracle.truffle.api.TruffleContext$Builder newContextBuilder()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public com.oracle.truffle.api.TruffleFile getCurrentWorkingDirectory()
 meth public com.oracle.truffle.api.TruffleFile getInternalResource(java.lang.Class<? extends com.oracle.truffle.api.InternalResource>) throws java.io.IOException
 meth public com.oracle.truffle.api.TruffleFile getInternalResource(java.lang.String) throws java.io.IOException
@@ -568,9 +568,9 @@ meth public java.lang.Object asHostObject(java.lang.Object)
 meth public java.lang.Object asHostSymbol(java.lang.Class<?>)
 meth public java.lang.Object createHostAdapter(java.lang.Object[])
 meth public java.lang.Object createHostAdapterClass(java.lang.Class<?>[])
- anno 0 java.lang.Deprecated(null since="22.1")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.1")
 meth public java.lang.Object createHostAdapterClassWithStaticOverrides(java.lang.Class<?>[],java.lang.Object)
- anno 0 java.lang.Deprecated(null since="22.1")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.1")
 meth public java.lang.Object createHostAdapterWithClassOverrides(java.lang.Object[],java.lang.Object)
 meth public java.lang.Object findMetaObject(java.lang.Object)
 meth public java.lang.Object getPolyglotBindings()
@@ -582,13 +582,13 @@ meth public java.lang.String[] getApplicationArguments()
 meth public java.lang.Thread createSystemThread(java.lang.Runnable)
 meth public java.lang.Thread createSystemThread(java.lang.Runnable,java.lang.ThreadGroup)
 meth public java.lang.Thread createThread(java.lang.Runnable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.Thread createThread(java.lang.Runnable,com.oracle.truffle.api.TruffleContext)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.Thread createThread(java.lang.Runnable,com.oracle.truffle.api.TruffleContext,java.lang.ThreadGroup)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.Thread createThread(java.lang.Runnable,com.oracle.truffle.api.TruffleContext,java.lang.ThreadGroup,long)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.Throwable asHostException(java.lang.Throwable)
 meth public java.time.ZoneId getTimeZone()
 meth public java.util.Map<java.lang.String,com.oracle.truffle.api.InstrumentInfo> getInstruments()
@@ -640,7 +640,7 @@ hfds argumentNames,disposed,source
 
 CLSS public abstract interface static com.oracle.truffle.api.TruffleLanguage$Provider
  outer com.oracle.truffle.api.TruffleLanguage
- anno 0 java.lang.Deprecated(null since="23.1")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="23.1")
 meth public abstract com.oracle.truffle.api.TruffleLanguage<?> create()
 meth public abstract java.lang.String getLanguageClassName()
 meth public abstract java.util.Collection<java.lang.String> getServicesClassNames()
@@ -753,7 +753,7 @@ innr public abstract interface static Interrupter
 innr public abstract interface static Interruptible
 innr public abstract interface static InterruptibleFunction
 meth public <%0 extends java.lang.Object> void setBlockedWithException(com.oracle.truffle.api.nodes.Node,com.oracle.truffle.api.TruffleSafepoint$Interrupter,com.oracle.truffle.api.TruffleSafepoint$Interruptible<{%%0}>,{%%0},java.lang.Runnable,java.util.function.Consumer<java.lang.Throwable>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> {%%1} setBlockedFunction(com.oracle.truffle.api.nodes.Node,com.oracle.truffle.api.TruffleSafepoint$Interrupter,com.oracle.truffle.api.TruffleSafepoint$InterruptibleFunction<{%%0},{%%1}>,{%%0},java.lang.Runnable,java.util.function.Consumer<java.lang.Throwable>)
 meth public abstract <%0 extends java.lang.Object> void setBlocked(com.oracle.truffle.api.nodes.Node,com.oracle.truffle.api.TruffleSafepoint$Interrupter,com.oracle.truffle.api.TruffleSafepoint$Interruptible<{%%0}>,{%%0},java.lang.Runnable,java.util.function.Consumer<java.lang.Throwable>)
 meth public abstract boolean hasPendingSideEffectingActions()
@@ -938,7 +938,7 @@ meth public com.oracle.truffle.api.debug.DebugValue getReceiver()
 meth public com.oracle.truffle.api.debug.DebugValue getRootInstance()
 meth public com.oracle.truffle.api.source.SourceSection getSourceSection()
 meth public java.lang.Iterable<com.oracle.truffle.api.debug.DebugValue> getArguments()
- anno 0 java.lang.Deprecated(null since="20.3")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="20.3")
 meth public java.lang.Iterable<com.oracle.truffle.api.debug.DebugValue> getDeclaredValues()
 meth public java.lang.String getName()
 supr java.lang.Object
@@ -978,7 +978,7 @@ meth public abstract void threadInitialized(com.oracle.truffle.api.debug.DebugCo
 CLSS public abstract com.oracle.truffle.api.debug.DebugValue
 meth public !varargs final com.oracle.truffle.api.debug.DebugValue execute(com.oracle.truffle.api.debug.DebugValue[])
 meth public abstract <%0 extends java.lang.Object> {%%0} as(java.lang.Class<{%%0}>)
- anno 0 java.lang.Deprecated(null since="20.1")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="20.1")
 meth public abstract boolean hasReadSideEffects()
 meth public abstract boolean hasWriteSideEffects()
 meth public abstract boolean isInternal()
@@ -988,7 +988,7 @@ meth public abstract com.oracle.truffle.api.debug.DebuggerSession getSession()
 meth public abstract java.lang.String getName()
 meth public abstract void set(com.oracle.truffle.api.debug.DebugValue)
 meth public abstract void set(java.lang.Object)
- anno 0 java.lang.Deprecated(null since="21.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="21.2")
 meth public boolean asBoolean()
 meth public boolean equals(java.lang.Object)
 meth public boolean fitsInBigInteger()
@@ -1086,7 +1086,7 @@ hcls AccessorDebug
 CLSS public final com.oracle.truffle.api.debug.DebuggerSession
 intf java.io.Closeable
 meth public boolean isBreakpointsActive()
- anno 0 java.lang.Deprecated(null since="19.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="19.0")
 meth public boolean isBreakpointsActive(com.oracle.truffle.api.debug.Breakpoint$Kind)
 meth public boolean suspendHere(com.oracle.truffle.api.nodes.Node)
 meth public com.oracle.truffle.api.debug.Breakpoint install(com.oracle.truffle.api.debug.Breakpoint)
@@ -1102,7 +1102,7 @@ meth public void resume(java.lang.Thread)
 meth public void resumeAll()
 meth public void setAsynchronousStackDepth(int)
 meth public void setBreakpointsActive(boolean)
- anno 0 java.lang.Deprecated(null since="19.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="19.0")
 meth public void setBreakpointsActive(com.oracle.truffle.api.debug.Breakpoint$Kind,boolean)
 meth public void setContextsListener(com.oracle.truffle.api.debug.DebugContextsListener,boolean)
 meth public void setShowHostStackFrames(boolean)
@@ -1382,7 +1382,7 @@ CLSS public final static com.oracle.truffle.api.dsl.InlineSupport$BooleanField
  outer com.oracle.truffle.api.dsl.InlineSupport
 meth public boolean get(com.oracle.truffle.api.nodes.Node)
 meth public com.oracle.truffle.api.dsl.InlineSupport$BooleanField createParentAccessor(java.lang.Class<? extends com.oracle.truffle.api.nodes.Node>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static com.oracle.truffle.api.dsl.InlineSupport$BooleanField create(java.lang.invoke.MethodHandles$Lookup,java.lang.String)
 meth public void set(com.oracle.truffle.api.nodes.Node,boolean)
 supr com.oracle.truffle.api.dsl.InlineSupport$InlinableField
@@ -1391,7 +1391,7 @@ CLSS public final static com.oracle.truffle.api.dsl.InlineSupport$ByteField
  outer com.oracle.truffle.api.dsl.InlineSupport
 meth public byte get(com.oracle.truffle.api.nodes.Node)
 meth public com.oracle.truffle.api.dsl.InlineSupport$ByteField createParentAccessor(java.lang.Class<? extends com.oracle.truffle.api.nodes.Node>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static com.oracle.truffle.api.dsl.InlineSupport$ByteField create(java.lang.invoke.MethodHandles$Lookup,java.lang.String)
 meth public void set(com.oracle.truffle.api.nodes.Node,byte)
 supr com.oracle.truffle.api.dsl.InlineSupport$InlinableField
@@ -1400,7 +1400,7 @@ CLSS public final static com.oracle.truffle.api.dsl.InlineSupport$CharField
  outer com.oracle.truffle.api.dsl.InlineSupport
 meth public char get(com.oracle.truffle.api.nodes.Node)
 meth public com.oracle.truffle.api.dsl.InlineSupport$CharField createParentAccessor(java.lang.Class<? extends com.oracle.truffle.api.nodes.Node>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static com.oracle.truffle.api.dsl.InlineSupport$CharField create(java.lang.invoke.MethodHandles$Lookup,java.lang.String)
 meth public void set(com.oracle.truffle.api.nodes.Node,char)
 supr com.oracle.truffle.api.dsl.InlineSupport$InlinableField
@@ -1408,7 +1408,7 @@ supr com.oracle.truffle.api.dsl.InlineSupport$InlinableField
 CLSS public final static com.oracle.truffle.api.dsl.InlineSupport$DoubleField
  outer com.oracle.truffle.api.dsl.InlineSupport
 meth public com.oracle.truffle.api.dsl.InlineSupport$DoubleField createParentAccessor(java.lang.Class<? extends com.oracle.truffle.api.nodes.Node>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public double get(com.oracle.truffle.api.nodes.Node)
 meth public static com.oracle.truffle.api.dsl.InlineSupport$DoubleField create(java.lang.invoke.MethodHandles$Lookup,java.lang.String)
 meth public void set(com.oracle.truffle.api.nodes.Node,double)
@@ -1417,7 +1417,7 @@ supr com.oracle.truffle.api.dsl.InlineSupport$InlinableField
 CLSS public final static com.oracle.truffle.api.dsl.InlineSupport$FloatField
  outer com.oracle.truffle.api.dsl.InlineSupport
 meth public com.oracle.truffle.api.dsl.InlineSupport$FloatField createParentAccessor(java.lang.Class<? extends com.oracle.truffle.api.nodes.Node>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public float get(com.oracle.truffle.api.nodes.Node)
 meth public static com.oracle.truffle.api.dsl.InlineSupport$FloatField create(java.lang.invoke.MethodHandles$Lookup,java.lang.String)
 meth public void set(com.oracle.truffle.api.nodes.Node,float)
@@ -1441,7 +1441,7 @@ hfds targetClass,updaters
 CLSS public final static com.oracle.truffle.api.dsl.InlineSupport$IntField
  outer com.oracle.truffle.api.dsl.InlineSupport
 meth public com.oracle.truffle.api.dsl.InlineSupport$IntField createParentAccessor(java.lang.Class<? extends com.oracle.truffle.api.nodes.Node>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public int get(com.oracle.truffle.api.nodes.Node)
 meth public static com.oracle.truffle.api.dsl.InlineSupport$IntField create(java.lang.invoke.MethodHandles$Lookup,java.lang.String)
 meth public void set(com.oracle.truffle.api.nodes.Node,int)
@@ -1450,7 +1450,7 @@ supr com.oracle.truffle.api.dsl.InlineSupport$InlinableField
 CLSS public final static com.oracle.truffle.api.dsl.InlineSupport$LongField
  outer com.oracle.truffle.api.dsl.InlineSupport
 meth public com.oracle.truffle.api.dsl.InlineSupport$LongField createParentAccessor(java.lang.Class<? extends com.oracle.truffle.api.nodes.Node>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public long get(com.oracle.truffle.api.nodes.Node)
 meth public static com.oracle.truffle.api.dsl.InlineSupport$LongField create(java.lang.invoke.MethodHandles$Lookup,java.lang.String)
 meth public void set(com.oracle.truffle.api.nodes.Node,long)
@@ -1460,7 +1460,7 @@ CLSS public final static com.oracle.truffle.api.dsl.InlineSupport$ReferenceField
  outer com.oracle.truffle.api.dsl.InlineSupport
 meth public boolean compareAndSet(com.oracle.truffle.api.nodes.Node,{com.oracle.truffle.api.dsl.InlineSupport$ReferenceField%0},{com.oracle.truffle.api.dsl.InlineSupport$ReferenceField%0})
 meth public com.oracle.truffle.api.dsl.InlineSupport$ReferenceField<{com.oracle.truffle.api.dsl.InlineSupport$ReferenceField%0}> createParentAccessor(java.lang.Class<? extends com.oracle.truffle.api.nodes.Node>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends java.lang.Object> com.oracle.truffle.api.dsl.InlineSupport$ReferenceField<{%%0}> create(java.lang.invoke.MethodHandles$Lookup,java.lang.String,java.lang.Class<{%%0}>)
 meth public void set(com.oracle.truffle.api.nodes.Node,{com.oracle.truffle.api.dsl.InlineSupport$ReferenceField%0})
 meth public {com.oracle.truffle.api.dsl.InlineSupport$ReferenceField%0} get(com.oracle.truffle.api.nodes.Node)
@@ -1489,7 +1489,7 @@ meth public abstract com.oracle.truffle.api.dsl.InlineSupport$RequiredField[] va
 CLSS public final static com.oracle.truffle.api.dsl.InlineSupport$ShortField
  outer com.oracle.truffle.api.dsl.InlineSupport
 meth public com.oracle.truffle.api.dsl.InlineSupport$ShortField createParentAccessor(java.lang.Class<? extends com.oracle.truffle.api.nodes.Node>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public short get(com.oracle.truffle.api.nodes.Node)
 meth public static com.oracle.truffle.api.dsl.InlineSupport$ShortField create(java.lang.invoke.MethodHandles$Lookup,java.lang.String)
 meth public void set(com.oracle.truffle.api.nodes.Node,short)
@@ -1498,7 +1498,7 @@ supr com.oracle.truffle.api.dsl.InlineSupport$InlinableField
 CLSS public final static com.oracle.truffle.api.dsl.InlineSupport$StateField
  outer com.oracle.truffle.api.dsl.InlineSupport
 meth public com.oracle.truffle.api.dsl.InlineSupport$StateField createParentAccessor(java.lang.Class<? extends com.oracle.truffle.api.nodes.Node>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public com.oracle.truffle.api.dsl.InlineSupport$StateField subUpdater(int,int)
 meth public int get(com.oracle.truffle.api.nodes.Node)
 meth public static com.oracle.truffle.api.dsl.InlineSupport$StateField create(java.lang.invoke.MethodHandles$Lookup,java.lang.String)
@@ -1918,7 +1918,7 @@ meth public com.oracle.truffle.api.nodes.Node getInstrumentedNode()
 meth public com.oracle.truffle.api.source.SourceSection getInstrumentedSourceSection()
 meth public java.lang.Object getNodeObject()
 meth public java.lang.RuntimeException createError(java.lang.RuntimeException)
- anno 0 java.lang.Deprecated(null since="21.3")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="21.3")
 meth public java.lang.String toString()
 meth public java.lang.ThreadDeath createUnwind(java.lang.Object)
 meth public java.lang.ThreadDeath createUnwind(java.lang.Object,com.oracle.truffle.api.instrumentation.EventBinding<?>)
@@ -1940,7 +1940,7 @@ meth public abstract void onReturnExceptional(com.oracle.truffle.api.instrumenta
 meth public abstract void onReturnValue(com.oracle.truffle.api.instrumentation.EventContext,com.oracle.truffle.api.frame.VirtualFrame,java.lang.Object)
 meth public java.lang.Object onUnwind(com.oracle.truffle.api.instrumentation.EventContext,com.oracle.truffle.api.frame.VirtualFrame,java.lang.Object)
 meth public void onInputValue(com.oracle.truffle.api.instrumentation.EventContext,com.oracle.truffle.api.frame.VirtualFrame,com.oracle.truffle.api.instrumentation.EventContext,int,java.lang.Object)
- anno 0 java.lang.Deprecated(null since="20.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="20.0")
 meth public void onResume(com.oracle.truffle.api.instrumentation.EventContext,com.oracle.truffle.api.frame.VirtualFrame)
 meth public void onYield(com.oracle.truffle.api.instrumentation.EventContext,com.oracle.truffle.api.frame.VirtualFrame,java.lang.Object)
 
@@ -2020,12 +2020,12 @@ meth public abstract <%0 extends com.oracle.truffle.api.instrumentation.Contexts
 meth public abstract <%0 extends com.oracle.truffle.api.instrumentation.ExecuteSourceListener> com.oracle.truffle.api.instrumentation.EventBinding<{%%0}> attachExecuteSourceListener(com.oracle.truffle.api.instrumentation.SourceFilter,{%%0},boolean)
 meth public abstract <%0 extends com.oracle.truffle.api.instrumentation.ExecuteSourceListener> com.oracle.truffle.api.instrumentation.EventBinding<{%%0}> createExecuteSourceBinding(com.oracle.truffle.api.instrumentation.SourceFilter,{%%0},boolean)
 meth public abstract <%0 extends com.oracle.truffle.api.instrumentation.ExecutionEventListener> com.oracle.truffle.api.instrumentation.EventBinding<{%%0}> attachExecutionEventListener(com.oracle.truffle.api.instrumentation.SourceSectionFilter,com.oracle.truffle.api.instrumentation.SourceSectionFilter,{%%0})
- anno 0 java.lang.Deprecated(null since="20.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="20.0")
 meth public abstract <%0 extends com.oracle.truffle.api.instrumentation.ExecutionEventNodeFactory> com.oracle.truffle.api.instrumentation.EventBinding<{%%0}> attachExecutionEventFactory(com.oracle.truffle.api.instrumentation.NearestSectionFilter,com.oracle.truffle.api.instrumentation.SourceSectionFilter,{%%0})
 meth public abstract <%0 extends com.oracle.truffle.api.instrumentation.ExecutionEventNodeFactory> com.oracle.truffle.api.instrumentation.EventBinding<{%%0}> attachExecutionEventFactory(com.oracle.truffle.api.instrumentation.SourceSectionFilter,com.oracle.truffle.api.instrumentation.SourceSectionFilter,{%%0})
 meth public abstract <%0 extends com.oracle.truffle.api.instrumentation.LoadSourceListener> com.oracle.truffle.api.instrumentation.EventBinding<{%%0}> attachLoadSourceListener(com.oracle.truffle.api.instrumentation.SourceFilter,{%%0},boolean)
 meth public abstract <%0 extends com.oracle.truffle.api.instrumentation.LoadSourceListener> com.oracle.truffle.api.instrumentation.EventBinding<{%%0}> attachLoadSourceListener(com.oracle.truffle.api.instrumentation.SourceSectionFilter,{%%0},boolean)
- anno 0 java.lang.Deprecated(null since="19.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="19.0")
 meth public abstract <%0 extends com.oracle.truffle.api.instrumentation.LoadSourceListener> com.oracle.truffle.api.instrumentation.EventBinding<{%%0}> createLoadSourceBinding(com.oracle.truffle.api.instrumentation.SourceFilter,{%%0},boolean)
 meth public abstract <%0 extends com.oracle.truffle.api.instrumentation.LoadSourceSectionListener> com.oracle.truffle.api.instrumentation.EventBinding<{%%0}> attachLoadSourceSectionListener(com.oracle.truffle.api.instrumentation.NearestSectionFilter,com.oracle.truffle.api.instrumentation.SourceSectionFilter,{%%0},boolean)
 meth public abstract <%0 extends com.oracle.truffle.api.instrumentation.LoadSourceSectionListener> com.oracle.truffle.api.instrumentation.EventBinding<{%%0}> attachLoadSourceSectionListener(com.oracle.truffle.api.instrumentation.SourceSectionFilter,{%%0},boolean)
@@ -2248,9 +2248,9 @@ innr public abstract interface static Provider
 innr public final static Env
 meth protected abstract void onCreate(com.oracle.truffle.api.instrumentation.TruffleInstrument$Env)
 meth protected final <%0 extends java.lang.Object> com.oracle.truffle.api.ContextLocal<{%%0}> createContextLocal(com.oracle.truffle.api.instrumentation.TruffleInstrument$ContextLocalFactory<{%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected final <%0 extends java.lang.Object> com.oracle.truffle.api.ContextThreadLocal<{%%0}> createContextThreadLocal(com.oracle.truffle.api.instrumentation.TruffleInstrument$ContextThreadLocalFactory<{%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected org.graalvm.options.OptionDescriptors getContextOptionDescriptors()
 meth protected org.graalvm.options.OptionDescriptors getOptionDescriptors()
 meth protected void onDispose(com.oracle.truffle.api.instrumentation.TruffleInstrument$Env)
@@ -2287,9 +2287,9 @@ meth public com.oracle.truffle.api.TruffleFile getInternalResource(java.lang.Str
 meth public com.oracle.truffle.api.TruffleFile getTruffleFile(com.oracle.truffle.api.TruffleContext,java.lang.String)
 meth public com.oracle.truffle.api.TruffleFile getTruffleFile(com.oracle.truffle.api.TruffleContext,java.net.URI)
 meth public com.oracle.truffle.api.TruffleFile getTruffleFile(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public com.oracle.truffle.api.TruffleFile getTruffleFile(java.net.URI)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public com.oracle.truffle.api.TruffleLogger getLogger(java.lang.Class<?>)
 meth public com.oracle.truffle.api.TruffleLogger getLogger(java.lang.String)
 meth public com.oracle.truffle.api.instrumentation.Instrumenter getInstrumenter()
@@ -2319,7 +2319,7 @@ hcls GuardedExecutableNode,MessageTransportProxy
 
 CLSS public abstract interface static com.oracle.truffle.api.instrumentation.TruffleInstrument$Provider
  outer com.oracle.truffle.api.instrumentation.TruffleInstrument
- anno 0 java.lang.Deprecated(null since="23.1")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="23.1")
 meth public abstract com.oracle.truffle.api.instrumentation.TruffleInstrument create()
 meth public abstract java.lang.String getInstrumentClassName()
 meth public abstract java.util.Collection<java.lang.String> getServicesClassNames()
@@ -2361,7 +2361,7 @@ CLSS public abstract com.oracle.truffle.api.interop.InteropException
 meth public final java.lang.Throwable fillInStackTrace()
 meth public final java.lang.Throwable getCause()
 meth public final java.lang.Throwable initCause(java.lang.Throwable)
- anno 0 java.lang.Deprecated(null since="20.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="20.2")
 supr java.lang.Exception
 hfds serialVersionUID
 
@@ -2613,7 +2613,7 @@ meth public abstract !hasdefault java.lang.String limit()
 meth public abstract !hasdefault java.lang.String value()
 
 CLSS public abstract interface com.oracle.truffle.api.library.DefaultExportProvider
- anno 0 java.lang.Deprecated(null since="23.1")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="23.1")
 intf com.oracle.truffle.api.library.provider.DefaultExportProvider
 
 CLSS public abstract com.oracle.truffle.api.library.DynamicDispatchLibrary
@@ -2625,7 +2625,7 @@ supr com.oracle.truffle.api.library.Library
 hfds FACTORY
 
 CLSS public abstract interface com.oracle.truffle.api.library.EagerExportProvider
- anno 0 java.lang.Deprecated(null since="23.1")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="23.1")
 intf com.oracle.truffle.api.library.provider.EagerExportProvider
 
 CLSS public abstract interface !annotation com.oracle.truffle.api.library.ExportLibrary
@@ -2912,7 +2912,7 @@ meth public java.lang.Object[] storeParentFrameInArguments(com.oracle.truffle.ap
 meth public static boolean pollOSRBackEdge(com.oracle.truffle.api.nodes.BytecodeOSRNode)
 meth public static java.lang.Object tryOSR(com.oracle.truffle.api.nodes.BytecodeOSRNode,int,java.lang.Object,java.lang.Runnable,com.oracle.truffle.api.frame.VirtualFrame)
 meth public void copyIntoOSRFrame(com.oracle.truffle.api.frame.VirtualFrame,com.oracle.truffle.api.frame.VirtualFrame,int)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public void copyIntoOSRFrame(com.oracle.truffle.api.frame.VirtualFrame,com.oracle.truffle.api.frame.VirtualFrame,int,java.lang.Object)
 meth public void prepareOSR(int)
 meth public void restoreParentFrame(com.oracle.truffle.api.frame.VirtualFrame,com.oracle.truffle.api.frame.VirtualFrame)
@@ -3201,7 +3201,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 meth public final java.lang.Throwable fillInStackTrace()
- anno 0 java.lang.Deprecated(null since="19.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="19.0")
 supr java.lang.Exception
 hfds serialVersionUID
 
@@ -3212,34 +3212,34 @@ supr com.oracle.truffle.api.nodes.SlowPathException
 hfds result,serialVersionUID
 
 CLSS public abstract interface com.oracle.truffle.api.object.BooleanLocation
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract boolean getBoolean(com.oracle.truffle.api.object.DynamicObject,boolean)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract boolean getBoolean(com.oracle.truffle.api.object.DynamicObject,com.oracle.truffle.api.object.Shape)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract java.lang.Class<java.lang.Boolean> getType()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setBoolean(com.oracle.truffle.api.object.DynamicObject,boolean) throws com.oracle.truffle.api.object.FinalLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setBoolean(com.oracle.truffle.api.object.DynamicObject,boolean,com.oracle.truffle.api.object.Shape) throws com.oracle.truffle.api.object.FinalLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setBoolean(com.oracle.truffle.api.object.DynamicObject,boolean,com.oracle.truffle.api.object.Shape,com.oracle.truffle.api.object.Shape)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 
 CLSS public abstract interface com.oracle.truffle.api.object.DoubleLocation
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract double getDouble(com.oracle.truffle.api.object.DynamicObject,boolean)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract double getDouble(com.oracle.truffle.api.object.DynamicObject,com.oracle.truffle.api.object.Shape)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract java.lang.Class<java.lang.Double> getType()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setDouble(com.oracle.truffle.api.object.DynamicObject,double) throws com.oracle.truffle.api.object.FinalLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setDouble(com.oracle.truffle.api.object.DynamicObject,double,com.oracle.truffle.api.object.Shape) throws com.oracle.truffle.api.object.FinalLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setDouble(com.oracle.truffle.api.object.DynamicObject,double,com.oracle.truffle.api.object.Shape,com.oracle.truffle.api.object.Shape)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 
 CLSS public abstract com.oracle.truffle.api.object.DynamicObject
 cons protected init(com.oracle.truffle.api.object.Shape)
@@ -3257,7 +3257,7 @@ CLSS protected abstract interface static !annotation com.oracle.truffle.api.obje
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface com.oracle.truffle.api.object.DynamicObjectFactory
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract !varargs com.oracle.truffle.api.object.DynamicObject newInstance(java.lang.Object[])
 meth public abstract com.oracle.truffle.api.object.Shape getShape()
 
@@ -3296,7 +3296,7 @@ supr com.oracle.truffle.api.library.Library
 hfds FACTORY,UNCACHED
 
 CLSS public final com.oracle.truffle.api.object.FinalLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 supr com.oracle.truffle.api.nodes.SlowPathException
 hfds INSTANCE,serialVersionUID
 
@@ -3311,27 +3311,27 @@ supr java.lang.Object
 hfds name
 
 CLSS public final com.oracle.truffle.api.object.IncompatibleLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 supr com.oracle.truffle.api.nodes.SlowPathException
 hfds INSTANCE,serialVersionUID
 
 CLSS public abstract interface com.oracle.truffle.api.object.IntLocation
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract int getInt(com.oracle.truffle.api.object.DynamicObject,boolean)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract int getInt(com.oracle.truffle.api.object.DynamicObject,com.oracle.truffle.api.object.Shape)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract java.lang.Class<java.lang.Integer> getType()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setInt(com.oracle.truffle.api.object.DynamicObject,int) throws com.oracle.truffle.api.object.FinalLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setInt(com.oracle.truffle.api.object.DynamicObject,int,com.oracle.truffle.api.object.Shape) throws com.oracle.truffle.api.object.FinalLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setInt(com.oracle.truffle.api.object.DynamicObject,int,com.oracle.truffle.api.object.Shape,com.oracle.truffle.api.object.Shape)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 
 CLSS public abstract com.oracle.truffle.api.object.Layout
- anno 0 java.lang.Deprecated(null since="21.1")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="21.1")
 cons protected init()
 fld public final static java.lang.String OPTION_PREFIX = "truffle.object."
 innr protected abstract static Access
@@ -3340,7 +3340,7 @@ innr public final static Builder
 meth protected com.oracle.truffle.api.object.Shape buildShape(java.lang.Object,java.lang.Object,int,com.oracle.truffle.api.Assumption)
 meth protected static com.oracle.truffle.api.object.LayoutFactory getFactory()
 meth public abstract com.oracle.truffle.api.object.Shape$Allocator createAllocator()
- anno 0 java.lang.Deprecated(null since="21.1")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="21.1")
 meth public abstract java.lang.Class<? extends com.oracle.truffle.api.object.DynamicObject> getType()
 supr java.lang.Object
 hfds INT_TO_DOUBLE_FLAG,INT_TO_LONG_FLAG,LAYOUT_FACTORY
@@ -3360,7 +3360,7 @@ supr java.lang.Object
 
 CLSS public final static com.oracle.truffle.api.object.Layout$Builder
  outer com.oracle.truffle.api.object.Layout
- anno 0 java.lang.Deprecated(null since="21.1")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="21.1")
 meth public com.oracle.truffle.api.object.Layout build()
 meth public com.oracle.truffle.api.object.Layout$Builder addAllowedImplicitCast(com.oracle.truffle.api.object.Layout$ImplicitCast)
 meth public com.oracle.truffle.api.object.Layout$Builder setAllowedImplicitCasts(java.util.EnumSet<com.oracle.truffle.api.object.Layout$ImplicitCast>)
@@ -3370,7 +3370,7 @@ hfds allowedImplicitCasts,dynamicObjectClass
 
 CLSS public final static !enum com.oracle.truffle.api.object.Layout$ImplicitCast
  outer com.oracle.truffle.api.object.Layout
- anno 0 java.lang.Deprecated(null since="21.1")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="21.1")
 fld public final static com.oracle.truffle.api.object.Layout$ImplicitCast IntToDouble
 fld public final static com.oracle.truffle.api.object.Layout$ImplicitCast IntToLong
 meth public static com.oracle.truffle.api.object.Layout$ImplicitCast valueOf(java.lang.String)
@@ -3378,68 +3378,68 @@ meth public static com.oracle.truffle.api.object.Layout$ImplicitCast[] values()
 supr java.lang.Enum<com.oracle.truffle.api.object.Layout$ImplicitCast>
 
 CLSS public abstract interface com.oracle.truffle.api.object.LayoutFactory
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract com.oracle.truffle.api.object.Property createProperty(java.lang.Object,com.oracle.truffle.api.object.Location)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract com.oracle.truffle.api.object.Property createProperty(java.lang.Object,com.oracle.truffle.api.object.Location,int)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract int getPriority()
 meth public com.oracle.truffle.api.object.Layout createLayout(com.oracle.truffle.api.object.Layout$Builder)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public com.oracle.truffle.api.object.Shape createShape(java.lang.Object)
 
 CLSS public abstract com.oracle.truffle.api.object.Location
 cons protected init()
 meth protected abstract java.lang.Object getInternal(com.oracle.truffle.api.object.DynamicObject)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth protected abstract void setInternal(com.oracle.truffle.api.object.DynamicObject,java.lang.Object) throws com.oracle.truffle.api.object.IncompatibleLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth protected double getDouble(com.oracle.truffle.api.object.DynamicObject,boolean) throws com.oracle.truffle.api.nodes.UnexpectedResultException
 meth protected int getInt(com.oracle.truffle.api.object.DynamicObject,boolean) throws com.oracle.truffle.api.nodes.UnexpectedResultException
 meth protected long getLong(com.oracle.truffle.api.object.DynamicObject,boolean) throws com.oracle.truffle.api.nodes.UnexpectedResultException
 meth protected static boolean checkShape(com.oracle.truffle.api.object.DynamicObject,com.oracle.truffle.api.object.Shape)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth protected static com.oracle.truffle.api.object.FinalLocationException finalLocation() throws com.oracle.truffle.api.object.FinalLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth protected static com.oracle.truffle.api.object.IncompatibleLocationException incompatibleLocation() throws com.oracle.truffle.api.object.IncompatibleLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract boolean equals(java.lang.Object)
 meth public abstract int hashCode()
 meth public boolean canSet(com.oracle.truffle.api.object.DynamicObject,java.lang.Object)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public boolean canSet(java.lang.Object)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public boolean canStore(java.lang.Object)
 meth public boolean isAssumedFinal()
 meth public boolean isConstant()
 meth public boolean isDeclared()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public boolean isFinal()
 meth public boolean isPrimitive()
 meth public boolean isValue()
 meth public com.oracle.truffle.api.Assumption getFinalAssumption()
 meth public final java.lang.Object get(com.oracle.truffle.api.object.DynamicObject)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public final java.lang.Object get(com.oracle.truffle.api.object.DynamicObject,com.oracle.truffle.api.object.Shape)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public final void set(com.oracle.truffle.api.object.DynamicObject,java.lang.Object) throws com.oracle.truffle.api.object.FinalLocationException,com.oracle.truffle.api.object.IncompatibleLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public java.lang.Object get(com.oracle.truffle.api.object.DynamicObject,boolean)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public java.lang.Object getConstantValue()
 meth public void set(com.oracle.truffle.api.object.DynamicObject,java.lang.Object,com.oracle.truffle.api.object.Shape) throws com.oracle.truffle.api.object.FinalLocationException,com.oracle.truffle.api.object.IncompatibleLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public void set(com.oracle.truffle.api.object.DynamicObject,java.lang.Object,com.oracle.truffle.api.object.Shape,com.oracle.truffle.api.object.Shape) throws com.oracle.truffle.api.object.IncompatibleLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 supr java.lang.Object
 
 CLSS public abstract interface com.oracle.truffle.api.object.LocationFactory
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract com.oracle.truffle.api.object.Location createLocation(com.oracle.truffle.api.object.Shape,java.lang.Object)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 
 CLSS public final !enum com.oracle.truffle.api.object.LocationModifier
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 fld public final static com.oracle.truffle.api.object.LocationModifier Final
 fld public final static com.oracle.truffle.api.object.LocationModifier NonNull
 meth public static com.oracle.truffle.api.object.LocationModifier valueOf(java.lang.String)
@@ -3447,63 +3447,63 @@ meth public static com.oracle.truffle.api.object.LocationModifier[] values()
 supr java.lang.Enum<com.oracle.truffle.api.object.LocationModifier>
 
 CLSS public abstract interface com.oracle.truffle.api.object.LongLocation
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract java.lang.Class<java.lang.Long> getType()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract long getLong(com.oracle.truffle.api.object.DynamicObject,boolean)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract long getLong(com.oracle.truffle.api.object.DynamicObject,com.oracle.truffle.api.object.Shape)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setLong(com.oracle.truffle.api.object.DynamicObject,long) throws com.oracle.truffle.api.object.FinalLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setLong(com.oracle.truffle.api.object.DynamicObject,long,com.oracle.truffle.api.object.Shape) throws com.oracle.truffle.api.object.FinalLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setLong(com.oracle.truffle.api.object.DynamicObject,long,com.oracle.truffle.api.object.Shape,com.oracle.truffle.api.object.Shape)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 
 CLSS public abstract interface com.oracle.truffle.api.object.ObjectLocation
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract boolean isNonNull()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract java.lang.Class<?> getType()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 
 CLSS public com.oracle.truffle.api.object.ObjectType
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 cons public init()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public boolean equals(com.oracle.truffle.api.object.DynamicObject,java.lang.Object)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public int hashCode(com.oracle.truffle.api.object.DynamicObject)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public java.lang.Class<?> dispatch()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public java.lang.String toString(com.oracle.truffle.api.object.DynamicObject)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 supr java.lang.Object
 hfds DEFAULT
 
 CLSS public abstract com.oracle.truffle.api.object.Property
 cons protected init()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract boolean isHidden()
 meth public abstract com.oracle.truffle.api.object.Location getLocation()
 meth public abstract int getFlags()
 meth public abstract java.lang.Object get(com.oracle.truffle.api.object.DynamicObject,boolean)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract java.lang.Object get(com.oracle.truffle.api.object.DynamicObject,com.oracle.truffle.api.object.Shape)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract java.lang.Object getKey()
 meth public abstract void set(com.oracle.truffle.api.object.DynamicObject,java.lang.Object,com.oracle.truffle.api.object.Shape) throws com.oracle.truffle.api.object.FinalLocationException,com.oracle.truffle.api.object.IncompatibleLocationException
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setGeneric(com.oracle.truffle.api.object.DynamicObject,java.lang.Object,com.oracle.truffle.api.object.Shape)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setSafe(com.oracle.truffle.api.object.DynamicObject,java.lang.Object,com.oracle.truffle.api.object.Shape)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract void setSafe(com.oracle.truffle.api.object.DynamicObject,java.lang.Object,com.oracle.truffle.api.object.Shape,com.oracle.truffle.api.object.Shape)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public static com.oracle.truffle.api.object.Property create(java.lang.Object,com.oracle.truffle.api.object.Location,int)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 supr java.lang.Object
 
 CLSS public final com.oracle.truffle.api.object.PropertyGetter
@@ -3532,38 +3532,38 @@ meth public abstract boolean isValid()
 meth public abstract com.oracle.truffle.api.Assumption getLeafAssumption()
 meth public abstract com.oracle.truffle.api.Assumption getValidAssumption()
 meth public abstract com.oracle.truffle.api.object.DynamicObject newInstance()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract com.oracle.truffle.api.object.DynamicObjectFactory createFactory()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract com.oracle.truffle.api.object.Layout getLayout()
- anno 0 java.lang.Deprecated(null since="21.1")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="21.1")
 meth public abstract com.oracle.truffle.api.object.ObjectType getObjectType()
- anno 0 java.lang.Deprecated(null since="20.3")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="20.3")
 meth public abstract com.oracle.truffle.api.object.Property getLastProperty()
 meth public abstract com.oracle.truffle.api.object.Property getProperty(java.lang.Object)
 meth public abstract com.oracle.truffle.api.object.Shape addProperty(com.oracle.truffle.api.object.Property)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract com.oracle.truffle.api.object.Shape changeType(com.oracle.truffle.api.object.ObjectType)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract com.oracle.truffle.api.object.Shape defineProperty(java.lang.Object,java.lang.Object,int)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract com.oracle.truffle.api.object.Shape defineProperty(java.lang.Object,java.lang.Object,int,com.oracle.truffle.api.object.LocationFactory)
- anno 0 java.lang.Deprecated(null since="20.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="20.2")
 meth public abstract com.oracle.truffle.api.object.Shape getParent()
- anno 0 java.lang.Deprecated(null since="20.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="20.2")
 meth public abstract com.oracle.truffle.api.object.Shape getRoot()
 meth public abstract com.oracle.truffle.api.object.Shape removeProperty(com.oracle.truffle.api.object.Property)
- anno 0 java.lang.Deprecated(null since="20.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="20.2")
 meth public abstract com.oracle.truffle.api.object.Shape replaceProperty(com.oracle.truffle.api.object.Property,com.oracle.truffle.api.object.Property)
- anno 0 java.lang.Deprecated(null since="20.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="20.2")
 meth public abstract com.oracle.truffle.api.object.Shape tryMerge(com.oracle.truffle.api.object.Shape)
 meth public abstract com.oracle.truffle.api.object.Shape$Allocator allocator()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract int getPropertyCount()
 meth public abstract java.lang.Iterable<com.oracle.truffle.api.object.Property> getProperties()
 meth public abstract java.lang.Iterable<java.lang.Object> getKeys()
 meth public abstract java.lang.Object getMutex()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract java.lang.Object getSharedData()
 meth public abstract java.util.List<com.oracle.truffle.api.object.Property> getPropertyList()
 meth public abstract java.util.List<com.oracle.truffle.api.object.Property> getPropertyListInternal(boolean)
@@ -3584,29 +3584,29 @@ hcls AbstractBuilder
 
 CLSS public abstract static com.oracle.truffle.api.object.Shape$Allocator
  outer com.oracle.truffle.api.object.Shape
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 cons protected init()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth protected abstract com.oracle.truffle.api.object.Location locationForType(java.lang.Class<?>,boolean,boolean)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth protected abstract com.oracle.truffle.api.object.Location locationForValue(java.lang.Object,boolean,boolean)
- anno 0 java.lang.Deprecated(null since="19.3")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="19.3")
 meth public abstract com.oracle.truffle.api.object.Location constantLocation(java.lang.Object)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract com.oracle.truffle.api.object.Location declaredLocation(java.lang.Object)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract com.oracle.truffle.api.object.Shape$Allocator addLocation(com.oracle.truffle.api.object.Location)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public abstract com.oracle.truffle.api.object.Shape$Allocator copy()
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public final com.oracle.truffle.api.object.Location locationForType(java.lang.Class<?>)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public final com.oracle.truffle.api.object.Location locationForType(java.lang.Class<?>,java.util.EnumSet<com.oracle.truffle.api.object.LocationModifier>)
- anno 0 java.lang.Deprecated(null since="22.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.2")
 meth public final com.oracle.truffle.api.object.Location locationForValue(java.lang.Object)
- anno 0 java.lang.Deprecated(null since="20.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="20.2")
 meth public final com.oracle.truffle.api.object.Location locationForValue(java.lang.Object,java.util.EnumSet<com.oracle.truffle.api.object.LocationModifier>)
- anno 0 java.lang.Deprecated(null since="19.3")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="19.3")
 supr java.lang.Object
 
 CLSS public final static com.oracle.truffle.api.object.Shape$Builder
@@ -3662,9 +3662,9 @@ meth public boolean profile(boolean)
 meth public java.lang.String toString()
 meth public static com.oracle.truffle.api.profiles.ConditionProfile create()
 meth public static com.oracle.truffle.api.profiles.ConditionProfile createBinaryProfile()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static com.oracle.truffle.api.profiles.ConditionProfile createCountingProfile()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static com.oracle.truffle.api.profiles.ConditionProfile getUncached()
 meth public static com.oracle.truffle.api.profiles.InlinedConditionProfile inline(com.oracle.truffle.api.dsl.InlineSupport$InlineTarget)
 meth public void disable()
@@ -3884,7 +3884,7 @@ meth public boolean profile(boolean)
 meth public java.lang.String toString()
 meth public static com.oracle.truffle.api.profiles.LoopConditionProfile create()
 meth public static com.oracle.truffle.api.profiles.LoopConditionProfile createCountingProfile()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static com.oracle.truffle.api.profiles.LoopConditionProfile getUncached()
 meth public void disable()
 meth public void profileCounted(long)
@@ -4141,7 +4141,7 @@ meth public final boolean codeRangeEqualsUncached(com.oracle.truffle.api.strings
 meth public final boolean equals(java.lang.Object)
 meth public final boolean equalsUncached(com.oracle.truffle.api.strings.AbstractTruffleString,com.oracle.truffle.api.strings.TruffleString$Encoding)
 meth public final boolean isCompatibleTo(com.oracle.truffle.api.strings.TruffleString$Encoding)
- anno 0 java.lang.Deprecated(null since="23.0")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="23.0")
 meth public final boolean isCompatibleToUncached(com.oracle.truffle.api.strings.TruffleString$Encoding)
 meth public final boolean isEmpty()
 meth public final boolean isImmutable()
@@ -4212,10 +4212,10 @@ meth public final java.lang.String toStringDebug()
 meth public final long parseLongUncached() throws com.oracle.truffle.api.strings.TruffleString$NumberFormatException
 meth public final long parseLongUncached(int) throws com.oracle.truffle.api.strings.TruffleString$NumberFormatException
 meth public final void copyToByteArrayNodeUncached(int,byte[],int,int,com.oracle.truffle.api.strings.TruffleString$Encoding)
- anno 0 java.lang.Deprecated(null since="22.3")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.3")
 meth public final void copyToByteArrayUncached(int,byte[],int,int,com.oracle.truffle.api.strings.TruffleString$Encoding)
 meth public final void copyToNativeMemoryNodeUncached(int,java.lang.Object,int,int,com.oracle.truffle.api.strings.TruffleString$Encoding)
- anno 0 java.lang.Deprecated(null since="22.3")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="22.3")
 meth public final void copyToNativeMemoryUncached(int,java.lang.Object,int,int,com.oracle.truffle.api.strings.TruffleString$Encoding)
 meth public void materializeUncached(com.oracle.truffle.api.strings.AbstractTruffleString,com.oracle.truffle.api.strings.TruffleString$Encoding)
 supr java.lang.Object
@@ -4341,6 +4341,13 @@ meth public abstract com.oracle.truffle.api.strings.TranscodingErrorHandler$Repl
 
 CLSS public final static com.oracle.truffle.api.strings.TranscodingErrorHandler$ReplacementString
  outer com.oracle.truffle.api.strings.TranscodingErrorHandler
+cons public init(com.oracle.truffle.api.strings.TruffleString,int)
+meth public com.oracle.truffle.api.strings.TruffleString replacement()
+meth public final boolean equals(java.lang.Object)
+meth public final int hashCode()
+meth public final java.lang.String toString()
+meth public int byteLength()
+supr java.lang.Record
 hfds byteLength,replacement
 
 CLSS public final com.oracle.truffle.api.strings.TruffleString
@@ -5406,13 +5413,17 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -5421,6 +5432,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -5462,6 +5474,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -5471,6 +5484,13 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract java.lang.Record
+cons protected init()
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.String toString()
+supr java.lang.Object
 
 CLSS public java.lang.RuntimeException
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -5541,9 +5561,16 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public abstract java.lang.ref.Reference<%0 extends java.lang.Object>
+meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth public boolean enqueue()
 meth public boolean isEnqueued()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="16")
+meth public final boolean refersTo({java.lang.ref.Reference%0})
+meth public static void reachabilityFence(java.lang.Object)
 meth public void clear()
 meth public {java.lang.ref.Reference%0} get()
 supr java.lang.Object
@@ -5567,6 +5594,7 @@ meth public java.util.function.Predicate<{java.util.function.Predicate%0}> and(j
 meth public java.util.function.Predicate<{java.util.function.Predicate%0}> negate()
 meth public java.util.function.Predicate<{java.util.function.Predicate%0}> or(java.util.function.Predicate<? super {java.util.function.Predicate%0}>)
 meth public static <%0 extends java.lang.Object> java.util.function.Predicate<{%%0}> isEqual(java.lang.Object)
+meth public static <%0 extends java.lang.Object> java.util.function.Predicate<{%%0}> not(java.util.function.Predicate<? super {%%0}>)
 
 CLSS public abstract interface org.graalvm.options.OptionDescriptors
 fld public final static org.graalvm.options.OptionDescriptors EMPTY
@@ -5786,9 +5814,9 @@ meth public final int getIndex()
 meth public final int hashCode()
 meth public final int maxLength()
 meth public final int maxLengthDistance()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final int mbcodeStartPosition()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final int minLength()
 meth public final int prevCharHead(byte[],int,int,int)
 meth public final int rightAdjustCharHead(byte[],int,int,int)

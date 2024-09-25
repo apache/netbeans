@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.21
+#Version 1.22
 
 CLSS public abstract interface java.io.Serializable
 
@@ -561,7 +561,7 @@ fld public final static java.lang.String RANDOM_SEED_PROPERTY_NAME = "junit.jupi
 intf org.junit.jupiter.api.ClassOrderer
 meth public void orderClasses(org.junit.jupiter.api.ClassOrdererContext)
 supr java.lang.Object
-hfds DEFAULT_SEED,logger
+hfds logger
 
 CLSS public abstract interface org.junit.jupiter.api.ClassOrdererContext
 meth public abstract java.util.List<? extends org.junit.jupiter.api.ClassDescriptor> getClassDescriptors()
@@ -728,7 +728,7 @@ fld public final static java.lang.String RANDOM_SEED_PROPERTY_NAME = "junit.jupi
 intf org.junit.jupiter.api.MethodOrderer
 meth public void orderMethods(org.junit.jupiter.api.MethodOrdererContext)
 supr java.lang.Object
-hfds DEFAULT_SEED,logger
+hfds logger
 
 CLSS public abstract interface org.junit.jupiter.api.MethodOrdererContext
 meth public abstract java.lang.Class<?> getTestClass()

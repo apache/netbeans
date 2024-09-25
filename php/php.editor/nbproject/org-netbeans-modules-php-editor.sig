@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.38.0
+#Version 2.40.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -2590,6 +2590,7 @@ CLSS public final static !enum org.netbeans.modules.php.editor.parser.astnodes.C
  outer org.netbeans.modules.php.editor.parser.astnodes.CastExpression
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.CastExpression$Type ARRAY
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.CastExpression$Type BOOL
+fld public final static org.netbeans.modules.php.editor.parser.astnodes.CastExpression$Type FLOAT
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.CastExpression$Type INT
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.CastExpression$Type OBJECT
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.CastExpression$Type REAL
@@ -3452,6 +3453,7 @@ hfds scalarType,stringValue
 
 CLSS public final static !enum org.netbeans.modules.php.editor.parser.astnodes.Scalar$Type
  outer org.netbeans.modules.php.editor.parser.astnodes.Scalar
+fld public final static org.netbeans.modules.php.editor.parser.astnodes.Scalar$Type FLOAT
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.Scalar$Type INT
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.Scalar$Type REAL
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.Scalar$Type STRING

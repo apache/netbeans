@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.19.0
+#Version 1.20.0
 
 CLSS public java.awt.Color
 cons public init(float,float,float)

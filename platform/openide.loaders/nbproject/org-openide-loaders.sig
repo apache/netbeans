@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.94
+#Version 7.95
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -3171,14 +3171,15 @@ cons public init(java.lang.String,int)
 meth public boolean isDisplayOverflowOnHover()
 meth public java.awt.Dimension getPreferredSize()
 meth public void addNotify()
+meth public void doLayout()
+meth public void invalidate()
 meth public void removeAll()
 meth public void removeNotify()
 meth public void setDisplayOverflowOnHover(boolean)
 meth public void setOrientation(int)
 meth public void updateUI()
-meth public void validate()
 supr javax.swing.JToolBar
-hfds PROP_DRAGGER,PROP_JDEV_DISABLE_OVERFLOW,PROP_PREF_ICON_SIZE,awtEventListener,componentAdapter,displayOverflowOnHover,overflowButton,overflowToolbar,popup,showingPopup
+hfds PROP_DRAGGER,PROP_JDEV_DISABLE_OVERFLOW,PROP_PREF_ICON_SIZE,awtEventListener,componentAdapter,displayOverflowOnHover,overflowButton,overflowToolbar,popup,showingPopup,updateOverflow
 hcls SafePopupMenu,SafeToolBar,ToolbarArrowIcon
 
 CLSS public abstract interface org.openide.awt.UndoRedo

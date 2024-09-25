@@ -57,6 +57,7 @@
     <filter pattern="https://ant\.apache\.org" accept="true" />
     <filter pattern="https://ant\.apache\.org/manual/running\.html#sysprops" accept="true" />
     <filter pattern="https://ant\.apache\.org/manual/Types/antlib\.html" accept="true" />
+    <filter pattern="https://maven\.apache\.org/guides/mini/guide-configuring-plugins\.html" accept="true" />
     
     <filter pattern="https://river\.apache\.org" accept="true" /> <!-- jini -->
     <filter pattern="http://findbugs\.sourceforge\.net" accept="true" />

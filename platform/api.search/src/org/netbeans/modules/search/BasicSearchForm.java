@@ -1096,10 +1096,10 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
             area.setLineWrap(false);
 
             Border border = ((JComponent)reference.getEditor().getEditorComponent()).getBorder();
-            if (border == null) {
-                border = reference.getBorder();
+            
+            if (border != null) {
+                area.setBorder(border);
             }
-            area.setBorder(border);
 
             // retain standard focus traversal behavior
             area.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERS‌​AL_KEYS, null);

@@ -30,11 +30,9 @@ import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.EmbeddingProvider;
 import org.netbeans.modules.php.blade.editor.BladeLanguage;
 import org.netbeans.modules.php.blade.editor.lexer.BladeTokenId;
-
 /**
- * this will enable braces matches of html elements
- * 
- * @author bhaidu
+ *
+ * @author bogdan
  */
 @EmbeddingProvider.Registration(
         mimeType = BladeLanguage.MIME_TYPE,
@@ -88,6 +86,6 @@ public class BladePhpEmbeddingProvider extends EmbeddingProvider {
 
     @Override
     public void cancel() {
-        //TODO see html implementation
+       
     }
 }

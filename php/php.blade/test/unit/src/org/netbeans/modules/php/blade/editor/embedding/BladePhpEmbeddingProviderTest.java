@@ -54,15 +54,12 @@ public class BladePhpEmbeddingProviderTest extends BladeTestBase {
         return sb.toString();
     }
 
-    /**
-     * php embeddings freezes for syntax like $var:test or tertiary operation ?:
-     * 
-     * solution is to skip full php embedd or hide ":" characters
-     * 
-     * @throws Exception 
-     */
-    public void testFreezeNekudo_01() throws Exception {
-        checkPhpEmbedding("php_freeze_nekudo_01");
+    public void testPhpInlineEmbedding_01() throws Exception {
+        checkPhpEmbedding("php_inline_embedding_01");
+    }
+    
+    public void testPhpInlineEmbedding_02() throws Exception {
+        checkPhpEmbedding("php_inline_embedding_02");
     }
 
 }

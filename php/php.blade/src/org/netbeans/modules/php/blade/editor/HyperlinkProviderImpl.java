@@ -46,6 +46,7 @@ import org.openide.util.Exceptions;
 
 /**
  * Similar to a declaration finder
+ * causes ordinal error
  *
  * @author bhaidu
  */

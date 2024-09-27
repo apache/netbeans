@@ -22,7 +22,7 @@
 <!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
 <fontscolors>
     <fontcolor name="blade_comment" default="comment"/>
-    <fontcolor name="blade_php" foreColor="cyan"/>
+    <fontcolor name="blade_php"/>
     <fontcolor name="blade_directive" foreColor="ff966738">
         <font style="bold" />
     </fontcolor>

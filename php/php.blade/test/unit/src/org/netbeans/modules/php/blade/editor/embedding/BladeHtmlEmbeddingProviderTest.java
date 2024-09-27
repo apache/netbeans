@@ -34,7 +34,7 @@ public class BladeHtmlEmbeddingProviderTest extends BladeTestBase {
         super(testName);
     }
 
-    private void checkPhpEmbedding(final String relFilePath) throws Exception {
+    private void checkHtmlEmbedding(final String relFilePath) throws Exception {
         checkEmbedding(relFilePath, new BladeHtmlEmbeddingProvider());
     }
 
@@ -55,7 +55,7 @@ public class BladeHtmlEmbeddingProviderTest extends BladeTestBase {
     }
 
     public void testHtmlEmbedding_01() throws Exception {
-        checkPhpEmbedding("html_embedding_01");
+        checkHtmlEmbedding("html_embedding_01");
     }
 
 }

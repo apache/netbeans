@@ -29,12 +29,7 @@ import org.antlr.v4.runtime.Token;
 public abstract class ColoringLexerAdaptor extends Lexer {
 
     private int _currentRuleType = Token.INVALID_TYPE;
-    public int roundParenBalance = 0;
-    public int squareParenBalance = 0;
-    public int curlyParenBalance = 0;
-    public int exitIfModePosition = 0;
-    public int phpExpressionOffset = -1;
-    public boolean hasPhpExprContent = false;
+    private int roundParenBalance = 0;
 
     public ColoringLexerAdaptor(CharStream input) {
         super(input);
@@ -46,6 +41,10 @@ public abstract class ColoringLexerAdaptor extends Lexer {
 
     public void setCurrentRuleType(int ruleType) {
         this._currentRuleType = ruleType;
+    }
+    
+    public int getRoundParenBalance(){
+        return this.roundParenBalance;
     }
 
     @Override
@@ -84,6 +83,7 @@ public abstract class ColoringLexerAdaptor extends Lexer {
     public void increaseRoundParenBalance() {
         this.roundParenBalance++;
     }
+    
 
     public void decreaseRoundParenBalance() {
         this.roundParenBalance--;
@@ -97,12 +97,6 @@ public abstract class ColoringLexerAdaptor extends Lexer {
         return this._input.LA(1) == ch1
                 && this._input.LA(2) == ch2
                 && this._input.LA(3) == ch3;
-    }
-
-    public boolean hasNoBladeParamOpenBracket() {
-        return this.roundParenBalance > 0
-                && this.squareParenBalance == 0
-                && this.curlyParenBalance == 0;
     }
 
     //blade coloring lexer
@@ -124,11 +118,7 @@ public abstract class ColoringLexerAdaptor extends Lexer {
     }
     
     public void consumeExprToken(){
-        if (this._input.LA(1) == ':' && this._input.LA(2) != ':'){
-            this.setType(BladeAntlrColoringLexer.PHP_EXPRESSION);
-        } else {
-            this.more();
-        }
+        this.more();
     }
     
     public void testForFreezeCombination(){
@@ -140,14 +130,6 @@ public abstract class ColoringLexerAdaptor extends Lexer {
             this.consumeExprToken();
         }
     }
-   
-//    to continue when the sepparation of PHP_EXPRESSION can be implemented    
-//    public void setPhpExpressionOffset(){
-//        this.phpExpressionOffset = this.getCharIndex();
-//    }
-//    
-//    public boolean isFirstElement() {
-//        return this._tokenStartCharIndex <= this.phpExpressionOffset;
-//    }
+
 }
 

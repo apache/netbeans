@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import org.netbeans.modules.parsing.impl.indexing.errors.TaskCache;
 import org.openide.filesystems.FileObject;
 
@@ -74,12 +75,79 @@ public class ErrorsCache {
         return Collections.unmodifiableCollection(TaskCache.getDefault().getAllFilesWithRecord(root));
     }
 
+    /**Return all errors or warnings for the given file
+     *
+     * @param file file for which the errors are being retrieved
+     * @param convertor constructor of {@code T} instances from error description properties
+     * @return errors or warnings
+     * @since 9.37
+     */
+    public static <T> List<T> getErrors(FileObject file, ReverseConvertor<T> convertor) throws IOException {
+        return Collections.unmodifiableList(TaskCache.getDefault().getErrors(file, convertor));
+    }
+
     /**Getter for properties of the given error description.
      */
     public static interface Convertor<T> {
         public ErrorKind getKind(T t);
         public int       getLineNumber(T t);
         public String    getMessage(T t);
+    }
+
+    /**Position in a text expressed as 1-based line and character offset.
+     * @since 9.37
+     */
+     public static final class Position {
+        private int line;
+        private int column;
+
+        public Position(int line, int column) {
+            this.line = line;
+            this.column = column;
+        }
+
+        public int getLine() {
+            return line;
+        }
+
+        public int getColumn() {
+            return column;
+        }
+    }
+
+    /**Range in a text expressed as (1-based) start and end positions.
+     * @since 9.37
+     */
+    public static final class Range {
+        private Position start;
+        private Position end;
+
+        public Range(Position start, Position end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        public Position getStart() {
+            return start;
+        }
+
+        public Position getEnd() {
+            return end;
+        }
+    }
+
+    /**Getter for properties of the given error description including the range.
+     * @since 9.37
+     */
+    public static interface Convertor2<T> extends Convertor<T> {
+        public Range getRange(T t);
+    }
+
+    /**Constructor of error description from the properties.
+     * @since 9.37
+     */
+    public static interface ReverseConvertor<T> {
+        public T get(ErrorKind kind, Range range, String message);
     }
 
     public static enum ErrorKind {

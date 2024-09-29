@@ -32,16 +32,16 @@ import org.netbeans.modules.php.analysis.results.Result;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
-public class PHPStanReportParserTest extends NbTestCase {
+public class CheckStyleReportParserTest extends NbTestCase {
 
-    public PHPStanReportParserTest(String name) {
+    public CheckStyleReportParserTest(String name) {
         super(name);
     }
 
     public void testParse() throws Exception {
         FileObject root = getDataDir("phpstan/PHPStanSupport");
         FileObject workDir = root;
-        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log.xml"), root, workDir);
+        List<Result> results = CheckStyleReportParser.parse(getLogFile("phpstan-log.xml"), root, workDir);
         assertNotNull(results);
 
         assertEquals(4, results.size());
@@ -67,7 +67,7 @@ public class PHPStanReportParserTest extends NbTestCase {
     public void testParseWithOtherOutput() throws Exception {
         FileObject root = getDataDir("phpstan/PHPStanSupport");
         FileObject workDir = root;
-        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-with-other-output.xml"), root, workDir);
+        List<Result> results = CheckStyleReportParser.parse(getLogFile("phpstan-log-with-other-output.xml"), root, workDir);
         assertNotNull(results);
         assertEquals(2, results.size());
     }
@@ -75,7 +75,7 @@ public class PHPStanReportParserTest extends NbTestCase {
     public void testParseNetBeans3022() throws Exception {
         FileObject root = getDataDir("phpstan/PHPStanSupport/netbeans3022");
         FileObject workDir = getDataDir("phpstan/PHPStanSupport");
-        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-netbeans-3022.xml"), root, workDir);
+        List<Result> results = CheckStyleReportParser.parse(getLogFile("phpstan-log-netbeans-3022.xml"), root, workDir);
         assertNotNull(results);
         assertEquals(3, results.size());
     }
@@ -83,7 +83,7 @@ public class PHPStanReportParserTest extends NbTestCase {
     public void testParseNetBeans3022Win() throws Exception {
         FileObject root = getDataDir("phpstan/PHPStanSupport/netbeans3022");
         FileObject workDir = getDataDir("phpstan/PHPStanSupport");
-        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-netbeans-3022-win.xml"), root, workDir);
+        List<Result> results = CheckStyleReportParser.parse(getLogFile("phpstan-log-netbeans-3022-win.xml"), root, workDir);
         assertNotNull(results);
         assertEquals(3, results.size());
     }
@@ -93,7 +93,7 @@ public class PHPStanReportParserTest extends NbTestCase {
         FileObject workDir = null;
         File logFile = getLogFile("phpstan-log-netbeans-3022-without-workdir.xml");
         fixContent(logFile);
-        List<Result> results = PHPStanReportParser.parse(logFile, root, workDir);
+        List<Result> results = CheckStyleReportParser.parse(logFile, root, workDir);
         assertNotNull(results);
         assertEquals(3, results.size());
     }
@@ -101,7 +101,7 @@ public class PHPStanReportParserTest extends NbTestCase {
     public void testParseWithHtmlEntities() throws Exception {
         FileObject root = getDataDir("phpstan/PHPStanSupport");
         FileObject workDir = root;
-        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-html-entities.xml"), root, workDir);
+        List<Result> results = CheckStyleReportParser.parse(getLogFile("phpstan-log-html-entities.xml"), root, workDir);
         assertNotNull(results);
 
         assertEquals(1, results.size());
@@ -112,10 +112,38 @@ public class PHPStanReportParserTest extends NbTestCase {
         assertEquals("Function count() should return int but returns array&lt;string&gt;.", result.getDescription());
     }
 
+    public void testPsalmParse() throws Exception {
+        FileObject root = getDataDir("psalm/PsalmSupport");
+        FileObject workDir = root;
+        List<Result> results = CheckStyleReportParser.parse(getPsalmLogFile("nb-php-psalm-log.xml"), root, workDir);
+        assertNotNull(results);
+
+        assertEquals(40, results.size());
+        Result result = results.get(0);
+        assertEquals(FileUtil.toFile(root.getFileObject("src/Calculator.php")).getAbsolutePath(), result.getFilePath());
+        assertEquals(32, result.getLine());
+        assertEquals("error: MissingReturnType: Method Calculator::plus does not have a return type", result.getCategory());
+        assertEquals("MissingReturnType: Method Calculator::plus does not have a return type", result.getDescription());
+
+        result = results.get(23);
+        assertEquals(FileUtil.toFile(root.getFileObject("test/src/CalculatorTest.php")).getAbsolutePath(), result.getFilePath());
+        assertEquals(46, result.getLine());
+        assertEquals("error: MissingReturnType: Method CalculatorTest::testPlus does not have a return type, expecting void", result.getCategory());
+        assertEquals("MissingReturnType: Method CalculatorTest::testPlus does not have a return type, expecting void", result.getDescription());
+    }
+
     private File getLogFile(String name) throws Exception {
         assertNotNull(name);
         File phpstan = new File(getDataDir(), "phpstan");
         File xmlLog = new File(phpstan, name);
+        assertTrue(xmlLog.isFile());
+        return xmlLog;
+    }
+
+    private File getPsalmLogFile(String name) throws Exception {
+        assertNotNull(name);
+        File psalm = new File(getDataDir(), "psalm");
+        File xmlLog = new File(psalm, name);
         assertTrue(xmlLog.isFile());
         return xmlLog;
     }

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle>
+<file name="src/Calculator.php">
+ <error line="32" column="21" severity="error" message="MissingReturnType: Method Calculator::plus does not have a return type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="32" column="26" severity="error" message="MissingParamType: Parameter $a has no provided type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="32" column="30" severity="error" message="MissingParamType: Parameter $b has no provided type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="33" column="16" severity="error" message="MixedOperand: Left operand cannot be mixed"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="42" column="21" severity="error" message="MissingReturnType: Method Calculator::minus does not have a return type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="42" column="27" severity="error" message="MissingParamType: Parameter $a has no provided type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="42" column="31" severity="error" message="MissingParamType: Parameter $b has no provided type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="43" column="16" severity="error" message="MixedOperand: Left operand cannot be mixed"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="53" column="21" severity="error" message="MissingReturnType: Method Calculator::multiply does not have a return type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="53" column="30" severity="error" message="MissingParamType: Parameter $a has no provided type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="53" column="34" severity="error" message="MissingParamType: Parameter $b has no provided type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="54" column="16" severity="error" message="MixedOperand: Left operand cannot be mixed"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="62" column="21" severity="error" message="MissingReturnType: Method Calculator::divide does not have a return type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="62" column="28" severity="error" message="MissingParamType: Parameter $a has no provided type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="62" column="32" severity="error" message="MissingParamType: Parameter $b has no provided type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="66" column="16" severity="error" message="MixedOperand: Left operand cannot be mixed"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="69" column="21" severity="error" message="MissingReturnType: Method Calculator::modulo does not have a return type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="69" column="21" severity="error" message="PossiblyUnusedMethod: Cannot find any calls to method Calculator::modulo"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="69" column="28" severity="error" message="MissingParamType: Parameter $a has no provided type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="69" column="32" severity="error" message="MissingParamType: Parameter $b has no provided type"/>
+</file>
+<file name="src/Calculator.php">
+ <error line="70" column="16" severity="error" message="MixedOperand: Left operand cannot be mixed"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="23" column="7" severity="error" message="UnusedClass: Class CalculatorTest is never used"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="28" column="15" severity="error" message="PropertyNotSetInConstructor: Property CalculatorTest::$object is not defined in constructor of CalculatorTest or in any methods called in the constructor"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="46" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testPlus does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="53" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testPlus2 does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="60" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testPlus3 does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="67" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testPlus4 does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="74" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testMinus does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="81" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testMinus2 does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="88" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testMinus3 does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="95" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testMinus4 does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="102" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testMultiply does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="109" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testMultiply2 does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="116" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testMultiply3 does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="123" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testMultiply4 does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="130" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testMultiply5 does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="137" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testDivide does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="144" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testDivide2 does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="151" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testDivide3 does not have a return type, expecting void"/>
+</file>
+<file name="test/src/CalculatorTest.php">
+ <error line="158" column="21" severity="error" message="MissingReturnType: Method CalculatorTest::testModulo does not have a return type, expecting never"/>
+</file>
+</checkstyle>

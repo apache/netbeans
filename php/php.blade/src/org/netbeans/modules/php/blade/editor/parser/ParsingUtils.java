@@ -34,6 +34,7 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.openide.filesystems.AbstractFileSystem;
 import org.openide.filesystems.DefaultAttributes;
@@ -299,7 +300,7 @@ public final class ParsingUtils {
 
         @Override
         public String mimeType(String name) {
-            return "text/x-php5";
+            return FileUtils.PHP_MIME_TYPE;
         }
 
         @Override

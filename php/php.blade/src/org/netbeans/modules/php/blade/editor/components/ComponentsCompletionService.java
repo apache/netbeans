@@ -23,7 +23,6 @@ import org.netbeans.modules.php.blade.editor.components.annotation.Namespace;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexResult;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexUtils;
@@ -39,7 +38,6 @@ import org.openide.filesystems.FileObject;
 
 public class ComponentsCompletionService {
 
-    @CheckForNull
     public Collection<PhpIndexResult> queryComponents(String prefix, FileObject fo) {
         Collection<PhpIndexResult> results = new ArrayList<>();
         Project project = ProjectUtils.getMainOwner(fo);

@@ -62,7 +62,7 @@ import org.openide.util.Exceptions;
  */
 @MimeRegistrations(value = {
     @MimeRegistration(mimeType = "text/html", service = CompletionProvider.class),
-    @MimeRegistration(mimeType = "text/x-blade", service = CompletionProvider.class)
+    @MimeRegistration(mimeType = BladeLanguage.MIME_TYPE, service = CompletionProvider.class)
 })
 public class BladeCompletionProvider implements CompletionProvider {
 
@@ -182,7 +182,7 @@ public class BladeCompletionProvider implements CompletionProvider {
             } finally {
                 long time = System.currentTimeMillis() - startTime;
                 if (time > 2000) {
-                    LOGGER.log(Level.INFO, "Slow completion time detected. {0}ms", time);
+                    LOGGER.log(Level.INFO, "Slow completion time detected. {0}ms", time); // NOI18N
                 }
                 resultSet.finish();
             }

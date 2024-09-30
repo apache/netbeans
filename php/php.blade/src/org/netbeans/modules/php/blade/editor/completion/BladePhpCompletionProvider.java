@@ -31,7 +31,9 @@ import org.antlr.v4.runtime.Token;
 import org.netbeans.api.editor.document.EditorDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.editor.mimelookup.MimeRegistrations;
+import static org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrLexer.*;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.blade.editor.BladeLanguage;
 import org.netbeans.modules.php.blade.editor.EditorStringUtils;
 import org.netbeans.modules.php.blade.editor.ResourceUtilities;
@@ -40,7 +42,6 @@ import org.netbeans.modules.php.blade.editor.indexing.BladeIndex.IndexedReferenc
 import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
 import org.netbeans.modules.php.blade.project.ProjectUtils;
 import org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrLexer;
-import static org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrLexer.*;
 import org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrUtils;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionProvider;
@@ -58,7 +59,7 @@ import org.openide.util.Exceptions;
  * @author bhaidu
  */
 @MimeRegistrations(value = {
-    @MimeRegistration(mimeType = "text/x-php5", service = CompletionProvider.class, position = 102),
+    @MimeRegistration(mimeType = FileUtils.PHP_MIME_TYPE, service = CompletionProvider.class, position = 102),
 }
 )
 public class BladePhpCompletionProvider implements CompletionProvider {
@@ -99,15 +100,10 @@ public class BladePhpCompletionProvider implements CompletionProvider {
         }
 
         char lastChar = typedText.charAt(typedText.length() - 1);
-        switch (lastChar) {
-            case ')':
-            case '\n':
-            case '<':
-            case '>':
-                return 0;
-        }
-
-        return COMPLETION_QUERY_TYPE;
+        return switch (lastChar) {
+            case ')', '\n', '<', '>' -> 0;
+            default -> COMPLETION_QUERY_TYPE;
+        };
     }
 
     private class BladeCompletionQuery extends AsyncCompletionQuery {
@@ -121,7 +117,7 @@ public class BladePhpCompletionProvider implements CompletionProvider {
             doQuery(resultSet, doc, caretOffset);
             long time = System.currentTimeMillis() - startTime;
             if (time > 2000) {
-                LOGGER.log(Level.INFO, "Slow completion time detected. {0}ms", time);
+                LOGGER.log(Level.INFO, "Slow completion time detected. {0}ms", time); // NOI18N
             }
             resultSet.finish();
         }
@@ -212,7 +208,7 @@ public class BladePhpCompletionProvider implements CompletionProvider {
                         for (FileObject file : childrenFiles) {
                             String pathFileName = file.getName();
                             if (!file.isFolder()) {
-                                pathFileName = pathFileName.replace(".blade", "");
+                                pathFileName = pathFileName.replace(".blade", ""); // NOI18N
                             }
                             completeBladePath(pathFileName, file, pathOffset, resultSet);
                         }
@@ -232,10 +228,8 @@ public class BladePhpCompletionProvider implements CompletionProvider {
             case EXPR_STRING: {
                 String pathName = EditorStringUtils.stripSurroundingQuotes(currentToken.getText());
 
-                if (!pathName.contains("resources")) {
-                    if (!"resources".startsWith(pathName)) {
-                        break;
-                    }
+                if (!pathName.contains(BladePathUtils.LARAVEL_RESOURCES)) {
+                    break;
                 }
 
                 int lastSlash = pathName.lastIndexOf("/");

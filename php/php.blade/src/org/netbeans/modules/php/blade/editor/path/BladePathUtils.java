@@ -28,6 +28,7 @@ import java.util.Map;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.php.blade.project.BladeProjectProperties;
 import org.netbeans.modules.php.blade.project.ProjectUtils;
+import org.netbeans.modules.php.blade.syntax.StringUtils;
 import org.netbeans.spi.project.ui.support.ProjectConvertors;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -38,6 +39,7 @@ import org.openide.filesystems.FileUtil;
  */
 public final class BladePathUtils {
 
+    public static final String LARAVEL_RESOURCES = "resources"; //NOI18N
     public static final String LARAVEL_VIEW_PATH = "resources/views"; //NOI18N
     public static final String BLADE_EXT = ".blade.php"; //NOI18N
 
@@ -133,11 +135,11 @@ public final class BladePathUtils {
             return list;
         }
 
-        String unixPath = prefixViewPath.replace(".", "/");
+        String unixPath = prefixViewPath.replace(StringUtils.DOT, StringUtils.FORWARD_SLASH);
         int relativeSlash;
 
         //fix issues with lastIndexOf search
-        relativeSlash = unixPath.lastIndexOf("/");
+        relativeSlash = unixPath.lastIndexOf(StringUtils.FORWARD_SLASH);
 
         HashSet<FileObject> filteredViewRoots = new HashSet<>();
 
@@ -179,7 +181,7 @@ public final class BladePathUtils {
             //filter by filename in relative context
             for (FileObject rootFolder : filteredViewRoots) {
                 for (FileObject file : rootFolder.getChildren()) {
-                    String filePath = file.getPath().replace(rootFolder.getPath() + "/", "");
+                    String filePath = file.getPath().replace(rootFolder.getPath() + StringUtils.FORWARD_SLASH, "");
                     if (filePath.startsWith(relativePrefixToCompare)) {
                         list.add(file);
                     }
@@ -269,7 +271,7 @@ public final class BladePathUtils {
             String viewFileAbsPath = viewFile.getPath();
             if (filePath.startsWith(viewFileAbsPath)) {
                 String relativePath = filePath.replace(viewFileAbsPath, "");
-                if (!relativePath.startsWith("/")) {
+                if (!relativePath.startsWith(StringUtils.FORWARD_SLASH)) {
                     //it doesn't belong to the folder
                     continue;
                 }
@@ -298,11 +300,11 @@ public final class BladePathUtils {
     }
 
     public static String toBladeViewPath(String filePath) {
-        return filePath.replace(BLADE_EXT, "").replace("/", ".");
+        return filePath.replace(BLADE_EXT, "").replace(StringUtils.FORWARD_SLASH, StringUtils.DOT);
     }
 
     public static String viewPathToFilePath(String viewPath) {
-        return viewPath.replace(".", "/") + BLADE_EXT;
+        return viewPath.replace(StringUtils.DOT, StringUtils.FORWARD_SLASH) + BLADE_EXT;
     }
 
     public static HashSet<FileObject> getDefaultRoots(Project project) {
@@ -317,6 +319,6 @@ public final class BladePathUtils {
     }
 
     public static String toBladeToProjectFilePath(String path) {
-        return LARAVEL_VIEW_PATH + "/" + viewPathToFilePath(path);
+        return LARAVEL_VIEW_PATH + StringUtils.FORWARD_SLASH + viewPathToFilePath(path);
     }
 }

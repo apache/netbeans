@@ -29,6 +29,7 @@ import org.netbeans.editor.BaseDocument;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.antlr.v4.runtime.Token;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
@@ -46,7 +47,6 @@ import org.netbeans.modules.php.blade.csl.elements.ElementType;
 import org.netbeans.modules.php.blade.csl.elements.NamedElement;
 import org.netbeans.modules.php.blade.csl.elements.PhpFunctionElement;
 import org.netbeans.modules.php.blade.csl.elements.TagElement;
-import org.netbeans.modules.php.blade.editor.completion.BladeCompletionProposal.CompletionRequest;
 import org.netbeans.modules.php.blade.editor.directives.CustomDirectives;
 import org.netbeans.modules.php.blade.editor.parser.BladeParserResult;
 import org.netbeans.modules.php.blade.editor.preferences.ModulePreferences;
@@ -149,7 +149,7 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
         PhpCodeCompletionService phpCodeCompletion = new PhpCodeCompletionService();
         for (CompletionProposal proposal : phpCodeCompletion.getCompletionProposal(offset, currentToken)) {
             String proposalPrefix = proposal.getInsertPrefix();
-            if (proposalPrefix.startsWith(phpCodeCompletion.prefix)) {
+            if (proposalPrefix.startsWith(phpCodeCompletion.getPrefix())) {
                 completionProposals.add(proposal);
             }
         }
@@ -162,19 +162,17 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
         FileObject fo = completionContext.getParserResult().getSnapshot().getSource().getFileObject();
 
         if (scopedVariables != null && !scopedVariables.isEmpty()) {
-            CompletionRequest request = new CompletionRequest();
-            request.anchorOffset = completionContext.getCaretOffset() - variablePrefix.length();
-            request.carretOffset = completionContext.getCaretOffset();
-            request.prefix = variablePrefix;
+            int anchorOffset = completionContext.getCaretOffset() - variablePrefix.length();
+            
             if (BladeVariables.LOOP_VAR.startsWith(variablePrefix)) {
                 String variableName = BladeVariables.LOOP_VAR; 
                 NamedElement variableElement = new NamedElement(variableName, fo, ElementType.VARIABLE);
-                completionProposals.add(new BladeCompletionProposal.BladeVariableItem(variableElement, request, variableName));
+                completionProposals.add(new BladeCompletionProposal.BladeVariableItem(variableElement, anchorOffset, variableName));
             }
             for (String variableName : scopedVariables) {
                 if (variableName.startsWith(variablePrefix)) {
                     NamedElement variableElement = new NamedElement(variableName, fo, ElementType.VARIABLE);
-                    completionProposals.add(new BladeCompletionProposal.VariableItem(variableElement, request, variableName));
+                    completionProposals.add(new BladeCompletionProposal.VariableItem(variableElement, anchorOffset, variableName));
                 }
             }
         }
@@ -192,13 +190,13 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
             CodeCompletionContext completionContext, Token currentToken) {
         String tagStart = currentToken.getText();
 
-        CompletionRequest request = completionRequest(tagStart, completionContext.getCaretOffset());
+        int anchorOffset = computeAnchorOffset(tagStart, completionContext.getCaretOffset());
         BladeTags tagsContainer = new BladeTags();
         Tag[] tags = tagsContainer.getTags();
         for (Tag tag : tags) {
             if (tag.openTag().startsWith(tagStart)) {
                 TagElement tagElement = new TagElement(tag.closeTag());
-                completionProposals.add(new BladeCompletionProposal.BladeTag(tagElement, request, tag));
+                completionProposals.add(new BladeCompletionProposal.BladeTag(tagElement, anchorOffset, tag));
             }
         }
     }
@@ -208,7 +206,7 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
         String prefix = currentToken.getText();
         DirectiveCompletionList completionList = new DirectiveCompletionList();
 
-        CompletionRequest request = completionRequest(prefix, completionContext.getCaretOffset());
+        int anchorOffset = computeAnchorOffset(prefix, completionContext.getCaretOffset());
 
         for (Directive directive : completionList.getDirectives()) {
             String directiveName = directive.name();
@@ -216,15 +214,15 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
                 DirectiveElement directiveEl = new DirectiveElement(directiveName, fo);
 
                 if (directive.params()) {
-                    completionProposals.add(new BladeCompletionProposal.DirectiveWithArg(directiveEl, request, directive));
+                    completionProposals.add(new BladeCompletionProposal.DirectiveWithArg(directiveEl, anchorOffset, directive));
                     if (!directive.endtag().isEmpty()) {
-                        completionProposals.add(new BladeCompletionProposal.BlockDirectiveWithArg(directiveEl, request, directive));
+                        completionProposals.add(new BladeCompletionProposal.BlockDirectiveWithArg(directiveEl, anchorOffset, directive));
                     }
                 } else {
 
-                    completionProposals.add(new BladeCompletionProposal.InlineDirective(directiveEl, request, directive));
+                    completionProposals.add(new BladeCompletionProposal.InlineDirective(directiveEl, anchorOffset, directive));
                     if (!directive.endtag().isEmpty()) {
-                        completionProposals.add(new BladeCompletionProposal.BlockDirective(directiveEl, request, directive));
+                        completionProposals.add(new BladeCompletionProposal.BlockDirective(directiveEl, anchorOffset, directive));
                     }
                 }
             }
@@ -236,11 +234,11 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
             public void filterDirectiveName(CustomDirectives.CustomDirective directive, FileObject file) {
                 DirectiveElement directiveEl = new DirectiveElement(directive.name, file);
                 if (directive.name.startsWith(prefix)) {
-                    CompletionRequest request = completionRequest(prefix, completionContext.getCaretOffset());
+                    int anchorOffset = computeAnchorOffset(prefix, completionContext.getCaretOffset());
                     completionProposals.add(
                             new BladeCompletionProposal.CustomDirective(
                                     directiveEl,
-                                    request,
+                                    anchorOffset,
                                     directive.name
                             ));
                 }
@@ -317,13 +315,8 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
         }
         return result;
     }
-
-    public static CompletionRequest completionRequest(String prefix, int offset) {
-        CompletionRequest request = new CompletionRequest();
-        request.anchorOffset = offset - prefix.length();
-        request.carretOffset = offset;
-        request.prefix = prefix;
-
-        return request;
+    
+    public static int computeAnchorOffset(@NonNull String prefix, int offset){
+        return offset - prefix.length();
     }
 }

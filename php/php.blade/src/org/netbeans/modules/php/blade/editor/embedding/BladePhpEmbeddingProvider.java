@@ -28,6 +28,7 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.parsing.api.Embedding;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.EmbeddingProvider;
+import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.blade.editor.BladeLanguage;
 import org.netbeans.modules.php.blade.editor.lexer.BladeTokenId;
 /**
@@ -36,9 +37,9 @@ import org.netbeans.modules.php.blade.editor.lexer.BladeTokenId;
  */
 @EmbeddingProvider.Registration(
         mimeType = BladeLanguage.MIME_TYPE,
-        targetMimeType = "text/x-php5")
+        targetMimeType = FileUtils.PHP_MIME_TYPE)
 public class BladePhpEmbeddingProvider extends EmbeddingProvider {
-    public static final String TARGET_MIME_TYPE = "text/x-php5"; //NOI18N
+    public static final String TARGET_MIME_TYPE = FileUtils.PHP_MIME_TYPE; //NOI18N
 
     @Override
     public List<Embedding> getEmbeddings(final Snapshot snapshot) {

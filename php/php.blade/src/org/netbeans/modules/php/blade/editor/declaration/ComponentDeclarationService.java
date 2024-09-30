@@ -57,7 +57,7 @@ public class ComponentDeclarationService {
     }
     
     public FileObject getComponentResourceFile(String componentId, String classQualifiedName, FileObject sourceFo) {
-        if (classQualifiedName.toLowerCase().contains("livewire")){
+        if (classQualifiedName.toLowerCase().contains(ComponentsSupport.LIVEWIRE_NAME)){
             return getLivewireComponentResourceFile(componentId, sourceFo);
         }
         
@@ -70,7 +70,7 @@ public class ComponentDeclarationService {
             return null;
         }
         
-        FileObject componentResource = project.getProjectDirectory().getFileObject("resources/views/livewire/" + componentId + ".blade.php");
+        FileObject componentResource = project.getProjectDirectory().getFileObject("resources/views/livewire/" + componentId + ".blade.php"); // NOI18N
 
         if (componentResource != null && componentResource.isValid()){
             return componentResource;

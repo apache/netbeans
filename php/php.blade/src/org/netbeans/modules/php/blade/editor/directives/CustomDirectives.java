@@ -90,7 +90,7 @@ public final class CustomDirectives {
     private void extractCustomDirectives() {
         LOGGER.info("Extracting custom directives");
         String[] compilerPathList = BladeProjectProperties.getInstance(project).getCompilerPathList();
-        FileObject defaultAppProvider = project.getProjectDirectory().getFileObject("app/Providers/AppServiceProvider.php");
+        FileObject defaultAppProvider = project.getProjectDirectory().getFileObject("app/Providers/AppServiceProvider.php"); // NOI18N
         String defaultAppPath = "";
         
         if (defaultAppProvider != null){
@@ -171,7 +171,7 @@ public final class CustomDirectives {
      * directive name
      */
     private class FunctionInvocationVisitor extends org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor {
-        private final String[] validFunctions = new String[]{"directive", "if"};
+        private final String[] validFunctions = new String[]{"directive", "if"}; // NOI18N
         private final List<CustomDirective> directives;
 
         public FunctionInvocationVisitor() {
@@ -196,13 +196,13 @@ public final class CustomDirectives {
             Expression directiveName = (Expression) iter.next();
             if (directiveName != null && directiveName instanceof Scalar) {
                 Scalar name = (Scalar) directiveName;
-                String escapedDirectiveName = name.getStringValue().replaceAll("^[\"|\']|[\"|[\']]$", "");
+                String escapedDirectiveName = name.getStringValue().replaceAll("^[\"|\']|[\"|[\']]$", ""); // NOI18N
                 directives.add(new CustomDirective("@" + escapedDirectiveName, name.getStartOffset()));
                 //Custom If Statements
                 if (functionName.equals("if")){
-                    directives.add(new CustomDirective("@unless" + escapedDirectiveName, name.getStartOffset()));
-                    directives.add(new CustomDirective("@else" + escapedDirectiveName, name.getStartOffset()));
-                    directives.add(new CustomDirective("@end" + escapedDirectiveName, name.getStartOffset()));
+                    directives.add(new CustomDirective("@unless" + escapedDirectiveName, name.getStartOffset())); // NOI18N
+                    directives.add(new CustomDirective("@else" + escapedDirectiveName, name.getStartOffset())); // NOI18N
+                    directives.add(new CustomDirective("@end" + escapedDirectiveName, name.getStartOffset())); // NOI18N
                 }
             }
         }

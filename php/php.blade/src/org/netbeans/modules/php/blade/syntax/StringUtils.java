@@ -24,6 +24,9 @@ package org.netbeans.modules.php.blade.syntax;
  */
 public final class StringUtils {
 
+    public static final String DOT = ".";
+    public static final String FORWARD_SLASH = "/"; //NOI18N
+    
     private StringUtils() {
 
     }

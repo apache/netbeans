@@ -655,6 +655,63 @@
 							}
 						}
 					]
+				},
+				{
+					"begin": "^\\s*(///)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.definition.comment.java"
+						}
+					},
+					"end": "\n",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.java"
+						}
+					},
+					"name": "comment.block.javadoc.markdown.java",
+					"patterns": [
+						{
+							"match": "@(author|deprecated|return|see|serial|since|version)\\b",
+							"name": "keyword.other.documentation.javadoc.java"
+						},
+						{
+							"match": "(@param)\\s+(\\S+)",
+							"captures": {
+								"1": {
+									"name": "keyword.other.documentation.javadoc.java"
+								},
+								"2": {
+									"name": "variable.parameter.java"
+								}
+							}
+						},
+						{
+							"match": "(@(?:exception|throws))\\s+(\\S+)",
+							"captures": {
+								"1": {
+									"name": "keyword.other.documentation.javadoc.java"
+								},
+								"2": {
+									"name": "entity.name.type.class.java"
+								}
+							}
+						},
+						{
+							"match": "{(@link)\\s+(\\S+)?#([\\w$]+\\s*\\([^\\(\\)]*\\)).*?}",
+							"captures": {
+								"1": {
+									"name": "keyword.other.documentation.javadoc.java"
+								},
+								"2": {
+									"name": "entity.name.type.class.java"
+								},
+								"3": {
+									"name": "variable.parameter.java"
+								}
+							}
+						}
+					]
 				}
 			]
 		},

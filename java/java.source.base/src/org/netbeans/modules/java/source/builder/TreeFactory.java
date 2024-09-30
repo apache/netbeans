@@ -32,6 +32,7 @@ import com.sun.source.doctree.IndexTree;
 import com.sun.source.doctree.InheritDocTree;
 import com.sun.source.doctree.LinkTree;
 import com.sun.source.doctree.ParamTree;
+import com.sun.source.doctree.RawTextTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.doctree.SeeTree;
 import com.sun.source.doctree.SerialDataTree;
@@ -61,6 +62,9 @@ import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.jvm.ClassReader;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.model.JavacTypes;
+import com.sun.tools.javac.parser.Tokens.Comment;
+import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
+import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DCTree.DCReference;
 import com.sun.tools.javac.tree.DocTreeMaker;
 import com.sun.tools.javac.tree.JCTree;
@@ -71,6 +75,7 @@ import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.JCDiagnostic;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1806,7 +1811,13 @@ public class TreeFactory {
     }
     
     public DocCommentTree DocComment(List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
-        return docMake.at(NOPOS).newDocCommentTree(fullBody, tags);
+        DCDocComment temp = docMake.at(NOPOS).newDocCommentTree(fullBody, tags);
+        return DocComment(temp.getFirstSentence(), temp.getBody(), temp.getBlockTags());
+    }
+
+    public DocCommentTree MarkdownDocComment(List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
+        DCDocComment temp = docMake.at(NOPOS).newDocCommentTree(fullBody, tags);
+        return MarkdownDocComment(temp.getFirstSentence(), temp.getBody(), temp.getBlockTags());
     }
     
     public DocTree Snippet(List<? extends DocTree> attributes, TextTree text){
@@ -1818,10 +1829,18 @@ public class TreeFactory {
     }
     
     public DocCommentTree DocComment(List<? extends DocTree> firstSentence, List<? extends DocTree> body, List<? extends DocTree> tags) {
+        return DocComment(HTML_JAVADOC_COMMENT, firstSentence, body, tags);
+    }
+
+    public DocCommentTree MarkdownDocComment(List<? extends DocTree> firstSentence, List<? extends DocTree> body, List<? extends DocTree> tags) {
+        return DocComment(MARKDOWN_JAVADOC_COMMENT, firstSentence, body, tags);
+    }
+
+    private DocCommentTree DocComment(Comment comment, List<? extends DocTree> firstSentence, List<? extends DocTree> body, List<? extends DocTree> tags) {
         final ArrayList<DocTree> fullBody = new ArrayList<>(firstSentence.size() + body.size());
         fullBody.addAll(firstSentence);
         fullBody.addAll(body);                
-        return docMake.at(NOPOS).newDocCommentTree(fullBody, tags);
+        return docMake.at(NOPOS).newDocCommentTree(comment, fullBody, tags, Collections.emptyList(), Collections.emptyList());
     }
     
     public com.sun.source.doctree.ErroneousTree Erroneous(String text, DiagnosticSource diagSource, String code, Object... args) {
@@ -1902,6 +1921,10 @@ public class TreeFactory {
     public VersionTree Version(List<? extends DocTree> text) {
         return docMake.at(NOPOS).newVersionTree(text);
     }
+
+    public RawTextTree RawText(String text) {
+        return docMake.at(NOPOS).newRawTextTree(DocTree.Kind.MARKDOWN, text);
+    }
     
     public com.sun.source.doctree.LiteralTree Code(TextTree text) {
         return docMake.at(NOPOS).newCodeTree(text);
@@ -1957,9 +1980,6 @@ public class TreeFactory {
                 }
                 paramTypesParam = lbl.toList();
             }
-            for (Constructor cc : DCReference.class.getDeclaredConstructors()) {
-                System.err.println("cc: " + cc);
-            }
             Constructor<DCReference> c = DCReference.class.getDeclaredConstructor(String.class, JCExpression.class, JCTree.class, javax.lang.model.element.Name.class, List.class);
             c.setAccessible(true);
             DCReference result = c.newInstance("", (JCTree.JCExpression) qualExpr, qualExpr == null ? null : ((JCTree.JCExpression) qualExpr).getTree(), member != null ? (com.sun.tools.javac.util.Name) names.fromString(member.toString()) : null, paramTypesParam);
@@ -1993,5 +2013,42 @@ public class TreeFactory {
     @SuppressWarnings("unchecked")
     private <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
         throw (T) t;
+    }
+
+    private static final Comment HTML_JAVADOC_COMMENT = new CommentImpl(CommentStyle.JAVADOC_BLOCK);
+    private static final Comment MARKDOWN_JAVADOC_COMMENT = new CommentImpl(CommentStyle.JAVADOC_LINE);
+
+    private static class CommentImpl implements Comment {
+
+        private final CommentStyle style;
+
+        public CommentImpl(CommentStyle style) {
+            this.style = style;
+        }
+
+        @Override
+        public String getText() {
+            return "";
+        }
+
+        @Override
+        public JCDiagnostic.DiagnosticPosition getPos() {
+            return null;
+        }
+
+        @Override
+        public int getSourcePos(int index) {
+            return -1;
+        }
+
+        @Override
+        public CommentStyle getStyle() {
+            return style;
+        }
+
+        @Override
+        public boolean isDeprecated() {
+            return false;
+        }
     }
 }

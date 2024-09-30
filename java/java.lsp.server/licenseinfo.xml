@@ -50,4 +50,9 @@
         <license ref="MIT-java-grammar" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
+    <fileset>
+        <file>vscode/language-configuration.json</file>
+        <license ref="MIT-vscode" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
 </licenseinfo>

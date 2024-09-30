@@ -1949,6 +1949,7 @@ public abstract class PositionEstimator {
             LINE_COMMENT, 
             BLOCK_COMMENT,
             JAVADOC_COMMENT,
+            JAVADOC_COMMENT_LINE_RUN,
             WHITESPACE
     );
 

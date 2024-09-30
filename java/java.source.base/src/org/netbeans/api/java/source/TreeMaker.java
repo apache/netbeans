@@ -30,6 +30,7 @@ import com.sun.source.doctree.EntityTree;
 import com.sun.source.doctree.InheritDocTree;
 import com.sun.source.doctree.LinkTree;
 import com.sun.source.doctree.ParamTree;
+import com.sun.source.doctree.RawTextTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.doctree.SeeTree;
 import com.sun.source.doctree.SerialDataTree;
@@ -3575,7 +3576,7 @@ public final class TreeMaker {
         return delegate.Deprecated(text);
     }
 
-    /**Creates a new javadoc comment.
+    /**Creates a new HTML javadoc comment.
      *
      * @param fullBody the entire body of the comment
      * @param tags the block tags of the comment (after the main body)
@@ -3586,8 +3587,19 @@ public final class TreeMaker {
         return delegate.DocComment(fullBody, tags);
     }
 
-    /**Creates a new javadoc comment.
-     * 
+    /**Creates a new HTML javadoc comment.
+     *
+     * @param fullBody the entire body of the comment
+     * @param tags the block tags of the comment (after the main body)
+     * @return newly created DocCommentTree
+     * @since 2.71
+     */
+    public DocCommentTree MarkdownDocComment(List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
+        return delegate.MarkdownDocComment(fullBody, tags);
+    }
+
+    /**Creates a new HTML javadoc comment.
+     *
      * @param firstSentence the javadoc comment's first sentence
      * @param body the main body of the comment
      * @param tags the block tags of the comment (after the main body)
@@ -3596,6 +3608,18 @@ public final class TreeMaker {
      */
     public DocCommentTree DocComment(List<? extends DocTree> firstSentence, List<? extends DocTree> body, List<? extends DocTree> tags) {
         return delegate.DocComment(firstSentence, body, tags);
+    }
+
+    /**Creates a new Markdown javadoc comment.
+     *
+     * @param firstSentence the javadoc comment's first sentence
+     * @param body the main body of the comment
+     * @param tags the block tags of the comment (after the main body)
+     * @return newly created DocCommentTree
+     * @since 2.71
+     */
+    public DocCommentTree MarkdownDocComment(List<? extends DocTree> firstSentence, List<? extends DocTree> body, List<? extends DocTree> tags) {
+        return delegate.MarkdownDocComment(firstSentence, body, tags);
     }
 
     /**Creates the DocTree's ParamTree.
@@ -3725,6 +3749,16 @@ public final class TreeMaker {
      */
     public TextTree Text(String text) {
         return delegate.Text(text);
+    }
+
+    /**Creates the DocTree's RawTextTree.
+     *
+     * @param text the text
+     * @return newly created RawTextTree
+     * @since 2.71
+     */
+    public RawTextTree RawText(String text) {
+        return delegate.RawText(text);
     }
 
     /**Creates the DocTree's ThrowsTree that will produce @throws.

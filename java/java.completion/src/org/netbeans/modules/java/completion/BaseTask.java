@@ -176,6 +176,7 @@ abstract class BaseTask extends UserTask {
                 case LINE_COMMENT:
                 case BLOCK_COMMENT:
                 case JAVADOC_COMMENT:
+                case JAVADOC_COMMENT_LINE_RUN:
                     break;
                 default:
                     return ts;
@@ -206,6 +207,7 @@ abstract class BaseTask extends UserTask {
                 case LINE_COMMENT:
                 case BLOCK_COMMENT:
                 case JAVADOC_COMMENT:
+                case JAVADOC_COMMENT_LINE_RUN:
                     break;
                 default:
                     return ts;
@@ -461,6 +463,7 @@ abstract class BaseTask extends UserTask {
                                     case LINE_COMMENT:
                                     case BLOCK_COMMENT:
                                     case JAVADOC_COMMENT:
+                                    case JAVADOC_COMMENT_LINE_RUN:
                                         break;
                                     case ARROW:
                                         scope = controller.getTrees().getScope(blockPath);
@@ -490,6 +493,7 @@ abstract class BaseTask extends UserTask {
                             case LINE_COMMENT:
                             case BLOCK_COMMENT:
                             case JAVADOC_COMMENT:
+                            case JAVADOC_COMMENT_LINE_RUN:
                                 break;
                             case ARROW:
                                 return new Env(offset, prefix, controller, path, sourcePositions, scope);

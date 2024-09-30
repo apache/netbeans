@@ -270,32 +270,32 @@ public class JavadocCompletionUtilsTest extends JavadocTestSupport {
         TokenSequence<JavadocTokenId> jdts = JavadocCompletionUtils.findJavadocTokenSequence(info, offset);
         assertTrue(jdts.moveNext());
         assertTrue(insertPointer(code, offset),
-                JavadocCompletionUtils.isLineBreak(jdts.token()));
+                JavadocCompletionUtils.isLineBreak(jdts));
         offset += 1;
         jdts = JavadocCompletionUtils.findJavadocTokenSequence(info, offset);
         assertTrue(jdts.moveNext());
         // token is INDENT
         assertFalse(insertPointer(code, offset),
-                JavadocCompletionUtils.isLineBreak(jdts.token()));
+                JavadocCompletionUtils.isLineBreak(jdts));
         
         what = "  \n";
         offset = code.indexOf(what);
         jdts = JavadocCompletionUtils.findJavadocTokenSequence(info, offset);
         assertTrue(jdts.moveNext());
         assertTrue(insertPointer(code, offset),
-                JavadocCompletionUtils.isLineBreak(jdts.token(), offset - jdts.offset()));
+                JavadocCompletionUtils.isLineBreak(jdts, offset - jdts.offset()));
         
         what = "  * {*i";
         offset = code.indexOf(what) + what.length() - 3;
         jdts = JavadocCompletionUtils.findJavadocTokenSequence(info, offset);
         assertTrue(jdts.moveNext());
         assertFalse(insertPointer(code, offset),
-                JavadocCompletionUtils.isLineBreak(jdts.token()));
+                JavadocCompletionUtils.isLineBreak(jdts));
         assertTrue(insertPointer(code, offset),
-                JavadocCompletionUtils.isLineBreak(jdts.token(), offset - jdts.offset()));
+                JavadocCompletionUtils.isLineBreak(jdts, offset - jdts.offset()));
         offset = code.indexOf(what);
         assertFalse(insertPointer(code, offset),
-                JavadocCompletionUtils.isLineBreak(jdts.token(), offset - jdts.offset()));
+                JavadocCompletionUtils.isLineBreak(jdts, offset - jdts.offset()));
     }
     
     public void testIsLineBreak2() throws Exception {
@@ -319,10 +319,10 @@ public class JavadocCompletionUtilsTest extends JavadocTestSupport {
         assertTrue(jdts.moveNext());
         assertTrue(jdts.token().id() == JavadocTokenId.OTHER_TEXT);
         assertFalse(insertPointer(code, jdts.offset() + jdts.token().length()),
-                JavadocCompletionUtils.isLineBreak(jdts.token()));
+                JavadocCompletionUtils.isLineBreak(jdts));
         // test OTHER_TEXT('     * |{')
         assertTrue(insertPointer(code, jdts.offset() + jdts.token().length() - 1),
-                JavadocCompletionUtils.isLineBreak(jdts.token(), jdts.token().length() - 1));
+                JavadocCompletionUtils.isLineBreak(jdts, jdts.token().length() - 1));
     }
     
     public void testIsWhiteSpace() throws Exception {

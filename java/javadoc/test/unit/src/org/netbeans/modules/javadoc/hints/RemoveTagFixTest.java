@@ -388,4 +388,30 @@ public class RemoveTagFixTest extends NbTestCase {
                 "}\n");
     }
 
+    public void testRemoveParamTagFixMarkdown() throws Exception {
+        HintTest.create()
+                .input("""
+                       package test;
+                       class Zima {
+                           ///
+                           /// @param p1 description
+                           void leden() {
+                           }
+                       }
+                       """)
+                .preference(AVAILABILITY_KEY + true, true)
+                .preference(SCOPE_KEY, "private")
+                .run(JavadocHint.class)
+                .findWarning("3:8-3:29:warning:Unknown @param: p1")
+                .applyFix("Remove @param tag")
+                .assertCompilable()
+                .assertOutput("""
+                              package test;
+                              class Zima {
+                                  ///
+                                  void leden() {
+                                  }
+                              }
+                              """);
+    }
 }

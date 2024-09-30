@@ -72,6 +72,7 @@ export const COMMAND_PREFIX : string = "nbls";
 const DATABASE: string = 'Database';
 const listeners = new Map<string, string[]>();
 export let client: Promise<NbLanguageClient>;
+export let clientRuntimeJDK : string | null = null;
 let testAdapter: NbTestAdapter | undefined;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
@@ -189,7 +190,7 @@ function findJDK(onChange: (path : string | null) => void): void {
 
     let currentJdk = find();
     let projectJdk : string | undefined = getProjectJDKHome();
-    validateJDKCompatibility(currentJdk, projectJdk);
+    validateJDKCompatibility(projectJdk);
     let timeout: NodeJS.Timeout | undefined = undefined;
     workspace.onDidChangeConfiguration(params => {
         if (timeout) {
@@ -462,7 +463,21 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     checkConflict();
 
     // find acceptable JDK and launch the Java part
-    findJDK((specifiedJDK) => {
+    findJDK(async (specifiedJDK) => {
+        const osExeSuffix = process.platform === 'win32' ? '.exe' : '';
+        if (!specifiedJDK || !(fs.existsSync(path.resolve(specifiedJDK, 'bin', `java${osExeSuffix}`)) && path.resolve(specifiedJDK, 'bin', `javac${osExeSuffix}`))) {
+            const msg = specifiedJDK ? 
+                `The current path to JDK "${specifiedJDK}" may be invalid. A valid JDK is required by Apache NetBeans Language Server to run.
+                You should configure a proper JDK for Apache NetBeans and/or other technologies. Do you want to run JDK configuration now ?` :
+                'A valid JDK is required by Apache NetBeans Language Server to run, but none was found. You should configure a proper JDK for Apache NetBeans and/or other technologies. ' +
+                'Do you want to run JDK configuration now ?';
+            const Y = "Yes";
+            const N = "No";
+            if (await vscode.window.showErrorMessage(msg, Y, N) == Y) {
+                vscode.commands.executeCommand('nbls.jdk.configuration');
+                return;
+            }
+        }
         let currentClusters = findClusters(context.extensionPath).sort();
         const dsSorter = (a: TextDocumentFilter, b: TextDocumentFilter) => {
             return (a.language || '').localeCompare(b.language || '')
@@ -939,6 +954,7 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
     client = new Promise<NbLanguageClient>((clientOK, clientErr) => {
         setClient = [
             function (c : NbLanguageClient) {
+                clientRuntimeJDK = specifiedJDK;
                 clientOK(c);
                 if (clientResolve) {
                     clientResolve(c);
@@ -1148,7 +1164,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         storagePath : userdir,
         jdkHome : specifiedJDK,
         verbose: beVerbose
-    };
+    };    
     let launchMsg = `Launching Apache NetBeans Language Server with ${specifiedJDK ? specifiedJDK : 'default system JDK'} and userdir ${userdir}`;
     handleLog(log, launchMsg);
     vscode.window.setStatusBarMessage(launchMsg, 2000);

@@ -106,18 +106,23 @@ export async function findAll(knownJavas?: Java[]): Promise<Java[]> {
     for (const javaRoot of javaRoots) {
         const dirents = fs.readdirSync(javaRoot, { withFileTypes: true });
         for (const dirent of dirents) {
-            if (dirent.isDirectory()) {
-                const javaHome = path.join(javaRoot, dirent.name);
-                const java = new Java(javaHome);
-                if (java.isJdk()) {
-                    jdks.push(java);
-                } else if (isMac()) {
-                    const macJavaHome = path.join(javaHome, 'Contents', 'Home');
-                    const macJava = new Java(macJavaHome);
-                    if (macJava.isJdk()) {
-                        jdks.push(macJava);
+            const javaHome = path.join(javaRoot, dirent.name);
+            // statSync returns true even for symlinked dirs
+            try {
+                if (fs.statSync(javaHome).isDirectory()) {
+                    const java = new Java(javaHome);
+                    if (java.isJdk()) {
+                        jdks.push(java);
+                    } else if (isMac()) {
+                        const macJavaHome = path.join(javaHome, 'Contents', 'Home');
+                        const macJava = new Java(macJavaHome);
+                        if (macJava.isJdk()) {
+                            jdks.push(macJava);
+                        }
                     }
                 }
+            } catch (statErr : any) {
+                // just ignore
             }
         }
     }

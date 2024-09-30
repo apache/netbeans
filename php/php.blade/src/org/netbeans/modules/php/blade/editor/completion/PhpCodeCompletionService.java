@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.antlr.v4.runtime.Token;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
@@ -33,7 +34,6 @@ import org.netbeans.modules.php.blade.csl.elements.ClassElement;
 import org.netbeans.modules.php.blade.csl.elements.ElementType;
 import org.netbeans.modules.php.blade.csl.elements.NamedElement;
 import org.netbeans.modules.php.blade.editor.EditorStringUtils;
-import static org.netbeans.modules.php.blade.editor.completion.BladeCompletionHandler.completionRequest;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexFunctionResult;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexResult;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexUtils;
@@ -50,9 +50,13 @@ import org.openide.filesystems.FileObject;
  *
  * @author bogdan
  */
-public class PhpCodeCompletionService {
+public final class PhpCodeCompletionService {
 
-    public String prefix = "";
+    private String prefix = "";
+
+    public String getPrefix() {
+        return prefix;
+    }
 
     public List<CompletionProposal> getCompletionProposal(int offset, Token currentToken) {
         List<CompletionProposal> proposals = new ArrayList<>();
@@ -100,7 +104,7 @@ public class PhpCodeCompletionService {
         BladeParserResult.FieldAccessReference fieldAccessReference = parserResult.findFieldAccessRefrence(offset);
 
         FileObject fo = parserResult.getSnapshot().getSource().getFileObject();
-        
+
         if (fieldAccessReference != null) {
             completeClassConstants(prefix, fieldAccessReference.ownerClass.identifier, offset, completionProposals, fo);
             completeClassMethods(prefix, fieldAccessReference, offset, completionProposals, fo);
@@ -139,42 +143,41 @@ public class PhpCodeCompletionService {
                     Collection<PhpIndexResult> indexedNamespaces = PhpIndexUtils.queryNamespaces(
                             fo, namespacePath, QuerySupport.Kind.PREFIX
                     );
-                    BladeCompletionProposal.CompletionRequest request = completionRequest(prefix, offset);
+
+                    int anchorOffset = computeAnchorOffset(prefix, offset);
 
                     for (PhpIndexResult indexResult : indexedNamespaces) {
                         completionProposals.add(new BladeCompletionProposal.NamespaceItem(
-                                namespaceElement(indexResult), request, indexResult.name));
+                                namespaceElement(indexResult), anchorOffset, indexResult.name));
                     }
                 } else if (prefix.endsWith("\\")) {
                     //the identifier is the namespace
                     int substringOffset = elementReference.identifier.startsWith("\\") ? 1 : 0;
                     String namespacePath = elementReference.identifier.substring(substringOffset, elementReference.identifier.length() - 1);
                     Collection<PhpIndexResult> indexClassResults = PhpIndexUtils.queryAllNamespaceClasses(fo, namespacePath);
-                    BladeCompletionProposal.CompletionRequest request = completionRequest(namespacePath, offset + namespacePath.length());
+                    int anchorOffset = computeAnchorOffset(namespacePath, offset + namespacePath.length());
                     for (PhpIndexResult indexResult : indexClassResults) {
-                        completionProposals.add(new BladeCompletionProposal.ClassItem(classElement(indexResult), request, indexResult.name));
+                        completionProposals.add(new BladeCompletionProposal.ClassItem(classElement(indexResult), anchorOffset, indexResult.name));
                     }
-                    //completeNamespacedPhpClasses("", namespace, offset, completionProposals, parserResult);
                 }
                 break;
         }
     }
 
-    private static void completePhpClasses(String prefix, int offset, 
+    private static void completePhpClasses(String prefix, int offset,
             final List<CompletionProposal> completionProposals,
-            FileObject fo) 
-    {
+            FileObject fo) {
 
         Collection<PhpIndexResult> indexClassResults = PhpIndexUtils.queryClass(fo, prefix);
 
         if (indexClassResults.isEmpty()) {
             return;
         }
-        BladeCompletionProposal.CompletionRequest request = completionRequest(prefix, offset);
+        int anchorOffset = computeAnchorOffset(prefix, offset);
 
         for (PhpIndexResult indexResult : indexClassResults) {
             completionProposals.add(new BladeCompletionProposal.ClassItem(
-                    classElement(indexResult), request, indexResult.name));
+                    classElement(indexResult), anchorOffset, indexResult.name));
         }
     }
 
@@ -186,14 +189,14 @@ public class PhpCodeCompletionService {
         if (indexedFunctions.isEmpty()) {
             return;
         }
-        BladeCompletionProposal.CompletionRequest request = completionRequest(prefix, offset);
+        int anchorOffset = computeAnchorOffset(prefix, offset);
         for (PhpIndexFunctionResult indexResult : indexedFunctions) {
             //to be completed
             //might add syntax completion cursor
             String preview = indexResult.name + indexResult.getParamsAsString();
             completionProposals.add(new BladeCompletionProposal.FunctionItem(
                     functionElement(indexResult),
-                    request,
+                    anchorOffset,
                     preview)
             );
         }
@@ -219,7 +222,7 @@ public class PhpCodeCompletionService {
             return;
         }
 
-        BladeCompletionProposal.CompletionRequest request = completionRequest(prefix, offset);
+        int anchorOffset = computeAnchorOffset(prefix, offset);
 
         for (PhpIndexFunctionResult indexResult : indexedFunctions) {
             //to be completed
@@ -227,7 +230,7 @@ public class PhpCodeCompletionService {
             String preview = indexResult.name + indexResult.getParamsAsString();
             completionProposals.add(new BladeCompletionProposal.FunctionItem(
                     functionElement(indexResult),
-                    request,
+                    anchorOffset,
                     indexResult.getClassNamespace(),
                     preview)
             );
@@ -256,34 +259,33 @@ public class PhpCodeCompletionService {
             return;
         }
 
-        BladeCompletionProposal.CompletionRequest request = completionRequest(prefix, offset + substringOffset);
+        int anchorOffset = computeAnchorOffset(prefix, offset + substringOffset);
 
         for (PhpIndexResult indexResult : indexClassResults) {
             completionProposals.add(new BladeCompletionProposal.NamespaceItem(
-                    namespaceElement(indexResult), request, indexResult.name));
+                    namespaceElement(indexResult), anchorOffset, indexResult.name));
         }
     }
 
     private static void completeConstants(String prefix, int offset,
             final List<CompletionProposal> completionProposals,
-            FileObject fo) 
-    {
+            FileObject fo) {
         Collection<PhpIndexResult> indexClassResults = PhpIndexUtils.queryConstants(fo, prefix);
 
         //treat only uppercase strings
-        if (!Character.isUpperCase(prefix.charAt(0))){
+        if (!Character.isUpperCase(prefix.charAt(0))) {
             return;
         }
-        
+
         if (indexClassResults.isEmpty()) {
             return;
         }
 
-        BladeCompletionProposal.CompletionRequest request = completionRequest(prefix, offset);
+        int anchorOffset = computeAnchorOffset(prefix, offset);
 
         for (PhpIndexResult indexResult : indexClassResults) {
             completionProposals.add(new BladeCompletionProposal.ConstantItem(
-                    constantElement(indexResult), request, indexResult.name));
+                    constantElement(indexResult), anchorOffset, indexResult.name));
         }
     }
 
@@ -295,30 +297,29 @@ public class PhpCodeCompletionService {
                 fo, prefix, ownerClass);
 
         //treat only uppercase strings
-        if (!Character.isUpperCase(prefix.charAt(0))){
+        if (!Character.isUpperCase(prefix.charAt(0))) {
             return;
         }
-        
+
         if (indexClassResults.isEmpty()) {
             return;
         }
 
-        BladeCompletionProposal.CompletionRequest request = completionRequest(prefix, offset);
+        int anchorOffset = computeAnchorOffset(prefix, offset);
 
         for (PhpIndexResult indexResult : indexClassResults) {
             completionProposals.add(new BladeCompletionProposal.ConstantItem(
-                    constantElement(indexResult), request, indexResult.name));
+                    constantElement(indexResult), anchorOffset, indexResult.name));
         }
     }
 
     //TODO might move in a factory for NamedElement
-
     private static ClassElement classElement(PhpIndexResult indexResult) {
         return new ClassElement(indexResult.name,
                 indexResult.namespace,
                 indexResult.declarationFile);
     }
-    
+
     private static NamedElement namespaceElement(PhpIndexResult indexResult) {
         return namedElement(indexResult, ElementType.PHP_NAMESPACE);
     }
@@ -331,12 +332,16 @@ public class PhpCodeCompletionService {
     private static NamedElement constantElement(PhpIndexResult indexResult) {
         return namedElement(indexResult, ElementType.PHP_CONSTANT);
     }
-    
+
     private static NamedElement namedElement(PhpIndexResult indexResult, ElementType type) {
         return new NamedElement(indexResult.name, indexResult.declarationFile, type);
     }
-    
+
     private static NamedElement namedElement(String preview, PhpIndexResult indexResult, ElementType type) {
         return new NamedElement(preview, indexResult.declarationFile, type);
+    }
+
+    public static int computeAnchorOffset(@NonNull String prefix, int offset) {
+        return offset - prefix.length();
     }
 }

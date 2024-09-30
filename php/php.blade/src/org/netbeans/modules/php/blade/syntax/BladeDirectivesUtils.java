@@ -41,6 +41,7 @@ public final class BladeDirectivesUtils {
     public static final String DIRECTIVE_FOREACH = "@foreach"; // NOI18N
     public static final String DIRECTIVE_INCLUDE = "@include"; // NOI18N
     public static final String DIRECTIVE_EXTENDS = "@extends"; // NOI18N
+    public static final String DIRECTIVE_SESSION = "@session"; // NOI18N
     
     public static String[] directiveStart2EndPair(String directive){
         if (directive.equals(DIRECTIVE_SECTION)){

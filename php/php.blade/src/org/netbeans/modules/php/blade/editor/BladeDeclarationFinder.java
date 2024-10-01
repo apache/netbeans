@@ -20,7 +20,9 @@ package org.netbeans.modules.php.blade.editor;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
@@ -121,8 +123,8 @@ public class BladeDeclarationFinder implements DeclarationFinder {
             }
 
             if (nt.getType() == BL_PARAM_STRING || nt.getType() == EXPR_STRING) {
-                List<Integer> tokensToMatch = BladeLexerUtils.TOKENS_WITH_IDENTIFIABLE_PARAM;
-                List<Integer> tokensStop = Arrays.asList(new Integer[]{HTML});
+                Set<Integer> tokensToMatch = BladeLexerUtils.TOKENS_WITH_IDENTIFIABLE_PARAM;
+                Set<Integer> tokensStop = new HashSet<>(Arrays.asList(new Integer[]{HTML}));
                 org.antlr.v4.runtime.Token matchedToken = BladeAntlrUtils.findBackward(tokens, tokensToMatch, tokensStop);
                 int offsetCorrection = caretOffset - lineOffset;
                 if (matchedToken != null) {

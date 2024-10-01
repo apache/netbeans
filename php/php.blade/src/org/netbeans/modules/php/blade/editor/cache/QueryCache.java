@@ -59,7 +59,7 @@ public final class QueryCache<K, V> {
     }
 
     protected Set<K> getExpiredKeys() {
-        return this.cacheMap.keySet().parallelStream()
+        return this.cacheMap.keySet().stream()
                 .filter(this::isExpired)
                 .collect(Collectors.toSet());
     }

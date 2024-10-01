@@ -94,7 +94,6 @@ public abstract class BladeCompletionItem implements CompletionItem {
         CompletionUtilities.renderHtml(getIcon(), getLeftHtmlText(), getRightHtmlText(), g, defaultFont, defaultColor, width, height, selected);
     }
 
-
     @Override
     public CompletionTask createDocumentationTask() {
         return null;
@@ -137,11 +136,11 @@ public abstract class BladeCompletionItem implements CompletionItem {
     public CharSequence getInsertPrefix() {
         return getItemText();
     }
-    
+
     protected ImageIcon getIcon() {
         return null;
     }
-    
+
     protected String getLeftHtmlText() {
         return name;
     }
@@ -243,13 +242,12 @@ public abstract class BladeCompletionItem implements CompletionItem {
 
         @Override
         protected String getSubstituteText() {
-            String template = getItemText() + "($$${arg})"; // NOI18N
-            switch (getName()) {
-                case BladeDirectivesUtils.DIRECTIVE_INCLUDE,
-                        BladeDirectivesUtils.DIRECTIVE_EXTENDS ->
-                    template = getItemText() + "('${path}')"; // NOI18N
-            }
-            return template;
+            return switch (getName()) {
+                case BladeDirectivesUtils.DIRECTIVE_INCLUDE, BladeDirectivesUtils.DIRECTIVE_EXTENDS ->
+                    getItemText() + "('${path}')"; // NOI18N
+                default ->
+                    getItemText() + "($$${arg})"; // NOI18N
+            };
         }
 
         @Override
@@ -316,14 +314,11 @@ public abstract class BladeCompletionItem implements CompletionItem {
 
         @Override
         protected String getSubstituteText() {
-            String template = getItemText() + "($$${arg})\n\n${selection}${cursor}\n" + getEndTag(); // NOI18N
-
-            switch (getName()) {
+            return switch (getName()) {
                 case BladeDirectivesUtils.DIRECTIVE_FOREACH ->
-                    template = getItemText() + "($$${array} as $$${item})\n${selection}${cursor}\n" + getEndTag(); // NOI18N
-            }
-
-            return template;
+                    getItemText() + "($$${array} as $$${item})\n${selection}${cursor}\n" + getEndTag(); // NOI18N
+                default -> getItemText() + "($$${arg})\n\n${selection}${cursor}\n" + getEndTag(); // NOI18N
+            };
         }
 
         @Override

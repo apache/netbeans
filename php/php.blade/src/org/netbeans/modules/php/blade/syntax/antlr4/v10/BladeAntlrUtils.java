@@ -19,6 +19,7 @@
 package org.netbeans.modules.php.blade.syntax.antlr4.v10;
 
 import java.util.List;
+import java.util.Set;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.antlr.v4.runtime.CharStreams;
@@ -70,7 +71,7 @@ public final class BladeAntlrUtils {
     }
 
     public static Token findForward(Document doc, Token start,
-            List<String> stopTokenText, List<String> openTokensText) {
+            Set<String> stopTokenText, Set<String> openTokensText) {
 
         AntlrTokenSequence tokens = getTokens(doc);
 
@@ -128,7 +129,7 @@ public final class BladeAntlrUtils {
     }
 
     public static Token findBackward(Document doc, Token start,
-            List<String> stopTokenText, List<String> openTokensText) {
+            Set<String> stopTokenText, Set<String> openTokensText) {
 
         AntlrTokenSequence tokens = getTokens(doc);
 
@@ -165,7 +166,7 @@ public final class BladeAntlrUtils {
     }
 
     public static Token findBackward(AntlrTokenSequence tokens,
-            List<Integer> tokensMatch, List<Integer> tokensStop) {
+            Set<Integer> tokensMatch, Set<Integer> tokensStop) {
 
         while (tokens.hasPrevious()) {
             Token pt = tokens.previous().get();
@@ -185,39 +186,8 @@ public final class BladeAntlrUtils {
         return null;
     }
 
-    public static Token findForward(Document doc, Token start,
-            int tokensMatch, List<Integer> skipableTokens) {
-        AntlrTokenSequence tokens = getTokens(doc);
-
-        if (tokens == null || tokens.isEmpty()) {
-            return null;
-        }
-
-        tokens.seekTo(start.getStopIndex() + 1);
-
-        while (tokens.hasNext()) {
-            Token pt = tokens.next().get();
-            if (pt == null) {
-                continue;
-            }
-
-            if (pt.getType() == tokensMatch) {
-                return pt;
-            }
-
-            if (skipableTokens.contains(pt.getType())) {
-                continue;
-            }
-
-            return null;
-        }
-
-        return null;
-
-    }
-
     public static Token findForwardWithStop(Document doc, Token start,
-            int tokensMatch, List<Integer> stopTokens) {
+            int tokensMatch, Set<Integer> stopTokens) {
         AntlrTokenSequence tokens = getTokens(doc);
 
         if (tokens == null || tokens.isEmpty()) {
@@ -246,7 +216,7 @@ public final class BladeAntlrUtils {
     }
 
     public static Token findBackward(Document doc, Token start,
-            int tokensMatch, List<Integer> skipableTokens) {
+            int tokensMatch, Set<Integer> skipableTokens) {
         AntlrTokenSequence tokens = getTokens(doc);
 
         if (tokens == null || tokens.isEmpty()) {
@@ -277,7 +247,7 @@ public final class BladeAntlrUtils {
     }
 
     public static Token findBackwardWithStop(Document doc, Token start,
-            int tokensMatch, List<Integer> stopTokens) {
+            int tokensMatch, Set<Integer> stopTokens) {
         AntlrTokenSequence tokens = getTokens(doc);
 
         if (tokens == null || tokens.isEmpty()) {

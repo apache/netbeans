@@ -19,7 +19,9 @@
 package org.netbeans.modules.php.blade.editor.lexer;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.swing.text.Document;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -36,12 +38,12 @@ public final class BladeLexerUtils {
     private BladeLexerUtils() {
 
     }
-
-    public static final List<Integer> TOKENS_WITH_IDENTIFIABLE_PARAM = Arrays.asList(new Integer[]{
+    public static final Integer[] TOKENS_WITH_IDENTIFIABLE_PARAM_VALUES = new Integer[] {
         D_EXTENDS, D_INCLUDE, D_INCLUDE_IF, D_INCLUDE_WHEN,
         D_INCLUDE_UNLESS, D_EACH, D_SECTION, D_HAS_SECTION, D_SECTION_MISSING,
         D_PUSH, D_PUSH_IF, D_PREPEND, D_USE, D_INJECT, D_ASSET_BUNDLER
-    });
+    };
+    public static final Set<Integer> TOKENS_WITH_IDENTIFIABLE_PARAM = new HashSet<>(Arrays.asList(TOKENS_WITH_IDENTIFIABLE_PARAM_VALUES));
 
     public static TokenSequence<? extends PHPTokenId> getPhpTokenSequence(TokenHierarchy<Document> th, final int offset) {
         return getTokenSequence(th, offset, PHPTokenId.language());

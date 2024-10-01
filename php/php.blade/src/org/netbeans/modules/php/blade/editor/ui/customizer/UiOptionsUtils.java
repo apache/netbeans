@@ -18,9 +18,8 @@
  */
 package org.netbeans.modules.php.blade.editor.ui.customizer;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
-import java.util.List;
 
 
 /**
@@ -30,11 +29,6 @@ import java.util.List;
 public class UiOptionsUtils {
     
     public static String encodeToStrings(Enumeration<String> list) {
-        List<String> result = new ArrayList<>();
-        while (list.hasMoreElements()) {
-            result.add(list.nextElement());
-        }
-
-        return String.join("|", result);
+        return String.join("|", Collections.list(list));
     }
 }

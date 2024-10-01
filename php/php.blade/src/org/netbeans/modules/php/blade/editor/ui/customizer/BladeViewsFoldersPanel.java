@@ -22,7 +22,6 @@ import java.awt.EventQueue;
 import java.io.File;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.php.blade.editor.indexing.BladeIndex;
 import org.netbeans.modules.php.blade.editor.indexing.IndexManager;
 import org.netbeans.modules.php.blade.project.BladeProjectProperties;
 import org.netbeans.spi.options.OptionsPanelController;
@@ -33,17 +32,17 @@ import org.openide.util.NbBundle;
 @NbBundle.Messages("BladePanel.options.keywords.tabTitle=Frameworks & Tools")
 @OptionsPanelController.Keywords(
     keywords = {
-        "php", "blade"
+        "php", "blade" // NOI18N
     },
-    location = "Html5",
-    tabTitle = "#BladePanel.options.keywords.tabTitle"
+    location = "Html5", // NOI18N
+    tabTitle = "#BladePanel.options.keywords.tabTitle" // NOI18N
 )
 
 public final class BladeViewsFoldersPanel extends javax.swing.JPanel {
 
     private final ChangeSupport changeSupport = new ChangeSupport(this);
     private final Project project;
-    BladeProjectProperties bladeProperties;
+    private final BladeProjectProperties bladeProperties;
 
     BladeViewsFoldersPanel(Project project) {
         assert project != null;
@@ -65,10 +64,6 @@ public final class BladeViewsFoldersPanel extends javax.swing.JPanel {
       
     public void addChangeListener(ChangeListener listener) {
         changeSupport.addChangeListener(listener);
-    }
-    
-    void fireChange() {
-        changeSupport.fireChange();
     }
   
     /**

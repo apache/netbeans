@@ -128,7 +128,7 @@ public class BladeCompletionProposal implements CompletionProposal {
         }
         if (file != null) {
             formatter.reset();
-            formatter.appendText(" ");
+            formatter.appendText(" "); // NOI18N
             formatter.appendText(file.getName());
         }
         return formatter.getText();
@@ -162,7 +162,7 @@ public class BladeCompletionProposal implements CompletionProposal {
             }
             if (file != null) {
                 formatter.reset();
-                formatter.appendText(" ");
+                formatter.appendText(" "); // NOI18N
                 formatter.appendText(file.getNameExt());
             }
             return formatter.getText();
@@ -196,7 +196,7 @@ public class BladeCompletionProposal implements CompletionProposal {
 
     public static class ClassItem extends PhpElementItem {
 
-        protected String namespace = null;
+        private String namespace = null;
         
         public ClassItem(ClassElement element, int anchorOffset, String previewValue) {
             super(element, anchorOffset, previewValue);
@@ -224,7 +224,7 @@ public class BladeCompletionProposal implements CompletionProposal {
         @Override
         public String getCustomInsertTemplate() {
             if (namespace != null && namespace.length() > 0) {
-                return "\\" + namespace + "\\" + getElement().getName();
+                return "\\" + namespace + "\\" + getElement().getName(); // NOI18N
             }
             return getElement().getName();
         }
@@ -401,11 +401,10 @@ public class BladeCompletionProposal implements CompletionProposal {
 
         @Override
         public String getCustomInsertTemplate() {
-            String template = getName() + "($$${arg})";
-            switch (getName()) {
-                case BladeDirectivesUtils.DIRECTIVE_INCLUDE, BladeDirectivesUtils.DIRECTIVE_EXTENDS -> template = getName() + "('${path}')"; // NOI18N
-            }
-            return template;
+            return switch (getName()) {
+                case BladeDirectivesUtils.DIRECTIVE_INCLUDE, BladeDirectivesUtils.DIRECTIVE_EXTENDS -> getName() + "('${path}')"; // NOI18N
+                default -> getName() + "($$${arg})"; // NOI18N
+            };
         }
 
         @Override

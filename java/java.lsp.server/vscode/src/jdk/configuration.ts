@@ -106,17 +106,45 @@ function allSettings(): FeatureItem[][] {
     return [ allSettings, selectedSettings ];
 }
 
+async function checkJDKCompatibility(check? : jdk.Java, features? : FeatureItem[]) : Promise<FeatureItem | null> {
+    if (!features) {
+        return null;
+    }
+    if (check) {
+        for (let setting of features) {
+            if (!await setting.setting.acceptJdk(check)) {
+                return setting;
+            }
+        }
+    }
+    return null;
+}
+
 async function selectJDK(input: MultiStepInput, state: Partial<State>): Promise<any | undefined> {
     if (!state.allJdks) {
         state.allJdks = await allJdks(state);
+    }
+    let filteredJDKs : JdkItem[] = [];
+    let someLeftOut : boolean = false;
+    if (state.selectedSettings) {
+        for (let jdk of state.allJdks) {
+            if (await checkJDKCompatibility(jdk.jdk, state.selectedSettings)) {
+                // non-null feature item -> incompatible
+                someLeftOut = true;
+            } else {
+                filteredJDKs.push(jdk);
+            }
+        }
+    } else {
+        filteredJDKs = [...state.allJdks];
     }
     const selectCustom = { label: '$(folder-opened) Select Custom JDK...' };
     const selected: any = await input.showQuickPick({
         title: `${ACTION_NAME}: JDK`,
         step: 2,
         totalSteps: totalSteps(state),
-        placeholder: 'Select JDK',
-        items: [ selectCustom, ...state.allJdks ],
+        placeholder: someLeftOut ? 'Select JDK (filtering compatible JDKs)' : 'Select JDK',
+        items: [ selectCustom, ...filteredJDKs ],
         validate: () => Promise.resolve(undefined),
         shouldResume: () => Promise.resolve(false)
     });
@@ -128,17 +156,35 @@ async function selectJDK(input: MultiStepInput, state: Partial<State>): Promise<
             if (customJdk) {
                 await jdk.registerCustom(customJdk);
                 state.allJdks = await allJdks(state);
+                let selected : boolean = false;
                 for (const jdkItem of state.allJdks) {
                     if (jdkItem.jdk?.javaHome === customJdk.javaHome) {
                         state.selectedJdk = jdkItem;
+                        selected = true;
                         break;
                     }
+                }
+                if (!selected) {
+                    // if for some reason, the custom JDK cannot be found among possible selections,
+                    // reject it
+                    await vscode.window.showErrorMessage(`The selected JDK ${javaRoot} could not be used. Please choose another one`, 'Retry');
+                    return (input: MultiStepInput) => selectJDK(input, state);
                 }
             } else {
                 return (input: MultiStepInput) => selectJDK(input, state);
             }
         } else if (selected[0].jdk) {
             state.selectedJdk = selected[0];
+        }
+    }
+    const f = await checkJDKCompatibility(state.selectedJdk?.jdk, state.selectedSettings);
+    if (f) {
+        const Y = 'Proceed Anyway';
+        const N = 'Choose a Different JDK';
+        const q = await vscode.window.showWarningMessage(`The selected JDK (${state.selectedJdk?.jdk.name()}) is not compatible with feature ${f.label}. Do you want to proceed ?`, N, Y);
+        if (q !== Y) {
+            state.selectedJdk = undefined;
+            return (input: MultiStepInput) => selectJDK(input, state);
         }
     }
     return (input: MultiStepInput) => selectScope(input, state);

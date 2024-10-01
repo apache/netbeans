@@ -473,8 +473,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                 Path target = Files.createTempFile(logDir, "completion-sampler", ".npss");
                                 try (OutputStream out = Files.newOutputStream(target);
                                      DataOutputStream dos = new DataOutputStream(out)) {
-                                    sampler.stop();
-                                    sampler.
                                     sampler.stopAndWriteTo(dos);
                                     System.err.println("wrote completion sample to: " + target.toAbsolutePath());
                                 }

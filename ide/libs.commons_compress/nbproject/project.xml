@@ -26,11 +26,27 @@
             <code-name-base>org.netbeans.libs.commons_compress</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>org.apache.commons.codec</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.17</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.apache.commons.commons_io</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>2.15</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.apache.commons.lang3</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>3.14</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>

@@ -21,12 +21,14 @@
 -->
 <licenseinfo>
     <fileset>
+        <file>src/org/netbeans/modules/php/blade/resources/emptyBladeFile.blade.php</file>
+        <file>src/org/netbeans/modules/php/blade/resources/formattingExample.blade.php</file>
         <file>src/org/netbeans/modules/php/blade/resources/highlightBlade.blade.php</file>
+        <file>src/org/netbeans/modules/php/blade/resources/NewBladeFileDescription.html</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="GUI_USABILITY"/>
     </fileset>
     <fileset>
-        <file>tools/skeleton.netbeans</file>
         <file>src/org/netbeans/modules/php/blade/resources/icon.png</file>
         <file>src/org/netbeans/modules/php/blade/resources/icons/at.png</file>
         <file>src/org/netbeans/modules/php/blade/resources/icons/blade_file.png</file>

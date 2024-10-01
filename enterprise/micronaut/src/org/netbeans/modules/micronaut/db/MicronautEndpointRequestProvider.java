@@ -96,7 +96,8 @@ public class MicronautEndpointRequestProvider implements CommandProvider {
                                 String contentType = getContentType(cc, el, type);
                                 List<VariableElement> fileUploads = new ArrayList<>();
                                 Map<String, VariableElement> body2params = new LinkedHashMap<>();
-                                for (VariableElement param : ((ExecutableElement) el).getParameters()) {
+                                List<? extends VariableElement> parameters = ((ExecutableElement) el).getParameters();
+                                for (VariableElement param : parameters) {
                                     if (param.asType().getKind() == TypeKind.DECLARED
                                             && "io.micronaut.http.multipart.CompletedFileUpload".contentEquals(((TypeElement) ((DeclaredType) param.asType()).asElement()).getQualifiedName())) {
                                         fileUploads.add(param);
@@ -127,6 +128,22 @@ public class MicronautEndpointRequestProvider implements CommandProvider {
                                                     contentType = "";
                                                 }
                                             }
+                                        } else {
+                                            String functionName = Utils.getOciFunctionName(cc, ((TypeElement) el.getEnclosingElement()).getQualifiedName().toString());
+                                            if (functionName != null && functionName.contentEquals(el.getSimpleName())) {
+                                                body2params.put("", param);
+                                                if (contentType == null) {
+                                                    TypeMirror tm = param.asType();
+                                                    if (tm.getKind() == TypeKind.TYPEVAR) {
+                                                        tm = ((TypeVariable) tm).getUpperBound();
+                                                    }
+                                                    if (tm.getKind() == TypeKind.DECLARED && Utils.getAnnotation(((DeclaredType) tm).asElement().getAnnotationMirrors(), "io.micronaut.serde.annotation.Serdeable") != null) {
+                                                        contentType = "application/json";
+                                                    } else if (!cc.getTypes().isAssignable(param.asType(), cc.getElements().getTypeElement("java.lang.CharSequence").asType())) {
+                                                        contentType = "";
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -144,7 +161,9 @@ public class MicronautEndpointRequestProvider implements CommandProvider {
                                     }
                                     sb.append("--mfd--");
                                 } else if (body2params.isEmpty()) {
-                                    sb.append("\n\n${").append(cnt.incrementAndGet()).append(":// TODO: Fill the value").append(contentType).append("}");
+                                    if (!parameters.isEmpty()) {
+                                        sb.append("\n\n${").append(cnt.incrementAndGet()).append(":// TODO: Fill the value").append("}");
+                                    }
                                 } else if (body2params.size() == 1 && body2params.keySet().iterator().next().isEmpty()) {
                                     sb.append("\n\n");
                                     fillJSON(cc, 0, null, body2params.values().iterator().next(), sb, cnt);
@@ -160,7 +179,7 @@ public class MicronautEndpointRequestProvider implements CommandProvider {
                                     }
                                     sb.append('}');
                                 }
-                                future.complete(sb.toString());
+                                future.complete(sb.length() > 0 ? sb.toString() : null);
                             } else {
                                 future.complete(null);
                             }
@@ -188,7 +207,13 @@ public class MicronautEndpointRequestProvider implements CommandProvider {
         if (tm.getKind() == TypeKind.DECLARED) {
             TypeElement te = (TypeElement) ((DeclaredType) tm).asElement();
             if ("java.lang.String".contentEquals(te.getQualifiedName())) {
-                sb.append("\"${").append(cnt.incrementAndGet()).append(':').append(ve.getSimpleName()).append("}\"");
+                if (name != null) {
+                    sb.append("\"");
+                }
+                sb.append("${").append(cnt.incrementAndGet()).append(':').append(ve.getSimpleName()).append('}');
+                if (name != null) {
+                    sb.append("\"");
+                }
             } else if (Utils.getAnnotation(te.getAnnotationMirrors(), "io.micronaut.serde.annotation.Serdeable") != null) {
                 sb.append("{\n");
                 if (level > 0) {

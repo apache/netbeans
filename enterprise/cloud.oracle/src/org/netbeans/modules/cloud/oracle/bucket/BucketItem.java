@@ -29,8 +29,8 @@ public final class BucketItem extends OCIItem {
 
     private String namespace;
 
-    public BucketItem(OCID id, String compartmentId, String name, String namespace) {
-        super(id, compartmentId, name);
+    public BucketItem(OCID id, String compartmentId, String name, String namespace, String tenancyId, String regionCode) {
+        super(id, compartmentId, name, tenancyId, regionCode);
         this.namespace = namespace;
     }
 

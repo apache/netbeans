@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.30.0
+#Version 0.31.0
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1815,6 +1815,7 @@ cons public init(java.io.InputStream,long,long)
 supr org.apache.commons.compress.utils.ChecksumVerifyingInputStream
 
 CLSS public org.apache.commons.compress.utils.CharsetNames
+ anno 0 java.lang.Deprecated()
 cons public init()
 fld public final static java.lang.String ISO_8859_1
 fld public final static java.lang.String US_ASCII
@@ -1975,7 +1976,7 @@ meth public long position()
 meth public long size() throws java.io.IOException
 meth public void close() throws java.io.IOException
 supr java.lang.Object
-hfds EMPTY_PATH_ARRAY,channels,currentChannelIdx,globalPosition
+hfds EMPTY_PATH_ARRAY,channelList,currentChannelIdx,globalPosition
 
 CLSS public org.apache.commons.compress.utils.OsgiUtils
 cons public init()
@@ -2149,7 +2150,7 @@ meth public void reset() throws java.io.IOException
 meth public void setPropagateClose(boolean)
  anno 0 java.lang.Deprecated()
 supr org.apache.commons.io.input.ProxyInputStream
-hfds count,maxCount,propagateClose
+hfds count,mark,maxCount,propagateClose
 hcls AbstractBuilder
 
 CLSS public abstract org.apache.commons.io.input.ProxyInputStream

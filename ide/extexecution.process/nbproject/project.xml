@@ -26,15 +26,6 @@
             <code-name-base>org.netbeans.modules.extexecution.process</code-name-base>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>org.netbeans.libs.jna</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>2.1</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.modules.extexecution.base</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -61,14 +52,6 @@
                 </dependency>
             </module-dependencies>
             <public-packages/>
-            <class-path-extension>
-                <runtime-relative-path>ext/winp-1.28.jar</runtime-relative-path>
-                <binary-origin>external/winp-1.28.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/processtreekiller-2.0.1.jar</runtime-relative-path>
-                <binary-origin>external/processtreekiller-2.0.1.jar</binary-origin>
-            </class-path-extension>
         </data>
     </configuration>
 </project>

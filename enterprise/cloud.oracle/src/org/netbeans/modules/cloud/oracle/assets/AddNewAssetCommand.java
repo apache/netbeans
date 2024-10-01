@@ -36,7 +36,6 @@ import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.netbeans.modules.cloud.oracle.steps.ItemTypeStep;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.steps.DatabaseConnectionStep;
-import org.netbeans.modules.cloud.oracle.steps.ItemCreationDecisionStep;
 import org.netbeans.modules.cloud.oracle.steps.TenancyStep;
 import org.netbeans.spi.lsp.CommandProvider;
 import org.openide.util.lookup.Lookups;
@@ -57,12 +56,21 @@ public class AddNewAssetCommand implements CommandProvider {
 
     private static final Map<String, String[]> DEP_MAP = new HashMap() {
         {
-            put("Databases", new String[]{"io.micronaut.oraclecloud", "micronaut-oraclecloud-atp"}); //NOI18N
+            put("Databases", new String[]{"io.micronaut.oraclecloud", "micronaut-oraclecloud-atp",
+                                            "io.micronaut.sql", "micronaut-jdbc-hikari"}); //NOI18N
             put("Bucket", new String[]{"io.micronaut.objectstorage", "micronaut-object-storage-oracle-cloud"}); //NOI18N
             put("Vault", new String[]{"io.micronaut.oraclecloud", "micronaut-oraclecloud-vault"}); //NOI18N
+            put("MetricsNamespace", new String[]{"io.micronaut.oraclecloud", "micronaut-oraclecloud-micrometer"}); //NOI18N
         }
     };
 
+    private static final Map<String, String[]> ANNOTATION_PROCESSOR_MAP = new HashMap() {
+        {
+            put("MetricsNamespace", new String[]{"io.micronaut.micrometer", "micronaut-micrometer-annotation"}); //NOI18N
+        }
+    };
+
+        
     @Override
     public Set<String> getCommands() {
         return Collections.unmodifiableSet(COMMANDS);
@@ -78,38 +86,22 @@ public class AddNewAssetCommand implements CommandProvider {
                         }
                         return new TenancyStep();
                     }).stepForClass(TenancyStep.class, (s) -> new CompartmentStep())
-                    .stepForClass(CompartmentStep.class, (s) -> new ItemCreationDecisionStep())
-                    .stepForClass(ItemCreationDecisionStep.class, (s) -> {
-                        if (ItemCreationDecisionStep.CREATE_NEW_OPTION.equals(s.getValue())) {
-                            return null;
-                        }
-                        return new SuggestedStep(null);
-                    })
-                    .stepForClass(SuggestedStep.class, (s) -> new ProjectStep())
+                    .stepForClass(CompartmentStep.class, (s) -> new SuggestedStep(null))
+                    .stepForClass(ProjectStep.class, (s) -> new ItemTypeStep())
                     .build();
-        
         Steps.getDefault()
-                .executeMultistep(new ItemTypeStep(), Lookups.fixed(nsProvider))
+                .executeMultistep(new ProjectStep(), Lookups.fixed(nsProvider))
                 .thenAccept(values -> {
                     Project project = values.getValueForStep(ProjectStep.class);
                     CompletableFuture<? extends OCIItem> item = null;
                     String itemType = values.getValueForStep(ItemTypeStep.class);
-                    if ("Databases".equals(itemType)) { 
+                    if ("Databases".equals(itemType)) {
                         DatabaseItem i = values.getValueForStep(DatabaseConnectionStep.class);
                         if (i == null) {
                             item = new AddADBAction().addADB();
                         } else {
                             item = CompletableFuture.completedFuture(i);
                         }
-                    } else if (ItemCreationDecisionStep.CREATE_NEW_OPTION.equals(values.getValueForStep(ItemCreationDecisionStep.class))) { //NOI18N
-                        OCIItemCreator creator = OCIItemCreator.getCreator(itemType);
-                        if (creator != null) {
-                            CompletableFuture<Map<String, Object>> vals = creator.steps();
-                            item = vals.thenCompose(params -> {
-                                return creator.create(values, params);
-                            });
-                        }
-    
                     } else {
                         OCIItem i = values.getValueForStep(SuggestedStep.class);
                         if (i == null) {
@@ -120,18 +112,33 @@ public class AddNewAssetCommand implements CommandProvider {
                         }
                     }
                     
+                    if (values.getValueForStep(SuggestedStep.class) instanceof CreateNewResourceItem) {
+                        OCIItemCreator creator = OCIItemCreator.getCreator(itemType);
+                        if (creator != null) {
+                            CompletableFuture<Map<String, Object>> vals = creator.steps();
+                            item = vals.thenCompose(params -> {
+                                return creator.create(values, params);
+                            });
+                        }
+                    }
+                    
                     item.thenAccept(i -> {
                         CloudAssets.getDefault().addItem(i);
                         String[] art = DEP_MAP.get(i.getKey().getPath());
+                        String[] processor = ANNOTATION_PROCESSOR_MAP.get(i.getKey().getPath());
                         try {
-                            DependencyUtils.addDependency(project, art[0], art[1]);
-                            future.complete(null);
+                            if (art != null && art.length > 1) {
+                                DependencyUtils.addDependency(project, art);
+                            }
+                            if (processor != null && processor.length > 1) {
+                                DependencyUtils.addAnnotationProcessor(project, processor[0], processor[1]);
+                            }
                         } catch (IllegalStateException e) {
                             future.completeExceptionally(e);
                         }
+                        future.complete(null);
                     });
                 });
         return future;
     }
-    
 }

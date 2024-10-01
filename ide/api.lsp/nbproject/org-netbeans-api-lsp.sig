@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.25
+#Version 1.28
 
 CLSS public abstract interface java.io.Serializable
 
@@ -22,10 +22,19 @@ meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
 
+CLSS public java.lang.Exception
+cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr java.lang.Throwable
+
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -35,6 +44,28 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public java.lang.Throwable
+cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+intf java.io.Serializable
+meth public final java.lang.Throwable[] getSuppressed()
+meth public final void addSuppressed(java.lang.Throwable)
+meth public java.lang.StackTraceElement[] getStackTrace()
+meth public java.lang.String getLocalizedMessage()
+meth public java.lang.String getMessage()
+meth public java.lang.String toString()
+meth public java.lang.Throwable fillInStackTrace()
+meth public java.lang.Throwable getCause()
+meth public java.lang.Throwable initCause(java.lang.Throwable)
+meth public void printStackTrace()
+meth public void printStackTrace(java.io.PrintStream)
+meth public void printStackTrace(java.io.PrintWriter)
+meth public void setStackTrace(java.lang.StackTraceElement[])
+supr java.lang.Object
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -312,6 +343,24 @@ meth public int getStartOffset()
 supr java.lang.Object
 hfds endOffset,startOffset
 
+CLSS public final org.netbeans.api.lsp.ResourceModificationException
+cons public init(java.util.List<org.netbeans.api.lsp.WorkspaceEdit>,java.util.List<java.lang.String>,java.lang.String)
+cons public init(java.util.List<org.netbeans.api.lsp.WorkspaceEdit>,org.netbeans.api.lsp.WorkspaceEdit,int,int,java.util.Collection<java.lang.String>,java.lang.String,java.lang.Throwable)
+fld public final static int BEFORE_FIRST_EDIT = -1
+fld public final static int UNSPECIFIED_EDIT = -2
+fld public final static int UNSPECIFIED_OPERATIION = -2
+meth public boolean isUnspecifiedEdit()
+meth public int getFailedEditIndex()
+meth public int getFailedOperationIndex()
+meth public java.util.List<java.lang.String> getSavedResources()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.List<org.netbeans.api.lsp.WorkspaceEdit> getAppliedEdits()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.lsp.WorkspaceEdit getFailedEdit()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+supr java.lang.Exception
+hfds appliedEdits,failedEdit,failedEditIndex,failedOperationIndex,savedResources
+
 CLSS public org.netbeans.api.lsp.ResourceOperation
 cons public init()
 innr public final static CreateFile
@@ -452,6 +501,7 @@ hfds end,newText,start
 CLSS public org.netbeans.api.lsp.WorkspaceEdit
 cons public init(java.util.List<org.openide.util.Union2<org.netbeans.api.lsp.TextDocumentEdit,org.netbeans.api.lsp.ResourceOperation>>)
 meth public java.util.List<org.openide.util.Union2<org.netbeans.api.lsp.TextDocumentEdit,org.netbeans.api.lsp.ResourceOperation>> getDocumentChanges()
+meth public static java.util.concurrent.CompletableFuture<java.util.List<java.lang.String>> applyEdits(java.util.List<org.netbeans.api.lsp.WorkspaceEdit>,boolean)
 supr java.lang.Object
 hfds documentChanges
 
@@ -462,6 +512,9 @@ CLSS public abstract interface !annotation org.netbeans.spi.editor.mimelookup.Mi
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass()
 meth public abstract java.lang.String subfolderName()
+
+CLSS public abstract interface org.netbeans.spi.lsp.ApplyEditsImplementation
+meth public abstract java.util.concurrent.CompletableFuture<java.util.List<java.lang.String>> applyChanges(java.util.List<org.netbeans.api.lsp.WorkspaceEdit>,boolean)
 
 CLSS public abstract interface org.netbeans.spi.lsp.CallHierarchyProvider
 meth public abstract java.util.concurrent.CompletableFuture<java.util.List<org.netbeans.api.lsp.CallHierarchyEntry$Call>> findIncomingCalls(org.netbeans.api.lsp.CallHierarchyEntry)
@@ -479,6 +532,8 @@ meth public abstract java.util.List<org.netbeans.api.lsp.CodeAction> getCodeActi
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.Set<java.lang.String> getSupportedCodeActionKinds()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
 
 CLSS public abstract interface org.netbeans.spi.lsp.CodeLensProvider
  anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="CodeLensProvider")

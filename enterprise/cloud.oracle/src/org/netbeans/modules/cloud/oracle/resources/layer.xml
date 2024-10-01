@@ -82,6 +82,9 @@
                     <file name="org-netbeans-modules-cloud-oracle-developer-ContainerRepositoryNode-getContainerRepositories.instance">
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryNode.getContainerRepositories" name="instanceCreate"/>
                     </file>
+                    <file name="org-netbeans-modules-cloud-oracle-developer-MetricsNamespaceNode-getMetrics.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.MetricsNamespaceNode.getMetricNamespaces" name="instanceCreate"/>
+                    </file>
                     <file name="org-netbeans-modules-cloud-oracle-compute-ClusterNode-getClusters.instance">
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.compute.ClusterNode.getClusters" name="instanceCreate"/>
                     </file>
@@ -215,6 +218,23 @@
                     </file>
                 </folder>
             </folder>
+            <folder name="MetricsNamespace">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-developer-MetricsNamespaceNode-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.MetricsNamespaceNode.createNode" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-developer-MetricsNode-getMetrics.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.MetricsNode.getMetrics" name="instanceCreate"/>
+                    </file>
+                </folder>
+                <folder name="Metrics">
+                    <folder name="Nodes">
+                        <file name="org-netbeans-modules-cloud-oracle-developer-MetricsNode-createNode.instance">
+                            <attr methodvalue="org.netbeans.modules.cloud.oracle.developer.MetricsNode.createNode" name="instanceCreate"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
             <folder name="ContainerTag">
                 <folder name="Nodes">
                     <file name="org-netbeans-modules-cloud-oracle-cdeveloper-ContainerTagNode-createNode.instance">
@@ -279,6 +299,15 @@
                         <!--org.netbeans.modules.cloud.oracle.devops.RepositoryNode.createNode()-->
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.RepositoryNode.createNode" name="instanceCreate"/>
                     </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-java">
+                <folder name="AnnotationProcessors">
+                    <file name="org-netbeans-modules-cloud-oracle-assets-CloudAssetsJavaCompletion.instance"/>
                 </folder>
             </folder>
         </folder>

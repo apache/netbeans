@@ -19,14 +19,19 @@
 package org.netbeans.modules.cloud.oracle.steps;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
+import org.netbeans.modules.cloud.oracle.OCIManager;
+import org.netbeans.modules.cloud.oracle.OCISessionInitiator;
 import org.netbeans.modules.cloud.oracle.assets.AbstractStep;
-import org.netbeans.modules.cloud.oracle.assets.Steps;
 import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.openide.NotifyDescriptor;
+import org.openide.NotifyDescriptor.QuickPick;
 import org.openide.util.NbBundle;
 
 /**
@@ -35,7 +40,9 @@ import org.openide.util.NbBundle;
  * @author Jan Horvath
  */
 @NbBundle.Messages({
-    "SelectDBConnection=Select Database Connection"
+    "SelectDBConnection=Select Database Connection",
+    "AddNewConnection=<Add a new Connection>",
+    "OADB=Oracle Autonomous Database"
 })
 public final class DatabaseConnectionStep extends AbstractStep<DatabaseItem> {
 
@@ -51,8 +58,12 @@ public final class DatabaseConnectionStep extends AbstractStep<DatabaseItem> {
             String compartmentId = connections[i].getConnectionProperties().getProperty("CompartmentOCID"); //NOI18N
             String description = connections[i].getConnectionProperties().getProperty("Description"); //NOI18N
             if (ocid != null && compartmentId != null) {
+                OCISessionInitiator session = OCIManager.getDefault().getActiveProfile();
+                String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+                String regionCode = session.getRegion().getRegionCode();
+
                 DatabaseItem dbItem
-                        = new DatabaseItem(OCID.of(ocid, "Databases"), compartmentId, name, null, name); //NOI18N
+                        = new DatabaseItem(OCID.of(ocid, "Databases"), compartmentId, name, null, name, tenancyId, regionCode); //NOI18N
                 dbItem.setDescription(description);
                 adbConnections.put(name, dbItem);
             }
@@ -61,12 +72,19 @@ public final class DatabaseConnectionStep extends AbstractStep<DatabaseItem> {
 
     @Override
     public NotifyDescriptor createInput() {
-        return Steps.createQuickPick(adbConnections, Bundle.SelectDBConnection());
+        List<QuickPick.Item> items = new LinkedList<>();
+        items.add(new QuickPick.Item(Bundle.AddNewConnection(), Bundle.AddNewConnection()));
+        for (Entry<String, DatabaseItem> adbConnection : adbConnections.entrySet()) {
+            items.add(new QuickPick.Item(adbConnection.getKey(), Bundle.OADB()));
+        }
+        return new NotifyDescriptor.QuickPick(Bundle.SelectDBConnection(), Bundle.SelectDBConnection(), items, false);
     }
 
     @Override
     public void setValue(String selected) {
-        this.selected = (DatabaseItem) adbConnections.get(selected);
+        if (!selected.equals(Bundle.AddNewConnection())) {
+            this.selected = (DatabaseItem) adbConnections.get(selected);
+        }
     }
 
     @Override

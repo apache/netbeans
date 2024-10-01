@@ -25,6 +25,8 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +38,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.function.Predicate;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -75,6 +77,7 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 import org.netbeans.modules.maven.InternalActionDelegate;
 import org.netbeans.modules.maven.problems.SanityBuildAction.SanityBuildNeededChecker;
+import org.openide.util.Cancellable;
 import org.openide.util.Pair;
 
 /**
@@ -362,25 +365,25 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
         List<Artifact> missingJars = new ArrayList<Artifact>();
         List<Artifact> artifactsToCheck = new ArrayList<>(project.getArtifacts());
         MavenProject partial = MavenProjectCache.getPartialProject(project);
-        Collection<Artifact> fakes = (Collection<Artifact>)project.getContextValue("NB_FakedArtifacts");
+        Collection<Artifact> placeholders = MavenProjectCache.getPlaceholderArtifacts(project);
         if (LOG.isLoggable(Level.FINER)) {
             LOG.log(Level.FINER, "Checking artifacts: {0}", artifactsToCheck);
             if (partial != null && partial != project) {
-                Collection<Artifact> partialFakes = (Collection<Artifact>)partial.getContextValue("NB_FakedArtifacts");
-                LOG.log(Level.FINER, "Partial project for {0}@{1} is: {2}@{3}, fake artifacts: {4}", new Object[] { 
-                    project, System.identityHashCode(project), partial, System.identityHashCode(partial), partialFakes
+                Collection<Artifact> partialPlaceholders = MavenProjectCache.getPlaceholderArtifacts(partial);
+                LOG.log(Level.FINER, "Partial project for {0}@{1} is: {2}@{3}, placeholder artifacts: {4}", new Object[] { 
+                    project, System.identityHashCode(project), partial, System.identityHashCode(partial), partialPlaceholders
                 });
             }
-            LOG.log(Level.FINER, "Fake artifacts for {0}@{1}: {2}", new Object[] { 
-                project, System.identityHashCode(project), fakes
+            LOG.log(Level.FINER, "Placeholder artifacts for {0}@{1}: {2}", new Object[] { 
+                project, System.identityHashCode(project), placeholders
             });
         }
         
         Collection<Artifact> toCheck = new HashSet<>(project.getArtifacts());
-        if (fakes != null) {
-            // the fake artifacts are typically without a scope, so ignore scope when merging with other reported pieces.
+        if (placeholders != null) {
+            // the placeholder artifacts are typically without a scope, so ignore scope when merging with other reported pieces.
             Set<String> ids = toCheck.stream().map(MavenModelProblemsProvider::artifactId).collect(Collectors.toSet());
-            fakes.stream().filter(a -> !ids.contains(artifactId(a))).forEach(toCheck::add);
+            placeholders.stream().filter(a -> !ids.contains(artifactId(a))).forEach(toCheck::add);
         }
         
         for (Artifact art : toCheck) {
@@ -555,6 +558,34 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
         return primingProvider;
     }
     
+    /**
+     * Finds a suitable Consumer for cancellable in the action context Lookup.
+     * I didn't want to provide yet another public interface, so this code checks for a Consumer,
+     * whose implementation class specializes the T type to org.openide.Cancellable
+     * If the context lookup can accept a Cancellable implementation, we provide one, that can cancel 
+     * the running process.
+     * @param context action context
+     * @param primingHandle future capable of cancelling the priming build
+     * @return true, if attached.
+     */
+    private boolean attachCancellable(Lookup context, CompletableFuture primingHandle) {
+        Consumer<Cancellable> c = context.lookup(Consumer.class);
+        if (c != null) {
+            int index = 0;
+            Class[] interfaces = c.getClass().getInterfaces();
+            for (Type t  : c.getClass().getGenericInterfaces()) {
+                if (interfaces[index].getName().equals(Consumer.class.getName())) {
+                    if (((ParameterizedType)t).getActualTypeArguments()[0].getTypeName().equals(Cancellable.class.getName())) {
+                        c.accept(() -> primingHandle.cancel(true));
+                        return true;
+                    }
+                }
+                index++;
+            }
+        }
+        return false;
+    }
+    
     private class PrimingActionProvider implements ActionProvider {
         @Override
         public String[] getSupportedActions() {
@@ -576,8 +607,9 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                 listener.finished(true);
             } else {
                 LOG.log(Level.FINE, "Resolving sanity build action");
-                CompletableFuture<ProjectProblemsProvider.Result> r = saba.resolve(context);
-                r.whenComplete((a, e) -> {
+                CompletableFuture<ProjectProblemsProvider.Result> primingHandle = saba.resolve(context);
+                attachCancellable(context, primingHandle);
+                primingHandle.whenComplete((a, e) -> {
                    listener.finished(e == null); 
                 });
             }

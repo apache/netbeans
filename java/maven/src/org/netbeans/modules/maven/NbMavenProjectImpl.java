@@ -141,7 +141,7 @@ public final class NbMavenProjectImpl implements Project {
                     x = project == null ? null : project.get();
                 }
                 LOG.log(Level.FINE, "Project {0} starting reload. Currentproject is: {1}", 
-                        new Object[] { System.identityHashCode(x == null ? this : x ), x });
+                        new Object[] { Integer.toHexString(System.identityHashCode(x)), x });
             }
             problemReporter.clearReports(); //#167741 -this will trigger node refresh?
             MavenProject prj = loadOriginalMavenProject(true);
@@ -149,7 +149,7 @@ public final class NbMavenProjectImpl implements Project {
             synchronized (NbMavenProjectImpl.this) {
                 old = project == null ? null : project.get();
                 LOG.log(Level.FINE, "Project {0} reloaded. Old project is: {1}, new project {2}", 
-                        new Object[] { prj, System.identityHashCode(old == null ? this : old), System.identityHashCode(prj) });
+                        new Object[] { prj, Integer.toHexString(System.identityHashCode(old)), Integer.toHexString(System.identityHashCode(prj)) });
                 if (old != null && MavenProjectCache.isFallbackproject(prj)) {
                     prj.setPackaging(old.getPackaging()); //#229366 preserve packaging for broken projects to avoid changing lookup.
                 }
@@ -295,6 +295,10 @@ public final class NbMavenProjectImpl implements Project {
         return problemReporter;
     }
 
+    public long getLoadTimestamp() {
+        return MavenProjectCache.getLoadTimestamp(this.project.get());
+    }
+    
     public String getHintJavaPlatform() {
         String hint = getAuxProps().get(Constants.HINT_JDK_PLATFORM, true);
         if (hint == null) {
@@ -482,6 +486,7 @@ public final class NbMavenProjectImpl implements Project {
             LOG.log(Level.FINE, "Asked for project {0} being updated, waiting for the refresh to complete.", projectFile);
             CompletableFuture<MavenProject> f = new CompletableFuture<>();
             reloadTask.addTaskListener((e) -> {
+                 // TODO: must remove the listener, it is one shot !
                 LOG.log(Level.FINE, "Project {0} update done.", projectFile);
                 f.complete(getOriginalMavenProject());
             });
@@ -605,6 +610,9 @@ public final class NbMavenProjectImpl implements Project {
      */
     // @GuardedBy(this)
     private RequestProcessor.Task reloadCompletionTask;
+    
+    // @GuardedBy(this)
+    private RequestProcessor.Task operationCompletionTask;
         
     // tests only !
     synchronized Pair<List<RequestProcessor.Task>, RequestProcessor.Task> reloadBlockingState() {
@@ -616,6 +624,10 @@ public final class NbMavenProjectImpl implements Project {
         return reloadTask;
     }
     
+    public RequestProcessor.Task scheduleProjectOperation(RequestProcessor rp, Runnable r,  int delay) {
+        return scheduleProjectOperation(rp, r, delay, false);
+    }
+    
     /**
      * Schedules project operation that delays potential reloads. If a reload is posted, it will be performed only after
      * this operation compeltes (successfully, or erroneously). Multiple project operations can be scheduled, an eventual project reload
@@ -623,43 +635,58 @@ public final class NbMavenProjectImpl implements Project {
      * operation schedules.
      * <p>
      * To avoid race condition on task startup, this method actually creates and schedules the task so it blocks reloads from its inception.
-     * It returns the value of the worker task as the result value. 
-     * wrapper.
+     * Since the project might be reloaded and full effects of the reload will be visible only after broadcasting and completing PROP_PROJECT
+     * event, the caller might ask to return a Task that will complete after all that is complete. If no project reload happens the task
+     * completes as soon as the Runnable finishes.
+     *
      * @param rp request processor that should schedule the task
      * @param delay optional delay, use 0 for immediate run
      * @param r operation to run
+     * @param afterChangesFired if true, the returned Task will complete only after the post-operation project reload fires its events.
      * @return the scheduled task
      */
-    public RequestProcessor.Task scheduleProjectOperation(RequestProcessor rp, Runnable r,  int delay) {
+    public RequestProcessor.Task scheduleProjectOperation(RequestProcessor rp, Runnable r,  int delay, boolean afterChangesFired) {
         RequestProcessor.Task t = rp.create(r);
         if (Boolean.getBoolean("test.reload.sync")) {
             LOG.log(Level.FINE, "Running the blocking task synchronously (test.reload.sync set)");
             t.run();
             return t;
         } else {
+            RequestProcessor.Task t2;
             synchronized (this) {
+                if (operationCompletionTask == null) {
+                    operationCompletionTask = RELOAD_RP.create(() -> {});
+                }
+                t2 = operationCompletionTask;
                 blockingList.add(t);
                 if (LOG.isLoggable(Level.FINER)) {
                     LOG.log(Level.FINER, "Blocking project reload on task {0}, blocking queue: {1}", new Object[] { t, blockingList });
                 }
                 t.addTaskListener((e) -> {
+                    boolean runImmediately;
                     synchronized (this) {
                         blockingList.remove(t);
                         if (!blockingList.isEmpty()) {
                             LOG.log(Level.FINER, "Project {0} task {1} finished, still blocked", new Object[] { this, t });
                             return;
                         }
-                        if (reloadCompletionTask == null) {
-                            LOG.log(Level.FINER, "Project {0} task {1} finished, no reload requested", new Object[] { this, t });
-                            return;
-                        }
+                        // the value is still cached in t2
+                        operationCompletionTask = null;
+                        runImmediately = reloadCompletionTask == null;
+                    }
+                    if (runImmediately) {
+                        LOG.log(Level.FINER, "Project {0} task {1} finished, no reload requested", new Object[] { this, t });
+                        t2.run();
+                        return;
                     }
                     LOG.log(Level.FINER, "Project {0} task {1} finished, project reload released", new Object[] { this, t });
-                    fireProjectReload(true);
+                    fireProjectReload(true).addTaskListener((e2) -> {
+                        t2.run();
+                    });
                 });
             }
             t.schedule(delay);
-            return t;
+            return afterChangesFired ? t2 : t;
         }
     }
     
@@ -764,7 +791,7 @@ public final class NbMavenProjectImpl implements Project {
                 } else {
                     LOG.log(Level.INFO, "Recovering module {0}, pomfile {1}", new Object[] { modName, modPom });
                     NbMavenProjectImpl childImpl = c.getLookup().lookup(NbMavenProjectImpl.class);
-                    childImpl.fireProjectReload(true);
+                    childImpl.fireProjectReload(true).waitFinished();
                 }
             } catch (IOException ex) {
                 LOG.log(Level.FINE, "Error getting module project {0} is not a project", modName);

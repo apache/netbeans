@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.1
+#Version 1.2
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -31,4 +32,6 @@ CLSS public abstract interface static org.netbeans.modules.java.file.launcher.sp
 meth public abstract java.lang.String getOptions()
 meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
 meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
+meth public java.net.URI getWorkDirectory()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 

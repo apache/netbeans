@@ -35,7 +35,7 @@ class RunConfigurationProvider implements vscode.DebugConfigurationProvider {
 			resolve(config);
 		});
 	}
-
+	
 	resolveDebugConfigurationWithSubstitutedVariables?(_folder: vscode.WorkspaceFolder | undefined, config: vscode.DebugConfiguration, _token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
         return new Promise<vscode.DebugConfiguration>(resolve => {
 			const args = argumentsNode.getValue();
@@ -51,7 +51,11 @@ class RunConfigurationProvider implements vscode.DebugConfigurationProvider {
 			if (vmArgs) {
 				if (!config.vmArgs) {
 					config.vmArgs = vmArgs;
+				} else if (Array.isArray(config.vmArgs)) {
+					let cfg : string[] = config.vmArgs;
+					cfg.push(vmArgs);
 				} else {
+					// assume the config is a string
 					config.vmArgs = `${config.vmArgs} ${vmArgs}`;
 				}
 			}

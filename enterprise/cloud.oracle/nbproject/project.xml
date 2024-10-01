@@ -83,6 +83,12 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.libs.javacapi</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency/>
+                </dependency>
+                <dependency>
                     <code-name-base>com.google.gson</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -106,6 +112,14 @@
                     <run-dependency>
                         <release-version>1</release-version>
                         <specification-version>1.57</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.java.source.base</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>2.68</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -362,6 +376,10 @@
             <class-path-extension>
                 <runtime-relative-path>ext/oci-java-sdk-artifacts-3.25.3.jar</runtime-relative-path>
                 <binary-origin>external/oci-java-sdk-artifacts-3.25.3.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/oci-java-sdk-monitoring-3.25.3.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-monitoring-3.25.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/httpclient-4.5.13.jar</runtime-relative-path>

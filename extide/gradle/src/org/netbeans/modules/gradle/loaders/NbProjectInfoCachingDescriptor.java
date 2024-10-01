@@ -59,7 +59,7 @@ public final class NbProjectInfoCachingDescriptor implements ModelCachingDescrip
     @Override
     public void onLoad(String target, NbProjectInfo model) {
         Quality quality = model.hasException() ? SIMPLE : FULL_ONLINE;
-        ProjectInfoDiskCache.QualifiedProjectInfo qinfo = new ProjectInfoDiskCache.QualifiedProjectInfo(quality, model);
+        ProjectInfoDiskCache.QualifiedProjectInfo qinfo = new ProjectInfoDiskCache.QualifiedProjectInfo(quality, model, System.currentTimeMillis());
         GradleFiles gf = new GradleFiles(structure.getProjectDir(target), true);
         ProjectInfoDiskCache.get(gf).storeData(qinfo);
     }

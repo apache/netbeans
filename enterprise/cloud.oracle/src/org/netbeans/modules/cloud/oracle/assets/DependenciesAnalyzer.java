@@ -39,6 +39,7 @@ public final class DependenciesAnalyzer implements SuggestionAnalyzer {
             put("micronaut-oraclecloud-atp", "Databases"); //NOI18N
             put("micronaut-object-storage-oracle-cloud", "Bucket"); //NOI18N
             put("micronaut-oraclecloud-vault", "Vault"); //NOI18N
+            put("micronaut-oraclecloud-micrometer", "MetricsNamespace"); //NOI18N        
         }
     };
 

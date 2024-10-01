@@ -20,7 +20,12 @@
 package org.netbeans.modules.maven.api;
 
 import java.io.File;
+import java.io.StringReader;
 import java.util.Arrays;
+import java.util.List;
+import org.apache.maven.model.Dependency;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
@@ -138,4 +143,133 @@ public class PluginPropertyUtilsTest extends NbTestCase {
         assertEquals("[--enable-preview]", Arrays.toString(PluginPropertyUtils.getPluginPropertyList(ProjectManager.getDefault().findProject(d), "org.apache.maven.plugins", "maven-compiler-plugin", "compilerArgs", "arg", null)));
     }
 
+    public void testDependencyListBuilder() throws Exception {
+        String testPom =
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                <modelVersion>4.0.0</modelVersion>
+                <groupId>let.me.reproduce</groupId>
+                <artifactId>annotation-processor-netbeans-reproducer</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <packaging>jar</packaging>
+                <properties>
+                    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                    <maven.compiler.release>21</maven.compiler.release>
+                    <exec.mainClass>let.me.reproduce.annotation.processor.netbeans.reproducer.Main</exec.mainClass>
+                </properties>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.mapstruct</groupId>
+                        <artifactId>mapstruct</artifactId>
+                        <version>1.5.5.Final</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.soabase.record-builder</groupId>
+                        <artifactId>record-builder-core</artifactId>
+                        <version>42</version>
+                    </dependency>
+                </dependencies>
+
+                <build>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <version>3.13.0</version>
+                            <configuration>
+                                <parameters>true</parameters>
+                                <annotationProcessorPaths>
+                                    <path>
+                                        <groupId>org.mapstruct</groupId>
+                                        <artifactId>mapstruct-processor</artifactId>
+                                        <version>1.5.5.Final</version>
+                                    </path>
+                                    <path>
+                                        <groupId>io.soabase.record-builder</groupId>
+                                        <artifactId>record-builder-processor</artifactId>
+                                        <version>42</version>
+                                    </path>
+                                </annotationProcessorPaths>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </build>
+            </project>
+            """;
+        Xpp3Dom configRoot = Xpp3DomBuilder.build(new StringReader(testPom)).getChild("build").getChild("plugins").getChildren()[0].getChild("configuration");
+
+        // Matching filter for propertyItemName should yield correct result
+        PluginPropertyUtils.DependencyListBuilder bld = new PluginPropertyUtils.DependencyListBuilder(
+                "annotationProcessorPaths",
+                null
+        );
+        List<Dependency> dependencies = bld.build(configRoot, PluginPropertyUtils.DUMMY_EVALUATOR);
+        assertEquals(2, dependencies.size());
+
+        String testPom2 =
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                <modelVersion>4.0.0</modelVersion>
+                <groupId>let.me.reproduce</groupId>
+                <artifactId>annotation-processor-netbeans-reproducer</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <packaging>jar</packaging>
+                <properties>
+                    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                    <maven.compiler.release>21</maven.compiler.release>
+                    <exec.mainClass>let.me.reproduce.annotation.processor.netbeans.reproducer.Main</exec.mainClass>
+                </properties>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.mapstruct</groupId>
+                        <artifactId>mapstruct</artifactId>
+                        <version>1.5.5.Final</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.soabase.record-builder</groupId>
+                        <artifactId>record-builder-core</artifactId>
+                        <version>42</version>
+                    </dependency>
+                </dependencies>
+
+                <build>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <version>3.13.0</version>
+                            <configuration>
+                                <parameters>true</parameters>
+                                <annotationProcessorPaths>
+                                    <annotationProcessorPath>
+                                        <groupId>org.mapstruct</groupId>
+                                        <artifactId>mapstruct-processor</artifactId>
+                                        <version>1.5.5.Final</version>
+                                    </annotationProcessorPath>
+                                    <annotationProcessorPath2>
+                                        <groupId>io.soabase.record-builder</groupId>
+                                        <artifactId>record-builder-processor</artifactId>
+                                        <version>42</version>
+                                    </annotationProcessorPath2>
+                                </annotationProcessorPaths>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </build>
+            </project>
+            """;
+
+        // Filter with null value for propertyItemName should yield full list
+        Xpp3Dom configRoot2 = Xpp3DomBuilder.build(new StringReader(testPom2)).getChild("build").getChild("plugins").getChildren()[0].getChild("configuration");
+        PluginPropertyUtils.DependencyListBuilder bld2 = new PluginPropertyUtils.DependencyListBuilder(
+                "annotationProcessorPaths",
+                null
+        );
+        List<Dependency> dependencies3 = bld2.build(configRoot2, PluginPropertyUtils.DUMMY_EVALUATOR);
+        assertEquals(2, dependencies3.size());
+    }
 }

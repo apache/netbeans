@@ -27,14 +27,17 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.apache.maven.artifact.Artifact;
@@ -138,7 +141,7 @@ public class MavenFileOwnerQueryImpl implements FileOwnerQueryImplementation {
         return groupId + ':' + artifactId + ":" + version;
     }
 
-    public void registerCoordinates(String groupId, String artifactId, String version, URL owner, boolean fire) {
+    public synchronized void registerCoordinates(String groupId, String artifactId, String version, URL owner, boolean fire) {
         String oldkey = groupId + ':' + artifactId;
         //remove old key if pointing to the same project
         if (owner.toString().equals(prefs().get(oldkey, null))) {
@@ -147,6 +150,19 @@ public class MavenFileOwnerQueryImpl implements FileOwnerQueryImplementation {
         
         String key = cacheKey(groupId, artifactId, version);
         String ownerString = owner.toString();
+
+        String oldString = prefs().get(key, null);
+        if (oldString != null && !oldString.equals(ownerString)) {
+            // avoid replacing gav to an opened project with gav to a closed project. Closed projects continue to listen and sometimes register themselves
+            // - this is to avoid replacing a "live, opened" project registration with a closed project registration, if they compete for the same artifact id.
+            Set<String> opened = Arrays.stream(OpenProjects.getDefault().getOpenProjects()).
+                    map(p -> p.getProjectDirectory().toURI().toString()).collect(Collectors.toSet());
+            if (opened.contains(oldString) && !opened.contains(ownerString)) {
+                LOG.log(Level.FINE, "NOT replacing {0} with {1} under {2}, old owner is opened while the new is not.", new Object[] {oldString, owner, key});
+                return;
+            }
+        }
+
         try {
             for (String k : prefs().keys()) {
                 String value;
@@ -165,7 +181,7 @@ public class MavenFileOwnerQueryImpl implements FileOwnerQueryImplementation {
         } catch (BackingStoreException ex) {
             LOG.log(Level.FINE, "Error iterating preference to find old mapping", ex);
         }
-        
+
         prefs().put(key, ownerString);
         LOG.log(Level.FINE, "Registering {0} under {1}", new Object[] {owner, key});
         if (fire) {

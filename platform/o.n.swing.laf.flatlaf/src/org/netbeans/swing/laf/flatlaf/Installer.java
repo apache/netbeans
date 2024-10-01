@@ -23,6 +23,8 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import java.net.URI;
+import java.net.URL;
 import javax.swing.UIManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -51,6 +53,13 @@ public class Installer extends ModuleInstall {
         FileObject customFolder = FileUtil.getConfigFile("LookAndFeel");
         if (customFolder != null && customFolder.isFolder()) {
             FlatLaf.registerCustomDefaultsSource(customFolder.toURL());
+        } else {
+            try {
+                URL lafConfig = URI.create("nbfs://nbhost/SystemFileSystem/LookAndFeel/").toURL();
+                FlatLaf.registerCustomDefaultsSource(lafConfig);
+            } catch (Exception ex) {
+                // fall through
+            }
         }
 
         FlatLaf.setSystemColorGetter( name -> {

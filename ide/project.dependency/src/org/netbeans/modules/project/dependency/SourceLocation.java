@@ -26,14 +26,14 @@ import org.openide.filesystems.FileObject;
  * In case the range cannot be determined,
  * the start an end position are equal. In the case the position cannot be determined
  * at all, the start (and end) positions are set to -1.
- * <p/>
+ * <p>
  * In the case the object itself is not present in the project file, but is implied
  * by another project construction, the {@link #getImpliedBy()} is not null, and provides
  * the model for that construction, which may be project type-specific. For example a dependency may be introduced by intermediate
  * libraries. In that case, when the API is queried for the dependency declaration source,
  * it will return the direct dependence that introduced the dependency in question from {@link #getImpliedBy}
  * and its location range. Other project-specific artifacts may be returned.
- * <p/>
+ * <p>
  * The SourceLocation can identify another artifact that contains the actual declaration. For implied
  * artifacts ({@link #getImpliedBy()}{@code != null}), the artifact identifies the artifact that declares
  * the dependency. If the dependency specification is split, i.e. into a BOM project and the
@@ -79,7 +79,7 @@ public final class SourceLocation {
     }
 
     /**
-     * Idnentifies the source file. The file can be {@code null], if the location is not located inside the project, such as
+     * Idnentifies the source file. The file can be {@code null}, if the location is not located inside the project, such as
      * version declared in a dpeendency management of a parent POM.
      * 
      * @return Returns the file.

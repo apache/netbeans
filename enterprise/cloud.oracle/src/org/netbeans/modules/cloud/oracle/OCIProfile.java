@@ -215,7 +215,8 @@ public final class OCIProfile implements OCISessionInitiator {
     }
     
     private TenancyItem createTenancyItem(Tenancy tenancy) {
-        TenancyItem item = new TenancyItem(OCID.of(tenancy.getId(), "Tenancy"), tenancy.getName());
+        String regionCode = configProvider.getRegion().getRegionCode();
+        TenancyItem item = new TenancyItem(OCID.of(tenancy.getId(), "Tenancy"), tenancy.getName(), regionCode);
         item.setDescription(Bundle.LBL_HomeRegion(tenancy.getHomeRegionKey()));
         return item;
     }

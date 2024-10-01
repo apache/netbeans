@@ -27,8 +27,8 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
  */
 public class KeyItem extends OCIItem {
 
-    public KeyItem(OCID id, String compartmentId, String name) {
-        super(id, compartmentId, name);
+    public KeyItem(OCID id, String compartmentId, String name, String tenancyId, String regionCode) {
+        super(id, compartmentId, name, tenancyId, regionCode);
     }
 
     public KeyItem() {

@@ -30,6 +30,7 @@ import java.util.Properties;
 import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.InvalidArtifactRTException;
 import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
@@ -194,7 +195,7 @@ public class PluginPropertyUtils {
         T build(Xpp3Dom configRoot, ExpressionEvaluator eval);
     }
     
-    private static ExpressionEvaluator DUMMY_EVALUATOR = new ExpressionEvaluator() {
+    static ExpressionEvaluator DUMMY_EVALUATOR = new ExpressionEvaluator() {
 
         @Override
         public Object evaluate(String string) throws ExpressionEvaluationException {
@@ -610,18 +611,14 @@ public class PluginPropertyUtils {
         private static final String PROP_VERSION = "version"; // NOI18N
         private static final String PROP_SCOPE = "scope"; // NOI18N
         
-        private final MavenProject mvnProject;
         private final String multiPropertyName;
-        private final String propertyItemName;
         private final String filterType;
-        
-        public DependencyListBuilder(MavenProject mvnProject, String multiPropertyName, String propertyItemName, String filterType) {
-            this.mvnProject = mvnProject;
+
+        public DependencyListBuilder(String multiPropertyName, String filterType) {
             this.multiPropertyName = multiPropertyName;
-            this.propertyItemName = propertyItemName;
             this.filterType = filterType;
         }
-        
+
         @Override
         public List<Dependency> build(Xpp3Dom configRoot, ExpressionEvaluator eval) {
             if (configRoot == null) {
@@ -632,7 +629,7 @@ public class PluginPropertyUtils {
             if (source == null) {
                 return null;
             }
-            for (Xpp3Dom ch : source.getChildren(propertyItemName)) {
+            for (Xpp3Dom ch : source.getChildren()) {
                 Xpp3Dom a = ch.getChild(PROP_ARTIFACT_ID);
                 Xpp3Dom g = ch.getChild(PROP_GROUP_ID);
                 Xpp3Dom v = ch.getChild(PROP_VERSION);
@@ -693,16 +690,31 @@ public class PluginPropertyUtils {
 
         /**
          * Creates a query instance with mandatory parameters
+         *
          * @param pluginGroupId plugin's group ID
          * @param pluginArtifactId plugin's artifact ID
-         * @param pathProperty name of the property (the property should contain a list of items)
-         * @param pathItemName name of the single item's element
+         * @param pathProperty name of the property (the property should contain
+         * a list of items)
          */
-        public PluginConfigPathParams(String pluginGroupId, String pluginArtifactId, String pathProperty, String pathItemName) {
+        public PluginConfigPathParams(String pluginGroupId, String pluginArtifactId, String pathProperty) {
             this.pluginGroupId = pluginGroupId;
             this.pluginArtifactId = pluginArtifactId;
             this.pathProperty = pathProperty;
-            this.pathItemName = pathItemName;
+            this.pathItemName = null;
+        }
+
+        /**
+         * Creates a query instance with mandatory parameters
+         * 
+         * @deprecated List items can have arbitrary names, use {@link #PluginConfigPathParams(java.lang.String, java.lang.String, java.lang.String)} instead.
+         * @param pluginGroupId plugin's group ID
+         * @param pluginArtifactId plugin's artifact ID
+         * @param pathProperty name of the property (the property should contain a list of items)
+         * @param pathItemName name of the single item's element (ignored)
+         */
+        @Deprecated
+        public PluginConfigPathParams(String pluginGroupId, String pluginArtifactId, String pathProperty, String pathItemName) {
+            this(pluginGroupId, pluginArtifactId, pathProperty);
         }
 
         /**
@@ -741,6 +753,10 @@ public class PluginPropertyUtils {
             return pathProperty;
         }
 
+        /**
+         * Returns null.
+         */
+        @Deprecated
         public String getPathItemName() {
             return pathItemName;
         }
@@ -777,7 +793,7 @@ public class PluginPropertyUtils {
         }
         
         MavenProject mavenProject = projectImpl.getOriginalMavenProject();
-        DependencyListBuilder bld = new DependencyListBuilder(mavenProject, query.getPathProperty(), query.getPathItemName(), query.getArtifactType());
+        DependencyListBuilder bld = new DependencyListBuilder(query.getPathProperty(), query.getArtifactType());
         List<Dependency> coordinates = PluginPropertyUtils.getPluginPropertyBuildable(mavenProject, query.getPluginGroupId(), query.getPluginArtifactId(), query.getGoal(), bld);
         if (coordinates == null) {
             return null;
@@ -802,16 +818,29 @@ public class PluginPropertyUtils {
             // BEGIN:copied from maven-compiler-plugin + adapted
             Artifact artifact;
             try {
-                artifact = new DefaultArtifact(
-                     coord.getGroupId(),
-                     coord.getArtifactId(),
-                     VersionRange.createFromVersionSpec( coord.getVersion() ),
-                     coord.getScope() == null ? query.getDefaultScope() : coord.getScope(),
-                     coord.getType(),
-                     coord.getClassifier(),
-                     handler,
-                     false );
-            } catch (InvalidVersionSpecificationException ex) {
+                VersionRange rng = VersionRange.createFromVersionSpec( coord.getVersion() );
+                if (rng != null) {
+                    artifact = new DefaultArtifact(
+                         coord.getGroupId(),
+                         coord.getArtifactId(),
+                         VersionRange.createFromVersionSpec( coord.getVersion() ),
+                         coord.getScope() == null ? query.getDefaultScope() : coord.getScope(),
+                         coord.getType(),
+                         coord.getClassifier(),
+                         handler,
+                         false );
+                } else {
+                    artifact = new DefaultArtifact(
+                         coord.getGroupId(),
+                         coord.getArtifactId(),
+                         "",
+                         coord.getScope() == null ? query.getDefaultScope() : coord.getScope(),
+                         coord.getType(),
+                         coord.getClassifier(),
+                         handler
+                    );
+                }
+            } catch (InvalidVersionSpecificationException | InvalidArtifactRTException ex) {
                 errorsOpt.add(new ArtifactResolutionException(ex.getMessage(), 
                         coord.getGroupId(), coord.getArtifactId(), coord.getVersion(), 
                         coord.getType(), coord.getClassifier(), ex));
@@ -820,21 +849,23 @@ public class PluginPropertyUtils {
 
             requiredArtifacts.add( artifact );
 
-            ArtifactResolutionRequest request = new ArtifactResolutionRequest()
-                            .setArtifact( requiredArtifacts.iterator().next() )
-                            .setResolveRoot(true)
-                            .setResolveTransitively(true)
-                            .setArtifactDependencies(requiredArtifacts)
-                            .setLocalRepository(projectImpl.getEmbedder().getLocalRepository())
-                            .setRemoteRepositories( mavenProject.getRemoteArtifactRepositories() );
+            if (transitiveDependencies) {
+                ArtifactResolutionRequest request = new ArtifactResolutionRequest()
+                                .setArtifact( requiredArtifacts.iterator().next() )
+                                .setResolveRoot(true)
+                                .setResolveTransitively(true)
+                                .setArtifactDependencies(requiredArtifacts)
+                                .setLocalRepository(projectImpl.getEmbedder().getLocalRepository())
+                                .setRemoteRepositories( mavenProject.getRemoteArtifactRepositories() );
 
-            ArtifactResolutionResult resolutionResult = repos.resolve(request);
-            // END:copied from maven-compiler-plugin + adapted
-            if (errorsOpt != null) {
-                errorsOpt.addAll(resolutionResult.getMetadataResolutionExceptions());
-                errorsOpt.addAll(resolutionResult.getErrorArtifactExceptions());
+                ArtifactResolutionResult resolutionResult = repos.resolve(request);
+                // END:copied from maven-compiler-plugin + adapted
+                if (errorsOpt != null) {
+                    errorsOpt.addAll(resolutionResult.getMetadataResolutionExceptions());
+                    errorsOpt.addAll(resolutionResult.getErrorArtifactExceptions());
+                }
+                requiredArtifacts.addAll(resolutionResult.getArtifacts());
             }
-            requiredArtifacts.addAll(resolutionResult.getArtifacts());
         }
         return new ArrayList<>(requiredArtifacts);
     }

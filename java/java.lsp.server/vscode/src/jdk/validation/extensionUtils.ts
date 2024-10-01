@@ -18,7 +18,7 @@
  */
 
 import * as vscode from 'vscode';
-import { client as nblsClient } from '../../extension';
+import { client as nblsClient, clientRuntimeJDK} from '../../extension';
 
 const RH_EXTENSION_ID = 'redhat.java';
 
@@ -27,6 +27,12 @@ export function isRHExtensionActive(): boolean {
     return rh ? true : false;
 }
 
+export async function currentClientJDK() : Promise<string | null> {
+    await nblsClient;
+    return clientRuntimeJDK;
+}
+
 export async function waitForNblsCommandToBeAvailable() {
     await nblsClient;
+
 }

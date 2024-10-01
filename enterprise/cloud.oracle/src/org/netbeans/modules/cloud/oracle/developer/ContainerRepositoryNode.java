@@ -83,6 +83,8 @@ public class ContainerRepositoryNode extends OCINode {
                     .compartmentId(compartmentId.getKey().getValue())
                     .build();
 
+            String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+
             return client.listContainerRepositories(listContainerRepositoriesRequest)
                     .getContainerRepositoryCollection()
                     .getItems()
@@ -94,7 +96,8 @@ public class ContainerRepositoryNode extends OCINode {
                             session.getRegion().getRegionCode(),
                             d.getNamespace(),
                             d.getIsPublic(), 
-                            d.getImageCount()
+                            d.getImageCount(),
+                            tenancyId
                     ))
                     .collect(Collectors.toList());
         };

@@ -31,12 +31,15 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
 import org.netbeans.api.java.source.JavaSourceTest.SourceLevelQueryImpl;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
@@ -596,6 +599,208 @@ public class ElementUtilitiesTest extends NbTestCase {
             assertFalse(globals.contains("test.A.B"));
             assertTrue(globals.contains("java.util.List"));
             assertTrue(globals.contains("java.lang.System"));
+        }, true);
+    }
+
+    public void testGetLinkedRecordElements1() throws Exception {
+        prepareTest();
+        SourceUtilsTestUtil.setSourceLevel(testFO, "17");
+        TestUtilities.copyStringToFile(FileUtil.toFile(testFO),
+                """
+                package test;
+                public record R(String component) {}
+                """
+        );
+        SourceLevelQueryImpl.sourceLevel = "17";
+
+        JavaSource javaSource = JavaSource.forFileObject(testFO);
+        javaSource.runUserActionTask((CompilationController controller) -> {
+            controller.toPhase(JavaSource.Phase.RESOLVED);
+
+            TypeElement record = controller.getTopLevelElements().get(0);
+            ElementUtilities utils = controller.getElementUtilities();
+            Collection<? extends Element> linked = utils.getLinkedRecordElements(record.getRecordComponents().get(0));
+            Set<String> linkedEncoded = linked.stream()
+                                              .map(Element::getKind)
+                                              .map(ElementKind::name)
+                                              .collect(Collectors.toCollection(TreeSet::new));
+            assertEquals(new TreeSet<>(Arrays.asList("FIELD", "METHOD", "PARAMETER", "RECORD_COMPONENT")),
+                         linkedEncoded);
+
+            for (Element linkedElement : linked) {
+                if (!linked.equals(utils.getLinkedRecordElements(linkedElement))) {
+                    utils.getLinkedRecordElements(linkedElement);
+                }
+                assertEquals(linked, utils.getLinkedRecordElements(linkedElement));
+            }
+        }, true);
+    }
+
+    public void testGetLinkedRecordElements2() throws Exception {
+        prepareTest();
+        SourceUtilsTestUtil.setSourceLevel(testFO, "17");
+        TestUtilities.copyStringToFile(FileUtil.toFile(testFO),
+                """
+                package test;
+                public record R(String component) {
+                    public R {
+                        this.component = component;
+                    }
+                    public String component() {
+                        return component;
+                    }
+                }
+                """
+        );
+        SourceLevelQueryImpl.sourceLevel = "17";
+
+        JavaSource javaSource = JavaSource.forFileObject(testFO);
+        javaSource.runUserActionTask((CompilationController controller) -> {
+            controller.toPhase(JavaSource.Phase.RESOLVED);
+
+            TypeElement record = controller.getTopLevelElements().get(0);
+            ElementUtilities utils = controller.getElementUtilities();
+            Collection<? extends Element> linked = utils.getLinkedRecordElements(record.getRecordComponents().get(0));
+            Set<String> linkedEncoded = linked.stream()
+                                              .map(Element::getKind)
+                                              .map(ElementKind::name)
+                                              .collect(Collectors.toCollection(TreeSet::new));
+            assertEquals(new TreeSet<>(Arrays.asList("FIELD", "METHOD", "PARAMETER", "RECORD_COMPONENT")),
+                         linkedEncoded);
+
+            for (Element linkedElement : linked) {
+                if (!linked.equals(utils.getLinkedRecordElements(linkedElement))) {
+                    utils.getLinkedRecordElements(linkedElement);
+                }
+                assertEquals(linked, utils.getLinkedRecordElements(linkedElement));
+            }
+        }, true);
+    }
+
+    public void testGetLinkedRecordElements3() throws Exception {
+        prepareTest();
+        SourceUtilsTestUtil.setSourceLevel(testFO, "17");
+        TestUtilities.copyStringToFile(FileUtil.toFile(testFO),
+                """
+                package test;
+                public record R(String component) {
+                    public R(String component) {
+                        this.component = component;
+                    }
+                    public String component() {
+                        return component;
+                    }
+                }
+                """
+        );
+        SourceLevelQueryImpl.sourceLevel = "17";
+
+        JavaSource javaSource = JavaSource.forFileObject(testFO);
+        javaSource.runUserActionTask((CompilationController controller) -> {
+            controller.toPhase(JavaSource.Phase.RESOLVED);
+
+            TypeElement record = controller.getTopLevelElements().get(0);
+            ElementUtilities utils = controller.getElementUtilities();
+            Collection<? extends Element> linked = utils.getLinkedRecordElements(record.getRecordComponents().get(0));
+            Set<String> linkedEncoded = linked.stream()
+                                              .map(Element::getKind)
+                                              .map(ElementKind::name)
+                                              .collect(Collectors.toCollection(TreeSet::new));
+            assertEquals(new TreeSet<>(Arrays.asList("FIELD", "METHOD", "PARAMETER", "RECORD_COMPONENT")),
+                         linkedEncoded);
+
+            for (Element linkedElement : linked) {
+                if (!linked.equals(utils.getLinkedRecordElements(linkedElement))) {
+                    utils.getLinkedRecordElements(linkedElement);
+                }
+                assertEquals(linked, utils.getLinkedRecordElements(linkedElement));
+            }
+        }, true);
+    }
+
+    public void testGetLinkedRecordElements4() throws Exception {
+        prepareTest();
+        SourceUtilsTestUtil.setSourceLevel(testFO, "17");
+        TestUtilities.copyStringToFile(FileUtil.toFile(testFO),
+                """
+                package test;
+                public record R(String component) {
+                    public R(String anotherName) { //error
+                        this.component = anotherName;
+                    }
+                    public String component() {
+                        return component;
+                    }
+                }
+                """
+        );
+        SourceLevelQueryImpl.sourceLevel = "17";
+
+        JavaSource javaSource = JavaSource.forFileObject(testFO);
+        javaSource.runUserActionTask((CompilationController controller) -> {
+            controller.toPhase(JavaSource.Phase.RESOLVED);
+
+            TypeElement record = controller.getTopLevelElements().get(0);
+            Element brokenParameter = ElementFilter.constructorsIn(record.getEnclosedElements()).get(0).getParameters().get(0);
+            ElementUtilities utils = controller.getElementUtilities();
+            Collection<? extends Element> linked = utils.getLinkedRecordElements(brokenParameter);
+            Set<String> linkedEncoded = linked.stream()
+                                              .map(Element::getKind)
+                                              .map(ElementKind::name)
+                                              .collect(Collectors.toCollection(TreeSet::new));
+            assertEquals(new TreeSet<>(Arrays.asList("PARAMETER")),
+                         linkedEncoded);
+        }, true);
+    }
+
+    public void testGetLinkedRecordElements5() throws Exception {
+        prepareTest();
+        SourceUtilsTestUtil.setSourceLevel(sourceRoot, "17");
+        TestUtilities.copyStringToFile(FileUtil.toFile(testFO),
+                """
+                package test;
+                public record R(String component) {
+                    public R {
+                        this.component = component;
+                    }
+                    public String component() {
+                        return component;
+                    }
+                }
+                """
+        );
+        FileObject useFO = FileUtil.createData(sourceRoot, "test/Use.java");
+        TestUtilities.copyStringToFile(FileUtil.toFile(useFO),
+                """
+                package test;
+                public class Use {}
+                """
+        );
+        SourceLevelQueryImpl.sourceLevel = "17";
+
+        SourceUtilsTestUtil.compileRecursively(sourceRoot);
+
+        JavaSource javaSource = JavaSource.forFileObject(useFO);
+        javaSource.runUserActionTask((CompilationController controller) -> {
+            controller.toPhase(JavaSource.Phase.RESOLVED);
+
+            TypeElement record = controller.getElements().getTypeElement("test.R");
+            Element component = record.getRecordComponents().get(0);
+            ElementUtilities utils = controller.getElementUtilities();
+            Collection<? extends Element> linked = utils.getLinkedRecordElements(component);
+            Set<String> linkedEncoded = linked.stream()
+                                              .map(Element::getKind)
+                                              .map(ElementKind::name)
+                                              .collect(Collectors.toCollection(TreeSet::new));
+            assertEquals(new TreeSet<>(Arrays.asList("FIELD", "METHOD", "PARAMETER", "RECORD_COMPONENT")),
+                         linkedEncoded);
+
+            for (Element linkedElement : linked) {
+                if (!linked.equals(utils.getLinkedRecordElements(linkedElement))) {
+                    utils.getLinkedRecordElements(linkedElement);
+                }
+                assertEquals(linked, utils.getLinkedRecordElements(linkedElement));
+            }
         }, true);
     }
 

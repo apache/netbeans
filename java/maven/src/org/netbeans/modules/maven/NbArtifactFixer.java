@@ -108,7 +108,7 @@ public class NbArtifactFixer implements ArtifactFixer {
             //instead of workarounds down the road, we set the artifact's file here.
             // some stacktraces to maven/aether do set it after querying our code, but some don't for reasons unknown to me.
             artifact.setFile(f);
-            Set<Artifact> s = CAPTURE_FAKE_ARTIFACTS.get();
+            Set<Artifact> s = CAPTURE_PLACEHOLDER_ARTIFACTS.get();
             if (s != null) {
                 String c = artifact.getProperty("nbResolvingArtifact.classifier", null);
                 String e = artifact.getProperty("nbResolvingArtifact.extension", null);
@@ -194,10 +194,10 @@ public class NbArtifactFixer implements ArtifactFixer {
     }        
     
     /**
-     * Collects faked artifacts, which would be otherwise hidden in maven infrastructure. The value is only valid during {@link #collectFallbackArtifacts}, which
+     * Collects placeholder artifacts, which would be otherwise hidden in maven infrastructure. The value is only valid during {@link #collectPlaceholderArtifacts}, which
      * can be invoked recursively.
      */
-    private static ThreadLocal<Set<Artifact>> CAPTURE_FAKE_ARTIFACTS = new ThreadLocal<Set<Artifact>>();
+    private static final ThreadLocal<Set<Artifact>> CAPTURE_PLACEHOLDER_ARTIFACTS = new ThreadLocal<Set<Artifact>>();
 
     /**
      * Performs an operation and collects forged artifacts created during that operation. The invocation can be nested; each invocation gets only artifacts from its own 'level',
@@ -210,10 +210,10 @@ public class NbArtifactFixer implements ArtifactFixer {
      * @return
      * @throws E 
      */
-    public static <T, E extends Throwable> T collectFallbackArtifacts(ExceptionCallable<T, E> code, Consumer<Set<Artifact>> collector) throws E {
-        Set<Artifact> save = CAPTURE_FAKE_ARTIFACTS.get();
+    public static <T, E extends Throwable> T collectPlaceholderArtifacts(ExceptionCallable<T, E> code, Consumer<Set<Artifact>> collector) throws E {
+        Set<Artifact> save = CAPTURE_PLACEHOLDER_ARTIFACTS.get();
         try {
-            CAPTURE_FAKE_ARTIFACTS.set(new HashSet<>());
+            CAPTURE_PLACEHOLDER_ARTIFACTS.set(new HashSet<>());
             return code.call();
         } catch (Error | RuntimeException r) {
             throw r;
@@ -223,9 +223,9 @@ public class NbArtifactFixer implements ArtifactFixer {
             throw new Error(); 
         } finally {
             if (collector != null) {
-                collector.accept(CAPTURE_FAKE_ARTIFACTS.get());
+                collector.accept(CAPTURE_PLACEHOLDER_ARTIFACTS.get());
             }
-            CAPTURE_FAKE_ARTIFACTS.set(save);
+            CAPTURE_PLACEHOLDER_ARTIFACTS.set(save);
         }
     }
 }

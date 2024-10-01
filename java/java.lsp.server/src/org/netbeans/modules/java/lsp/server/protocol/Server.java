@@ -49,7 +49,6 @@ import com.google.gson.JsonPrimitive;
 import java.util.prefs.Preferences;
 import java.util.LinkedHashSet;
 import java.util.Objects;
-import java.util.WeakHashMap;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -71,6 +70,7 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.RenameOptions;
+import org.eclipse.lsp4j.SaveOptions;
 import org.eclipse.lsp4j.SemanticTokensCapabilities;
 import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.ServerCapabilities;
@@ -160,7 +160,12 @@ import org.openide.util.lookup.ProxyLookup;
  */
 public final class Server {
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
+    /**
+     * Special logger that logs LSP in/out messages.
+     */
+    private static final Logger LSP_LOG = Logger.getLogger("org.netbeans.modules.java.lsp.server.lsptrace"); // NOI18N
     private static final LspServerTelemetryManager LSP_SERVER_TELEMETRY = new LspServerTelemetryManager();
+    private static final ErrorsNotifier ERR_NOTIFIER = new ErrorsNotifier();
     
     private Server() {
     }
@@ -183,7 +188,8 @@ public final class Server {
         ((LanguageClientAware) server).connect(remote);
         msgProcessor.attachClient(server.client);
         Future<Void> runningServer = serverLauncher.startListening();
-        LSP_SERVER_TELEMETRY.connect(server.client, runningServer);        
+        LSP_SERVER_TELEMETRY.connect(server.client, runningServer);
+        ERR_NOTIFIER.connect(server, runningServer);
         return new NbLspServer(server, runningServer);
     }
     
@@ -265,7 +271,17 @@ public final class Server {
             // PENDING: allow for message consumer wrappers to be registered to add pre/post processing for
             // the request plus build the request's default Lookup contents.
             if (!(delegate instanceof Endpoint)) {
-                return delegate; 
+                return new MessageConsumer() {
+                    @Override
+                    public void consume(Message msg) throws MessageIssueException, JsonRpcException {
+                        if (LSP_LOG.isLoggable(Level.FINEST)) {
+                            LSP_LOG.log(Level.FINEST, "OUT: {0}", 
+                                    msg.toString().replace("\n", "\n\t"));
+                        }
+                        delegate.consume(msg);
+                    }
+                
+                };
             }
             return new MessageConsumer() {
                 @Override
@@ -274,6 +290,10 @@ public final class Server {
                     ProxyLookup ll = new ProxyLookup(new AbstractLookup(ic), sessionLookup);
                     final OperationContext ctx;
 
+                    if (LSP_LOG.isLoggable(Level.FINEST)) {
+                        LSP_LOG.log(Level.FINEST, "IN : {0}", 
+                                msg.toString().replace("\n", "\n\t"));
+                    }
                     // Intercept client REQUESTS; take the progress token from them, if it is
                     // attached.
                     Runnable r;
@@ -847,6 +867,9 @@ public final class Server {
                 textDocumentSyncOptions.setChange(TextDocumentSyncKind.Incremental);
                 textDocumentSyncOptions.setOpenClose(true);
                 textDocumentSyncOptions.setWillSaveWaitUntil(true);
+                // TODO: we now do not request to send saved contents, but in case of client side applied text edits, it could be cool to 
+                // receive the current document contents at a savepoint.
+                textDocumentSyncOptions.setSave(new SaveOptions(false));
                 capabilities.setTextDocumentSync(textDocumentSyncOptions);
                 CompletionOptions completionOptions = new CompletionOptions();
                 completionOptions.setResolveProvider(true);
@@ -1405,13 +1428,14 @@ public final class Server {
 
         @Override
         public synchronized boolean scanStarted(Context context) {
-           LSP_SERVER_TELEMETRY.sendTelemetry(new TelemetryEvent(MessageType.Info.toString(), LSP_SERVER_TELEMETRY.SCAN_START_EVT, "nbls.scanStarted")); 
-	   return true;
+            LSP_SERVER_TELEMETRY.sendTelemetry(new TelemetryEvent(MessageType.Info.toString(), LSP_SERVER_TELEMETRY.SCAN_START_EVT, "nbls.scanStarted")); 
+	    return true;
         }
 
         @Override
         public synchronized void scanFinished(Context context) {
-        LSP_SERVER_TELEMETRY.sendTelemetry(new TelemetryEvent(MessageType.Info.toString(),LSP_SERVER_TELEMETRY.SCAN_END_EVT,"nbls.scanFinished"));
+            LSP_SERVER_TELEMETRY.sendTelemetry(new TelemetryEvent(MessageType.Info.toString(),LSP_SERVER_TELEMETRY.SCAN_END_EVT,"nbls.scanFinished"));
+            ERR_NOTIFIER.notifyErrors(context.getRootURI());
         }
 
         @Override

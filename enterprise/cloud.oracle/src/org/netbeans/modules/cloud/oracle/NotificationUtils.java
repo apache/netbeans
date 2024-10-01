@@ -41,4 +41,9 @@ public class NotificationUtils {
     public static void showMessage(String message) {
         DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(message));
     }
+    
+    public static void showWarningMessage(String message) {
+        DialogDisplayer.getDefault()
+                .notifyLater(new NotifyDescriptor.Message(message, NotifyDescriptor.WARNING_MESSAGE));
+    }
 }

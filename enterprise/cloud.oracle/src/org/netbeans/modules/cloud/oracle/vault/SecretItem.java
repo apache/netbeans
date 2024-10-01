@@ -31,8 +31,8 @@ public class SecretItem extends OCIItem {
     private String lifecycleState;
     private Date deletionTime;
 
-    public SecretItem(OCID id, String compartmentId, String name, String lifecycleState, Date deletionTime) {
-        super(id, compartmentId, name);
+    public SecretItem(OCID id, String compartmentId, String name, String lifecycleState, Date deletionTime, String tenancyId, String regionCode) {
+        super(id, compartmentId, name, tenancyId, regionCode);
         this.lifecycleState = lifecycleState;
         this.deletionTime = deletionTime;
     }

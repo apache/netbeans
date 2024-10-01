@@ -925,6 +925,15 @@ public class TreeFactory {
                            (JCExpression)type, (JCExpression)initializer);
     }
     
+    public VariableTree RecordComponent(ModifiersTree modifiers,
+                          CharSequence name,
+                          Tree type) {
+        JCModifiers augmentedModifiers = (JCModifiers) Modifiers(modifiers.getFlags(), modifiers.getAnnotations());
+
+        augmentedModifiers.flags |= Flags.RECORD;
+
+        return Variable(augmentedModifiers, name, type, null);
+    }
     public Tree BindingPattern(CharSequence name,
                                Tree type) {
         try {

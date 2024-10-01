@@ -54,7 +54,21 @@ public final class NbFormatter extends java.util.logging.Formatter {
     }
 
     private void print(StringBuilder sb, LogRecord record, Set<Throwable> beenThere) {
-        String message = formatMessage(record);
+        String message;
+        try {
+            message = formatMessage(record);
+        } catch (ThreadDeath td) {
+            throw td;
+        } catch (Throwable t) {
+            message = record.getMessage();
+            sb.append("*** Error occured during formatting of message: ");
+            sb.append(lineSeparator);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            t.printStackTrace(pw);
+            sb.append(sw.toString());
+            sb.append(lineSeparator);
+        }
         if (message != null && message.indexOf('\n') != -1 && record.getThrown() == null) {
             // multi line messages print witout any wrappings
             sb.append(message);

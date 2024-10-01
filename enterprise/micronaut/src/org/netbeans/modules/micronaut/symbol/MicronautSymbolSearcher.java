@@ -81,9 +81,9 @@ public class MicronautSymbolSearcher implements IndexSearcher {
         if (textForQuery.equals("@/")) {
             RequestProcessor.getDefault().post(() -> {
                 try {
+                    Diagnostic.ReporterControl control = Diagnostic.findReporterControl(Lookup.getDefault(), project.getProjectDirectory());
                     Set<FileObject> duplicates = getSymbolsWithPathDuplicates(project, null).stream().map(descriptor -> descriptor.getFileObject()).collect(Collectors.toSet());
                     if (!duplicates.isEmpty()) {
-                        Diagnostic.ReporterControl control = Diagnostic.findReporterControl(Lookup.getDefault(), project.getProjectDirectory());
                         control.diagnosticChanged(duplicates, "text/x-java");
                     }
                 } catch (IOException ex) {

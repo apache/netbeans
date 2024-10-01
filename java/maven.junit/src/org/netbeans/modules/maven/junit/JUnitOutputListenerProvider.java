@@ -107,10 +107,10 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
         outDirPattern = Pattern.compile ("(?:\\[INFO\\] )?Surefire report directory\\: (?<" + GROUP_FILE_NAME + ">.*)", Pattern.DOTALL); //NOI18N
         outDirPattern2 = Pattern.compile("(?:\\[INFO\\] )?Setting reports dir\\: (?<" + GROUP_FILE_NAME + ">.*)", Pattern.DOTALL); //NOI18N
         this.config = config;
-        usedNames = new HashSet<String>();
+        usedNames = new HashSet<>();
         startTimeStamp = System.currentTimeMillis();
-        runningTestClasses = new ArrayList<String>();
-        runningTestClassesInParallel = new ArrayList<String>();
+        runningTestClasses = new ArrayList<>();
+        runningTestClassesInParallel = new ArrayList<>();
         surefireRunningInParallel = isSurefireRunningInParallel();
     }
     
@@ -262,7 +262,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                 // http://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html#reportsDirectory
                 reportsDirectory = getReportsDirectory(
                     Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE,
-                    "test", "${project.build.directory}/surefire-reports"); //NOI81N
+                    "test", visitor, "${project.build.directory}/surefire-reports"); //NOI81N
             }
             reportNameSuffix = PluginPropertyUtils.getPluginProperty(
                 config.getMavenProject(), Constants.GROUP_APACHE_PLUGINS,
@@ -272,7 +272,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
 	} else if ("mojo-execute#failsafe:integration-test".equals(sequenceId)) {  //NOI81N
 	    reportsDirectory = getReportsDirectory(
                 Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_FAILSAFE,
-                "integration-test", "${project.build.directory}/failsafe-reports");  //NOI81N
+                "integration-test", visitor, "${project.build.directory}/failsafe-reports");  //NOI81N
             reportNameSuffix = PluginPropertyUtils.getPluginProperty(
                 config.getMavenProject(), Constants.GROUP_APACHE_PLUGINS,
                 Constants.PLUGIN_FAILSAFE, "reportNameSuffix", "integration-test",  //NOI81N
@@ -313,14 +313,26 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
         }
     }
 
-    private String getReportsDirectory(String groupId, String artifactId, String goal, String fallbackExpression) {
-        String reportsDirectory = PluginPropertyUtils.getPluginProperty(config.getMavenProject(),
+    private String getReportsDirectory(String groupId, String artifactId, String goal, OutputVisitor visitor, String fallbackExpression) {
+        MavenProject currentProject = null;
+        // get maven module from context if available
+        OutputVisitor.Context context = visitor.getContext();
+        if (context != null && context.getCurrentProject() != null) {
+            NbMavenProject subProject = context.getCurrentProject().getLookup().lookup(NbMavenProject.class);
+            if (subProject != null) {
+                currentProject = subProject.getMavenProject();
+            }
+        }
+        if (currentProject == null) {
+            currentProject = config.getMavenProject();
+        }
+        String reportsDirectory = PluginPropertyUtils.getPluginProperty(currentProject,
            groupId, artifactId, "reportsDirectory", goal, null); // NOI18N
-        if (null == reportsDirectory) {
+        if (reportsDirectory == null) {
             // fallback to default value
             try {
                 Object defaultValue = PluginPropertyUtils
-                    .createEvaluator(config.getMavenProject())
+                    .createEvaluator(currentProject)
                     .evaluate(fallbackExpression);
                 if (defaultValue instanceof String) {
                     reportsDirectory = (String) defaultValue;
@@ -409,7 +421,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
 			void rerun(Set<Testcase> tests) {
 			    RunConfig brc = RunUtils.cloneRunConfig(config);
 			    StringBuilder tst = new StringBuilder();
-			    Map<String, Collection<String>> methods = new HashMap<String, Collection<String>>();
+			    Map<String, Collection<String>> methods = new HashMap<>();
                             //#222776 calculate the approximate space the failed tests will occupy on the cmd line.
                             //important on windows which places a limit on the length.
                             int windowslimitcount = 0;
@@ -418,7 +430,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
 				if (tc.getClassName() != null) {
 				    Collection<String> lst = methods.get(tc.getClassName());
 				    if (lst == null) {
-					lst = new ArrayList<String>();
+					lst = new ArrayList<>();
 					methods.put(tc.getClassName(), lst);
                                         windowslimitcount = windowslimitcount + tc.getClassName().length() + 1; // + 1 for ,
 				    }
@@ -594,7 +606,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
         }
         if (text != null) {
             String[] strs = StringUtils.split(text, "\n");
-            List<String> lines = new ArrayList<String>();
+            List<String> lines = new ArrayList<>();
             if (message != null) {
                 lines.add(message);
             }
@@ -753,16 +765,14 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                     junitManager.displayOutput(session, FileUtils.fileRead(output), false);
                 }
             }
-        } catch (IOException x) {
-            LOG.log(Level.WARNING, "parsing " + report, x);
-        } catch (ParseException x) {
+        } catch (IOException | ParseException x) {
             LOG.log(Level.WARNING, "parsing " + report, x);
         }
     }
 
     private void logText(String text, Testcase test, boolean failure) {
         StringTokenizer tokens = new StringTokenizer(text, "\n"); //NOI18N
-        List<String> lines = new ArrayList<String>();
+        List<String> lines = new ArrayList<>();
         while (tokens.hasMoreTokens()) {
             lines.add(tokens.nextToken());
         }

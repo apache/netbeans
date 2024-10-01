@@ -1276,7 +1276,7 @@ public final class GeneratorUtilities {
         // check for possible name clashes originating from adding the package imports
         Set<Element> explicitNamedImports = new HashSet<Element>();
         for (Element element : elementsToImport) {
-            if (element.getKind().isClass() || element.getKind().isInterface()) {
+            if (element.getEnclosingElement() != pkg && (element.getKind().isClass() || element.getKind().isInterface())) {
                 for (Symbol sym : importScope.getSymbolsByName((com.sun.tools.javac.util.Name)element.getSimpleName())) {
                     if (sym.getKind().isClass() || sym.getKind().isInterface()) {
                         if (sym != element) {

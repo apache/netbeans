@@ -20,7 +20,6 @@ package org.netbeans.modules.lsp.client.bindings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -48,24 +47,16 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.EditorRegistry;
-import org.netbeans.api.editor.mimelookup.MimeLookup;
-import org.netbeans.api.lsp.Diagnostic;
 import org.netbeans.editor.BaseDocumentEvent;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.*;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
-import org.netbeans.spi.editor.hints.ErrorDescription;
-import org.netbeans.spi.editor.hints.ErrorDescriptionFactory;
-import org.netbeans.spi.editor.hints.HintsController;
-import org.netbeans.spi.editor.hints.Severity;
-import org.netbeans.spi.lsp.ErrorProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.OnStart;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -331,16 +322,8 @@ public class TextDocumentSyncServerCapabilityHandler {
 
             LSPBindings server = LSPBindings.getBindings(file);
 
-            if (server == null) {
-                Lookup lkp = MimeLookup.getLookup(file.getMIMEType());
-                Collection<? extends ErrorProvider> errorProviders = lkp.lookupAll(ErrorProvider.class);
-                if (!errorProviders.isEmpty()) {
-                    ErrorProviderBridge b = new ErrorProviderBridge(doc, file, errorProviders, WORKER);
-                    b.start();
-                    c.putClientProperty(ErrorProviderBridge.class, b);
-                }
-                return;
-            }
+            if (server == null)
+                return ; //ignore
 
             SwingUtilities.invokeLater(() -> {
                 if (c.getClientProperty(MarkOccurrences.class) == null) {

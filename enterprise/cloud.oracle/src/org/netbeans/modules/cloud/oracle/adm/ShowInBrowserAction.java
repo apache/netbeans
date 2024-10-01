@@ -45,6 +45,7 @@ import org.openide.util.NbBundle;
     @ActionReference(path = "Cloud/Oracle/KnowledgeBase/Actions", position = 260),
     @ActionReference(path = "Cloud/Oracle/Vulnerability/Actions", position = 260),
     @ActionReference(path = "Cloud/Oracle/VulnerabilityAudit/Actions", position = 260),
+    @ActionReference(path = "Cloud/Oracle/MetricsNamespace/Metrics/Actions", position = 260),
 })
 
 @NbBundle.Messages({

@@ -1362,11 +1362,15 @@ public class ServerTest extends NbTestCase {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
         String code = "/**\n" +
-                      " * This is a test class with Javadoc.\n" +
+                      " * This is a class level Javadoc.\n" +
                       " */\n" +
                       "public class Test {\n" +
-                      "    public static void main(String[] args) {\n" +
-                      "        Test t = new Test();\n" +
+                      "/**\n"+
+                      "This is constructor level Javadoc\n"+
+                      "**/\n"+
+                      "Test(int i){}\n"+ 
+                      "    public static void main(String[] args) {\n"+
+                      "        Test t = new Test(10000);\n" +
                       "    }\n" +
                       "}\n";
         try (Writer w = new FileWriter(src)) {
@@ -1401,18 +1405,35 @@ public class ServerTest extends NbTestCase {
         InitializeResult result = server.initialize(new InitializeParams()).get();
         assertTrue(result.getCapabilities().getHoverProvider().isLeft() && result.getCapabilities().getHoverProvider().getLeft());
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
-        Hover hover = server.getTextDocumentService().hover(new HoverParams(new TextDocumentIdentifier(toURI(src)), new Position(5, 10))).get();
-        assertNotNull(hover);
-        assertTrue(hover.getContents().isRight());
-        MarkupContent content = hover.getContents().getRight();
-        assertNotNull(content);
-        assertEquals(content.getKind(), "markdown");
-        assertEquals(content.getValue(), "```\n" +
+        Hover hoverClass = server.getTextDocumentService().hover(new HoverParams(new TextDocumentIdentifier(toURI(src)), new Position(9, 10))).get();
+        Hover hoverConstructor = server.getTextDocumentService().hover(new HoverParams(new TextDocumentIdentifier(toURI(src)), new Position(9, 23))).get();
+        Hover hoverIntegerArgument = server.getTextDocumentService().hover(new HoverParams(new TextDocumentIdentifier(toURI(src)), new Position(9, 26))).get();
+        assertNotNull(hoverClass);
+        assertNotNull(hoverConstructor);
+        assertNull(hoverIntegerArgument);
+        assertTrue(hoverConstructor.getContents().isRight());
+        assertTrue(hoverClass.getContents().isRight());
+        MarkupContent classContent = hoverClass.getContents().getRight();
+        MarkupContent constructorContent = hoverConstructor.getContents().getRight();
+        assertNotNull(classContent);
+        assertNotNull(constructorContent);
+        assertEquals(classContent.getKind(), "markdown");
+        assertEquals(constructorContent.getKind(), "markdown");
+        assertEquals(classContent.getValue(), "```\n" +
                 "public class Test\n" +
                 "extends Object\n" +
                 "```\n" +
                 "\n" +
-                "This is a test class with Javadoc.\n" +
+                "This is a class level Javadoc.\n" +
+                "\n");
+        assertEquals(constructorContent.getValue(),
+                "**Test**\n"+
+                "\n"+
+                "```\n" +
+                "Test(int i)\n" +
+                "```\n" +
+                "\n" +
+                "This is constructor level Javadoc\n" +
                 "\n");
     }
 
@@ -1712,6 +1733,7 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         List<Diagnostic>[] diags = new List[1];
+        AtomicBoolean checkForDiags = new AtomicBoolean(false);
         CountDownLatch indexingComplete = new CountDownLatch(1);
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
@@ -1723,9 +1745,11 @@ public class ServerTest extends NbTestCase {
         
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
-                synchronized (diags) {
-                    diags[0] = params.getDiagnostics();
-                    diags.notifyAll();
+                if (checkForDiags.get()) {
+                    synchronized (diags) {
+                        diags[0] = params.getDiagnostics();
+                        diags.notifyAll();
+                    }
                 }
             }
         }, client.getInputStream(), client.getOutputStream());
@@ -1738,6 +1762,7 @@ public class ServerTest extends NbTestCase {
         InitializeResult result = server.initialize(initParams).get();
         indexingComplete.await();
         String uri = toURI(src);
+        checkForDiags.set(true);
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
 
         Diagnostic unresolvable = assertDiags(diags, "Error:2:8-2:12").get(0);

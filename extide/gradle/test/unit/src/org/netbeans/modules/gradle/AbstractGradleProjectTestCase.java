@@ -18,14 +18,19 @@
  */
 package org.netbeans.modules.gradle;
 
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.test.ProjectTestUtils;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.gradle.api.NbGradleProject;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLINE;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.modules.project.uiapi.ProjectOpenedTrampoline;
@@ -34,6 +39,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
 import org.openide.modules.DummyInstalledFileLocator;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -69,12 +75,28 @@ public class AbstractGradleProjectTestCase extends NbTestCase {
     protected FileObject createGradleProject(String buildScript) throws IOException {
         return createGradleProject(null, buildScript, null);
     }
-
+    
     protected Project openProject(FileObject projectDir) throws IOException {
         Project prj = ProjectManager.getDefault().findProject(projectDir);
+        // project open will provoke project load, and the Project Lookup changes; specifically, the number of Sources providers change
+        CountDownLatch latch = new CountDownLatch(1);
+        PropertyChangeListener l = (e) -> {
+            if (e.getPropertyName().equals(NbGradleProject.PROP_PROJECT_INFO)) {
+                latch.countDown();
+            }
+        };
         assertNotNull(prj);
         ProjectTrust.getDefault().trustProject(prj);
+        NbGradleProject.addPropertyChangeListener(prj, l);
         ProjectOpenedTrampoline.DEFAULT.projectOpened(prj.getLookup().lookup(ProjectOpenedHook.class));
+        try {
+            // the project is loaded when projectOpened returns, but some events are fired and processed asynchronously.
+            assertTrue(latch.await(10, TimeUnit.SECONDS));
+            ProjectTestUtils.waitProjectLookup(prj).get();
+        } catch (InterruptedException | ExecutionException ex) {
+            fail("Interrupted");
+        }
+        NbGradleProject.removePropertyChangeListener(prj, l);
         return prj;
     }
 

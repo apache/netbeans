@@ -25,7 +25,6 @@
 [![Build Status](https://ci-builds.apache.org/job/Netbeans/view/vscode/job/netbeans-vscode/badge/icon)](https://ci-builds.apache.org/job/Netbeans/view/vscode/job/netbeans-vscode/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/apache/netbeans/blob/master/LICENSE)
 
-**Version 22.9.9 is 23.0 Early Access version.**
 
 This is [Apache NetBeans](http://netbeans.org) Language Server extension for VS Code. Use it to get all the _goodies of NetBeans_ via the VS Code user interface! Runs on __JDK11__ and all newer versions.
 
@@ -37,6 +36,7 @@ Apache NetBeans Language Server brings full featured Java development (edit-comp
    2. Select installed JDK to use for these settings in step 2/3
    3. In step 3/3 select if settings will be applied at User level for all Workspaces (Folders open) or for current Workspace (Folder) only.
    4. NetBeans Language Server JDK Home setting `netbeans.jdkhome` is __also__ available in `VSCode | Preferences | Settings ...` `Netbeans: Jdkhome` . More below in section [Selecting the JDK](#selecting-the-jdk)
+   5. Setting `netbeans.project.jdkhome` holds a path to a JDK that is used as a default platform for opened folder/workspace (e.g. Java project). To avoid possible issues with default platform changing (i.e. changes from JDK21 to JDK8), NBLS is restarted when `netbeans.project.jdhome` changes.
 
 2. Use __Java: New Project...__ " command to start creating new project, or
 3. Open the folder with existing __pom.xml__ for Maven or ___Gradle___ project files (_build.gradle, gradle.properties_).

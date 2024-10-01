@@ -170,13 +170,17 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -185,6 +189,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -201,6 +206,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -258,6 +264,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface java.util.EventListener
 
@@ -711,7 +720,7 @@ meth public org.netbeans.api.java.source.CodeStyle$WrapStyle wrapTryResources()
 meth public org.netbeans.api.java.source.CodeStyle$WrapStyle wrapWhileStatement()
 meth public static org.netbeans.api.java.source.CodeStyle getDefault(javax.swing.text.Document)
 meth public static org.netbeans.api.java.source.CodeStyle getDefault(org.netbeans.api.project.Project)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.java.source.CodeStyle getDefault(org.openide.filesystems.FileObject)
 supr java.lang.Object
 hfds preferences
@@ -823,13 +832,13 @@ meth public static org.netbeans.api.java.source.Comment$Style[] values()
 supr java.lang.Enum<org.netbeans.api.java.source.Comment$Style>
 
 CLSS public final org.netbeans.api.java.source.CommentCollector
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.java.source.CommentCollector getInstance()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void collect(org.netbeans.api.java.source.WorkingCopy) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void collect(org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId>,org.netbeans.api.java.source.CompilationInfo)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds instance
 
@@ -877,12 +886,12 @@ meth public org.netbeans.api.java.source.ClasspathInfo getClasspathInfo()
 meth public org.netbeans.api.java.source.ElementUtilities getElementUtilities()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.netbeans.api.java.source.JavaSource getJavaSource()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 0 org.netbeans.api.annotations.common.NullUnknown()
 meth public org.netbeans.api.java.source.JavaSource$Phase getPhase()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.netbeans.api.java.source.PositionConverter getPositionConverter()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.api.java.source.TreeUtilities getTreeUtilities()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.netbeans.api.java.source.TypeUtilities getTypeUtilities()
@@ -1246,7 +1255,7 @@ meth public static java.lang.String[] getJVMSignature(org.netbeans.api.java.sour
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static java.net.URL getJavadoc(javax.lang.model.element.Element,org.netbeans.api.java.source.ClasspathInfo)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.net.URL getPreferredJavadoc(javax.lang.model.element.Element)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -1268,18 +1277,18 @@ meth public static java.util.Set<java.net.URL> getDependentRoots(java.net.URL,bo
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static javax.lang.model.element.TypeElement getEnclosingTypeElement(javax.lang.model.element.Element)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static javax.lang.model.element.TypeElement getOutermostEnclosingTypeElement(javax.lang.model.element.Element)
 meth public static javax.lang.model.type.TypeMirror getBound(javax.lang.model.type.WildcardType)
 meth public static javax.lang.model.type.TypeMirror resolveCapturedType(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.type.TypeMirror)
 meth public static javax.lang.model.type.WildcardType resolveCapturedType(javax.lang.model.type.TypeMirror)
 meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> getJavaTokenSequence(org.netbeans.api.lexer.TokenHierarchy,int)
 meth public static org.openide.filesystems.FileObject getFile(javax.lang.model.element.Element,org.netbeans.api.java.source.ClasspathInfo)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openide.filesystems.FileObject getFile(org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,org.netbeans.api.java.source.ClasspathInfo)
 meth public static void forceSource(org.netbeans.api.java.source.CompilationController,org.openide.filesystems.FileObject)
 meth public static void waitScanFinished() throws java.lang.InterruptedException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds LOG
 hcls CaseInsensitiveMatch,CaseSensitiveMatch,Match
@@ -1450,7 +1459,7 @@ meth public com.sun.source.tree.MethodTree Method(com.sun.source.tree.ModifiersT
 meth public com.sun.source.tree.MethodTree Method(com.sun.source.tree.ModifiersTree,java.lang.CharSequence,com.sun.source.tree.Tree,java.util.List<? extends com.sun.source.tree.TypeParameterTree>,java.util.List<? extends com.sun.source.tree.VariableTree>,java.util.List<? extends com.sun.source.tree.ExpressionTree>,com.sun.source.tree.BlockTree,com.sun.source.tree.ExpressionTree,boolean)
 meth public com.sun.source.tree.MethodTree Method(com.sun.source.tree.ModifiersTree,java.lang.CharSequence,com.sun.source.tree.Tree,java.util.List<? extends com.sun.source.tree.TypeParameterTree>,java.util.List<? extends com.sun.source.tree.VariableTree>,java.util.List<? extends com.sun.source.tree.ExpressionTree>,java.lang.String,com.sun.source.tree.ExpressionTree)
 meth public com.sun.source.tree.MethodTree Method(javax.lang.model.element.ExecutableElement,com.sun.source.tree.BlockTree)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public com.sun.source.tree.MethodTree addMethodParameter(com.sun.source.tree.MethodTree,com.sun.source.tree.VariableTree)
 meth public com.sun.source.tree.MethodTree addMethodThrows(com.sun.source.tree.MethodTree,com.sun.source.tree.ExpressionTree)
 meth public com.sun.source.tree.MethodTree addMethodTypeParameter(com.sun.source.tree.MethodTree,com.sun.source.tree.TypeParameterTree)
@@ -1518,7 +1527,7 @@ meth public com.sun.source.tree.SynchronizedTree Synchronized(com.sun.source.tre
 meth public com.sun.source.tree.ThrowTree Throw(com.sun.source.tree.ExpressionTree)
 meth public com.sun.source.tree.Tree BindingPattern(com.sun.source.tree.VariableTree)
 meth public com.sun.source.tree.Tree BindingPattern(java.lang.CharSequence,com.sun.source.tree.Tree)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public com.sun.source.tree.Tree SwitchExpression(com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.CaseTree>)
 meth public com.sun.source.tree.Tree Type(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.NonNull()
@@ -1578,20 +1587,20 @@ fld public final static java.util.Set<com.sun.source.tree.Tree$Kind> CLASS_TREE_
 meth public !varargs boolean hasError(com.sun.source.tree.Tree,java.lang.String[])
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public boolean isAccessible(com.sun.source.tree.Scope,javax.lang.model.element.Element,javax.lang.model.type.TypeMirror)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isAnnotation(com.sun.source.tree.ClassTree)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isClass(com.sun.source.tree.ClassTree)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isCompileTimeConstantExpression(com.sun.source.util.TreePath)
 meth public boolean isEndOfCompoundVariableDeclaration(com.sun.source.tree.Tree)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public boolean isEnum(com.sun.source.tree.ClassTree)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isEnumConstant(com.sun.source.tree.VariableTree)
 meth public boolean isExpressionStatement(com.sun.source.tree.ExpressionTree)
 meth public boolean isInterface(com.sun.source.tree.ClassTree)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isModuleInfo(com.sun.source.tree.CompilationUnitTree)
 meth public boolean isPackageInfo(com.sun.source.tree.CompilationUnitTree)
 meth public boolean isPartOfCompoundVariableDeclaration(com.sun.source.tree.Tree)
@@ -1715,31 +1724,31 @@ supr java.util.EventObject
 hfds module,root,types
 
 CLSS public final org.netbeans.api.java.source.UiUtils
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr public final static PrintPart
 meth public static boolean open(org.netbeans.api.java.source.ClasspathInfo,javax.lang.model.element.Element)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean open(org.openide.filesystems.FileObject,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean open(org.openide.filesystems.FileObject,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static int getDistance(java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String getHeader(com.sun.source.util.TreePath,org.netbeans.api.java.source.CompilationInfo,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String getHeader(javax.lang.model.element.Element,org.netbeans.api.java.source.CompilationInfo,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static javax.swing.Icon getDeclarationIcon(javax.lang.model.element.Element)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static javax.swing.Icon getElementIcon(javax.lang.model.element.ElementKind,java.util.Collection<javax.lang.model.element.Modifier>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds log
 hcls FindDeclarationVisitor
 
 CLSS public final static org.netbeans.api.java.source.UiUtils$PrintPart
  outer org.netbeans.api.java.source.UiUtils
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String ANNOTATIONS = "%annotations%"
 fld public final static java.lang.String EXTENDS = "%extends%"
 fld public final static java.lang.String FLAGS = "%flags%"

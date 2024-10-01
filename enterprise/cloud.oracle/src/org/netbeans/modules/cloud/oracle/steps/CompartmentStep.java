@@ -23,6 +23,7 @@ import com.oracle.bmc.identity.IdentityClient;
 import com.oracle.bmc.identity.model.Compartment;
 import com.oracle.bmc.identity.requests.ListCompartmentsRequest;
 import com.oracle.bmc.identity.responses.ListCompartmentsResponse;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -33,6 +34,7 @@ import org.netbeans.modules.cloud.oracle.assets.AbstractStep;
 import org.netbeans.modules.cloud.oracle.assets.Steps.Values;
 import static org.netbeans.modules.cloud.oracle.assets.Steps.createQuickPick;
 import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
+import org.netbeans.modules.cloud.oracle.items.IncompatibleTenancyItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.items.TenancyItem;
@@ -44,6 +46,8 @@ import org.openide.util.NbBundle;
  * @author Jan Horvath
  */
 @NbBundle.Messages({
+    "NoTenancy=Tenancy is not selected",
+    "IncompatibleTenancy=Tenancy not compatible with other selected Cloud Assets. Please return and select other one.",
     "NoCompartment=There are no compartments in the Tenancy",
     "CollectingItems_Text=Listing compartments and databases",
     "SelectCompartment=Select Compartment",
@@ -53,17 +57,29 @@ import org.openide.util.NbBundle;
 public final class CompartmentStep extends AbstractStep<CompartmentItem> {
 
     private Map<String, OCIItem> compartments = null;
+    private TenancyItem tenancy;
     private CompartmentItem selected;
 
     @Override
     public void prepare(ProgressHandle h, Values values) {
         h.progress(Bundle.CollectingItems_Text());
-        TenancyItem tenancy = values.getValueForStep(TenancyStep.class);
-        compartments = getFlatCompartment(tenancy);
+        tenancy = values.getValueForStep(TenancyStep.class);
+        if (tenancy != null && !(tenancy instanceof IncompatibleTenancyItem)) {
+            compartments = getFlatCompartment(tenancy);
+
+        } else {
+            compartments = Collections.emptyMap();
+        }
     }
 
     @Override
     public NotifyDescriptor createInput() {
+        if (tenancy == null) {
+            return new NotifyDescriptor.QuickPick("", Bundle.NoTenancy(), Collections.emptyList(), false);
+        } 
+        if (tenancy instanceof IncompatibleTenancyItem) {
+            return new NotifyDescriptor.QuickPick("", Bundle.IncompatibleTenancy(), Collections.emptyList(), false);
+        }
         if (onlyOneChoice()) {
             throw new IllegalStateException("Input shouldn't be displayed for one choice"); // NOI18N
         }
@@ -102,6 +118,8 @@ public final class CompartmentStep extends AbstractStep<CompartmentItem> {
         OCISessionInitiator session = OCIManager.getDefault().getActiveSession();
         Identity identityClient = session.newClient(IdentityClient.class);
         String nextPageToken = null;
+        String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+        String regionCode = session.getRegion().getRegionCode();
 
         do {
             ListCompartmentsResponse response
@@ -115,7 +133,7 @@ public final class CompartmentStep extends AbstractStep<CompartmentItem> {
                                     .page(nextPageToken)
                                     .build());
             for (Compartment comp : response.getItems()) {
-                FlatCompartmentItem ci = new FlatCompartmentItem(comp) {
+                FlatCompartmentItem ci = new FlatCompartmentItem(comp, tenancyId, regionCode) {
                     @Override
                     FlatCompartmentItem getItem(OCID compId) {
                         return compartments.get(compId);
@@ -148,8 +166,8 @@ public final class CompartmentStep extends AbstractStep<CompartmentItem> {
         private final OCID parentId;
         private String flatName;
 
-        private FlatCompartmentItem(Compartment ociComp) {
-            super(OCID.of(ociComp.getId(), "Compartment"), ociComp.getCompartmentId(), ociComp.getName());      // NOI18N
+        private FlatCompartmentItem(Compartment ociComp, String tenancyId, String regionCode) {
+            super(OCID.of(ociComp.getId(), "Compartment"), ociComp.getCompartmentId(), ociComp.getName(), tenancyId, regionCode);      // NOI18N
             setDescription(ociComp.getDescription());
             parentId = OCID.of(ociComp.getCompartmentId(), "Compartment"); // NOI18N
         }

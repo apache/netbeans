@@ -29,13 +29,11 @@ public final class ContainerTagItem extends OCIItem {
     
     private String digest;
     private String version;
-    private String regionCode;
     private String namespace;
     private String repositoryName;
 
-    public ContainerTagItem(OCID id, String compartmentId, String repositoryName, String regionCode, String namespace, String version, String digest) {
-        super(id, compartmentId, version != null ? version : digest);
-        this.regionCode = regionCode;
+    public ContainerTagItem(OCID id, String compartmentId, String repositoryName, String regionCode, String namespace, String version, String digest, String tenancyId) {
+        super(id, compartmentId, version != null ? version : digest, tenancyId, regionCode);
         this.version = version;
         this.digest = digest;
         this.repositoryName = repositoryName;
@@ -48,9 +46,9 @@ public final class ContainerTagItem extends OCIItem {
 
     public String getUrl() {
         if (version != null) {
-            return String.format("%s.ocir.io/%s/%s:%s", regionCode, namespace, repositoryName, version);
+            return String.format("%s.ocir.io/%s/%s:%s", getRegionCode(), namespace, repositoryName, version);
         } 
-        return String.format("%s.ocir.io/%s/%s@%s", regionCode, namespace, repositoryName, digest);
+        return String.format("%s.ocir.io/%s/%s@%s", getRegionCode(), namespace, repositoryName, digest);
     }
 
     public String getDigest() {

@@ -29,12 +29,10 @@ public final class ContainerRepositoryItem extends OCIItem {
 
     private Boolean isPublic;
     private Integer imageCount;
-    private String regionCode;
     private String namespace;
 
-    public ContainerRepositoryItem(OCID id, String compartmentId, String name, String regionCode, String namespace, Boolean isPublic, Integer imageCount) {
-        super(id, compartmentId, name);
-        this.regionCode = regionCode;
+    public ContainerRepositoryItem(OCID id, String compartmentId, String name, String regionCode, String namespace, Boolean isPublic, Integer imageCount, String tenancyId) {
+        super(id, compartmentId, name, tenancyId, regionCode);
         this.namespace = namespace;
         this.isPublic = isPublic;
         this.imageCount = imageCount;
@@ -56,16 +54,16 @@ public final class ContainerRepositoryItem extends OCIItem {
         this.imageCount = imageCount;
     }
 
-    public String getRegionCode() {
-        return regionCode;
-    }
-
     public String getNamespace() {
         return namespace;
     }
     
     public String getUrl() {
         return String.format("%s.ocir.io/%s/%s", getRegionCode(), getNamespace(), getName());
+    }
+    
+    public String getRegistry() {
+        return String.format("%s.ocir.io", getRegionCode());
     }
     
 }

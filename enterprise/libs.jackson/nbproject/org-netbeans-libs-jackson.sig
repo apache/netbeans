@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.22
+#Version 2.23
 
 CLSS public abstract interface !annotation com.fasterxml.jackson.annotation.JacksonAnnotation
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -3058,7 +3058,7 @@ meth public static long parseLong(char[],int,int)
 meth public static long parseLong(java.lang.String)
 meth public static long parseLong19(char[],int,boolean)
 supr java.lang.Object
-hfds L_BILLION,MAX_LONG_STR,MIN_LONG_STR_NO_SIGN,PATTERN_FLOAT
+hfds L_BILLION,MAX_LONG_STR,MIN_LONG_STR_NO_SIGN,PATTERN_FLOAT,PATTERN_FLOAT_TRAILING_DOT
 
 CLSS public final com.fasterxml.jackson.core.io.NumberOutput
 cons public init()
@@ -4652,6 +4652,7 @@ intf java.io.Serializable
 meth public abstract void releasePooled({com.fasterxml.jackson.core.util.RecyclerPool%0})
 meth public abstract {com.fasterxml.jackson.core.util.RecyclerPool%0} acquirePooled()
 meth public boolean clear()
+meth public int pooledCount()
 meth public {com.fasterxml.jackson.core.util.RecyclerPool%0} acquireAndLinkPooled()
 
 CLSS public abstract static com.fasterxml.jackson.core.util.RecyclerPool$BoundedPoolBase<%0 extends com.fasterxml.jackson.core.util.RecyclerPool$WithPool<{com.fasterxml.jackson.core.util.RecyclerPool$BoundedPoolBase%0}>>
@@ -4660,6 +4661,7 @@ cons protected init(int)
 fld public final static int DEFAULT_CAPACITY = 100
 meth public boolean clear()
 meth public int capacity()
+meth public int pooledCount()
 meth public void releasePooled({com.fasterxml.jackson.core.util.RecyclerPool$BoundedPoolBase%0})
 meth public {com.fasterxml.jackson.core.util.RecyclerPool$BoundedPoolBase%0} acquirePooled()
 supr com.fasterxml.jackson.core.util.RecyclerPool$StatefulImplBase<{com.fasterxml.jackson.core.util.RecyclerPool$BoundedPoolBase%0}>
@@ -4670,6 +4672,7 @@ CLSS public abstract static com.fasterxml.jackson.core.util.RecyclerPool$Concurr
 cons protected init(int)
 fld protected final java.util.Deque<{com.fasterxml.jackson.core.util.RecyclerPool$ConcurrentDequePoolBase%0}> pool
 meth public boolean clear()
+meth public int pooledCount()
 meth public void releasePooled({com.fasterxml.jackson.core.util.RecyclerPool$ConcurrentDequePoolBase%0})
 meth public {com.fasterxml.jackson.core.util.RecyclerPool$ConcurrentDequePoolBase%0} acquirePooled()
 supr com.fasterxml.jackson.core.util.RecyclerPool$StatefulImplBase<{com.fasterxml.jackson.core.util.RecyclerPool$ConcurrentDequePoolBase%0}>
@@ -4680,6 +4683,7 @@ CLSS public abstract static com.fasterxml.jackson.core.util.RecyclerPool$LockFre
 cons protected init(int)
 innr protected static Node
 meth public boolean clear()
+meth public int pooledCount()
 meth public void releasePooled({com.fasterxml.jackson.core.util.RecyclerPool$LockFreePoolBase%0})
 meth public {com.fasterxml.jackson.core.util.RecyclerPool$LockFreePoolBase%0} acquirePooled()
 supr com.fasterxml.jackson.core.util.RecyclerPool$StatefulImplBase<{com.fasterxml.jackson.core.util.RecyclerPool$LockFreePoolBase%0}>
@@ -4696,6 +4700,7 @@ cons public init()
 intf com.fasterxml.jackson.core.util.RecyclerPool<{com.fasterxml.jackson.core.util.RecyclerPool$NonRecyclingPoolBase%0}>
 meth public abstract {com.fasterxml.jackson.core.util.RecyclerPool$NonRecyclingPoolBase%0} acquirePooled()
 meth public boolean clear()
+meth public int pooledCount()
 meth public void releasePooled({com.fasterxml.jackson.core.util.RecyclerPool$NonRecyclingPoolBase%0})
 meth public {com.fasterxml.jackson.core.util.RecyclerPool$NonRecyclingPoolBase%0} acquireAndLinkPooled()
 supr java.lang.Object
@@ -4719,6 +4724,7 @@ cons protected init()
 intf com.fasterxml.jackson.core.util.RecyclerPool<{com.fasterxml.jackson.core.util.RecyclerPool$ThreadLocalPoolBase%0}>
 meth public abstract {com.fasterxml.jackson.core.util.RecyclerPool$ThreadLocalPoolBase%0} acquirePooled()
 meth public boolean clear()
+meth public int pooledCount()
 meth public void releasePooled({com.fasterxml.jackson.core.util.RecyclerPool$ThreadLocalPoolBase%0})
 meth public {com.fasterxml.jackson.core.util.RecyclerPool$ThreadLocalPoolBase%0} acquireAndLinkPooled()
 supr java.lang.Object
@@ -5695,7 +5701,6 @@ meth public int intValue()
 meth public int size()
 meth public java.lang.Number numberValue()
 meth public java.lang.String asText(java.lang.String)
- anno 0 java.lang.Deprecated()
 meth public java.lang.String textValue()
 meth public java.lang.String toPrettyString()
 meth public java.math.BigDecimal decimalValue()
@@ -8457,7 +8462,7 @@ meth public com.fasterxml.jackson.databind.deser.DeserializerCache emptyCopy()
 meth public int cachedDeserializersCount()
 meth public void flushCachedDeserializers()
 supr java.lang.Object
-hfds serialVersionUID
+hfds _incompleteDeserializersLock,serialVersionUID
 
 CLSS public abstract com.fasterxml.jackson.databind.deser.DeserializerFactory
 cons public init()
@@ -10634,6 +10639,7 @@ cons public init()
 fld protected final static int TYPE_DURATION = 1
 fld protected final static int TYPE_G_CALENDAR = 2
 fld protected final static int TYPE_QNAME = 3
+fld protected final static javax.xml.namespace.QName EMPTY_QNAME
 innr public static Std
 meth public boolean hasDeserializerFor(com.fasterxml.jackson.databind.DeserializationConfig,java.lang.Class<?>)
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> findBeanDeserializer(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.BeanDescription)
@@ -10645,6 +10651,7 @@ CLSS public static com.fasterxml.jackson.databind.ext.CoreXMLDeserializers$Std
 cons public init(java.lang.Class<?>,int)
 fld protected final int _kind
 meth protected java.lang.Object _deserialize(java.lang.String,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+meth protected java.lang.Object _deserializeFromEmptyString(com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected javax.xml.datatype.XMLGregorianCalendar _gregorianFromDate(com.fasterxml.jackson.databind.DeserializationContext,java.util.Date)
 meth public java.lang.Object deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 supr com.fasterxml.jackson.databind.deser.std.FromStringDeserializer<java.lang.Object>
@@ -13417,7 +13424,6 @@ meth public final void serialize(com.fasterxml.jackson.core.JsonGenerator,com.fa
 meth public int hashCode()
 meth public java.lang.String asText()
 meth public java.lang.String asText(java.lang.String)
- anno 0 java.lang.Deprecated()
 meth public java.lang.String toPrettyString()
 meth public java.lang.String toString()
 meth public static com.fasterxml.jackson.databind.node.MissingNode getInstance()
@@ -13437,7 +13443,6 @@ meth public final void serialize(com.fasterxml.jackson.core.JsonGenerator,com.fa
 meth public int hashCode()
 meth public java.lang.String asText()
 meth public java.lang.String asText(java.lang.String)
- anno 0 java.lang.Deprecated()
 meth public static com.fasterxml.jackson.databind.node.NullNode getInstance()
 supr com.fasterxml.jackson.databind.node.ValueNode
 hfds serialVersionUID
@@ -13569,7 +13574,6 @@ meth public int hashCode()
 meth public java.lang.Object getPojo()
 meth public java.lang.String asText()
 meth public java.lang.String asText(java.lang.String)
- anno 0 java.lang.Deprecated()
 meth public long asLong(long)
 supr com.fasterxml.jackson.databind.node.ValueNode
 hfds serialVersionUID
@@ -13616,7 +13620,6 @@ meth public int asInt(int)
 meth public int hashCode()
 meth public java.lang.String asText()
 meth public java.lang.String asText(java.lang.String)
- anno 0 java.lang.Deprecated()
 meth public java.lang.String textValue()
 meth public long asLong(long)
 meth public static com.fasterxml.jackson.databind.node.TextNode valueOf(java.lang.String)

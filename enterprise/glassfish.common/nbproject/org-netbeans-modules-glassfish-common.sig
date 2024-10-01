@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.98
+#Version 1.99
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1642,6 +1642,7 @@ fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLAS
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_7_0_12
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_7_0_13
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_7_0_14
+fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_7_0_15
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_7_0_2
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_7_0_3
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_7_0_4

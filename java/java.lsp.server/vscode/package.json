@@ -322,8 +322,13 @@
 							"vmArgs": {
 								"type": [
 									"string",
+									"array",
 									"null"
 								],
+								"items": {
+									"type": "string",
+									"description": "Single argument to the VM"
+								},
 								"description": "Arguments for the Java VM",
 								"default": null
 							},
@@ -565,6 +570,11 @@
 				"icon": "$(add)"
 			},
 			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.adm.ShowInBrowserAction",
+				"title": "Open In Browser",
+				"icon": "$(link-external)"
+			},
+			{
 				"command": "nbls.db.add.connection",
 				"title": "Add JDBC Database Connection"
 			},
@@ -618,7 +628,11 @@
 			{
 				"command": "nbls.project.buildPushImage",
 				"title": "Build and Push container image",
-                                "icon": "$(live-share)"
+				"icon": "$(live-share)"
+			},
+			{
+				"command": "nbls.cloud.assets.buildPushNativeImage",
+				"title": "Build and Push Native Image container image"
 			},
 			{
 				"command": "cloud.assets.policy.create",
@@ -647,7 +661,8 @@
 			},
 			{
 				"command": "nbls:Edit:org.openide.actions.DeleteAction",
-				"title": "Delete"
+				"title": "Delete",
+				"icon": "$(trash)"
 			},
 			{
 				"command": "nbls.project.run",
@@ -856,6 +871,10 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateBuildRun",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.adm.ShowInBrowserAction",
 					"when": "false"
 				},
 				{
@@ -1072,6 +1091,11 @@
 					"group": "oci@1000"
 				},
 				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.adm.ShowInBrowserAction",
+					"when": "viewItem =~ /class:oracle.developer.MetricsItem/",
+					"group": "inline@10"
+				},
+				{
 					"command": "nbls.cloud.computeInstance.ssh",
 					"when": "viewItem =~ /publicIp:.*/ && viewItem =~ /^(?!.*imageUrl:).*/",
 					"group": "inline@10"
@@ -1081,10 +1105,15 @@
 					"when": "viewItem =~ /publicIp:.*/ && viewItem =~ /imageUrl:.*/",
 					"group": "inline@10"
 				},
-                                {
+				{
 					"command": "nbls.project.buildPushImage",
 					"when": "viewItem =~ /class:oracle.developer.ContainerRepositoryItem/",
 					"group": "inline@9"
+				},
+				{
+					"command": "nbls.cloud.assets.buildPushNativeImage",
+					"when": "viewItem =~ /class:oracle.developer.ContainerRepositoryItem/",
+					"group": "oci@1000"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddRepository",
@@ -1098,7 +1127,7 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddToProject",
-					"when": "viewItem =~ /(ComputeInstanceItem|ClusterItem|BucketItem|DatabaseItem|VaultItem|ContainerRepositoryItem)/ && view != cloud.assets",
+					"when": "viewItem =~ /(ComputeInstanceItem|ClusterItem|BucketItem|DatabaseItem|VaultItem|ContainerRepositoryItem|MetricsNamespaceItem)/ && view != cloud.assets",
 					"group": "inline@14"
 				},
 				{
@@ -1128,7 +1157,7 @@
 				},
 				{
 					"command": "nbls:Edit:org.openide.actions.DeleteAction",
-					"when": "viewItem =~ /lifecycleState:ACTIVE*/ || (viewItem =~ /publicIp:.*/ && viewItem =~ /imageUrl:.*/)",
+					"when": "viewItem =~ /lifecycleState:ACTIVE*/ || viewItem =~ /ContainerTagItem/",
 					"group": "inline@10"
 				}
 			]
@@ -1216,6 +1245,14 @@
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/bucket.svg",
 				"codeicon": "archive"
 			},
+			{
+                "uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/metrics.svg",
+                "codeicon": "graph-line"
+            },
+            {
+                "uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/metrics_namespace.svg",
+                "codeicon": "symbol-namespace"
+            },
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/computeinstance.svg",
 				"codeicon": "server-environment"
@@ -1349,7 +1386,7 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./; node ./esbuild.js",
+		"compile": "tsc -p ./ && node ./esbuild.js",
 		"watch": "tsc -watch -p ./ | node ./esbuild.js --watch",
 		"test": "node ./out/test/runTest.js",
 		"nbcode": "node ./out/nbcode.js",

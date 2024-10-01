@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.25
+#Version 1.26
 
 CLSS public abstract com.oracle.js.parser.AbstractParser
 cons protected init(com.oracle.js.parser.Source,com.oracle.js.parser.ErrorManager,boolean,int)
@@ -1900,7 +1900,7 @@ meth public java.io.BufferedReader newBufferedReader() throws java.io.IOExceptio
 meth public java.io.BufferedReader newBufferedReader(java.nio.charset.Charset) throws java.io.IOException
 meth public java.lang.String detectMimeType()
 meth public java.lang.String getMimeType() throws java.io.IOException
- anno 0 java.lang.Deprecated(null since="20.2")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="20.2")
 meth public java.lang.String getName()
 meth public java.lang.String getPath()
 meth public java.lang.String toString()
@@ -1942,18 +1942,18 @@ meth protected boolean patchContext({com.oracle.truffle.api.TruffleLanguage%0},c
 meth protected com.oracle.truffle.api.CallTarget parse(com.oracle.truffle.api.TruffleLanguage$ParsingRequest) throws java.lang.Exception
 meth protected com.oracle.truffle.api.nodes.ExecutableNode parse(com.oracle.truffle.api.TruffleLanguage$InlineParsingRequest) throws java.lang.Exception
 meth protected final <%0 extends java.lang.Object> com.oracle.truffle.api.ContextLocal<{%%0}> createContextLocal(com.oracle.truffle.api.TruffleLanguage$ContextLocalFactory<{com.oracle.truffle.api.TruffleLanguage%0},{%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected final <%0 extends java.lang.Object> com.oracle.truffle.api.ContextThreadLocal<{%%0}> createContextThreadLocal(com.oracle.truffle.api.TruffleLanguage$ContextThreadLocalFactory<{com.oracle.truffle.api.TruffleLanguage%0},{%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected final int getAsynchronousStackDepth()
 meth protected final java.lang.String getLanguageHome()
 meth protected java.lang.Object getLanguageView({com.oracle.truffle.api.TruffleLanguage%0},java.lang.Object)
 meth protected java.lang.Object getScope({com.oracle.truffle.api.TruffleLanguage%0})
 meth protected org.graalvm.options.OptionDescriptors getOptionDescriptors()
 meth protected static <%0 extends com.oracle.truffle.api.TruffleLanguage<?>> {%%0} getCurrentLanguage(java.lang.Class<{%%0}>)
- anno 0 java.lang.Deprecated(null since="21.3")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="21.3")
 meth protected static <%0 extends java.lang.Object, %1 extends com.oracle.truffle.api.TruffleLanguage<{%%0}>> {%%0} getCurrentContext(java.lang.Class<{%%1}>)
- anno 0 java.lang.Deprecated(null since="21.3")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="21.3")
 meth protected void disposeContext({com.oracle.truffle.api.TruffleLanguage%0})
 meth protected void disposeThread({com.oracle.truffle.api.TruffleLanguage%0},java.lang.Thread)
 meth protected void exitContext({com.oracle.truffle.api.TruffleLanguage%0},com.oracle.truffle.api.TruffleLanguage$ExitMode,int)
@@ -2124,8 +2124,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -2134,6 +2136,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -2150,6 +2153,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -2222,4 +2226,7 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 

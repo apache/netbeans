@@ -28,8 +28,8 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
 public class VaultItem extends OCIItem {
     private String managementEndpoint;
 
-    public VaultItem(OCID id, String compartment, String name, String managementEndpoint) {
-        super(id, compartment, name);
+    public VaultItem(OCID id, String compartment, String name, String managementEndpoint, String tenancyId, String regionCode) {
+        super(id, compartment, name, tenancyId, regionCode);
         this.managementEndpoint = managementEndpoint;
     }
 

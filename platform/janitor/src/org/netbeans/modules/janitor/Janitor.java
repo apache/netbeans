@@ -247,7 +247,7 @@ public class Janitor {
         if (cacheDir != null) {
             File cacheParent = cacheDir.getParentFile();
             for (File f : cacheParent.listFiles()) {
-                if (f.isDirectory() && !f.equals(userDir)) {
+                if (f.isDirectory() && !f.equals(cacheDir)) {
                     names.add(f.getName());
                 }
             }

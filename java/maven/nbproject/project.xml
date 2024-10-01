@@ -608,6 +608,10 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.api.maven</code-name-base>
                     </test-dependency>
+                    <test-dependency>
+                        <!-- Because otherwise data systems and their services will not materialize -->
+                        <code-name-base>org.netbeans.modules.settings</code-name-base>
+                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <friend-packages>

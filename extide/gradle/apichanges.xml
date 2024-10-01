@@ -83,6 +83,29 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="load-options-lookup">
+            <api name="general"/>
+            <summary>LoadOptions object replaces growing number of argumetns to project load APIs. Access to current Lookup added.</summary>
+            <version major="2" minor="43"/>
+            <date day="9" month="8" year="2024"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes" deprecation="yes"/>
+            <description>
+                <p>
+                    To avoid growing number of parameters to <a href="@TOP@/org/netbeans/modules/gradle/api/NbGradleProject.html#toQuality-java.lang.String-org.netbeans.modules.gradle.api.NbGradleProject.Quality-boolean-">toQuality()</a>, 
+                    a <a href="@TOP@/org/netbeans/modules/gradle/api/NbGradleProject.LoadOptions.html">LoadOptions</a> structure was created that can be used to provide details on
+                    how the project should be loaded.
+                </p>
+                <p>
+                    The time the project data was actually loaded is now available using <a href="@TOP@/org/netbeans/modules/gradle/api/NbGradleProject.html#getEvaluateTime--">NbGradleProject.getEvaluateTime()</a>.
+                    The time can be used for timestamp checking against project files.
+                </p>
+                <p>
+                    Access to the current metadata information/services snapshot is newly available from <a href="@TOP@/org/netbeans/modules/gradle/api/NbGradleProject.html#curretLookup--">NbGradleProject.currentLookup()</a>.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.gradle.api" name="NbGradleProject"/>
+        </change>
         <change id="gradle-init-javaversion">
             <api name="general"/>
             <summary>Gradle InitOperation now Supports  --java-version and --comments flags</summary>

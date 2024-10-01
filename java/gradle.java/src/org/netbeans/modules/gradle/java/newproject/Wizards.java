@@ -35,7 +35,7 @@ public final class Wizards {
 
     private Wizards() {};
 
-    private static final List<Integer> JAVA_VERSIONS = List.of(22, 21, 17, 11, 8);
+    private static final List<Integer> JAVA_VERSIONS = List.of(23, 22, 21, 17, 11, 8);
     private static final List<TestFramework> JAVA_TEST_FRAMEWORKS = List.of(
             JUNIT,
             JUNIT_5,

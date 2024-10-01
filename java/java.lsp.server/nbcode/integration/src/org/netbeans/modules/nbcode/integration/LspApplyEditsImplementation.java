@@ -19,13 +19,14 @@
 package org.netbeans.modules.nbcode.integration;
 
 import org.netbeans.modules.java.lsp.server.ui.AbstractApplyEditsImplementation;
+import org.netbeans.spi.lsp.ApplyEditsImplementation;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author sdedic
  */
-@ServiceProvider(service = AbstractApplyEditsImplementation.class, position = 10000)
+@ServiceProvider(service = ApplyEditsImplementation.class, position = 10000)
 public class LspApplyEditsImplementation extends AbstractApplyEditsImplementation{
     
 }

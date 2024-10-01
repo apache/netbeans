@@ -62,7 +62,7 @@ import org.openide.util.Lookup;
         }
 )
 public class MicronautGradleArtifactsImpl implements ProjectArtifactsImplementation<MicronautGradleArtifactsImpl.R>{
-    private static final String EXTENSION_GRAAL_VM_NATIVE = "graalVmNative";
+    private static final String EXTENSION_GRAAL_VM_NATIVE = "graalvmNative";
     private static final String TASK_NATIVE_COMPILE = "nativeCompile";
 
     private final Project project;

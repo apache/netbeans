@@ -103,12 +103,12 @@ import org.openide.windows.TopComponent;
             position = 1400
     ),
     @ActionReference(
-            path = "Editors/" + MIMETypes.CPP + "/Popup",
+            path = "Editors/" + MIMETypes.HPP + "/Popup",
             id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.WhereUsedAction"),
             position = 1400
     ),
     @ActionReference(
-            path = "Editors/" + MIMETypes.CPP + "/Popup",
+            path = "Editors/" + MIMETypes.HPP + "/Popup",
             id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.RenameAction"),
             position = 1500,
             separatorAfter = 1550

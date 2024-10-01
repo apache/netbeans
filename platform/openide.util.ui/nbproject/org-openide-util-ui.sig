@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.33
+#Version 9.34
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -82,10 +82,15 @@ cons public init()
 intf java.io.Closeable
 meth public abstract int read() throws java.io.IOException
 meth public boolean markSupported()
+meth public byte[] readAllBytes() throws java.io.IOException
+meth public byte[] readNBytes(int) throws java.io.IOException
 meth public int available() throws java.io.IOException
 meth public int read(byte[]) throws java.io.IOException
 meth public int read(byte[],int,int) throws java.io.IOException
+meth public int readNBytes(byte[],int,int) throws java.io.IOException
 meth public long skip(long) throws java.io.IOException
+meth public long transferTo(java.io.OutputStream) throws java.io.IOException
+meth public static java.io.InputStream nullInputStream()
 meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
@@ -119,7 +124,9 @@ meth public boolean readBoolean() throws java.io.IOException
 meth public byte readByte() throws java.io.IOException
 meth public char readChar() throws java.io.IOException
 meth public double readDouble() throws java.io.IOException
+meth public final java.io.ObjectInputFilter getObjectInputFilter()
 meth public final java.lang.Object readObject() throws java.io.IOException,java.lang.ClassNotFoundException
+meth public final void setObjectInputFilter(java.io.ObjectInputFilter)
 meth public float readFloat() throws java.io.IOException
 meth public int available() throws java.io.IOException
 meth public int read() throws java.io.IOException
@@ -131,7 +138,7 @@ meth public int skipBytes(int) throws java.io.IOException
 meth public java.io.ObjectInputStream$GetField readFields() throws java.io.IOException,java.lang.ClassNotFoundException
 meth public java.lang.Object readUnshared() throws java.io.IOException,java.lang.ClassNotFoundException
 meth public java.lang.String readLine() throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String readUTF() throws java.io.IOException
 meth public long readLong() throws java.io.IOException
 meth public short readShort() throws java.io.IOException
@@ -217,6 +224,7 @@ fld public final static byte TC_STRING = 116
 fld public final static int PROTOCOL_VERSION_1 = 1
 fld public final static int PROTOCOL_VERSION_2 = 2
 fld public final static int baseWireHandle = 8257536
+fld public final static java.io.SerializablePermission SERIAL_FILTER_PERMISSION
 fld public final static java.io.SerializablePermission SUBCLASS_IMPLEMENTATION_PERMISSION
 fld public final static java.io.SerializablePermission SUBSTITUTION_PERMISSION
 fld public final static short STREAM_MAGIC = -21267
@@ -227,6 +235,7 @@ cons public init()
 intf java.io.Closeable
 intf java.io.Flushable
 meth public abstract void write(int) throws java.io.IOException
+meth public static java.io.OutputStream nullOutputStream()
 meth public void close() throws java.io.IOException
 meth public void flush() throws java.io.IOException
 meth public void write(byte[]) throws java.io.IOException
@@ -243,8 +252,10 @@ CLSS public abstract interface java.lang.Cloneable
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -269,6 +280,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -404,6 +416,7 @@ supr java.util.AbstractCollection<{java.util.AbstractSet%0}>
 
 CLSS public abstract interface java.util.Collection<%0 extends java.lang.Object>
 intf java.lang.Iterable<{java.util.Collection%0}>
+meth public <%0 extends java.lang.Object> {%%0}[] toArray(java.util.function.IntFunction<{%%0}[]>)
 meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
 meth public abstract boolean add({java.util.Collection%0})
 meth public abstract boolean addAll(java.util.Collection<? extends {java.util.Collection%0}>)
@@ -436,6 +449,8 @@ supr java.lang.Object
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry
+meth public !varargs static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> ofEntries(java.util.Map$Entry<? extends {%%0},? extends {%%1}>[])
+ anno 0 java.lang.SafeVarargs()
 meth public abstract boolean containsKey(java.lang.Object)
 meth public abstract boolean containsValue(java.lang.Object)
 meth public abstract boolean equals(java.lang.Object)
@@ -452,6 +467,19 @@ meth public abstract {java.util.Map%1} put({java.util.Map%0},{java.util.Map%1})
 meth public abstract {java.util.Map%1} remove(java.lang.Object)
 meth public boolean remove(java.lang.Object,java.lang.Object)
 meth public boolean replace({java.util.Map%0},{java.util.Map%1},{java.util.Map%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map$Entry<{%%0},{%%1}> entry({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> copyOf(java.util.Map<? extends {%%0},? extends {%%1}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
 meth public void forEach(java.util.function.BiConsumer<? super {java.util.Map%0},? super {java.util.Map%1}>)
 meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
 meth public {java.util.Map%1} compute({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
@@ -464,6 +492,8 @@ meth public {java.util.Map%1} replace({java.util.Map%0},{java.util.Map%1})
 
 CLSS public abstract interface java.util.Set<%0 extends java.lang.Object>
 intf java.util.Collection<{java.util.Set%0}>
+meth public !varargs static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0}[])
+ anno 0 java.lang.SafeVarargs()
 meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
 meth public abstract boolean add({java.util.Set%0})
 meth public abstract boolean addAll(java.util.Collection<? extends {java.util.Set%0}>)
@@ -480,6 +510,18 @@ meth public abstract java.lang.Object[] toArray()
 meth public abstract java.util.Iterator<{java.util.Set%0}> iterator()
 meth public abstract void clear()
 meth public java.util.Spliterator<{java.util.Set%0}> spliterator()
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> copyOf(java.util.Collection<? extends {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of()
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
 
 CLSS public abstract interface java.util.concurrent.Executor
 meth public abstract void execute(java.lang.Runnable)
@@ -525,6 +567,7 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void putValue(java.lang.String,java.lang.Object)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void setEnabled(boolean)
+meth public boolean accept(java.lang.Object)
 
 CLSS public abstract interface javax.swing.Icon
 meth public abstract int getIconHeight()
@@ -551,7 +594,7 @@ meth public boolean isNotifiable(int)
 meth public final java.lang.Throwable annotate(java.lang.Throwable,java.lang.String)
 meth public final java.lang.Throwable annotate(java.lang.Throwable,java.lang.Throwable)
 meth public final java.lang.Throwable copyAnnotation(java.lang.Throwable,java.lang.Throwable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void log(java.lang.String)
 meth public final void notify(java.lang.Throwable)
 meth public static org.openide.ErrorManager getDefault()
@@ -578,7 +621,7 @@ supr java.lang.Object
 hcls Trivial
 
 CLSS public abstract org.openide.ServiceType
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 fld public final static java.lang.String PROP_NAME = "name"
 innr public abstract static Registry
@@ -587,11 +630,11 @@ intf java.io.Serializable
 intf org.openide.util.HelpCtx$Provider
 meth protected final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected java.lang.String displayName()
 meth public abstract org.openide.util.HelpCtx getHelpCtx()
 meth public final org.openide.ServiceType createClone()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public java.lang.String getName()
@@ -601,7 +644,7 @@ hfds err,name,serialVersionUID,supp
 
 CLSS public final static org.openide.ServiceType$Handle
  outer org.openide.ServiceType
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.openide.ServiceType)
 intf java.io.Serializable
 meth public java.lang.String toString()
@@ -611,16 +654,16 @@ hfds className,name,serialVersionUID,serviceType
 
 CLSS public abstract static org.openide.ServiceType$Registry
  outer org.openide.ServiceType
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 intf java.io.Serializable
 meth public <%0 extends org.openide.ServiceType> java.util.Enumeration<{%%0}> services(java.lang.Class<{%%0}>)
 meth public abstract java.util.Enumeration<org.openide.ServiceType> services()
 meth public abstract java.util.List getServiceTypes()
 meth public abstract void setServiceTypes(java.util.List)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.ServiceType find(java.lang.Class)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.ServiceType find(java.lang.String)
 supr java.lang.Object
 hfds serialVersionUID
@@ -632,7 +675,7 @@ meth public abstract void finished()
 CLSS public abstract org.openide.util.BaseUtilities
 fld public final static int OS_AIX = 64
 fld public final static int OS_DEC = 1024
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int OS_FREEBSD = 131072
 fld public final static int OS_HP = 32
 fld public final static int OS_IRIX = 128
@@ -645,14 +688,14 @@ fld public final static int OS_SOLARIS = 8
 fld public final static int OS_SUNOS = 256
 fld public final static int OS_TRU64 = 512
 fld public final static int OS_UNIX_MASK = 1709048
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int OS_UNIX_OTHER = 524288
 fld public final static int OS_VMS = 16384
 fld public final static int OS_WIN2000 = 8192
 fld public final static int OS_WIN95 = 2
 fld public final static int OS_WIN98 = 4
 fld public final static int OS_WINDOWS_MASK = 303111
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int OS_WINNT = 1
 fld public final static int OS_WINVISTA = 262144
 fld public final static int OS_WIN_OTHER = 32768
@@ -777,10 +820,10 @@ hcls AnnException,OwnLevel
 
 CLSS public final org.openide.util.HelpCtx
 cons public init(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 cons public init(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.util.HelpCtx DEFAULT_HELP
 innr public abstract interface static Displayer
 innr public abstract interface static Provider
@@ -866,7 +909,7 @@ supr java.lang.Object
 CLSS public final static org.openide.util.Lookup$Template<%0 extends java.lang.Object>
  outer org.openide.util.Lookup
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.Class<{org.openide.util.Lookup$Template%0}>)
 cons public init(java.lang.Class<{org.openide.util.Lookup$Template%0}>,java.lang.String,{org.openide.util.Lookup$Template%0})
 meth public boolean equals(java.lang.Object)
@@ -961,7 +1004,7 @@ hfds ex,serialVersionUID
 
 CLSS public org.openide.util.NbBundle
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr public abstract interface static !annotation Messages
 innr public abstract interface static ClassLoaderFinder
 meth public !varargs static java.lang.String getMessage(java.lang.Class<?>,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object[])
@@ -976,11 +1019,11 @@ meth public static java.lang.String getMessage(java.lang.Class<?>,java.lang.Stri
 meth public static java.lang.String getMessage(java.lang.Class<?>,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object)
 meth public static java.lang.String getMessage(java.lang.Class<?>,java.lang.String,java.lang.Object[])
 meth public static java.net.URL getLocalizedFile(java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.net.URL getLocalizedFile(java.lang.String,java.lang.String,java.util.Locale)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.net.URL getLocalizedFile(java.lang.String,java.lang.String,java.util.Locale,java.lang.ClassLoader)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.util.Iterator<java.lang.String> getLocalizingSuffixes()
 meth public static java.util.ResourceBundle getBundle(java.lang.Class<?>)
 meth public static java.util.ResourceBundle getBundle(java.lang.String)
@@ -988,16 +1031,16 @@ meth public static java.util.ResourceBundle getBundle(java.lang.String,java.util
 meth public static java.util.ResourceBundle getBundle(java.lang.String,java.util.Locale,java.lang.ClassLoader)
 meth public static void setBranding(java.lang.String)
 meth public static void setClassLoaderFinder(org.openide.util.NbBundle$ClassLoaderFinder)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds LOG,USE_DEBUG_LOADER,brandingToken,bundleCache,localizedFileCache,utfThenIsoCharset,utfThenIsoCharsetOnlyUTF8
 hcls AttributesMap,DebugLoader,LocaleIterator,MergedBundle,PBundle,UtfThenIsoCharset
 
 CLSS public abstract interface static org.openide.util.NbBundle$ClassLoaderFinder
  outer org.openide.util.NbBundle
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.lang.ClassLoader find()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public abstract interface static !annotation org.openide.util.NbBundle$Messages
  outer org.openide.util.NbBundle
@@ -1040,7 +1083,7 @@ meth public static boolean isAuthenticationDialogSuppressed()
 meth public static char[] getAuthenticationPassword(java.net.URI)
 meth public static java.lang.String getAuthenticationUsername(java.net.URI)
 meth public static java.lang.String getKeyForAuthenticationPassword(java.net.URI)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String getProxyHost(java.net.URI)
 meth public static java.lang.String getProxyPort(java.net.URI)
 supr java.lang.Object
@@ -1081,7 +1124,7 @@ meth public static void notWhitespace(java.lang.CharSequence,java.lang.CharSeque
 supr java.lang.Object
 
 CLSS public org.openide.util.Queue<%0 extends java.lang.Object>
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 meth public void put({org.openide.util.Queue%0})
 meth public {org.openide.util.Queue%0} get()
@@ -1120,13 +1163,13 @@ meth public org.openide.util.RequestProcessor$Task post(java.lang.Runnable,int)
 meth public org.openide.util.RequestProcessor$Task post(java.lang.Runnable,int,int)
 meth public static org.openide.util.RequestProcessor getDefault()
 meth public static org.openide.util.RequestProcessor$Task createRequest(java.lang.Runnable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openide.util.RequestProcessor$Task postRequest(java.lang.Runnable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openide.util.RequestProcessor$Task postRequest(java.lang.Runnable,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openide.util.RequestProcessor$Task postRequest(java.lang.Runnable,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void execute(java.lang.Runnable)
 meth public void shutdown()
 meth public void stop()
@@ -1246,7 +1289,7 @@ hfds serialVersionUID
 CLSS public final org.openide.util.Utilities
 fld public final static int OS_AIX = 64
 fld public final static int OS_DEC = 1024
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int OS_FREEBSD = 131072
 fld public final static int OS_HP = 32
 fld public final static int OS_IRIX = 128
@@ -1259,14 +1302,14 @@ fld public final static int OS_SOLARIS = 8
 fld public final static int OS_SUNOS = 256
 fld public final static int OS_TRU64 = 512
 fld public final static int OS_UNIX_MASK = 1709048
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int OS_UNIX_OTHER = 524288
 fld public final static int OS_VMS = 16384
 fld public final static int OS_WIN2000 = 8192
 fld public final static int OS_WIN95 = 2
 fld public final static int OS_WIN98 = 4
 fld public final static int OS_WINDOWS_MASK = 303111
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int OS_WINNT = 1
 fld public final static int OS_WINVISTA = 262144
 fld public final static int OS_WIN_OTHER = 32768
@@ -1277,35 +1320,35 @@ meth public static boolean compareObjects(java.lang.Object,java.lang.Object)
 meth public static boolean compareObjectsImpl(java.lang.Object,java.lang.Object,int)
 meth public static boolean isJavaIdentifier(java.lang.String)
 meth public static boolean isLargeFrameIcons()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean isMac()
 meth public static boolean isModalDialogOpen()
 meth public static boolean isMouseKeyCode(int)
 meth public static boolean isUnix()
 meth public static boolean isWindows()
 meth public static int arrayHashCode(java.lang.Object[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static int getOperatingSystem()
 meth public static int mouseButtonKeyCode(int)
 meth public static int mouseWheelDownKeyCode()
 meth public static int mouseWheelUpKeyCode()
 meth public static int showJFileChooser(javax.swing.JFileChooser,java.awt.Component,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.awt.Component findDialogParent()
 meth public static java.awt.Component findDialogParent(java.awt.Component)
 meth public static java.awt.Component getFocusTraversableComponent(java.awt.Component)
 meth public static java.awt.Cursor createCustomCursor(java.awt.Component,java.awt.Image,java.lang.String)
 meth public static java.awt.Cursor createProgressCursor(java.awt.Component)
 meth public static java.awt.Dimension getScreenSize()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.awt.Image icon2Image(javax.swing.Icon)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.awt.Image loadImage(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.awt.Image loadImage(java.lang.String,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.awt.Image mergeImages(java.awt.Image,java.awt.Image,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.awt.Rectangle findCenterBounds(java.awt.Dimension)
 meth public static java.awt.Rectangle getUsableScreenBounds()
 meth public static java.awt.Rectangle getUsableScreenBounds(java.awt.GraphicsConfiguration)
@@ -1313,7 +1356,7 @@ meth public static java.beans.BeanInfo getBeanInfo(java.lang.Class<?>) throws ja
 meth public static java.beans.BeanInfo getBeanInfo(java.lang.Class<?>,java.lang.Class<?>) throws java.beans.IntrospectionException
 meth public static java.io.File toFile(java.net.URI)
 meth public static java.io.File toFile(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.Class<?> getObjectType(java.lang.Class<?>)
 meth public static java.lang.Class<?> getPrimitiveType(java.lang.Class<?>)
 meth public static java.lang.Object toPrimitiveArray(java.lang.Object[])
@@ -1325,21 +1368,21 @@ meth public static java.lang.String keyToString(javax.swing.KeyStroke)
 meth public static java.lang.String keyToString(javax.swing.KeyStroke,boolean)
 meth public static java.lang.String pureClassName(java.lang.String)
 meth public static java.lang.String replaceString(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String translate(java.lang.String)
 meth public static java.lang.String wrapString(java.lang.String,int,boolean,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String wrapString(java.lang.String,int,java.text.BreakIterator,boolean)
 meth public static java.lang.String[] parseParameters(java.lang.String)
 meth public static java.lang.String[] wrapStringToArray(java.lang.String,int,boolean,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String[] wrapStringToArray(java.lang.String,int,java.text.BreakIterator,boolean)
 meth public static java.lang.ref.ReferenceQueue<java.lang.Object> activeReferenceQueue()
 meth public static java.net.URI toURI(java.io.File)
 meth public static java.net.URL toURL(java.io.File) throws java.net.MalformedURLException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.util.List partialSort(java.util.List,java.util.Comparator,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.util.List<? extends javax.swing.Action> actionsForPath(java.lang.String)
 meth public static java.util.List<? extends javax.swing.Action> actionsForPath(java.lang.String,org.openide.util.Lookup)
 meth public static javax.swing.JPopupMenu actionsToPopup(javax.swing.Action[],java.awt.Component)
@@ -1355,7 +1398,7 @@ hcls NamesAndValues
 
 CLSS public static org.openide.util.Utilities$UnorderableException
  outer org.openide.util.Utilities
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.util.Collection,java.util.Map)
 cons public init(java.util.Collection,java.util.Map)
 meth public java.util.Collection getUnorderable()
@@ -1425,7 +1468,7 @@ hfds RP
 hcls ActionRunnable
 
 CLSS public abstract interface org.openide.util.actions.ActionPerformer
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void performAction(org.openide.util.actions.SystemAction)
 
 CLSS public abstract org.openide.util.actions.ActionPresenterProvider
@@ -1440,7 +1483,7 @@ supr java.lang.Object
 hcls Default
 
 CLSS public abstract org.openide.util.actions.BooleanStateAction
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 fld public final static java.lang.String PROP_BOOLEAN_STATE = "booleanState"
 intf org.openide.util.actions.Presenter$Menu
@@ -1478,12 +1521,12 @@ meth public boolean getSurviveFocusChange()
 meth public java.lang.Object getActionMapKey()
 meth public javax.swing.Action createContextAwareInstance(org.openide.util.Lookup)
 meth public org.openide.util.actions.ActionPerformer getActionPerformer()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void actionPerformed(java.awt.event.ActionEvent)
 meth public void performAction()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setActionPerformer(org.openide.util.actions.ActionPerformer)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setSurviveFocusChange(boolean)
 supr org.openide.util.actions.CallableSystemAction
 hfds LISTENER,PROP_ACTION_PERFORMER,err,notSurviving,serialVersionUID,surviving
@@ -1529,7 +1572,7 @@ meth public final void putValue(java.lang.String,java.lang.Object)
 meth public final void setIcon(javax.swing.Icon)
 meth public static <%0 extends org.openide.util.actions.SystemAction> {%%0} get(java.lang.Class<{%%0}>)
 meth public static javax.swing.JPopupMenu createPopupMenu(org.openide.util.actions.SystemAction[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static javax.swing.JToolBar createToolbarPresenter(org.openide.util.actions.SystemAction[])
 meth public static org.openide.util.actions.SystemAction[] linkActions(org.openide.util.actions.SystemAction[],org.openide.util.actions.SystemAction[])
 meth public void setEnabled(boolean)
@@ -1639,7 +1682,7 @@ meth public abstract void rejected()
 
 CLSS public org.openide.util.io.FoldingIOException
 cons public init(java.lang.Throwable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getLocalizedMessage()
 meth public java.lang.String toString()
 meth public void printStackTrace()
@@ -1737,7 +1780,7 @@ meth public abstract javax.swing.Icon loadIcon(java.net.URL) throws java.io.IOEx
 CLSS public abstract org.openide.xml.EntityCatalog
 cons protected init()
 fld public final static java.lang.String PUBLIC_ID = "-//NetBeans//Entity Mapping Registration 1.0//EN"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf org.xml.sax.EntityResolver
 meth public static org.openide.xml.EntityCatalog getDefault()
 supr java.lang.Object

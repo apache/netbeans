@@ -22,11 +22,6 @@ import java.util.Collections;
 import java.util.Optional;
 import static junit.framework.TestCase.assertNotNull;
 import org.apache.maven.project.MavenProject;
-import org.netbeans.api.lsp.WorkspaceEdit;
-import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectManager;
-import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
@@ -37,57 +32,17 @@ import org.netbeans.modules.project.dependency.DependencyResult;
 import org.netbeans.modules.project.dependency.ProjectDependencies;
 import org.netbeans.modules.project.dependency.ProjectModificationResult;
 import org.netbeans.modules.project.dependency.Scopes;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 /**
  *
  * @author sdedic
  */
-public class MavenDependencyModifierImplTest extends NbTestCase {
+public class MavenDependencyModifierImplTest extends MavenDependencyModifierImplTestBase {
 
     public MavenDependencyModifierImplTest(String name) {
         super(name);
     }
     
-    private FileObject projectDir;
-    private Project project;
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp(); 
-        clearWorkDir();
-    }
-    
-    
-    
-    private Project makeProject(String subdir, String alternateBuildscript) throws Exception {
-        FileObject src = FileUtil.toFileObject(getDataDir()).getFileObject(subdir);
-        projectDir = FileUtil.copyFile(src, FileUtil.toFileObject(getWorkDir()), src.getNameExt());
-        if (alternateBuildscript != null) {
-            FileObject fo = src.getFileObject(alternateBuildscript);
-            FileObject target = projectDir.getFileObject("build.gradle");
-            if (target != null) {
-                target.delete();
-            }
-            fo.copy(projectDir, "build", "gradle");
-        }
-        
-        Project p = ProjectManager.getDefault().findProject(projectDir);
-        assertNotNull(p);
-        
-        OpenProjects.getDefault().open(new Project[] { p }, true);
-        OpenProjects.getDefault().openProjects().get();
-
-        this.project = p;
-        return p;
-    }
-
     public void testSimpleAdd() throws Exception {
         makeProject("simpleProject", null);
         

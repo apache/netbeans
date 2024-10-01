@@ -20,6 +20,14 @@
     under the License.
 
 -->
+## Version 23.0.0
+* JDK can be set per project, new setting: `netbeans.project.jdkhome`
+* Micronaut: 
+    * Source action to generate tests for endpoints added. 
+    * Code completion support for values of `Mapping` annotation.
+* Cloud Assets: Support for container repostory and run in Compute Instance 
+* ... and other bug fixes
+
 ## Version 22.9.9
 * OCI Cloud Assets panel added which allows setting Micronaut OCI runtime properties & generate OCI policies
 * JDK Configuration wizard added to unify setting Java for various VSCode parts

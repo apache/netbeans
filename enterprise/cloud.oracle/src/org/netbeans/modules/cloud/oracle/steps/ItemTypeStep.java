@@ -44,6 +44,7 @@ public class ItemTypeStep extends AbstractStep<String> {
             put(Bundle.Bucket(), "Bucket"); //NOI18N 
             put(Bundle.Vault(), "Vault"); //NOI18N
             put(Bundle.ContainerRepository(), "ContainerRepository"); //NOI18N
+            put(Bundle.MetricsNamespace(), "MetricsNamespace"); //NOI18N
         }
     };
     private String selected;

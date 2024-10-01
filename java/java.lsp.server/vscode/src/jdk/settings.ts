@@ -48,16 +48,29 @@ export abstract class Setting {
     // Configure this setting for the specific JDK
     abstract setJdk(jdk: jdk.Java, scope: vscode.ConfigurationTarget): Promise<boolean>;
 
+    async acceptJdk(jdk: jdk.Java) : Promise<boolean> {
+        return true;
+    }
 }
 
 class JavaSetting extends Setting {
 
     readonly supportsWorkspaceScope: boolean;
+    readonly minVersion : number | undefined;
     private java: jdk.Java | null | undefined;
 
-    constructor(name: string, property: string, supportsWorkspaceScope: boolean = true) {
+    constructor(name: string, property: string, minVersion? : number, supportsWorkspaceScope: boolean = true) {
         super(name, property);
+        this.minVersion = minVersion;
         this.supportsWorkspaceScope = supportsWorkspaceScope;
+    }
+
+    async acceptJdk(jdk: jdk.Java) : Promise<boolean> {
+        if (!this.minVersion) {
+            return true;
+        }
+        let v = await jdk.getVersion();
+        return !v?.major || v.major >= this.minVersion;
     }
 
     protected getJavaHome(): string | undefined {
@@ -73,7 +86,11 @@ class JavaSetting extends Setting {
     }
 
     getSetting(): string {
-        return this.property;
+        if (this.minVersion) {
+            return `${this.property} (requires JDK ${this.minVersion}+)`;
+        } else {
+            return this.property;
+        }
     }
 
     getCurrent(): string | undefined {
@@ -324,13 +341,13 @@ const NBLS_EXTENSION_ID = 'asf.apache-netbeans-java';
 const NBLS_SETTINGS_NAME = 'Language Server by Apache NetBeans';
 const NBLS_SETTINGS_PROPERTY = 'netbeans.jdkhome';
 function nblsSetting(): Setting {
-    return new JavaSetting(NBLS_SETTINGS_NAME, NBLS_SETTINGS_PROPERTY, true);
+    return new JavaSetting(NBLS_SETTINGS_NAME, NBLS_SETTINGS_PROPERTY, 17, true);
 }
 
 const NBLS_SETTINGS_PROJECT_NAME = 'Language Server by Apache NetBeans - Java Runtime for Projects';
 const NBLS_SETTINGS_PROJECT_PROPERTY = 'netbeans.project.jdkhome';
 function nblsProjectSetting(): Setting {
-    return new JavaSetting(NBLS_SETTINGS_PROJECT_NAME, NBLS_SETTINGS_PROJECT_PROPERTY, true);
+    return new JavaSetting(NBLS_SETTINGS_PROJECT_NAME, NBLS_SETTINGS_PROJECT_PROPERTY, undefined, true);
 }
 
 

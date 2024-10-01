@@ -73,6 +73,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
+import org.netbeans.modules.micronaut.db.Utils;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.indexing.Context;
@@ -109,6 +110,8 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
     private static final String MANAGEMENT_WRITE_ANNOTATION = "io.micronaut.management.endpoint.annotation.Write";
     private static final String MANAGEMENT_DELETE_ANNOTATION = "io.micronaut.management.endpoint.annotation.Delete";
     private static final String MANAGEMENT_SELECTOR_ANNOTATION = "io.micronaut.management.endpoint.annotation.Selector";
+    private static final String AWS_FUNCTION = "io.micronaut.function.aws.MicronautRequestHandler";
+    private static final String OCI_FUNCTION = "io.micronaut.oraclecloud.function.OciFunction";
 
     private final Map<FileObject, Boolean> map = new WeakHashMap<>();
     private final Map<ClasspathInfo, List<ClassSymbolLocation>> cache = new WeakHashMap<>();
@@ -151,11 +154,18 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
                 if (ret == null) {
                     ClassPath cp = ClassPath.getClassPath(root, ClassPath.COMPILE);
                     cp.addPropertyChangeListener(WeakListeners.propertyChange(this, cp));
-                    ret = cp.findResource("io/micronaut/http/annotation/HttpMethodMapping.class") != null
-                            || cp.findResource("io/micronaut/management/endpoint/annotation/Endpoint.class") != null;
+                    ret = resolveClassName(cp, HTTP_METHOD_MAPPING_ANNOTATION, MANAGEMENT_ENDPOINT_ANNOTATION, AWS_FUNCTION, OCI_FUNCTION);
                     map.put(root, ret);
                 }
                 return ret;
+            }
+        }
+        return false;
+    }
+    private static boolean resolveClassName(ClassPath cp, String... fqns) {
+        for (String fqn : fqns) {
+            if (cp.findResource(fqn.replace('.', '/') + ".class") != null) {
+                return true;
             }
         }
         return false;
@@ -165,6 +175,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
         final List<SymbolLocation> ret = new ArrayList<>();
         SourcePositions sp = cc.getTrees().getSourcePositions();
         TreePathScanner<Void, String> scanner = new TreePathScanner<Void, String>() {
+            private String functionName = null;
             @Override
             public Void visitClass(ClassTree node, String path) {
                 TreePath treePath = this.getCurrentPath();
@@ -182,15 +193,27 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
                     } else {
                         path = getPath((TypeElement) cls);
                     }
+                    TypeElement ociFunctionTE = cc.getElements().getTypeElement(OCI_FUNCTION);
+                    if (ociFunctionTE != null && cc.getTypes().isSubtype(cc.getTypes().erasure(cls.asType()), ociFunctionTE.asType())) {
+                        functionName = Utils.getOciFunctionName(cc, ((TypeElement) cls).getQualifiedName().toString());
+                    }
+                    TypeElement awsFunctionTE = cc.getElements().getTypeElement(AWS_FUNCTION);
+                    if (awsFunctionTE != null && cc.getTypes().isSubtype(cc.getTypes().erasure(cls.asType()), awsFunctionTE.asType())) {
+                        functionName = "handleRequest";
+                    }
                 }
                 return super.visitClass(node, path);
             }
 
             @Override
             public Void visitMethod(MethodTree node, String path) {
-                if (path != null) {
-                    TreePath treePath = this.getCurrentPath();
-                    MthIterator it = new MthIterator(cc.getTrees().getElement(treePath), cc.getElements(), cc.getTypes());
+                TreePath treePath = this.getCurrentPath();
+                if (functionName != null && functionName.contentEquals(node.getName())) {
+                    int[] span = cc.getTreeUtilities().findNameSpan(node);
+                    ret.add(new SymbolLocation("@/ -- POST", (int) sp.getStartPosition(treePath.getCompilationUnit(), node), (int) sp.getEndPosition(treePath.getCompilationUnit(), node), span[0], span[1]));
+                } else if (path != null) {
+                    Element mth = cc.getTrees().getElement(treePath);
+                    MthIterator it = new MthIterator(mth, cc.getElements(), cc.getTypes());
                     while (it.hasNext()) {
                         ExecutableElement ee = it.next();
                         for (AnnotationMirror ann : ee.getAnnotationMirrors()) {

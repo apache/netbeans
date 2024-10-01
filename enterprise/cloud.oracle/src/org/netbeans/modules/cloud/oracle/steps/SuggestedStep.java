@@ -19,6 +19,7 @@
 package org.netbeans.modules.cloud.oracle.steps;
 
 import com.oracle.bmc.model.BmcException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.cloud.oracle.assets.AbstractStep;
+import org.netbeans.modules.cloud.oracle.assets.CreateNewResourceItem;
 import org.netbeans.modules.cloud.oracle.assets.Steps;
 import org.netbeans.modules.cloud.oracle.assets.Steps.Values;
 import org.netbeans.modules.cloud.oracle.bucket.BucketNode;
@@ -36,6 +38,7 @@ import org.netbeans.modules.cloud.oracle.compute.ClusterNode;
 import org.netbeans.modules.cloud.oracle.compute.ComputeInstanceNode;
 import org.netbeans.modules.cloud.oracle.database.DatabaseNode;
 import org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryNode;
+import org.netbeans.modules.cloud.oracle.developer.MetricsNamespaceNode;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.vault.VaultNode;
 import org.openide.NotifyDescriptor;
@@ -54,6 +57,7 @@ import org.openide.util.NbBundle;
     "Compute=Compute Instance",
     "SelectItem=Select {0}",
     "ContainerRepository=Container Repository",
+    "MetricsNamespace=Metrics Namespace",
 })
 public class SuggestedStep extends AbstractStep<OCIItem> {
     private static final Logger LOG = Logger.getLogger(SuggestedStep.class.getName());
@@ -90,6 +94,8 @@ public class SuggestedStep extends AbstractStep<OCIItem> {
                 return Bundle.Compute();
             case "ContainerRepository":
                 return Bundle.ContainerRepository();
+            case "MetricsNamespace":
+                return Bundle.MetricsNamespace();
         }
         throw new MissingResourceException("Missing OCI type", null, suggestedType);
     }
@@ -124,7 +130,7 @@ public class SuggestedStep extends AbstractStep<OCIItem> {
      * @return  List of items found
      */
     protected static List<? extends OCIItem> getItemsByPath(CompartmentItem parent, String path) {
-        Map<String, OCIItem> items = new HashMap<>();
+        List<OCIItem> items = new ArrayList<>();
         try {
             switch (path) {
                 case "Databases": //NOI18N
@@ -138,7 +144,11 @@ public class SuggestedStep extends AbstractStep<OCIItem> {
                 case "ComputeInstance": //NOI18N
                     return ComputeInstanceNode.getComputeInstances().apply(parent);
                 case "ContainerRepository": //NOI18N
-                    return ContainerRepositoryNode.getContainerRepositories().apply(parent);
+                    items.add(new CreateNewResourceItem());
+                    items.addAll(ContainerRepositoryNode.getContainerRepositories().apply(parent));
+                    return items;
+                case "MetricsNamespace": //NOI18N
+                    return MetricsNamespaceNode.getMetricNamespaces().apply(parent);
                 default:
                     return Collections.emptyList();
             }

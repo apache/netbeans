@@ -109,9 +109,9 @@ class CheckNodeListener implements MouseListener, KeyListener {
                         o = ((TreeElement) o).getUserObject();
                         if (o instanceof RefactoringElement) {
                                 openDiff(node);
-                            }
                         }
                     }
+                }
             } else {
                 Rectangle chRect = CheckRenderer.getCheckBoxRectangle();
                 Rectangle rowRect = tree.getPathBounds(path);
@@ -356,10 +356,7 @@ class CheckNodeListener implements MouseListener, KeyListener {
         } while (!node.isLeaf());
         tree.setSelectionRow(newRow);
         tree.scrollRowToVisible(newRow);
-        if (isQuery) {
-            CheckNodeListener.findInSource(node);
-        } else {
-            CheckNodeListener.openDiff(node);
-        }
+        CheckNodeListener.openDiff(node);
     }
+
 } // end CheckNodeListener

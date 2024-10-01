@@ -2420,6 +2420,9 @@ jobs:
       - name: php.atoum
         run: ant $OPTS -f php/php.atoum test
 
+      - name: php.blade
+        run: ant $OPTS -f php/php.blade test
+
       - name: php.code.analysis
         run: ant $OPTS -f php/php.code.analysis test
 

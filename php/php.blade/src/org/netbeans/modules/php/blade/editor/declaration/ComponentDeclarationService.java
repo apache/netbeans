@@ -21,6 +21,7 @@ package org.netbeans.modules.php.blade.editor.declaration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.php.blade.editor.components.annotation.Namespace;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexResult;
@@ -56,6 +57,7 @@ public class ComponentDeclarationService {
         return results;
     }
     
+    @CheckForNull
     public FileObject getComponentResourceFile(String componentId, String classQualifiedName, FileObject sourceFo) {
         if (classQualifiedName.toLowerCase().contains(ComponentsSupport.LIVEWIRE_NAME)){
             return getLivewireComponentResourceFile(componentId, sourceFo);
@@ -64,6 +66,7 @@ public class ComponentDeclarationService {
         return null;
     }
 
+    @CheckForNull
     public FileObject getLivewireComponentResourceFile(String componentId, FileObject sourceFo) {
         Project project = ProjectUtils.getMainOwner(sourceFo);
         if (project == null) {

@@ -20,7 +20,9 @@ package org.netbeans.modules.php.blade.editor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.swing.text.BadLocationException;
 import org.antlr.v4.runtime.Token;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -155,7 +157,7 @@ public class BladeBracesMatcher implements BracesMatcher {
 
     private int[] findOpenTag() {
         int matchTokenType = BladeAntlrUtils.getTagPairTokenType(originToken.getType());
-        List<Integer> skipableTokenTypes = new ArrayList<>();
+        Set<Integer> skipableTokenTypes = new HashSet<>();
         skipableTokenTypes.add(HTML);
         Token startToken = BladeAntlrUtils.findBackwardWithStop(context.getDocument(),
                 originToken,
@@ -173,7 +175,7 @@ public class BladeBracesMatcher implements BracesMatcher {
 
     private int[] findCloseTag() {
         int matchTokenType = BladeAntlrUtils.getTagPairTokenType(originToken.getType());
-        List<Integer> skipableTokenTypes = new ArrayList<>();
+        Set<Integer> skipableTokenTypes = new HashSet<>();
         skipableTokenTypes.add(HTML);
         Token endToken = BladeAntlrUtils.findForwardWithStop(context.getDocument(),
                 originToken,
@@ -195,8 +197,8 @@ public class BladeBracesMatcher implements BracesMatcher {
         if (pair == null){
             return null;
         }
-        List<String> startDirectiveForBalance = new ArrayList<>();
-        List<String> stopDirectives = Arrays.asList(pair);
+        Set<String> startDirectiveForBalance = new HashSet<>();
+        Set<String> stopDirectives = new HashSet<>(Arrays.asList(pair));
 
         for (String endDirective : pair) {
             String[] startDirectives = BladeDirectivesUtils.directiveEnd2StartPair(endDirective);
@@ -224,8 +226,8 @@ public class BladeBracesMatcher implements BracesMatcher {
     private int[] findCustomDirectiveEnd(String directive) {
         String endPrefix = BladeDirectivesUtils.END_DIRECTIVE_PREFIX;
         String[] pair = new String[]{endPrefix + directive.substring(1)};
-        List<String> stopDirectives = Arrays.asList(pair);
-        List<String> startDirectiveForBalance = Arrays.asList(new String[]{directive});
+        Set<String> stopDirectives = new HashSet<>(Arrays.asList(pair));
+        Set<String> startDirectiveForBalance = new HashSet<>(Arrays.asList(new String[]{directive}));
 
         Token endToken = BladeAntlrUtils.findForward(context.getDocument(),
                 originToken,
@@ -244,8 +246,8 @@ public class BladeBracesMatcher implements BracesMatcher {
     @CheckForNull
     private int[] findOriginForDirectiveEnd(String directive) {
         String[] pair = BladeDirectivesUtils.directiveEnd2StartPair(directive);
-        List<String> endDirectivesForBalance = new ArrayList<>();
-        List<String> openDirectives = Arrays.asList(pair);
+        Set<String> endDirectivesForBalance = new HashSet<>();
+        Set<String> openDirectives = new HashSet<>(Arrays.asList(pair));
 
         for (String startDirective : pair) {
             String[] endDirectives = BladeDirectivesUtils.directiveStart2EndPair(startDirective);

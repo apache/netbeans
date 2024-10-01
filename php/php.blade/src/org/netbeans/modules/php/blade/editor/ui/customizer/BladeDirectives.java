@@ -38,7 +38,7 @@ import org.openide.util.Exceptions;
 public class BladeDirectives extends javax.swing.JPanel {
 
     private final Project project;
-    BladeProjectProperties bladeProperties;
+    private final BladeProjectProperties bladeProperties;
 
     /**
      * Creates new form CustomizerIncludePath
@@ -177,7 +177,7 @@ public class BladeDirectives extends javax.swing.JPanel {
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         try {
-            Desktop.getDesktop().browse(new URI("https://laravel.com/docs/10.x/blade#extending-blade"));
+            Desktop.getDesktop().browse(new URI("https://laravel.com/docs/10.x/blade#extending-blade")); // NOI18N
         } catch (URISyntaxException | IOException ex) {
             Exceptions.printStackTrace(ex);
         }

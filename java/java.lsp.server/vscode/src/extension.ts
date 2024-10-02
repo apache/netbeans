@@ -45,7 +45,7 @@ import {
 import * as net from 'net';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ChildProcess } from 'child_process';
+import { spawnSync, ChildProcess } from 'child_process';
 import * as vscode from 'vscode';
 import * as ls from 'vscode-languageserver-protocol';
 import * as launcher from './nbcode';
@@ -73,10 +73,13 @@ const DATABASE: string = 'Database';
 const listeners = new Map<string, string[]>();
 export let client: Promise<NbLanguageClient>;
 export let clientRuntimeJDK : string | null = null;
+export const MINIMAL_JDK_VERSION = 17;
+
 let testAdapter: NbTestAdapter | undefined;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
 let consoleLog: boolean = !!process.env['ENABLE_CONSOLE_LOG'];
+let specifiedJDKWarned : string[] = [];
 
 export class NbLanguageClient extends LanguageClient {
     private _treeViewService: TreeViewService;
@@ -465,17 +468,47 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     // find acceptable JDK and launch the Java part
     findJDK(async (specifiedJDK) => {
         const osExeSuffix = process.platform === 'win32' ? '.exe' : '';
-        if (!specifiedJDK || !(fs.existsSync(path.resolve(specifiedJDK, 'bin', `java${osExeSuffix}`)) && path.resolve(specifiedJDK, 'bin', `javac${osExeSuffix}`))) {
+        let jdkOK : boolean = true;
+        let javaExecPath : string;
+        if (!specifiedJDK) {
+            javaExecPath = 'java';
+        } else {
+            javaExecPath = path.resolve(specifiedJDK, 'bin', 'java');
+            jdkOK = fs.existsSync(path.resolve(specifiedJDK, 'bin', `java${osExeSuffix}`)) && fs.existsSync(path.resolve(specifiedJDK, 'bin', `javac${osExeSuffix}`));
+        }
+        if (jdkOK) {
+            log.appendLine(`Verifying java: ${javaExecPath}`);
+            // let the shell interpret PATH and .exe extension
+            let javaCheck = spawnSync(`${javaExecPath} -version`, { shell : true });
+            if (javaCheck.error || javaCheck.status) {
+                jdkOK = false;
+            } else {
+                javaCheck.stderr.toString().split('\n').find(l => {
+                    // yes, versions like 1.8 (up to 9) will be interpreted as 1, which is OK for < comparison
+                    let re = /.* version \"([0-9]+)\.[^"]+\".*/.exec(l);
+                    if (re) {
+                        let versionNumber = Number(re[1]);
+                        if (versionNumber < MINIMAL_JDK_VERSION) {
+                            jdkOK = false;
+                        }
+                    }
+                });
+            }
+        }
+        let warnedJDKs : string[] = specifiedJDKWarned; 
+        if (!jdkOK && !warnedJDKs.includes(specifiedJDK || '')) {
             const msg = specifiedJDK ? 
-                `The current path to JDK "${specifiedJDK}" may be invalid. A valid JDK is required by Apache NetBeans Language Server to run.
-                You should configure a proper JDK for Apache NetBeans and/or other technologies. Do you want to run JDK configuration now ?` :
-                'A valid JDK is required by Apache NetBeans Language Server to run, but none was found. You should configure a proper JDK for Apache NetBeans and/or other technologies. ' +
-                'Do you want to run JDK configuration now ?';
+                `The current path to JDK "${specifiedJDK}" may be invalid. A valid JDK ${MINIMAL_JDK_VERSION}+ is required by Apache NetBeans Language Server to run.
+                You should configure a proper JDK for Apache NetBeans and/or other technologies. Do you want to run JDK configuration now?` :
+                `A valid JDK ${MINIMAL_JDK_VERSION}+ is required by Apache NetBeans Language Server to run, but none was found. You should configure a proper JDK for Apache NetBeans and/or other technologies. ` +
+                'Do you want to run JDK configuration now?';
             const Y = "Yes";
             const N = "No";
             if (await vscode.window.showErrorMessage(msg, Y, N) == Y) {
                 vscode.commands.executeCommand('nbls.jdk.configuration');
                 return;
+            } else {
+                warnedJDKs.push(specifiedJDK || '');
             }
         }
         let currentClusters = findClusters(context.extensionPath).sort();

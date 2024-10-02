@@ -20,6 +20,22 @@
     under the License.
 
 -->
+## Version 23.9.9
+* Version 23.9.9 is VSNetBeans technology preview of upcoming VSNetBeans 24.0
+* Warn if JDK appears invalid and offer JDK configuration wizard
+* Project improvements:
+    * Improving "internal reload" during project reload
+    * Support for adding annotation processor dependencies
+    * Maven and Gradle implementation of Project (re)load API
+* Micronaut:
+    * Report warnings for properties in config files with unset values. 
+    * Code completion for named cloud assets added.
+    * Improvements &  bug fixes in LSP for Micronaut symbols
+* Cloud Assets improvements:
+    * Support for container repository and docker build/push
+    * Support for registering database
+* Various other bug fixes and improvements
+  
 ## Version 23.0.0
 * JDK can be set per project, new setting: `netbeans.project.jdkhome`
 * Micronaut: 

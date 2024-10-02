@@ -91,137 +91,161 @@ public class PartialReparseTest extends NbTestCase {
     }
 
     public void testPartialReparse() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "    private void test() {\n" +
-                  "        System.err.println(1);^^\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      private void test() {
+                          System.err.println(1);^^
+                      }
+                  }
+                  """,
                   "\n        System.err.println(2);");
     }
 
     public void testIntroduceParseError1() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "    private void test() {\n" +
-                  "        System.err.println(1);^^\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      private void test() {
+                          System.err.println(1);^^
+                      }
+                  }
+                  """,
                   "\n        if (");
     }
 
     public void testIntroduceParseError2() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "    private void test() {\n" +
-                  "        System.err.println(1);^^\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      private void test() {
+                          System.err.println(1);^^
+                      }
+                  }
+                  """,
                   "\n        if (tr");
     }
 
     public void testRemoveParseError() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "    private void test() {\n" +
-                  "        System.err.println(1);^\n" +
-                  "        if (^\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      private void test() {
+                          System.err.println(1);^
+                          if (^
+                      }
+                  }
+                  """,
                   "");
     }
 
     public void testResolutionError() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "    private void test() {\n" +
-                  "        System.err.println(1);^^\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      private void test() {
+                          System.err.println(1);^^
+                      }
+                  }
+                  """,
                   "\n        a = 15;");
     }
 
     public void testRemoveResolution() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "    private void test() {\n" +
-                  "        System.err.println(1);^\n" +
-                  "        a = 15;^\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      private void test() {
+                          System.err.println(1);^
+                          a = 15;^
+                      }
+                  }
+                  """,
                   "");
     }
 
     public void testIntroduceSomeNewErrors() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "    private void test() {\n" +
-                  "        System.err.println(1);\n" +
-                  "        if (^^\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      private void test() {
+                          System.err.println(1);
+                          if (^^
+                      }
+                  }
+                  """,
                   "a");
     }
 
     public void testErrorsRemain() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "    private void test() {\n" +
-                  "        System.err.println(1);\n" +
-                  "        ^if (^a\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      private void test() {
+                          System.err.println(1);
+                          ^if (^a
+                      }
+                  }
+                  """,
                   "if (");
     }
 
     public void testFlowErrors1() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "    private void test() {\n" +
-                  "        final int i = 5;\n" +
-                  "        ^^\n" +
-                  "        System.err.println(i);\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      private void test() {
+                          final int i = 5;
+                          ^^
+                          System.err.println(i);
+                      }
+                  }
+                  """,
                   "return ;");
     }
 
     public void testFlowErrors2() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "    private void test() {\n" +
-                  "        final int i = 5;\n" +
-                  "        ^return ;^\n" +
-                  "        System.err.println(i);\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      private void test() {
+                          final int i = 5;
+                          ^return ;^
+                          System.err.println(i);
+                      }
+                  }
+                  """,
                   "");
     }
 
     public void testAnonymous() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "    private void test() {\n" +
-                  "        new Object() {\n" +
-                  "        };" +
-                  "        final int i = 5;\n" +
-                  "        ^^\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      private void test() {
+                          new Object() {
+                          };
+                          final int i = 5;
+                          ^^
+                      }
+                  }
+                  """,
                   "final int j = 5;");
     }
 
     public void testAnonymousName() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "    private Object o = new Object() {};\n" +
-                  "    private void test() {\n" +
-                  "        new Object() {\n" +
-                  "        };" +
-                  "        final int i = 5;\n" +
-                  "        ^^\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      private Object o = new Object() {};
+                      private void test() {
+                          new Object() {
+                          };
+                          final int i = 5;
+                          ^^
+                      }
+                  }
+                  """,
                   "final int j = 5;",
                   info -> {
                       new TreePathScanner<Void, Void>() {
@@ -238,101 +262,119 @@ public class PartialReparseTest extends NbTestCase {
     }
 
     public void testAnonymousFullReparse1() throws Exception {
-        doVerifyFullReparse("package test;\n" +
-                            "public class Test {\n" +
-                            "    private void test() {\n" +
-                            "        ^new Object() {};^\n" +
-                            "        final int i = 5;\n" +
-                            "    }" +
-                            "}",
+        doVerifyFullReparse("""
+                            package test;
+                            public class Test {
+                                private void test() {
+                                    ^new Object() {};^
+                                    final int i = 5;
+                                }
+                            }
+                            """,
                             "");
     }
 
     public void testAnonymousFullReparse2() throws Exception {
-        doVerifyFullReparse("package test;\n" +
-                            "public class Test {\n" +
-                            "    private void test() {\n" +
-                            "        new Object() {};\n" +
-                            "        final int i = 5;\n" +
-                            "        ^^\n" +
-                            "    }" +
-                            "}",
+        doVerifyFullReparse("""
+                            package test;
+                            public class Test {
+                                private void test() {
+                                    new Object() {};
+                                    final int i = 5;
+                                    ^^
+                                }
+                            }
+                            """,
                             "new Object() {};");
     }
 
     public void testDocComments() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "        /**javadoc1*/" +
-                  "    private void test() {\n" +
-                  "        new Object() {" +
-                  "            /**javadoc2*/" +
-                  "            final int i = 5;\n" +
-                  "            ^^\n" +
-                  "       };\n" +
-                  "    }" +
-                  "}",
-                  "        /**javadoc3*/\n" +
-                  "        final int j = 5;\n");
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      /**javadoc1*/
+                      private void test() {
+                          new Object() {
+                              /**javadoc2*/
+                              final int i = 5;
+                              ^^
+                         };
+                      }
+                  }
+                  """, 
+                  """
+                  /**javadoc3*/
+                              final int j = 5;
+                  """);
     }
 
     public void testConstructor1() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "    public Test() {\n" +
-                  "        System.err.println(1);\n" +
-                  "        ^^\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      public Test() {
+                          System.err.println(1);
+                          ^^
+                      }
+                  }
+                  """,
                   "System.err.println(2);");
     }
 
     public void testConstructor2() throws Exception {
-        doRunTest("package test;\n" +
-                  "public class Test {\n" +
-                  "    public Test() {\n" +
-                  "        super();" +
-                  "        System.err.println(1);\n" +
-                  "        ^^\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      public Test() {
+                          super();
+                          System.err.println(1);
+                          ^^
+                      }
+                  }
+                  """,
                   "System.err.println(2);");
     }
 
     public void testConstructorEnum1() throws Exception {
-        doRunTest("package test;\n" +
-                  "public enum Test {\n" +
-                  "    A(1);\n" +
-                  "    public Test(int i) {\n" +
-                  "        System.err.println(i);\n" +
-                  "        ^^\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public enum Test {
+                      A(1);
+                      public Test(int i) {
+                          System.err.println(i);
+                          ^^
+                      }
+                  }
+                  """,
                   "System.err.println(2);");
     }
 
     public void testConstructorEnum2() throws Exception {
-        doRunTest("package test;\n" +
-                  "public enum Test {\n" +
-                  "    A(1);\n" +
-                  "    public Test(int i) {\n" +
-                  "        super();\n" +
-                  "        System.err.println(i);\n" +
-                  "        ^^\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public enum Test {
+                      A(1);
+                      public Test(int i) {
+                          super();
+                          System.err.println(i);
+                          ^^
+                      }
+                  }
+                  """,
                   "System.err.println(2);");
     }
 
     public void testConstructorEnum3() throws Exception {
-        doRunTest("package test;\n" +
-                  "public enum E {\n" +
-                  "    A;\n" +
-                  "    E() {\n" +
-                  "        super();\n" +
-                  "        System.err.println(\"^^\");\n" +
-                  "    }" +
-                  "}",
+        doRunTest("""
+                  package test;
+                  public enum E {
+                      A;
+                      E() {
+                          super();
+                          System.err.println("^^");
+                      }
+                  }
+                  """,
                   "a",
                   info -> {});
     }

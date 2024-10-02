@@ -21,6 +21,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as process from 'process';
 import * as jdk from './jdk';
+import { MINIMAL_JDK_VERSION } from '../extension';
 
 
 export abstract class Setting {
@@ -341,7 +342,7 @@ const NBLS_EXTENSION_ID = 'asf.apache-netbeans-java';
 const NBLS_SETTINGS_NAME = 'Language Server by Apache NetBeans';
 const NBLS_SETTINGS_PROPERTY = 'netbeans.jdkhome';
 function nblsSetting(): Setting {
-    return new JavaSetting(NBLS_SETTINGS_NAME, NBLS_SETTINGS_PROPERTY, 17, true);
+    return new JavaSetting(NBLS_SETTINGS_NAME, NBLS_SETTINGS_PROPERTY, MINIMAL_JDK_VERSION, true);
 }
 
 const NBLS_SETTINGS_PROJECT_NAME = 'Language Server by Apache NetBeans - Java Runtime for Projects';

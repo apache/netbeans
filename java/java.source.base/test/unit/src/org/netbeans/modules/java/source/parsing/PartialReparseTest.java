@@ -34,11 +34,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.swing.JEditorPane;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.tools.Diagnostic;
 import org.netbeans.modules.editor.java.JavaKit;
@@ -55,8 +55,6 @@ import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.SourceUtils;
-import org.netbeans.junit.RandomlyFails;
-import org.netbeans.modules.java.source.NoJavacHelper;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.cookies.EditorCookie;
@@ -70,6 +68,7 @@ public class PartialReparseTest extends NbTestCase {
         super(name);
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         SourceUtilsTestUtil.prepareTest(new String[0], new Object[0]);
@@ -101,7 +100,6 @@ public class PartialReparseTest extends NbTestCase {
                   "\n        System.err.println(2);");
     }
 
-    @RandomlyFails
     public void testIntroduceParseError1() throws Exception {
         doRunTest("package test;\n" +
                   "public class Test {\n" +
@@ -204,13 +202,13 @@ public class PartialReparseTest extends NbTestCase {
         doRunTest("package test;\n" +
                   "public class Test {\n" +
                   "    private void test() {\n" +
-                  "        new Object() {\\n" +
+                  "        new Object() {\n" +
                   "        };" +
                   "        final int i = 5;\n" +
                   "        ^^\n" +
                   "    }" +
                   "}",
-                  "final int j = 5;\n");
+                  "final int j = 5;");
     }
 
     public void testAnonymousName() throws Exception {
@@ -224,9 +222,10 @@ public class PartialReparseTest extends NbTestCase {
                   "        ^^\n" +
                   "    }" +
                   "}",
-                  "final int j = 5;\n",
+                  "final int j = 5;",
                   info -> {
                       new TreePathScanner<Void, Void>() {
+                          @Override
                           public Void visitNewClass(NewClassTree tree, Void p) {
                               if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD) {
                                   TypeElement el = (TypeElement) info.getTrees().getElement(new TreePath(getCurrentPath(), tree.getClassBody()));
@@ -242,8 +241,7 @@ public class PartialReparseTest extends NbTestCase {
         doVerifyFullReparse("package test;\n" +
                             "public class Test {\n" +
                             "    private void test() {\n" +
-                            "        ^new Object() {" +
-                            "        };^" +
+                            "        ^new Object() {};^\n" +
                             "        final int i = 5;\n" +
                             "    }" +
                             "}",
@@ -254,13 +252,12 @@ public class PartialReparseTest extends NbTestCase {
         doVerifyFullReparse("package test;\n" +
                             "public class Test {\n" +
                             "    private void test() {\n" +
-                            "        new Object() {" +
-                            "        };" +
+                            "        new Object() {};\n" +
                             "        final int i = 5;\n" +
                             "        ^^\n" +
                             "    }" +
                             "}",
-                            "new Object() {}");
+                            "new Object() {};");
     }
 
     public void testDocComments() throws Exception {
@@ -345,13 +342,18 @@ public class PartialReparseTest extends NbTestCase {
     }
 
     private void doRunTest(String code, String inject, Consumer<CompilationInfo> callback) throws Exception {
+
         FileObject srcDir = FileUtil.createMemoryFileSystem().getRoot();
         FileObject src = srcDir.createData("Test.java");
+
+        // parse original source
+        String codeInput = code.replace("^", "");
         try (Writer out = new OutputStreamWriter(src.getOutputStream())) {
-            out.write(code.replaceFirst("^", "").replaceFirst("^", ""));
+            out.write(codeInput);
         }
         EditorCookie ec = src.getLookup().lookup(EditorCookie.class);
         Document doc = ec.openDocument();
+        assertEquals(codeInput, doc.getText(0, doc.getLength()));
         JavaSource source = JavaSource.forFileObject(src);
         Object[] topLevel = new Object[1];
         source.runUserActionTask(cc -> {
@@ -359,10 +361,9 @@ public class PartialReparseTest extends NbTestCase {
             topLevel[0] = cc.getCompilationUnit();
             callback.accept(cc);
         }, true);
-        int startReplace = code.indexOf('^');
-        int endReplace = code.indexOf('^', startReplace + 1) + 1;
-        doc.remove(startReplace, endReplace - startReplace);
-        doc.insertString(startReplace, inject, null);
+
+        // replace snippet and run again
+        replaceSourceSnippetInDoc(doc, code, inject);
         AtomicReference<List<TreeDescription>> actualTree = new AtomicReference<>();
         AtomicReference<List<DiagnosticDescription>> actualDiagnostics = new AtomicReference<>();
         AtomicReference<List<Long>> actualLineMap = new AtomicReference<>();
@@ -393,29 +394,44 @@ public class PartialReparseTest extends NbTestCase {
     }
 
     private void doVerifyFullReparse(String code, String inject) throws Exception {
+
         FileObject srcDir = FileUtil.createMemoryFileSystem().getRoot();
         FileObject src = srcDir.createData("Test.java");
+
+        // parse original source
+        String codeInput = code.replace("^", "");
         try (Writer out = new OutputStreamWriter(src.getOutputStream())) {
-            out.write(code.replaceFirst("^", "").replaceFirst("^", ""));
+            out.write(codeInput);
         }
         EditorCookie ec = src.getLookup().lookup(EditorCookie.class);
         Document doc = ec.openDocument();
+        assertEquals(codeInput, doc.getText(0, doc.getLength()));
         JavaSource source = JavaSource.forFileObject(src);
         Object[] topLevel = new Object[1];
         source.runUserActionTask(cc -> {
             cc.toPhase(Phase.RESOLVED);
-             topLevel[0] = cc.getCompilationUnit();
+            topLevel[0] = cc.getCompilationUnit();
         }, true);
-        int startReplace = code.indexOf('^');
-        int endReplace = code.indexOf('^', startReplace + 1) - 1;
-        doc.remove(startReplace, endReplace - startReplace);
-        doc.insertString(startReplace, inject, null);
+
+        // replace snippet and run again
+        replaceSourceSnippetInDoc(doc, code, inject);
         source.runUserActionTask(cc -> {
             cc.toPhase(Phase.RESOLVED);
             assertNotSame(topLevel[0], cc.getCompilationUnit());
         }, true);
         ec.saveDocument();
         ec.close();
+    }
+
+    private static void replaceSourceSnippetInDoc(Document doc, String code, String inject) throws BadLocationException {
+        int start = code.indexOf('^');
+        int end = code.lastIndexOf('^');
+        doc.remove(start, end - start - 1);
+        doc.insertString(start, inject, null);
+        assertEquals(
+            code.substring(0, start) + inject + code.substring(end + 1, code.length()),
+            doc.getText(0, doc.getLength())
+        );
     }
 
     private static List<TreeDescription> dumpTree(CompilationInfo info) {
@@ -463,7 +479,7 @@ public class PartialReparseTest extends NbTestCase {
             ElementKind.STATIC_INIT, ElementKind.FIELD, ElementKind.ENUM_CONSTANT);
 
     private static List<DiagnosticDescription> dumpDiagnostics(CompilationInfo info) {
-        return info.getDiagnostics().stream().map(d -> new DiagnosticDescription(d)).collect(Collectors.toList());
+        return info.getDiagnostics().stream().map(d -> new DiagnosticDescription(d)).toList();
     }
 
     private static List<Long> dumpLineMap(CompilationInfo info) {

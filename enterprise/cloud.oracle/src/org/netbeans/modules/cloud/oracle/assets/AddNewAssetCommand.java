@@ -69,7 +69,6 @@ public class AddNewAssetCommand implements CommandProvider {
             put("MetricsNamespace", new String[]{"io.micronaut.micrometer", "micronaut-micrometer-annotation"}); //NOI18N
         }
     };
-
         
     @Override
     public Set<String> getCommands() {
@@ -79,6 +78,7 @@ public class AddNewAssetCommand implements CommandProvider {
     @Override
     public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
         CompletableFuture future = new CompletableFuture();
+        boolean showSetRefNameStep = CloudAssets.getDefault().itemExistWithoutReferanceName(DatabaseItem.class);
         Steps.NextStepProvider nsProvider = Steps.NextStepProvider.builder()
                     .stepForClass(ItemTypeStep.class, (s) -> {
                         if ("Databases".equals(s.getValue())) {
@@ -100,7 +100,18 @@ public class AddNewAssetCommand implements CommandProvider {
                         if (i == null) {
                             item = new AddADBAction().addADB();
                         } else {
-                            item = CompletableFuture.completedFuture(i);
+                            if (showSetRefNameStep) {
+                                SetReferenceNameAction action = new SetReferenceNameAction(i);
+                                item = action.setReferenceName().thenAccept(referenceName -> {
+                                    if (referenceName == null) {
+                                        future.completeExceptionally(new IllegalArgumentException("Reference name not set"));
+                                        return;
+                                    }
+                                    CloudAssets.getDefault().setReferenceName(i, referenceName);
+                                }).thenCompose(val -> CompletableFuture.completedFuture(i));
+                            } else {
+                                item = CompletableFuture.completedFuture(i);
+                            }
                         }
                     } else {
                         OCIItem i = values.getValueForStep(SuggestedStep.class);
@@ -134,6 +145,9 @@ public class AddNewAssetCommand implements CommandProvider {
                                 DependencyUtils.addAnnotationProcessor(project, processor[0], processor[1]);
                             }
                         } catch (IllegalStateException e) {
+                            if ("Databases".equals(itemType)) {
+                                CloudAssets.getDefault().removeReferenceNameFor(i);
+                            }
                             future.completeExceptionally(e);
                         }
                         future.complete(null);

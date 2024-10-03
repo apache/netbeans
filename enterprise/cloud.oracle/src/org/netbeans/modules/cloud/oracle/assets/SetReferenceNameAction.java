@@ -20,12 +20,12 @@ package org.netbeans.modules.cloud.oracle.assets;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.CompletableFuture;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import org.openide.DialogDescriptor;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
+import org.netbeans.modules.cloud.oracle.steps.ReferenceNameStep;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
@@ -56,26 +56,17 @@ public class SetReferenceNameAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String oldRefName = CloudAssets.getDefault().getReferenceName(context);
-        if (oldRefName == null) {
-            oldRefName = "";
-        }
-        NotifyDescriptor.InputLine inp = new NotifyDescriptor.InputLine(oldRefName, Bundle.ReferenceName());
-        inp.setInputText(oldRefName);
-        Object selected = DialogDisplayer.getDefault().notify(inp);
-        if (DialogDescriptor.OK_OPTION != selected) {
-            return;
-        }
-        String refName = inp.getInputText();
-        if (refName.matches("[a-zA-Z0-9]+")) { //NOI18N
-            if (!CloudAssets.getDefault().setReferenceName(context, refName)) {
-                NotifyDescriptor.Message msg = new NotifyDescriptor.Message(Bundle.ReferenceNameSame());
-                DialogDisplayer.getDefault().notify(msg);
-            }
-        } else {
-            NotifyDescriptor.Message msg = new NotifyDescriptor.Message(Bundle.ReferenceNameValidationError());
-            DialogDisplayer.getDefault().notify(msg);
-        }
+         setReferenceName();
     }
     
+    public CompletableFuture<String> setReferenceName() {
+        CompletableFuture future = new CompletableFuture();
+        Steps.getDefault().executeMultistep(new ReferenceNameStep(context), Lookup.EMPTY)
+                .thenAccept(vals -> {
+                    String refName = vals.getValueForStep(ReferenceNameStep.class);
+                    CloudAssets.getDefault().setReferenceName(context, refName);
+                    future.complete(refName);
+                });
+        return future;
+    }
 }

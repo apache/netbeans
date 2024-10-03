@@ -732,8 +732,8 @@
 				"title": "Open Service Console"
 			},
 			{
-				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddDbConnectionToVault",
-				"title": "Add to OCI Vault"
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddSecretsToVault",
+				"title": "Add Sensitive Data to OCI Vault"
 			},
 			{
 				"command": "nbls.select.editor.projects",
@@ -940,7 +940,7 @@
 					"when": "false"
 				},
 				{
-					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddDbConnectionToVault",
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddSecretsToVault",
 					"when": "false"
 				},
 				{
@@ -1084,9 +1084,9 @@
 					"group": "oci@300"
 				},
 				{
-					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddDbConnectionToVault",
-					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/",
-					"group": "oci@400"
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddSecretsToVault",
+					"when": "viewItem =~ /class:oracle.vault.VaultItem/",
+					"group": "oci@200"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",

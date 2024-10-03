@@ -523,6 +523,11 @@
 				"icon": "$(play)"
 			},
 			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.RunInClusterAction",
+				"title": "Run in Cluster",
+				"icon": "$(play)"
+			},
+			{
 				"command": "nbls.workspace.compile",
 				"title": "Compile Workspace",
 				"category": "Java"
@@ -854,6 +859,10 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.RunInClusterAction",
+					"when": "false"
+				},
+				{
 					"command": "nbls:Edit:org.openide.actions.DeleteAction",
 					"when": "false"
 				},
@@ -1106,6 +1115,11 @@
 					"group": "inline@10"
 				},
 				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.RunInClusterAction",
+					"when": "viewItem =~ /clusterName:.*/ && viewItem =~ /imageUrl:.*/",
+					"group": "inline@10"
+				},
+				{
 					"command": "nbls.project.buildPushImage",
 					"when": "viewItem =~ /class:oracle.developer.ContainerRepositoryItem/",
 					"group": "inline@9"
@@ -1246,13 +1260,13 @@
 				"codeicon": "archive"
 			},
 			{
-                "uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/metrics.svg",
-                "codeicon": "graph-line"
-            },
-            {
-                "uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/metrics_namespace.svg",
-                "codeicon": "symbol-namespace"
-            },
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/metrics.svg",
+				"codeicon": "graph-line"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/metrics_namespace.svg",
+				"codeicon": "symbol-namespace"
+			},
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/computeinstance.svg",
 				"codeicon": "server-environment"

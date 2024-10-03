@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.cloud.oracle.compute;
 
-import com.oracle.bmc.containerengine.ContainerEngineClient;
 import com.oracle.bmc.containerengine.requests.ListClustersRequest;
 import com.oracle.bmc.core.model.Instance;
 import java.util.stream.Collectors;
@@ -29,6 +28,9 @@ import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.openide.nodes.Children;
 import org.openide.util.NbBundle;
+
+import com.oracle.bmc.containerengine.ContainerEngineClient;
+
 
 /**
  *
@@ -85,4 +87,5 @@ public class ClusterNode extends OCINode {
                     .collect(Collectors.toList());
         };
     }
+    
 }

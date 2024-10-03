@@ -62,6 +62,7 @@
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddSuggestedItemAction" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.RemoveFromProject" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.SetReferenceName" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.RunInClusterAction" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.adm.ShowInBrowserAction" stringvalue="Tools"/>
             </file>
         </folder>

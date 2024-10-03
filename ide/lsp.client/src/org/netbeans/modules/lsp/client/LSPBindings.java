@@ -45,6 +45,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -143,7 +144,7 @@ public class LSPBindings {
     }
 
     private static final Map<FileObject, Map<BackgroundTask, RequestProcessor.Task>> backgroundTasks = new WeakHashMap<>();
-    private final Set<FileObject> openedFiles = new HashSet<>();
+    private final Map<FileObject, Boolean> openedFiles = new ConcurrentHashMap<>();
 
     public static synchronized LSPBindings getBindings(FileObject file) {
         for (Entry<FileObject, Map<String, LSPBindings>> e : workspace2Extension2Server.entrySet()) {
@@ -542,7 +543,7 @@ public class LSPBindings {
         return backgroundTasks.computeIfAbsent(file, f -> new IdentityHashMap<>());
     }
 
-    public Set<FileObject> getOpenedFiles() {
+    public Map<FileObject, Boolean> getOpenedFiles() {
         return openedFiles;
     }
 

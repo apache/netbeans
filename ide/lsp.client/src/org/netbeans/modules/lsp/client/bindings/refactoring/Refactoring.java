@@ -140,8 +140,8 @@ public class Refactoring {
                     if (file != null) {
                         PositionBounds bounds;
                         try {
-                            CloneableEditorSupport es = file.getLookup().lookup(CloneableEditorSupport.class);
-                            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+                            CloneableEditorSupport es = Utils.lookupForFile(file, CloneableEditorSupport.class);
+                            EditorCookie ec = Utils.lookupForFile(file, EditorCookie.class);
                             StyledDocument doc = ec.openDocument();
 
                             bounds = new PositionBounds(es.createPositionRef(Utils.getOffset(doc, l.getRange().getStart()), Position.Bias.Forward),
@@ -150,7 +150,7 @@ public class Refactoring {
                             Exceptions.printStackTrace(ex);
                             bounds = null;
                         }
-                        LineCookie lc = file.getLookup().lookup(LineCookie.class);
+                        LineCookie lc = Utils.lookupForFile(file, LineCookie.class);
                         Line startLine = lc.getLineSet().getCurrent(l.getRange().getStart().getLine());
                         String lineText = startLine.getText();
                         int highlightEnd = Math.min(lineText.length(), l.getRange().getEnd().getCharacter());
@@ -341,9 +341,9 @@ public class Refactoring {
         private Difference textEdit2Difference(FileObject file, TextEdit edit) {
             if (file != null) {
                 try {
-                    EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+                    EditorCookie ec = Utils.lookupForFile(file, EditorCookie.class);
                     StyledDocument doc = ec.openDocument();
-                    CloneableEditorSupport es = file.getLookup().lookup(CloneableEditorSupport.class);
+                    CloneableEditorSupport es = Utils.lookupForFile(file, CloneableEditorSupport.class);
 
                     PositionRef start = es.createPositionRef(Utils.getOffset(doc, edit.getRange().getStart()), Position.Bias.Forward);
                     PositionRef end   = es.createPositionRef(Utils.getOffset(doc, edit.getRange().getEnd()), Position.Bias.Forward);

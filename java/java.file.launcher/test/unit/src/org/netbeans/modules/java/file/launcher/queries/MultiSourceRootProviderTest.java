@@ -19,11 +19,14 @@
 package org.netbeans.modules.java.file.launcher.queries;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Writer;
 import java.net.URI;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.event.ChangeListener;
@@ -31,12 +34,15 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation.Result;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
@@ -254,14 +260,54 @@ public class MultiSourceRootProviderTest extends NbTestCase {
             supportedFile = Files.createTempFile("dummy", ".java").toFile();
             FileObject realFileSource = FileUtil.createData(supportedFile);
             FileObject inMemorySource = FileUtil.createMemoryFileSystem().getRoot().createData("Ahoj.java");
+            MultiSourceRootProvider provider = new MultiSourceRootProvider();
 
-            assertFalse(MultiSourceRootProvider.isSupportedFile(inMemorySource));
-            assertTrue(MultiSourceRootProvider.isSupportedFile(realFileSource));
+            assertFalse(provider.isSupportedFile(inMemorySource));
+            assertTrue(provider.isSupportedFile(realFileSource));
         } finally {
             if(supportedFile != null && supportedFile.exists()) {
                 supportedFile.delete();
             }
         }
+    }
+
+    public void testMultiSourceRootProviderRespondsForKnownFolders() throws IOException {
+        File wd = getWorkDir();
+        File testDir = new File(wd, "test");
+        File packDir = new File(testDir, "pack");
+        File testFile = new File(packDir, "Test.java");
+
+        packDir.mkdirs();
+
+        try (Writer w = Files.newBufferedWriter(testFile.toPath())) {
+            w.write("package pack;");
+        }
+
+        testResult.setOptions("");
+        testResult.setWorkDirectory(testDir.toURI());
+
+        MultiSourceRootProvider provider = new MultiSourceRootProvider();
+
+        //before recongizing testDir is a multi-source file root:
+        assertNull(provider.findClassPath(FileUtil.toFileObject(wd), ClassPath.SOURCE));
+        assertNull(provider.findClassPath(FileUtil.toFileObject(testDir), ClassPath.SOURCE));
+        assertNull(provider.findClassPath(FileUtil.toFileObject(packDir), ClassPath.SOURCE));
+
+        //recognize the source file as a multi-source file:
+        ClassPath cp = provider.findClassPath(FileUtil.toFileObject(testFile), ClassPath.SOURCE);
+
+        assertNotNull(cp);
+
+        //check properties:
+        assertNull(provider.findClassPath(FileUtil.toFileObject(wd), ClassPath.SOURCE));
+        assertNull(provider.findClassPath(FileUtil.toFileObject(testDir), ClassPath.SOURCE));
+        assertNull(provider.findClassPath(FileUtil.toFileObject(packDir), ClassPath.SOURCE));
+
+        testResult.setRegisterRoot(true);
+
+        assertNull(provider.findClassPath(FileUtil.toFileObject(wd), ClassPath.SOURCE));
+        assertSame(cp, provider.findClassPath(FileUtil.toFileObject(testDir), ClassPath.SOURCE));
+        assertSame(cp, provider.findClassPath(FileUtil.toFileObject(packDir), ClassPath.SOURCE));
     }
 
     @Override
@@ -294,6 +340,7 @@ public class MultiSourceRootProviderTest extends NbTestCase {
         private final ChangeSupport cs = new ChangeSupport(this);
         private final AtomicReference<String> options = new AtomicReference<>();
         private final AtomicReference<URI> workdir = new AtomicReference<>();
+        private final AtomicBoolean registerRoot = new AtomicBoolean();
 
         public TestResultImpl() {
         }
@@ -315,6 +362,16 @@ public class MultiSourceRootProviderTest extends NbTestCase {
 
         public void setWorkDirectory(URI workdir) {
             this.workdir.set(workdir);
+            cs.fireChange();
+        }
+
+        @Override
+        public boolean registerRoot() {
+            return registerRoot.get();
+        }
+
+        public void setRegisterRoot(boolean registerRoot) {
+            this.registerRoot.set(registerRoot);
             cs.fireChange();
         }
 

@@ -111,6 +111,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
     private static final String FILE_ARGUMENTS = "single_file_run_arguments"; //NOI18N
     private static final String FILE_JDK = "single_file_run_jdk"; //NOI18N
     private static final String FILE_VM_OPTIONS = "single_file_vm_options"; //NOI18N
+    private static final String FILE_REGISTER_ROOT = "register_root"; //NOI18N
 
     private static final Map<String,Image> IMAGE_CACHE = new ConcurrentHashMap<>();
     private static final boolean ALWAYS_PREFFER_COMPUTED_ICON = Boolean.getBoolean("JavaNode.prefferComputedIcon"); //NOI18N
@@ -242,6 +243,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
             ss.setName("runFileArguments"); // NOI18N
             ss.setDisplayName(getMessage(JavaNode.class, "LBL_JavaNode_without_project_run")); // NOI18N
             ss.setShortDescription("Run the file's source code.");
+            ss.put(new JavaFileBooleanAttributeProperty(dObj, FILE_REGISTER_ROOT, "registerRoot", "singlefile_registerRoot")); // NOI18N
             ss.put(new RunFileJDKProperty(dObj));
             ss.put(new JavaFileAttributeProperty(dObj, FILE_ARGUMENTS, "runFileArguments", "singlefile_arguments")); // NOI18N
             ss.put(new JavaFileAttributeProperty(dObj, FILE_VM_OPTIONS, "runFileVMOptions", "singlefile_options")); // NOI18N
@@ -464,6 +466,33 @@ public final class JavaNode extends DataNode implements ChangeListener {
 
         }
 
+    }
+
+    // editable file attribute
+    private static final class JavaFileBooleanAttributeProperty extends PropertySupport.ReadWrite<Boolean> {
+
+        private final String attribute;
+        private final DataObject dObj;
+
+        public JavaFileBooleanAttributeProperty(DataObject dObj, String attribute, String name, String msgKeyPart) {
+            super(name, Boolean.class, getMessage(JavaNode.class, "PROP_JavaNode_" + msgKeyPart), getMessage(JavaNode.class, "HINT_JavaNode_" + msgKeyPart)); // NOI18N
+            this.dObj = dObj;
+            this.attribute = attribute;
+        }
+
+        @Override
+        public Boolean getValue() {
+            return dObj.getPrimaryFile().getAttribute(attribute) instanceof Boolean val ? val : false;
+        }
+
+        @Override
+        public void setValue(Boolean o) {
+            try {
+                dObj.getPrimaryFile().setAttribute(attribute, o);
+            } catch (IOException ex) {
+                LOG.log(Level.WARNING, "Java File does not exist : {0}", dObj.getPrimaryFile().getName()); //NOI18N
+            }
+        }
     }
 
     // editable file attribute

@@ -64,6 +64,7 @@ public final class SingleSourceFileUtil {
     public static final String FILE_ARGUMENTS = "single_file_run_arguments"; //NOI18N
     public static final String FILE_JDK = "single_file_run_jdk"; //NOI18N
     public static final String FILE_VM_OPTIONS = "single_file_vm_options"; //NOI18N
+    public static final String FILE_REGISTER_ROOT = "register_root"; //NOI18N
 
     public static FileObject getJavaFileWithoutProjectFromLookup(Lookup lookup) {
         for (DataObject dObj : lookup.lookupAll(DataObject.class)) {
@@ -153,6 +154,10 @@ public final class SingleSourceFileUtil {
         return PARSER.doParse(line, workingDirectory);
     }
 
+    public static boolean isTrue(Object value) {
+        return value instanceof Boolean b && b;
+    }
+
     private static final LineParser PARSER = new LineParser();
 
     private static class LineParser extends CompilerOptionsQueryImplementation.Result {
@@ -215,6 +220,10 @@ public final class SingleSourceFileUtil {
 
         public URI getWorkDirectory() {
             return delegate.getWorkDirectory();
+        }
+
+        public boolean registerRoot() {
+            return delegate.registerRoot();
         }
 
         @Override

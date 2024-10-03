@@ -28,9 +28,12 @@ public interface SingleFileOptionsQueryImplementation {
     public Result optionsFor(FileObject file);
 
     public interface Result {
-        public String getOptions();
+        public @NonNull String getOptions();
         public default @NonNull URI getWorkDirectory() {
             throw new UnsupportedOperationException();
+        }
+        public default boolean registerRoot() {
+            return false;
         }
         public void addChangeListener(ChangeListener l);
         public void removeChangeListener(ChangeListener l);

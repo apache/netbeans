@@ -89,7 +89,7 @@ public final class CustomDirectives {
 
     private void extractCustomDirectives() {
         LOGGER.info("Extracting custom directives");
-        String[] compilerPathList = BladeProjectProperties.getInstance(project).getCompilerPathList();
+        String[] compilerPathList = BladeProjectProperties.getInstance(project).getDirectiveRegistrationsPathList();
         FileObject defaultAppProvider = project.getProjectDirectory().getFileObject("app/Providers/AppServiceProvider.php"); // NOI18N
         String defaultAppPath = "";
         

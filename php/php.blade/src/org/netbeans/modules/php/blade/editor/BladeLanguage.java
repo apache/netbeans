@@ -56,30 +56,30 @@ import org.netbeans.modules.php.blade.editor.parser.BladeParserResult;
  * @author Haidu Bogdan
  */
 @MIMEResolver.Registration(
-        resource = "../resources/mime-resolver.xml",  //NOI18N
-        displayName = "#LBL_Blade_LOADER", //NOI18N
+        resource = "../resources/mime-resolver.xml",
+        displayName = "#LBL_Blade_LOADER",
         position = 1
 )
 
 @NbBundle.Messages({
     "LBL_Blade_LOADER=Blade template files"
 })
-@LanguageRegistration(mimeType = "text/x-blade", useMultiview = true) //NOI18N
+@LanguageRegistration(mimeType = BladeLanguage.MIME_TYPE, useMultiview = true)
 @ActionReferences({
-    @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"), path = ACTIONS, position = 100), //NOI18N
-    @ActionReference(id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"), path = ACTIONS, position = 300, separatorBefore = 200), //NOI18N
-    @ActionReference(id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"), path = ACTIONS, position = 400), //NOI18N
-    @ActionReference(id = @ActionID(category = "Edit", id = "org.openide.actions.PasteAction"), path = ACTIONS, position = 500, separatorAfter = 600), //NOI18N
-    @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.NewAction"), path = ACTIONS, position = 700), //NOI18N
-    @ActionReference(id = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"), path = ACTIONS, position = 800), //NOI18N
-    @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.RenameAction"), path = ACTIONS, position = 900, separatorAfter = 1000), //NOI18N
-    @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"), path = ACTIONS, position = 1100, separatorAfter = 1200), //NOI18N
-    @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"), path = ACTIONS, position = 1300, separatorAfter = 1400), //NOI18N
-    @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.ToolsAction"), path = ACTIONS, position = 1500), //NOI18N
-    @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"), path = ACTIONS, position = 1600), //NOI18N
-    @ActionReference(id = @ActionID(category = "TemplateActions", id = "org.netbeans.modules.php.blade.editor.actions.FindUsage"), //NOI18N
+    @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"), path = ACTIONS, position = 100),
+    @ActionReference(id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"), path = ACTIONS, position = 300, separatorBefore = 200),
+    @ActionReference(id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"), path = ACTIONS, position = 400),
+    @ActionReference(id = @ActionID(category = "Edit", id = "org.openide.actions.PasteAction"), path = ACTIONS, position = 500, separatorAfter = 600),
+    @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.NewAction"), path = ACTIONS, position = 700),
+    @ActionReference(id = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"), path = ACTIONS, position = 800),
+    @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.RenameAction"), path = ACTIONS, position = 900, separatorAfter = 1000),
+    @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"), path = ACTIONS, position = 1100, separatorAfter = 1200),
+    @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"), path = ACTIONS, position = 1300, separatorAfter = 1400),
+    @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.ToolsAction"), path = ACTIONS, position = 1500),
+    @ActionReference(id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"), path = ACTIONS, position = 1600),
+    @ActionReference(id = @ActionID(category = "TemplateActions", id = "org.netbeans.modules.php.blade.editor.actions.FindUsage"),
             path = ACTIONS, separatorBefore = 1700, position = 1800),
-    @ActionReference(id = @ActionID(category = "System", id = "org.netbeans.modules.php.blade.editor.actions.AntlrDebug"), path = ACTIONS, position = 1900), //NOI18N
+    @ActionReference(id = @ActionID(category = "System", id = "org.netbeans.modules.php.blade.editor.actions.AntlrDebug"), path = ACTIONS, position = 1900),
 }
 )
 public class BladeLanguage extends DefaultLanguageConfig {

@@ -29,17 +29,14 @@ import org.netbeans.spi.options.OptionsPanelController;
  */
 @OptionsPanelController.Keywords(
         keywords = {
-            "php", "twig"
+            "php" // NOI18N
         },
         location = UiUtils.OPTIONS_PATH,
-        tabTitle = "Laravel tab"
+        tabTitle = "Laravel tab" // NOI18N
 )
 public class BladeOptionsPanel extends javax.swing.JPanel {
 
-    private final BladeOptionsPanelController controller;
-
-    BladeOptionsPanel(BladeOptionsPanelController controller) {
-        this.controller = controller;
+    BladeOptionsPanel() {
         initComponents();
     }
 
@@ -87,10 +84,6 @@ public class BladeOptionsPanel extends javax.swing.JPanel {
 
     void store() {
        ModulePreferences.setPrefBoolean(GeneralPreferencesUtils.ENABLE_AUTO_TAG_COMPLETION, this.auto_tag_completion.isSelected());
-    }
-
-    void cancel() {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     boolean valid() {

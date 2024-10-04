@@ -16,19 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.blade.editor.ui.customizer;
+package org.netbeans.modules.php.blade.editor.typinghooks;
 
-import java.util.Collections;
-import java.util.Enumeration;
+import org.netbeans.modules.php.blade.editor.BladeTestBase;
 
 
-/**
- *
- * @author bhaidu
- */
-public class UiOptionsUtils {
-    
-    public static String encodeToStrings(Enumeration<String> list) {
-        return String.join("|", Collections.list(list));
+public abstract class BladeTypinghooksTestBase extends BladeTestBase {
+
+    public BladeTypinghooksTestBase(String testName) {
+        super(testName);
     }
+
+    @Override
+    protected boolean runInEQ() {
+        return true;
+    }
+
 }

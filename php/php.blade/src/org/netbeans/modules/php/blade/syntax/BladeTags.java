@@ -28,7 +28,7 @@ import org.netbeans.modules.php.blade.syntax.annotation.TagRegister;
 @TagRegister({
     @Tag(openTag = "{{", closeTag = "}}", description = "regular echo", position=0),
     @Tag(openTag = "{!!", closeTag = "!!}", description = "raw echo", position=1),
-    @Tag(openTag = "{{--", closeTag = "--}}", description = "comment", position=2)
+    @Tag(openTag = "{{--", closeTag = "--}}", description = "comment", position=2),
 })
 public class BladeTags {
 

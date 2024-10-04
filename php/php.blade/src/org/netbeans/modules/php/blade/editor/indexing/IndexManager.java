@@ -34,7 +34,7 @@ public class IndexManager {
 
     public static void reindexProjectViews(Project project) {
         assert project != null;
-        String[] views = BladeProjectProperties.getInstance(project).getViewsPathList();
+        String[] views = BladeProjectProperties.getInstance(project).getViewsFolderPathList();
 
         if (views.length > 0) {
             for (String view : views) {

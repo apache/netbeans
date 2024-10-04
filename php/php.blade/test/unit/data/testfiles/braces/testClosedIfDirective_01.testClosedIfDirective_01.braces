@@ -1,0 +1,5 @@
+<html>
+*@if*($x)
+text
+*@end^if*
+</html>

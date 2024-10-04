@@ -28,7 +28,7 @@ import org.openide.util.Lookup;
 
 @UiUtils.PhpOptionsPanelRegistration(
         id = BladeOptionsPanelController.ID,
-        displayName = "Blade",
+        displayName = "Blade", // NOI18N
         position = 2150
 )
 public class BladeOptionsPanelController extends OptionsPanelController {
@@ -38,23 +38,20 @@ public class BladeOptionsPanelController extends OptionsPanelController {
 
     private BladeOptionsPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private volatile boolean changed;
 
     @Override
     public void update() {
         getPanel().load();
-        changed = false;
     }
 
     @Override
     public void applyChanges() {
         getPanel().store();
-        changed = false;
     }
 
     @Override
     public void cancel() {
-        getPanel().cancel();
+        //no action
     }
 
     @Override
@@ -89,17 +86,9 @@ public class BladeOptionsPanelController extends OptionsPanelController {
 
     private BladeOptionsPanel getPanel() {
         if (panel == null) {
-            panel = new BladeOptionsPanel(this);
+            panel = new BladeOptionsPanel();
         }
         return panel;
-    }
-
-    void changed() {
-        if (!changed) {
-            changed = true;
-            pcs.firePropertyChange(OptionsPanelController.PROP_CHANGED, false, true);
-        }
-        pcs.firePropertyChange(OptionsPanelController.PROP_VALID, null, null);
     }
 
     public static String getOptionsPath() {

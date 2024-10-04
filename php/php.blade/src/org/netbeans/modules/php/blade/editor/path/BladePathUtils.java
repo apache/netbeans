@@ -169,7 +169,7 @@ public final class BladePathUtils {
             relativePrefixToCompare = unixPath;
         }
 
-        if (unixPath.endsWith("/")) {
+        if (unixPath.endsWith(StringUtils.FORWARD_SLASH)) {
             //add children
             for (FileObject rootFolder : filteredViewRoots) {
                 list.addAll(Arrays.asList(rootFolder.getChildren()));
@@ -205,7 +205,7 @@ public final class BladePathUtils {
     public static List<FileObject> getCustomViewsRoots(Project project, FileObject contextFile) {
         List<FileObject> list = new ArrayList<>();
 
-        String[] views = BladeProjectProperties.getInstance(project).getViewsPathList();
+        String[] views = BladeProjectProperties.getInstance(project).getViewsFolderPathList();
 
         if (views.length > 0) {
             views = Arrays.stream(views).filter(s -> !s.isEmpty()).toArray(String[]::new);
@@ -255,7 +255,7 @@ public final class BladePathUtils {
             }
         }
 
-        String[] viewFolders = BladeProjectProperties.getInstance(project).getViewsPathList();
+        String[] viewFolders = BladeProjectProperties.getInstance(project).getViewsFolderPathList();
 
         for (String viewFolder : viewFolders) {
             if (viewFolder.length() == 0) {

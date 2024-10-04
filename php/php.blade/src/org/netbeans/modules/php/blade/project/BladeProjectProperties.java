@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.php.blade.project;
 
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,7 +29,6 @@ import javax.swing.DefaultListModel;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.modules.php.blade.editor.ui.customizer.UiOptionsUtils;
 import org.openide.util.NbPreferences;
 
 /**
@@ -48,6 +49,9 @@ public final class BladeProjectProperties {
     private DefaultListModel<String> viewsPathList = new DefaultListModel();
     // enable declaration finder outside of framework plugin
     private final AtomicBoolean nonLaravelDeclFinder = new AtomicBoolean(false);
+    
+    // the pipe "|" char needs to be escaped
+    public static final String ESCAPED_VIEW_PATH_SEPARATOR = "\\|"; // NOI18N
 
     private BladeProjectProperties(Project project) {
         this.project = project;
@@ -81,12 +85,12 @@ public final class BladeProjectProperties {
     }
 
     public void storeDirectiveCustomizerPaths() {
-        String includePath = UiOptionsUtils.encodeToStrings(directiveCustomizerPathList.elements());
+        String includePath = encodeToStrings(directiveCustomizerPathList.elements());
         getPreferences().put(DIRECTIVE_CUSTOMIZER_PATH_LIST, includePath);
     }
 
     public void storeViewsPaths() {
-        String includePath = UiOptionsUtils.encodeToStrings(viewsPathList.elements());
+        String includePath = encodeToStrings(viewsPathList.elements());
         getPreferences().put(VIEW_PATH_LIST, includePath);
     }
 
@@ -112,16 +116,16 @@ public final class BladeProjectProperties {
     }
 
     public void setViewsPathList(DefaultListModel<String> list) {
-        String includePath = UiOptionsUtils.encodeToStrings(list.elements());
+        String includePath = encodeToStrings(list.elements());
         getPreferences().put(VIEW_PATH_LIST, includePath);
     }
 
     public DefaultListModel<String> createModelForDirectiveCusomizerPathList() {
-        return creatModelFromPreferences(DIRECTIVE_CUSTOMIZER_PATH_LIST);
+        return createFilePathModelFromPreferences(DIRECTIVE_CUSTOMIZER_PATH_LIST);
     }
 
     public DefaultListModel<String> createModelForViewsPathList() {
-        return creatModelFromPreferences(VIEW_PATH_LIST);
+        return createFilePathModelFromPreferences(VIEW_PATH_LIST);
     }
 
     public DefaultListModel<String> getModelForDirectiveCusomizerPathList() {
@@ -136,13 +140,13 @@ public final class BladeProjectProperties {
         return nonLaravelDeclFinder.get();
     }
 
-    private DefaultListModel<String> creatModelFromPreferences(String pathName) {
+    private DefaultListModel<String> createFilePathModelFromPreferences(String pathName) {
         DefaultListModel<String> model = new DefaultListModel<>();
         String encodedCompilerPathList = getPreferences().get(pathName, null);
         String[] paths;
 
         if (encodedCompilerPathList != null) {
-            paths = encodedCompilerPathList.split("\\|", -1); // NOI18N
+            paths = encodedCompilerPathList.split(ESCAPED_VIEW_PATH_SEPARATOR, -1);
         } else {
             return model;
         }
@@ -157,20 +161,20 @@ public final class BladeProjectProperties {
         return model;
     }
 
-    public String[] getCompilerPathList() {
-        String encodedCompilerPathList = getPreferences().get(DIRECTIVE_CUSTOMIZER_PATH_LIST, null);
+    public String[] getDirectiveRegistrationsPathList() {
+        String encodedDirectiveRegistrationPathList = getPreferences().get(DIRECTIVE_CUSTOMIZER_PATH_LIST, null);
         String[] paths = new String[]{};
-        if (encodedCompilerPathList != null) {
-            return encodedCompilerPathList.split("\\|", -1); // NOI18N
+        if (encodedDirectiveRegistrationPathList != null) {
+            return encodedDirectiveRegistrationPathList.split(ESCAPED_VIEW_PATH_SEPARATOR, -1);
         }
         return paths;
     }
 
-    public String[] getViewsPathList() {
-        String encodedCompilerPathList = getPreferences().get(VIEW_PATH_LIST, null);
+    public String[] getViewsFolderPathList() {
+        String encodedViewsFolderPathList = getPreferences().get(VIEW_PATH_LIST, null);
         String[] paths = new String[]{};
-        if (encodedCompilerPathList != null) {
-            return encodedCompilerPathList.split("\\|", -1); // NOI18N
+        if (encodedViewsFolderPathList != null) {
+            return encodedViewsFolderPathList.split(ESCAPED_VIEW_PATH_SEPARATOR, -1);
         }
         return paths;
     }
@@ -183,4 +187,7 @@ public final class BladeProjectProperties {
         getPreferences().removePreferenceChangeListener(preferenceChangeListener);
     }
 
+    public static String encodeToStrings(Enumeration<String> list) {
+        return String.join(ESCAPED_VIEW_PATH_SEPARATOR, Collections.list(list));
+    }
 }

@@ -138,7 +138,7 @@ public final class PhpCodeCompletionService {
                 if (elementReference.namespace != null) {
                     String classQuery = prefix;
                     String namespace = elementReference.namespace;
-                    int substringStartOffset = namespace.startsWith("\\") ? 1 : 0;
+                    int substringStartOffset = namespace.startsWith(EditorStringUtils.NAMESPACE_SEPARATOR) ? 1 : 0;
                     String namespacePath = namespace.substring(substringStartOffset) + classQuery;
                     Collection<PhpIndexResult> indexedNamespaces = PhpIndexUtils.queryNamespaces(
                             fo, namespacePath, QuerySupport.Kind.PREFIX
@@ -150,9 +150,9 @@ public final class PhpCodeCompletionService {
                         completionProposals.add(new BladeCompletionProposal.NamespaceItem(
                                 namespaceElement(indexResult), anchorOffset, indexResult.name));
                     }
-                } else if (prefix.endsWith("\\")) {
+                } else if (prefix.endsWith(EditorStringUtils.NAMESPACE_SEPARATOR)) {
                     //the identifier is the namespace
-                    int substringOffset = elementReference.identifier.startsWith("\\") ? 1 : 0;
+                    int substringOffset = elementReference.identifier.startsWith(EditorStringUtils.NAMESPACE_SEPARATOR) ? 1 : 0;
                     String namespacePath = elementReference.identifier.substring(substringOffset, elementReference.identifier.length() - 1);
                     Collection<PhpIndexResult> indexClassResults = PhpIndexUtils.queryAllNamespaceClasses(fo, namespacePath);
                     int anchorOffset = computeAnchorOffset(namespacePath, offset + namespacePath.length());

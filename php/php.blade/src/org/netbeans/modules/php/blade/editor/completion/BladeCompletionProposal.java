@@ -28,6 +28,7 @@ import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
 import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.php.blade.csl.elements.ClassElement;
+import org.netbeans.modules.php.blade.editor.EditorStringUtils;
 import org.netbeans.modules.php.blade.editor.ResourceUtilities;
 import org.netbeans.modules.php.blade.syntax.BladeDirectivesUtils;
 import org.netbeans.modules.php.blade.syntax.annotation.Directive;
@@ -224,7 +225,7 @@ public class BladeCompletionProposal implements CompletionProposal {
         @Override
         public String getCustomInsertTemplate() {
             if (namespace != null && namespace.length() > 0) {
-                return "\\" + namespace + "\\" + getElement().getName(); // NOI18N
+                return EditorStringUtils.NAMESPACE_SEPARATOR + namespace + EditorStringUtils.NAMESPACE_SEPARATOR + getElement().getName(); // NOI18N
             }
             return getElement().getName();
         }

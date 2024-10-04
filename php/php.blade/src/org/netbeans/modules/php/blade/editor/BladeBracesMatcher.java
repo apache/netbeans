@@ -271,7 +271,7 @@ public class BladeBracesMatcher implements BracesMatcher {
         return null;
     }
 
-    @MimeRegistration(service = BracesMatcherFactory.class, mimeType = BladeLanguage.MIME_TYPE, position = 110)
+    @MimeRegistration(service = BracesMatcherFactory.class, mimeType = BladeLanguage.MIME_TYPE, position = 0)
     public static final class Factory implements BracesMatcherFactory {
 
         @Override

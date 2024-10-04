@@ -16,15 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.blade.syntax.annotation;
+
+package org.netbeans.modules.php.blade.editor.format;
 
 /**
  *
- * @author bhaidu
+ * 
  */
-public @interface Tag {
-    String openTag();
-    String closeTag() default ""; //NOI18N
-    String description() default ""; //NOI18N
-    int position() default 0;
+public class BladeFormatterTest extends BladeFormatterTestBase {
+
+    public BladeFormatterTest(String testName) {
+        super(testName);
+    }
+
+    public void testIfBlockFormat_01() throws Exception{
+        format("if_block_01");
+    }
+
 }

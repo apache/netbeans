@@ -49,6 +49,7 @@ public final class PhpIndexUtils {
     private final static QueryCache<String, Collection<PhpIndexResult>> cache = new QueryCache();
     private final static QueryCache<String, Collection<PhpIndexFunctionResult>> functionCache = new QueryCache();
 
+    public static final int MIN_NAMESPACE_PREFIX_LENGTH = 3;
     private static final Map<Integer, PhpIndexUtils> QUERY_SUPPORT_INSTANCES = new WeakHashMap<>();
 
     private PhpIndexUtils() {
@@ -380,7 +381,7 @@ public final class PhpIndexUtils {
         QuerySupport phpindex = QuerySupportFactory.get(fo);
         Collection<PhpIndexFunctionResult> results = new ArrayList<>();
         String queryNamespacePath = queryNamespace;
-        if (queryNamespace != null && queryNamespace.length() > 3) {
+        if (queryNamespace != null && queryNamespace.length() > MIN_NAMESPACE_PREFIX_LENGTH) {
             queryNamespacePath =  EditorStringUtils.trimNamespace(queryNamespace);
         }
         //should query the class befoe
@@ -410,7 +411,7 @@ public final class PhpIndexUtils {
                         }
 
                         if (namespace.length() > 0) {
-                            classNamespace = namespace + "\\" + className;
+                            classNamespace = namespace + EditorStringUtils.NAMESPACE_SEPARATOR + className;
                         }
                     }
                 }
@@ -746,7 +747,7 @@ public final class PhpIndexUtils {
     }
 
     /**
-     * TODO improve the function param parsing
+     * 
      *
      * @param sig
      * @return
@@ -757,16 +758,6 @@ public final class PhpIndexUtils {
         String[] parts = sig.split(regexp);
         if (parts.length > 0) {
             String paramName = parts[0];
-            boolean isRawType = Integer.parseInt(parts[2]) > 0;
-            boolean isMandatory = Integer.parseInt(parts[4]) > 0;
-            boolean isReference = Integer.parseInt(parts[5]) > 0;
-            boolean isVariadic = Integer.parseInt(parts[6]) > 0;
-            boolean isUnionType = Integer.parseInt(parts[7]) > 0;
-            int modifier = Integer.parseInt(parts[8]);
-            boolean isIntersectionType = Integer.parseInt(parts[9]) > 0;
-            String defValue = parts.length > 3 ? parts[3] : null;
-            String declaredType = parts.length > 10 ? parts[10] : null;
-            String phpdocType = parts.length > 11 ? parts[11] : null;
             retval = paramName;
         }
         return retval;

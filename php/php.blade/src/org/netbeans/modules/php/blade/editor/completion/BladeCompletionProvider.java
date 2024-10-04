@@ -60,12 +60,13 @@ import org.openide.util.Exceptions;
  *
  * @author bhaidu
  */
-@MimeRegistrations(value = {
+@MimeRegistrations({
     @MimeRegistration(mimeType = "text/html", service = CompletionProvider.class),
     @MimeRegistration(mimeType = BladeLanguage.MIME_TYPE, service = CompletionProvider.class)
 })
 public class BladeCompletionProvider implements CompletionProvider {
 
+    public static final int MIN_COMPONENT_PREFIX_LENGTH = 3;
     private static final Logger LOGGER = Logger.getLogger(BladeCompletionProvider.class.getName());
 
     public enum CompletionType {
@@ -98,14 +99,10 @@ public class BladeCompletionProvider implements CompletionProvider {
         }
 
         char lastChar = typedText.charAt(typedText.length() - 1);
-        switch (lastChar) {
-            case ')':
-            case '\n':
-            case '<':
-            case '>':
-                return 0;
-        }
-        return COMPLETION_QUERY_TYPE;
+        return switch (lastChar) {
+            case ')', '\n', '<', '>' -> 0;
+            default -> COMPLETION_QUERY_TYPE;
+        };
     }
 
     private class BladeCompletionQuery extends AsyncCompletionQuery {
@@ -172,7 +169,7 @@ public class BladeCompletionProvider implements CompletionProvider {
                         }
                     }
                     case HTML_COMPONENT_PREFIX -> {
-                        String compPrefix = currentToken.getText().length() > 3 ? StringUtils.kebabToCamel(currentToken.getText().substring(3)) : "";
+                        String compPrefix = currentToken.getText().length() > MIN_COMPONENT_PREFIX_LENGTH ? StringUtils.kebabToCamel(currentToken.getText().substring(MIN_COMPONENT_PREFIX_LENGTH)) : ""; // NOI18N
                         completeComponents(compPrefix, fo, caretOffset, resultSet);
                     }
                     case D_UNKNOWN_ATTR_ENC -> completeDirectives(currentToken.getText(), doc, caretOffset, resultSet);

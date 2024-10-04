@@ -30,12 +30,12 @@ import org.openide.filesystems.FileObject;
  * @author bogdan
  */
 @NamespaceRegister({
-    @Namespace(path = "App\\View\\Components", fromApp = true, relativeFilePath = "app/View/Components"), // NOI18N
-    @Namespace(path = "App\\Http\\Livewire", fromApp = true, relativeFilePath = "app/Http/Livewire"), // NOI18N
-    @Namespace(path = "App\\Livewire", fromApp = true, relativeFilePath = "app/Livewire"), // NOI18N
-    @Namespace(path = "Illuminate\\Console\\View\\Components"), // NOI18N
-    @Namespace(path = "BladeUI\\Icons\\Components", packageName = "blade-ui-kit/blade-icons"), // NOI18N
-    @Namespace(path = "BladeUIKit\\Components", packageName = "blade-ui-kit/blade-ui-kit"),}) // NOI18N
+    @Namespace(path = "App\\View\\Components", fromApp = true, relativeFilePath = "app/View/Components"),
+    @Namespace(path = "App\\Http\\Livewire", fromApp = true, relativeFilePath = "app/Http/Livewire"),
+    @Namespace(path = "App\\Livewire", fromApp = true, relativeFilePath = "app/Livewire"),
+    @Namespace(path = "Illuminate\\Console\\View\\Components"),
+    @Namespace(path = "BladeUI\\Icons\\Components", packageName = "blade-ui-kit/blade-icons"),
+    @Namespace(path = "BladeUIKit\\Components", packageName = "blade-ui-kit/blade-ui-kit"),})
 public class ComponentsSupport {
 
     public static final String LIVEWIRE_NAME = "livewire";  // NOI18N

@@ -73,38 +73,25 @@ public class BladeFormatterService {
                     break;
                 }
                 if (tstart > cend) {
-//                    System.out.println("exit " + tstart + " > " + cend);
-//                    System.out.println("line : " + entry.getKey() + " ei " + existingLineIndent);
-//                    System.out.println("token : " + entry.getValue());
-//                    System.out.println("Finished formatting for caret " + cstart);
                     break;
                 }
             }
 
             if (tstart >= cstart) {
-//                System.out.println("doc length : " + context.document().getLength());
-//                System.out.println("delta : " + (tstart - textDelta));
                 if (context.document().getLength() < (tstart - textDelta)) {
                     //skipping
                     continue;
                 }
 
-//                System.out.println("line : " + entry.getKey());
-//                System.out.println("token : " + entry.getValue());
-//                System.out.println("indent : " + indent);
-//                System.out.println("htmlindent : " + htmlIndent);
                 try {
                     int lineStart_i = context.lineStartOffset(tstart - textDelta);
                     int originalIndent_i = context.lineIndent(lineStart_i);
                     int wsIndent = (indent + htmlIndent) * indentSize;
-//                    System.out.println("linestart + offset : " + (lineStart_i + wsIndent));
+
                     if (lineStart_i + wsIndent > context.document().getLength()) {
-//                        System.out.println("out of range : " + (lineStart_i + wsIndent));
                         break;
                     }
                     context.modifyIndent(lineStart_i, wsIndent);
-//                    System.out.println("delta : " + (originalIndent_i - wsIndent));
-//                    System.out.println("====================================");
                     textDelta += (originalIndent_i - wsIndent);
                 } catch (BadLocationException ex) {
                     Exceptions.printStackTrace(ex);

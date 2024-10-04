@@ -29,15 +29,13 @@ import org.netbeans.api.editor.mimelookup.MimeRegistrations;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.modules.php.blade.editor.BladeCommentHandler;
 import org.netbeans.modules.php.blade.editor.lexer.BladeTokenId;
 import static org.netbeans.modules.php.blade.editor.lexer.BladeTokenId.HTML;
-import static org.netbeans.modules.php.blade.editor.lexer.BladeTokenId.BLADE_COMMENT;
 import org.netbeans.modules.php.blade.editor.preferences.ModulePreferences;
 import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
 
 /**
- * auto complete for '[', '(', '\'', '"'
+ * auto complete for '[', '(', '\'', '"' and blade tags
  *
  * @author bhaidu
  */
@@ -93,7 +91,7 @@ public class BladeTypedTextInterceptor implements TypedTextInterceptor {
 
         int offset = context.getOffset();
 
-        if (offset < 2) {
+        if (offset < 1) {
             return;
         }
 
@@ -113,7 +111,8 @@ public class BladeTypedTextInterceptor implements TypedTextInterceptor {
 
         String tokenText = token.text().toString();
 
-        if (bladeToken.equals(HTML)) {
+        if (bladeToken.equals(HTML)
+                || tokenText.equals("{{") && ch == '-') { // NOI18N 
             completeFromHtmlFragments(tokenText, context, tagType);
         }
     }
@@ -167,8 +166,10 @@ public class BladeTypedTextInterceptor implements TypedTextInterceptor {
                 completeContentTag(context, tagType);
             case "{!" -> // NOI18N 
                 completeRawContentTag(context, tagType);
+            case "{{" -> // NOI18N 
+                completeCommenTag(context, tagType, "-- --}}");
             case "{{-" -> // NOI18N 
-                completeCommenTag(context, tagType);
+                completeCommenTag(context, tagType, "- --}}");
         }
     }
 
@@ -186,17 +187,14 @@ public class BladeTypedTextInterceptor implements TypedTextInterceptor {
         context.setText("! !!}", 1);// NOI18N
     }
 
-    private void completeCommenTag(MutableContext context, TagType tagType) {
+    private void completeCommenTag(MutableContext context, TagType tagType, String completeText) {
         if (tagType != TagType.COMMENT) {
             return;
         }
-        context.setText("- --}}", 1);// NOI18N
+        context.setText(completeText, 1);// NOI18N
     }
 
-    /**
-     * register for HTML also
-     */
-    @MimeRegistrations(value = {
+    @MimeRegistrations({
         @MimeRegistration(mimeType = BladeLanguage.MIME_TYPE, service = TypedTextInterceptor.Factory.class),
         @MimeRegistration(mimeType = "text/html", service = TypedTextInterceptor.Factory.class)
     })

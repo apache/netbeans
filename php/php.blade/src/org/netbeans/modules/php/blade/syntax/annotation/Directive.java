@@ -25,9 +25,9 @@ package org.netbeans.modules.php.blade.syntax.annotation;
 public @interface Directive {
     String name();
     boolean params() default false;
-    String endtag() default "";
+    String endtag() default ""; //NOI18N
     String[] endTags() default {};
-    String description() default "";
-    String category() default "";
-    String since() default "";
+    String description() default ""; //NOI18N
+    String category() default ""; //NOI18N
+    String since() default ""; //NOI18N
 }

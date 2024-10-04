@@ -44,6 +44,7 @@ import org.netbeans.modules.php.blade.editor.indexing.BladeIndex.IndexedReferenc
 import org.netbeans.modules.php.blade.editor.lexer.BladeLexerUtils;
 import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
 import org.netbeans.modules.php.blade.project.ProjectUtils;
+import org.netbeans.modules.php.blade.syntax.StringUtils;
 import org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrLexer;
 import org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrUtils;
 import org.netbeans.spi.editor.completion.CompletionItem;
@@ -61,9 +62,8 @@ import org.openide.util.Exceptions;
  *
  * @author bhaidu
  */
-@MimeRegistrations(value = {
-    @MimeRegistration(mimeType = FileUtils.PHP_MIME_TYPE, service = CompletionProvider.class, position = 102),
-}
+@MimeRegistrations({
+    @MimeRegistration(mimeType = FileUtils.PHP_MIME_TYPE, service = CompletionProvider.class, position = 102),}
 )
 public class BladePhpCompletionProvider implements CompletionProvider {
 
@@ -104,8 +104,10 @@ public class BladePhpCompletionProvider implements CompletionProvider {
 
         char lastChar = typedText.charAt(typedText.length() - 1);
         return switch (lastChar) {
-            case ')', '\n', '<', '>' -> 0;
-            default -> COMPLETION_QUERY_TYPE;
+            case ')', '\n', '<', '>' ->
+                0;
+            default ->
+                COMPLETION_QUERY_TYPE;
         };
     }
 
@@ -172,7 +174,7 @@ public class BladePhpCompletionProvider implements CompletionProvider {
         }
 
         switch (currentToken.getType()) {
-            case BL_PARAM_STRING ->  {
+            case BL_PARAM_STRING -> {
                 String pathName = EditorStringUtils.stripSurroundingQuotes(currentToken.getText());
                 Set<Integer> tokensToMatch = BladeLexerUtils.TOKENS_WITH_IDENTIFIABLE_PARAM;
                 Set<Integer> tokensStop = new HashSet<>(Arrays.asList(new Integer[]{HTML, BL_COMMA, BL_PARAM_CONCAT_OPERATOR}));
@@ -207,22 +209,25 @@ public class BladePhpCompletionProvider implements CompletionProvider {
                             completeBladePath(pathFileName, file, pathOffset, resultSet);
                         }
                         return;
-                }
-                    case D_SECTION, D_HAS_SECTION -> completeYieldIdFromIndex(pathName, fo, caretOffset, resultSet);
-                    case D_PUSH, D_PUSH_IF, D_PREPEND -> completeStackIdFromIndex(pathName, fo, caretOffset, resultSet);
+                    }
+                    case D_SECTION, D_HAS_SECTION ->
+                        completeYieldIdFromIndex(pathName, fo, caretOffset, resultSet);
+                    case D_PUSH, D_PUSH_IF, D_PREPEND ->
+                        completeStackIdFromIndex(pathName, fo, caretOffset, resultSet);
                 }
             }
-            case EXPR_STRING ->  {
+            case EXPR_STRING -> {
                 String pathName = EditorStringUtils.stripSurroundingQuotes(currentToken.getText());
 
                 if (!pathName.contains(BladePathUtils.LARAVEL_RESOURCES)) {
                 }
 
-                int lastSlash = pathName.lastIndexOf("/");
+                int lastSlash = pathName.lastIndexOf(StringUtils.FORWARD_SLASH);
 
                 FileObject projectDir = ProjectUtils.getProjectDirectory(fo);
 
                 if (projectDir == null) {
+                    break;
                 }
 
                 int pathOffset = caretOffset - pathName.length();
@@ -242,9 +247,10 @@ public class BladePhpCompletionProvider implements CompletionProvider {
                 if (isJsPath) {
                     FileObject jsFolder = projectDir.getFileObject(JS_ASSET_FOLDER);
                     if (jsFolder == null || !jsFolder.isValid()) {
+                        break;
                     }
                     for (FileObject file : jsFolder.getChildren()) {
-                        String jsPath = JS_ASSET_FOLDER + "/" + file.getNameExt();
+                        String jsPath = JS_ASSET_FOLDER + StringUtils.FORWARD_SLASH + file.getNameExt();
                         if (jsPath.startsWith(pathName)) {
                             addAssetPathCompletionItem(jsPath, file.getPath(), pathOffset, resultSet, CompletionType.JS_FILE);
                         }
@@ -253,9 +259,10 @@ public class BladePhpCompletionProvider implements CompletionProvider {
                 if (isCssPath) {
                     FileObject cssFolder = projectDir.getFileObject(CSS_ASSET_FOLDER);
                     if (cssFolder == null || !cssFolder.isValid()) {
+                        break;
                     }
                     for (FileObject file : cssFolder.getChildren()) {
-                        String jsPath = CSS_ASSET_FOLDER + "/" + file.getNameExt();
+                        String jsPath = CSS_ASSET_FOLDER + StringUtils.FORWARD_SLASH + file.getNameExt();
                         if (jsPath.startsWith(pathName)) {
                             addAssetPathCompletionItem(jsPath, file.getPath(), pathOffset, resultSet, CompletionType.CSS_FILE);
                         }
@@ -263,6 +270,7 @@ public class BladePhpCompletionProvider implements CompletionProvider {
                 }
             }
             default -> {
+                //skip any action
             }
         }
     }
@@ -340,17 +348,16 @@ public class BladePhpCompletionProvider implements CompletionProvider {
     }
 
     private static String getReferenceIcon(CompletionType type) {
-
-        switch (type) {
-            case FOLDER:
-                return ResourceUtilities.FOLDER; // NOI18N
-            case CSS_FILE:
-                return "org/netbeans/modules/css/visual/resources/style_sheet_16.png"; // NOI18N
-            case JS_FILE:
-                return "org/netbeans/modules/javascript2/editor/resources/javascript.png"; // NOI18N
-        }
-        return ResourceUtilities.LAYOUT_IDENTIFIER; //NOI18N
-
+        return switch (type) {
+            case FOLDER ->
+                ResourceUtilities.FOLDER;
+            case CSS_FILE ->
+                "org/netbeans/modules/css/visual/resources/style_sheet_16.png"; // NOI18N
+            case JS_FILE ->
+                "org/netbeans/modules/javascript2/editor/resources/javascript.png"; // NOI18N
+            default ->
+                ResourceUtilities.LAYOUT_IDENTIFIER;
+        };
     }
 
 }

@@ -1,4 +1,4 @@
-// Generated from java-escape by ANTLR 4.11.1
+// Generated from BladeAntlrFormatterParser.g4 by ANTLR 4.13.0
 
  /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue"})
 public class BladeAntlrFormatterParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.11.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.13.0", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -125,7 +125,7 @@ public class BladeAntlrFormatterParser extends Parser {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "java-escape"; }
+	public String getGrammarFileName() { return "BladeAntlrFormatterParser.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -174,7 +174,7 @@ public class BladeAntlrFormatterParser extends Parser {
 			setState(43);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 2000678626L) != 0) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 2000678626L) != 0)) {
 				{
 				{
 				setState(40);
@@ -658,7 +658,7 @@ public class BladeAntlrFormatterParser extends Parser {
 			setState(92);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 817921632L) != 0) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 817921632L) != 0)) {
 				{
 				{
 				setState(89);
@@ -747,7 +747,7 @@ public class BladeAntlrFormatterParser extends Parser {
 			setState(107);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 817921632L) != 0) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 817921632L) != 0)) {
 				{
 				{
 				setState(104);
@@ -832,7 +832,7 @@ public class BladeAntlrFormatterParser extends Parser {
 				setState(117);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				while (((_la) & ~0x3f) == 0 && ((1L << _la) & 817921632L) != 0) {
+				while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 817921632L) != 0)) {
 					{
 					{
 					setState(114);
@@ -1240,7 +1240,7 @@ public class BladeAntlrFormatterParser extends Parser {
 				setState(158); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( ((_la) & ~0x3f) == 0 && ((1L << _la) & 2000678626L) != 0 );
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 2000678626L) != 0) );
 			setState(160);
 			section_block_end();
 			}
@@ -1482,7 +1482,7 @@ public class BladeAntlrFormatterParser extends Parser {
 			{
 			setState(182);
 			_la = _input.LA(1);
-			if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 1074003970L) != 0) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 1074003970L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {

@@ -74,6 +74,6 @@ public class ParserPerformanceTest extends BladeTestBase {
         );
 //
         System.out.println(output);
-        assertTrue(time < 500);
+        assertTrue("Parsing time should be below 500", time < 500);
     }
 }

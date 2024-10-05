@@ -61,8 +61,8 @@ import org.openide.util.Exceptions;
  * @author bhaidu
  */
 @MimeRegistrations({
-    @MimeRegistration(mimeType = "text/html", service = CompletionProvider.class),
-    @MimeRegistration(mimeType = BladeLanguage.MIME_TYPE, service = CompletionProvider.class)
+    @MimeRegistration(mimeType = "text/html", service = CompletionProvider.class, position=102),
+    @MimeRegistration(mimeType = BladeLanguage.MIME_TYPE, service = CompletionProvider.class, position=0)
 })
 public class BladeCompletionProvider implements CompletionProvider {
 

@@ -51,13 +51,13 @@ public class BladeLexerPerformanceTest extends BladeTestBase {
         long time = end.getTime() - start.getTime();
         long fileSize = testFile.getTotalSpace() / 1024;
         String output = String.format(
-                "Parsing of file(%s: %sKB) takes: %sms",
+                "Lexer tokenization of file(%s: %sKB) takes: %sms",
                 testFile.getName(),
                 fileSize,
                 time
         );
 //
         System.out.println(output);
-        assertTrue(time < 200);
+        assertTrue("Lexer tokenization time should be below 200", time < 200);
     }
 }

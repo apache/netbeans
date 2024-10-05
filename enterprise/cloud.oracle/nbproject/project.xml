@@ -167,6 +167,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.libs.fabric8</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.project.dependency</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -300,6 +309,15 @@
                 <dependency>
                     <code-name-base>slf4j.api</code-name-base>
                     <run-dependency/>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.snakeyaml_engine</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.15</specification-version>
+                    </run-dependency>
                 </dependency>
             </module-dependencies>
             <test-dependencies>

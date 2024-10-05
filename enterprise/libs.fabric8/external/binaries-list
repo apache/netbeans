@@ -1,0 +1,45 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+1FC4C00B6847D020A90CB587414224DF171A9753 io.fabric8:kubernetes-client:6.7.0
+A6AF58A7523C3CFC5E58394C0D48DD462EAFC540 io.fabric8:kubernetes-client-api:6.7.0
+23B36D63BE07C2C10FEAA0244C67C90C0EA54982 io.fabric8:kubernetes-model-core:6.7.0
+40F3EE8F360F34FC026710247403A95A856D3400 io.fabric8:kubernetes-model-common:6.7.0
+420884197573F239FFE0F1E8ABC0513A2FE91F07 io.fabric8:kubernetes-model-resource:6.7.0
+C3B0A55A56B897BF75F76694FCA58EF68EEABA23 io.fabric8:kubernetes-model-rbac:6.7.0
+7CA213A28B7ECFEF4A65931BB8CDAF89328A6929 io.fabric8:kubernetes-model-admissionregistration:6.7.0
+14503D5A6E7EA1AC471AF0EBD9B03B251DD8A015 io.fabric8:kubernetes-model-apps:6.7.0
+4BF36041CF40892A4AB6A2AFA66B131DF7332903 io.fabric8:kubernetes-model-autoscaling:6.7.0
+13279ADBCB5DE868E798D978C50F8311DB69317F io.fabric8:kubernetes-model-apiextensions:6.7.0
+5DDEAEB5D69A456A71CAE9A1D5271B844A483078 io.fabric8:kubernetes-model-batch:6.7.0
+D6E0FB64A8CB8625D77002CA497DA8BC38B42F90 io.fabric8:kubernetes-model-certificates:6.7.0
+EA31428BDD428F2AF5B7C7BD59F59542ACF8426C io.fabric8:kubernetes-model-coordination:6.7.0
+6735DEC3CE8508C3397E7E639CFFA441FA94A400 io.fabric8:kubernetes-model-discovery:6.7.0
+18C860A2B2F6B8C364562BBA1B7790846CD449CF io.fabric8:kubernetes-model-events:6.7.0
+BA89079768FB59C0FA411487E3D6AE2399F26594 io.fabric8:kubernetes-model-extensions:6.7.0
+D042C5FD77B52C18F34FC056D9C29C6CE67FD49D io.fabric8:kubernetes-model-flowcontrol:6.7.0
+77C7A1743888279FEEBDEA599C998B4549CDCCE9 io.fabric8:kubernetes-model-networking:6.7.0
+8ECF11CE7EB51ADB36247150A7B24C8BC9BEE4A6 io.fabric8:kubernetes-model-metrics:6.7.0
+D470AB8FFD160B6F62F762F2F6CDCB387022A105 io.fabric8:kubernetes-model-policy:6.7.0
+23EAB95DBA4B350F8EB6B7C8387C12E666CFA4CA io.fabric8:kubernetes-model-scheduling:6.7.0
+B70C71AB91614A8B2B42FC470E8F1C5675AA5627 io.fabric8:kubernetes-model-storageclass:6.7.0
+668A82E7A9CC2278EAC0C26D262840D07EA410CD io.fabric8:kubernetes-model-node:6.7.0
+B2ED34DECE21F1752FF1DD0AEB5DEF4A96F23D17 io.fabric8:kubernetes-httpclient-okhttp:6.7.0
+D3E1CE1D2B3119ADF270B2D00D947BEB03FE3321 com.squareup.okhttp3:okhttp:3.12.12
+BC28B5A964C8F5721EB58EE3F3C47A9BCBF4F4D8 com.squareup.okio:okio:1.15.0
+D952189F6ABB148FF72AAB246AA8C28CF99B469F com.squareup.okhttp3:logging-interceptor:3.12.12
+D3EBF0F291297649B4C8DC3ECC81D2EDDEDC100D io.fabric8:zjsonpatch:0.3.0

@@ -28,6 +28,7 @@ import org.netbeans.modules.php.analysis.commands.CodeSniffer;
 import org.netbeans.modules.php.analysis.commands.CodingStandardsFixer;
 import org.netbeans.modules.php.analysis.commands.MessDetector;
 import org.netbeans.modules.php.analysis.commands.PHPStan;
+import org.netbeans.modules.php.analysis.commands.Psalm;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.UiUtils;
 import org.openide.filesystems.FileChooserBuilder;
@@ -41,6 +42,8 @@ public final class AnalysisUiUtils {
     private static final String MESS_DETECTOR_RULE_SET_FILE_LAST_FOLDER_SUFFIX = ".messDetector.ruleSetFile"; // NOI18N
     private static final String PHPSTAN_LAST_FOLDER_SUFFIX = ".phpstan"; // NOI18N
     private static final String PHPSTAN_CONFIGURATION_LAST_FOLDER_SUFFIX = ".phpstan.config"; // NOI18N
+    private static final String PSALM_LAST_FOLDER_SUFFIX = ".psalm"; // NOI18N
+    private static final String PSALM_CONFIGURATION_LAST_FOLDER_SUFFIX = ".psalm.config"; // NOI18N
 
     private AnalysisUiUtils() {
     }
@@ -79,6 +82,18 @@ public final class AnalysisUiUtils {
     @NbBundle.Messages("AnalysisUiUtils.browse.phpstan.configuration.title=Select PHPStan Configuration File")
     public static File browsePHPStanConfiguration() {
         return browse(PHPSTAN_CONFIGURATION_LAST_FOLDER_SUFFIX, Bundle.AnalysisUiUtils_browse_phpstan_configuration_title());
+    }
+
+    @CheckForNull
+    @NbBundle.Messages("AnalysisUiUtils.browse.psalm.title=Select Psalm")
+    public static File browsePsalm() {
+        return browse(PSALM_LAST_FOLDER_SUFFIX, Bundle.AnalysisUiUtils_browse_psalm_title());
+    }
+
+    @CheckForNull
+    @NbBundle.Messages("AnalysisUiUtils.browse.psalm.configuration.title=Select Psalm Configuration File")
+    public static File browsePsalmConfiguration() {
+        return browse(PSALM_CONFIGURATION_LAST_FOLDER_SUFFIX, Bundle.AnalysisUiUtils_browse_psalm_configuration_title());
     }
 
     @CheckForNull
@@ -155,6 +170,23 @@ public final class AnalysisUiUtils {
                 .setListTitle(Bundle.AnalysisUiUtils_search_phpstan_scripts())
                 .setPleaseWaitPart(Bundle.AnalysisUiUtils_search_phpstan_pleaseWaitPart())
                 .setNoItemsFound(Bundle.AnalysisUiUtils_search_phpstan_notFound());
+        return search(param);
+    }
+
+    @CheckForNull
+    @NbBundle.Messages({
+        "AnalysisUiUtils.search.psalm.title=Psalm scripts",
+        "AnalysisUiUtils.search.psalm.scripts=P&salm scripts:",
+        "AnalysisUiUtils.search.psalm.pleaseWaitPart=Psalm scripts",
+        "AnalysisUiUtils.search.psalm.notFound=No Psalm scripts found."
+    })
+    public static String searchPsalm() {
+        SearchParameter param = new SearchParameter()
+                .setFilenames(Arrays.asList(Psalm.NAME, Psalm.LONG_NAME))
+                .setWindowTitle(Bundle.AnalysisUiUtils_search_psalm_title())
+                .setListTitle(Bundle.AnalysisUiUtils_search_psalm_scripts())
+                .setPleaseWaitPart(Bundle.AnalysisUiUtils_search_psalm_pleaseWaitPart())
+                .setNoItemsFound(Bundle.AnalysisUiUtils_search_psalm_notFound());
         return search(param);
     }
 

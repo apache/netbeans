@@ -35,6 +35,7 @@ import org.openide.util.Exceptions;
  */
 public final class ClusterItem extends OCIItem {
     private String config = null;
+    private String namespace = "default"; //NOI8N
 
     public ClusterItem(OCID id, String compartmentId, String name, String tenancyId, String regionCode) {
         super(id, compartmentId, name, tenancyId, regionCode);
@@ -50,6 +51,16 @@ public final class ClusterItem extends OCIItem {
 
     public void setConfig(String config) {
         this.config = config;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        String oldNamespace = this.namespace;
+        this.namespace = namespace;
+        firePropertyChange("namespace", oldNamespace, namespace); //NOI18N
     }
     
     public void update() {

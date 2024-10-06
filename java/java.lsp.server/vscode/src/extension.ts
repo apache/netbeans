@@ -1552,7 +1552,11 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             if (lifecycleState) {
                 item.description = lifecycleState === "PENDING_DELETION" ? '(pending deletion)' : undefined;
             }
-
+            const clusterNamespace = getValueAfterPrefix(item.contextValue, "clusterNamespace:");
+            if (clusterNamespace) {
+                item.description = clusterNamespace;
+                return item;
+            }
             return item;
         }
 

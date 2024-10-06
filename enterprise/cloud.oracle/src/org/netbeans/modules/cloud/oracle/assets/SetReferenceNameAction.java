@@ -61,6 +61,7 @@ public class SetReferenceNameAction implements ActionListener {
             oldRefName = "";
         }
         NotifyDescriptor.InputLine inp = new NotifyDescriptor.InputLine(oldRefName, Bundle.ReferenceName());
+        inp.setInputText(oldRefName);
         Object selected = DialogDisplayer.getDefault().notify(inp);
         if (DialogDescriptor.OK_OPTION != selected) {
             return;

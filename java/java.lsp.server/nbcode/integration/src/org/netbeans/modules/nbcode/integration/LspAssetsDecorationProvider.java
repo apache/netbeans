@@ -53,6 +53,7 @@ public class LspAssetsDecorationProvider implements TreeDataProvider.Factory {
     public static final String CTXVALUE_PREFIX_IMAGE_COUNT = "imageCount:"; // NOI18N
     public static final String CTXVALUE_PREFIX_REPOSITORY_PUBLIC = "repositoryPublic:"; // NOI18N
     public static final String CTXVALUE_PREFIX_SECRET_LIFECYCLE_STATE = "lifecycleState:"; // NOI18N
+    public static final String CTXVALUE_PREFIX_CLUSTER_NAMESPACE = "clusterNamespace:"; // NOI18N
 
     @Override
     public synchronized TreeDataProvider createProvider(String treeId) {
@@ -77,6 +78,13 @@ public class LspAssetsDecorationProvider implements TreeDataProvider.Factory {
             if (refName != null) {
                 d.addContextValues(CTXVALUE_PREFIX_REFERENCE_NAME + refName);
                 set = true;
+            }
+            if (item instanceof ClusterItem) {
+                String namespace = ((ClusterItem) item).getNamespace();
+                if (namespace != null) {
+                    d.addContextValues(CTXVALUE_PREFIX_CLUSTER_NAMESPACE + namespace);
+                    set = true;
+                }
             }
             if (item instanceof ComputeInstanceItem) {
                 String publicIp = ((ComputeInstanceItem) item).getPublicIp();

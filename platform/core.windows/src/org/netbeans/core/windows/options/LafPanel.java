@@ -27,7 +27,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -58,10 +60,9 @@ public class LafPanel extends javax.swing.JPanel {
     
     private final Preferences prefs = NbPreferences.forModule(LafPanel.class);
     
-    private final boolean isAquaLaF = "Aqua".equals(UIManager.getLookAndFeel().getID()); //NOI18N
     private static final boolean NO_RESTART_ON_LAF_CHANGE = Boolean.getBoolean("nb.laf.norestart"); //NOI18N
     private int defaultLookAndFeelIndex;
-    private final ArrayList<LookAndFeelInfo> lafs = new ArrayList<LookAndFeelInfo>( 10 );
+    private final List<LookAndFeelInfo> lafs = new ArrayList<>();
     
     protected LafPanel(final LafOptionsPanelController controller) {
         this.controller = controller;
@@ -74,13 +75,8 @@ public class LafPanel extends javax.swing.JPanel {
                 fireChanged();
             }
         });
-        initLookAndFeel();
+        initLookAndFeels();
         lblRestart.setVisible(!NO_RESTART_ON_LAF_CHANGE);
-        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-        for( LookAndFeelInfo li : lafs ) {
-            model.addElement( li.getName() );
-        }
-        comboLaf.setModel( model );
         comboLaf.addItemListener( new ItemListener() {
 
             @Override
@@ -106,50 +102,71 @@ public class LafPanel extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        panelLaF = new javax.swing.JPanel();
-        checkMaximizeNativeLaF = new javax.swing.JCheckBox();
         panelLaFCombo = new javax.swing.JPanel();
-        comboLaf = new javax.swing.JComboBox();
-        lblLaf = new javax.swing.JLabel();
+        checkMaximizeNativeLaF = new javax.swing.JCheckBox();
         lblRestart = new javax.swing.JLabel();
+        comboLaf = new javax.swing.JComboBox();
+        javax.swing.JLabel lblLaf = new javax.swing.JLabel();
+        showAllLafs = new javax.swing.JCheckBox();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setLayout(new java.awt.GridBagLayout());
 
-        panelLaF.setLayout(new java.awt.BorderLayout());
+        panelLaFCombo.setLayout(new java.awt.BorderLayout(3, 0));
 
         org.openide.awt.Mnemonics.setLocalizedText(checkMaximizeNativeLaF, org.openide.util.NbBundle.getMessage(LafPanel.class, "LafPanel.checkMaximizeNativeLaF.text")); // NOI18N
         checkMaximizeNativeLaF.setToolTipText(org.openide.util.NbBundle.getMessage(LafPanel.class, "LafPanel.checkMaximizeNativeLaF.toolTipText")); // NOI18N
-        panelLaF.add(checkMaximizeNativeLaF, java.awt.BorderLayout.WEST);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
-        add(panelLaF, gridBagConstraints);
-
-        panelLaFCombo.setLayout(new java.awt.BorderLayout(3, 0));
-        panelLaFCombo.add(comboLaf, java.awt.BorderLayout.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(lblRestart, NbBundle.getMessage(LafPanel.class, "LafPanel.lblRestart.text")); // NOI18N
 
         lblLaf.setLabelFor(comboLaf);
         org.openide.awt.Mnemonics.setLocalizedText(lblLaf, NbBundle.getMessage(LafPanel.class, "LafPanel.lblLaf.text")); // NOI18N
-        panelLaFCombo.add(lblLaf, java.awt.BorderLayout.WEST);
 
-        org.openide.awt.Mnemonics.setLocalizedText(lblRestart, NbBundle.getMessage(LafPanel.class, "LafPanel.lblRestart.text")); // NOI18N
-        panelLaFCombo.add(lblRestart, java.awt.BorderLayout.LINE_END);
+        org.openide.awt.Mnemonics.setLocalizedText(showAllLafs, org.openide.util.NbBundle.getMessage(LafPanel.class, "LafPanel.showAllLafs.text")); // NOI18N
+        showAllLafs.setToolTipText(org.openide.util.NbBundle.getMessage(LafPanel.class, "LafPanel.showAllLafs.toolTipText")); // NOI18N
+        showAllLafs.addActionListener(this::showAllLafsActionPerformed);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        add(panelLaFCombo, gridBagConstraints);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelLaFCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblLaf)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(comboLaf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblRestart))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(showAllLafs)
+                            .addComponent(checkMaximizeNativeLaF))))
+                .addContainerGap(36, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(panelLaFCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblLaf)
+                    .addComponent(comboLaf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblRestart, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(showAllLafs)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(checkMaximizeNativeLaF)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void showAllLafsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showAllLafsActionPerformed
+        initLookAndFeels();
+        load();
+    }//GEN-LAST:event_showAllLafsActionPerformed
 
     protected void load() {
         checkMaximizeNativeLaF.setSelected(prefs.getBoolean(WinSysPrefs.MAXIMIZE_NATIVE_LAF, false));
@@ -158,6 +175,9 @@ public class LafPanel extends javax.swing.JPanel {
         defaultLookAndFeelIndex = lafs.indexOf( isForcedLaF ? getCurrentLaF() : getPreferredLaF() );
         comboLaf.setSelectedIndex( defaultLookAndFeelIndex );
         comboLaf.setEnabled( !isForcedLaF );
+        if (isForcedLaF) {
+            showAllLafs.setVisible(false);
+        }
     }
 
     protected boolean store() {
@@ -190,20 +210,44 @@ public class LafPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox checkMaximizeNativeLaF;
     private javax.swing.JComboBox comboLaf;
-    private javax.swing.JLabel lblLaf;
     private javax.swing.JLabel lblRestart;
-    private javax.swing.JPanel panelLaF;
     private javax.swing.JPanel panelLaFCombo;
+    private javax.swing.JCheckBox showAllLafs;
     // End of variables declaration//GEN-END:variables
 
-
-    private void initLookAndFeel() {
+    private void initLookAndFeels() {
         lafs.clear();
-        for( LookAndFeelInfo i : UIManager.getInstalledLookAndFeels() ) {
-            lafs.add( i );
+        String lafExcludes = NbBundle.getMessage(LafPanel.class, "LafPanel.excludes").trim();
+        if (lafExcludes.isEmpty()) {
+            showAllLafs.setVisible(false);
+        } else {
+            boolean showAllLafsOption = Boolean.parseBoolean(
+                    NbBundle.getMessage(LafPanel.class, "LafPanel.showAllLafs.visible"));
+            showAllLafs.setVisible(showAllLafsOption);
+        }
+        if (lafExcludes.isEmpty() || showAllLafs.isSelected()) {
+            lafs.addAll(Arrays.asList(UIManager.getInstalledLookAndFeels()));
+        } else {
+            String cur = getCurrentLaF().getClassName();
+            String pref = getPreferredLaF().getClassName();
+            for (LookAndFeelInfo li : UIManager.getInstalledLookAndFeels()) {
+                String cls = li.getClassName();
+                String name = cls.substring(cls.lastIndexOf('.') + 1, cls.length());
+                if (cls.equals(cur) || cls.equals(pref) || !lafExcludes.contains(name)) {
+                    lafs.add(li);
+                }
+            }
+        }
+        Object lastSelection = comboLaf.getSelectedItem();
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        for(LookAndFeelInfo info : lafs) {
+            model.addElement(info.getName());
+        }
+        comboLaf.setModel(model);
+        if (lastSelection != null) {
+            comboLaf.setSelectedItem(lastSelection);
         }
     }
 
@@ -213,32 +257,33 @@ public class LafPanel extends javax.swing.JPanel {
 
     private LookAndFeelInfo getCurrentLaF() {
         LookAndFeelInfo currentLaf = null;
-        String currentLAFClassName = UIManager.getLookAndFeel().getClass().getName();
-        boolean isAqua = "Aqua".equals(UIManager.getLookAndFeel().getID()); //NOI18N
-        for( LookAndFeelInfo li : lafs ) {
-            if( currentLAFClassName.equals( li.getClassName() ) 
-                    || (isAqua && li.getClassName().contains("com.apple.laf.AquaLookAndFeel")) ) { //NOI18N
+        LookAndFeel laf = UIManager.getLookAndFeel();
+        String currentLAFClassName = laf.getClass().getName();
+        boolean isAqua = "Aqua".equals(laf.getID()); //NOI18N
+        for (LookAndFeelInfo li : UIManager.getInstalledLookAndFeels()) {
+            if (currentLAFClassName.equals(li.getClassName())
+                    || (isAqua && li.getClassName().contains("com.apple.laf.AquaLookAndFeel"))) { //NOI18N
                 currentLaf = li;
                 break;
             }
         }
-        return currentLaf;
+        return currentLaf == null ? new LookAndFeelInfo(laf.getName(), currentLAFClassName) : currentLaf;
     }
 
     private LookAndFeelInfo getPreferredLaF() {
         String lafClassName = NbPreferences.root().node( "laf" ).get( "laf", null ); //NOI18N
         if( null == lafClassName )
             return getCurrentLaF();
-        LookAndFeelInfo currentLaf = null;
+        LookAndFeelInfo prefLaf = null;
         boolean isAqua = "Aqua".equals(UIManager.getLookAndFeel().getID()); //NOI18N
-        for( LookAndFeelInfo li : lafs ) {
-            if( lafClassName.equals( li.getClassName() )
-                    || (isAqua && li.getClassName().contains("com.apple.laf.AquaLookAndFeel")) ) { //NOI18N
-                currentLaf = li;
+        for (LookAndFeelInfo li : UIManager.getInstalledLookAndFeels()) {
+            if (lafClassName.equals(li.getClassName())
+                    || (isAqua && li.getClassName().contains("com.apple.laf.AquaLookAndFeel"))) { //NOI18N
+                prefLaf = li;
                 break;
             }
         }
-        return currentLaf;
+        return prefLaf == null ? getCurrentLaF() : prefLaf;
     }
 
     private static Notification restartNotification;

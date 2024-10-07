@@ -20,8 +20,6 @@ package org.netbeans.modules.php.blade.editor.format;
 
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -40,10 +38,9 @@ import org.openide.util.Exceptions;
  * @author bhaidu
  */
 public class BladeFormatterService {
-    private static final Logger LOGGER = Logger.getLogger(BladeFormatterService.class.getName());
     public final Map<Integer, FormatToken> formattedLineIndentList = new TreeMap<>();
-    boolean debugMode = false;
-    public boolean isIndentation;
+    private boolean debugMode = false;
+    private boolean isIndentation;
 
     public void format(Context context, String text, int indentSize) {
         isIndentation = context.isIndent();
@@ -58,7 +55,6 @@ public class BladeFormatterService {
         final int cstart = context.startOffset();
         final int cend = context.endOffset();
         int textDelta = 0;
-        LOGGER.log(Level.INFO, "Starting formatting from caret {0}:\n", cstart);
         
         for (Map.Entry<Integer, FormatToken> entry : formattedLineIndentList.entrySet()) {
             int tstart = entry.getValue().tokenStart;
@@ -113,14 +109,14 @@ public class BladeFormatterService {
 
                 Token start = ctx.getStart();
                 blockBalance++;
-                if (ctx.getStop() != null && !formattedLineIndentList.containsKey(start.getLine())) {
-                    Token endDefinition = ctx.getStop();
+                
+                if (!formattedLineIndentList.containsKey(start.getLine())) {
                     //hack to indent after blade block
                     int offset = isIndentation ? 1 : 0;
-                    formattedLineIndentList.put(endDefinition.getLine(),
-                            new FormatToken(endDefinition.getStopIndex() + 1 + offset, indent+offset, htmlBlockBalance, null));
+                    formattedLineIndentList.put(start.getLine(),
+                            new FormatToken(start.getStopIndex() + 1 + offset, indent+offset, htmlBlockBalance, null));
+                    indent++;
                 }
-                indent++;
             }
 
             @Override
@@ -143,11 +139,12 @@ public class BladeFormatterService {
             }
 
             @Override
-            public void exitSection_block_start(BladeAntlrFormatterParser.Section_block_startContext ctx) {
+            public void enterSection_block(BladeAntlrFormatterParser.Section_blockContext ctx) {
                 Token start = ctx.getStart();
+
                 blockBalance++;
-                if (ctx.getStop() != null && !formattedLineIndentList.containsKey(start.getLine())) {
-                    Token rArgParent = ctx.getStop();
+                if (!formattedLineIndentList.containsKey(start.getLine())) {
+                    Token rArgParent = ctx.getStart();
                     String debugText = debugMode ? rArgParent.getText() : null;
                     formattedLineIndentList.put(rArgParent.getLine(), new FormatToken(rArgParent.getStopIndex() + 1, indent, htmlBlockBalance, debugText));
                     indent++;
@@ -155,15 +152,16 @@ public class BladeFormatterService {
             }
 
             @Override
-            public void exitSection_block_end(BladeAntlrFormatterParser.Section_block_endContext ctx) {
-                Token start = ctx.getStart();
-                int line = start.getLine();
+            public void exitSection_block(BladeAntlrFormatterParser.Section_blockContext ctx) {
+                Token end = ctx.getStop();
+
+                int line = end.getLine();
                 if (!formattedLineIndentList.containsKey(line)) {
                     indent--;
                     if (indent < 0) {
                         indent = 0;
                     }
-                    formattedLineIndentList.put(line, new FormatToken(start.getStartIndex(), indent, htmlBlockBalance, start.getText()));
+                    formattedLineIndentList.put(line, new FormatToken(end.getStartIndex(), indent, htmlBlockBalance, end.getText()));
                 } else {
                     formattedLineIndentList.remove(line);
                 }

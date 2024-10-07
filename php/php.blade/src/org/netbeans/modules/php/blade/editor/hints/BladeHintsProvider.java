@@ -100,7 +100,7 @@ public class BladeHintsProvider implements HintsProvider {
             for (OffsetRange range : entry.getValue()) {
                 OffsetRange hintRange = new OffsetRange(range.getStart(), range.getEnd() + 1);
                 hints.add(new Hint(new BladeRule(HintSeverity.WARNING),
-                        "Blade path not found.\nFor custom blade context you can try to set the root folder using:\nProject -> Properties -> Laravel Blade -> Views Folder",
+                        "Blade path not found.\nFor custom blade context you can try to set the root folder using:\nProject -> Properties -> Laravel Blade -> Views Folder", //NOI18N
                         context.parserResult.getSnapshot().getSource().getFileObject(),
                         hintRange,
                         Collections.emptyList(),
@@ -133,9 +133,7 @@ public class BladeHintsProvider implements HintsProvider {
      */
     @Override
     public void computeErrors(HintsManager manager, RuleContext context, List<Hint> hints, List<Error> unhandled) {
-        BladeParserResult parserResult = (BladeParserResult) context.parserResult;
-
-        unhandled.addAll(parserResult.getDiagnostics());
+        unhandled.addAll(context.parserResult.getDiagnostics());
     }
 
     /**
@@ -143,7 +141,7 @@ public class BladeHintsProvider implements HintsProvider {
      */
     @Override
     public void cancel() {
-        //todo implement
+        //not required
     }
 
     /**
@@ -168,7 +166,7 @@ public class BladeHintsProvider implements HintsProvider {
      */
     @Override
     public List<Rule> getBuiltinRules() {
-        return null;
+        return Collections.<Rule>emptyList();
     }
 
     /**

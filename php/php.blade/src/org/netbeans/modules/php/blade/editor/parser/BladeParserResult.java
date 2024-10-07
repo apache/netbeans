@@ -20,6 +20,7 @@ package org.netbeans.modules.php.blade.editor.parser;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -833,7 +834,7 @@ public class BladeParserResult extends ParserResult {
             @Override
             public void exitFile(BladeAntlrParser.FileContext ctx) {
                 if (ifBalance != 0) {
-                    errors.add(new BladeError(null, "Unclosed @if", null, getFileObject(), ifStart, ctx.getStart().getStopIndex(), Severity.ERROR));
+                    errors.add(new BladeError("Unclosed @if", getFileObject(), ifStart, ctx.getStart().getStopIndex(), Severity.ERROR));
                 }
             }
 
@@ -857,7 +858,7 @@ public class BladeParserResult extends ParserResult {
 
     @Override
     public List<? extends Error> getDiagnostics() {
-        return errors;
+        return new ArrayList<>(errors);
     }
 
     @Override
@@ -881,7 +882,7 @@ public class BladeParserResult extends ParserResult {
                 if (offendingSymbol instanceof Token offendingToken) {
                     errorPosition = offendingToken.getStartIndex();
                 }
-                errors.add(new BladeError(null, msg, null, getFileObject(), errorPosition, errorPosition, Severity.ERROR));
+                errors.add(new BladeError(msg, getFileObject(), errorPosition, errorPosition, Severity.ERROR));
             }
 
         };
@@ -953,18 +954,4 @@ public class BladeParserResult extends ParserResult {
         public String itemVariable;
     }
 
-    public static class BladeError extends DefaultError implements org.netbeans.modules.csl.api.Error.Badging {
-
-        public BladeError(@NullAllowed String key, @NonNull String displayName,
-                @NullAllowed String description, @NonNull FileObject file,
-                @NonNull int start, @NonNull int end, @NonNull Severity severity) {
-            super(key, displayName, description, file, start, end, severity);
-        }
-
-        @Override
-        public boolean showExplorerBadge() {
-            return true;
-        }
-
-    }
 }

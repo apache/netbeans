@@ -27,16 +27,13 @@ import javax.swing.text.Document;
 import org.netbeans.modules.csl.api.Formatter;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.editor.indent.spi.Context;
-
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.settings.SimpleValueNames;
-import org.netbeans.api.project.Project;
-import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 import org.netbeans.modules.php.blade.editor.preferences.GeneralPreferencesUtils;
-import org.netbeans.spi.project.ui.support.ProjectConvertors;
-import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -58,13 +55,6 @@ public class BladeFormatter implements Formatter {
         if (context.isIndent() && !isBladeIndentEnabled(doc)) {
             return;
         } else if (!isBladeFormattingEnabled(doc)) {
-            return;
-        }
-        //todo
-        //check tab context
-        FileObject file = NbEditorUtilities.getFileObject(doc);
-        Project projectOwner = ProjectConvertors.getNonConvertorOwner(file);
-        if (projectOwner == null) {
             return;
         }
 
@@ -92,13 +82,21 @@ public class BladeFormatter implements Formatter {
                     (new BladeFormatterService()).format(context, currentText, indentSize);
 
                 } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
 
         };
 
+        String lookupClassName = Lookup.getDefault().getClass().getSimpleName();
+        if (lookupClassName.equals("MockLookup")) {
+            //test mode
+            rn.run();
+        } else {
+            SwingUtilities.invokeLater(rn);
+        }
         //run after html indent is finished
-        SwingUtilities.invokeLater(rn);
+        
         if (LOGGER.isLoggable(Level.FINE)) {
             long end = System.currentTimeMillis();
             LOGGER.log(Level.FINE, "Reformat took: {0} ms", (end - start)); //NOI18N

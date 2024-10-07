@@ -96,11 +96,11 @@ public abstract class BladeFormatterTestBase extends BladeTestBase {
         return true;
     }
 
-    protected void format(String fileName) throws Exception {
-        format(fileName, new IndentPrefs(4, 4));
+    protected void reformatFile(String fileName) throws Exception {
+        reformatFile(fileName, new IndentPrefs(4, 4));
     }
 
-    protected void format(String fileName, IndentPrefs indentPreferences) throws Exception {
+    protected void reformatFile(String fileName, IndentPrefs indentPreferences) throws Exception {
         assert fileName != null;
         reformatFileContents("testfiles/format/" + fileName + ".blade.php", indentPreferences); //NOI18N
     }

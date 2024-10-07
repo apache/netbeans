@@ -155,7 +155,7 @@ D_PHP : '@php' {this._input.LA(1) == ' ' || this._input.LA(1) == '\n'}?->pushMod
 AT : '@' ->skip;
 
 WS : ((' ') | [\t])+;
-NL : [\r\n];
+NL : [\r\n]+;
 
 
 

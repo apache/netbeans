@@ -16,28 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-package org.netbeans.modules.php.blade.editor.format;
+package org.netbeans.modules.php.blade.editor.actions;
 
 /**
  *
- * 
+ * @author bogdan
  */
-public class BladeFormatterTest extends BladeFormatterTestBase {
+public final class BladeUtils {
 
-    public BladeFormatterTest(String testName) {
-        super(testName);
+    private BladeUtils() {
+
     }
 
-    public void testIfBlockFormat_01() throws Exception{
-        reformatFile("if_block_01");
-    }
-    
-    public void testDirectiveBlocksFormat_01() throws Exception{
-        reformatFile("directive_blocks_01");
-    }
-    
-    public void testDirectiveBlocksFormat_02() throws Exception{
-        reformatFile("directive_blocks_02");
+    public static String replaceLinesAndTabs(String input) {
+        String escapedString = input;
+        escapedString = escapedString.replaceAll("\n", "\\\\n");
+        escapedString = escapedString.replaceAll("\r", "\\\\r");
+        escapedString = escapedString.replaceAll("\t", "\\\\t");
+        return escapedString;
     }
 }

@@ -36,6 +36,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.Vocabulary;
 import org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrColoringLexer;
 import static org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrColoringLexer.*;
 import org.openide.awt.ActionID;
@@ -101,6 +102,7 @@ public class ViewAntlrColoringTokensAction extends AbstractAction implements Act
             try {
                 CharStream cs = CharStreams.fromString(String.valueOf(fileObject.asText()));
                 BladeAntlrColoringLexer lexer = new BladeAntlrColoringLexer(cs);
+                Vocabulary vocabulary = lexer.getVocabulary();
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
                 tokens.fill();
                 Document doc = viewer.getDocument();
@@ -108,45 +110,22 @@ public class ViewAntlrColoringTokensAction extends AbstractAction implements Act
                 // Would be better to create some diff and update the changed elemets
                 doc.remove(0, doc.getLength());
                 StringBuilder result = new StringBuilder();
-
-                int lastLine = 0;
+                
                 for (Token token : tokens.getTokens()) {
-                    if (lastLine != token.getLine()) {
-                        lastLine = token.getLine();
-                        if (lastLine > 1) {
-                            result.append("\n");
-                        }
-                        result.append("L");
-                        result.append(lastLine);
-                        result.append(": ").append(lastLine);
+                    int tokenId = token.getType();
+                    String text = token.getText();
+                    result.append("Token #");
+                    result.append(tokenId);
+                    result.append(" ");
+                    result.append(vocabulary.getDisplayName(tokenId));
+                    String tokenText = BladeUtils.replaceLinesAndTabs(text);
+                    if (!tokenText.isEmpty()) {
+                        result.append(" ");
+                        result.append("[");
+                        result.append(token);
+                        result.append("]");
                     }
-                    switch (token.getType()) {
-                        case DIRECTIVE:
-                        case D_AT:    
-                            result.append(token.getText());
-                            break;
-                        case HTML_TAG:    
-                        case HTML:
-                            result.append(" (HTML-");
-                            result.append(token.getType());
-                            result.append(" ");
-                            result.append(token.getText());
-                            result.append(" ~)");
-                            break;
-                        case PHP_EXPRESSION:
-                            result.append(" (PHP_EXPRESSION)");
-                            result.append(token.getText());
-                            break;
-                        case BLADE_PHP_ECHO_EXPR:
-                            result.append(" (BLADE_PHP_ECHO_EXPR)");
-                            result.append(token.getText());
-                            break;
-                        default:
-                            result.append(token.getType());
-                    }
-                    if (token.getType() > -1) {
-                        result.append(" | ");
-                    }
+                    result.append("\n");
                 }
 
                 EditorKit kit = viewer.getEditorKit();

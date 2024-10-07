@@ -616,6 +616,11 @@
 				"icon": "$(edit)"
 			},
 			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.SetClusterNamespace",
+				"title": "Set a Cluster Namespace",
+				"icon": "$(edit)"
+			},
+			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.RemoveFromProject",
 				"title": "Remove from Oracle Cloud Assets",
 				"icon": "$(remove)"
@@ -899,6 +904,10 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.SetClusterNamespace",
+					"when": "false"
+				},
+				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.RemoveFromProject",
 					"when": "false"
 				},
@@ -1147,6 +1156,11 @@
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.SetReferenceName",
 					"when": "viewItem =~ /cap:refName/ && view == cloud.assets",
+					"group": "inline@14"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.SetClusterNamespace",
+					"when": "viewItem =~ /clusterNamespace:.*/ && view == cloud.assets",
 					"group": "inline@14"
 				},
 				{

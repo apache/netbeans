@@ -36,6 +36,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.Vocabulary;
 import org.netbeans.modules.php.blade.syntax.antlr4.formatter.BladeAntlrFormatterLexer;
 import static org.netbeans.modules.php.blade.syntax.antlr4.formatter.BladeAntlrFormatterLexer.*;
 import org.openide.awt.ActionID;
@@ -101,6 +102,7 @@ public class ViewAntlrFormatterTokensAction extends AbstractAction implements Ac
             try {
                 CharStream cs = CharStreams.fromString(String.valueOf(fileObject.asText()));
                 BladeAntlrFormatterLexer lexer = new BladeAntlrFormatterLexer(cs);
+                Vocabulary vocabulary = lexer.getVocabulary();
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
                 tokens.fill();
                 Document doc = viewer.getDocument();
@@ -109,75 +111,21 @@ public class ViewAntlrFormatterTokensAction extends AbstractAction implements Ac
                 doc.remove(0, doc.getLength());
                 StringBuilder result = new StringBuilder();
 
-                int lastLine = 0;
                 for (Token token : tokens.getTokens()) {
-                    if (lastLine != token.getLine()) {
-                        lastLine = token.getLine();
-                        if (lastLine > 1) {
-                            result.append("\n");
-                        }
-                        result.append("L");
-                        result.append(lastLine);
-                        result.append(": ");
+                    int tokenId = token.getType();
+                    String text = token.getText();
+                    result.append("Token #");
+                    result.append(tokenId);
+                    result.append(" ");
+                    result.append(vocabulary.getDisplayName(tokenId));
+                    String tokenText = BladeUtils.replaceLinesAndTabs(text);
+                    if (!tokenText.isEmpty()) {
+                        result.append(" ");
+                        result.append("[");
+                        result.append(token);
+                        result.append("]");
                     }
-                    switch (token.getType()) {
-                        case PARAM_COMMA:
-                            result.append(" ~,");
-                            break;
-                        case D_ARG_LPAREN:
-                            result.append(" ~(");
-                            break;
-                        case D_ARG_RPAREN:
-                            result.append(" ~)");
-                            break;
-                        case SG_QUOTE:
-                            result.append(" '");
-                            break;
-                        case WS:
-                            result.append(" (");
-                            result.append(token.getText());
-                            result.append(" )");
-                            break;
-                        case NL:
-                            result.append(" (n)");
-                            break;
-                        case EQ:
-                            result.append("(EQ)");
-                            break;
-                        case STRING:
-                            result.append("string");
-                            break;
-                        case IDENTIFIER:
-                            result.append("~");
-                            result.append(token.getText());
-                            break;
-                        case COMPONENT_TAG:
-                            result.append("COMP_TAG ");
-                            result.append(token.getText());
-                            break;
-                        case HTML_CLOSE_TAG:
-                            result.append("CLOSE_TAG ");
-                            result.append(token.getText());
-                            break;
-                        case HTML_START_BLOCK_TAG:
-                            result.append("START_TAG ");
-                            result.append(token.getText());
-                            break;
-                        case GT_SYMBOL:
-                            result.append(" (>)");
-                            break;
-                        case D_PHP:
-                            result.append(" (@php)");
-                            break;
-                        default:
-                            result.append(token.getType());
-                            if (token.getText().startsWith("@")) {
-                                result.append(" (DIRECTIVE)");
-                            }
-                    }
-                    if (token.getType() > -1) {
-                        result.append(" | ");
-                    }
+                    result.append("\n");
                 }
 
                 EditorKit kit = viewer.getEditorKit();

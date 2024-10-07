@@ -133,18 +133,6 @@ public class BladeAntlrFormatterParserBaseListener implements BladeAntlrFormatte
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBlock_directive_name(BladeAntlrFormatterParser.Block_directive_nameContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBlock_directive_name(BladeAntlrFormatterParser.Block_directive_nameContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterBlock_end(BladeAntlrFormatterParser.Block_endContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -205,37 +193,13 @@ public class BladeAntlrFormatterParserBaseListener implements BladeAntlrFormatte
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSection_block_end(BladeAntlrFormatterParser.Section_block_endContext ctx) { }
+	@Override public void enterNl_with_space_after(BladeAntlrFormatterParser.Nl_with_space_afterContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSection_block_end(BladeAntlrFormatterParser.Section_block_endContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterSection_block_start(BladeAntlrFormatterParser.Section_block_startContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitSection_block_start(BladeAntlrFormatterParser.Section_block_startContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterNl_with_space_before(BladeAntlrFormatterParser.Nl_with_space_beforeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitNl_with_space_before(BladeAntlrFormatterParser.Nl_with_space_beforeContext ctx) { }
+	@Override public void exitNl_with_space_after(BladeAntlrFormatterParser.Nl_with_space_afterContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

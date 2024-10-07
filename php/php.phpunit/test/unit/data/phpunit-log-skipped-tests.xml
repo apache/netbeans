@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="CLI Arguments" tests="17" assertions="14" errors="0" failures="2" skipped="3" time="0.035194">
+    <testsuite name="CalculatorTest" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" tests="17" assertions="14" errors="0" failures="2" skipped="3" time="0.035194">
+      <testcase name="testPlus" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="47" class="CalculatorTest" classname="CalculatorTest" assertions="1" time="0.007517"/>
+      <testcase name="testPlus2" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="54" class="CalculatorTest" classname="CalculatorTest" assertions="1" time="0.012255">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">CalculatorTest::testPlus2
+Failed asserting that 1 matches expected 2.
+
+/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php:55</failure>
+      </testcase>
+      <testcase name="testPlus3" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="64" class="CalculatorTest" classname="CalculatorTest" assertions="1" time="0.001137"/>
+      <testcase name="testPlus4" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="71" class="CalculatorTest" classname="CalculatorTest" assertions="1" time="0.000984"/>
+      <testcase name="testMinus" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="78" class="CalculatorTest" classname="CalculatorTest" assertions="1" time="0.001094"/>
+      <testcase name="testMinus2" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="85" class="CalculatorTest" classname="CalculatorTest" assertions="1" time="0.000989"/>
+      <testcase name="testMinus3" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="92" class="CalculatorTest" classname="CalculatorTest" assertions="1" time="0.000950"/>
+      <testcase name="testMinus4" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="99" class="CalculatorTest" classname="CalculatorTest" assertions="1" time="0.000978"/>
+      <testcase name="testMultiply" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="106" class="CalculatorTest" classname="CalculatorTest" assertions="1" time="0.000964"/>
+      <testcase name="testMultiply2" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="113" class="CalculatorTest" classname="CalculatorTest" assertions="1" time="0.000983"/>
+      <testcase name="testMultiply3" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="120" class="CalculatorTest" classname="CalculatorTest" assertions="1" time="0.000961"/>
+      <testcase name="testMultiply4" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="127" class="CalculatorTest" classname="CalculatorTest" assertions="1" time="0.001048"/>
+      <testcase name="testMultiply5" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="134" class="CalculatorTest" classname="CalculatorTest" assertions="1" time="0.001190"/>
+      <testcase name="testDivide" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="141" class="CalculatorTest" classname="CalculatorTest" assertions="1" time="0.001630">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">CalculatorTest::testDivide
+Failed asserting that 0 matches expected 2.
+
+/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php:142</failure>
+      </testcase>
+      <testcase name="testDivide2" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="149" class="CalculatorTest" classname="CalculatorTest" assertions="0" time="0.000000">
+        <skipped/>
+      </testcase>
+      <testcase name="testDivide3" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="160" class="CalculatorTest" classname="CalculatorTest" assertions="0" time="0.001233">
+        <skipped/>
+      </testcase>
+      <testcase name="testModulo" file="/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php" line="170" class="CalculatorTest" classname="CalculatorTest" assertions="0" time="0.001281">
+        <skipped/>
+      </testcase>
+    </testsuite>
+  </testsuite>
+</testsuites>

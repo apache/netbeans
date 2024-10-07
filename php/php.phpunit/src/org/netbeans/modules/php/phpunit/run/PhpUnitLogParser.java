@@ -38,7 +38,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public final class PhpUnitLogParser extends DefaultHandler {
 
-    enum Content { NONE, ERROR, FAILURE };
+    enum Content { NONE, ERROR, FAILURE, SKIPPED };
     private static final Logger LOGGER = Logger.getLogger(PhpUnitLogParser.class.getName());
     private static final String NO_FILE = "NO_FILE"; // NOI18N
 
@@ -90,6 +90,8 @@ public final class PhpUnitLogParser extends DefaultHandler {
             startTestFailure(attributes);
         } else if ("error".equals(qName)) { // NOI18N
             startTestError(attributes);
+        } else if ("skipped".equals(qName)) { // NOI18N
+            startTestSkipped(attributes);
         }
     }
 
@@ -111,6 +113,7 @@ public final class PhpUnitLogParser extends DefaultHandler {
         switch (content) {
             case FAILURE:
             case ERROR:
+            case SKIPPED:
                 buffer.append(new String(ch, start, length));
                 break;
             case NONE:
@@ -167,6 +170,11 @@ public final class PhpUnitLogParser extends DefaultHandler {
 
     private void startTestFailure(Attributes attributes) {
         content = Content.FAILURE;
+    }
+
+    private void startTestSkipped(Attributes attributes) {
+        content = Content.SKIPPED;
+        testCase.setSkippedStatus();
     }
 
     private void endTestContent() {

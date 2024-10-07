@@ -108,16 +108,6 @@ public interface BladeAntlrFormatterParserListener extends ParseTreeListener {
 	 */
 	void exitBlock_start(BladeAntlrFormatterParser.Block_startContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link BladeAntlrFormatterParser#block_directive_name}.
-	 * @param ctx the parse tree
-	 */
-	void enterBlock_directive_name(BladeAntlrFormatterParser.Block_directive_nameContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link BladeAntlrFormatterParser#block_directive_name}.
-	 * @param ctx the parse tree
-	 */
-	void exitBlock_directive_name(BladeAntlrFormatterParser.Block_directive_nameContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link BladeAntlrFormatterParser#block_end}.
 	 * @param ctx the parse tree
 	 */
@@ -168,35 +158,15 @@ public interface BladeAntlrFormatterParserListener extends ParseTreeListener {
 	 */
 	void exitSection_block(BladeAntlrFormatterParser.Section_blockContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link BladeAntlrFormatterParser#section_block_end}.
+	 * Enter a parse tree produced by {@link BladeAntlrFormatterParser#nl_with_space_after}.
 	 * @param ctx the parse tree
 	 */
-	void enterSection_block_end(BladeAntlrFormatterParser.Section_block_endContext ctx);
+	void enterNl_with_space_after(BladeAntlrFormatterParser.Nl_with_space_afterContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link BladeAntlrFormatterParser#section_block_end}.
+	 * Exit a parse tree produced by {@link BladeAntlrFormatterParser#nl_with_space_after}.
 	 * @param ctx the parse tree
 	 */
-	void exitSection_block_end(BladeAntlrFormatterParser.Section_block_endContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link BladeAntlrFormatterParser#section_block_start}.
-	 * @param ctx the parse tree
-	 */
-	void enterSection_block_start(BladeAntlrFormatterParser.Section_block_startContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link BladeAntlrFormatterParser#section_block_start}.
-	 * @param ctx the parse tree
-	 */
-	void exitSection_block_start(BladeAntlrFormatterParser.Section_block_startContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link BladeAntlrFormatterParser#nl_with_space_before}.
-	 * @param ctx the parse tree
-	 */
-	void enterNl_with_space_before(BladeAntlrFormatterParser.Nl_with_space_beforeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link BladeAntlrFormatterParser#nl_with_space_before}.
-	 * @param ctx the parse tree
-	 */
-	void exitNl_with_space_before(BladeAntlrFormatterParser.Nl_with_space_beforeContext ctx);
+	void exitNl_with_space_after(BladeAntlrFormatterParser.Nl_with_space_afterContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link BladeAntlrFormatterParser#nl_with_space}.
 	 * @param ctx the parse tree

@@ -36,6 +36,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.Vocabulary;
 import org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrLexer;
 import static org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrLexer.*;
 import org.openide.awt.ActionID;
@@ -101,6 +102,7 @@ public class ViewAntlrLexerTokensAction extends AbstractAction implements Action
             try {
                 CharStream cs = CharStreams.fromString(String.valueOf(fileObject.asText()));
                 BladeAntlrLexer lexer = new BladeAntlrLexer(cs);
+                Vocabulary vocabulary = lexer.getVocabulary();
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
                 tokens.fill();
                 Document doc = viewer.getDocument();
@@ -109,60 +111,21 @@ public class ViewAntlrLexerTokensAction extends AbstractAction implements Action
                 doc.remove(0, doc.getLength());
                 StringBuilder result = new StringBuilder();
 
-                int lastLine = 0;
                 for (Token token : tokens.getTokens()) {
-                    if (lastLine != token.getLine()) {
-                        lastLine = token.getLine();
-                        if (lastLine > 1) {
-                            result.append("\n");
-                        }
-                        result.append("L");
-                        result.append(lastLine);
-                        result.append(": ").append(lastLine);
+                    int tokenId = token.getType();
+                    String text = token.getText();
+                    result.append("Token #");
+                    result.append(tokenId);
+                    result.append(" ");
+                    result.append(vocabulary.getDisplayName(tokenId));
+                    String tokenText = BladeUtils.replaceLinesAndTabs(text);
+                    if (!tokenText.isEmpty()) {
+                        result.append(" ");
+                        result.append("[");
+                        result.append(token);
+                        result.append("]");
                     }
-                    switch (token.getType()) {
-                        case BLADE_EXPR_LPAREN:
-                            result.append(" '('");
-                            break;
-                        case BLADE_EXPR_RPAREN:
-                            result.append(" ')'");
-                            break;
-                        case HTML:
-                            result.append(" (HTML)");
-                            result.append(token.getText());
-                            break;
-                        case HTML_COMPONENT_PREFIX:
-                            result.append(" (HTML_COMPONENT_PREFIX)");
-                            result.append(token.getText());
-                            break;
-                        case PHP_NEW:
-                            result.append(" (\n)");
-                            break;
-                        case PHP_EXPRESSION:
-                            result.append(" (PHP_EXPRESSION)");
-                            result.append(token.getText());
-                            break;
-                        case PHP_NAMESPACE_PATH:
-                            result.append(" (PHP_NAMESPACE_PATH)");
-                            result.append(token.getText());
-                            break;
-                        case PHP_IDENTIFIER:
-                            result.append(" (PHP_IDENTIFIER)");
-                            result.append(token.getText());
-                            break;
-                        case PHP_VARIABLE:
-                            result.append(" (PHP_VARIABLE)");
-                            result.append(token.getText());
-                            break;
-                        default:
-                            result.append(token.getType());
-                            if (token.getText().startsWith("@")) {
-                                result.append(" (DIRECTIVE)");
-                            }
-                    }
-                    if (token.getType() > -1) {
-                        result.append(" | ");
-                    }
+                    result.append("\n");
                 }
 
                 EditorKit kit = viewer.getEditorKit();

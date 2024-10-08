@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.Arrays;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.php.spi.testing.run.TestCase;
 
@@ -293,6 +294,22 @@ public class PhpUnitLogParserTest extends NbTestCase {
         TestCaseVo testCase = testSuite.getTestCases().get(16);
         assertTrue(testCase.isError());
         assertEquals("Risky Test", testCase.getStackTrace()[0]);
+    }
+
+    public void testParseLogSkippedTests() throws Exception {
+        Reader reader = createReader("phpunit-log-skipped-tests.xml");
+        TestSessionVo testSession = new TestSessionVo(null);
+
+        PhpUnitLogParser.parse(reader, testSession);
+
+        assertSame(1, testSession.getTestSuites().size());
+        TestSuiteVo testSuite = testSession.getTestSuites().get(0);
+        assertEquals("CalculatorTest", testSuite.getName());
+        assertEquals("/home/troizet/NetBeansProjects/Calculator-PHPUnit/test/src/CalculatorTest.php", testSuite.getFile());
+        TestCaseVo testCase = testSuite.getTestCases().get(15);
+        assertEquals("testDivide3", testCase.getName());
+        assertTrue(testCase.isSkipped());
+        assertTrue(Arrays.asList(testCase.getStackTrace()).isEmpty());
     }
 
     private Reader createReader(String filename) throws FileNotFoundException {

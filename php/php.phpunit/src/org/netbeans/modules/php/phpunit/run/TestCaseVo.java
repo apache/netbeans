@@ -155,6 +155,11 @@ public final class TestCaseVo {
         status = TestCase.Status.FAILED;
     }
 
+    public void setSkippedStatus() {
+        assert status == TestCase.Status.PASSED : "Expected PASSED status but was: " + status; // NOI18N
+        status = TestCase.Status.SKIPPED;
+    }
+
     public TestCase.Status getStatus() {
         return status;
     }
@@ -165,6 +170,10 @@ public final class TestCaseVo {
 
     public boolean isFailure() {
         return status.equals(TestCase.Status.FAILED);
+    }
+
+    public boolean isSkipped() {
+        return status.equals(TestCase.Status.SKIPPED);
     }
 
     @Override

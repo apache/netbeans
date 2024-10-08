@@ -198,7 +198,7 @@ public class BladeBracesMatcher implements BracesMatcher {
             return null;
         }
         Set<String> startDirectiveForBalance = new HashSet<>();
-        Set<String> stopDirectives = new HashSet<>(Arrays.asList(pair));
+        Set<String> stopDirectives = Set.of(pair);
 
         for (String endDirective : pair) {
             String[] startDirectives = BladeDirectivesUtils.directiveEnd2StartPair(endDirective);
@@ -226,8 +226,8 @@ public class BladeBracesMatcher implements BracesMatcher {
     private int[] findCustomDirectiveEnd(String directive) {
         String endPrefix = BladeDirectivesUtils.END_DIRECTIVE_PREFIX;
         String[] pair = new String[]{endPrefix + directive.substring(1)};
-        Set<String> stopDirectives = new HashSet<>(Arrays.asList(pair));
-        Set<String> startDirectiveForBalance = new HashSet<>(Arrays.asList(new String[]{directive}));
+        Set<String> stopDirectives = Set.of(pair);
+        Set<String> startDirectiveForBalance = Set.of(directive);
 
         Token endToken = BladeAntlrUtils.findForward(context.getDocument(),
                 originToken,
@@ -247,7 +247,7 @@ public class BladeBracesMatcher implements BracesMatcher {
     private int[] findOriginForDirectiveEnd(String directive) {
         String[] pair = BladeDirectivesUtils.directiveEnd2StartPair(directive);
         Set<String> endDirectivesForBalance = new HashSet<>();
-        Set<String> openDirectives = new HashSet<>(Arrays.asList(pair));
+        Set<String> openDirectives = Set.of(pair);
 
         for (String startDirective : pair) {
             String[] endDirectives = BladeDirectivesUtils.directiveStart2EndPair(startDirective);

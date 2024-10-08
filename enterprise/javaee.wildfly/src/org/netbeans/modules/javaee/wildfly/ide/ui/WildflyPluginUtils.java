@@ -61,6 +61,8 @@ public class WildflyPluginUtils {
 
     public static final Version EAP_7_0 = new Version("7.0.0", false); // NOI18N
 
+    public static final Version EAP_8_0 = new Version("8.0.0", false); // NOI18N
+
     public static final Version WILDFLY_8_0_0 = new Version("8.0.0", true); // NOI18N
 
     public static final Version WILDFLY_8_1_0 = new Version("8.1.0", true); // NOI18N
@@ -440,6 +442,10 @@ public class WildflyPluginUtils {
                     JarFileSystem featurePackProductConfJar = new JarFileSystem(file);
                     return featurePackProductConfJar.getManifest().getMainAttributes();
                 }
+                if (file.getName().startsWith("wildfly-ee-feature-pack-product-conf") && file.getName().endsWith(".jar")) {
+                    JarFileSystem featurePackProductConfJar = new JarFileSystem(file);
+                    return featurePackProductConfJar.getManifest().getMainAttributes();
+                }
             } catch (Exception ignore) {
             }
         }
@@ -661,6 +667,9 @@ public class WildflyPluginUtils {
 
         private Version convertEAP(Version version) {
             if (!version.isWidlfy()) {
+                if (version.compareToIgnoreUpdate(EAP_8_0) >= 0) {
+                    return WILDFLY_28_0_0;
+                }
                 if (version.compareToIgnoreUpdate(EAP_7_0) >= 0) {
                     return WILDFLY_10_0_0;
                 }

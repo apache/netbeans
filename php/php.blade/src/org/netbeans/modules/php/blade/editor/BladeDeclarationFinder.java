@@ -124,7 +124,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
 
             if (nt.getType() == BL_PARAM_STRING || nt.getType() == EXPR_STRING) {
                 Set<Integer> tokensToMatch = BladeLexerUtils.TOKENS_WITH_IDENTIFIABLE_PARAM;
-                Set<Integer> tokensStop = new HashSet<>(Arrays.asList(new Integer[]{HTML}));
+                Set<Integer> tokensStop = Set.of(HTML);
                 org.antlr.v4.runtime.Token matchedToken = BladeAntlrUtils.findBackward(tokens, tokensToMatch, tokensStop);
                 int offsetCorrection = caretOffset - lineOffset;
                 if (matchedToken != null) {

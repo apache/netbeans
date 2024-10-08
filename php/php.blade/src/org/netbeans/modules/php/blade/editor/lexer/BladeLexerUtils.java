@@ -38,12 +38,12 @@ public final class BladeLexerUtils {
     private BladeLexerUtils() {
 
     }
-    public static final Integer[] TOKENS_WITH_IDENTIFIABLE_PARAM_VALUES = new Integer[] {
+
+    public static final Set<Integer> TOKENS_WITH_IDENTIFIABLE_PARAM = Set.of(
         D_EXTENDS, D_INCLUDE, D_INCLUDE_IF, D_INCLUDE_WHEN,
         D_INCLUDE_UNLESS, D_EACH, D_SECTION, D_HAS_SECTION, D_SECTION_MISSING,
         D_PUSH, D_PUSH_IF, D_PREPEND, D_USE, D_INJECT, D_ASSET_BUNDLER
-    };
-    public static final Set<Integer> TOKENS_WITH_IDENTIFIABLE_PARAM = new HashSet<>(Arrays.asList(TOKENS_WITH_IDENTIFIABLE_PARAM_VALUES));
+    );;
 
     public static TokenSequence<? extends PHPTokenId> getPhpTokenSequence(TokenHierarchy<Document> th, final int offset) {
         return getTokenSequence(th, offset, PHPTokenId.language());

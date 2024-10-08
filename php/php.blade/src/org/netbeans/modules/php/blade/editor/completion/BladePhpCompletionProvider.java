@@ -177,7 +177,7 @@ public class BladePhpCompletionProvider implements CompletionProvider {
             case BL_PARAM_STRING -> {
                 String pathName = EditorStringUtils.stripSurroundingQuotes(currentToken.getText());
                 Set<Integer> tokensToMatch = BladeLexerUtils.TOKENS_WITH_IDENTIFIABLE_PARAM;
-                Set<Integer> tokensStop = new HashSet<>(Arrays.asList(new Integer[]{HTML, BL_COMMA, BL_PARAM_CONCAT_OPERATOR}));
+                Set<Integer> tokensStop = Set.of(HTML, BL_COMMA, BL_PARAM_CONCAT_OPERATOR);
 
                 Token directiveToken = BladeAntlrUtils.findBackward(tokens, tokensToMatch, tokensStop);
                 if (directiveToken == null) {

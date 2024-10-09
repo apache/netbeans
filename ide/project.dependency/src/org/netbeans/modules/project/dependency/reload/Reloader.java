@@ -44,6 +44,7 @@ import org.netbeans.modules.project.dependency.ProjectOperationException;
 import org.netbeans.modules.project.dependency.ProjectReload;
 import org.netbeans.modules.project.dependency.ProjectReload.ProjectState;
 import org.netbeans.modules.project.dependency.ProjectReload.StateRequest;
+import static org.netbeans.modules.project.dependency.reload.ProjectReloadInternal.EMPTY_PARTS;
 import org.netbeans.modules.project.dependency.reload.ProjectReloadInternal.StateParts;
 import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation;
 import org.netbeans.modules.project.dependency.spi.ProjectReloadImplementation.ExtendedQuery;
@@ -76,6 +77,7 @@ public final class Reloader {
     final Project project;
     final StateRequest request;
     final ProjectState originalState;
+    final StateParts originalParts;
     final Throwable originTrace;
 
     /**
@@ -137,6 +139,11 @@ public final class Reloader {
         this.project = p;
         this.request = request;
         this.originalState = currentRef == null ? null : currentRef.get();
+        if (originalState == null) {
+            originalParts = EMPTY_PARTS;
+        } else {
+            originalParts = ReloadApiAccessor.get().getParts(originalState);
+        }
         this.forced = request.isForceReload();
         this.variantKey = currentRef == null ? null : currentRef.variantKey;
 
@@ -500,6 +507,9 @@ public final class Reloader {
             long t = f.lastModified().getTime();
             boolean modified = f.getLookup().lookup(SaveCookie.class) != null;
             for (ProjectStateData d : e.getValue()) {
+                if (d.getTimestamp() <= 0) {
+                    continue;
+                }
                 if (modified || d.getTimestamp() < t) {
                     if (LOG.isLoggable(Level.FINE)) {
                         LOG.log(Level.FINER, "CHECK {0}: StateData not consistent: {1}. Modified={2}, file={3}, state={4}", 
@@ -826,22 +836,58 @@ public final class Reloader {
             if (!d.loadedData.isValid()) {
                 break;
             }
-            long ts = d.loadedData.getTimestamp();
-            Collection<FileObject> fos = d.loadedData.getFiles();
-            for (FileObject f : fos) {
-                f.refresh();
-                if (f.lastModified().getTime() > ts) {
-                    d.loadedData.fireChanged(false, true);
-                    break;
-                }
-            }
-            if (!d.loadedData.isConsistent() && request.isConsistent()) {
-                break;
-            }
+            // if the impl asked to retry, it should reload; it's sort of "invalid"
             if (lastRetries.contains(d)) {
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.log(Level.FINE, "CHECK: {0}: implementation requested load retry {1}", new Object[]{toString(), d.impl});
                 }
+                break;
+            }
+            long ts = d.loadedData.getTimestamp();
+            boolean recheck = false;
+            Collection<FileObject> fos = d.loadedData.getFiles();
+            if (ts > 0) {
+                if (fos.isEmpty()) {
+                    LOG.log(Level.FINE, "CHECK: {0}: impl {1} reports no files, validate against other state parts", new Object[]{toString(), d.impl});
+                    // if the state data reports no files, check whether any of state data
+                    // with the same-or-higher timestamp wasn't made inconsistent
+                    for (ProjectReloadImplementation impl : originalParts.keySet()) {
+                        ProjectStateData psd = originalParts.get(impl);
+                        if (psd != null) {
+                            long t = psd.getTimestamp();
+                            if (t >= ts && (!psd.isConsistent() || !psd.isValid())) {
+                                recheck = true;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    // if files are reported, check the file timestamps against the state one
+                    for (FileObject f : fos) {
+                        f.refresh();
+                        if (f.lastModified().getTime() > ts) {
+                            d.loadedData.fireChanged(false, true);
+                            // do not break, the data will be marked as inconsistent and checked
+                            // later if request requires consistency
+                            LOG.log(Level.FINE, "CHECK: {0}: recheck on change - filestamp newer {1} vs. {2}", new Object[]{toString(), f.lastModified().getTime(), ts});
+                            recheck = true;
+                        }
+                    }
+                }
+            } else if (ts == ProjectStateData.TIME_RELOAD) {
+                recheck = true;
+            } else if (ts == ProjectStateData.TIME_RECHECK_ON_CHANGE) {
+                for (ProjectReloadImplementation impl : parts.keySet()) {
+                    ProjectStateData psdOld = originalParts.get(impl);
+                    ProjectStateData psdNew = parts.get(impl);
+                    
+                    if (!Objects.equals(psdOld, psdNew)) {
+                        LOG.log(Level.FINE, "CHECK: {0}: recheck on change - state differs {1} vs. {2}", new Object[]{toString(), psdOld, psdNew});
+                        recheck = true;
+                    }
+                }
+            }
+            if ((recheck || !d.loadedData.isConsistent()) && request.isConsistent()) {
                 break;
             }
             if ((d.impl instanceof ExtendedQuery) && !((ExtendedQuery) d.impl).checkState(request, d.loadedData)) {

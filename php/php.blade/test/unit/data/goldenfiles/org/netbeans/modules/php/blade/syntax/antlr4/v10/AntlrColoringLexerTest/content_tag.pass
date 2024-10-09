@@ -1,6 +1,0 @@
-Token #6 HTML [[@0,0:6='Hello, ',<6>,1:0]]
-Token #5 CONTENT_TAG [[@1,7:8='{{',<5>,1:7]]
-Token #3 BLADE_PHP_ECHO_EXPR [[@2,9:15=' $name ',<3>,1:9]]
-Token #5 CONTENT_TAG [[@3,16:17='}}',<5>,1:16]]
-Token #6 HTML [[@4,18:19='.\n',<6>,1:18]]
-Token #-1 EOF [[@5,20:19='<EOF>',<-1>,2:0]]

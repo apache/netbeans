@@ -33,4 +33,16 @@ public class BladeParserErrorTest extends BladeTestBase {
     public void testUnopendSetError_01() throws Exception {
         checkErrors("testfiles/parser/unopend/unopend_set_error_01.blade.php");
     }
+
+    public void testUclosedSectionError_01() throws Exception {
+        checkErrors("testfiles/parser/unopend/unclosed_section_error_01.blade.php");
+    }
+
+    public void testInlineSectionNoError_01() throws Exception {
+        checkErrors("testfiles/parser/unopend/inline_section_noerror_01.blade.php");
+    }
+    
+    public void testUnclosedDirectiveBracketError_01() throws Exception {
+        checkErrors("testfiles/parser/unopend/unclosed_directive_bracket_error_01.blade.php");
+    }
 }

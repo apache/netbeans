@@ -21,8 +21,6 @@ package org.netbeans.modules.php.blade.syntax.antlr4.v10;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.atn.ATN;
-import org.antlr.v4.runtime.misc.Interval;
 
 /**
  *
@@ -31,11 +29,10 @@ import org.antlr.v4.runtime.misc.Interval;
 public abstract class LexerAdaptor extends Lexer {
 
     private int _currentRuleType = Token.INVALID_TYPE;
-    public int roundParenBalance = 0;
-    public int squareParenBalance = 0;
-    public int curlyParenBalance = 0;
-    public int exitIfModePosition = 0;
-    public boolean compomentTagOpen = false;
+    private int roundParenBalance = 0;
+    private int squareParenBalance = 0;
+    private int curlyParenBalance = 0;
+    private boolean compomentTagOpen = false;
 
     public LexerAdaptor(CharStream input) {
         super(input);
@@ -59,27 +56,13 @@ public abstract class LexerAdaptor extends Lexer {
         setCurrentRuleType(Token.INVALID_TYPE);
         super.reset();
     }
-
-    /**
-     * eager check to see if the character position in a line is at the start
-     *
-     * @return
-     */
-    public boolean IsNewLineOrStart() {
-        return this._tokenStartCharPositionInLine <= 2;
+    
+    public int getRoundParenBalance(){
+        return this.roundParenBalance;
     }
-
-    public boolean peekNextChar(char peekChar) {
-        return (char) this._input.LA(1) == peekChar;
-    }
-
-    public boolean peekNextChars(char peekChar, int number) {
-        for (int i = 1; i < number; i++) {
-            if ((char) this._input.LA(i) != peekChar) {
-                return false;
-            }
-        }
-        return true;
+    
+    public void resetRoundParenBalance(){
+        this.roundParenBalance = 0;
     }
 
     public void increaseRoundParenBalance() {
@@ -89,17 +72,27 @@ public abstract class LexerAdaptor extends Lexer {
     public void decreaseRoundParenBalance() {
         this.roundParenBalance--;
     }
-
-    public boolean endsWith(char ch1, char ch2) {
-        return this._input.LA(1) == ch1 && this._input.LA(2) == ch2;
+    
+    public int getSquareParenBalance(){
+        return this.squareParenBalance;
+    }
+    
+    public void increaseSquareParenBalance() {
+        this.squareParenBalance++;
     }
 
-    public boolean endsWith(char ch1, char ch2, char ch3) {
-        return this._input.LA(1) == ch1
-                && this._input.LA(2) == ch2
-                && this._input.LA(3) == ch3;
+    public void decreaseSquareParenBalance() {
+        this.squareParenBalance--;
     }
 
+    public void increaseCurlyParenBalance() {
+        this.curlyParenBalance++;
+    }
+
+    public void decreaseCurlyParenBalance() {
+        this.curlyParenBalance--;
+    }
+    
     public boolean hasNoBladeParamOpenBracket() {
         return this.roundParenBalance == 0
                 && this.squareParenBalance == 0
@@ -148,6 +141,9 @@ public abstract class LexerAdaptor extends Lexer {
         }
     }
 
+    public void setComponentTagOpenStatus(boolean status){
+        this.compomentTagOpen = status;
+    }
     
     public void consumeHtmlIdentifier(){
         if (this.compomentTagOpen == true) {

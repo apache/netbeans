@@ -1,3 +1,5 @@
 Token #0 BLADE_DIRECTIVE [@include]
-Token #1 PHP_BLADE_EXPRESSION [('path', ['key' => 'value'])]
-Token #2 HTML [\n]
+Token #1 BLADE_PAREN [(]
+Token #2 PHP_BLADE_EXPRESSION ['path', ['key' => 'value']]
+Token #3 BLADE_PAREN [)]
+Token #4 HTML [\n]

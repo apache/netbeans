@@ -233,13 +233,13 @@ PHP_INLINE_START : ('<?php' | '<?=')->pushMode(INSIDE_PHP_INLINE);
 
 
 
-HTML_COMPONENT_PREFIX : '<x-' (CompomentIdentifier |  CompomentIdentifier ('::' CompomentIdentifier)+)? {this.compomentTagOpen = true;};
+HTML_COMPONENT_PREFIX : '<x-' (CompomentIdentifier |  CompomentIdentifier ('::' CompomentIdentifier)+)? {this.setComponentTagOpenStatus(true);};
 HTML_L_COMPONENT : '<x-' CompomentIdentifier {this._input.LA(1) == '>'}? ->type(HTML_COMPONENT_PREFIX);
 JS_SCRIPT : ('$'? '(' StringParam | FullIdentifier ')' ('.' NameString)? |  JsFunctionStart ('.' JsFunctionStart)*) ->skip;
 HTML_TAG_START : '<' FullIdentifier;
 HTML_CLOSE_TAG : ('</' FullIdentifier [\n\r ]* '>')+ ->skip;
-HTML_TAG_SELF_CLOSE : '/>' {this.compomentTagOpen = false;}->type(HTML);
-HTML_CLOSE_SYMBOL : '>' {this.compomentTagOpen = false;} ->type(HTML);
+HTML_TAG_SELF_CLOSE : '/>' {this.setComponentTagOpenStatus(false);}->type(HTML);
+HTML_CLOSE_SYMBOL : '>' {this.setComponentTagOpenStatus(false);} ->type(HTML);
 STRING_PATH : ('"' HTML_PATH* '"' | [\\'] HTML_PATH [\\'])->skip;
 HTML_PATH : (' ')* FullIdentifier ('/' FullIdentifier)+ ('.' NameString)? ('?' NameString (EQ NameString)*)? ->skip;
 HTML_TEXT : (' ')* FullIdentifier ((' ')+ FullIdentifier)+ ->skip;
@@ -303,15 +303,15 @@ L_OTHER : . ->type(HTML), popMode;
 //{{}}, @if, @foreach
 mode INSIDE_PHP_EXPRESSION;
 
-OPEN_EXPR_PAREN : {this.roundParenBalance == 0}? '(' {this.increaseRoundParenBalance();} ->more;
-CLOSE_EXPR_PAREN : {this.roundParenBalance == 1}? ')' 
+OPEN_EXPR_PAREN : {this.getRoundParenBalance() == 0}? '(' {this.increaseRoundParenBalance();} ->more;
+CLOSE_EXPR_PAREN : {this.getRoundParenBalance() == 1}? ')' 
     {this.decreaseRoundParenBalance();}->type(PHP_EXPRESSION),mode(DEFAULT_MODE);
 
-LPAREN : {this.roundParenBalance > 0}? '(' {this.increaseRoundParenBalance();}->more;
-RPAREN : {this.roundParenBalance > 0}? ')' {this.decreaseRoundParenBalance();}->more;
+LPAREN : {this.getRoundParenBalance() > 0}? '(' {this.increaseRoundParenBalance();}->more;
+RPAREN : {this.getRoundParenBalance() > 0}? ')' {this.decreaseRoundParenBalance();}->more;
 
 //in case of lexer restart context
-EXIT_RPAREN : ')' {this.roundParenBalance == 0}?->type(PHP_EXPRESSION),mode(DEFAULT_MODE);
+EXIT_RPAREN : ')' {this.getRoundParenBalance() == 0}?->type(PHP_EXPRESSION),mode(DEFAULT_MODE);
 
 PHP_EXPRESSION_MORE : . ->more;
 
@@ -321,18 +321,18 @@ EXIT_EOF : EOF->type(ERROR),popMode;
 mode LOOK_FOR_PHP_COMPOSED_EXPRESSION;
 
 WS_COMPOSED_EXPR : [ ]+->skip;
-BLADE_EXPR_LPAREN : '(' {this.roundParenBalance = 0;} ->pushMode(INSIDE_PHP_COMPOSED_EXPRESSION);
+BLADE_EXPR_LPAREN : '(' {this.resetRoundParenBalance();} ->pushMode(INSIDE_PHP_COMPOSED_EXPRESSION);
 
 L_COMPOSED_EXPR_OTHER : . ->type(HTML), popMode;
 
 //{{}}, @if, @foreach
 mode INSIDE_PHP_COMPOSED_EXPRESSION;
 
-EXPR_SQ_LPAREN : '[' {this.squareParenBalance++;}->type(BL_SQ_LPAREN);
-EXPR_SQ_RPAREN : ']' {this.squareParenBalance--;}->type(BL_SQ_RPAREN);
+EXPR_SQ_LPAREN : '[' {this.increaseSquareParenBalance();}->type(BL_SQ_LPAREN);
+EXPR_SQ_RPAREN : ']' {this.decreaseSquareParenBalance();}->type(BL_SQ_RPAREN);
 
-EXPR_CURLY_LPAREN : '{' {this.curlyParenBalance++;}->type(PHP_EXPRESSION);
-EXPR_CURLY_RPAREN : '}' {this.curlyParenBalance--;}->type(PHP_EXPRESSION);
+EXPR_CURLY_LPAREN : '{' {this.increaseCurlyParenBalance();}->type(PHP_EXPRESSION);
+EXPR_CURLY_RPAREN : '}' {this.decreaseCurlyParenBalance();}->type(PHP_EXPRESSION);
 
 EXPR_STRING : DOUBLE_QUOTED_STRING_FRAGMENT | SINGLE_QUOTED_STRING_FRAGMENT;
 
@@ -356,7 +356,7 @@ EXIT_COMPOSED_EXPRESSION_EOF : EOF->type(ERROR),popMode;
 mode LOOK_FOR_BLADE_PARAMETERS;
 
 WS_BL_PARAM : [ ]+->skip;
-OPEN_BL_PARAM_PAREN_MORE : '(' {this.roundParenBalance = 0;} ->type(BLADE_PARAM_LPAREN),pushMode(INSIDE_BLADE_PARAMETERS);
+OPEN_BL_PARAM_PAREN_MORE : '(' {this.resetRoundParenBalance();} ->type(BLADE_PARAM_LPAREN),pushMode(INSIDE_BLADE_PARAMETERS);
 
 L_BL_PARAM_OTHER : . ->type(HTML), popMode;
 
@@ -364,7 +364,7 @@ mode FOREACH_LOOP_EXPRESSION;
 
 FOREACH_WS_EXPR : [ ]+->skip;
 FOREACH_LOOP_LPAREN : '(' {this.increaseRoundParenBalance();};
-FOREACH_LOOP_RPAREN : ')' {this.decreaseRoundParenBalance(); if (this.roundParenBalance == 0){this.popMode();}};
+FOREACH_LOOP_RPAREN : ')' {this.decreaseRoundParenBalance(); if (this.getRoundParenBalance() == 0){this.popMode();}};
 
 FOREACH_AS : 'as';
 
@@ -385,11 +385,11 @@ mode INSIDE_BLADE_PARAMETERS;
 
 BL_PARAM_LINE_COMMENT : LineComment->channel(COMMENT);
 
-BL_SQ_LPAREN : '[' {this.squareParenBalance++;};
-BL_SQ_RPAREN : ']' {this.squareParenBalance--;};
+BL_SQ_LPAREN : '[' {this.increaseSquareParenBalance();};
+BL_SQ_RPAREN : ']' {this.decreaseSquareParenBalance();};
 
-BL_CURLY_LPAREN : '{' {this.curlyParenBalance++;}->type(BLADE_PARAM_EXTRA);
-BL_CURLY_RPAREN : '}' {this.curlyParenBalance--;}->type(BLADE_PARAM_EXTRA);
+BL_CURLY_LPAREN : '{' {this.increaseCurlyParenBalance();}->type(BLADE_PARAM_EXTRA);
+BL_CURLY_RPAREN : '}' {this.decreaseCurlyParenBalance();}->type(BLADE_PARAM_EXTRA);
 
 BL_PARAM_LPAREN : '(' {this.increaseRoundParenBalance();}->type(BLADE_PARAM_EXTRA);
 BL_PARAM_RPAREN : ')' {consumeParamRParen();};

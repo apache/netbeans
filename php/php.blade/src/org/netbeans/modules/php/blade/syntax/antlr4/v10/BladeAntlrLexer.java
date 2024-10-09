@@ -372,21 +372,21 @@ public class BladeAntlrLexer extends LexerAdaptor {
 	private void HTML_COMPONENT_PREFIX_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 0:
-			this.compomentTagOpen = true;
+			this.setComponentTagOpenStatus(true);
 			break;
 		}
 	}
 	private void HTML_TAG_SELF_CLOSE_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 1:
-			this.compomentTagOpen = false;
+			this.setComponentTagOpenStatus(false);
 			break;
 		}
 	}
 	private void HTML_CLOSE_SYMBOL_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 2:
-			this.compomentTagOpen = false;
+			this.setComponentTagOpenStatus(false);
 			break;
 		}
 	}
@@ -428,35 +428,35 @@ public class BladeAntlrLexer extends LexerAdaptor {
 	private void BLADE_EXPR_LPAREN_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 8:
-			this.roundParenBalance = 0;
+			this.resetRoundParenBalance();
 			break;
 		}
 	}
 	private void EXPR_SQ_LPAREN_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 9:
-			this.squareParenBalance++;
+			this.increaseSquareParenBalance();
 			break;
 		}
 	}
 	private void EXPR_SQ_RPAREN_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 10:
-			this.squareParenBalance--;
+			this.decreaseSquareParenBalance();
 			break;
 		}
 	}
 	private void EXPR_CURLY_LPAREN_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 11:
-			this.curlyParenBalance++;
+			this.increaseCurlyParenBalance();
 			break;
 		}
 	}
 	private void EXPR_CURLY_RPAREN_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 12:
-			this.curlyParenBalance--;
+			this.decreaseCurlyParenBalance();
 			break;
 		}
 	}
@@ -477,7 +477,7 @@ public class BladeAntlrLexer extends LexerAdaptor {
 	private void OPEN_BL_PARAM_PAREN_MORE_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 15:
-			this.roundParenBalance = 0;
+			this.resetRoundParenBalance();
 			break;
 		}
 	}
@@ -491,35 +491,35 @@ public class BladeAntlrLexer extends LexerAdaptor {
 	private void FOREACH_LOOP_RPAREN_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 17:
-			this.decreaseRoundParenBalance(); if (this.roundParenBalance == 0){this.popMode();}
+			this.decreaseRoundParenBalance(); if (this.getRoundParenBalance() == 0){this.popMode();}
 			break;
 		}
 	}
 	private void BL_SQ_LPAREN_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 18:
-			this.squareParenBalance++;
+			this.increaseSquareParenBalance();
 			break;
 		}
 	}
 	private void BL_SQ_RPAREN_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 19:
-			this.squareParenBalance--;
+			this.decreaseSquareParenBalance();
 			break;
 		}
 	}
 	private void BL_CURLY_LPAREN_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 20:
-			this.curlyParenBalance++;
+			this.increaseCurlyParenBalance();
 			break;
 		}
 	}
 	private void BL_CURLY_RPAREN_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 21:
-			this.curlyParenBalance--;
+			this.decreaseCurlyParenBalance();
 			break;
 		}
 	}
@@ -651,35 +651,35 @@ public class BladeAntlrLexer extends LexerAdaptor {
 	private boolean OPEN_EXPR_PAREN_sempred(RuleContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 9:
-			return this.roundParenBalance == 0;
+			return this.getRoundParenBalance() == 0;
 		}
 		return true;
 	}
 	private boolean CLOSE_EXPR_PAREN_sempred(RuleContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 10:
-			return this.roundParenBalance == 1;
+			return this.getRoundParenBalance() == 1;
 		}
 		return true;
 	}
 	private boolean LPAREN_sempred(RuleContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 11:
-			return this.roundParenBalance > 0;
+			return this.getRoundParenBalance() > 0;
 		}
 		return true;
 	}
 	private boolean RPAREN_sempred(RuleContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 12:
-			return this.roundParenBalance > 0;
+			return this.getRoundParenBalance() > 0;
 		}
 		return true;
 	}
 	private boolean EXIT_RPAREN_sempred(RuleContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 13:
-			return this.roundParenBalance == 0;
+			return this.getRoundParenBalance() == 0;
 		}
 		return true;
 	}

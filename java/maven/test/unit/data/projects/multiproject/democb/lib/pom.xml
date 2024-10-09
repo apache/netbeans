@@ -23,24 +23,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.exampleca</groupId>
-  <artifactId>oci</artifactId>
+  <artifactId>lib</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>${packaging}</packaging>
-  <name>democa-${artifactId}</name>
+  <packaging>jar</packaging>
 
   <parent>
     <groupId>com.exampleca</groupId>
     <artifactId>democa-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
+
   <properties>
     <packaging>jar</packaging>
     <jdk.version>17</jdk.version>
     <release.version>17</release.version>
     <micronaut.version>4.0.3-oracle-00001</micronaut.version>
-    <micronaut.test.resources.enabled>true</micronaut.test.resources.enabled>
-    <micronaut.runtime>netty</micronaut.runtime>
-    <exec.mainClass>com.exampleca.Application</exec.mainClass>
   </properties>
 
   <repositories>
@@ -68,8 +65,13 @@
   </dependencyManagement>
   <dependencies>
     <dependency>
-      <groupId>com.oracle.oci.sdk</groupId>
-      <artifactId>oci-java-sdk-addons-graalvm</artifactId>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-inject</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.micronaut.validation</groupId>
+      <artifactId>micronaut-validation</artifactId>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -88,8 +90,8 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>io.micronaut.flyway</groupId>
-      <artifactId>micronaut-flyway</artifactId>
+      <groupId>io.micronaut.objectstorage</groupId>
+      <artifactId>micronaut-object-storage-core</artifactId>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -103,16 +105,6 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>io.micronaut.oraclecloud</groupId>
-      <artifactId>micronaut-oraclecloud-httpclient-netty</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.micronaut.oraclecloud</groupId>
-      <artifactId>micronaut-oraclecloud-sdk</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
       <groupId>io.micronaut.serde</groupId>
       <artifactId>micronaut-serde-jackson</artifactId>
       <scope>compile</scope>
@@ -120,11 +112,6 @@
     <dependency>
       <groupId>io.micronaut.sql</groupId>
       <artifactId>micronaut-jdbc-hikari</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.micronaut.validation</groupId>
-      <artifactId>micronaut-validation</artifactId>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -136,6 +123,11 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-http-server</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.micronaut.testresources</groupId>
@@ -157,40 +149,16 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.exampleca</groupId>
-      <artifactId>lib</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
   </dependencies>
+
   <build>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+      </resource>
+    </resources>
+
     <plugins>
-      <plugin>
-        <groupId>com.google.cloud.tools</groupId>
-        <artifactId>jib-maven-plugin</artifactId>
-        <configuration>
-          <to>
-            <image>${project.name}</image>
-          </to>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>io.micronaut.maven</groupId>
-        <artifactId>micronaut-maven-plugin</artifactId>
-          <configuration>
-            <baseImageRun>frolvlad/alpine-glibc:alpine-3.16</baseImageRun>
-          </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -205,12 +173,6 @@
               <groupId>io.micronaut.data</groupId>
               <artifactId>micronaut-data-processor</artifactId>
               <version>${micronaut.data.version}</version>
-              <exclusions>
-                <exclusion>
-                  <groupId>io.micronaut</groupId>
-                  <artifactId>micronaut-inject</artifactId>
-                </exclusion>
-              </exclusions>
             </path>
             <path>
               <groupId>io.micronaut</groupId>
@@ -221,23 +183,11 @@
               <groupId>io.micronaut.serde</groupId>
               <artifactId>micronaut-serde-processor</artifactId>
               <version>${micronaut.serialization.version}</version>
-              <exclusions>
-                <exclusion>
-                  <groupId>io.micronaut</groupId>
-                  <artifactId>micronaut-inject</artifactId>
-                </exclusion>
-              </exclusions>
             </path>
             <path>
               <groupId>io.micronaut.validation</groupId>
               <artifactId>micronaut-validation-processor</artifactId>
               <version>${micronaut.validation.version}</version>
-              <exclusions>
-                <exclusion>
-                  <groupId>io.micronaut</groupId>
-                  <artifactId>micronaut-inject</artifactId>
-                </exclusion>
-              </exclusions>
             </path>
           </annotationProcessorPaths>
         </configuration>

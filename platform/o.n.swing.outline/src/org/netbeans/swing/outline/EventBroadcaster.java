@@ -672,11 +672,11 @@ final class EventBroadcaster implements TableModelListener, TreeModelListener, E
         
         //Start with the number of children of whatever was expanded/collapsed
         int count = getTreeModel().getChildCount(path.getLastPathComponent());
-        
+
         if (count == 0) {
             return null;
         }
-        
+
         //Iterate any of the expanded children, adding in their child counts
         for (int i=0; i < paths.length; i++) {
             count += getTreeModel().getChildCount(paths[i].getLastPathComponent());

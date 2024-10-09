@@ -71,6 +71,7 @@ import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEditCapabilities;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
+import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
@@ -303,55 +304,64 @@ public class LSPBindings {
                 foundServer = true;
                 try {
                     LanguageClientImpl lci = new LanguageClientImpl();
-                    InputStream in = LanguageServerProviderAccessor.getINSTANCE().getInputStream(desc);
-                    OutputStream out = LanguageServerProviderAccessor.getINSTANCE().getOutputStream(desc);
-                    Process p = LanguageServerProviderAccessor.getINSTANCE().getProcess(desc);
-                    Launcher.Builder<LanguageServer> launcherBuilder = new LSPLauncher.Builder<LanguageServer>()
-                            .setLocalService(lci)
-                            .setRemoteInterface(LanguageServer.class)
-                            .setInput(in)
-                            .setOutput(out)
-                            .configureGson(gson -> {
-                                gson.registerTypeAdapter(SemanticTokensLegend.class, new InstanceCreator<SemanticTokensLegend>() {
-                                    @Override
-                                    public SemanticTokensLegend createInstance(Type type) {
-                                        return new SemanticTokensLegend(Collections.emptyList(), Collections.emptyList());
-                                    }
+                    LanguageServer server = LanguageServerProviderAccessor.getINSTANCE().getServer(desc);
+                    Process process;
+                    if (server == null) {
+                        InputStream in = LanguageServerProviderAccessor.getINSTANCE().getInputStream(desc);
+                        OutputStream out = LanguageServerProviderAccessor.getINSTANCE().getOutputStream(desc);
+                        process = LanguageServerProviderAccessor.getINSTANCE().getProcess(desc);
+                        Launcher.Builder<LanguageServer> launcherBuilder = new LSPLauncher.Builder<LanguageServer>()
+                                .setLocalService(lci)
+                                .setRemoteInterface(LanguageServer.class)
+                                .setInput(in)
+                                .setOutput(out)
+                                .configureGson(gson -> {
+                                    gson.registerTypeAdapter(SemanticTokensLegend.class, new InstanceCreator<SemanticTokensLegend>() {
+                                        @Override
+                                        public SemanticTokensLegend createInstance(Type type) {
+                                            return new SemanticTokensLegend(Collections.emptyList(), Collections.emptyList());
+                                        }
+                                    });
+                                    gson.registerTypeAdapter(SemanticTokens.class, new InstanceCreator<SemanticTokens>() {
+                                        @Override
+                                        public SemanticTokens createInstance(Type type) {
+                                            return new SemanticTokens(Collections.emptyList());
+                                        }
+                                    });
                                 });
-                                gson.registerTypeAdapter(SemanticTokens.class, new InstanceCreator<SemanticTokens>() {
-                                    @Override
-                                    public SemanticTokens createInstance(Type type) {
-                                        return new SemanticTokens(Collections.emptyList());
-                                    }
-                                });
+
+                        if (LOG.isLoggable(Level.FINER)) {
+                            PrintWriter pw = new PrintWriter(new Writer() {
+                                StringBuffer sb = new StringBuffer();
+
+                                @Override
+                                public void write(char[] cbuf, int off, int len) throws IOException {
+                                    sb.append(cbuf, off, len);
+                                }
+
+                                @Override
+                                public void flush() throws IOException {
+                                    LOG.finer(sb.toString());
+                                }
+
+                                @Override
+                                public void close() throws IOException {
+                                    sb.setLength(0);
+                                    sb.trimToSize();
+                                }
                             });
-
-                    if (LOG.isLoggable(Level.FINER)) {
-                        PrintWriter pw = new PrintWriter(new Writer() {
-                            StringBuffer sb = new StringBuffer();
-
-                            @Override
-                            public void write(char[] cbuf, int off, int len) throws IOException {
-                                sb.append(cbuf, off, len);
-                            }
-
-                            @Override
-                            public void flush() throws IOException {
-                                LOG.finer(sb.toString());
-                            }
-
-                            @Override
-                            public void close() throws IOException {
-                                sb.setLength(0);
-                                sb.trimToSize();
-                            }
-                        });
-                        launcherBuilder.traceMessages(pw);
+                            launcherBuilder.traceMessages(pw);
+                        }
+                        Launcher<LanguageServer> launcher = launcherBuilder.create();
+                        launcher.startListening();
+                        server = launcher.getRemoteProxy();
+                    } else {
+                        process = null;
+                        if (server instanceof LanguageClientAware aware) {
+                            aware.connect(lci);
+                        }
                     }
-                    Launcher<LanguageServer> launcher = launcherBuilder.create();
-                    launcher.startListening();
-                    LanguageServer server = launcher.getRemoteProxy();
-                    InitializeResult result = initServer(p, server, dir); //XXX: what if a different root is expected????
+                    InitializeResult result = initServer(process, server, dir); //XXX: what if a different root is expected????
                     server.initialized(new InitializedParams());
                     b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
                     // Register cleanup via LSPReference#run

@@ -44,7 +44,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import java.util.zip.ZipError;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
@@ -886,10 +885,8 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                             BooleanQuery bq = new BooleanQuery.Builder()
                                     .add(new BooleanClause(new PrefixQuery(new Term(ArtifactInfo.UINFO, id)), BooleanClause.Occur.MUST))
                                     .build();
-                            IteratorSearchResponse response = repeatedPagedSearch(bq, indexingContext, MAX_RESULT_COUNT);
-                            add = response == null || response.getTotalHitsCount() == 0;
-                            if (response != null) {
-                                response.close();
+                            try (IteratorSearchResponse response = repeatedPagedSearch(bq, indexingContext, MAX_RESULT_COUNT)) {
+                                add = response == null || response.getTotalHitsCount() == 0;
                             }
                         }
                         if (add) {
@@ -903,17 +900,16 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                     }
 
                 }
-                try {
-                    indexer.addArtifactsToIndex(artifactContexts, indexingContext);
-                    storeGroupCache(repo, indexingContext);
-                } catch (ZipError err) {
-                    LOGGER.log(Level.INFO, "#230581 concurrent access to local repository file. Skipping..", err);
-                }
+                indexer.addArtifactsToIndex(artifactContexts, indexingContext);
+                storeGroupCache(repo, indexingContext);
 
                 return null;
             });
         } catch (MutexException ex) {
-            Exceptions.printStackTrace(ex);
+            List<Artifact> sample = artifacts.stream().limit(5).toList();
+            LOGGER.log(Level.WARNING,
+                "Unable to update index with artifact(s): " + sample
+                        + (artifacts.size() > sample.size() ? (" +" + (artifacts.size() - sample.size()) + " more") : ""), ex);
         } catch (NullPointerException x) {
             LOGGER.log(Level.INFO, "#201057", x);
         }

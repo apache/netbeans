@@ -46,6 +46,8 @@ public class BladeLexer extends AbstractAntlrLexerBridge<BladeAntlrColoringLexer
         int type = antlrToken.getType();
         //System.out.println(text + " " + type);
         switch (type) {
+            case BladeAntlrColoringLexer.BLADE_PAREN:
+                return token(BLADE_PAREN);
             case BladeAntlrColoringLexer.BLADE_COMMENT_START:
                 return token(BLADE_COMMENT_START);
             case BladeAntlrColoringLexer.BLADE_COMMENT:
@@ -76,7 +78,6 @@ public class BladeLexer extends AbstractAntlrLexerBridge<BladeAntlrColoringLexer
             case BladeAntlrColoringLexer.D_AT:
                 return token(BLADE_DIRECTIVE_UNKNOWN);
             case BladeAntlrColoringLexer.ERROR:
-            case BladeAntlrColoringLexer.WS_EXPR:
                 return token(WS_D);
             default:
                 return token(OTHER);

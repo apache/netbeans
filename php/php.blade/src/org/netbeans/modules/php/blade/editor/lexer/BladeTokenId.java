@@ -42,6 +42,7 @@ public enum BladeTokenId implements TokenId {
     BLADE_COMMENT_END("blade_comment"),
     BLADE_DIRECTIVE("blade_directive"),
     BLADE_ECHO_DELIMITOR("blade_echo_delimiters"),
+    BLADE_PAREN(""),
     HTML("html"),
     WS_D("html"),
     BLADE_DIRECTIVE_UNKNOWN("at_string"),
@@ -84,17 +85,36 @@ public enum BladeTokenId implements TokenId {
 
                     //php brace matcher freeze issue patch
                     String tokenText = token.text().toString();
-                    int startOffset = 1;
-                    int endOffset = 1;
+                    int startOffset = 0;
+                    int endOffset = 0;
 
+                    if (!tokenText.startsWith("(") && !tokenText.startsWith("[")){
+                        return LanguageEmbedding.create(phpLanguage, startOffset, endOffset, false);
+                    }
+                                      
+                    //php brace matcher freeze issue patch
                     if (tokenText.startsWith("((") && tokenText.endsWith("))")){ //NOI18N
+                        startOffset = 2;
+                        endOffset = 2;
+                    } else if (tokenText.startsWith("[[") && tokenText.endsWith("]]")){ //NOI18N
                         startOffset = 2;
                         endOffset = 2;
                     } else if (tokenText.startsWith("([") && tokenText.endsWith("])")){ //NOI18N
                         startOffset = 2;
                         endOffset = 2;
-                    } else if (tokenText.startsWith("([")){ //NOI18N
+                    } else if (tokenText.startsWith("[(") && tokenText.endsWith(")]")){ //NOI18N
                         startOffset = 2;
+                        endOffset = 2;
+                    } else if (tokenText.startsWith("([") || tokenText.startsWith("[(")){ //NOI18N
+                        startOffset = 2;
+                    } else if (tokenText.startsWith("(") && tokenText.endsWith(")")){ //NOI18N
+                        startOffset = 1;
+                        endOffset = 1;
+                    } else if (tokenText.startsWith("[") && tokenText.endsWith("]")){ //NOI18N
+                        startOffset = 1;
+                        endOffset = 1;
+                    }  else if (tokenText.startsWith("(") || tokenText.startsWith("[")){ //NOI18N
+                        startOffset = 1;
                     }
                     return LanguageEmbedding.create(phpLanguage, startOffset, endOffset, false);
                 }

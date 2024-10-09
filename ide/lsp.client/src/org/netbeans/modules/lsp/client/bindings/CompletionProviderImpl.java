@@ -173,12 +173,18 @@ public class CompletionProviderImpl implements CompletionProvider {
                     }
                     for (CompletionItem i : items) {
                         String insert = i.getInsertText() != null ? i.getInsertText() : i.getLabel();
-                        String leftLabel = encode(i.getLabel());
+                        String leftLabel;
                         String rightLabel;
-                        if (i.getDetail() != null) {
-                            rightLabel = encode(i.getDetail());
+                        if (i.getLabelDetails() != null) {
+                            leftLabel = encode(i.getLabel() + (i.getLabelDetails().getDetail() != null ? i.getLabelDetails().getDetail() : ""));
+                            rightLabel = encode(i.getLabelDetails().getDescription());
                         } else {
-                            rightLabel = null;
+                            leftLabel = encode(i.getLabel());
+                            if (i.getDetail() != null) {
+                                rightLabel = encode(i.getDetail());
+                            } else {
+                                rightLabel = null;
+                            }
                         }
                         String sortText = i.getSortText() != null ? i.getSortText() : i.getLabel();
                         CompletionItemKind kind = i.getKind();
@@ -298,6 +304,7 @@ public class CompletionProviderImpl implements CompletionProvider {
                                                             default:
                                                             case "plaintext": documentation.append("<pre>\n").append(content.getValue()).append("\n</pre>"); break;
                                                             case "markdown": documentation.append(HtmlRenderer.builder().build().render(Parser.builder().build().parse(content.getValue()))); break;
+                                                            case "html": documentation.append(content.getValue()); break;
                                                         }
                                                     }
                                                     return documentation.toString();

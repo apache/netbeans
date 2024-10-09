@@ -108,6 +108,7 @@
             </test-dependencies>
             <public-packages>
                 <package>org.netbeans.api.lsp</package>
+                <package>org.netbeans.api.lsp.bridge</package>
                 <package>org.netbeans.spi.lsp</package>
             </public-packages>
         </data>

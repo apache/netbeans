@@ -88,6 +88,10 @@ public abstract class ColoringLexerAdaptor extends Lexer {
     public void decreaseRoundParenBalance() {
         this.roundParenBalance--;
     }
+    
+    public void resetRoundParenBalance() {
+        this.roundParenBalance = 0;
+    }
 
     public boolean endsWith(char ch1, char ch2) {
         return this._input.LA(1) == ch1 && this._input.LA(2) == ch2;
@@ -120,16 +124,5 @@ public abstract class ColoringLexerAdaptor extends Lexer {
     public void consumeExprToken(){
         this.more();
     }
-    
-    public void testForFreezeCombination(){
-        if (this.roundParenBalance <= 1 && 
-                (this._input.LA(1) == ')' 
-                ||  this._input.LA(1) == ']')){
-            this.setType(BladeAntlrColoringLexer.ERROR);
-        } else {
-            this.consumeExprToken();
-        }
-    }
-
 }
 

@@ -44,7 +44,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import java.util.zip.ZipError;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
@@ -903,12 +902,8 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                     }
 
                 }
-                try {
-                    indexer.addArtifactsToIndex(artifactContexts, indexingContext);
-                    storeGroupCache(repo, indexingContext);
-                } catch (ZipError err) {
-                    LOGGER.log(Level.INFO, "#230581 concurrent access to local repository file. Skipping..", err);
-                }
+                indexer.addArtifactsToIndex(artifactContexts, indexingContext);
+                storeGroupCache(repo, indexingContext);
 
                 return null;
             });

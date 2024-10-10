@@ -485,6 +485,9 @@ public enum NodeType {
     // definitions to handle variable syntax
     , preservedToken
     , preservedTokenTopLevel
+    // {} block
+    , braceBlock2
+    // simple brace block
     , braceBlock
     , bracketBlock
     , parenBlock

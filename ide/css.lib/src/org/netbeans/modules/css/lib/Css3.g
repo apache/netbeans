@@ -713,11 +713,8 @@ atRuleId
 	;
 
 generic_at_rule
-    : AT_IDENT ws? ( atRuleId ws? )?
-        LBRACE
-        	syncTo_RBRACE
-        RBRACE
-	;
+    : AT_IDENT ws ((LBRACE) => braceBlock2 | (componentValue) => componentValue) ((ws (LBRACE | (componentValue) => componentValue)) => (ws ((LBRACE) => braceBlock2 | (componentValue) => componentValue)))*;
+
 moz_document
 	:
 	MOZ_DOCUMENT_SYM ws? ( moz_document_function ws?) ( COMMA ws? moz_document_function ws? )*
@@ -899,7 +896,7 @@ declaration
     | (cp_mixin_declaration)=>cp_mixin_declaration
     | (cp_mixin_call)=> cp_mixin_call (ws? IMPORTANT_SYM)?
     | (cp_mixin_call)=> {isScssSource()}? cp_mixin_call (ws? IMPORTANT_SYM)?    
-    | {isCssPreprocessorSource()}? at_rule
+    | at_rule
     | {isScssSource()}? sass_control
     | {isScssSource()}? sass_extend
     | {isScssSource()}? sass_debug
@@ -1096,7 +1093,15 @@ preservedToken: ~ (LPAREN | LBRACE | LBRACKET | RPAREN | RBRACE | RBRACKET);
 
 preservedTokenTopLevel: ~ (LPAREN | LBRACE | LBRACKET | RPAREN | RBRACE | RBRACKET | SEMI );
 
-braceBlock: LBRACE componentValue+ RBRACE;
+// {} block
+braceBlock2:
+    LBRACE ws?
+        declarations?
+    RBRACE
+    ;
+
+// simple brace block
+braceBlock: LBRACE componentValue* RBRACE;
 
 bracketBlock: LBRACKET componentValue+ RBRACKET;
 

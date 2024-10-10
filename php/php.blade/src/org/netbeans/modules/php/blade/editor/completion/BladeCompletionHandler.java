@@ -232,14 +232,14 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
         CustomDirectives.getInstance(project).filterAction(new CustomDirectives.FilterCallback() {
             @Override
             public void filterDirectiveName(CustomDirectives.CustomDirective directive, FileObject file) {
-                DirectiveElement directiveEl = new DirectiveElement(directive.name, file);
-                if (directive.name.startsWith(prefix)) {
+                DirectiveElement directiveEl = new DirectiveElement(directive.getName(), file);
+                if (directive.getName().startsWith(prefix)) {
                     int anchorOffset = computeAnchorOffset(prefix, completionContext.getCaretOffset());
                     completionProposals.add(
                             new BladeCompletionProposal.CustomDirective(
                                     directiveEl,
                                     anchorOffset,
-                                    directive.name
+                                    directive.getName()
                             ));
                 }
             }

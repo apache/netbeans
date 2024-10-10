@@ -275,9 +275,9 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                 CustomDirectives.getInstance(projectOwner).filterAction(new CustomDirectives.FilterCallbackDeclaration(dlcustomDirective) {
                     @Override
                     public void filterDirectiveName(CustomDirective directive, FileObject file) {
-                        if (directive.name.equals(directiveNameFound)) {
+                        if (directive.getName().equals(directiveNameFound)) {
                             NamedElement customDirectiveHandle = new NamedElement(directiveNameFound, file, ElementType.CUSTOM_DIRECTIVE);
-                            DeclarationFinder.DeclarationLocation newLoc = new DeclarationFinder.DeclarationLocation(file, directive.offset, customDirectiveHandle);
+                            DeclarationFinder.DeclarationLocation newLoc = new DeclarationFinder.DeclarationLocation(file, directive.getOffset(), customDirectiveHandle);
                             this.location.addAlternative(new AlternativeLocationImpl(newLoc));
                         }
                     }

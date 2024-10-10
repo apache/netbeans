@@ -31,15 +31,17 @@ import org.netbeans.modules.parsing.spi.EmbeddingProvider;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.blade.editor.BladeLanguage;
 import org.netbeans.modules.php.blade.editor.lexer.BladeTokenId;
+
 /**
- *
+ * only for simple <?php ?> content
+ * 
  * @author bogdan
  */
 @EmbeddingProvider.Registration(
         mimeType = BladeLanguage.MIME_TYPE,
         targetMimeType = FileUtils.PHP_MIME_TYPE)
 public class BladePhpEmbeddingProvider extends EmbeddingProvider {
-    public static final String TARGET_MIME_TYPE = FileUtils.PHP_MIME_TYPE; //NOI18N
+    public static final String TARGET_MIME_TYPE = FileUtils.PHP_MIME_TYPE;
 
     @Override
     public List<Embedding> getEmbeddings(final Snapshot snapshot) {
@@ -68,13 +70,13 @@ public class BladePhpEmbeddingProvider extends EmbeddingProvider {
             if (id.equals(BladeTokenId.PHP_INLINE)) {
                 embeddings.add(snapshot.create(offset, t.length(), TARGET_MIME_TYPE));
             } else {
-                fake = new String(new char[tText.length()]).replace("\0", "@");
+                fake = new String(new char[tText.length()]).replace("\0", "@"); //NOI18N
                 embeddings.add(snapshot.create(fake, TARGET_MIME_TYPE));
             }
         }
 
         if (embeddings.isEmpty()) {
-            return Collections.singletonList(snapshot.create("", TARGET_MIME_TYPE));
+            return Collections.singletonList(snapshot.create("", TARGET_MIME_TYPE)); //NOI18N
         } else {
             return Collections.singletonList(Embedding.create(embeddings));
         }

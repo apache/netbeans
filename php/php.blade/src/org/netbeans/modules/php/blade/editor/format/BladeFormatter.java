@@ -75,7 +75,7 @@ public class BladeFormatter implements Formatter {
                     if (context.isIndent()) {
                         int lineStart = context.lineStartOffset(context.caretOffset());
                         String lineText = doc.getText(lineStart, context.caretOffset() - lineStart);
-                        if (!lineText.isEmpty() && lineText.replaceAll(" ", "").isEmpty()) {
+                        if (!lineText.isEmpty() && lineText.replaceAll(" ", "").isEmpty()) { //NOI18N
                             return;
                         }
                     }
@@ -89,7 +89,7 @@ public class BladeFormatter implements Formatter {
         };
 
         String lookupClassName = Lookup.getDefault().getClass().getSimpleName();
-        if (lookupClassName.equals("MockLookup")) {
+        if (lookupClassName.equals("MockLookup")) { //NOI18N
             //test mode
             rn.run();
         } else {

@@ -53,10 +53,12 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import org.eclipse.lsp4j.ClientCapabilities;
+import org.eclipse.lsp4j.DiagnosticWorkspaceCapabilities;
 import org.eclipse.lsp4j.DocumentSymbolCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.InitializedParams;
+import org.eclipse.lsp4j.PublishDiagnosticsCapabilities;
 import org.eclipse.lsp4j.ResourceOperationKind;
 import org.eclipse.lsp4j.SemanticTokens;
 import org.eclipse.lsp4j.SemanticTokensCapabilities;
@@ -427,6 +429,8 @@ public class LSPBindings {
        wcc.getWorkspaceEdit().setResourceOperations(Arrays.asList(ResourceOperationKind.Create, ResourceOperationKind.Delete, ResourceOperationKind.Rename));
        SymbolCapabilities sc = new SymbolCapabilities(new SymbolKindCapabilities(Arrays.asList(SymbolKind.values())));
        wcc.setSymbol(sc);
+       PublishDiagnosticsCapabilities publishDiagnostics = new PublishDiagnosticsCapabilities();
+       tdcc.setPublishDiagnostics(publishDiagnostics);
        initParams.setCapabilities(new ClientCapabilities(wcc, tdcc, null));
        CompletableFuture<InitializeResult> initResult = server.initialize(initParams);
        while (true) {

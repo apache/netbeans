@@ -458,6 +458,7 @@ public class JavaKit extends NbEditorKit {
                 if (isJavadocTouched) {
                     blockCommentComplete(doc, dotPos, context);
                 }
+                TypingCompletion.javadocLineRunCompletion(context);
             }
         }
 

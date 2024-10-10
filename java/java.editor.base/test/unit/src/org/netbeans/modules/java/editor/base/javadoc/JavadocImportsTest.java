@@ -207,6 +207,124 @@ public class JavadocImportsTest extends JavadocTestSupport {
         assertEquals(exp, sortedResult);
     }
     
+    public void testComputeReferencedElementsMarkdown() throws Exception {
+        String code =
+                """
+                package p;
+                import java.io.IOException;
+                import java.util.Collections;
+                import java.util.List;
+                class C {
+                   ///link1 {@link Runnable}
+                   ///link3 {@linkplain Collections#binarySearch(java.util.List, Object) search}
+                   ///{@link java. uncomplete reference}
+                   ///unclosed link {@value Math#PI}
+                   ///@see List
+                   ///@throws IOException
+                   void m() throws java.io.IOException {
+                   }
+                   ///
+                   ///{@link Collections}
+                   ///
+                   int field;
+                   /// {@link IOException
+                   interface InnerInterface {}
+                   /// {@link Collections}
+                   @interface InnerAnnotationType {}
+                }
+                /// {@link Collections}
+                enum TopLevelEnum {
+                   /** {@link Collections} */   E1
+                }
+                """;
+                //TODO: does not work:
+                //unclosed link {@value Math#PI\n
+        prepareTest(code);
+
+        // C.m()
+        TreePath member = findPath(code, "m() throws");
+        assertNotNull(member);
+        List <TypeElement> exp = Arrays.asList(
+                info.getElements().getTypeElement("java.lang.Runnable"),
+                info.getElements().getTypeElement("java.lang.Math"),
+                info.getElements().getTypeElement("java.lang.Object"),
+                info.getElements().getTypeElement("java.util.Collections"),
+                info.getElements().getTypeElement("java.util.List"),
+                info.getElements().getTypeElement("java.io.IOException")
+                );
+        Collections.<TypeElement>sort(exp, new ElementComparator());
+        Set<TypeElement> result = JavadocImports.computeReferencedElements(info, member);
+        assertNotNull(result);
+        List<TypeElement> sortedResult = new ArrayList<TypeElement>(result);
+        sortedResult.sort(new ElementComparator());
+        assertEquals(exp, sortedResult);
+
+        // C.field
+        member = findPath(code, "field;");
+        assertNotNull(member);
+        exp = Arrays.asList(
+                info.getElements().getTypeElement("java.util.Collections")
+                );
+        Collections.<TypeElement>sort(exp, new ElementComparator());
+        result = JavadocImports.computeReferencedElements(info, member);
+        assertNotNull(result);
+        sortedResult = new ArrayList<TypeElement>(result);
+        sortedResult.sort(new ElementComparator());
+        assertEquals(exp, sortedResult);
+
+        // C.InnerInterface
+        member = findPath(code, "InnerInterface {");
+        assertNotNull(member);
+        exp = Arrays.asList(
+                info.getElements().getTypeElement("java.io.IOException")
+                );
+        Collections.<TypeElement>sort(exp, new ElementComparator());
+        result = JavadocImports.computeReferencedElements(info, member);
+        assertNotNull(result);
+        sortedResult = new ArrayList<TypeElement>(result);
+        sortedResult.sort(new ElementComparator());
+        assertEquals(exp, sortedResult);
+
+        // C.InnerAnnotationType
+        member = findPath(code, "InnerAnnotationType {");
+        assertNotNull(member);
+        exp = Arrays.asList(
+                info.getElements().getTypeElement("java.util.Collections")
+                );
+        Collections.<TypeElement>sort(exp, new ElementComparator());
+        result = JavadocImports.computeReferencedElements(info, member);
+        assertNotNull(result);
+        sortedResult = new ArrayList<TypeElement>(result);
+        sortedResult.sort(new ElementComparator());
+        assertEquals(exp, sortedResult);
+
+        // TopLevelEnum
+        member = findPath(code, "TopLevelEnum {");
+        assertNotNull(member);
+        exp = Arrays.asList(
+                info.getElements().getTypeElement("java.util.Collections")
+                );
+        Collections.<TypeElement>sort(exp, new ElementComparator());
+        result = JavadocImports.computeReferencedElements(info, member);
+        assertNotNull(result);
+        sortedResult = new ArrayList<TypeElement>(result);
+        sortedResult.sort(new ElementComparator());
+        assertEquals(exp, sortedResult);
+
+        // TopLevelEnum.E1
+        member = findPath(code, "E1\n");
+        assertNotNull(member);
+        exp = Arrays.asList(
+                info.getElements().getTypeElement("java.util.Collections")
+                );
+        Collections.<TypeElement>sort(exp, new ElementComparator());
+        result = JavadocImports.computeReferencedElements(info, member);
+        assertNotNull(result);
+        sortedResult = new ArrayList<TypeElement>(result);
+        sortedResult.sort(new ElementComparator());
+        assertEquals(exp, sortedResult);
+    }
+
     public void testComputeTokensOfReferencedElements() throws Exception {
         String code = 
                 "package p;\n" +
@@ -275,6 +393,87 @@ public class JavadocImportsTest extends JavadocTestSupport {
         exp = Arrays.<Token>asList(jdts.token());
         assertEquals(toFind.toString(), exp, tokens);
         
+        // toFind Collections#binarySearch
+        toFind = findElement(code, "binarySearch(Collections.<String>emptyList()");
+        assertNotNull(toFind);
+        tokens = JavadocImports.computeTokensOfReferencedElements(info, where, toFind);
+        assertNotNull(toFind.toString(), tokens);
+        jdts.move(code.indexOf("binarySearch", code.indexOf("link2")));
+        assertTrue(jdts.moveNext());
+        exp = Arrays.<Token>asList(jdts.token());
+//        assertEquals(toFind.toString(), exp, tokens);
+    }
+
+    public void testComputeTokensOfReferencedElementsMarkdown() throws Exception {
+        String code =
+                """
+                package p;
+                import java.util.Collections;
+                class C {
+                   ///link1 {@link Runnable}
+                   ///link2 {@link Collections#binarySearch(java.util.List, java.lang.Object) search}
+                   ///{@link java. uncomplete reference}   ///unclosed link {@value Math#PI}
+                   ///@see java.util.Collections
+                   ///@throws ThrowsUnresolved
+                   ///
+                   void m() throws java.io.IOException {
+                       Collections.<String>binarySearch(Collections.<String>emptyList(), "");
+                       double pi = Math.PI;
+                   }
+                }
+                """;
+                //TODO: does not work:
+                //unclosed link {@value Math#PI\n
+        prepareTest(code);
+
+        TreePath where = findPath(code, "m() throws");
+        assertNotNull(where);
+        TokenSequence<JavadocTokenId> jdts = JavadocCompletionUtils.findJavadocTokenSequence(info, null, info.getTrees().getElement(where));
+        assertNotNull(jdts);
+        List<Token> exp;
+
+        // toFind java.lang.Runnable
+        Element toFind = info.getElements().getTypeElement("java.lang.Runnable");
+        assertNotNull(toFind);
+        List<Token> tokens = JavadocImports.computeTokensOfReferencedElements(info, where, toFind);
+        assertNotNull(toFind.toString(), tokens);
+        jdts.move(code.indexOf("Runnable", code.indexOf("link1")));
+        assertTrue(jdts.moveNext());
+        exp = Arrays.<Token>asList(jdts.token());
+        assertEquals(toFind.toString(), exp, tokens);
+
+        // toFind java.util.Collections
+        toFind = info.getElements().getTypeElement("java.util.Collections");
+        assertNotNull(toFind);
+        tokens = JavadocImports.computeTokensOfReferencedElements(info, where, toFind);
+        assertNotNull(toFind.toString(), tokens);
+        exp = new ArrayList<Token>();
+        jdts.move(code.indexOf("Collections", code.indexOf("link2")));
+        assertTrue(jdts.moveNext());
+        exp.add(jdts.token());
+        jdts.move(code.indexOf("Collections", code.indexOf("///@see")));
+        assertTrue(jdts.moveNext());
+        exp.add(jdts.token());
+        System.err.println("exp:");
+        for (Token e : exp) {
+            System.err.println(e.text());
+        }
+        System.err.println("tokens:");
+        for (Token e : tokens) {
+            System.err.println(e.text());
+        }
+        assertEquals(toFind.toString(), exp, tokens);
+
+        // toFind Math#PI
+        toFind = findElement(code, "PI;\n");
+        assertNotNull(toFind);
+        tokens = JavadocImports.computeTokensOfReferencedElements(info, where, toFind);
+        assertNotNull(toFind.toString(), tokens);
+        jdts.move(code.indexOf("PI", code.indexOf("unclosed link")));
+        assertTrue(jdts.moveNext());
+        exp = Arrays.<Token>asList(jdts.token());
+        assertEquals(toFind.toString(), exp, tokens);
+
         // toFind Collections#binarySearch
         toFind = findElement(code, "binarySearch(Collections.<String>emptyList()");
         assertNotNull(toFind);

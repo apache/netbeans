@@ -698,4 +698,35 @@ public class AddTagFixTest extends NbTestCase {
                 + "    public static class MEx extends Exception {}\n"
                 + "}\n");
     }
+
+    public void testAddTagMarkdown() throws Exception {
+        // issue 160414
+        HintTest.create()
+                .input("""
+                       package test;
+                       public class Test {
+                           ///
+                           /// @param p1 param1
+                           ///
+                           public void leden(int p1, int p2) {
+                           }
+                       }
+                       """)
+                .sourceLevel("23")
+                .run(JavadocHint.class)
+                .findWarning("5:30-5:36:warning:Missing @param tag for p2") //TODO: test branding
+                .applyFix("Add @param p2 tag")
+                .assertCompilable()
+                .assertOutput("""
+                              package test;
+                              public class Test {
+                                  ///
+                                  /// @param p1 param1
+                                  /// @param p2
+                                  ///
+                                  public void leden(int p1, int p2) {
+                                  }
+                              }
+                              """);
+    }
 }

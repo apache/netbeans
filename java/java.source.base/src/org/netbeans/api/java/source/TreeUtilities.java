@@ -1312,7 +1312,11 @@ public final class TreeUtilities {
         
         tokenSequence.move(pos);
         
-        if (!tokenSequence.moveNext() || tokenSequence.token().id() != JavaTokenId.JAVADOC_COMMENT) return null;
+        if (!tokenSequence.moveNext() ||
+            (tokenSequence.token().id() != JavaTokenId.JAVADOC_COMMENT &&
+             tokenSequence.token().id() != JavaTokenId.JAVADOC_COMMENT_LINE_RUN)) {
+            return null;
+        }
         
         TokenSequence<JavadocTokenId> jdocTS = tokenSequence.embedded(JavadocTokenId.language());
         

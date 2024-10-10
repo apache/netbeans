@@ -363,8 +363,18 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
                     while (idx < line.length() &&
                         (line.charAt(idx) == ' ' ||
                         line.charAt(idx) == '\t' ||
-                        line.charAt(idx) == '*'))
+                        line.charAt(idx) == '*'  ||
+                        line.charAt(idx) == '/'))
                     {
+                        if (line.charAt(idx) == '/') {
+                            if (line.length() > idx + 2 &&
+                                line.charAt(idx + 1) == '/' &&
+                                line.charAt(idx + 2) == '/') {
+                                idx += 3;
+                                continue;
+                            }
+                            break;
+                        }
                         idx++;
                     }
 

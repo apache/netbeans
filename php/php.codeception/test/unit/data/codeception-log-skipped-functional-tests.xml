@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="functional" tests="6" assertions="7" errors="0" failures="0" skipped="1" useless="0" time="0.190654">
+    <testcase name="openLoginPage" class="LoginFormCest" file="/var/www/new_yyi2/basic/tests/functional/LoginFormCest.php" feature="open login page" time="0.000000" assertions="0">
+      <skipped/>
+    </testcase>
+    <testcase name="internalLoginById" class="LoginFormCest" file="/var/www/new_yyi2/basic/tests/functional/LoginFormCest.php" feature="internal login by id" time="0.084995" assertions="1"/>
+    <testcase name="internalLoginByInstance" class="LoginFormCest" file="/var/www/new_yyi2/basic/tests/functional/LoginFormCest.php" feature="internal login by instance" time="0.020276" assertions="1"/>
+    <testcase name="loginWithEmptyCredentials" class="LoginFormCest" file="/var/www/new_yyi2/basic/tests/functional/LoginFormCest.php" feature="login with empty credentials" time="0.035114" assertions="2"/>
+    <testcase name="loginWithWrongCredentials" class="LoginFormCest" file="/var/www/new_yyi2/basic/tests/functional/LoginFormCest.php" feature="login with wrong credentials" time="0.026634" assertions="1"/>
+    <testcase name="loginSuccessfully" class="LoginFormCest" file="/var/www/new_yyi2/basic/tests/functional/LoginFormCest.php" feature="login successfully" time="0.023634" assertions="2"/>
+  </testsuite>
+</testsuites>

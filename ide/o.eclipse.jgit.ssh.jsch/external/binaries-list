@@ -14,4 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-B6A43BB49E2BD61F5BB0A1DBAE1D8F7883B2BA9D org.eclipse.jgit:org.eclipse.jgit.ssh.jsch:6.10.0.202406032230-r
+44AD1B1124EC81AC0ACC2280E27B0239DFFEC41F org.eclipse.jgit:org.eclipse.jgit.ssh.jsch:7.0.0.202409031743-r

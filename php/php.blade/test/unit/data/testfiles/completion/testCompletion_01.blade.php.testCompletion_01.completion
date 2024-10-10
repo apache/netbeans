@@ -1,0 +1,96 @@
+Code completion result for source line:
+@|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO <font><b>@append</b></font>                
+CONSTRUCTO <font><b>@break</b></font>                 
+CONSTRUCTO <font><b>@continue</b></font>              
+CONSTRUCTO <font><b>@csrf</b></font>                  
+CONSTRUCTO <font><b>@default</b></font>               
+CONSTRUCTO <font><b>@else</b></font>                  
+CONSTRUCTO <font><b>@empty</b></font>                 v5.4
+CONSTRUCTO <font><b>@endPushIf</b></font>             
+CONSTRUCTO <font><b>@endfor</b></font>                
+CONSTRUCTO <font><b>@endforeach</b></font             
+CONSTRUCTO <font><b>@endforelse</b></font             
+CONSTRUCTO <font><b>@endfragment</b></fon             
+CONSTRUCTO <font><b>@endif</b></font>                 
+CONSTRUCTO <font><b>@endonce</b></font>               
+CONSTRUCTO <font><b>@endprepend</b></font             
+CONSTRUCTO <font><b>@endpush</b></font>               
+CONSTRUCTO <font><b>@endsection</b></font             
+CONSTRUCTO <font><b>@once</b></font>                  
+CONSTRUCTO <font><b>@overwrite</b></font>             
+CONSTRUCTO <font><b>@php</b></font>                   
+CONSTRUCTO <font><b>@stop</b></font>                  
+CONSTRUCTO @auth()                                    
+CONSTRUCTO @auth() ... @endauth                       
+CONSTRUCTO @can()                                     v5.1
+CONSTRUCTO @can() ... @endcan                         v5.1
+CONSTRUCTO @canany()                                  v5.8
+CONSTRUCTO @canany() ... @endcanany                   v5.8
+CONSTRUCTO @cannot()                                  v5.3
+CONSTRUCTO @cannot() ... @endcannot                   v5.3
+CONSTRUCTO @case()                                    
+CONSTRUCTO @checked()                                 v9
+CONSTRUCTO @class()                                   v8
+CONSTRUCTO @dd()                                      
+CONSTRUCTO @disabled()                                v9
+CONSTRUCTO @dump()                                    
+CONSTRUCTO @each()                                    
+CONSTRUCTO @elseif()                                  
+CONSTRUCTO @empty()                                   v5.4
+CONSTRUCTO @empty() ... @endempty                     v5.4
+CONSTRUCTO @env()                                     
+CONSTRUCTO @env() ... @endenv                         
+CONSTRUCTO @error()                                   
+CONSTRUCTO @error() ... @enderror                     
+CONSTRUCTO @extends()                                 
+CONSTRUCTO @for()                                     
+CONSTRUCTO @for() ... @endfor                         
+CONSTRUCTO @foreach()                                 
+CONSTRUCTO @foreach() ... @endforeach                 
+CONSTRUCTO @forelse()                                 
+CONSTRUCTO @forelse() ... @endforelse                 
+CONSTRUCTO @fragment()                                
+CONSTRUCTO @fragment() ... @endfragment               
+CONSTRUCTO @guest()                                   
+CONSTRUCTO @guest() ... @endguest                     
+CONSTRUCTO @hasSection()                              
+CONSTRUCTO @hasSection() ... @endif                   
+CONSTRUCTO @if()                                      
+CONSTRUCTO @if() ... @endif                           
+CONSTRUCTO @include()                                 
+CONSTRUCTO @includeFirst()                            
+CONSTRUCTO @includeIf()                               
+CONSTRUCTO @includeUnless()                           
+CONSTRUCTO @includeWhen()                             
+CONSTRUCTO @inject()                                  
+CONSTRUCTO @isset()                                   
+CONSTRUCTO @isset() ... @endisset                     
+CONSTRUCTO @json()                                    
+CONSTRUCTO @lang()                                    
+CONSTRUCTO @method()                                  
+CONSTRUCTO @php ... @endphp                           
+CONSTRUCTO @prepend()                                 
+CONSTRUCTO @prepend() ... @endprepend                 
+CONSTRUCTO @push()                                    
+CONSTRUCTO @push() ... @endpush                       
+CONSTRUCTO @pushIf()                                  
+CONSTRUCTO @pushIf() ... @endPushIf                   
+CONSTRUCTO @readony()                                 v9
+CONSTRUCTO @required()                                v9
+CONSTRUCTO @section()                                 
+CONSTRUCTO @section() ... @endsection                 
+CONSTRUCTO @sectionMissing()                          
+CONSTRUCTO @sectionMissing() ... @endif               
+CONSTRUCTO @session()                                 v10
+CONSTRUCTO @session() ... @endsession                 v10
+CONSTRUCTO @stack()                                   
+CONSTRUCTO @style()                                   v9
+CONSTRUCTO @switch()                                  
+CONSTRUCTO @switch() ... @endswitch                   
+CONSTRUCTO @unless()                                  
+CONSTRUCTO @unless() ... @endunless                   
+CONSTRUCTO @use()                                     
+CONSTRUCTO @vite()                                    v11
+CONSTRUCTO @yield()                                   

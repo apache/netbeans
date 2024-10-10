@@ -45,7 +45,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.RequestProcessor;
@@ -580,7 +579,7 @@ public abstract class CLIHandler extends Object {
                 enterState(10, block);
                 
                 final byte[] arr = new byte[KEY_LENGTH];
-                new Random().nextBytes(arr);
+                new SecureRandom().nextBytes(arr);
 
                 
                 final RandomAccessFile os = raf;

@@ -216,7 +216,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="comSourceLevel" min="-2" pref="72" max="-2" attributes="0"/>
+                      <Component id="comSourceLevel" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="comJavaPlatform" max="32767" attributes="2"/>
                           <EmptySpace max="-2" attributes="0"/>

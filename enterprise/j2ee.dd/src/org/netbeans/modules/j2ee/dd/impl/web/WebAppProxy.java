@@ -33,7 +33,9 @@ import java.beans.PropertyChangeListener;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author  mk115033
@@ -208,16 +210,18 @@ public class WebAppProxy implements WebApp {
         return webApp==null?null:webApp.findBeanByName(beanName, propertyName, value);
     }
 
-    public java.util.Map getAllDescriptions() {
-        return webApp==null?new java.util.HashMap():webApp.getAllDescriptions();
+    @Override
+    public Map<String, String> getAllDescriptions() {
+        return webApp == null ? new HashMap<>() : webApp.getAllDescriptions();
     }
 
-    public java.util.Map getAllDisplayNames() {
-        return webApp==null?new java.util.HashMap():webApp.getAllDisplayNames();
+    @Override
+    public Map<String, String> getAllDisplayNames() {
+        return webApp == null ? new HashMap<>() : webApp.getAllDisplayNames();
     }
 
-    public java.util.Map getAllIcons() {
-        return webApp==null?new java.util.HashMap():webApp.getAllIcons();
+    public Map<String, String[]> getAllIcons() {
+        return webApp == null ? new HashMap<>() : webApp.getAllIcons();
     }
 
     public org.netbeans.modules.j2ee.dd.api.common.InitParam[] getContextParam() {
@@ -577,11 +581,11 @@ public class WebAppProxy implements WebApp {
         if (webApp!=null) webApp.removeSmallIcon(locale);
     }
 
-    public void setAllDescriptions(java.util.Map descriptions) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+    public void setAllDescriptions(Map descriptions) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
         if (webApp!=null) webApp.setAllDescriptions(descriptions);
     }
 
-    public void setAllDisplayNames(java.util.Map displayNames) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+    public void setAllDisplayNames(Map displayNames) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
         if (webApp!=null) webApp.setAllDisplayNames(displayNames);
     }
 

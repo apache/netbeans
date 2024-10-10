@@ -39,7 +39,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.openide.windows.InputOutput;
 
 /**
  * Start the JPDA debugger.
@@ -52,11 +51,9 @@ public class JPDAStart implements Runnable {
     private static final String TRANSPORT = "dt_socket"; //NOI18N
 
     private final Object[] lock = new Object[2];
-    private final InputOutput io;
     private final FileObject fileObject;
 
-    JPDAStart(InputOutput inputOutput, FileObject fileObject) {
-        io = inputOutput;
+    JPDAStart(FileObject fileObject) {
         this.fileObject = fileObject;
     }
 
@@ -123,16 +120,16 @@ public class JPDAStart implements Runnable {
                         JPDADebugger.startListening(flc, args,
                                 new Object[]{properties});
                     } catch (DebuggerStartException ex) {
-                        io.getErr().println("Debugger Start Error."); //NOI18N
+//                        io.getErr().println("Debugger Start Error."); //NOI18N
                         SingleSourceFileUtil.LOG.log(Level.SEVERE, "Debugger Start Error.", ex);
                     }
                 });
             } catch (java.io.IOException ioex) {
-                io.getErr().println("IO Error:"); //NOI18N
+//                io.getErr().println("IO Error:"); //NOI18N
 //                org.openide.ErrorManager.getDefault().notify(ioex);
                 lock[1] = ioex;
             } catch (com.sun.jdi.connect.IllegalConnectorArgumentsException icaex) {
-                io.getErr().println("Illegal Connector"); //NOI18N
+//                io.getErr().println("Illegal Connector"); //NOI18N
                 lock[1] = icaex;
             } finally {
                 lock.notify();

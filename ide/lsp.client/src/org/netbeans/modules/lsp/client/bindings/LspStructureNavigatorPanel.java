@@ -18,32 +18,23 @@
  */
 package org.netbeans.modules.lsp.client.bindings;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.util.Collection;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.text.StyledDocument;
 import org.netbeans.api.actions.Openable;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.spi.lsp.StructureProvider;
-import org.netbeans.spi.navigator.NavigatorPanel;
 import org.openide.awt.Actions;
 import org.openide.cookies.EditorCookie;
 import org.openide.cookies.LineCookie;
-import org.openide.explorer.ExplorerManager;
-import org.openide.explorer.view.BeanTreeView;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.text.Line;
 import org.openide.text.NbDocument;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.AbstractLookup;

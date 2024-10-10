@@ -220,6 +220,7 @@ public class LSPBindings {
                 for(String mt: description.mimeTypes) {
                     mimeType2Server.put(mt, description);
                 }
+                TextDocumentSyncServerCapabilityHandler.refreshOpenedFilesInServers();
                 WORKER.post(() -> cs.fireChange());
             }
         }
@@ -357,7 +358,6 @@ public class LSPBindings {
                     new LSPReference(b, Utilities.activeReferenceQueue());
                     lci.setBindings(b);
                     LanguageServerProviderAccessor.getINSTANCE().setBindings(desc, b);
-                    TextDocumentSyncServerCapabilityHandler.refreshOpenedFilesInServers();
                     return b;
                 } catch (InterruptedException | ExecutionException ex) {
                     LOG.log(Level.WARNING, null, ex);

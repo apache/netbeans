@@ -89,7 +89,8 @@ import org.openide.util.lookup.Lookups;
 @NbBundle.Messages({
     "SuggestVault=For better security when using Autonomous Database, be sure to also add OCI Vault.",
     "UpdatingConfigMap=Updating Config Map",
-    "CMUpdated=ConfigMap in \"{0}\" project was updated"
+    "CMUpdated=ConfigMap in \"{0}\" project was updated",
+    "NoConfigMap=No ConfigMap found in the Devops project {0}",
 })
 public class ConfigMapUploader {
 
@@ -111,15 +112,7 @@ public class ConfigMapUploader {
                 nsProviderBuilder.stepForClass(PasswordStep.class, (s) -> new KeyStep(vaultRef.get()));
             } else if (item instanceof DatabaseItem) {
                 dbRef.set((DatabaseItem) item);
-                DatabaseConnection conn = null;
-                DatabaseConnection[] connections = ConnectionManager.getDefault().getConnections();
-                for (int i = 0; i < connections.length; i++) {
-                    if (item.getKey().getValue().equals(
-                            connections[i].getConnectionProperties().get("OCID"))) { //NOI18N
-                        conn = connections[i];
-                        break;
-                    }
-                }
+                DatabaseConnection conn = ((DatabaseItem) item).getCorrespondingConnection();
                 String user, password;
                 if (conn != null) {
                     user = conn.getUser();
@@ -155,7 +148,7 @@ public class ConfigMapUploader {
                         NotifyDescriptor.Message msg = new NotifyDescriptor.Message(Bundle.CMUpdated(devopsProject.getName()), NotifyDescriptor.INFORMATION_MESSAGE);
                         DialogDisplayer.getDefault().notifyLater(msg);
                     } else {
-                        NotifyDescriptor.Message msg = new NotifyDescriptor.Message(org.netbeans.modules.cloud.oracle.actions.Bundle.NoConfigMap(devopsProject.getName()), NotifyDescriptor.WARNING_MESSAGE);
+                        NotifyDescriptor.Message msg = new NotifyDescriptor.Message(Bundle.NoConfigMap(devopsProject.getName()), NotifyDescriptor.WARNING_MESSAGE);
                         DialogDisplayer.getDefault().notifyLater(msg);
                     }
                     future.complete(null);

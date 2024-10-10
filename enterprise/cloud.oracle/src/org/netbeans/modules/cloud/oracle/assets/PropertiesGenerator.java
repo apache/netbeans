@@ -25,9 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.modules.cloud.oracle.bucket.BucketItem;
+import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.netbeans.modules.cloud.oracle.developer.MetricsNamespaceItem;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.vault.VaultItem;
@@ -71,7 +71,6 @@ public final class PropertiesGenerator {
     public PropertiesGenerator(boolean local) {
         Collection<OCIItem> items = CloudAssets.getDefault().getItems();
         VaultItem vault = null;
-        DatabaseConnection conn = null;
         for (OCIItem item : items) {
             if ("Vault".equals(item.getKey().getPath())) {
                 vault = (VaultItem) item;
@@ -90,14 +89,8 @@ public final class PropertiesGenerator {
                     application.put("micronaut.object-storage.oracle-cloud." + nameLowercase + ".namespace", ((BucketItem) item).getNamespace()); //NOI18N
                     break;
                 case "Databases": //NOI18N
-                    DatabaseConnection[] connections = ConnectionManager.getDefault().getConnections();
-                    for (int i = 0; i < connections.length; i++) {
-                        if (item.getKey().getValue().equals(
-                                connections[i].getConnectionProperties().get("OCID"))) { //NOI18N
-                            conn = connections[i];
-                            break;
-                        }
-                    }
+                    DatabaseConnection conn = ((DatabaseItem) item).getCorrespondingConnection();
+                   
                     if (conn != null) {
                         
                         if (vault != null) {

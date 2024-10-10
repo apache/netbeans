@@ -255,16 +255,32 @@ public final class CloudAssets {
             } 
         }
         return null;
-    } 
+    }
+    
+    public boolean itemExistWithoutReferanceName(Class<? extends OCIItem> cls) {
+        return getReferenceNamesByClass(cls).isEmpty() && 
+                CloudAssets.getDefault().getItems().stream().anyMatch(item -> cls.isInstance(item));
+    }
+    
+    public boolean referenceNameExist(String itemPath, String refName) {
+        for (Entry<OCIItem, String> refEntry : refNames.entrySet()) {
+            if (refEntry.getKey().getKey().getPath().equals(itemPath)
+                    && refName.equals(refEntry.getValue())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public void removeReferenceNameFor(OCIItem item) {
+        refNames.remove(item);
+    }
 
     public boolean setReferenceName(OCIItem item, String refName) {
         Parameters.notNull("refName", refName); //NOI18N
-        Parameters.notNull("OCIItem", item); //NOI18N
-        for (Entry<OCIItem, String> refEntry : refNames.entrySet()) {
-            if (refEntry.getKey().getKey().getPath().equals(item.getKey().getPath())
-                    && refName.equals(refEntry.getValue())) {
-                return false;
-            }
+        Parameters.notNull("OCIItem", item); //NOI18N   
+        if (referenceNameExist(item.getKey().getPath(), refName)) {
+            return false;
         }
         String oldRefName = refNames.get(item);
         refNames.put(item, refName);

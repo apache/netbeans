@@ -110,6 +110,14 @@ public class DependencyText {
         return sb.toString();
     }
     
+    static String stripStrict(String s) {
+        if (!s.endsWith("!!")) {
+            return s;
+        } else {
+            return s.substring(0, s.length() - 2);
+        }
+    }
+    
     public String getContentsOrGav() {
         if (contents != null) {
             return contents;
@@ -117,7 +125,7 @@ public class DependencyText {
             StringBuilder sb = new StringBuilder();
             sb.append(group).append(':').append(name);
             if (version != null && !version.isEmpty()) {
-                sb.append(':').append(version);
+                sb.append(":").append(stripStrict(version));
             }
             return sb.toString();
         }

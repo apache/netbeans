@@ -40,6 +40,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
+import org.openide.filesystems.FileUtil;
 
 /**
  * Caches audit results in NB cache folder. Uses Jackson to serialize the audit summary + 
@@ -154,10 +157,18 @@ final class AuditCache {
             }
         }
     }
-    public VulnerabilityReport cacheAuditResults(VulnerabilityReport report) throws IOException {
+    private static String key(Project project, String knowledgeBaseId) {
+        Project p2 = ProjectUtils.rootOf(project);
+        String k = "knowledge.segment." + knowledgeBaseId;
+        if (p2 != project) {
+            k = k + "." + FileUtil.getRelativePath(p2.getProjectDirectory(), project.getProjectDirectory()).replace('/', '.');
+        }
+        return k;
+    }
+    
+    public VulnerabilityReport cacheAuditResults(Project project, VulnerabilityReport report) throws IOException {
         Properties segments = loadSegments();
-        String k = "knowledge.segment." + report.summary.getKnowledgeBaseId();
-        
+        String k = key(project, report.summary.getKnowledgeBaseId());
         File cacheDir = Places.getCacheSubdirectory(CACHE_SUBDIR);
         Path segPath = cacheDir.toPath().resolve(SEGMENTS_FILE);
         boolean writeSegment = !Files.exists(segPath);
@@ -214,9 +225,9 @@ final class AuditCache {
      * @param knowledgeBaseId
      * @return 
      */
-    public VulnerabilityReport loadAudit(String knowledgeBaseId) throws IOException {
+    public VulnerabilityReport loadAudit(Project project, String knowledgeBaseId) throws IOException {
         Properties segments = loadSegments();
-        String k = "knowledge.segment." + knowledgeBaseId;
+        String k = key(project, knowledgeBaseId);
         String segName = segments.getProperty(k);
         
         if (segName == null) {

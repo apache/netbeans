@@ -685,13 +685,13 @@ public class TextDependencyScanner {
             if (DependencyText.KEYWORD_PROJECT.equals(t.keyword) &&
                 t.contents.equals(projectName)) {
                 return t;
-            } else if (t.keyword == null && t.getContentsOrGav().equals(gav) && scopeMatches(d, t)) {
+            } else if (t.keyword == null && DependencyText.stripStrict(t.getContentsOrGav()).equals(gav) && scopeMatches(d, t)) {
                 return t;
             }
         }
         
         for (DependencyText t : dependencies) {
-            if (t.keyword == null && t.contents != null && t.contents.equals(groupAndName) && scopeMatches(d, t)) {
+            if (t.keyword == null && t.contents != null && DependencyText.stripStrict(t.contents).equals(groupAndName) && scopeMatches(d, t)) {
                 return t;
             }
         }

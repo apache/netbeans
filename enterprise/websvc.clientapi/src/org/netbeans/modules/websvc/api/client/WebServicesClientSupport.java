@@ -56,7 +56,7 @@ public final class WebServicesClientSupport {
     public static final String WSCLIENTUPTODATE_CLASSPATH = "wsclientuptodate.classpath";
 
     private WebServicesClientSupportImpl impl;
-    private static final Lookup.Result implementations =
+    private static final Lookup.Result<?> implementations =
         Lookup.getDefault().lookupResult(WebServicesClientSupportProvider.class);
 
     static  {

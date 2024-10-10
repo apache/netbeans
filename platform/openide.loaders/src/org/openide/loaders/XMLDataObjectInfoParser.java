@@ -95,7 +95,7 @@ implements FileChangeListener, LexicalHandler, LookupListener {
     private Reference<XMLDataObject> xml;
     private String parsedId;
     private Lookup lookup;
-    private Lookup.Result result;
+    private Lookup.Result<?> result;
     private ThreadLocal<Class<?>> QUERY = new ThreadLocal<Class<?>>();
 
     XMLDataObjectInfoParser(XMLDataObject xml) {
@@ -151,7 +151,7 @@ implements FileChangeListener, LexicalHandler, LookupListener {
                     break;
                 }
             }
-            Lookup.Result r = result;
+            Lookup.Result<?> r = result;
             if (r != null) {
                 if (XMLDataObject.ERR.isLoggable(Level.FINE)) {
                     XMLDataObject.ERR.fine("Querying the result: " + r);
@@ -327,7 +327,7 @@ implements FileChangeListener, LexicalHandler, LookupListener {
             }
         }
         synchronized (this) {
-            Lookup.Result prevRes = result;
+            Lookup.Result<?> prevRes = result;
             lookup = newLookup;
             if (XMLDataObject.ERR.isLoggable(Level.FINE)) {
                 XMLDataObject.ERR.fine("Shared lookup updated: " + lookup + " for " + realXML);

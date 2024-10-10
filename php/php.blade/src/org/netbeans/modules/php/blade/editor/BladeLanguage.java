@@ -90,6 +90,8 @@ public class BladeLanguage extends DefaultLanguageConfig {
 
     public static final String ACTIONS = "Loaders/" + BladeLanguage.MIME_TYPE + "/Actions"; //NOI18N
     public static final String MIME_TYPE = "text/x-blade"; //NOI18N
+    public static final String FILE_EXTENSION_SUFFIX = ".blade"; //NOI18N
+    public static final String FILE_EXTENSION = "blade.php"; //NOI18N
 
     @Override
     public Language<BladeTokenId> getLexerLanguage() {
@@ -103,7 +105,7 @@ public class BladeLanguage extends DefaultLanguageConfig {
 
     @Override
     public String getPreferredExtension() {
-        return "blade.php"; // NOI18N
+        return FILE_EXTENSION;
     }
 
     @Override
@@ -203,10 +205,10 @@ public class BladeLanguage extends DefaultLanguageConfig {
 
     @NbBundle.Messages("Source=&Source Blade")
     @MultiViewElement.Registration(
-            displayName = "#Source", //NOI18N
+            displayName = "#Source",
             persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
             mimeType = BladeLanguage.MIME_TYPE,
-            preferredID = "blade.source", //NOI18N
+            preferredID = "blade.source",
             position = 100
     )
     public static MultiViewEditorElement createMultiViewEditorElement(Lookup context) {

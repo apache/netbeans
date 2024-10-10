@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.php.blade.editor.BladeLanguage;
 import org.netbeans.modules.php.blade.project.BladeProjectProperties;
 import org.netbeans.modules.php.blade.project.ProjectUtils;
 import org.netbeans.modules.php.blade.syntax.StringUtils;
@@ -40,8 +41,9 @@ import org.openide.filesystems.FileUtil;
 public final class BladePathUtils {
 
     public static final String LARAVEL_RESOURCES = "resources"; //NOI18N
-    public static final String LARAVEL_VIEW_PATH = "resources/views"; //NOI18N
-    public static final String BLADE_EXT = ".blade.php"; //NOI18N
+    public static final String LARAVEL_VIEW_FOLDER = "views"; //NOI18N
+    public static final String LARAVEL_VIEW_PATH = LARAVEL_RESOURCES + StringUtils.FORWARD_SLASH + LARAVEL_VIEW_FOLDER;
+    public static final String BLADE_EXT = "." + BladeLanguage.FILE_EXTENSION; //NOI18N
 
     private BladePathUtils() {
 
@@ -70,7 +72,7 @@ public final class BladePathUtils {
             return fileViewAssociationList;
         }
 
-        String sanitizedBladePath = viewPathToFilePath(viewPath); //NOI18N
+        String sanitizedBladePath = viewPathToFilePath(viewPath);
 
         for (FileObject viewRoot : viewRoots) {
             FileObject includedFile = viewRoot.getFileObject(sanitizedBladePath, true);
@@ -181,7 +183,7 @@ public final class BladePathUtils {
             //filter by filename in relative context
             for (FileObject rootFolder : filteredViewRoots) {
                 for (FileObject file : rootFolder.getChildren()) {
-                    String filePath = file.getPath().replace(rootFolder.getPath() + StringUtils.FORWARD_SLASH, "");
+                    String filePath = file.getPath().replace(rootFolder.getPath() + StringUtils.FORWARD_SLASH, ""); //NOI18N
                     if (filePath.startsWith(relativePrefixToCompare)) {
                         list.add(file);
                     }
@@ -205,7 +207,11 @@ public final class BladePathUtils {
     public static List<FileObject> getCustomViewsRoots(Project project, FileObject contextFile) {
         List<FileObject> list = new ArrayList<>();
 
-        String[] views = BladeProjectProperties.getInstance(project).getViewsFolderPathList();
+        BladeProjectProperties bladeProperties = BladeProjectProperties.getInstance(project);
+        if (bladeProperties == null) {
+            return list;
+        }
+        String[] views = bladeProperties.getViewsFolderPathList();
 
         if (views.length > 0) {
             views = Arrays.stream(views).filter(s -> !s.isEmpty()).toArray(String[]::new);
@@ -246,16 +252,22 @@ public final class BladePathUtils {
             //belongs to the default folder
             String viewFolderPath = defaultLaravelPath.getPath();
             if (filePath.startsWith(viewFolderPath)) {
-                String bladePath = BladePathUtils.toBladeViewPath(filePath.replace(viewFolderPath, ""));
+                String bladePath = BladePathUtils.toBladeViewPath(filePath.replace(viewFolderPath, "")); //NOI18N
                 //starting slash
-                if (bladePath.startsWith(".")) {
+                if (bladePath.startsWith(StringUtils.DOT)) {
                     bladePath = bladePath.substring(1, bladePath.length());
                 }
                 return bladePath;
             }
         }
 
-        String[] viewFolders = BladeProjectProperties.getInstance(project).getViewsFolderPathList();
+        BladeProjectProperties bladeProperties = BladeProjectProperties.getInstance(project);
+
+        if (bladeProperties == null) {
+            return path;
+        }
+
+        String[] viewFolders = bladeProperties.getViewsFolderPathList();
 
         for (String viewFolder : viewFolders) {
             if (viewFolder.length() == 0) {
@@ -270,7 +282,7 @@ public final class BladePathUtils {
             FileObject viewFile = FileUtil.toFileObject(viewPath);
             String viewFileAbsPath = viewFile.getPath();
             if (filePath.startsWith(viewFileAbsPath)) {
-                String relativePath = filePath.replace(viewFileAbsPath, "");
+                String relativePath = filePath.replace(viewFileAbsPath, ""); //NOI18N
                 if (!relativePath.startsWith(StringUtils.FORWARD_SLASH)) {
                     //it doesn't belong to the folder
                     continue;
@@ -285,22 +297,22 @@ public final class BladePathUtils {
     public static String getRelativeProjectPath(FileObject currentFile) {
         Project projectOwner = ProjectConvertors.getNonConvertorOwner(currentFile);
         if (projectOwner == null) {
-            return "";
+            return ""; //NOI18N
         }
 
         String dirPath = projectOwner.getProjectDirectory().getPath();
-        String relativePath = currentFile.getPath().replace(dirPath, "");
+        String relativePath = currentFile.getPath().replace(dirPath, ""); //NOI18N
 
         //only if we found the relative project path
         if (currentFile.getPath().length() > relativePath.length()) {
             return relativePath;
         }
 
-        return "";
+        return ""; //NOI18N
     }
 
     public static String toBladeViewPath(String filePath) {
-        return filePath.replace(BLADE_EXT, "").replace(StringUtils.FORWARD_SLASH, StringUtils.DOT);
+        return filePath.replace(BLADE_EXT, "").replace(StringUtils.FORWARD_SLASH, StringUtils.DOT); //NOI18N
     }
 
     public static String viewPathToFilePath(String viewPath) {
@@ -320,5 +332,13 @@ public final class BladePathUtils {
 
     public static String toBladeToProjectFilePath(String path) {
         return LARAVEL_VIEW_PATH + StringUtils.FORWARD_SLASH + viewPathToFilePath(path);
+    }
+
+    public static String removeViewsFolderFromPath(String filePath) {
+        int viewsPos = filePath.indexOf(StringUtils.FORWARD_SLASH + BladePathUtils.LARAVEL_VIEW_FOLDER + StringUtils.FORWARD_SLASH);
+        if (viewsPos < 0) {
+            return filePath;
+        }
+        return filePath.substring(viewsPos, filePath.length());
     }
 }

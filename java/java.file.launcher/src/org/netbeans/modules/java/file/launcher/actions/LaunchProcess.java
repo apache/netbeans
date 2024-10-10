@@ -34,6 +34,7 @@ import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.BaseUtilities;
+import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 
 final class LaunchProcess implements Callable<Process> {
@@ -82,6 +83,8 @@ final class LaunchProcess implements Callable<Process> {
                     ExplicitProcessParameters.builder()
                                              .args(readArgumentsFromAttribute(fileObject, SingleSourceFileUtil.FILE_ARGUMENTS))
                                              .launcherArgs(readArgumentsFromAttribute(fileObject, SingleSourceFileUtil.FILE_VM_OPTIONS))
+                                             .launcherArgs(Arrays.asList(BaseUtilities.parseParameters(
+                                                    NbPreferences.forModule(JavaPlatformManager.class).get(SingleSourceFileUtil.GLOBAL_VM_OPTIONS, "").trim()))) //NOI18N
                                              .workingDirectory(workDir)
                                              .build();
 

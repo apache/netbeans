@@ -32,16 +32,20 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
+import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -63,6 +67,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
@@ -78,7 +83,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.swing.JEditorPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -236,6 +240,7 @@ import org.netbeans.modules.editor.indent.api.Reformat;
 import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.netbeans.modules.java.lsp.server.ui.AbstractJavaPlatformProviderOverride;
 import org.netbeans.modules.parsing.impl.SourceAccessor;
+import org.netbeans.modules.sampler.Sampler;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.lsp.CallHierarchyProvider;
 import org.netbeans.spi.lsp.CodeLensProvider;
@@ -244,11 +249,16 @@ import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.NotifyDescriptor.Message;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
+import org.openide.modules.Places;
 import org.openide.text.CloneableEditorSupport;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
@@ -256,6 +266,7 @@ import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakSet;
@@ -273,6 +284,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static final String COMMAND_RUN_SINGLE = "nbls.run.single";         // NOI18N
     private static final String COMMAND_DEBUG_SINGLE = "nbls.debug.single";     // NOI18N
     private static final String NETBEANS_JAVADOC_LOAD_TIMEOUT = "javadoc.load.timeout";// NOI18N
+    private static final String NETBEANS_COMPLETION_WARNING_TIME = "completion.warning.time";// NOI18N
     private static final String NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS = "java.onSave.organizeImports";// NOI18N
     private static final String URL = "url";// NOI18N
     private static final String INDEX = "index";// NOI18N
@@ -334,8 +346,36 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private final AtomicInteger javadocTimeout = new AtomicInteger(-1);
     private List<Completion> lastCompletions = null;
 
+    private static final int INITIAL_COMPLETION_SAMPLING_DELAY = 1000;
+    private static final int DEFAULT_COMPLETION_WARNING_LENGTH = 10_000;
+    private static final RequestProcessor COMPLETION_SAMPLER_WORKER = new RequestProcessor("java-lsp-completion-sampler", 1, false, false);
+
     @Override
+    @Messages({
+        "# {0} - the timeout elapsed",
+        "# {1} - path to the saved sampler file",
+        "INFO_LongCodeCompletion=Analyze completions taking longer than {0}. A sampler snapshot has been saved to: {1}"
+    })
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
+        AtomicBoolean done = new AtomicBoolean();
+        AtomicReference<Sampler> samplerRef = new AtomicReference<>();
+        AtomicLong samplingStart = new AtomicLong();
+        AtomicLong samplingWarningLength = new AtomicLong(DEFAULT_COMPLETION_WARNING_LENGTH);
+        long completionStart = System.currentTimeMillis();
+        COMPLETION_SAMPLER_WORKER.post(() -> {
+            if (!done.get()) {
+                Sampler sampler = Sampler.createSampler("completion");
+                if (sampler != null) {
+                    sampler.start();
+                    samplerRef.set(sampler);
+                    samplingStart.set(System.currentTimeMillis());
+                    if (done.get()) {
+                        sampler.stop();
+                    }
+                }
+            }
+        }, INITIAL_COMPLETION_SAMPLING_DELAY);
+
         lastCompletions = new ArrayList<>();
         AtomicInteger index = new AtomicInteger(0);
         final CompletionList completionList = new CompletionList();
@@ -358,9 +398,21 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             ConfigurationItem conf = new ConfigurationItem();
             conf.setScopeUri(uri);
             conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVADOC_LOAD_TIMEOUT);
-            return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
+            ConfigurationItem completionWarningLength = new ConfigurationItem();
+            completionWarningLength.setScopeUri(uri);
+            completionWarningLength.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_COMPLETION_WARNING_TIME);
+            return client.configuration(new ConfigurationParams(Arrays.asList(conf, completionWarningLength))).thenApply(c -> {
                 if (c != null && !c.isEmpty()) {
-                    javadocTimeout.set(((JsonPrimitive)c.get(0)).getAsInt());
+                    if (c.get(0) instanceof JsonPrimitive) {
+                        JsonPrimitive javadocTimeSetting = (JsonPrimitive) c.get(0);
+
+                        javadocTimeout.set(javadocTimeSetting.getAsInt());
+                    }
+                    if (c.get(1) instanceof JsonPrimitive) {
+                        JsonPrimitive samplingWarningsLengthSetting = (JsonPrimitive) c.get(1);
+
+                        samplingWarningLength.set(samplingWarningsLengthSetting.getAsLong());
+                    }
                 }
                 final int caret = Utils.getOffset(doc, params.getPosition());
                 List<CompletionItem> items = new ArrayList<>();
@@ -438,6 +490,36 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         prefs.put("classMemberInsertionPoint", point);
                     } else {
                         prefs.remove("classMemberInsertionPoint");
+                    }
+
+                    done.set(true);
+                    Sampler sampler = samplerRef.get();
+                    if (sampler != null) {
+                        long samplingTime = (System.currentTimeMillis() - completionStart);
+                        long minSamplingTime = Math.min(1_000, samplingWarningLength.get());
+                        if (samplingTime >= minSamplingTime &&
+                            samplingTime >= samplingWarningLength.get() &&
+                            samplingWarningLength.get() >= 0) {
+                            Lookup lookup = Lookup.getDefault();
+                            new Thread(() -> {
+                                Lookups.executeWith(lookup, () -> {
+                                    Path logDir = Places.getUserDirectory().toPath().resolve("var/log");
+                                    try {
+                                        Path target = Files.createTempFile(logDir, "completion-sampler", ".npss");
+                                        try (OutputStream out = Files.newOutputStream(target);
+                                             DataOutputStream dos = new DataOutputStream(out)) {
+                                            sampler.stopAndWriteTo(dos);
+
+                                            NotifyDescriptor notifyUser = new Message(Bundle.INFO_LongCodeCompletion(samplingWarningLength.get(), target.toAbsolutePath().toString()));
+
+                                            DialogDisplayer.getDefault().notifyLater(notifyUser);
+                                        }
+                                    } catch (IOException ex) {
+                                        Exceptions.printStackTrace(ex);
+                                    }
+                                });
+                            }).start();
+                        }
                     }
                 }
                 completionList.setItems(items);

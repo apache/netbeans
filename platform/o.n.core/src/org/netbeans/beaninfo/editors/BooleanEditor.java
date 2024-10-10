@@ -19,7 +19,6 @@
 
 package org.netbeans.beaninfo.editors;
 
-import java.beans.*;
 
 /**
  * Editor for property of type java.lang.Boolean
@@ -29,9 +28,10 @@ import java.beans.*;
 public class BooleanEditor extends WrappersEditor {
 
     public BooleanEditor() {
-        super(java.lang.Boolean.TYPE);
+        super(Boolean.TYPE);
     }
 
+    @Override
     public String getJavaInitializationString() {
         Boolean val = (Boolean) getValue();
         return Boolean.TRUE.equals(val) ? "java.lang.Boolean.TRUE" :

@@ -19,8 +19,6 @@
 
 package org.netbeans.beaninfo.editors;
 
-import java.beans.*;
-
 /**
  * Editor for property of type java.lang.Long
  *
@@ -29,11 +27,12 @@ import java.beans.*;
 public class LongEditor extends WrappersEditor {
 
     public LongEditor() {
-        super(java.lang.Long.TYPE);
+        super(Long.TYPE);
     }
 
+    @Override
     public String getJavaInitializationString() {
-	return "new java.lang.Long(" + getAsText() + "L)"; // NOI18N
+	return "Long.valueOf(" + getAsText() + "L)"; // NOI18N
     }
 
 }

@@ -19,7 +19,6 @@
 
 package org.netbeans.beaninfo.editors;
 
-import java.beans.*;
 
 /**
  * Editor for property of type java.lang.Byte
@@ -29,12 +28,8 @@ import java.beans.*;
 public class ByteEditor extends WrappersEditor {
 
     public ByteEditor() {
-        super(java.lang.Byte.TYPE);
+        super(Byte.TYPE);
     }
-
-
-    //----------------------------------------------------------------------
-
 
     /**
      * This method is intended for use when generating Java code to set
@@ -47,8 +42,9 @@ public class ByteEditor extends WrappersEditor {
      * @return A fragment of Java code representing an initializer for the
      *   	current value.
      */
+    @Override
     public String getJavaInitializationString() {
-	return "new java.lang.Byte((byte)" + getAsText() + ")"; // NOI18N
+	return "Byte.valueOf((byte)" + getAsText() + ")"; // NOI18N
     }
 
 }

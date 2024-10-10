@@ -19,8 +19,6 @@
 
 package org.netbeans.beaninfo.editors;
 
-import java.beans.*;
-
 /**
  * Editor for property of type java.lang.Double
  *
@@ -29,12 +27,8 @@ import java.beans.*;
 public class DoubleEditor extends WrappersEditor {
 
     public DoubleEditor() {
-        super(java.lang.Double.TYPE);
+        super(Double.TYPE);
     }
-
-
-    //----------------------------------------------------------------------
-
 
     /**
      * This method is intended for use when generating Java code to set
@@ -47,8 +41,9 @@ public class DoubleEditor extends WrappersEditor {
      * @return A fragment of Java code representing an initializer for the
      *   	current value.
      */
+    @Override
     public String getJavaInitializationString() {
-	return "new java.lang.Double(" + getAsText() + ")"; // NOI18N
+	return "Double.valueOf(" + getAsText() + "D)"; // NOI18N
     }
 
 }

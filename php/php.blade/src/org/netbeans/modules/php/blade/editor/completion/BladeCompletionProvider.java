@@ -218,9 +218,9 @@ public class BladeCompletionProvider implements CompletionProvider {
         CustomDirectives.getInstance(project).filterAction(new CustomDirectives.FilterCallback() {
             @Override
             public void filterDirectiveName(CustomDirective customDirective, FileObject file) {
-                if (customDirective.name.startsWith(prefix)) {
+                if (customDirective.getName().startsWith(prefix)) {
                     resultSet.addItem(DirectiveCompletionBuilder.itemWithArg(
-                            startOffset, carretOffset, prefix, customDirective.name,
+                            startOffset, carretOffset, prefix, customDirective.getName(),
                             "custom directive", doc, file)); // NOI18N
                 }
             }

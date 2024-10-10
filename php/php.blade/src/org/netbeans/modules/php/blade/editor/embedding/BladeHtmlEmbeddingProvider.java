@@ -40,7 +40,7 @@ import org.netbeans.modules.php.blade.editor.lexer.BladeTokenId;
         mimeType = BladeLanguage.MIME_TYPE,
         targetMimeType = "text/html")
 public class BladeHtmlEmbeddingProvider extends EmbeddingProvider {
-    public static final String FILLER = " ";
+    public static final String FILLER = " "; //NOI18N
     public static final String TARGET_MIME_TYPE = "text/html"; //NOI18N
 
     @Override
@@ -72,19 +72,16 @@ public class BladeHtmlEmbeddingProvider extends EmbeddingProvider {
                 if (id.equals(BladeTokenId.HTML)) {
                     embeddings.add(snapshot.create(offset, t.length(), TARGET_MIME_TYPE));
                 } else {
-                    fake = new String(new char[tText.length()]).replace("\0", FILLER);
+                    fake = new String(new char[tText.length()]).replace("\0", FILLER); //NOI18N
                     embeddings.add(snapshot.create(fake, TARGET_MIME_TYPE));
                 }
             }
         } catch (Exception ex) {
-            //Exceptions.printStackTrace(ex);
             return Collections.emptyList();
         }
         
-        //LOGGER.log(Level.INFO, "html ebedding finished for {0}, it took " + (System.currentTimeMillis() - startTime), snapshot.getSource().getFileObject().getName());
-
         if (embeddings.isEmpty()) {
-            return Collections.singletonList(snapshot.create("", TARGET_MIME_TYPE));
+            return Collections.singletonList(snapshot.create("", TARGET_MIME_TYPE)); //NOI18N
         } else {
             return Collections.singletonList(Embedding.create(embeddings));
         }

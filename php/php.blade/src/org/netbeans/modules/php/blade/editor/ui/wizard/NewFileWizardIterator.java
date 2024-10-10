@@ -27,6 +27,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.templates.TemplateRegistration;
+import org.netbeans.modules.php.blade.editor.BladeLanguage;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataFolder;
@@ -39,7 +40,8 @@ import org.openide.loaders.DataObject;
  */
 public class NewFileWizardIterator implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
 
-    WizardDescriptor wizard;
+    private WizardDescriptor wizard;
+    public static final String DEFAULT_FILENAME = "myfile"; //NOI18N
     private WizardDescriptor.Panel<WizardDescriptor> wizardPanel;
 
     private NewFileWizardIterator() {
@@ -57,21 +59,19 @@ public class NewFileWizardIterator implements WizardDescriptor.InstantiatingIter
 
     @Override
     public Set<FileObject> instantiate() throws IOException {
-  //      getBottomPanel().save();
-
         FileObject dir = Templates.getTargetFolder(wizard);
         FileObject template = Templates.getTemplate(wizard);
 
         DataFolder dataFolder = DataFolder.findFolder(dir);
         DataObject dataTemplate = DataObject.find(template);
-        DataObject createdFile = dataTemplate.createFromTemplate(dataFolder, Templates.getTargetName(wizard) + ".blade");
+        DataObject createdFile = dataTemplate.createFromTemplate(dataFolder, Templates.getTargetName(wizard) + BladeLanguage.FILE_EXTENSION_SUFFIX);
         return Collections.singleton(createdFile.getPrimaryFile());
     }
 
     @Override
     public void initialize(WizardDescriptor wizard) {
         this.wizard = wizard;
-        Templates.setTargetName(wizard, "myfile");
+        Templates.setTargetName(wizard, DEFAULT_FILENAME);
         wizardPanel = createWizardPanel();
     }
 
@@ -88,7 +88,7 @@ public class NewFileWizardIterator implements WizardDescriptor.InstantiatingIter
 
     @Override
     public String name() {
-        return "new php file wizaed"; // NOI18N
+        return "new blade php file wizard"; // NOI18N
     }
 
     @Override

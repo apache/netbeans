@@ -95,6 +95,7 @@ public class HintsDiagnosticsProvider implements ErrorProvider {
                     break;
             }
             
+            b.setSeverity(s);
             result.add(b.build());
         }
         return result;

@@ -104,7 +104,6 @@ public class MicroApplication {
     }
 
     private int calcRunningInstanceCount() {
-        System.out.println("calcRunningInstanceCount");
         List<String> processIds = new ArrayList<>();
         String executorFilter = "gav=" + mavenProject.getGroupId() + ":" + mavenProject.getArtifactId() + ":" + mavenProject.getVersion();
         final Runtime re = Runtime.getRuntime();

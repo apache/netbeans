@@ -18,6 +18,8 @@ meth public java.lang.String toString()
 CLSS public abstract interface org.netbeans.modules.fish.payara.micro.plugin.Constants
 fld public final static java.lang.String ARCHETYPE_ARTIFACT_ID = "payara-micro-maven-archetype"
 fld public final static java.lang.String ARCHETYPE_GROUP_ID = "fish.payara.maven.archetypes"
+fld public final static java.lang.String STARTER_ARCHETYPE_ARTIFACT_ID = "payara-starter-archetype"
+fld public final static java.lang.String STARTER_ARCHETYPE_GROUP_ID = "fish.payara.starter"
 fld public final static java.lang.String ARCHETYPE_REPOSITORY = "https://oss.sonatype.org/content/repositories/snapshots"
 fld public final static java.lang.String BUILD_ICON = "org/netbeans/modules/fish/payara/micro/project/resources/payara-micro-build.png"
 fld public final static java.lang.String CLEAN_ICON = "org/netbeans/modules/fish/payara/micro/project/resources/payara-micro-clean.png"

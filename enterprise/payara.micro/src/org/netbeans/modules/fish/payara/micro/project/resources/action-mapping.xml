@@ -30,7 +30,7 @@
             <goal>compiler:compile</goal>
             <goal>war:exploded</goal>
             <goal>payara-micro:stop</goal>
-            <goal>payara-micro:start</goal>
+            <goal>payara-micro:dev</goal>
         </goals>
         <properties>
             <netbeans.deploy>false</netbeans.deploy>
@@ -46,7 +46,7 @@
             <goal>compiler:compile</goal>
             <goal>war:exploded</goal>
             <goal>payara-micro:stop</goal>
-            <goal>payara-micro:start</goal>
+            <goal>payara-micro:dev</goal>
         </goals>
         <properties>
             <netbeans.deploy>false</netbeans.deploy>
@@ -63,7 +63,7 @@
             <goal>compiler:compile</goal>
             <goal>war:exploded</goal>
             <goal>payara-micro:stop</goal>
-            <goal>payara-micro:start</goal>
+            <goal>payara-micro:dev</goal>
         </goals>
         <properties>
             <exec.args>-Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address}</exec.args>
@@ -82,7 +82,7 @@
             <goal>compiler:compile</goal>
             <goal>war:exploded</goal>
             <goal>payara-micro:stop</goal>
-            <goal>payara-micro:start</goal>
+            <goal>payara-micro:dev</goal>
         </goals>
         <properties>
             <exec.args>-Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address}</exec.args>
@@ -102,7 +102,7 @@
             <goal>compiler:compile</goal>
             <goal>war:exploded</goal>
             <goal>payara-micro:stop</goal>
-            <goal>payara-micro:start</goal>
+            <goal>payara-micro:dev</goal>
         </goals>
         <properties>
             <exec.args></exec.args>
@@ -121,7 +121,7 @@
             <goal>compiler:compile</goal>
             <goal>war:exploded</goal>
             <goal>payara-micro:stop</goal>
-            <goal>payara-micro:start</goal>
+            <goal>payara-micro:dev</goal>
         </goals>
         <properties>
             <exec.args></exec.args>

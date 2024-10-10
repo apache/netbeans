@@ -19,6 +19,7 @@
 
 package org.netbeans.spi.project;
 
+import java.util.Objects;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -31,6 +32,7 @@ public final class SingleMethod {
 
     private FileObject file;
     private String methodName;
+    private String enclosingType;
 
     /**
      * Creates a new instance holding the specified identification
@@ -43,6 +45,20 @@ public final class SingleMethod {
      * @since 1.19
      */
     public SingleMethod(FileObject file, String methodName) {
+        this(file, methodName, null);
+    }
+
+    /**
+     * Creates a new instance holding the specified identification of a method/function in a file.
+     *
+     * @param file file to be kept in the object
+     * @param methodName name of a method inside the file
+     * @param enclosingType the name of the enclosing type. There's no contract on what to put in
+     * here. Different languages will have different requirements or conventions.
+     * @exception java.lang.IllegalArgumentException if the file or method name is {@code null}
+     * @since 1.19
+     */
+    public SingleMethod(FileObject file, String methodName, String enclosingType) {
         super();
         if (file == null) {
             throw new IllegalArgumentException("file is <null>");
@@ -52,6 +68,7 @@ public final class SingleMethod {
         }
         this.file = file;
         this.methodName = methodName;
+        this.enclosingType = enclosingType;
     }
 
     /**
@@ -74,6 +91,10 @@ public final class SingleMethod {
         return methodName;
     }
 
+    public String getEnclosingType() {
+        return enclosingType;
+    }
+
     /**
      * Standard command for running single method/function
      *
@@ -94,14 +115,16 @@ public final class SingleMethod {
             return false;
         }
         SingleMethod other = (SingleMethod) obj;
-        return other.file.equals(file) && other.methodName.equals(methodName);
+        return other.file.equals(file) && other.methodName.equals(methodName)
+            && Objects.equals(this.enclosingType, other.enclosingType);
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 29 * hash + this.file.hashCode();
-        hash = 29 * hash + this.methodName.hashCode();
+        hash = 29 * hash + Objects.hashCode(this.file);
+        hash = 29 * hash + Objects.hashCode(this.methodName);
+        hash = 29 * hash + Objects.hashCode(this.enclosingType);
         return hash;
     }
 }

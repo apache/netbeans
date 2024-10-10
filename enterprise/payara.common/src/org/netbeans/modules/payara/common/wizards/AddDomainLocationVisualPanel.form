@@ -93,7 +93,12 @@
                           </Group>
                       </Group>
                   </Group>
-                  <Component id="dockerVolumeCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="dockerVolumeCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="wslCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
                   <Group type="102" attributes="0">
                       <Component id="hostPathLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -155,7 +160,10 @@
                   <Component id="passwordField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="dockerVolumeCheckBox" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="dockerVolumeCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="wslCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="hostPathLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -165,7 +173,7 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="remoteLink" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="53" max="32767" attributes="0"/>
               <Component id="remotePanel" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -476,6 +484,16 @@
           <ResourceString bundle="org/netbeans/modules/payara/common/wizards/Bundle.properties" key="AddDomainLocationVisualPanel.containerPathField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="wslCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/payara/common/wizards/Bundle.properties" key="AddDomainLocationVisualPanel.wslCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="wslCheckBoxActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

@@ -31,7 +31,9 @@ import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.lib.editor.codetemplates.api.CodeTemplateManager;
 import org.netbeans.modules.php.blade.editor.ResourceUtilities;
+import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
 import org.netbeans.modules.php.blade.syntax.BladeDirectivesUtils;
+import org.netbeans.modules.php.blade.syntax.StringUtils;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionTask;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
@@ -351,8 +353,7 @@ public abstract class BladeCompletionItem implements CompletionItem {
 
         @Override
         protected String getRightHtmlText() {
-            int viewsPos = filePath.indexOf("/views/"); // NOI18N
-            return filePath.substring(viewsPos, filePath.length());
+            return BladePathUtils.removeViewsFolderFromPath(filePath);
         }
     }
 }

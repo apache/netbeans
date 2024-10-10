@@ -61,9 +61,9 @@ public class BladeFormatterService {
             int indent = entry.getValue().indent;
             int htmlIndent = entry.getValue().htmlIndent;
             if (tstart < context.document().getLength()) {
-                int existingLineIndent = 0;
                 try {
-                    existingLineIndent = context.lineIndent(tstart);
+                    //safety check of offset position
+                    context.lineIndent(tstart);
                 } catch (BadLocationException ex) {
                     Exceptions.printStackTrace(ex);
                     break;

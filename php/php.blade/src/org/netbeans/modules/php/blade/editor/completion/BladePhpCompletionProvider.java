@@ -187,15 +187,15 @@ public class BladePhpCompletionProvider implements CompletionProvider {
                     case D_EXTENDS, D_INCLUDE, D_INCLUDE_IF, D_INCLUDE_WHEN, D_INCLUDE_UNLESS, D_EACH -> {
                         int lastDotPos;
 
-                        if (pathName.endsWith(".")) {
+                        if (pathName.endsWith(StringUtils.DOT)) {
                             lastDotPos = pathName.length();
                         } else {
-                            lastDotPos = pathName.lastIndexOf(".");
+                            lastDotPos = pathName.lastIndexOf(StringUtils.DOT);
                         }
                         int pathOffset;
 
                         if (lastDotPos > 0) {
-                            int dotFix = pathName.endsWith(".") ? 0 : 1;
+                            int dotFix = pathName.endsWith(StringUtils.DOT) ? 0 : 1;
                             pathOffset = caretOffset - pathName.length() + lastDotPos + dotFix;
                         } else {
                             pathOffset = caretOffset - pathName.length();
@@ -204,7 +204,7 @@ public class BladePhpCompletionProvider implements CompletionProvider {
                         for (FileObject file : childrenFiles) {
                             String pathFileName = file.getName();
                             if (!file.isFolder()) {
-                                pathFileName = pathFileName.replace(".blade", ""); // NOI18N
+                                pathFileName = pathFileName.replace(BladeLanguage.FILE_EXTENSION_SUFFIX, ""); // NOI18N
                             }
                             completeBladePath(pathFileName, file, pathOffset, resultSet);
                         }
@@ -323,13 +323,12 @@ public class BladePhpCompletionProvider implements CompletionProvider {
             int caretOffset, CompletionResultSet resultSet) {
 
         String filePath = fo.getPath();
-        int viewsPos = filePath.indexOf("/views/"); // NOI18N
 
         CompletionItem item = CompletionUtilities.newCompletionItemBuilder(identifier)
                 .iconResource(getReferenceIcon(CompletionType.YIELD_ID))
                 .startOffset(caretOffset)
                 .leftHtmlText(identifier)
-                .rightHtmlText(filePath.substring(viewsPos, filePath.length()))
+                .rightHtmlText(BladePathUtils.removeViewsFolderFromPath(filePath))
                 .sortPriority(1)
                 .build();
         resultSet.addItem(item);

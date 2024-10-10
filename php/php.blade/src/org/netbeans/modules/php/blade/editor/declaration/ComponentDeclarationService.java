@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Map;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.php.blade.editor.BladeLanguage;
 import org.netbeans.modules.php.blade.editor.components.annotation.Namespace;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexResult;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexUtils;
@@ -73,7 +74,7 @@ public class ComponentDeclarationService {
             return null;
         }
         
-        FileObject componentResource = project.getProjectDirectory().getFileObject("resources/views/livewire/" + componentId + ".blade.php"); // NOI18N
+        FileObject componentResource = project.getProjectDirectory().getFileObject("resources/views/livewire/" + componentId + "." + BladeLanguage.FILE_EXTENSION); // NOI18N
 
         if (componentResource != null && componentResource.isValid()){
             return componentResource;

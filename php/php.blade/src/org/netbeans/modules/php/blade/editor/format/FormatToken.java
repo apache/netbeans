@@ -45,6 +45,6 @@ public class FormatToken {
 
     @Override
     public String toString() {
-        return this.directive + ", " + this.indent * 4 + ", " + this.tokenStart;
+        return this.directive + ", " + this.indent * 4 + ", " + this.tokenStart; //NOI18N
     }
 }

@@ -52,7 +52,7 @@
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.lsp.server.explorer.NodeActionsProvider.forFile"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddADBAction" stringvalue="Tools"/>
-                <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddDbConnectionToVault" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddSecretsToVault" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.CloudRefresh" stringvalue="Tools"/>

@@ -18,14 +18,22 @@
  */
 package org.netbeans.modules.cloud.oracle.database;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import org.netbeans.api.db.explorer.ConnectionManager;
+import org.netbeans.api.db.explorer.DatabaseConnection;
+import org.netbeans.modules.cloud.oracle.assets.CloudAssets;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import org.netbeans.modules.cloud.oracle.vault.SensitiveData;
 
 /**
  *
  * @author Jan Horvath
  */
-public class DatabaseItem extends OCIItem {
+public class DatabaseItem extends OCIItem implements SensitiveData {
+    private static final String DEFAULT_REF_NAME = "DEFAULT";
     private final String serviceUrl;
     private final String connectionName;
 
@@ -54,4 +62,48 @@ public class DatabaseItem extends OCIItem {
         return Integer.MAX_VALUE;
     }
     
+    @Override
+    public Map<String, String> getSecrets() {
+        Map<String, String> secrets = new HashMap<>();
+        DatabaseConnection conn = this.getCorrespondingConnection();
+        if (conn == null) {
+            return secrets;
+        }
+        
+        String refName = getFormattedRefName();
+
+        secrets.put("DATASOURCES_" + refName + "_USERNAME", conn.getUser()); //NOI18N
+        secrets.put("DATASOURCES_" + refName + "_PASSWORD", conn.getPassword()); //NOI18N
+        secrets.put("DATASOURCES_" + refName + "_WALLET_PASSWORD", UUID.randomUUID().toString()); //NOI18N
+        secrets.put("DATASOURCES_" + refName + "_COMPARTMENTOCID", (String) conn.getConnectionProperties().get("CompartmentOCID")); //NOI18N
+        String ocid = (String) conn.getConnectionProperties().get("OCID"); //NOI18N
+        if (ocid != null && !ocid.isEmpty()) {
+            secrets.put("DATASOURCES_" + refName + "_OCID", ocid); //NOI18N
+        }
+        return secrets;
+    }
+    
+    private String getFormattedRefName() {
+        String refName = CloudAssets.getDefault().getReferenceName(this);
+        if (refName == null) {
+            return DEFAULT_REF_NAME;
+        }
+        return refName.toUpperCase();
+    }
+    
+    /**
+     * Corresponding database connection if exist, or null
+     * 
+     * @return DatabaseConnection or null
+     */
+    public DatabaseConnection getCorrespondingConnection() {
+        DatabaseConnection[] connections = ConnectionManager.getDefault().getConnections();
+        for (int i = 0; i < connections.length; i++) {
+            if (this.getKey().getValue().equals(
+                    connections[i].getConnectionProperties().get("OCID"))) { //NOI18N
+                return connections[i];
+            }
+        }
+        return null;
+    }
 }

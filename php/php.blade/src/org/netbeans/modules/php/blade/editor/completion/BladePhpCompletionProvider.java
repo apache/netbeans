@@ -220,6 +220,7 @@ public class BladePhpCompletionProvider implements CompletionProvider {
                 String pathName = EditorStringUtils.stripSurroundingQuotes(currentToken.getText());
 
                 if (!pathName.contains(BladePathUtils.LARAVEL_RESOURCES)) {
+                    break;
                 }
 
                 int lastSlash = pathName.lastIndexOf(StringUtils.FORWARD_SLASH);
@@ -255,8 +256,7 @@ public class BladePhpCompletionProvider implements CompletionProvider {
                             addAssetPathCompletionItem(jsPath, file.getPath(), pathOffset, resultSet, CompletionType.JS_FILE);
                         }
                     }
-                }
-                if (isCssPath) {
+                } else if (isCssPath) {
                     FileObject cssFolder = projectDir.getFileObject(CSS_ASSET_FOLDER);
                     if (cssFolder == null || !cssFolder.isValid()) {
                         break;

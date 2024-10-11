@@ -37,8 +37,8 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.Vocabulary;
+import org.netbeans.modules.php.blade.syntax.StringUtils;
 import org.netbeans.modules.php.blade.syntax.antlr4.formatter.BladeAntlrFormatterLexer;
-import static org.netbeans.modules.php.blade.syntax.antlr4.formatter.BladeAntlrFormatterLexer.*;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.filesystems.FileObject;
@@ -54,12 +54,12 @@ import org.openide.windows.TopComponent;
 @ActionRegistration(displayName = "AntlrFormatter Tokens")
 public class ViewAntlrFormatterTokensAction extends AbstractAction implements ActionListener {
 
-    Node node;
+    private final Node node;
     private transient JEditorPane viewer;
 
     public ViewAntlrFormatterTokensAction(Node node) {
         this.node = node;
-        putValue(NAME, "AntlrFormatter Tokens");
+        putValue(NAME, "AntlrFormatter Tokens"); // NOI18N
     }
 
     @Override
@@ -88,12 +88,11 @@ public class ViewAntlrFormatterTokensAction extends AbstractAction implements Ac
         }
 
         protected void initComponents() {
-            setName("Antlr formatter token preview - " + fileObject.getName());
+            setName("Antlr formatter token preview - " + fileObject.getName()); // NOI18N
             setLayout(new BorderLayout());
             viewer = new JEditorPane();
-            viewer.setContentType("text/plain");
-            viewer.setEditable(false);
-            //viewer.addHyperlinkListener(this::linkHandler);
+            viewer.setContentType("text/plain"); // NOI18N
+            viewer.setEditable(false); 
 
             JPanel panel = new JPanel(new BorderLayout());
             panel.add(new JScrollPane(viewer), BorderLayout.CENTER);
@@ -114,18 +113,18 @@ public class ViewAntlrFormatterTokensAction extends AbstractAction implements Ac
                 for (Token token : tokens.getTokens()) {
                     int tokenId = token.getType();
                     String text = token.getText();
-                    result.append("Token #");
+                    result.append("Token #"); // NOI18N
                     result.append(tokenId);
-                    result.append(" ");
+                    result.append(" "); // NOI18N
                     result.append(vocabulary.getDisplayName(tokenId));
-                    String tokenText = BladeUtils.replaceLinesAndTabs(text);
+                    String tokenText = StringUtils.replaceLinesAndTabs(text);
                     if (!tokenText.isEmpty()) {
-                        result.append(" ");
-                        result.append("[");
+                        result.append(" "); // NOI18N
+                        result.append("["); // NOI18N
                         result.append(token);
-                        result.append("]");
+                        result.append("]"); // NOI18N
                     }
-                    result.append("\n");
+                    result.append("\n"); // NOI18N
                 }
 
                 EditorKit kit = viewer.getEditorKit();

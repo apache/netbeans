@@ -21,7 +21,6 @@ package org.netbeans.modules.php.blade.editor.completion;
 import java.util.Collections;
 import java.util.Set;
 import javax.swing.ImageIcon;
-import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;

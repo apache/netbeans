@@ -26,7 +26,7 @@ public final class StringUtils {
 
     public static final String DOT = "."; //NOI18N
     public static final String FORWARD_SLASH = "/"; //NOI18N
-    
+
     private StringUtils() {
 
     }
@@ -56,11 +56,19 @@ public final class StringUtils {
     }
 
     public static String kebabToCamel(String str) {
-        String[] words = str.toLowerCase().split("-");
+        String[] words = str.toLowerCase().split("-"); // NOI18N
         String camelCase = words[0];
         for (int i = 1; i < words.length; i++) {
             camelCase += words[i].substring(0, 1).toUpperCase() + words[i].substring(1);
         }
         return capitalize(camelCase);
+    }
+
+    public static String replaceLinesAndTabs(String input) {
+        String escapedString = input;
+        escapedString = escapedString.replaceAll("\n", "\\\\n"); // NOI18N
+        escapedString = escapedString.replaceAll("\r", "\\\\r"); // NOI18N
+        escapedString = escapedString.replaceAll("\t", "\\\\t"); // NOI18N
+        return escapedString;
     }
 }

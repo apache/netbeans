@@ -37,8 +37,6 @@ public final class QueryCache<K, V> {
     private Map<K, CacheValue<V>> cacheMap;
     private Long cacheTimeout;
     
-    //private static final Map<QuerySupport, QueryCache> QUERY_SUPPORT_INDEX = new WeakHashMap<>();
-
     public QueryCache() {
         this(DEFAULT_CACHE_TIMEOUT);
     }

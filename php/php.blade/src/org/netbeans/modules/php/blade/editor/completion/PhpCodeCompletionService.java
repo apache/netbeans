@@ -31,7 +31,6 @@ import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
 import org.netbeans.modules.csl.api.CompletionProposal;
-import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -43,7 +42,6 @@ import org.netbeans.modules.php.blade.csl.elements.ClassElement;
 import org.netbeans.modules.php.blade.csl.elements.ElementType;
 import org.netbeans.modules.php.blade.csl.elements.NamedElement;
 import org.netbeans.modules.php.blade.editor.EditorStringUtils;
-import org.netbeans.modules.php.blade.editor.directives.CustomDirectives;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexFunctionResult;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexResult;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexUtils;
@@ -72,7 +70,7 @@ public final class PhpCodeCompletionService {
     public List<CompletionProposal> getCompletionProposal(int offset, Token currentToken) {
         final List<CompletionProposal> proposals = new ArrayList<>();
         String phpSnippet = currentToken.getText();
-        String phpStart = "<?php ";
+        String phpStart = "<?php "; // NOI18N
         if (phpSnippet.length() < 1 || currentToken.getStartIndex() < phpStart.length()) {
             return proposals;
         }
@@ -355,7 +353,7 @@ public final class PhpCodeCompletionService {
     }
 
     private static NamedElement functionElement(PhpIndexResult indexResult) {
-        String inputString = indexResult.name + "()";
+        String inputString = indexResult.name + "()"; // NOI18N
         return namedElement(inputString, indexResult, ElementType.PHP_FUNCTION);
     }
 

@@ -25,7 +25,10 @@
     <target name="generate-antlr-parser" description="Regenerate the ANTLRv4 parser" depends="init" extensionOf="-pre-compile">
         <property name="v10.outdir" location="${src.dir}/org/netbeans/modules/php/blade/syntax/antlr4/v10"/>
         <property name="formatter.outdir" location="${src.dir}/org/netbeans/modules/php/blade/syntax/antlr4/formatter"/>
-
+        <path id="antlr4.tool">
+            <fileset dir="../../ide/libs.antlr4.runtime/external" includes="*.jar"/>
+            <fileset dir="../../ide/libs.antlr3.runtime/external" includes="antlr-runtime-*.jar"/>
+        </path>
         <java classname="org.antlr.v4.Tool"  fork="true" dir="${v10.outdir}">
             <arg value="-o"/>
             <arg value="${v10.outdir}"/>

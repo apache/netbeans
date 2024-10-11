@@ -64,10 +64,10 @@ public class BladePathInfo {
             return false;
         }
         final BladePathInfo other = (BladePathInfo) obj;
-        if (!Objects.equals(this.bladePath, other.bladePath)) {
+        if (!Objects.equals(this.bladePath, other.getBladePath())) {
             return false;
         }
-        return Objects.equals(this.sourceFile, other.sourceFile);
+        return Objects.equals(this.sourceFile, other.getSourceFile());
     }
 
 }

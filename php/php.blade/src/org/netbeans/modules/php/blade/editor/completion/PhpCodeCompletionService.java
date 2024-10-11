@@ -20,20 +20,30 @@ package org.netbeans.modules.php.blade.editor.completion;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import javax.swing.text.BadLocationException;
 import org.antlr.v4.runtime.Token;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
+import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.spi.ParserResult;
+import org.netbeans.modules.parsing.api.ParserManager;
+import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
+import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.blade.csl.elements.ClassElement;
 import org.netbeans.modules.php.blade.csl.elements.ElementType;
 import org.netbeans.modules.php.blade.csl.elements.NamedElement;
 import org.netbeans.modules.php.blade.editor.EditorStringUtils;
+import org.netbeans.modules.php.blade.editor.directives.CustomDirectives;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexFunctionResult;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexResult;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexUtils;
@@ -41,10 +51,11 @@ import org.netbeans.modules.php.blade.editor.parser.BladeParserResult;
 import static org.netbeans.modules.php.blade.editor.parser.BladeParserResult.ReferenceType.PHP_CLASS;
 import static org.netbeans.modules.php.blade.editor.parser.BladeParserResult.ReferenceType.PHP_CONSTANT;
 import static org.netbeans.modules.php.blade.editor.parser.BladeParserResult.ReferenceType.PHP_NAMESPACE_PATH_TYPE;
-import org.netbeans.modules.php.blade.editor.parser.ParsingUtils;
 import org.netbeans.modules.php.editor.csl.PHPLanguage;
+import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.spi.project.ui.support.ProjectConvertors;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -59,43 +70,62 @@ public final class PhpCodeCompletionService {
     }
 
     public List<CompletionProposal> getCompletionProposal(int offset, Token currentToken) {
-        List<CompletionProposal> proposals = new ArrayList<>();
+        final List<CompletionProposal> proposals = new ArrayList<>();
         String phpSnippet = currentToken.getText();
         String phpStart = "<?php ";
         if (phpSnippet.length() < 1 || currentToken.getStartIndex() < phpStart.length()) {
             return proposals;
         }
         int previousSpace = currentToken.getStartIndex() - phpStart.length();
-        ParsingUtils parsingUtils = new ParsingUtils();
-        String whitespaceFill = new String(new char[previousSpace]).replace("\0", " ");
+        String whitespaceFill = new String(new char[previousSpace]).replace("\0", " "); // NOI18N
         String phpSnippetText = whitespaceFill + phpStart + currentToken.getText();
-        parsingUtils.parsePhpText(phpSnippetText);
-        ParserResult phpParserResult = parsingUtils.getParserResult();
-        if (phpParserResult == null) {
+        BaseDocument doc = new BaseDocument(true, FileUtils.PHP_MIME_TYPE);
+        try {
+            doc.insertString(0, phpSnippetText, null);
+            final Source source = Source.create(doc);
+
+            try {
+                ParserManager.parse(Collections.singleton(source), new UserTask() {
+                    @Override
+                    public void run(ResultIterator resultIterator) throws Exception {
+                        PHPParseResult result = (PHPParseResult) resultIterator.getParserResult();
+                        if (result == null || result.getProgram() == null) {
+                            return;
+                        }
+                        CodeCompletionHandler cc = (new PHPLanguage()).getCompletionHandler();
+                        prefix = cc.getPrefix(result, offset, true);
+
+                        if (prefix == null) {
+                            return;
+                        }
+
+                        if (prefix.length() == 0) {
+                            prefix = cc.getPrefix(result, offset - 1, true);
+                        }
+
+                        if (prefix == null || prefix.length() == 0) {
+                            return;
+                        }
+
+                        String phpPrefix = prefix;
+
+                        CodeCompletionContext context = PhpCodeCompletionContext.completionContext(offset,
+                                result, phpPrefix);
+
+                        CodeCompletionResult completionResult = cc.complete(context);
+                        proposals.addAll(completionResult.getItems());
+                    }
+                });
+            } catch (ParseException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+
+        } catch (BadLocationException ex) {
+            Exceptions.printStackTrace(ex);
             return proposals;
         }
-        CodeCompletionHandler cc = (new PHPLanguage()).getCompletionHandler();
-        prefix = cc.getPrefix(phpParserResult, offset, true);
 
-        if (prefix == null) {
-            return proposals;
-        }
-
-        if (prefix.length() == 0) {
-            prefix = cc.getPrefix(phpParserResult, offset - 1, true);
-        }
-
-        if (prefix == null || prefix.length() == 0) {
-            return proposals;
-        }
-
-        String phpPrefix = prefix;
-
-        CodeCompletionContext context = PhpCodeCompletionContext.completionContext(offset,
-                phpParserResult, phpPrefix);
-
-        CodeCompletionResult completionResult = cc.complete(context);
-        return completionResult.getItems();
+        return proposals;
     }
 
     public static void completePhpCode(final List<CompletionProposal> completionProposals,

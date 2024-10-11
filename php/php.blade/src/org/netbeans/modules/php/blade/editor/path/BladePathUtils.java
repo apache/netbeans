@@ -43,7 +43,6 @@ public final class BladePathUtils {
     public static final String LARAVEL_RESOURCES = "resources"; //NOI18N
     public static final String LARAVEL_VIEW_FOLDER = "views"; //NOI18N
     public static final String LARAVEL_VIEW_PATH = LARAVEL_RESOURCES + StringUtils.FORWARD_SLASH + LARAVEL_VIEW_FOLDER;
-    public static final String BLADE_EXT = "." + BladeLanguage.FILE_EXTENSION; //NOI18N
 
     private BladePathUtils() {
 
@@ -312,11 +311,11 @@ public final class BladePathUtils {
     }
 
     public static String toBladeViewPath(String filePath) {
-        return filePath.replace(BLADE_EXT, "").replace(StringUtils.FORWARD_SLASH, StringUtils.DOT); //NOI18N
+        return filePath.replace(BladeLanguage.FILE_EXTENSION_WITH_DOT, "").replace(StringUtils.FORWARD_SLASH, StringUtils.DOT); //NOI18N
     }
 
     public static String viewPathToFilePath(String viewPath) {
-        return viewPath.replace(StringUtils.DOT, StringUtils.FORWARD_SLASH) + BLADE_EXT;
+        return viewPath.replace(StringUtils.DOT, StringUtils.FORWARD_SLASH) + BladeLanguage.FILE_EXTENSION_WITH_DOT;
     }
 
     public static HashSet<FileObject> getDefaultRoots(Project project) {

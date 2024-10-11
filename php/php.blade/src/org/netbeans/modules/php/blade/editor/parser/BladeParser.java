@@ -42,7 +42,7 @@ public class BladeParser extends org.netbeans.modules.parsing.spi.Parser {
         }
 
         if (task.getClass().getName().contains("HtmlCssIndexContributor")) { // NOI18N
-            LOGGER.log(Level.INFO, "Skipped parsing for {0}", task.getClass().getName());
+            LOGGER.log(Level.INFO, "Skipped parsing for {0}", task.getClass().getName()); // NOI18N
             return;
         }
         BladeParserResult parserResult = createParserResult(snapshot);

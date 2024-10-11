@@ -50,6 +50,7 @@ import org.netbeans.modules.php.blade.editor.lexer.BladeTokenId.BladeLanguageHie
 import org.netbeans.modules.php.blade.editor.navigator.BladeStructureScanner;
 import org.netbeans.modules.php.blade.editor.parser.BladeParser;
 import org.netbeans.modules.php.blade.editor.parser.BladeParserResult;
+import org.netbeans.modules.php.blade.syntax.StringUtils;
 
 /**
  *
@@ -92,6 +93,7 @@ public class BladeLanguage extends DefaultLanguageConfig {
     public static final String MIME_TYPE = "text/x-blade"; //NOI18N
     public static final String FILE_EXTENSION_SUFFIX = ".blade"; //NOI18N
     public static final String FILE_EXTENSION = "blade.php"; //NOI18N
+    public static final String FILE_EXTENSION_WITH_DOT = StringUtils.DOT + FILE_EXTENSION;
 
     @Override
     public Language<BladeTokenId> getLexerLanguage() {

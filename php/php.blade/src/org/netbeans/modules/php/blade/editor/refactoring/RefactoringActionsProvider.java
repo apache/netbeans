@@ -26,6 +26,7 @@ import javax.swing.text.Document;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.editor.NbEditorUtilities;
+import org.netbeans.modules.php.blade.editor.BladeLanguage;
 import org.netbeans.modules.refactoring.api.ui.ExplorerContext;
 import org.netbeans.modules.refactoring.spi.ui.ActionsImplementationProvider;
 import org.netbeans.modules.refactoring.spi.ui.UI;
@@ -63,7 +64,7 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider {
                 FileObject file = NbEditorUtilities.getFileObject(doc);
                 int caretPos = c.getCaretPosition();
 
-                String name = "Unknown";
+                String name = "Unknown"; //NOI18N
 
                 if (abstractDoc != null) {
                     abstractDoc.readLock();
@@ -109,20 +110,20 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider {
             Node node = lookup.lookup(Node.class);
             FileObject file = node.getLookup().lookup(FileObject.class);
             FileObject dirTarget = (dir!= null && dir.isFolder()) ?  dir : file.getParent();
-
+            String bladeExtension = BladeLanguage.FILE_EXTENSION_WITH_DOT;
             String name = file.getNameExt();
             String existingFileName = file.getNameExt();
             int counter = 1;
             while(counter < 50 && dirTarget.getFileObject(existingFileName)!= null){
                 //shouldn't be the case
-                existingFileName = name.substring(0, name.length() - ".blade.php".length()) + "_" + counter + ".blade.php";
+                existingFileName = name.substring(0, name.length() - bladeExtension.length()) + "_" + counter + bladeExtension; //NOI18N
                 counter++;
             }
 
-            String incrementSuffix = counter > 1 ? "_" + (counter - 1) : "";
-            String resultName = existingFileName.substring(0, name.length() - ".blade.php".length()) + incrementSuffix;
+            String incrementSuffix = counter > 1 ? "_" + (counter - 1) : ""; //NOI18N
+            String resultName = existingFileName.substring(0, name.length() - bladeExtension.length()) + incrementSuffix;
             try {
-                FileUtil.copyFile(file, dirTarget, resultName, "blade.php");
+                FileUtil.copyFile(file, dirTarget, resultName, BladeLanguage.FILE_EXTENSION);
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -134,8 +135,7 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider {
         boolean ret = false;
         Node node = lookup.lookup(Node.class);
 
-        //hack to identify a blade file ?
-        if (node != null && node.getDisplayName().endsWith(".blade.php")) {
+        if (node != null && node.getDisplayName().endsWith(BladeLanguage.FILE_EXTENSION_WITH_DOT)) {
             ret = true;
         }
         return ret;
@@ -150,7 +150,7 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider {
         if (n == null) {
             return null;
         }
-        DataObject dob = n.getCookie(DataObject.class);
+        DataObject dob = n.getLookup().lookup(DataObject.class);
         if (dob != null) {
             return dob.getPrimaryFile();
         }

@@ -33,29 +33,31 @@ public class TooltipDoc {
     public static Documentation generateDoc(NamedElement elementHandle) {
         Documentation result = null;
         switch (elementHandle.getType()) {
-            case PATH:
-                String filePath = "";
+            case PATH -> {
+                String filePath = ""; // NOI18N
                 if (elementHandle.getFileObject() != null){
                     filePath = BladePathUtils.getRelativeProjectPath(elementHandle.getFileObject());
                 }
-                return Documentation.create(String.format("<div align=\"right\"><font size=-1>%s</font></div>", "blade path")
-                        + "<div><b>" + filePath + "</b></div>", null);
-            case CUSTOM_DIRECTIVE:
-                String docInfo = String.format("<div align=\"right\"><font size=-1>%s</font></div>", "custom directive")
-                        + "<div>" + elementHandle.getFileObject().getNameExt() + "</div>";
+                return Documentation.create(String.format("<div align=\"right\"><font size=-1>%s</font></div>", "blade path") // NOI18N
+                        + "<div><b>" + filePath + "</b></div>", null); // NOI18N
+            }
+            case CUSTOM_DIRECTIVE -> {
+                String docInfo = String.format("<div align=\"right\"><font size=-1>%s</font></div>", "custom directive") // NOI18N
+                        + "<div>" + elementHandle.getFileObject().getNameExt() + "</div>"; // NOI18N
                 return Documentation.create(docInfo, null);
+            }
         }
 
         return result;
     }
     
     public static Documentation generateFunctionDoc(PhpFunctionElement elementHandle) {
-        String info = "<div align=\"left\"><b>" + elementHandle.getName() + elementHandle.getParamsAsString() + "</b></div>";
+        String info = "<div align=\"left\"><b>" + elementHandle.getName() + elementHandle.getParamsAsString() + "</b></div>"; // NOI18N
         if (elementHandle.getNamespace() != null){
-            info += "<div>" + elementHandle.getNamespace() + "</div>";
+            info += "<div>" + elementHandle.getNamespace() + "</div>"; // NOI18N
         }
         info += "<div>" + elementHandle.getFileObject().getNameExt() + "</div>";
-        info += String.format("<div align=\"right\"><font size=-1>%s</font></div>", "php function");
+        info += String.format("<div align=\"right\"><font size=-1>%s</font></div>", "php function"); // NOI18N
         return Documentation.create(info, null);
     }
 }

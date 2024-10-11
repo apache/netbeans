@@ -21,7 +21,6 @@ package org.netbeans.modules.php.blade.editor.actions;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.AbstractAction;
-import javax.swing.text.JTextComponent;
 import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
 import org.netbeans.modules.php.blade.editor.refactoring.BladePathInfo;
 import org.netbeans.modules.php.blade.editor.refactoring.WhereBladePathUsedRefactoringUIImpl;

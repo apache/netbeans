@@ -21,6 +21,7 @@ package org.netbeans.modules.php.blade.editor.directives;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,8 +31,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.DeclarationFinder;
-import org.netbeans.modules.php.blade.editor.parser.ParsingUtils;
+import org.netbeans.modules.parsing.api.ParserManager;
+import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.php.blade.project.BladeProjectProperties;
+import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
@@ -40,6 +46,7 @@ import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -138,19 +145,34 @@ public final class CustomDirectives {
     }
 
     public void addDirectiveNamesFromFile(FileObject file) {
-        ParsingUtils parsingUtils = new ParsingUtils();
-        parsingUtils.parseFileObject(file);
-        FunctionInvocationVisitor functionInvocationVisitor = new FunctionInvocationVisitor();
-        if (parsingUtils.getParserResult() != null && parsingUtils.getParserResult().getProgram() != null) {
-            parsingUtils.getParserResult().getProgram().accept(functionInvocationVisitor);
-            List<CustomDirective> directiveList = functionInvocationVisitor.getDirectives();
+        final Source source = Source.create(file);
 
-            if (directiveList.isEmpty()) {
-                return;
-            }
+        if (source == null) {
+            return;
+        }
 
-            customDirectiveList.addAll(directiveList);
-            customDirectives.put(file, directiveList);
+        try {
+            ParserManager.parse(Collections.singleton(source), new UserTask() {
+                @Override
+                public void run(ResultIterator resultIterator) throws Exception {
+                    PHPParseResult result = (PHPParseResult) resultIterator.getParserResult();
+                    if (result == null || result.getProgram() == null) {
+                        return;
+                    }
+                    FunctionInvocationVisitor functionInvocationVisitor = new FunctionInvocationVisitor();
+                    result.getProgram().accept(functionInvocationVisitor);
+                    List<CustomDirective> directiveList = functionInvocationVisitor.getDirectives();
+
+                    if (directiveList.isEmpty()) {
+                        return;
+                    }
+
+                    customDirectiveList.addAll(directiveList);
+                    customDirectives.put(file, directiveList);
+                }
+            });
+        } catch (ParseException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }
 

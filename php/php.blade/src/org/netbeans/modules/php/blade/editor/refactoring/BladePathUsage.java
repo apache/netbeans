@@ -121,9 +121,9 @@ public class BladePathUsage {
                         //offset quote symbols
                         String annotatedLine
                                 = lineText.substring(0, start - rowStart + 1)
-                                + "<strong>"
+                                + "<strong>" //NOI18N
                                 + lineText.substring(start - rowStart + 1, end - rowStart + 2)
-                                + "</strong>"
+                                + "</strong>" //NOI18N
                                 + lineText.substring(end - rowStart + 2);
                         refactoringElements.add(query, new BladeRefactoringElementImpl(annotatedLine, fo, bounds));
                     } catch (BadLocationException | IOException ex) {
@@ -170,7 +170,7 @@ public class BladePathUsage {
 
         @Override
         public String getText() {
-            return "Element usage";
+            return "Element usage"; //NOI18N
         }
 
         @Override

@@ -189,7 +189,7 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
             JEditorPane c = ec.getOpenedPanes()[0];
             Document doc = c.getDocument();
             FileObject file = NbEditorUtilities.getFileObject(doc);
-            LSPBindings bindings = file != null ? LSPBindings.getBindings(file) : null;
+            LSPBindings bindings = file != null ? LSPBindings.getBindings(file, false) : null;
             return bindings;
         }
         return null;

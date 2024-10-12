@@ -51,7 +51,6 @@ import org.netbeans.spi.editor.highlighting.support.OffsetsBag;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
-import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -59,7 +58,6 @@ import org.openide.util.RequestProcessor;
  */
 public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyChangeListener {
 
-    private static final RequestProcessor WORKER = new RequestProcessor(MarkOccurrences.class.getName(), 1, false, false);
     private final JTextComponent component;
     private Document doc;
     private int caretPos;
@@ -139,13 +137,11 @@ public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyC
         } else {
             caretPos = -1;
         }
-        WORKER.post(() -> {
-            FileObject file = NbEditorUtilities.getFileObject(doc);
+        FileObject file = NbEditorUtilities.getFileObject(doc);
 
-            if (file != null) {
-                LSPBindings.rescheduleBackgroundTask(file, this);
-            }
-        });
+        if (file != null) {
+            LSPBindings.rescheduleBackgroundTask(file, this);
+        }
     }
 
     @Override

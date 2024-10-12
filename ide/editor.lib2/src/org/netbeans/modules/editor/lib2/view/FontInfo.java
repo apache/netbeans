@@ -26,6 +26,7 @@ import java.awt.font.TextLayout;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.StyleContext;
 
 /**
  * Info about font measurements.
@@ -83,8 +84,8 @@ final class FontInfo {
 
     FontInfo(Font origFont, JTextComponent textComponent, FontRenderContext frc, float rowHeightCorrection, int textZoom) {
         renderFont = (textZoom != 0)
-                ? new Font(origFont.getName(), origFont.getStyle(), Math.max(origFont.getSize() + textZoom, 1))
-                : origFont;
+                ? StyleContext.getDefaultStyleContext().getFont(origFont.getName(), origFont.getStyle(), Math.max(origFont.getSize() + textZoom, 1))
+                : StyleContext.getDefaultStyleContext().getFont(origFont.getName(), origFont.getStyle(), origFont.getSize());
         char defaultChar = 'A';
         String defaultCharText = String.valueOf(defaultChar);
         TextLayout defaultCharTextLayout = new TextLayout(defaultCharText, renderFont, frc); // NOI18N

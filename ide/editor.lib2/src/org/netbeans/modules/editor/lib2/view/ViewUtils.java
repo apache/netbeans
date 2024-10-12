@@ -131,6 +131,7 @@ public final class ViewUtils {
     }
 
     public static Font getFont(AttributeSet attrs, Font defaultFont) {
+        Font font = defaultFont;
         if (attrs != null) {
             String fontName = (String) attrs.getAttribute(StyleConstants.FontFamily);
             Boolean bold = (Boolean) attrs.getAttribute(StyleConstants.Bold);
@@ -154,10 +155,10 @@ public final class ViewUtils {
                     }
                 }
                 int fontSize = (fontSizeInteger != null) ? fontSizeInteger : defaultFont.getSize();
-                defaultFont = new Font(fontName, fontStyle, fontSize);
+                font = StyleContext.getDefaultStyleContext().getFont(fontName, fontStyle, fontSize);
             }
         }
-        return defaultFont;
+        return font;
     }
 
     /**
@@ -181,7 +182,7 @@ public final class ViewUtils {
                 if (italic != null && italic) {
                     fontStyle |= Font.ITALIC;
                 }
-                font = new Font(fontName, fontStyle, fontSizeInteger);
+                font = StyleContext.getDefaultStyleContext().getFont(fontName, fontStyle, fontSizeInteger);
             }
         }
         return font;

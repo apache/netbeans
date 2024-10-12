@@ -110,7 +110,7 @@ public class FoldManagerImpl implements FoldManager, BackgroundTask {
 
     @Override
     public void run(LSPBindings bindings, FileObject file) {
-        EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+        EditorCookie ec = Utils.lookupForFile(file, EditorCookie.class);
         Document doc = ec != null ? ec.getDocument() : null;
         if (doc == null) {
             return;

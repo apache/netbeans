@@ -159,7 +159,7 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
     public void publishDiagnostics(PublishDiagnosticsParams pdp) {
         try {
             FileObject file = URLMapper.findFileObject(new URI(pdp.getUri()).toURL());
-            EditorCookie ec = file != null ? file.getLookup().lookup(EditorCookie.class) : null;
+            EditorCookie ec = Utils.lookupForFile(file, EditorCookie.class);
             Document doc = ec != null ? ec.getDocument() : null;
             if (doc == null) {
                 return ; //ignore...

@@ -57,6 +57,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.text.Line;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
@@ -69,6 +70,23 @@ public class Utils {
 
     public static String toURI(FileObject file) {
         return file.toURI().toString().replace("file:/", "file:///");
+    }
+
+    public static String uriReplaceFilename(String inputUriString, String filename) {
+        try {
+            URI inputUri = URI.create(inputUriString);
+            URI newUri = inputUri.resolve(new URI(null, null, filename, null));
+            if ("file".equals(newUri.getScheme())) {
+                // By default the java URI routines drop empty hostnames from
+                // file URIs. Normalize this to the empty hostname. See also
+                // #toURI
+                return new URI("file", "", newUri.getPath(), null).toString();
+            } else {
+                return newUri.toString();
+            }
+        } catch (URISyntaxException ex) {
+            throw new IllegalArgumentException(ex);
+        }
     }
 
     public static Position createPosition(Document doc, int offset) throws BadLocationException {
@@ -137,7 +155,7 @@ public class Utils {
     private static void applyEdits(String uri, List<TextEdit> edits) {
         try {
             FileObject file = URLMapper.findFileObject(new URI(uri).toURL());
-            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+            EditorCookie ec = lookupForFile(file, EditorCookie.class);
             Document doc = ec != null ? ec.openDocument() : null;
             if (doc == null) {
                 return ;
@@ -274,7 +292,7 @@ public class Utils {
         FileObject targetFile = fromURI(targetUri);
 
         if (targetFile != null) {
-            LineCookie lc = targetFile.getLookup().lookup(LineCookie.class);
+            LineCookie lc = lookupForFile(targetFile, LineCookie.class);
 
             //TODO: expecting lc != null!
 
@@ -286,6 +304,25 @@ public class Utils {
         } else {
             //TODO: beep
         }
+    }
+
+    public static <T> T lookupForFile(FileObject targetFile, Class<T> clazz) {
+        if(targetFile == null) {
+            return null;
+        }
+        T lc = null;
+        try {
+            if (lc == null) {
+                DataObject dataObject = DataObject.find(targetFile);
+                lc = dataObject.getLookup().lookup(clazz);
+            }
+        } catch (DataObjectNotFoundException ex) {
+            // Ignore
+        }
+        if (lc == null) {
+            lc = targetFile.getLookup().lookup(clazz);
+        }
+        return lc;
     }
 
     private static final Comparator<TextEdit> rangeReverseSort = (s1, s2) -> {

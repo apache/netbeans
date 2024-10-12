@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.lsp.client.bindings;
 
+import org.netbeans.modules.lsp.client.Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,19 +48,23 @@ import org.eclipse.lsp4j.services.WorkspaceService;
 import org.junit.Test;
 import org.netbeans.junit.MockServices;
 import org.netbeans.modules.editor.lib2.EditorApiPackageAccessor;
-import org.netbeans.modules.lsp.client.Utils;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.text.CloneableEditorSupport;
 import org.openide.text.NbDocument;
+
 import static org.junit.Assert.*;
+
 import org.netbeans.modules.lsp.client.TestUtils.BaseWorkspaceServiceImpl;
+
 import static org.netbeans.modules.lsp.client.TestUtils.MIME_TYPE;
+
 import org.netbeans.modules.lsp.client.TestUtils.MimeDataProviderImpl;
 import org.netbeans.modules.lsp.client.TestUtils.MockLSP;
 import org.netbeans.modules.lsp.client.TestUtils.MockMimeResolver;
+import org.openide.loaders.DataFolder;
 
 /**
  *
@@ -92,7 +97,7 @@ public class TextDocumentSyncServerCapabilityHandlerTest {
 
         String uri = Utils.toURI(file);
 
-        SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeAndWait(() -> {
             EditorApiPackageAccessor.get().register(pane);
         });
 
@@ -125,28 +130,78 @@ public class TextDocumentSyncServerCapabilityHandlerTest {
 //
 //        assertEvents("didSave: " + uri);
 
-        SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeAndWait(() -> {
             EditorApiPackageAccessor.get().forceRelease(pane);
         });
 
         assertEvents("didClose: " + uri);
 
-        SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeAndWait(() -> {
             EditorApiPackageAccessor.get().register(pane);
         });
 
         assertEvents("didOpen: " + uri + "/" + MIME_TYPE + "/0/tet");
 
-        SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeAndWait(() -> {
             EditorApiPackageAccessor.get().forceRelease(pane);
         });
 
         assertEvents("didClose: " + uri);
     }
 
+    @Test
+    public void testRename() throws Exception {
+        MockLSP.createServer = () -> new TestLanguageServer();
+        MockServices.setServices(MimeDataProviderImpl.class, MockMimeResolver.class);
+
+        new TextDocumentSyncServerCapabilityHandler.Init().run();
+
+        FileObject folder = FileUtil.createMemoryFileSystem().getRoot().createFolder("myfolder");
+        FileObject folder2 = FileUtil.createMemoryFileSystem().getRoot().createFolder("myfolder2");
+        FileObject file = folder.createData("data.mock-txt");
+        DataObject dataObject = DataObject.find(file);
+        EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+        ((CloneableEditorSupport) ec).setMIMEType(MIME_TYPE);
+        Document doc = ec.openDocument();
+        JEditorPane pane = new JEditorPane() {
+            @Override
+            public boolean isFocusOwner() {
+                return true;
+            }
+        };
+
+        pane.setDocument(doc);
+
+        String uri = Utils.toURI(file);
+
+        SwingUtilities.invokeAndWait(() -> {
+            EditorApiPackageAccessor.get().register(pane);
+        });
+
+        assertEvents("didOpen: " + uri + "/" + MIME_TYPE + "/0/");
+
+        dataObject.rename("data-renamed.mock-txt");
+
+        String uri2 = Utils.toURI(file);
+
+        assertEvents("didClose: " + uri, "didOpen: " + uri2 + "/" + MIME_TYPE + "/0/");
+
+        dataObject.move(DataFolder.findFolder(folder2));
+
+        String uri3 = Utils.toURI(dataObject.getPrimaryFile());
+
+        assertEvents("didClose: " + uri2, "didOpen: " + uri3 + "/" + MIME_TYPE + "/0/");
+
+        SwingUtilities.invokeAndWait(() -> {
+            EditorApiPackageAccessor.get().forceRelease(pane);
+        });
+
+        assertEvents("didClose: " + uri3);
+    }
+
     private void assertEvents(String... events) {
         synchronized (eventLog) {
-            long timeout = System.currentTimeMillis() + 10000000;
+            long timeout = System.currentTimeMillis() + 10000;
 
             while (System.currentTimeMillis() < timeout && eventLog.size() < events.length) {
                 try {

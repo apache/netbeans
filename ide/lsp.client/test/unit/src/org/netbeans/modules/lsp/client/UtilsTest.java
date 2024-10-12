@@ -203,6 +203,12 @@ public class UtilsTest extends NbTestCase {
         assertEquals(new Position(4, 1), Utils.computeEndPositionForRemovedText(new Position(2, 2), "aaaaa\naaaaaaaa\na"));
     }
 
+    public void testUri() throws Exception {
+        String inputUri = "file:/home/demo/test%20with%20space.txt";
+        String resultUri = Utils.uriReplaceFilename(inputUri, "replacement filename with spaces.txt");
+        assertEquals("file:///home/demo/replacement%20filename%20with%20spaces.txt", resultUri);
+    }
+
     private void assertContent(String expectedContent, FileObject sourceFile) throws Exception {
         EditorCookie ec = sourceFile.getLookup().lookup(EditorCookie.class);
         StyledDocument doc = ec.openDocument();

@@ -89,8 +89,8 @@ public class UnconfiguredHint implements Runnable {
         List<ErrorDescription> errors = new ArrayList<>();
         String ccls = Utils.getCCLSPath();
         String clangd = Utils.getCLANGDPath();
-        if ((ccls == null || !new File(ccls).canExecute() || !new File(ccls).isFile()) &&
-            (clangd == null || !new File(clangd).canExecute() || !new File(clangd).isFile())) {
+        if ((ccls == null || !new File(ccls).canExecute()) &&
+            (clangd == null || !new File(clangd).canExecute())) {
             errors.add(ErrorDescriptionFactory.createErrorDescription(Severity.WARNING, "Neither ccls nor clangd configured!", Collections.singletonList(new ConfigureCCLS()), doc, 0));
         } else {
             Project prj = FileOwnerQuery.getOwner(file);

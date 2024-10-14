@@ -479,7 +479,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         if (jdkOK) {
             log.appendLine(`Verifying java: ${javaExecPath}`);
             // let the shell interpret PATH and .exe extension
-            let javaCheck = spawnSync(`${javaExecPath} -version`, { shell : true });
+            let javaCheck = spawnSync(`"${javaExecPath}" -version`, { shell : true });
             if (javaCheck.error || javaCheck.status) {
                 jdkOK = false;
             } else {

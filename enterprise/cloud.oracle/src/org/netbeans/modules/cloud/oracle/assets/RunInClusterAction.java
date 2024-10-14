@@ -29,6 +29,9 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
+import static org.netbeans.modules.cloud.oracle.assets.ConfigMapProvider.CONFIG_VOLUME_NAME;
+import static org.netbeans.modules.cloud.oracle.assets.ConfigMapProvider.ENVIRONMENT;
+import static org.netbeans.modules.cloud.oracle.assets.ConfigMapProvider.VOLUME_MOUNT_PATH;
 import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
 import org.netbeans.modules.cloud.oracle.developer.ContainerTagItem;
 import org.netbeans.modules.cloud.oracle.steps.ProjectStep;
@@ -91,12 +94,15 @@ public class RunInClusterAction implements ActionListener {
             h.start();
             KubernetesUtils.runWithClient(cluster, client -> {
                 Deployment existingDeployment = null;
-                DeploymentList dList = client.apps().deployments().list();
+                DeploymentList dList = client.apps().deployments().inNamespace(cluster.getNamespace()).list();
                 for (Deployment deployment : dList.getItems()) {
                     if (projectName.equals(deployment.getMetadata().getName())) {
                         existingDeployment = deployment;
                     }
                 }
+                ConfigMapProvider configMapProvider = new ConfigMapProvider(projectName, cluster);
+                configMapProvider.createConfigMap(); 
+                
                 if (existingDeployment != null) {
                     client.apps()
                             .deployments()
@@ -151,7 +157,24 @@ public class RunInClusterAction implements ActionListener {
                             .addNewPort()
                             .withContainerPort(8080)
                             .endPort()
+                            .addNewEnv()
+                            .withName("MICRONAUT_CONFIG_FILES")
+                            .withValue(configMapProvider.getMicronautConfigFiles())
+                            .endEnv()
+                            .addNewEnv()
+                            .withName("MICRONAUT_ENVIRONMENTS")
+                            .withValue(ENVIRONMENT)
+                            .endEnv()
+                            .addNewVolumeMount()
+                            .withName(CONFIG_VOLUME_NAME)
+                            .withMountPath(VOLUME_MOUNT_PATH)
+                            .withReadOnly(Boolean.TRUE)
+                            .endVolumeMount()
                             .endContainer()
+                            .addNewVolume()
+                            .withName(CONFIG_VOLUME_NAME)
+                            .withConfigMap(configMapProvider.getVolumeSource())
+                            .endVolume()
                             .endSpec()
                             .endTemplate()
                             .endSpec()
@@ -168,5 +191,4 @@ public class RunInClusterAction implements ActionListener {
             h.finish();
         }
     }
-
 }

@@ -672,8 +672,13 @@
 				"icon": "$(add)"
 			},
 			{
+				"command": "nbls.cloud.assets.configmap.devops.upload",
+				"title": "Add Cloud Assets to ConfigMap whithin an OCI DevOps project",
+				"icon": "$(add)"
+			},
+			{
 				"command": "nbls.cloud.assets.configmap.upload",
-				"title": "Add Cloud Assets to ConfigMap",
+				"title": "Add Cloud Assets to ConfigMap whithin OKE cluster",
 				"icon": "$(add)"
 			},
 			{

@@ -90,7 +90,7 @@ public class ContainerTagNode extends OCINode {
             if (!confirmAction(Bundle.MSG_ConfirmDeleteAction(this.getName()))) {
                 return;
             }
-            ArtifactsClient client = OCIManager.getDefault().getActiveSession().newClient(ArtifactsClient.class);
+            ArtifactsClient client = OCIManager.getDefault().getActiveProfile(getItem()).newClient(ArtifactsClient.class);
             DeleteContainerImageRequest request = DeleteContainerImageRequest.builder()
                     .imageId(this.getItem().getKey().getValue())
                     .build();

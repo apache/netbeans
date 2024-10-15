@@ -167,7 +167,7 @@ public class ConfigMapUploader {
 
     private static boolean updateConfigMap(ProgressHandle h, DevopsProjectItem devopsProject, PropertiesGenerator propGen) {
         // Add Vault to the ConfigMap artifact
-        DevopsClient devopsClient = DevopsClient.builder().build(OCIManager.getDefault().getActiveProfile().getConfigProvider());
+        DevopsClient devopsClient = DevopsClient.builder().build(OCIManager.getDefault().getActiveProfile(devopsProject).getConfigProvider());
         ListDeployArtifactsRequest request = ListDeployArtifactsRequest.builder()
                 .projectId(devopsProject.getKey().getValue()).build();
         ListDeployArtifactsResponse response = devopsClient.listDeployArtifacts(request);
@@ -202,7 +202,7 @@ public class ConfigMapUploader {
 
     private static void updateVault(ProgressHandle h, KeyItem key, VaultItem vault, PropertiesGenerator propGen, Project project) {
         h.progress(Bundle.UpdatingVault(vault.getName()));
-        VaultsClient client = VaultsClient.builder().build(getDefault().getActiveProfile().getConfigProvider());
+        VaultsClient client = VaultsClient.builder().build(getDefault().getActiveProfile(vault).getConfigProvider());
         ListSecretsRequest listSecretsRequest = ListSecretsRequest.builder()
                 .compartmentId(vault.getCompartmentId())
                 .vaultId(vault.getKey().getValue())

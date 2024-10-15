@@ -56,7 +56,7 @@ public class RepositoryNode extends OCINode {
 
     public static ChildrenProvider.SessionAware<DevopsProjectItem, RepositoryFolder> listRepositories() {
         return (project, session) -> {
-            try ( DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider())) {
+            try ( DevopsClient client = session.newClient(DevopsClient.class)) {
                 ListRepositoriesRequest listRepositoriesRequest = ListRepositoriesRequest.builder()
                         .projectId(project.getKey().getValue()).build();
                 ListRepositoriesResponse response = client.listRepositories(listRepositoriesRequest);

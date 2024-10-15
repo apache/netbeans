@@ -90,7 +90,7 @@ public class DownloadWalletAction extends AbstractAction implements ContextAware
 
     public DownloadWalletAction(DatabaseItem context) {
         this.context = context;
-        this.session = OCIManager.getDefault().getActiveProfile();
+        this.session = OCIManager.getDefault().getActiveProfile(context);
     }
 
     DownloadWalletAction(OCIProfile session, DatabaseItem context) {

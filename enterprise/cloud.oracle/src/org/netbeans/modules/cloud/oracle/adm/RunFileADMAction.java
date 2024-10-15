@@ -20,7 +20,6 @@ package org.netbeans.modules.cloud.oracle.adm;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Optional;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -81,8 +80,7 @@ public class RunFileADMAction implements ActionListener{
                 ErrorUtils.processError(exc, Bundle.MSG_CreatingAuditFailed(projectDisplayName));
             }
         } else {
-            if (OCIManager.getDefault().getActiveSession()== null
-                    || OCIManager.getDefault().getTenancy().equals(Optional.empty())) {
+            if (OCIManager.getDefault().getActiveProfile(kbItem) == null) {
                 DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_ProjectAuditInfo()));
             } else {
                 DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_ProjectAuditNoKB(projectDisplayName)));

@@ -46,7 +46,7 @@ public class OCINode extends AbstractNode {
     private final OCISessionInitiator session;
 
     public OCINode(OCIItem item) {
-        this(new CloudChildFactory(item), item, OCIManager.getDefault().getActiveSession(), Lookups.fixed(item));
+        this(new CloudChildFactory(item), item, OCIManager.getDefault().getActiveProfile(item), Lookups.fixed(item));
     }
     
     public OCINode(OCIItem item, OCISessionInitiator session) {
@@ -64,11 +64,11 @@ public class OCINode extends AbstractNode {
     }
     
     public OCINode(OCIItem item, Children children) {
-        super(children, Lookups.fixed(item, OCIManager.getDefault().getActiveSession()));
+        super(children, Lookups.fixed(item, OCIManager.getDefault().getActiveProfile(item)));
         setName(item.getName());
         this.item = item;
         this.factory = null;
-        this.session = OCIManager.getDefault().getActiveSession();
+        this.session = OCIManager.getDefault().getActiveProfile(item);
         refreshListener = new RefreshListener();
         item.addChangeListener(refreshListener);
     }

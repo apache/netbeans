@@ -30,6 +30,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -97,6 +99,8 @@ public final class CloudAssets {
 
     private final ChangeSupport changeSupport;
     private final Gson gson;
+    
+    private final ItemsChangeListener itemsListener = new ItemsChangeListener();
 
     CloudAssets() {
         this.gson = new GsonBuilder()
@@ -142,6 +146,7 @@ public final class CloudAssets {
                 .count();
         if (newItem.maxInProject() > presentCount && isTenancyCompatible(newItem, true)) {
             items.add(newItem);
+            newItem.addChangeListener(itemsListener);
             update();
             storeAssets();
         }
@@ -149,6 +154,7 @@ public final class CloudAssets {
 
     synchronized void removeItem(OCIItem item) {
         boolean update = false;
+        item.removeChangeListener(itemsListener);
         if (refNames.remove(item) != null) {
             update = true;
         }
@@ -455,6 +461,9 @@ public final class CloudAssets {
                 }
             }
             reader.endObject();
+            for (OCIItem oCIItem : loaded) {
+                oCIItem.addChangeListener(itemsListener);
+            }
             items = loaded;
             for (Entry<String, String> entry : loadingRefNames.entrySet()) {
                 setReferenceName(entry.getKey(), entry.getValue());
@@ -477,4 +486,12 @@ public final class CloudAssets {
         }
 
     }
+    
+    private final class ItemsChangeListener implements PropertyChangeListener {
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            CloudAssets.this.storeAssets();
+        }
+    }
+    
 }

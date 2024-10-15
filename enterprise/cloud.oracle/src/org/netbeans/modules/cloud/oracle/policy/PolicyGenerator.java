@@ -45,7 +45,6 @@ public class PolicyGenerator {
                     result.add("Allow any-user to manage autonomous-database-family" //NOI18N
                             + " in compartment id " + item.getCompartmentId() //NOI18N
                             + " where ALL {" //NOI18N
-                            + " request.principal.type = '" + principalType + "'," //NOI18N
                             + " request.principal.compartment.id = '" + execution.getCompartmentId() + "' }"); //NOI18N
                     break;
                 case "Bucket": //NOI18N

@@ -58,7 +58,7 @@ public class ContainerRepositoryNode extends OCINode {
     @Override
     public void update(OCIItem item) {
         ContainerRepositoryItem orig = (ContainerRepositoryItem) item;
-        ArtifactsClient client = OCIManager.getDefault().getActiveProfile().newClient(ArtifactsClient.class);
+        ArtifactsClient client = OCIManager.getDefault().getActiveProfile(item).newClient(ArtifactsClient.class);
         GetContainerRepositoryRequest listContainerRepositoriesRequest = GetContainerRepositoryRequest.builder()
                 .repositoryId(item.getKey().getValue())
                 .build();

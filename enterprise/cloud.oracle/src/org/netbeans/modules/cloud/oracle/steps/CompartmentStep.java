@@ -115,7 +115,7 @@ public final class CompartmentStep extends AbstractStep<CompartmentItem> {
      */
     static private Map<String, OCIItem> getFlatCompartment(TenancyItem tenancy) {
         Map<OCID, FlatCompartmentItem> compartments = new HashMap<>();
-        OCISessionInitiator session = OCIManager.getDefault().getActiveSession();
+        OCISessionInitiator session = OCIManager.getDefault().getActiveProfile(tenancy);
         Identity identityClient = session.newClient(IdentityClient.class);
         String nextPageToken = null;
         String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;

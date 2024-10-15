@@ -35,10 +35,13 @@ public interface NodeProvider<T extends OCIItem> {
     }
     
     public interface SessionAware<T extends OCIItem> extends NodeProvider<T> {
+        
+        @Override
         public default Node apply(T t) {
-            return apply(t, OCIManager.getDefault().getActiveSession());
+            return apply(t, OCIManager.getDefault().getActiveProfile(t));
         }
 
+        @Override
         public Node apply(T t, OCISessionInitiator session);
     }
 }

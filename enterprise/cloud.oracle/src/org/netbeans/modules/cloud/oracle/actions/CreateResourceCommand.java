@@ -19,8 +19,6 @@
 package org.netbeans.modules.cloud.oracle.actions;
 
 import java.util.concurrent.CompletableFuture;
-import org.netbeans.modules.cloud.oracle.OCIManager;
-import org.netbeans.modules.cloud.oracle.OCISessionInitiator;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.requests.OCIItemCreationDetails;
 
@@ -30,16 +28,9 @@ import org.netbeans.modules.cloud.oracle.requests.OCIItemCreationDetails;
  */
 public abstract class CreateResourceCommand<T extends OCIItem> {
     
-    private final OCISessionInitiator profile;
-    
     public CreateResourceCommand() {
-        this.profile = OCIManager.getDefault().getActiveProfile();
     }
 
-    public OCISessionInitiator getProfile() {
-        return profile;
-    }
-    
     abstract T callCreate(OCIItemCreationDetails itemCreator);
     
     public CompletableFuture<T> create(OCIItemCreationDetails creationDetails) {

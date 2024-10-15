@@ -43,7 +43,7 @@ public class CloudChildFactory extends ChildFactory<OCIItem> {
     }
 
     public CloudChildFactory(OCIItem parent) {
-        this(OCIManager.getDefault().getActiveSession(), parent);
+        this(OCIManager.getDefault().getActiveProfile(parent), parent);
     }
 
     @Override

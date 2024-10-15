@@ -59,7 +59,7 @@ public class TenancyNode extends OCINode implements PropertyChangeListener {
     })
     @Override
     public String getHtmlDisplayName() {
-        if (OCIManager.getDefault().getActiveProfile() == session) {
+        if (OCIManager.getDefault().getActiveProfile(getItem()) == session) {
             return Bundle.HTML_EmphasizeName(getDisplayName());
         } else {
             return null;

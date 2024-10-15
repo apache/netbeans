@@ -74,7 +74,7 @@ public class ComputeInstanceNode extends OCINode {
     
     static public void update(ComputeInstanceItem instance) {
         ComputeClient computeClient = ComputeClient.builder()
-                .build(OCIManager.getDefault().getActiveProfile().getAuthenticationProvider());
+                .build(OCIManager.getDefault().getActiveProfile(instance).getAuthenticationProvider());
         if (instance.getImageId() != null) {
             GetImageRequest request = GetImageRequest.builder()
                     .imageId(instance.getImageId()).build();
@@ -96,7 +96,7 @@ public class ComputeInstanceNode extends OCINode {
         }
          
         VirtualNetworkClient virtualNetworkClient = VirtualNetworkClient.builder()
-                .build(OCIManager.getDefault().getActiveProfile().getAuthenticationProvider());
+                .build(OCIManager.getDefault().getActiveProfile(instance).getAuthenticationProvider());
 
         ListVnicAttachmentsRequest listVnicAttachmentsRequest = ListVnicAttachmentsRequest.builder()
                 .compartmentId(instance.getCompartmentId())

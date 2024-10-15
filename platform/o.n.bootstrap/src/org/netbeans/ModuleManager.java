@@ -744,7 +744,7 @@ public final class ModuleManager extends Modules {
             ProxyClassLoader priviledged = null;
             NetigsoLoader osgi = null;
             if (!name.startsWith("java.")) { // NOI18N
-                Class<?>[] stack = TopSecurityManager.getStack();
+                List<Class<?>> stack = Util.getStack();
                 for (Class<?> c: stack) {
                     ClassLoader l = c.getClassLoader();
                     if (l == this) {
@@ -2407,7 +2407,7 @@ public final class ModuleManager extends Modules {
             Util.err.warning("Cyclic module dependencies, will not shut down cleanly: " + deps); // NOI18N
             return new TaskFuture(true, Task.EMPTY);
         }
-        if (!TopSecurityManager.officialExit && !installer.closing(sortedModules)) {
+        if (!NbExit.isExiting() && !installer.closing(sortedModules)) {
             return new TaskFuture(false, Task.EMPTY);
         }
         if (midHook != null) {

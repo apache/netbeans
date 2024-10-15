@@ -100,7 +100,7 @@ public class SecretNode extends OCINode {
     @Override
     public void update(OCIItem item) {
         SecretItem orig = (SecretItem) item;
-        VaultsClient client = OCIManager.getDefault().getActiveProfile().newClient(VaultsClient.class);
+        VaultsClient client = OCIManager.getDefault().getActiveProfile(item).newClient(VaultsClient.class);
         GetSecretRequest request = GetSecretRequest.builder()
                 .secretId(orig.getKey().getValue())
                 .build();
@@ -135,7 +135,7 @@ public class SecretNode extends OCINode {
                 return;
             }
             
-            VaultsClient client = OCIManager.getDefault().getActiveSession().newClient(VaultsClient.class);
+            VaultsClient client = OCIManager.getDefault().getActiveProfile(getItem()).newClient(VaultsClient.class);
             Date deletionTime = getDeletionTime();
             ScheduleSecretDeletionRequest request = buildScheduleDeletionRequest(deletionTime);
             ScheduleSecretDeletionResponse response;

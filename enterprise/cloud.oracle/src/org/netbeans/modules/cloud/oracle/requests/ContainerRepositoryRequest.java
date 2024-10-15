@@ -20,6 +20,7 @@ package org.netbeans.modules.cloud.oracle.requests;
 
 import com.oracle.bmc.artifacts.model.CreateContainerRepositoryDetails;
 import com.oracle.bmc.artifacts.requests.CreateContainerRepositoryRequest;
+import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 
 /**
  *
@@ -29,14 +30,14 @@ public class ContainerRepositoryRequest extends OCIItemCreationDetails<CreateCon
 
     private static final Boolean IS_REPOSITORY_PUBLIC = Boolean.FALSE;
 
-    public ContainerRepositoryRequest(String compartmentId, String name) {
-        super(compartmentId, name);
+    public ContainerRepositoryRequest(CompartmentItem compartment, String name) {
+        super(compartment, name);
     }
 
     @Override
     public CreateContainerRepositoryRequest getRequest() {
         CreateContainerRepositoryDetails createContainerRepositoryDetails = CreateContainerRepositoryDetails.builder()
-                .compartmentId(this.getCompartmentId())
+                .compartmentId(this.getCompartment().getKey().getValue())
                 .displayName(this.getName())
                 .isPublic(IS_REPOSITORY_PUBLIC)
                 .build(); 

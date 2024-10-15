@@ -227,7 +227,7 @@ public class ImageBuilderCommand implements CommandProvider {
 
     private boolean dockerLogin(ContainerRepositoryItem repo) {
         try {
-            String path = (String) BearerTokenCommand.generateBearerToken(OCIManager.getDefault().getActiveProfile(), repo.getRegistry());
+            String path = (String) BearerTokenCommand.generateBearerToken(OCIManager.getDefault().getActiveProfile(repo), repo.getRegistry());
             String[] command;
             if (BaseUtilities.isWindows()) {
                 command = new String[]{"cmd.exe", "/c",

@@ -67,7 +67,7 @@ public class CreateAutonomousDBAction extends AbstractAction implements ContextA
 
     public CreateAutonomousDBAction(CompartmentItem context) {
         this.context = context;
-        this.session = OCIManager.getDefault().getActiveProfile();
+        this.session = OCIManager.getDefault().getActiveProfile(context);
     }
 
     CreateAutonomousDBAction(OCIProfile session, CompartmentItem context) {
@@ -86,7 +86,7 @@ public class CreateAutonomousDBAction extends AbstractAction implements ContextA
         Optional<Pair<String, char[]>> result = CreateAutonomousDBDialog.showDialog(context);
         result.ifPresent((p) -> {
             RequestProcessor.getDefault().execute(() -> {
-                Optional<String> message = session.createAutonomousDatabase(context.getKey().getValue(), p.first(), p.second());
+                Optional<String> message = session.createAutonomousDatabase(context, p.first(), p.second());
                 if (!message.isPresent()) {
                     context.refresh();
                     DialogDisplayer.getDefault().notifyLater(

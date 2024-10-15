@@ -22,6 +22,7 @@ import com.oracle.bmc.artifacts.ArtifactsClient;
 import com.oracle.bmc.artifacts.model.ContainerRepository;
 import com.oracle.bmc.artifacts.requests.CreateContainerRepositoryRequest;
 import com.oracle.bmc.artifacts.responses.CreateContainerRepositoryResponse;
+import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.requests.OCIItemCreationDetails;
@@ -34,23 +35,21 @@ public class CreateContainerRepositoryCommand extends CreateResourceCommand<Cont
     
     @Override
     ContainerRepositoryItem callCreate(OCIItemCreationDetails itemCreator) {
-        ArtifactsClient client = this.getProfile().newClient(ArtifactsClient.class);
+        ArtifactsClient client = OCIManager.getDefault().getActiveProfile(itemCreator.getCompartment()).newClient(ArtifactsClient.class);
         
         CreateContainerRepositoryRequest request = (CreateContainerRepositoryRequest) itemCreator.getRequest();
         CreateContainerRepositoryResponse response = client.createContainerRepository(request);
         ContainerRepository res = response.getContainerRepository();
 
-        String tenancyId = this.getProfile().getTenancy().isPresent() ? this.getProfile().getTenancy().get().getKey().getValue() : null;
-
         return new ContainerRepositoryItem(
                 OCID.of(res.getId(), "ContainerRepository"), //NOI18N
                 res.getCompartmentId(),
                 res.getDisplayName(),
-                this.getProfile().getRegion().getRegionCode(),
+                itemCreator.getCompartment().getRegionCode(),
                 res.getNamespace(),
                 res.getIsPublic(), 
                 res.getImageCount(),
-                tenancyId
+                itemCreator.getCompartment().getTenancyId()
         );
     }
     

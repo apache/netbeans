@@ -55,7 +55,7 @@ public class DeployArtifactNode extends OCINode {
 
     public static ChildrenProvider.SessionAware<DevopsProjectItem, DeployArtifactItem.DeployArtifactFolder> listDeployArtifacts() {
         return (project, session) -> {
-            try ( DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider())) {
+            try ( DevopsClient client = session.newClient(DevopsClient.class)) {
                 ListDeployArtifactsRequest request = ListDeployArtifactsRequest.builder()
                         .projectId(project.getKey().getValue()).build();
                 ListDeployArtifactsResponse response = client.listDeployArtifacts(request);

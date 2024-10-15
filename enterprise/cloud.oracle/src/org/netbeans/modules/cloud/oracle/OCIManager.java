@@ -49,6 +49,7 @@ import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 import org.netbeans.api.server.properties.InstanceProperties;
 import org.netbeans.api.server.properties.InstancePropertiesManager;
+import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.netbeans.modules.cloud.oracle.items.TenancyItem;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileChangeListener;
@@ -622,8 +623,8 @@ public final class OCIManager {
      * @param password Password of ADMIN user
      * @return true if DB was created
      */
-    public Optional<String> createAutonomousDatabase(String compartmentId, String dbName, char[] password) {
-        return getActiveProfile().createAutonomousDatabase(compartmentId, dbName, password);
+    public Optional<String> createAutonomousDatabase(CompartmentItem compartment, String dbName, char[] password) {
+        return getActiveProfile(compartment).createAutonomousDatabase(compartment, dbName, password);
     }
 
     /**
@@ -638,7 +639,7 @@ public final class OCIManager {
      * @throws IOException
      */
     public Path downloadWallet(OCIItem dbInstance, String password, String parentPath) throws FileNotFoundException, IOException {
-        return getActiveProfile().downloadWallet(dbInstance, password, parentPath);
+        return getActiveProfile(dbInstance).downloadWallet(dbInstance, password, parentPath);
     }
     
     @FunctionalInterface

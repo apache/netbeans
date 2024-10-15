@@ -59,7 +59,7 @@ public class DevopsStep extends AbstractStep<DevopsProjectItem> {
         h.progress(Bundle.FetchingDevopsProjects());
         List<String> devops = DevopsProjectService.getDevopsProjectOcid();
         CompartmentItem compartment = values.getValueForStep(CompartmentStep.class);
-        Map<String, DevopsProjectItem> allProjectsInCompartment = getDevopsProjects(compartment.getKey().getValue());
+        Map<String, DevopsProjectItem> allProjectsInCompartment = getDevopsProjects(compartment);
         Map<String, DevopsProjectItem> filtered = allProjectsInCompartment.entrySet().stream().filter(e -> devops.contains(e.getValue().getKey().getValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         if (!filtered.isEmpty()) {
             devopsProjects = filtered;
@@ -97,22 +97,22 @@ public class DevopsStep extends AbstractStep<DevopsProjectItem> {
         return selected;
     }
 
-    protected static Map<String, DevopsProjectItem> getDevopsProjects(String compartmentId) {
-        try (DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider())) {
-            ListProjectsRequest request = ListProjectsRequest.builder().compartmentId(compartmentId).build();
+    protected static Map<String, DevopsProjectItem> getDevopsProjects(CompartmentItem compartment) {
+        try (DevopsClient client = new DevopsClient(OCIManager.getDefault().getActiveProfile(compartment).getConfigProvider())) {
+            ListProjectsRequest request = ListProjectsRequest.builder().compartmentId(compartment.getKey().getValue()).build();
             ListProjectsResponse response = client.listProjects(request);
             List<ProjectSummary> projects = response.getProjectCollection().getItems();
             for (ProjectSummary project : projects) {
                 project.getNotificationConfig().getTopicId();
             }
 
-            OCISessionInitiator session = OCIManager.getDefault().getActiveProfile();
+            OCISessionInitiator session = OCIManager.getDefault().getActiveProfile(compartment);
             String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
             String regionCode = session.getRegion().getRegionCode();
 
             return projects.stream().map(p -> new DevopsProjectItem(
                     OCID.of(p.getId(), "DevopsProject"), // NOI18N
-                    compartmentId,
+                    compartment.getKey().getValue(),
                     p.getName(),
                     tenancyId,
                     regionCode)).collect(Collectors.toMap(DevopsProjectItem::getName, Function.identity()));

@@ -76,7 +76,7 @@ public class BuildRunNode extends OCINode {
     
     public static ChildrenProvider.SessionAware<BuildRunFolderItem, BuildRunItem> expandBuildRuns() {
         return (project, session) -> {
-            try ( DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider())) {
+            try ( DevopsClient client = session.newClient(DevopsClient.class)) {
                 ListBuildRunsRequest request = ListBuildRunsRequest.builder()
                         .projectId(project.getKey().getValue())
                         .sortBy(ListBuildRunsRequest.SortBy.TimeCreated)

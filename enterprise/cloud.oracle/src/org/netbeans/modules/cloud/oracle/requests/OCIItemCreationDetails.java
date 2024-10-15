@@ -19,6 +19,7 @@
 package org.netbeans.modules.cloud.oracle.requests;
 
 import com.oracle.bmc.requests.BmcRequest;
+import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 
 
 /**
@@ -28,10 +29,10 @@ import com.oracle.bmc.requests.BmcRequest;
 public abstract class OCIItemCreationDetails<T extends BmcRequest<?>> {
     
     final String name;
-    final String compartmentId;
+    final CompartmentItem compartment;
 
-    public OCIItemCreationDetails(String compartmentId, String name) {
-        this.compartmentId = compartmentId;
+    public OCIItemCreationDetails(CompartmentItem compartment, String name) {
+        this.compartment = compartment;
         this.name = name;
     }
     
@@ -41,7 +42,7 @@ public abstract class OCIItemCreationDetails<T extends BmcRequest<?>> {
         return name;
     }
 
-    public String getCompartmentId() {
-        return compartmentId;
+    public CompartmentItem getCompartment() {
+        return compartment;
     }
 }

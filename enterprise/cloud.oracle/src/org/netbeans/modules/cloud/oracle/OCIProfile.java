@@ -48,6 +48,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.items.TenancyItem;
@@ -279,12 +280,15 @@ public final class OCIProfile implements OCISessionInitiator {
      * @param password Password of ADMIN user
      * @return true if DB was created
      */
-    public Optional<String> createAutonomousDatabase(String compartmentId, String dbName, char[] password) {
+    public Optional<String> createAutonomousDatabase(CompartmentItem compartment, String dbName, char[] password) {
         if (configProvider == null) {
             return Optional.empty();
         }
         try (final DatabaseClient client = new DatabaseClient(configProvider)) {
-            CreateAutonomousDatabaseBase createAutonomousDatabaseBase = CreateAutonomousDatabaseDetails.builder().compartmentId(compartmentId).dbName(dbName).adminPassword(new String(password)).cpuCoreCount(1).dataStorageSizeInTBs(1).build();
+            CreateAutonomousDatabaseBase createAutonomousDatabaseBase 
+                    = CreateAutonomousDatabaseDetails.builder().compartmentId(
+                            compartment.getKey().getValue()).dbName(dbName).adminPassword(
+                                    new String(password)).cpuCoreCount(1).dataStorageSizeInTBs(1).build();
             CreateAutonomousDatabaseRequest createAutonomousDatabaseRequest = CreateAutonomousDatabaseRequest.builder().createAutonomousDatabaseDetails(createAutonomousDatabaseBase).build();
             try {
                 CreateAutonomousDatabaseResponse response = client.createAutonomousDatabase(createAutonomousDatabaseRequest);
@@ -320,6 +324,5 @@ public final class OCIProfile implements OCISessionInitiator {
         }
         return Objects.equals(this.configPath, other.configPath);
     }
-    
     
 }

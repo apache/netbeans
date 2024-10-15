@@ -51,9 +51,9 @@ public class CreateContainerRepository implements OCIItemCreator {
 
     @Override
     public CompletableFuture<? extends OCIItem> create(Steps.Values values, Map<String, Object> params) {
-        String compartmentId = ((CompartmentItem)values.getValueForStep(CompartmentStep.class)).getKey().getValue();
+        CompartmentItem compartment = ((CompartmentItem)values.getValueForStep(CompartmentStep.class));
         String displayName = (String) params.get(REPOSITORY_NAME_FIELD);
-        OCIItemCreationDetails creationDetails = new ContainerRepositoryRequest(compartmentId, displayName);
+        OCIItemCreationDetails creationDetails = new ContainerRepositoryRequest(compartment, displayName);
         return new org.netbeans.modules.cloud.oracle.actions.CreateContainerRepositoryCommand().create(creationDetails);
     }
    

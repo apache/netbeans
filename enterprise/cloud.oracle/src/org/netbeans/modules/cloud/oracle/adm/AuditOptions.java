@@ -80,10 +80,6 @@ public final class AuditOptions {
         return this;
     }
 
-    public OCISessionInitiator getSession() {
-        return session != null ? session : OCIManager.getDefault().getActiveSession();
-    }
-
     /**
      * @return true, if data structure should be returned instead of just error/OK
      */

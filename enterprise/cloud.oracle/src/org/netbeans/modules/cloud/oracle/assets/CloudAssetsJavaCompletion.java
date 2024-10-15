@@ -47,7 +47,7 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
  */
 public class CloudAssetsJavaCompletion implements Processor {
 
-    private static final String DATA_SOURCE = "java.sql.DataSource";
+    private static final String JAVAX_DATA_SOURCE = "javax.sql.DataSource";
     private static final String JAKARTA_NAMED_ANNOTATION = "jakarta.inject.Named";
     private static final String MICRONAUT_JDBC_REPOSITORY_ANNOTATION = "io.micronaut.data.jdbc.annotation.JdbcRepository";
     private static final String MICRONAUT_OBJECT_STORAGE = "io.micronaut.objectstorage.ObjectStorageOperations";
@@ -106,8 +106,8 @@ public class CloudAssetsJavaCompletion implements Processor {
             Elements elements = this.processingEnv.get().getElementUtils();
             Types types = this.processingEnv.get().getTypeUtils();
             tm = types.erasure(tm);
-            TypeElement dataSource = elements.getTypeElement(DATA_SOURCE);
-            if (dataSource != null && types.isAssignable(tm, dataSource.asType())) {
+            TypeElement javaxDataSource = elements.getTypeElement(JAVAX_DATA_SOURCE);
+            if (javaxDataSource != null && types.isAssignable(tm, javaxDataSource.asType())) {
                 return DatabaseItem.class;
             }
             TypeElement objectStorage = elements.getTypeElement(MICRONAUT_OBJECT_STORAGE);

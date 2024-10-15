@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import org.netbeans.modules.cloud.oracle.actions.ConfigMapUploader;
+import org.netbeans.modules.cloud.oracle.actions.DevOpsProjectConfigMapUploader;
 import org.netbeans.spi.lsp.CommandProvider;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -36,10 +37,12 @@ import org.openide.util.lookup.ServiceProvider;
 public class CreateConfigCommand implements CommandProvider {
 
     private static final String COMMAND_CREATE_CONFIG = "nbls.cloud.assets.config.create.local"; //NOI18N
+    private static final String COMMAND_UPLOAD_TO_CONFIGMAP_WITHIN_DEVOPS = "nbls.cloud.assets.configmap.devops.upload"; //NOI18N
     private static final String COMMAND_UPLOAD_TO_CONFIGMAP = "nbls.cloud.assets.configmap.upload"; //NOI18N
 
     private static final Set COMMANDS = new HashSet<>(Arrays.asList(
             COMMAND_CREATE_CONFIG,
+            COMMAND_UPLOAD_TO_CONFIGMAP_WITHIN_DEVOPS,
             COMMAND_UPLOAD_TO_CONFIGMAP
     ));
     
@@ -56,6 +59,8 @@ public class CreateConfigCommand implements CommandProvider {
             ApplicationPropertiesGenerator appPropGen = new ApplicationPropertiesGenerator(propGen);
             String toWrite = appPropGen.getApplicationPropertiesString();
             future.complete(toWrite);
+        } else if (COMMAND_UPLOAD_TO_CONFIGMAP_WITHIN_DEVOPS.equals(command)) {
+            DevOpsProjectConfigMapUploader.uploadConfigMap(future);
         } else if (COMMAND_UPLOAD_TO_CONFIGMAP.equals(command)) {
             ConfigMapUploader.uploadConfigMap(future);
         }

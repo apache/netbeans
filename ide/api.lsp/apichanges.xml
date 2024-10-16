@@ -51,6 +51,20 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="RegisterLSPServices">
+        <api name="LSP_API"/>
+        <summary>Adding RegisterLSPServices annotation</summary>
+        <version major="1" minor="30"/>
+        <date day="14" month="10" year="2024"/>
+        <author login="jlahoda"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no" />
+        <description>
+            A <code>RegisterLSPServices</code> annotation is
+            introduced that allows to use the implementation of the services defined in this
+            module inside the IDE.
+        </description>
+        <class package="org.netbeans.api.lsp.bridge" name="RegisterLSPServices"/>
+    </change>
     <change id="CodeActionProvider.getSupportedCodeActionKinds">
         <api name="LSP_API"/>
         <summary>Adding CodeActionProvider.getSupportedCodeActionKinds method</summary>

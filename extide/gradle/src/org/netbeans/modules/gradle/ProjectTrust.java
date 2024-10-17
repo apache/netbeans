@@ -25,10 +25,10 @@ import java.nio.file.Path;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,7 +69,7 @@ public class ProjectTrust {
         byte[] buf = prefs.getByteArray(KEY_SALT, null);
         if (buf == null) {
             buf = new byte[16];
-            new Random().nextBytes(buf);
+            new SecureRandom().nextBytes(buf);
             prefs.putByteArray(KEY_SALT, buf);
         }
         salt = buf;
@@ -134,7 +134,7 @@ public class ProjectTrust {
         if (permanently && !isTrustedPermanently(project)) {
             Path trustFile = getProjectTrustFile(project);
             byte[] rnd = new byte[16];
-            new Random().nextBytes(rnd);
+            new SecureRandom().nextBytes(rnd);
             String projectId = toHex(rnd);
             projectTrust.put(pathId, projectId);
             try {

@@ -153,6 +153,7 @@
                 <friend>org.netbeans.modules.testng</friend>
                 <friend>org.netbeans.modules.web.clientproject.api</friend>
                 <package>org.netbeans.api.gototest</package>
+                <package>org.netbeans.modules.gototest</package>
                 <package>org.netbeans.spi.gototest</package>
             </friend-packages>
         </data>

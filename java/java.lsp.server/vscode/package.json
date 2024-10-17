@@ -187,6 +187,11 @@
 					"default": 100,
 					"description": "Timeout (in milliseconds) for loading Javadoc in code completion (-1 for unlimited)"
 				},
+				"netbeans.completion.warning.time": {
+					"type": "integer",
+					"default": 10000,
+					"description": "When code completion takes longer than this specified time (in milliseconds), there will be a warning produced (-1 to disable)"
+				},
 				"netbeans.format.codeFormatter": {
 					"type": "string",
 					"enum": [

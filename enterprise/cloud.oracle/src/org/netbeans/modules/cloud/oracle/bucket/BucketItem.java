@@ -18,14 +18,20 @@
  */
 package org.netbeans.modules.cloud.oracle.bucket;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import org.netbeans.modules.cloud.oracle.adm.URLProvider;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import org.openide.util.Exceptions;
 
 /**
  *
  * @author Jan Horvath
  */
-public final class BucketItem extends OCIItem {
+public final class BucketItem extends OCIItem implements URLProvider {
 
     private String namespace;
 
@@ -45,6 +51,20 @@ public final class BucketItem extends OCIItem {
     @Override
     public int maxInProject() {
         return Integer.MAX_VALUE;
+    }
+    
+    @Override
+    public URL getURL() {
+        if (getKey().getValue() != null && getRegion() != null) {
+            try {
+                URI uri = new URI(String.format("https://cloud.oracle.com/object-storage/buckets/%s/%s/objects?region=%s",
+                                    getNamespace(), getName(), getRegion()));
+                return uri.toURL();
+            } catch (MalformedURLException | URISyntaxException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } 
+        return null;
     }
     
 }

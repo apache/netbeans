@@ -21,7 +21,11 @@ package org.netbeans.modules.xml.catalog.user;
 
 import java.beans.PropertyChangeListener;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import org.netbeans.modules.xml.catalog.spi.CatalogDescriptor2;
 import org.netbeans.modules.xml.catalog.spi.CatalogListener;
 import org.netbeans.modules.xml.catalog.spi.CatalogReader;
@@ -175,7 +179,7 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
         return NbBundle.getMessage(UserXMLCatalog.class, "LBL_userCatalog");
     }
     
-    private synchronized Map getPublicIdMap() {
+    private synchronized Map<String, String> getPublicIdMap() {
         if (publicIds==null) {
             try {
                 FileObject userCatalog = FileUtil.getConfigFile(catalogResource);
@@ -365,7 +369,7 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
         return temp.toString("UTF-8");//NOI18N
     }
     
-    private Map parse(FileObject userCatalog) 
+    private Map<String, String> parse(FileObject userCatalog) 
         throws SAXException, java.io.IOException {
         javax.xml.parsers.SAXParserFactory fact = javax.xml.parsers.SAXParserFactory.newInstance();
         fact.setValidating(false);
@@ -380,7 +384,7 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
             return handler.getValues();
         } catch(javax.xml.parsers.ParserConfigurationException ex) {
             org.openide.ErrorManager.getDefault().notify(ex);
-            return new java.util.HashMap();
+            return new HashMap<>();
         }
     }
     /** Registers new entry (key:value) in catalog
@@ -437,12 +441,12 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
     }
     
     private static class CatalogHandler extends org.xml.sax.helpers.DefaultHandler implements LexicalHandler {
-        private Map values;
+        private Map<String, String> values;
         //private boolean insideEl, insideTag;
         private boolean schemaFound;
 
         CatalogHandler() {
-            values = new HashMap();
+            values = new HashMap<>();
         }
         public void startElement(String uri, String localName, String rawName, Attributes atts) throws SAXException {
             if ("public".equals(rawName)) { //NOI18N
@@ -494,7 +498,7 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
         @Override
         public void startEntity(String name) throws SAXException {}
         
-        public Map getValues() {
+        public Map<String, String> getValues() {
             return values;
         }
     }

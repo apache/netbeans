@@ -104,7 +104,7 @@ public final class FoldViewFactory extends EditorViewFactory implements FoldHier
     /**
      * Lookup results for color settings, being listened for changes.
      */
-    private Lookup.Result       colorSource;
+    private Lookup.Result<?>    colorSource;
     
     private Preferences         prefs;
     

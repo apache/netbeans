@@ -33,7 +33,7 @@
             <arg path="src/org/netbeans/modules/css/lib/Css3.g"/>
             <classpath>
                 <pathelement path="${classpath}"/>
-                <pathelement location="../../ide/libs.antlr3.runtime/external/antlr-complete-3.5.2.jar"/>
+                <pathelement location="../../ide/libs.antlr3.runtime/external/antlr-complete-3.5.3.jar"/>
             </classpath>
         </java>
 

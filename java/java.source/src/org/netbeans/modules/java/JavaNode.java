@@ -82,6 +82,7 @@ import org.openide.nodes.Sheet;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
@@ -108,6 +109,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
     private static final String EXECUTABLE_BADGE_URL = "org/netbeans/modules/java/resources/executable-badge.png";  //NOI18N
     private static final String NEEDS_COMPILE_BADGE_URL = "org/netbeans/modules/java/resources/needs-compile.png";  //NOI18N
     // synced with org.netbeans.modules.java.file.launcher.SingleSourceFileUtil
+    private static final String GLOBAL_VM_OPTIONS = "java_file_launcher_global_vm_options"; //NOI18N
     private static final String FILE_ARGUMENTS = "single_file_run_arguments"; //NOI18N
     private static final String FILE_JDK = "single_file_run_jdk"; //NOI18N
     private static final String FILE_VM_OPTIONS = "single_file_vm_options"; //NOI18N
@@ -247,6 +249,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
             ss.put(new RunFileJDKProperty(dObj));
             ss.put(new JavaFileAttributeProperty(dObj, FILE_ARGUMENTS, "runFileArguments", "singlefile_arguments")); // NOI18N
             ss.put(new JavaFileAttributeProperty(dObj, FILE_VM_OPTIONS, "runFileVMOptions", "singlefile_options")); // NOI18N
+            ss.put(new JavaFileGlobalOptionsProperty());
             sheet.put(ss);
         }
 
@@ -519,6 +522,19 @@ public final class JavaNode extends DataNode implements ChangeListener {
             } catch (IOException ex) {
                 LOG.log(Level.WARNING, "Java File does not exist : {0}", dObj.getPrimaryFile().getName()); //NOI18N
             }
+        }
+    }
+
+    // read-only global VM options
+    private static final class JavaFileGlobalOptionsProperty extends PropertySupport.ReadOnly<String> {
+
+        public JavaFileGlobalOptionsProperty() {
+            super("runFileGlobalOptions", String.class, getMessage(JavaNode.class, "PROP_JavaNode_singlefile_global_options"), getMessage(JavaNode.class, "HINT_JavaNode_singlefile_global_options")); // NOI18N
+        }
+
+        @Override
+        public String getValue() {
+            return NbPreferences.forModule(JavaPlatformManager.class).get(GLOBAL_VM_OPTIONS, "").trim();
         }
     }
 

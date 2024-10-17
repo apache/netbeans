@@ -56,7 +56,8 @@ import org.openide.util.RequestProcessor;
 
 @NbBundle.Messages({
     "RunInCluster=Run in OKE Cluster",
-    "Deploying=Deploying project \"{0}\" to the cluster \"{1}\""
+    "Deploying=Deploying project \"{0}\" to the cluster \"{1}\"",
+    "CreatingSecretRotationCronJob=Creating secret rotation CronJob"
 })
 public class RunInClusterAction implements ActionListener {
 
@@ -92,14 +93,14 @@ public class RunInClusterAction implements ActionListener {
         }
         try {
             h.start();
+            
+            CreateSecretRotationCronJobCommand srcc = new CreateSecretRotationCronJobCommand();
+            h.progress(Bundle.CreatingSecretRotationCronJob());
+            srcc.createSecretRotationCronJob().join();
+            
             KubernetesUtils.runWithClient(cluster, client -> {
-                Deployment existingDeployment = null;
                 DeploymentList dList = client.apps().deployments().inNamespace(cluster.getNamespace()).list();
-                for (Deployment deployment : dList.getItems()) {
-                    if (projectName.equals(deployment.getMetadata().getName())) {
-                        existingDeployment = deployment;
-                    }
-                }
+                Deployment existingDeployment = (Deployment) KubernetesUtils.findResource(client, dList, projectName);
                 ConfigMapProvider configMapProvider = new ConfigMapProvider(projectName, cluster);
                 configMapProvider.createConfigMap(); 
                 

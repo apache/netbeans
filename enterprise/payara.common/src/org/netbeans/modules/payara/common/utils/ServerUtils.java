@@ -160,7 +160,7 @@ public class ServerUtils {
                     "PayaraInstance.getDomainsFolder.versionIsNull",
                     instance.getDisplayName()));
         }
-        boolean useBuild = version.getBuild() > 0;
+        boolean useBuild = version.getBuild() != null && !version.getBuild().isEmpty();
         boolean useUpdate = useBuild || version.getUpdate() > 0;
         // Allocate 2 characters per version number part and 1 character
         // per separator.
@@ -175,7 +175,7 @@ public class ServerUtils {
             sb.append(Short.toString(version.getUpdate()));
             if (useBuild) {
                 sb.append(PayaraPlatformVersionAPI.SEPARATOR);
-                sb.append(Short.toString(version.getBuild()));
+                sb.append(version.getBuild());
             }
         }
         return sb.toString();

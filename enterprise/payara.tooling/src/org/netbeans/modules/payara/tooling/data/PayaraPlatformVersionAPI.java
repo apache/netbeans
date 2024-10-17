@@ -60,7 +60,7 @@ public interface PayaraPlatformVersionAPI {
      * <p/>
      * @return Build version number.
      */
-    short getBuild();
+    String getBuild();
 
     String getUriFragment();
 

@@ -2,5 +2,6 @@ bundles/bundles
 bundles/external
 bundles/licenses
 bundles/package/node_modules
+bundles/package/package-lock.json
 bundles/prepare/nbactions.xml
 bundles/prepare/target/

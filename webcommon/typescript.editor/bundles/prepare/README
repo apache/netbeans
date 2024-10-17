@@ -11,3 +11,18 @@ following inside the "bundles" directory:
    your module. This directory includes licenses, binaries-list, and the zipped modules
  * external directory, which contains zips that should be uploaded to the binary storage server
  * licenses directory, which contains new license files that should be put into nbbuild/licenses
+
+Run directly
+------------
+
+The binary can be run directly using the maven exec module. The call assumes,
+that the path to the netbeans checkout is placed into the environment variable
+$NB_CHECKOUT.
+
+```
+cd $NB_CHECKOUT
+mvn -f webcommon/typescript.editor/bundles/prepare \
+    -Dexec.mainClass="org.netbeans.modules.learning.prepare.PrepareBundles" \
+    -Dexec.args="$NB_CHECKOUT/webcommon/typescript.editor/bundles $NB_CHECKOUT" \
+    package exec:java
+```

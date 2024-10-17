@@ -234,6 +234,7 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
     /** Payara server administrator's password. */
     private String password;
     private boolean docker;
+    private boolean wsl;
     private String hostPath;
     private String containerPath;
     private String installRoot;
@@ -344,6 +345,14 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
 
     public void setDocker(boolean docker) {
         this.docker = docker;
+    }
+
+    public boolean isWSL() {
+        return wsl;
+    }
+
+    public void setWSL(boolean wsl) {
+        this.wsl = wsl;
     }
 
     public String getHostPath() {
@@ -518,7 +527,7 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
             PayaraInstance instance = PayaraInstance.create((String) wizard.getProperty("ServInstWizard_displayName"),  // NOI18N
                     installRoot, payaraRoot, domainsDir, domainName, 
                     newHttpPort, newAdminPort, userName, password,
-                    docker, hostPath, containerPath, targetValue,
+                    wsl, docker, hostPath, containerPath, targetValue,
                     formatUri(hostName, newAdminPort, getTargetValue(),domainsDir,domainName), 
                     instanceProvider);
             result.add(instance.getCommonInstance());
@@ -526,7 +535,7 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
             PayaraInstance instance = PayaraInstance.create((String) wizard.getProperty("ServInstWizard_displayName"),  // NOI18N
                     installRoot, payaraRoot, domainsDir, domainName,
                     getHttpPort(), getAdminPort(), userName, password, 
-                    docker, hostPath, containerPath, targetValue,
+                    wsl, docker, hostPath, containerPath, targetValue,
                     formatUri(hostName, getAdminPort(), getTargetValue(), domainsDir, domainName),
                     instanceProvider);
             result.add(instance.getCommonInstance());
@@ -541,7 +550,7 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         PayaraInstance instance = PayaraInstance.create((String) wizard.getProperty("ServInstWizard_displayName"),   // NOI18N
                 installRoot, payaraRoot, null, domainName,
                 getHttpPort(), getAdminPort(), userName, password, 
-                docker, hostPath, containerPath, targetValue,
+                wsl, docker, hostPath, containerPath, targetValue,
                 formatUri(hn, getAdminPort(), getTargetValue(),null, domainName), 
                 instanceProvider);
         result.add(instance.getCommonInstance());

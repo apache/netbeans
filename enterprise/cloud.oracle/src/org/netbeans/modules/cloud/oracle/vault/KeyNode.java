@@ -82,6 +82,7 @@ public class KeyNode extends OCINode {
                             OCID.of(d.getId(), "Vault/Key"), //NOI18N
                             d.getCompartmentId(),
                             d.getDisplayName(),
+                            vault.getKey().getValue(),
                             tenancyId,
                             regionCode)
                     )

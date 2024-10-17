@@ -18,14 +18,20 @@
  */
 package org.netbeans.modules.cloud.oracle.compute;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import org.netbeans.modules.cloud.oracle.adm.URLProvider;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import org.openide.util.Exceptions;
 
 /**
  *
  * @author Jan Horvath
  */
-public final class ComputeInstanceItem extends OCIItem {
+public final class ComputeInstanceItem extends OCIItem implements URLProvider {
     private String publicIp = null;
     private String processorDescription;
     private String username;
@@ -70,4 +76,16 @@ public final class ComputeInstanceItem extends OCIItem {
         this.publicIp = publicIp;
     }
     
+    @Override
+    public URL getURL() {
+        if (getKey().getValue() != null && getRegion() != null) {
+            try {
+                URI uri = new URI(String.format("https://cloud.oracle.com/compute/instances/%s?region=%s", getKey().getValue(), getRegion()));
+                return uri.toURL();
+            } catch (MalformedURLException | URISyntaxException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } 
+        return null;
+    }
 }

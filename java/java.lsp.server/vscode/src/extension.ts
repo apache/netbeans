@@ -904,6 +904,14 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         }
     ));
 
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.cloud.openConsole',
+        async (node) => {
+            const consoleUrl = getValueAfterPrefix(node.contextValue, 'consoleUrl:');
+            const url = vscode.Uri.parse(consoleUrl);
+            vscode.env.openExternal(url);
+        }
+    ));
+
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.cloud.imageUrl.copy',
         async (node) => {
             const imageUrl = getValueAfterPrefix(node.contextValue, 'imageUrl:');

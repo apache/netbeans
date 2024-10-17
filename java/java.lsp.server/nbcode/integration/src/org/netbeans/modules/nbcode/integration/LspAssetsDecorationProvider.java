@@ -18,8 +18,10 @@
  */
 package org.netbeans.modules.nbcode.integration;
 
+import java.net.URL;
 import java.util.Optional;
 import java.util.logging.Logger;
+import org.netbeans.modules.cloud.oracle.adm.URLProvider;
 import org.netbeans.modules.cloud.oracle.assets.CloudAssets;
 import org.netbeans.modules.cloud.oracle.bucket.BucketItem;
 import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
@@ -36,7 +38,6 @@ import org.netbeans.modules.java.lsp.server.explorer.api.TreeItemData;
 import org.openide.nodes.Node;
 import org.openide.util.lookup.ServiceProvider;
 
-
 /**
  *
  * @author Jan Horvath
@@ -44,7 +45,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = TreeDataProvider.Factory.class, path = "Explorers/cloud.assets")
 public class LspAssetsDecorationProvider implements TreeDataProvider.Factory {
     private static final Logger LOG = Logger.getLogger(LspAssetsDecorationProvider.class.getName());
-    
+
     public static final String CTXVALUE_CAP_REFERENCE_NAME = "cap:refName"; // NOI18N
     public static final String CTXVALUE_PREFIX_REFERENCE_NAME = "cloudAssetsReferenceName:"; // NOI18N
     public static final String CTXVALUE_PREFIX_PUBLIC_IP = "publicIp:"; // NOI18N
@@ -54,12 +55,13 @@ public class LspAssetsDecorationProvider implements TreeDataProvider.Factory {
     public static final String CTXVALUE_PREFIX_REPOSITORY_PUBLIC = "repositoryPublic:"; // NOI18N
     public static final String CTXVALUE_PREFIX_SECRET_LIFECYCLE_STATE = "lifecycleState:"; // NOI18N
     public static final String CTXVALUE_PREFIX_CLUSTER_NAMESPACE = "clusterNamespace:"; // NOI18N
+    public static final String CTXVALUE_PREFIX_CONSOLE_URL = "consoleUrl:"; // NOI18N
 
     @Override
     public synchronized TreeDataProvider createProvider(String treeId) {
         return new ProviderImpl(null);
     }
-    
+
     static class ProviderImpl implements TreeDataProvider {
         public ProviderImpl(NodeLookupContextValues lookupValues) {
         }
@@ -69,10 +71,17 @@ public class LspAssetsDecorationProvider implements TreeDataProvider.Factory {
             TreeItemData d = new TreeItemData();
             String refName;
             boolean set = false;
-            
+
             OCIItem item = n.getLookup().lookup(OCIItem.class);
             if (item == null) {
                 return null;
+            }
+            if (item instanceof URLProvider) {
+                URL consoleURL = ((URLProvider) item).getURL();
+                if (consoleURL != null) {
+                    d.addContextValues(CTXVALUE_PREFIX_CONSOLE_URL + consoleURL.toExternalForm());
+                    set = true;
+                }
             }
             refName = CloudAssets.getDefault().getReferenceName(item);
             if (refName != null) {
@@ -107,36 +116,39 @@ public class LspAssetsDecorationProvider implements TreeDataProvider.Factory {
                 } else {
                     ClusterItem cluster = CloudAssets.getDefault().getItem(ClusterItem.class);
                     if (cluster != null) {
-                         d.addContextValues(CTXVALUE_PREFIX_CLUSTER_NAME + cluster.getName());
+                        d.addContextValues(CTXVALUE_PREFIX_CLUSTER_NAME + cluster.getName());
                     }
                 }
                 d.addContextValues(CTXVALUE_PREFIX_IMAGE_URL + imageUrl);
                 set = true;
             }
-            if (item instanceof BucketItem 
+            if (item instanceof BucketItem
                     || item instanceof DatabaseItem) {
                 d.addContextValues(CTXVALUE_CAP_REFERENCE_NAME);
                 set = true;
             }
-            
+
             if (item instanceof SecretItem) {
-                d.addContextValues(CTXVALUE_PREFIX_SECRET_LIFECYCLE_STATE + ((SecretItem)item).getLifecycleState());
+                d.addContextValues(CTXVALUE_PREFIX_SECRET_LIFECYCLE_STATE + ((SecretItem) item).getLifecycleState());
                 set = true;
             }
             return set ? d : null;
         }
 
         @Override
-        public void addTreeItemDataListener(TreeDataListener l) {
+        public void addTreeItemDataListener(TreeDataListener l
+        ) {
         }
 
         @Override
-        public void removeTreeItemDataListener(TreeDataListener l) {
+        public void removeTreeItemDataListener(TreeDataListener l
+        ) {
         }
 
         @Override
-        public void nodeReleased(Node n) {
+        public void nodeReleased(Node n
+        ) {
         }
-    
+
     }
 }

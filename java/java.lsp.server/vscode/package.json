@@ -526,6 +526,10 @@
 				"title": "Copy the public IP address"
 			},
 			{
+				"command": "nbls.cloud.openConsole",
+				"title": "Open in OCI Console"
+			},
+			{
 				"command": "nbls.cloud.imageUrl.copy",
 				"title": "Copy pull command"
 			},
@@ -874,6 +878,10 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls.cloud.openConsole",
+					"when": "false"
+				},
+				{
 					"command": "nbls.cloud.imageUrl.copy",
 					"when": "false"
 				},
@@ -1123,7 +1131,12 @@
 				{
 					"command": "nbls.cloud.publicIp.copy",
 					"when": "viewItem =~ /publicIp:.*/ && viewItem =~ /^(?!.*imageUrl:).*/",
-					"group": "oci@1000"
+					"group": "instance@1500"
+				},
+				{
+					"command": "nbls.cloud.openConsole",
+					"when": "viewItem =~ /consoleUrl:.*/",
+					"group": "oci@2000"
 				},
 				{
 					"command": "nbls.cloud.imageUrl.copy",
@@ -1158,7 +1171,7 @@
 				{
 					"command": "nbls.cloud.assets.buildPushNativeImage",
 					"when": "viewItem =~ /class:oracle.developer.ContainerRepositoryItem/",
-					"group": "oci@1000"
+					"group": "container@1000"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddRepository",
@@ -1168,7 +1181,7 @@
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateBuildRun",
 					"when": "viewItem =~ /class:oracle.devops.BuildPipelineItem/",
-					"group": "inline@12"
+					"group": "container@12"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddToProject",

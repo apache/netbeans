@@ -1,3 +1,9 @@
+Name: typescript
+Description: TypeScript is a language for application scale JavaScript development
+Version: 5.6.2
+License: Apache-2.0-typescript
+Origin: https://www.typescriptlang.org/
+
 Parts of this work are licensed:
 Apache License
 

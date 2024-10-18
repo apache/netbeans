@@ -22,7 +22,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
-import java.util.logging.Logger;
 import static junit.framework.TestCase.assertEquals;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.junit.NbTestCase;
@@ -36,8 +35,6 @@ import org.openide.filesystems.FileUtil;
  */
 public class JavaFileTest extends NbTestCase {
     
-    private static final Logger LOG = Logger.getLogger(JavaFileTest.class.getName());
-    
     public JavaFileTest(String name) {
         super(name);
     }
@@ -45,23 +42,25 @@ public class JavaFileTest extends NbTestCase {
     public void testSingleJavaSourceRun() throws Exception {
         clearWorkDir();
         File f1 = new File(getWorkDir(), "TestSingleJavaFile.java");
-        FileWriter w = new FileWriter(f1);
-        w.write("public class TestSingleJavaFile {\n" +
-        "    \n" +
-        "    public static void main (String args[]) {\n" +
-        "        System.out.print(\"hello world\");\n" +
-        "    }\n" +
-        "    \n" +
-        "}");
-        w.close();
+        try (FileWriter w = new FileWriter(f1)) {
+            w.write(
+                """
+                public class TestSingleJavaFile {
+                    public static void main (String args[]) {
+                        System.out.print("hello world");
+                    }
+                }
+                """
+            );
+        }
         FileObject javaFO = FileUtil.toFileObject(f1);
         assertNotNull("FileObject found: " + f1, javaFO);
         SingleJavaSourceRunActionProvider runActionProvider = new SingleJavaSourceRunActionProvider();
-        LaunchProcess process = runActionProvider.invokeActionHelper(null, "run.single", javaFO, ExplicitProcessParameters.empty());
+        LaunchProcess process = runActionProvider.invokeActionHelper("run.single", javaFO, ExplicitProcessParameters.empty());
         BufferedReader reader
                 = new BufferedReader(new InputStreamReader(process.call().getInputStream()));
         StringBuilder builder = new StringBuilder();
-        String line = null;
+        String line;
         while ((line = reader.readLine()) != null) {
             builder.append(line);
         }

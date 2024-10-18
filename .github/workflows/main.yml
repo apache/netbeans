@@ -1294,6 +1294,9 @@ jobs:
       - name: java.freeform
         run: ant $OPTS -f java/java.freeform test
 
+      - name: java.file.launcher
+        run: ant $OPTS -f java/java.file.launcher test
+
 #      - name: java.kit
 #        run: ant $OPTS -f java/java.kit test
 

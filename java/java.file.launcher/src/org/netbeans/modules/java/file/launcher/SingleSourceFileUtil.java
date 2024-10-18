@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.platform.JavaPlatform;
+import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
@@ -41,6 +42,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Lookup;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -59,6 +61,9 @@ public final class SingleSourceFileUtil {
         int version = Integer.parseInt(javaVersion);
         return version;
     }
+
+    public static final String GLOBAL_VM_OPTIONS = "java_file_launcher_global_vm_options"; //NOI18N
+    public static final String GLOBAL_STOP_AND_RUN_OPTION = "java_file_launcher_global_stop_and_run_option"; //NOI18N
 
     // synced with JavaNode
     public static final String FILE_ARGUMENTS = "single_file_run_arguments"; //NOI18N
@@ -116,6 +121,10 @@ public final class SingleSourceFileUtil {
         String vmOptions = compilerVmOptionsObj != null ? ((String) compilerVmOptionsObj).trim() : ""; // NOI18N
         if (!vmOptions.isEmpty()) {
             compileCommandList.addAll(Arrays.asList(vmOptions.split(" "))); //NOI18N
+        }
+        String globalVmOptions = NbPreferences.forModule(JavaPlatformManager.class).get(GLOBAL_VM_OPTIONS, "").trim(); // NOI18N
+        if (!globalVmOptions.isEmpty()) {
+            compileCommandList.addAll(Arrays.asList(globalVmOptions.split(" "))); //NOI18N
         }
         compileCommandList.add(fileObject.getPath());
         ProcessBuilder compileProcessBuilder = new ProcessBuilder(compileCommandList);

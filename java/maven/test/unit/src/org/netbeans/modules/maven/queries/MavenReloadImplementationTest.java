@@ -19,6 +19,7 @@
 package org.netbeans.modules.maven.queries;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,6 +36,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,7 +49,10 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.NbMavenProject;
+import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
+import org.netbeans.modules.maven.execute.AbstractMavenExecutor;
+import org.netbeans.modules.maven.execute.MavenCommandLineExecutor;
 import org.netbeans.modules.maven.modelcache.MavenProjectCache;
 import org.netbeans.modules.project.dependency.ProjectOperationException;
 import org.netbeans.modules.project.dependency.ProjectReload;
@@ -62,13 +67,16 @@ import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.cookies.EditorCookie;
+import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.DummyInstalledFileLocator;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.IOProvider;
+import org.openide.windows.InputOutput;
 
 /**
  *
@@ -98,6 +106,7 @@ public class MavenReloadImplementationTest extends NbTestCase {
         System.setProperty("maven.defaultProjectBuilder.disableGlobalModelCache", "true");
         
         clearWorkDir();
+        FileUtil.toFileObject(getWorkDir()).refresh();
         
         // This is needed, otherwose the core window's startup code will redirect
         // System.out/err to the IOProvider, and its Trivial implementation will redirect
@@ -133,9 +142,16 @@ public class MavenReloadImplementationTest extends NbTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        MonitoringReloadImplementation.INSTANCE.enabled = false;
+        if (MonitoringReloadImplementation.INSTANCE != null) {
+            MonitoringReloadImplementation.INSTANCE.enabled = false;
+        }
+        if (MCLE.INSTANCE != null) {
+            MCLE.INSTANCE.block = false;
+            MCLE.INSTANCE.executedConfig = null;
+        }
         OpenProjects.getDefault().close(OpenProjects.getDefault().getOpenProjects());
         ProjectReloadInternal.getInstance().assertNoOperations();
+        
         super.tearDown(); 
     }
     
@@ -145,10 +161,19 @@ public class MavenReloadImplementationTest extends NbTestCase {
     Project lib;
     
     void setupMicronautProject() throws Exception {
-        FileUtil.toFileObject(getWorkDir()).refresh();
-
         FileObject testApp = dataFO.getFileObject("projects/multiproject/democa");
+        setupProject(testApp, null);
+    }
+    
+    interface SetupModifier {
+        public void modify(FileObject root) throws IOException;
+    }
+
+    void setupProject(FileObject testApp, SetupModifier modifier) throws Exception {
         prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "democa");
+        if (modifier != null) {
+            modifier.modify(prjCopy);
+        }
         root = ProjectManager.getDefault().findProject(prjCopy);
         oci = ProjectManager.getDefault().findProject(prjCopy.getFileObject("oci"));
         lib =  ProjectManager.getDefault().findProject(prjCopy.getFileObject("lib"));
@@ -537,6 +562,19 @@ public class MavenReloadImplementationTest extends NbTestCase {
         }).get();
     }
     
+    private void deleteRepositoryArtifact(String groupId, String artifactId, String version) throws IOException {
+        Path p = Paths.get(System.getProperty("user.home"), ".m2", "repository").resolve(Paths.get("", groupId.split("\\."))).resolve(artifactId);
+        if (version != null) {
+            p = p.resolve(version);
+        }
+        if (Files.exists(p)) {
+            Files.walk(p)
+                .sorted(Comparator.reverseOrder())
+                .map(Path::toFile)
+                .forEach(File::delete);
+        }
+    }
+    
     /**
      * The reload API is asked to refresh the state, but the underlying MavenProject
      * was already reloaded (through other means). A higher actual quality will
@@ -545,13 +583,7 @@ public class MavenReloadImplementationTest extends NbTestCase {
      * @throws Exception 
      */
     public void testMavenCurrentReplacedWithHigherQuality() throws Exception {
-        Path p = Paths.get(System.getProperty("user.home"), ".m2", "repository", "io", "micronaut", "platform", "micronaut-parent");
-        if (Files.exists(p)) {
-            Files.walk(p)
-                .sorted(Comparator.reverseOrder())
-                .map(Path::toFile)
-                .forEach(File::delete);
-        }
+        deleteRepositoryArtifact("io.micronaut.platform", "micronaut-parent", null);
         setupMicronautProject();
 
         NbMavenProjectImpl impl = root.getLookup().lookup(NbMavenProjectImpl.class);        
@@ -847,5 +879,144 @@ public class MavenReloadImplementationTest extends NbTestCase {
             reloadReached2.release();
             return null;
         }
+    }
+    
+    /**
+     * Checks that project with an unresolvable artifact will load to max LOADED state.
+     * When modified, it will again load to max LOADED state. The same if force-loaded.
+     * @throws Exception 
+     */
+    public void testUnresolvableArtifact() throws Exception {
+        FileObject testApp = dataFO.getFileObject("projects/multiproject/democa");
+        setupProject(testApp, (r) -> {
+            r.getFileObject("oci/pom.xml").delete();
+            r.getFileObject("oci/pom_unresolvable.xml").copy(r.getFileObject("oci"), "pom", "xml");
+        });
+        primeProject();
+        // low quality does not mean the priming will start.
+        ProjectState ps = ProjectReload.withProjectState(oci, ProjectReload.StateRequest.refresh()).get();
+        assertTrue(ps.getQuality().isAtLeast(Quality.INCOMPLETE));
+        
+        ((MCLE)Lookup.getDefault().lookup(MavenCommandLineExecutor.ExecuteMaven.class)).executedConfig = null;
+        
+        AtomicReference<MavenProject> mpRef = new AtomicReference<>();
+        // this request will fail, as the is not available
+        ProjectReload.withProjectState(oci, ProjectReload.StateRequest.refresh().toQuality(Quality.RESOLVED)).
+                exceptionally(t -> {
+                ProjectState s = ProjectReload.getProjectState(oci);
+                mpRef.set(s.getLookup().lookup(MavenProject.class));
+                assertTrue(s.getQuality().isAtLeast(Quality.LOADED));
+                return null;
+        }).get();
+        
+        assertNotNull(MCLE.INSTANCE.executedConfig);
+        MCLE.INSTANCE.executedConfig = null;
+        
+        // try again, without force flag: the request should not even launch Maven, as the reported unresolved
+        // artifacts are the same.
+        ProjectReload.withProjectState(oci, ProjectReload.StateRequest.refresh().toQuality(Quality.RESOLVED)).
+                exceptionally(t -> {
+                ProjectState s = ProjectReload.getProjectState(oci);
+                MavenProject mp = s.getLookup().lookup(MavenProject.class);
+                assertTrue(s.getQuality().isAtLeast(Quality.LOADED));
+                assertSame(mpRef.get(), mp);
+                return null;
+        }).get();
+        assertNull(MCLE.INSTANCE.executedConfig);
+        
+        oci.getProjectDirectory().getFileObject("pom.xml").delete();
+        // replace the POM:
+        FileObject newPom = FileUtil.copyFile(testApp.getFileObject("oci/pom.xml"), oci.getProjectDirectory(), "pom");
+        
+        ProjectState ps2 = ProjectReload.withProjectState(oci, ProjectReload.StateRequest.refresh().toQuality(Quality.RESOLVED)).get();
+        assertTrue(ps2.getQuality().isAtLeast(Quality.RESOLVED));
+    }
+    
+    public void testUnresolvableParentPom() throws Exception {
+        deleteRepositoryArtifact("io.micronaut.platform", "micronaut-parent", null);
+        setupMicronautProject();
+
+        try {
+            ProjectReload.withProjectState(oci, ProjectReload.StateRequest.refresh()).get();
+        } catch (ProjectOperationException | ExecutionException ex) {}
+        ProjectState ps = ProjectReload.getProjectState(oci);
+        assertEquals(Quality.BROKEN, ps.getQuality());
+        
+        // refresh to RESOLVED.
+        ProjectState ps2 = ProjectReload.withProjectState(oci, ProjectReload.StateRequest.refresh().toQuality(Quality.RESOLVED)).get();
+        assertEquals(Quality.RESOLVED, ps2.getQuality());
+    }
+    
+    public void testUnresolvableArtifactAppears() throws Exception {
+        FileObject testApp = dataFO.getFileObject("projects/multiproject/democa");
+        deleteRepositoryArtifact("org.flywaydb", "flyway-database-oracle", null);
+        setupProject(testApp, null);
+        primeProject();
+        
+        ProjectState ps = ProjectReload.withProjectState(oci, ProjectReload.StateRequest.refresh()).get();
+        assertEquals(Quality.RESOLVED, ps.getQuality());
+        
+        oci.getProjectDirectory().getFileObject("pom.xml").delete();
+        FileObject newPom = FileUtil.copyFile(testApp.getFileObject("oci/pom_add_artifact.xml"), oci.getProjectDirectory(), "pom");
+        
+        // now the project state should be just LOADED, as a new artifact has apepared:
+        ProjectState ps2 = ProjectReload.withProjectState(oci, ProjectReload.StateRequest.refresh()).get();
+        assertEquals(Quality.LOADED, ps2.getQuality());
+        
+        // block the priming / download:
+        ((MCLE)Lookup.getDefault().lookup(MavenCommandLineExecutor.ExecuteMaven.class)).block = true;
+        ProjectState ps3 = ProjectReload.withProjectState(oci, ProjectReload.StateRequest.refresh().tryQuality(Quality.RESOLVED)).get();
+        assertEquals(Quality.LOADED, ps3.getQuality());
+        MavenProject mp = ps3.getLookup().lookup(MavenProject.class);
+        
+        ProjectReload.withProjectState(oci, ProjectReload.StateRequest.refresh().toQuality(Quality.RESOLVED)).
+                exceptionally(t -> {
+                ProjectState s = ProjectReload.getProjectState(oci);
+                MavenProject mp2 = s.getLookup().lookup(MavenProject.class);
+                assertTrue(s.getQuality().isAtLeast(Quality.LOADED));
+                assertSame(mp, mp2);
+                return null;
+        }).get();
+        
+        MCLE.INSTANCE.block = false;
+        ProjectState ps4 = ProjectReload.withProjectState(oci, ProjectReload.StateRequest.reload().toQuality(Quality.RESOLVED)).get();
+        assertEquals(Quality.RESOLVED, ps4.getQuality());
+    }
+    
+    @ServiceProvider(service = MavenCommandLineExecutor.ExecuteMaven.class)
+    public static class MCLE extends MavenCommandLineExecutor.ExecuteMaven {
+        public static MCLE INSTANCE;
+        public volatile RunConfig executedConfig;
+        public volatile boolean block;
+        
+        public MCLE() {
+            INSTANCE = this;
+        }
+        
+        @Override
+        public ExecutorTask execute(RunConfig config, InputOutput io, AbstractMavenExecutor.TabContext tc) {
+            executedConfig = config;
+            if (block) {
+                ExecutorTask et = new ExecutorTask(() -> {}) {
+                    @Override
+                    public void stop() {
+                    }
+                    
+                    @Override
+                    public int result() {
+                        return 1;
+                    }
+                    
+                    @Override
+                    public InputOutput getInputOutput() {
+                        return InputOutput.NULL;
+                    }
+                };
+                et.run();
+                return et;
+            }
+            return super.execute(config, io, tc);
+        }
+        
     }
 }

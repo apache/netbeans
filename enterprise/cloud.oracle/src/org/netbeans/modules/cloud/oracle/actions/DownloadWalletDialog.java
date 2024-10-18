@@ -59,7 +59,7 @@ import org.openide.windows.WindowManager;
 })
 final class DownloadWalletDialog extends AbstractPasswordPanel {
 
-    public static final String WALLETS_PATH = "Databases/Wallets"; // NOI18N
+    public static final String WALLETS_PATH = "Database/Wallets"; // NOI18N
     private static final String LAST_USED_DIR = "lastUsedDir";
     
     /**

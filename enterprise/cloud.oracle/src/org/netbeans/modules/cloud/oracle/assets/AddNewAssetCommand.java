@@ -56,7 +56,7 @@ public class AddNewAssetCommand implements CommandProvider {
 
     private static final Map<String, String[]> DEP_MAP = new HashMap() {
         {
-            put("Databases", new String[]{"io.micronaut.oraclecloud", "micronaut-oraclecloud-atp",
+            put("Database", new String[]{"io.micronaut.oraclecloud", "micronaut-oraclecloud-atp",
                                             "io.micronaut.sql", "micronaut-jdbc-hikari"}); //NOI18N
             put("Bucket", new String[]{"io.micronaut.objectstorage", "micronaut-object-storage-oracle-cloud"}); //NOI18N
             put("Vault", new String[]{"io.micronaut.oraclecloud", "micronaut-oraclecloud-vault"}); //NOI18N
@@ -81,7 +81,7 @@ public class AddNewAssetCommand implements CommandProvider {
         boolean showSetRefNameStep = CloudAssets.getDefault().itemExistWithoutReferanceName(DatabaseItem.class);
         Steps.NextStepProvider nsProvider = Steps.NextStepProvider.builder()
                     .stepForClass(ItemTypeStep.class, (s) -> {
-                        if ("Databases".equals(s.getValue())) {
+                        if ("Database".equals(s.getValue())) {
                             return new DatabaseConnectionStep();
                         }
                         return new TenancyStep();
@@ -95,7 +95,7 @@ public class AddNewAssetCommand implements CommandProvider {
                     Project project = values.getValueForStep(ProjectStep.class);
                     CompletableFuture<? extends OCIItem> item = null;
                     String itemType = values.getValueForStep(ItemTypeStep.class);
-                    if ("Databases".equals(itemType)) {
+                    if ("Database".equals(itemType)) {
                         DatabaseItem i = values.getValueForStep(DatabaseConnectionStep.class);
                         if (i == null) {
                             item = new AddADBAction().addADB();
@@ -145,7 +145,7 @@ public class AddNewAssetCommand implements CommandProvider {
                                 DependencyUtils.addAnnotationProcessor(project, processor[0], processor[1]);
                             }
                         } catch (IllegalStateException e) {
-                            if ("Databases".equals(itemType)) {
+                            if ("Database".equals(itemType)) {
                                 CloudAssets.getDefault().removeReferenceNameFor(i);
                             }
                             future.completeExceptionally(e);

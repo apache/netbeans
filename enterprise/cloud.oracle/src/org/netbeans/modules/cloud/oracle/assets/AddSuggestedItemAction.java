@@ -68,7 +68,7 @@ public class AddSuggestedItemAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if ("Databases".equals(context.getPath())) { //NOI18N
+        if ("Database".equals(context.getPath())) { //NOI18N
             Steps.getDefault().executeMultistep(new DatabaseConnectionStep(), Lookup.EMPTY)
                     .thenAccept(values -> {
                         DatabaseItem db = values.getValueForStep(DatabaseConnectionStep.class);

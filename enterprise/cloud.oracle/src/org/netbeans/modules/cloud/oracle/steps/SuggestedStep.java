@@ -50,7 +50,7 @@ import org.openide.util.NbBundle;
  * @author Jan Horvath
  */
 @NbBundle.Messages({
-    "Databases=Oracle Autonomous Database",
+    "Database=Oracle Autonomous Database",
     "Vault=OCI Vault",
     "Bucket=Object Storage Bucket",
     "Cluster=Oracle Container Engine",
@@ -82,8 +82,8 @@ public class SuggestedStep extends AbstractStep<OCIItem> {
 
     private String getSuggestedItemName() {
         switch (suggestedType) {
-            case "Databases":
-                return Bundle.Databases();
+            case "Database":
+                return Bundle.Database();
             case "Vault":
                 return Bundle.Vault();
             case "Bucket":
@@ -133,7 +133,7 @@ public class SuggestedStep extends AbstractStep<OCIItem> {
         List<OCIItem> items = new ArrayList<>();
         try {
             switch (path) {
-                case "Databases": //NOI18N
+                case "Database": //NOI18N
                     return DatabaseNode.getDatabases().apply(parent);
                 case "Vault": //NOI18N
                     return VaultNode.getVaults().apply(parent);

@@ -70,7 +70,7 @@ import org.openide.util.NbBundle;
 )
 
 @ActionReferences(value = {
-    @ActionReference(path = "Cloud/Oracle/Databases/Actions", position = 250)
+    @ActionReference(path = "Cloud/Oracle/Database/Actions", position = 250)
 })
 @NbBundle.Messages({
     "LBL_SaveWallet=Save DB Wallet",

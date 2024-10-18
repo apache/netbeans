@@ -36,7 +36,7 @@ public final class DependenciesAnalyzer implements SuggestionAnalyzer {
 
     private static final Map<String, String> DEPENDENCIES = new HashMap() {
         {
-            put("micronaut-oraclecloud-atp", "Databases"); //NOI18N
+            put("micronaut-oraclecloud-atp", "Database"); //NOI18N
             put("micronaut-object-storage-oracle-cloud", "Bucket"); //NOI18N
             put("micronaut-oraclecloud-vault", "Vault"); //NOI18N
             put("micronaut-oraclecloud-micrometer", "MetricsNamespace"); //NOI18N        

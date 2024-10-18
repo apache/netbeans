@@ -68,10 +68,10 @@ public class AddADBAction implements ActionListener {
         boolean showSetRefNameStep = CloudAssets.getDefault().itemExistWithoutReferanceName(DatabaseItem.class);
         Steps.NextStepProvider nsProvider = Steps.NextStepProvider.builder()
                 .stepForClass(TenancyStep.class, (s) -> new CompartmentStep())
-                .stepForClass(CompartmentStep.class, (s) -> new SuggestedStep("Databases"))
+                .stepForClass(CompartmentStep.class, (s) -> new SuggestedStep("Database"))
                 .stepForClass(SuggestedStep.class, (s) -> new UsernameStep())
                 .stepForClass(UsernameStep.class, (s) -> new PasswordStep(null, (String) s.getValue()))
-                .stepForClass(PasswordStep.class, (s) -> showSetRefNameStep ? new ReferenceNameStep("Databases") : null)
+                .stepForClass(PasswordStep.class, (s) -> showSetRefNameStep ? new ReferenceNameStep("Database") : null)
                 .build();
         
         Steps.getDefault()

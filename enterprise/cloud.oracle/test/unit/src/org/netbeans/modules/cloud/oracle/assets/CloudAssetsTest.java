@@ -36,7 +36,7 @@ public class CloudAssetsTest {
     public void testStoreLoad() throws URISyntaxException {
         CloudAssets instance = new CloudAssets();
         instance.loadAssets();
-        instance.addItem(new DatabaseItem(OCID.of("db-ocid", "Databases"), "db-comp-id", "DB1", "http://test", "DB1", "tenancy-id", "reg"));
+        instance.addItem(new DatabaseItem(OCID.of("db-ocid", "Database"), "db-comp-id", "DB1", "http://test", "DB1", "tenancy-id", "reg"));
         instance.addItem(new ClusterItem(OCID.of("cluster-ocid", "Cluster"), "cluster-comp-id", "Cluster1", "tenancy-id", "reg"));
         instance.addItem(new ContainerRepositoryItem(OCID.of("container-repo-ocid", "ContainerRepository"), "container-repo-comp-id", "Repo1", "reg", "namespace", true, 2, "tenancy-id"));
         instance.storeAssets();

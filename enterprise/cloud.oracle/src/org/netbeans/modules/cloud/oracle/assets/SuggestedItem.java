@@ -58,8 +58,8 @@ public final class SuggestedItem extends OCIItem {
 
     public static SuggestedItem forPath(String path) {
         switch (path) {
-            case "Databases": //NOI18N
-                return new SuggestedItem("Databases", Bundle.SelectDatabases(), Collections.emptySet()); //NOI18N
+            case "Database": //NOI18N
+                return new SuggestedItem("Database", Bundle.SelectDatabases(), Collections.emptySet()); //NOI18N
             case "Vault": //NOI18N
                 return new SuggestedItem("Vault", Bundle.SelectVault(), Collections.emptySet()); //NOI18N
             case "Bucket": //NOI18N

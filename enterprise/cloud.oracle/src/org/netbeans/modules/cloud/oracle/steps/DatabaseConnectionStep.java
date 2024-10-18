@@ -63,7 +63,7 @@ public final class DatabaseConnectionStep extends AbstractStep<DatabaseItem> {
                 String regionCode = session.getRegion().getRegionCode();
 
                 DatabaseItem dbItem
-                        = new DatabaseItem(OCID.of(ocid, "Databases"), compartmentId, name, null, name, tenancyId, regionCode); //NOI18N
+                        = new DatabaseItem(OCID.of(ocid, "Database"), compartmentId, name, null, name, tenancyId, regionCode); //NOI18N
                 dbItem.setDescription(description);
                 adbConnections.put(name, dbItem);
             }

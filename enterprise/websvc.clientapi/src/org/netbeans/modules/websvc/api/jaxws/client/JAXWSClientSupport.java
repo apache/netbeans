@@ -44,7 +44,7 @@ import org.openide.nodes.Node;
 public final class JAXWSClientSupport {
     
     private JAXWSClientSupportImpl impl;
-    private static final Lookup.Result implementations =
+    private static final Lookup.Result<?> implementations =
         Lookup.getDefault().lookupResult(WebServicesClientSupportProvider.class);
 
     static  {

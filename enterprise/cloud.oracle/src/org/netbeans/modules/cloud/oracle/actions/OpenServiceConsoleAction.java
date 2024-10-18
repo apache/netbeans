@@ -39,7 +39,7 @@ import org.openide.util.NbBundle.Messages;
         displayName = "#CTL_OpenServiceConsoleAction"
 )
 @ActionReferences(value = {
-    @ActionReference(path = "Cloud/Oracle/Databases/Actions", position = 260)
+    @ActionReference(path = "Cloud/Oracle/Database/Actions", position = 260)
 })
 @Messages({"CTL_OpenServiceConsoleAction=Open Service Console",
         "MSG_ServiceConsole=Service Console URL: {0}"})

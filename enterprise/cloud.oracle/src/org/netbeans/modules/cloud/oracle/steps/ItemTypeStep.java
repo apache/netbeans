@@ -40,7 +40,7 @@ public class ItemTypeStep extends AbstractStep<String> {
 
     private static final Map<String, String> TYPES = new HashMap() {
         {
-            put(Bundle.Databases(), "Databases"); //NOI18N
+            put(Bundle.Database(), "Database"); //NOI18N
             put(Bundle.Bucket(), "Bucket"); //NOI18N 
             put(Bundle.Vault(), "Vault"); //NOI18N
             put(Bundle.ContainerRepository(), "ContainerRepository"); //NOI18N

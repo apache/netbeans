@@ -41,7 +41,7 @@ public class PolicyGenerator {
         List<String> result = new ArrayList();
         for (OCIItem item : items) {
             switch (item.getKey().getPath()) {
-                case "Databases": //NOI18N
+                case "Database": //NOI18N
                     result.add("Allow any-user to manage autonomous-database-family" //NOI18N
                             + " in compartment id " + item.getCompartmentId() //NOI18N
                             + " where ALL {" //NOI18N

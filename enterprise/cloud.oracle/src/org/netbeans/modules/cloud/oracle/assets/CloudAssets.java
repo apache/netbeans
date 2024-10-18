@@ -120,7 +120,7 @@ public final class CloudAssets {
             boolean update = false;
             for (Iterator it = items.iterator(); it.hasNext();) {
                 OCIItem item = (OCIItem) it.next();
-                if (!ocids.contains(item.getKey().getValue()) && "Databases".equals(item.getKey().getPath())) { //NOI18N
+                if (!ocids.contains(item.getKey().getValue()) && "Database".equals(item.getKey().getPath())) { //NOI18N
                     it.remove();
                     update = true;
                 }
@@ -243,7 +243,7 @@ public final class CloudAssets {
         list.addAll(items);
         return list;
     }
-
+    
     /**
      * Returns a <code>Collection</code> of items assigned by user. This doesn't
      * include suggested items.
@@ -406,7 +406,7 @@ public final class CloudAssets {
                                     .get("id").getAsJsonObject() //NOI18N
                                     .get("path").getAsString(); //NOI18N
                             switch (path) {
-                                case "Databases": //NOI18N
+                                case "Database": //NOI18N
                                     loaded.add(gson.fromJson(element, DatabaseItem.class));
                                     break;
                                 case "Bucket": //NOI18N

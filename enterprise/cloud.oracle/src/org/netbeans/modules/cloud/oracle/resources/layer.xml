@@ -186,7 +186,7 @@
                     </file>
                 </folder>
             </folder>
-            <folder name="Databases">
+            <folder name="Database">
                 <folder name="Nodes">
                     <file name="org-netbeans-modules-cloud-oracle-database-DatabaseNode-createNode.instance">
                         <!--org.netbeans.modules.cloud.oracle.database.DatabaseNode.createNode()-->

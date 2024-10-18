@@ -69,6 +69,7 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
+                <package>org.netbeans.modules.gsf.testrunner</package>
                 <package>org.netbeans.modules.gsf.testrunner.api</package>
                 <package>org.netbeans.modules.gsf.testrunner.plugin</package>
             </public-packages>

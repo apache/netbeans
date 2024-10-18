@@ -18,23 +18,31 @@
  */
 package org.netbeans.modules.cloud.oracle.vault;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Date;
+import org.netbeans.modules.cloud.oracle.adm.URLProvider;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import org.openide.util.Exceptions;
 
 /**
  *
  * @author Jan Horvath
  */
-public class SecretItem extends OCIItem {
+public class SecretItem extends OCIItem implements URLProvider {
     
     private String lifecycleState;
     private Date deletionTime;
+    private String vaultId;
 
-    public SecretItem(OCID id, String compartmentId, String name, String lifecycleState, Date deletionTime, String tenancyId, String regionCode) {
+    public SecretItem(OCID id, String compartmentId, String name, String lifecycleState, Date deletionTime, String vaultId, String tenancyId, String regionCode) {
         super(id, compartmentId, name, tenancyId, regionCode);
         this.lifecycleState = lifecycleState;
         this.deletionTime = deletionTime;
+        this.vaultId = vaultId;
     }
 
     public SecretItem() { 
@@ -51,6 +59,10 @@ public class SecretItem extends OCIItem {
     public Date getDeletionTime() {
         return this.deletionTime;
     }
+
+    public String getVaultId() {
+        return vaultId;
+    }
     
     void setDeletionTime(Date deletionTime) {
         this.deletionTime = deletionTime;
@@ -63,4 +75,19 @@ public class SecretItem extends OCIItem {
     void setLifecycleState(String lifecycleState) {
         this.lifecycleState = lifecycleState;
     }
+    
+    @Override
+    public URL getURL() {
+        if (getKey().getValue() != null && getRegion() != null) {
+            try {
+                URI uri = new URI(String.format("https://cloud.oracle.com/security/kms/vaults/%s/secrets/%s?region=%s", 
+                        getVaultId(), getKey().getValue(), getRegion()));
+                return uri.toURL();
+            } catch (MalformedURLException | URISyntaxException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } 
+        return null;
+    }
+    
 }

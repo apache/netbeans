@@ -18,21 +18,27 @@
  */
 package org.netbeans.modules.cloud.oracle.database;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
+import org.netbeans.modules.cloud.oracle.adm.URLProvider;
 import org.netbeans.modules.cloud.oracle.assets.CloudAssets;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.vault.SensitiveData;
+import org.openide.util.Exceptions;
 
 /**
  *
  * @author Jan Horvath
  */
-public class DatabaseItem extends OCIItem implements SensitiveData {
+public class DatabaseItem extends OCIItem implements SensitiveData, URLProvider {
     private static final String DEFAULT_REF_NAME = "DEFAULT";
     private final String serviceUrl;
     private final String connectionName;
@@ -104,6 +110,19 @@ public class DatabaseItem extends OCIItem implements SensitiveData {
                 return connections[i];
             }
         }
+        return null;
+    }
+
+    @Override
+    public URL getURL() {
+        if (getKey().getValue() != null && getRegion() != null) {
+            try {
+                URI uri = new URI(String.format("https://cloud.oracle.com/db/adbs/%s?region=%s", getKey().getValue(), getRegion()));
+                return uri.toURL();
+            } catch (MalformedURLException | URISyntaxException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } 
         return null;
     }
 }

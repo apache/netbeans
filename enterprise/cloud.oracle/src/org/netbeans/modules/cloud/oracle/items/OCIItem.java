@@ -18,9 +18,12 @@
  */
 package org.netbeans.modules.cloud.oracle.items;
 
+import com.oracle.bmc.Region;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents Oracle Cloud Resource identified by Oracle Cloud Identifier (OCID)
@@ -28,6 +31,9 @@ import java.util.Objects;
  * @author Jan Horvath
  */
 public abstract class OCIItem {
+    
+    private static final Logger LOG = Logger.getLogger(OCIItem.class.getName());
+    
     final OCID id;
     final String name;
     final String compartmentId;
@@ -186,6 +192,18 @@ public abstract class OCIItem {
     
     public void fireRefNameChanged(String oldRefName, String referenceName) {
         changeSupport.firePropertyChange("referenceName", oldRefName, referenceName);
+    }
+    
+    public String getRegion() {
+        if (getRegionCode() != null) {
+            try {
+                Region region = Region.fromRegionCodeOrId(getRegionCode());
+                return region.getRegionId();
+            } catch (IllegalArgumentException e) {
+                LOG.log(Level.INFO, "Unknown Region Code", e);
+            }
+        }
+        return null;
     }
     
 }

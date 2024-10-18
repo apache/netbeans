@@ -64,7 +64,7 @@ public class OCINode extends AbstractNode {
     }
     
     public OCINode(OCIItem item, Children children) {
-        super(children, Lookups.fixed(item, OCIManager.getDefault().getActiveProfile(item)));
+        super(children, Lookups.fixed(item));
         setName(item.getName());
         this.item = item;
         this.factory = null;

@@ -211,6 +211,7 @@ public class SecretNode extends OCINode {
                                 d.getSecretName(),
                                 d.getLifecycleState().getValue(),
                                 d.getTimeOfDeletion(),
+                                vault.getKey().getValue(),
                                 tenancyId,
                                 regionCode)
                     )

@@ -20,6 +20,8 @@ package org.netbeans.modules.fish.payara.micro.project.ui;
 
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.ARCHETYPE_ARTIFACT_ID;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.ARCHETYPE_GROUP_ID;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.STARTER_ARCHETYPE_ARTIFACT_ID;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.STARTER_ARCHETYPE_GROUP_ID;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -32,9 +34,13 @@ import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROJECT_IC
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROJECT_TYPE;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_ARTIFACT_ID;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_AUTO_BIND_HTTP;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_CONTEXT_ROOT;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_GROUP_ID;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_PACKAGE;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_PAYARA_MICRO_VERSION;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_PAYARA_VERSION;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_PLATFORM;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_PLATFORM_MICRO_VALUE;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_VERSION;
 import static org.netbeans.modules.fish.payara.micro.plugin.MicroPluginWizardDescriptor.updateMicroMavenPlugin;
 import org.netbeans.modules.maven.api.archetype.Archetype;
@@ -46,7 +52,6 @@ import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import static org.openide.util.NbBundle.getMessage;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_CONTEXT_ROOT;
 
 /**
  *
@@ -84,10 +89,12 @@ public final class MicroProjectWizardIterator extends BaseWizardIterator {
         Map<String, String> properties = new HashMap<>();
         if (payaraMicroVersion != null) {
             properties.put(PROP_PAYARA_MICRO_VERSION, payaraMicroVersion);
+            properties.put(PROP_PAYARA_VERSION, payaraMicroVersion);
         }
         properties.put(PROP_AUTO_BIND_HTTP, autoBindHttp);
         properties.put(PROP_CONTEXT_ROOT, contextRoot);
-
+        properties.put(PROP_PLATFORM, PROP_PLATFORM_MICRO_VALUE);
+        
         ArchetypeWizards.logUsage(archetype.getGroupId(), archetype.getArtifactId(), archetype.getVersion());
 
         File rootFile = FileUtil.normalizeFile((File) descriptor.getProperty("projdir")); // NOI18N
@@ -100,7 +107,6 @@ public final class MicroProjectWizardIterator extends BaseWizardIterator {
                 continue;
             }
             MavenProjectSupport.changeServer(project, true);
-            updateMicroMavenPlugin(project, payaraMicroVersion, autoBindHttp, contextRoot);
         }
 
         return projects;
@@ -108,12 +114,14 @@ public final class MicroProjectWizardIterator extends BaseWizardIterator {
 
     private Archetype createMojoArchetype(String payaraMicroVersion) {
         Archetype archetype = new Archetype();
-        archetype.setGroupId(ARCHETYPE_GROUP_ID);
-        archetype.setArtifactId(ARCHETYPE_ARTIFACT_ID);
         String[] versionToken = payaraMicroVersion.split("\\.");
         if (versionToken.length > 1 && Integer.parseInt(versionToken[0]) < 6) {
+            archetype.setGroupId(ARCHETYPE_GROUP_ID);
+            archetype.setArtifactId(ARCHETYPE_ARTIFACT_ID);
             archetype.setVersion("1.4.0");
         } else {
+            archetype.setGroupId(STARTER_ARCHETYPE_GROUP_ID);
+            archetype.setArtifactId(STARTER_ARCHETYPE_ARTIFACT_ID);
             // latest version of archetype automatically fetched from remote catalog
         }
         return archetype;

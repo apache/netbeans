@@ -897,6 +897,7 @@ hfds destFolder,ext,name,result,source
 
 CLSS public final org.netbeans.modules.payara.eecommon.api.config.AppClientVersion
 fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_10_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_11_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_1_3
 fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_1_4
 fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_5_0
@@ -910,6 +911,7 @@ supr org.netbeans.modules.payara.eecommon.api.config.J2EEBaseVersion
 
 CLSS public final org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion
 fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_10_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_11_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_1_3
 fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_1_4
 fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_5_0
@@ -1146,6 +1148,7 @@ CLSS public final org.netbeans.modules.payara.eecommon.api.config.J2EEVersion
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion J2EE_1_3
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion J2EE_1_4
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_10_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_11_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_8_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_9_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_9_1

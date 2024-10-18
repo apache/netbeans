@@ -89,6 +89,12 @@ public final class URITranslator {
                     Exceptions.printStackTrace(ex);
                 }
             }
+            if ("file".equals(uriUri.getScheme()) && !uri.startsWith("file:///")) { // NOI18N
+                // in "file:/C:" the : drive separator is at char 7. The leading slash before "C" is at 5.
+                if ((uri.length() <= 7) || uri.charAt(7) != ':') { // NOI18N
+                    uri = "file://" + uri.substring(5); // NOI18N
+                }
+            }
             return uri;
         });
     }

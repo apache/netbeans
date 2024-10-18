@@ -272,24 +272,57 @@
                 <package>org.jdom2.util</package>
                 <package>org.netbeans.modules.maven.embedder</package>
                 <package>org.netbeans.modules.maven.embedder.exec</package>
+                <!-- maven-resolver-api -->
                 <package>org.eclipse.aether</package>
                 <package>org.eclipse.aether.artifact</package>
-                <package>org.eclipse.org.eclipse.aether</package>
+                <package>org.eclipse.aether.collection</package>
+                <package>org.eclipse.aether.deployment</package>
+                <package>org.eclipse.aether.graph</package>
+                <package>org.eclipse.aether.installation</package>
+                <package>org.eclipse.aether.metadata</package>
                 <package>org.eclipse.aether.repository</package>
+                <package>org.eclipse.aether.resolution</package>
                 <package>org.eclipse.aether.transfer</package>
+                <package>org.eclipse.aether.version</package>
+                <!-- maven-resolver-spi -->
+                <package>org.eclipse.aether.spi</package>
+                <package>org.eclipse.aether.spi.checksums</package>
+                <package>org.eclipse.aether.spi.connector</package>
+                <package>org.eclipse.aether.spi.connector.checksum</package>
+                <package>org.eclipse.aether.spi.connector.filter</package>
+                <package>org.eclipse.aether.spi.connector.layout</package>
+                <package>org.eclipse.aether.spi.connector.transport</package>
+                <package>org.eclipse.aether.spi.io</package>
+                <package>org.eclipse.aether.spi.localrepo</package>
+                <package>org.eclipse.aether.spi.resolution</package>
+                <package>org.eclipse.aether.spi.synccontext</package>
+                <!-- maven-resolver-util -->
                 <package>org.eclipse.aether.util</package>
+                <package>org.eclipse.aether.util.artifact</package>
+                <package>org.eclipse.aether.util.concurrency</package>
+                <package>org.eclipse.aether.util.filter</package>
+                <package>org.eclipse.aether.util.graph</package>
+                <package>org.eclipse.aether.util.graph.manager</package>
+                <package>org.eclipse.aether.util.graph.selector</package>
+                <package>org.eclipse.aether.util.graph.transformer</package>
+                <package>org.eclipse.aether.util.graph.traverser</package>
+                <package>org.eclipse.aether.util.graph.version</package>
+                <package>org.eclipse.aether.util.graph.visitor</package>
+                <package>org.eclipse.aether.util.listener</package>
                 <package>org.eclipse.aether.util.repository</package>
                 <package>org.eclipse.aether.util.version</package>
-                <package>org.eclipse.aether.version</package>
+
                 <package>org.sonatype.plexus.components.cipher</package>
                 <package>org.sonatype.plexus.components.sec.dispatcher</package>
                 <package>org.apache.maven.wagon.shared.http</package>
                 <package>org.apache.maven.wagon.providers.http.wagon.shared</package>
             </friend-packages>
+            <!-- TODO: DROP THIS BEGIN-->
             <class-path-extension>
                 <runtime-relative-path>ext/maven/maven-dependency-tree-2.2.jar</runtime-relative-path>
                 <binary-origin>external/maven-dependency-tree-2.2.jar</binary-origin>
             </class-path-extension>
+            <!-- TODO: DROP THIS END -->
             <class-path-extension>
                 <runtime-relative-path>ext/maven/jdom2-2.0.6.1.jar</runtime-relative-path>
                 <binary-origin>external/jdom2-2.0.6.1.jar</binary-origin>

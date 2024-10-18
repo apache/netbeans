@@ -118,7 +118,7 @@ implements Cloneable, Stamps.Updater {
         if (framework == null) {
             readBundles();
             
-            Map configMap = new HashMap();
+            Map configMap = new HashMap<>();
             injectSystemProperties(configMap); // ensure we read system properties
             final String cache = getNetigsoCache().getPath();
             configMap.put(Constants.FRAMEWORK_STORAGE, cache);

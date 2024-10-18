@@ -21,6 +21,7 @@
 -->
 <!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
 <fontscolors>
+    <fontcolor name="annotation-separator" foreColor="ffffafaf" default="separator"/>
     <fontcolor name="character" default="char"/>
     <fontcolor name="character-escape" default="character"><font style="bold"/></fontcolor>
     <fontcolor name="character-escape-invalid" default="character"><font style="italic"/></fontcolor>
@@ -34,7 +35,7 @@
     <fontcolor name="keyword-directive" default="keyword"/>
     <fontcolor name="literal" default="keyword"/>
     <fontcolor name="mod-abstract"/>
-    <fontcolor name="mod-annotation-type" default="identifier"/>
+    <fontcolor name="mod-annotation-type" foreColor="fffffafa" default="identifier"/>
     <fontcolor name="mod-annotation-type-declaration" default="identifier"><font style="bold"/></fontcolor>
     <fontcolor name="mod-class" default="identifier"/>
     <fontcolor name="mod-class-declaration" default="identifier"/>

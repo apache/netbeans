@@ -31,7 +31,6 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.MissingResourceException;
 import java.util.logging.Level;
-import javax.imageio.IIOException;
 import org.netbeans.modules.nativeexecution.ConnectionManagerAccessor;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironmentFactory;
@@ -43,7 +42,6 @@ import org.netbeans.modules.nativeexecution.support.InstalledFileLocatorProvider
 import org.netbeans.modules.nativeexecution.support.Logger;
 import org.netbeans.modules.nativeexecution.support.MiscUtils;
 import org.openide.modules.InstalledFileLocator;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -112,7 +110,7 @@ public class HelperUtility {
 
             if (result == null) {
                 try {
-                    File localFile = getLocalFileFromSysProp(hinfo);
+                    File localFile = getLocalFileFromSysProp(hinfo, env.isLocal());
 
                     if (localFile == null) {
                         localFile = getLocalFile(hinfo);
@@ -218,6 +216,10 @@ public class HelperUtility {
         return result;
     }
 
+    protected File getLocalFile(final ExecutionEnvironment env, final HostInfo hinfo) throws MissingResourceException {
+        return null;
+    }
+
     protected File getLocalFile(final HostInfo hinfo) throws MissingResourceException {
         return null;
     }
@@ -273,8 +275,14 @@ public class HelperUtility {
         }
     }
 
-    private File getLocalFileFromSysProp(HostInfo hostInfo) {
+    private File getLocalFileFromSysProp(HostInfo hostInfo, boolean local) {
         String osname = hostInfo.getOS().getFamily().cname();
+        if (local) {
+            Shell activeShell = WindowsSupport.getInstance().getActiveShell();
+            if (activeShell != null && activeShell.type == Shell.ShellType.WSL) {
+                osname = "Linux";
+            }
+        }
         String platform = hostInfo.getCpuFamily().name().toLowerCase();
         String bitness = hostInfo.getOS().getBitness() == HostInfo.Bitness._64 ? "_64" : ""; // NOI18N
         StringBuilder propName = new StringBuilder(getClass().getSimpleName());

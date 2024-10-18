@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.nativeexecution;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import org.netbeans.modules.nativeexecution.api.pty.Pty;
 import org.netbeans.modules.nativeexecution.api.util.MacroMap;
 import org.netbeans.modules.nativeexecution.api.util.ProcessUtils;
 import org.netbeans.modules.nativeexecution.api.util.ProcessUtils.ExitStatus;
+import org.netbeans.modules.nativeexecution.api.util.Shell;
 import org.netbeans.modules.nativeexecution.api.util.Signal;
 import org.netbeans.modules.nativeexecution.api.util.UnbufferSupport;
 import org.netbeans.modules.nativeexecution.api.util.WindowsSupport;
@@ -55,7 +57,9 @@ public abstract class NbNativeProcess extends AbstractNativeProcess {
         super(new NativeProcessInfo(info, true));
         String _nbStartPath = null;
         try {
-            _nbStartPath = NbStartUtility.getInstance().getPath(getExecutionEnvironment());
+            _nbStartPath = NbStartUtility
+                    .getInstance(getExecutionEnvironment().isLocal())
+                    .getPath(getExecutionEnvironment());
         } catch (IOException ex) {
         } finally {
             nbStartPath = _nbStartPath;
@@ -71,12 +75,27 @@ public abstract class NbNativeProcess extends AbstractNativeProcess {
     private List<String> getCommand() {
         List<String> command = new ArrayList<>();
 
-        command.add(nbStartPath);
+        File wslPath = new File(System.getenv("windir"), "system32/wsl.exe");
+        Shell activeShell = null;
+        if(isWindows()) {
+            activeShell = WindowsSupport.getInstance().getActiveShell();
+        }
+        if (activeShell != null && activeShell.type == Shell.ShellType.WSL) {
+            command.add(wslPath.getAbsolutePath());
+            command.add(WindowsSupport.getInstance().convertToWSL(nbStartPath));
+        } else {
+            command.add(nbStartPath);
+        }
+
 
         String wdir = info.getWorkingDirectory(true);
         if (wdir != null && !wdir.isEmpty()) {
             command.add("--dir"); // NOI18N
-            command.add(fixForWindows(wdir));
+            if (activeShell != null && activeShell.type == Shell.ShellType.WSL) {
+                command.add(WindowsSupport.getInstance().convertToWSL(wdir));
+            } else {
+                command.add(fixForWindows(wdir));
+            }
         }
 
         if (!info.isPtyMode()) {
@@ -127,13 +146,26 @@ public abstract class NbNativeProcess extends AbstractNativeProcess {
             Map<String, String> userDefinedMap = userEnv.getUserDefinedMap();
 
             for (Map.Entry<String, String> entry : userDefinedMap.entrySet()) {
-                if (isWindows() && entry.getKey().equalsIgnoreCase("PATH")) { // NOI18N
+                if (isWindows() && entry.getKey().equalsIgnoreCase("PATH") && WindowsSupport.getInstance().getActiveShell().type != Shell.ShellType.WSL) { // NOI18N
                     command.add("--env"); // NOI18N
                     command.add(entry.getKey() + "=" + WindowsSupport.getInstance().convertToAllShellPaths(entry.getValue())); // NOI18N
                     continue;
                 }
                 command.add("--env"); // NOI18N
-                command.add(entry.getKey() + "=" + entry.getValue()); // NOI18N
+                String setCall = entry.getKey() + "=" + entry.getValue();
+                if (isWindows() && WindowsSupport.getInstance().getActiveShell().type == Shell.ShellType.WSL) {
+                    // the environment must be escaped so that it is passed
+                    // to the inner shell
+                    command.add(
+                            "\""
+                            + setCall
+                                    .replace("\\", "\\\\")
+                                    .replace("\"", "\\\"")
+                                    .replace("$", "\\$")
+                            + "\""); // NOI18N
+                } else {
+                    command.add(setCall);
+                }
             }
         }
 
@@ -240,7 +272,11 @@ public abstract class NbNativeProcess extends AbstractNativeProcess {
     }
 
     protected String fixForWindows(String path) {
-        return isWindows() ? WindowsSupport.getInstance().convertToCygwinPath(path) : path;
+        if(isWindows() && WindowsSupport.getInstance().getActiveShell().type == Shell.ShellType.CYGWIN) {
+            return WindowsSupport.getInstance().convertToCygwinPath(path);
+        } else {
+            return path;
+        }
     }
 
     private boolean destroyed() {

@@ -57,7 +57,8 @@ public class Shell {
         NO_SHELL,
         CYGWIN,
         MSYS,
-        UNKNOWN;
+        UNKNOWN,
+        WSL;
 
         public PathType toPathType() {
             switch (this) {
@@ -65,6 +66,8 @@ public class Shell {
                     return PathType.CYGWIN;
                 case MSYS:
                     return PathType.MSYS;
+                case WSL:
+                    return PathType.WSL;
                 default:
                     return null;
             }

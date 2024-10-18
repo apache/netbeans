@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.nativeexecution.api.util;
 
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -43,6 +45,8 @@ public final class WindowsSupport {
 
     private static final java.util.logging.Logger log = Logger.getInstance();
     private static final Object initLock = new Object();
+    private static final String SHELL_PROVIDER = System.getProperty("org.netbeans.modules.nativeexecution.api.util.WindowsSupport.shellProvider", null);
+    private static final String WSL_REG_BASE = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Lxss";
     private static WindowsSupport instance;
     private boolean initialized = false;
     private Shell activeShell = null;
@@ -94,47 +98,76 @@ public final class WindowsSupport {
         }
     }
 
+    private boolean isCheckShellProvider(ShellType shellType) {
+        if (shellType == null) {
+            return true;
+        }
+        return SHELL_PROVIDER == null || SHELL_PROVIDER.trim().isEmpty() || shellType.name().equals(SHELL_PROVIDER);
+    }
+
     private Shell findShell(String searchDir) {
         Shell shell;
         Shell candidate = null;
 
+        // 0. Try wsl
+
+        if (isWslAvailable() && isCheckShellProvider(ShellType.WSL)) {
+            File distributionPath = getWslDefaulDistributionFile();
+            if (distributionPath != null) {
+                for (String s : new String[]{"/usr/bin/bash", "/bin/bash"}) {
+                    File wslShell = new File(distributionPath, s);
+                    if (wslShell.exists()) {
+                        candidate = new Shell(ShellType.WSL, s, wslShell.getParentFile());
+                        ShellValidationStatus validationStatus = ShellValidationSupport.getValidationStatus(candidate);
+                        if (validationStatus.isValid() && !validationStatus.hasWarnings()) {
+                            return candidate;
+                        }
+                    }
+                }
+            }
+        }
+
         // 1. Try to find cygwin ...
 
-        String[][] cygwinRegKeys = new String[][]{
-            new String[]{"SOFTWARE\\cygwin\\setup", "rootdir", ".*rootdir.*REG_SZ(.*)"}, // NOI18N
-            new String[]{"SOFTWARE\\Wow6432Node\\cygwin\\setup", "rootdir", ".*rootdir.*REG_SZ(.*)"}, // NOI18N
-            new String[]{"SOFTWARE\\Cygnus Solutions\\Cygwin\\mounts v2\\/", "native", ".*native.*REG_SZ(.*)"}, // NOI18N
-            new String[]{"SOFTWARE\\Wow6432Node\\Cygnus Solutions\\Cygwin\\mounts v2\\/", "native", ".*native.*REG_SZ(.*)"}, // NOI18N
-        };
+        if (isCheckShellProvider(ShellType.CYGWIN)) {
+            String[][] cygwinRegKeys = new String[][]{
+                new String[]{"SOFTWARE\\cygwin\\setup", "rootdir", ".*rootdir.*REG_SZ(.*)"}, // NOI18N
+                new String[]{"SOFTWARE\\Wow6432Node\\cygwin\\setup", "rootdir", ".*rootdir.*REG_SZ(.*)"}, // NOI18N
+                new String[]{"SOFTWARE\\Cygnus Solutions\\Cygwin\\mounts v2\\/", "native", ".*native.*REG_SZ(.*)"}, // NOI18N
+                new String[]{"SOFTWARE\\Wow6432Node\\Cygnus Solutions\\Cygwin\\mounts v2\\/", "native", ".*native.*REG_SZ(.*)"}, // NOI18N
+            };
 
-        for (String[] regKey : cygwinRegKeys) {
-            shell = initShell(ShellType.CYGWIN, queryWindowsRegistry(
-                    regKey[0], regKey[1], regKey[2]));
+            for (String[] regKey : cygwinRegKeys) {
+                shell = initShell(ShellType.CYGWIN, queryWindowsRegistry(
+                        regKey[0], regKey[1], regKey[2]));
 
-            // If found cygwin in registry - it is assumed to be valid -
-            // just choose one
-            if (shell != null) {
-                return shell;
+                // If found cygwin in registry - it is assumed to be valid -
+                // just choose one
+                if (shell != null) {
+                    return shell;
+                }
             }
         }
 
         // No cygwin in the registry...
         // try msys
 
-        String[] msysRegKeys = new String[]{
-            "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\MSYS-1.0_is1", // NOI18N
-            "SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\MSYS-1.0_is1", // NOI18N
-        };
+        if (isCheckShellProvider(ShellType.MSYS)) {
+            String[] msysRegKeys = new String[]{
+                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\MSYS-1.0_is1", // NOI18N
+                "SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\MSYS-1.0_is1", // NOI18N
+            };
 
-        for (String regKey : msysRegKeys) {
-            shell = initShell(ShellType.MSYS, queryWindowsRegistry(
-                    regKey,
-                    "Inno Setup: App Path", // NOI18N
-                    ".*REG_SZ(.*)")); // NOI18N
+            for (String regKey : msysRegKeys) {
+                shell = initShell(ShellType.MSYS, queryWindowsRegistry(
+                        regKey,
+                        "Inno Setup: App Path", // NOI18N
+                        ".*REG_SZ(.*)")); // NOI18N
 
-            if (shell != null) {
-                // Again, if found one - use it
-                return shell;
+                if (shell != null) {
+                    // Again, if found one - use it
+                    return shell;
+                }
             }
         }
 
@@ -158,19 +191,19 @@ public final class WindowsSupport {
                     if ("bin".equals(parent.getName())) { // NOI18N
                         // Looks like we have found something...
                         // An attempt to understand what exactly we have found
-                         if (new File(parent, "msysinfo").exists()) { // NOI18N
+                         if (new File(parent, "msysinfo").exists() && isCheckShellProvider(ShellType.MSYS)) { // NOI18N
                             // Looks like this one is msys...
                             // As no valid cygwin was found - use it
                             return new Shell(ShellType.MSYS, sh.getAbsolutePath(), parent);
-                        } else if (new File(parent, "msys-2.0.dll").exists()) { // NOI18N
+                        } else if (new File(parent, "msys-2.0.dll").exists() && isCheckShellProvider(ShellType.MSYS)) { // NOI18N
                             // Looks like this one is msys2...
                             // As no valid cygwin was found - use it
                             return new Shell(ShellType.MSYS, sh.getAbsolutePath(), parent);
-                        } else if (new File(parent, "cygwin1.dll").exists()) { // NOI18N
+                        } else if (new File(parent, "cygwin1.dll").exists() && isCheckShellProvider(ShellType.CYGWIN)) { // NOI18N
                             // Looks like this one is sygwin...
                             // As no valid cygwin was found - use it
                             return new Shell(ShellType.CYGWIN, sh.getAbsolutePath(), parent);
-                        } else if (new File(parent, "cygcheck.exe").exists()) { // NOI18N
+                        } else if (new File(parent, "cygcheck.exe").exists() && isCheckShellProvider(ShellType.CYGWIN)) { // NOI18N
                             // Well ...
                             // The problem is that is is not in registry...
                             // I.e. we will use it if on msys found on the system...
@@ -187,6 +220,7 @@ public final class WindowsSupport {
                             }
                         }
                     }
+
                 }
             }
         }
@@ -267,6 +301,10 @@ public final class WindowsSupport {
 
     public String convertFromMSysPath(String msysPath) {
         return convert(PathType.MSYS, PathType.WINDOWS, msysPath, true);
+    }
+
+    public String convertToWSL(String winPath) {
+        return convert(PathType.WINDOWS, PathType.WSL, winPath, true);
     }
 
     /**
@@ -390,5 +428,29 @@ public final class WindowsSupport {
             pathKeyRef.compareAndSet(null, pathKey);
         }
         return pathKeyRef.get();
+    }
+
+    private boolean isWslAvailable() {
+        return new File(System.getenv("windir"), "system32/wsl.exe").exists();
+    }
+
+    private String getWslDefaulDistributionName() {
+        if (Advapi32Util.registryValueExists(WinReg.HKEY_CURRENT_USER, WSL_REG_BASE, "DefaultDistribution")) {
+            String defaultDistribution = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, WSL_REG_BASE, "DefaultDistribution");
+            if (Advapi32Util.registryValueExists(WinReg.HKEY_CURRENT_USER, WSL_REG_BASE + "\\" + defaultDistribution, "DistributionName")) {
+                String distributionName = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, WSL_REG_BASE + "\\" + defaultDistribution, "DistributionName");
+                return distributionName;
+            }
+        }
+        return null;
+    }
+
+    File getWslDefaulDistributionFile() {
+        String distributionName = getWslDefaulDistributionName();
+        if(distributionName != null) {
+            return new File("\\\\wsl.localhost\\", distributionName);
+        } else {
+            return null;
+        }
     }
 }

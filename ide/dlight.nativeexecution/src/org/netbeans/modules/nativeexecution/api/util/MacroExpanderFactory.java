@@ -88,7 +88,7 @@ public final class MacroExpanderFactory {
             // but it's to dangerous to change signature right now
         }
 
-        result = new MacroExpanderImpl(hostInfo, style);
+        result = new MacroExpanderImpl(hostInfo, style, execEnv.isLocal());
         if (hostInfo != null) {
             MacroExpander existing = expanderCache.putIfAbsent(key, result);
             if (existing != null) {
@@ -120,9 +120,11 @@ public final class MacroExpanderFactory {
         protected final Map<String, String> predefinedMacros =
                 Collections.synchronizedMap(new HashMap<String, String>());
         protected final HostInfo hostInfo;
+        private final boolean local;
 
-        public MacroExpanderImpl(final HostInfo hostInfo, final ExpanderStyle style) {
+        public MacroExpanderImpl(final HostInfo hostInfo, final ExpanderStyle style, final boolean local) {
             this.hostInfo = hostInfo;
+            this.local = local;
             setupPredefined(style);
         }
 
@@ -275,7 +277,12 @@ public final class MacroExpanderFactory {
 
             predefinedMacros.put("hostname", hostInfo.getHostname().toLowerCase()); // NOI18N
             predefinedMacros.put("soext", soext); // NOI18N
-            predefinedMacros.put("osname", osname); // NOI18N
+            Shell activeShell = WindowsSupport.getInstance().getActiveShell();
+            if(local && activeShell != null && activeShell.type == Shell.ShellType.WSL) {
+                predefinedMacros.put("osname", "Linux"); // NOI18N
+            } else {
+                predefinedMacros.put("osname", osname); // NOI18N
+            }
             predefinedMacros.put("isa", os.getBitness().toString()); // NOI18N
             predefinedMacros.put("_isa", os.getBitness() == HostInfo.Bitness._64 && hostInfo.getCpuFamily() != HostInfo.CpuFamily.AARCH64 ? "_64" : ""); // NOI18N
             String platform = hostInfo.getCpuFamily().name().toLowerCase();

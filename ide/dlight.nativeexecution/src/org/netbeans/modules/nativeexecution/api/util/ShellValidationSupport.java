@@ -50,12 +50,25 @@ public final class ShellValidationSupport {
 
         if (shell == null) {
             return NOSHELL;
-        }
-
-        if (shell.type == ShellType.CYGWIN) {
+        } else if (shell.type == ShellType.CYGWIN) {
             return validateCygwinShell(shell);
+        } else if (shell.type == ShellType.WSL) {
+            return validateWslShell(shell);
         }
 
+        return VALID;
+    }
+
+    private static ShellValidationStatus validateWslShell(final Shell shell) {
+        assert shell != null && shell.type == ShellType.WSL;
+        File wslPath = new File(System.getenv("windir"), "system32/wsl.exe");
+        ProcessUtils.ExitStatus exitStatus = ProcessUtils.execute(new ProcessBuilder(wslPath.getPath(), shell.shell, "-c", "echo 'Works'")); // NOI18N
+        if (! exitStatus.isOK()) {
+            return new ShellValidationStatus(shell, Arrays.asList("Failed to execute smoke test for shell (WSL) " + shell.shell + ", exit status: " + exitStatus), null);
+        }
+        if(! exitStatus.getOutputString().startsWith("Works")) {
+            return new ShellValidationStatus(shell, Arrays.asList("Smoke test for shell did not yield expected result: " + exitStatus.getOutputString()), null);
+        }
         return VALID;
     }
 

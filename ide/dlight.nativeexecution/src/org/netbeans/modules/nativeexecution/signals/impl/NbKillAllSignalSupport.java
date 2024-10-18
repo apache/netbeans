@@ -62,11 +62,11 @@ public final class NbKillAllSignalSupport extends HelperUtility implements Signa
                 case FREEBSD:
                     return false;
                 case WINDOWS:
-                    if (scope == SIGNAL_SCOPE.SIGNAL_BY_ENV) {
+                    Shell activeShell = WindowsSupport.getInstance().getActiveShell();
+                    if (scope == SIGNAL_SCOPE.SIGNAL_BY_ENV && (activeShell == null || activeShell.type != Shell.ShellType.WSL)) {
                         return false;
                     }
-                    Shell activeShell = WindowsSupport.getInstance().getActiveShell();
-                    return (activeShell != null && activeShell.type == Shell.ShellType.CYGWIN);
+                    return (activeShell != null && (activeShell.type == Shell.ShellType.CYGWIN || activeShell.type == Shell.ShellType.WSL));
                 case MACOSX:
                     if (scope == SIGNAL_SCOPE.SIGQUEUE_PROCESS) {
                         return false;

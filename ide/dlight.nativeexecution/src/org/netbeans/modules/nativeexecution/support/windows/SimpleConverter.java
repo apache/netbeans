@@ -19,14 +19,10 @@
 package org.netbeans.modules.nativeexecution.support.windows;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
 import org.netbeans.modules.nativeexecution.api.util.ProcessUtils;
 import org.netbeans.modules.nativeexecution.api.util.Shell;
 import org.netbeans.modules.nativeexecution.api.util.Shell.ShellType;
 import org.netbeans.modules.nativeexecution.api.util.WindowsSupport;
-import org.netbeans.modules.nativeexecution.support.Logger;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -52,7 +48,14 @@ public final class SimpleConverter implements PathConverter {
         String result = path;
 
         if (trgType == PathType.WINDOWS) {
-            String prefix = srcType == PathType.CYGWIN ? cygwinPrefix : "/"; // NOI18N
+            String prefix;
+            if (srcType == PathType.CYGWIN) {
+                prefix = cygwinPrefix;
+            } else if (srcType == PathType.WSL) {
+                prefix = "/mnt/"; // NOI18N
+            } else {
+                prefix = "/"; // NOI18N
+            }
             int plen = prefix.length();
             if (path.length() > plen && path.startsWith(prefix)) {
                 result = path.charAt(plen) + ":"; // NOI18N
@@ -63,10 +66,22 @@ public final class SimpleConverter implements PathConverter {
             return result.replace('/', '\\'); // NOI18N
         }
 
-        String prefix = trgType == PathType.CYGWIN ? cygwinPrefix : "/"; // NOI18N
+        String prefix;
+        if (trgType == PathType.CYGWIN) {
+            prefix = cygwinPrefix;
+        } else if (trgType == PathType.WSL) {
+            prefix = "/mnt/"; // NOI18N
+        } else {
+            prefix = "/"; // NOI18N
+        }
 
+        // At least cygwin and wsl use lowercase directory names for drive
+        // mapping. While cygwin has case insensitive behavior, at least Ubuntu
+        // on WSL show case sensitve behavior.
         if (path.length() > 2 && path.charAt(1) == ':') {
-            result = prefix + result.replaceFirst(":", ""); // NOI18N
+            result = prefix
+                    + path.substring(0, 1).toLowerCase()
+                    + path.substring(2);
         }
 
         return result.replace('\\', '/'); // NOI18N

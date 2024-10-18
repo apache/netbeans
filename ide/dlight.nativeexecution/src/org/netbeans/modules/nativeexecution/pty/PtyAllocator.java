@@ -37,7 +37,6 @@ import org.netbeans.modules.nativeexecution.api.util.MacroMap;
 import org.netbeans.modules.nativeexecution.api.util.Shell;
 import org.netbeans.modules.nativeexecution.api.util.WindowsSupport;
 import org.netbeans.modules.nativeexecution.pty.PtyOpenUtility.PtyInfo;
-import org.openide.util.Exceptions;
 import org.openide.util.Utilities;
 
 /**
@@ -82,12 +81,22 @@ public final class PtyAllocator {
 
                 if (Utilities.isWindows()) {
                     // Only works with cygwin...
-                    if (hostInfo.getShell() == null || WindowsSupport.getInstance().getActiveShell().type != Shell.ShellType.CYGWIN) {
-                        throw new IOException("terminal support requires Cygwin to be installed"); // NOI18N
+                    if (hostInfo.getShell() == null
+                            || (WindowsSupport.getInstance().getActiveShell().type != Shell.ShellType.CYGWIN
+                            && WindowsSupport.getInstance().getActiveShell().type != Shell.ShellType.WSL)
+                        ) {
+                        throw new IOException("terminal support requires Cygwin/WSL to be installed"); // NOI18N
                     }
-                    ptyOpenUtilityPath = WindowsSupport.getInstance().convertToCygwinPath(ptyOpenUtilityPath);
-                    String path = MacroMap.forExecEnv(env).get("PATH"); // NOI18N
-                    pb.environment().put("Path", path); // NOI18N
+                    Shell activeShell = WindowsSupport.getInstance().getActiveShell();
+                    if( activeShell != null && activeShell.type != Shell.ShellType.CYGWIN) {
+                        ptyOpenUtilityPath = WindowsSupport.getInstance().convertToCygwinPath(ptyOpenUtilityPath);
+                        String path = MacroMap.forExecEnv(env).get("PATH"); // NOI18N
+                        pb.environment().put("Path", path); // NOI18N
+                    } else {
+                        ptyOpenUtilityPath = WindowsSupport.getInstance().convertToWSL(ptyOpenUtilityPath);
+                        String path = MacroMap.forExecEnv(env).get("PATH"); // NOI18N
+                        pb.environment().put("Path", path); // NOI18N
+                    }
                 }
 
                 Process pty = pb.start(); // no ProcessUtils, streams are attached below

@@ -185,7 +185,7 @@ public final class NativeProcessBuilder implements Callable<Process> {
             };
         }
 
-        if (externalTerminal == null && NbStartUtility.getInstance().isSupported(info.getExecutionEnvironment())) {
+        if (externalTerminal == null && NbStartUtility.getInstance(info.getExecutionEnvironment().isLocal()).isSupported(info.getExecutionEnvironment())) {
             if (info.getExecutionEnvironment().isLocal()) {
                 process = new NbLocalNativeProcess(info);
             } else {

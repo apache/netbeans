@@ -32,6 +32,7 @@ import org.netbeans.modules.nativeexecution.api.HostInfo.CpuFamily;
 import org.netbeans.modules.nativeexecution.api.util.ProcessUtils;
 import org.netbeans.modules.nativeexecution.api.util.ProcessUtils.ExitStatus;
 import org.netbeans.modules.nativeexecution.api.util.Shell;
+import org.netbeans.modules.nativeexecution.api.util.Shell.ShellType;
 import org.netbeans.modules.nativeexecution.api.util.WindowsSupport;
 import org.netbeans.modules.nativeexecution.pty.NbStartUtility;
 import org.netbeans.modules.nativeexecution.support.Logger;
@@ -58,7 +59,7 @@ public class WindowsHostInfoProvider implements HostInfoProvider {
         Shell activeShell = WindowsSupport.getInstance().getActiveShell();
 
         if (activeShell != null && Shell.ShellType.CYGWIN.equals(activeShell.type)) {
-            String nbstart = NbStartUtility.getInstance().getPath(execEnv, info);
+            String nbstart = NbStartUtility.getInstance(execEnv.isLocal()).getPath(execEnv, info);
             String envPath = info.getEnvironmentFile();
             if (nbstart != null && envPath != null) {
                 ProcessBuilder pb = new ProcessBuilder(nbstart, "--dumpenv", envPath); // NOI18N
@@ -376,7 +377,12 @@ public class WindowsHostInfoProvider implements HostInfoProvider {
 
         @Override
         public String getEnvironmentFile() {
-            return getTempDir() + "/env"; // NOI18N
+            Shell activeShell = WindowsSupport.getInstance().getActiveShell();
+            if(activeShell != null && activeShell.type == ShellType.WSL) {
+                return null;
+            } else {
+                return getTempDir() + "/env"; // NOI18N
+            }
         }
     }
 }

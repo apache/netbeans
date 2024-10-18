@@ -162,7 +162,7 @@ public final class PtySupport {
                         return false;
                     }
                     
-                    return shell.type == Shell.ShellType.CYGWIN;
+                    return shell.type == Shell.ShellType.CYGWIN || shell.type == Shell.ShellType.WSL;
                 case MACOSX:
                     return true;
                 case LINUX:

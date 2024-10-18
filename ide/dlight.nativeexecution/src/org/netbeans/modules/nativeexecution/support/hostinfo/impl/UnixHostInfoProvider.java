@@ -265,7 +265,7 @@ public class UnixHostInfoProvider implements HostInfoProvider {
         String nbstart = null;
 
         try {
-            nbstart = NbStartUtility.getInstance().getPath(execEnv, hostInfo);
+            nbstart = NbStartUtility.getInstance(execEnv.isLocal()).getPath(execEnv, hostInfo);
         } catch (IOException ex) {
             log.log(Level.WARNING, "Failed to get remote path of NbStartUtility", ex); // NOI18N
             Exceptions.printStackTrace(ex);

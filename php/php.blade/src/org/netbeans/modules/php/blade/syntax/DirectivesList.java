@@ -66,6 +66,7 @@ import org.netbeans.modules.php.blade.syntax.annotation.DirectiveRegister;
     @Directive(name = "@includeWhen", params = true),
     @Directive(name = "@includeUnless", params = true),
     @Directive(name = "@each", params = true),
+    @Directive(name = "@verbatim", endtag = "@endverbatim"),
     //statement
     @Directive(name = "@switch", params = true, endtag = "@endswitch"),
     @Directive(name = "@case", params = true),
@@ -104,6 +105,8 @@ import org.netbeans.modules.php.blade.syntax.annotation.DirectiveRegister;
     @Directive(name = "@dd", params = true),
     @Directive(name = "@json", params = true),
     @Directive(name = "@vite", params = true, since = "11"),
+    @Directive(name = "@when", params = true, since = "11"),
+    @Directive(name = "@bool", params = true, since = "11"),
     //styles
     @Directive(name = "@class", params = true, since = "8"),
     @Directive(name = "@style", params = true, since = "9"),

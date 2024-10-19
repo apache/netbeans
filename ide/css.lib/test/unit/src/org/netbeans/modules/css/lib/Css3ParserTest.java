@@ -1676,4 +1676,15 @@ public class Css3ParserTest extends CssTestBase {
         assertParses("@container (20em < width < 30em) { }");
         assertParses("@container name (max-height: 780px) {}");
     }
+
+    public void testFlexibleAtRules() throws Exception {
+        assertParses("@apply bg-white p-5 rounded-lg shadow;");
+        assertParses("@tailwind base;");
+        assertParses("@layer components {\n"
+                + "  .card {\n"
+                + "    @apply bg-white p-5 rounded-lg shadow;\n"
+                + "  }\n"
+                + "}");
+    }
+
 }

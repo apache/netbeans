@@ -79,7 +79,8 @@ PHP_INLINE : '<?=' .*? '?>' | '<?php' .*? ('?>' | EOF);
 D_GENERIC_BLOCK_DIRECTIVES : ('@' DirectivesWithEndTag | '@sectionMissing' | '@hasSection') (' ')* {this._input.LA(1) == '('}? ->pushMode(LOOK_FOR_PHP_EXPRESSION),type(DIRECTIVE);
 
 D_GENERIC_INLINE_DIRECTIVES : ('@elseif' |  Include | '@extends' | '@each' | '@yield' | '@props' | '@method' 
-   | '@class' | '@style' | '@aware' | '@break' | '@continue' | '@selected' | '@disabled' | '@readonly' | '@required') (' ')* {this._input.LA(1) == '('}? ->pushMode(LOOK_FOR_PHP_EXPRESSION),type(DIRECTIVE);
+   | '@class' | '@style' | '@aware' | '@break' | '@continue' | '@selected' | '@disabled' 
+   | '@readonly' | '@required' | '@when' | '@bool') (' ')* {this._input.LA(1) == '('}? ->pushMode(LOOK_FOR_PHP_EXPRESSION),type(DIRECTIVE);
 
 D_GENERIC_INLINE_MIXED_DIRECTIVES : ('@break' | '@continue')->type(DIRECTIVE);
 
@@ -105,12 +106,12 @@ D_END : ('@end' NameString)->type(DIRECTIVE);
 D_LIVEWIRE : ('@livewireStyles' | '@bukStyles' | '@livewireScripts' | '@bukScripts' | '@click' ('.away')? '=')->type(DIRECTIVE);
 D_ASSET_BUNDLER : '@vite' (' ')* {this._input.LA(1) == '('}? ->pushMode(LOOK_FOR_PHP_EXPRESSION),type(DIRECTIVE);
 
+D_CSS_AT_RULE : ('@supports' | '@container' | '@scope' | '@media') (' ')* {this._input.LA(1) == '('}? ->type(HTML);
 //we will decide that a custom directive has expression to avoid email matching
 D_CUSTOM : ('@' NameString (' ')* {this._input.LA(1) == '('}? ) ->pushMode(LOOK_FOR_PHP_EXPRESSION);
 
 D_UNKNOWN : '@' NameString;
 
-//TODO move all known directives to fragment?
 //hack to allow completion for directives
 //it doesn't trigger completion
 D_AT : '@' (' ' | '>' | [\n\r])?;

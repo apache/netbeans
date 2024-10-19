@@ -87,8 +87,8 @@ public class SemanticHighlight implements BackgroundTask {
             int lastColumn = 0;
             int offset = 0;
             for (int i = 0; i < data.size(); i += 5) {
-                int deltaLine = data.get(i).intValue();
-                int deltaColumn = data.get(i + 1).intValue();
+                int deltaLine = data.get(i);
+                int deltaColumn = data.get(i + 1);
                 if (deltaLine == 0) {
                     lastColumn += deltaColumn;
                     offset += deltaColumn;
@@ -97,11 +97,11 @@ public class SemanticHighlight implements BackgroundTask {
                     lastColumn = deltaColumn;
                     offset = Utils.getOffset(doc, new Position(lastLine, lastColumn));
                 }
-                if (data.get(i + 2).intValue() <= 0) {
+                if (data.get(i + 2) <= 0) {
                     continue; //XXX!
                 }
-                AttributeSet tokenHighlight = fcs == null ? EMPTY : tokenHighlight(bindings, fcs, data.get(i + 3).intValue(), data.get(i + 4).intValue());
-                target.addHighlight(offset, offset + data.get(i + 2).intValue(), tokenHighlight);
+                AttributeSet tokenHighlight = fcs == null ? EMPTY : tokenHighlight(bindings, fcs, data.get(i + 3), data.get(i + 4));
+                target.addHighlight(offset, offset + data.get(i + 2), tokenHighlight);
             }
             getBag(doc).setHighlights(target);
         } catch (InterruptedException | ExecutionException ex) {
@@ -111,6 +111,7 @@ public class SemanticHighlight implements BackgroundTask {
 
     private final Map<Integer, Map<Integer, AttributeSet>> tokenId2Highlight = new HashMap<>();
 
+    @SuppressWarnings("AssignmentToMethodParameter")
     private AttributeSet tokenHighlight(final LSPBindings bindings, final FontColorSettings fcs, int tokenId, int modifiers) {
         assert fcs != null;
         return tokenId2Highlight.computeIfAbsent(tokenId, s -> new HashMap<>())
@@ -121,7 +122,7 @@ public class SemanticHighlight implements BackgroundTask {
                 //invalid token id
                 return EMPTY;
             }
-            String tokenName = tokenTypes.get(tokenId);
+            String tokenName = tokenId >= 0 ? tokenTypes.get(tokenId) : null;
             boolean isStatic = false;
             boolean isDeclaration = false;
             while (mods != 0) {
@@ -134,7 +135,7 @@ public class SemanticHighlight implements BackgroundTask {
                 mods &= ~mod;
             }
 
-            String colorSet = "mod-" + tokenName + (isDeclaration ? "-declaration" : "");
+            String colorSet = "mod" + (tokenName != null ? ("-" + tokenName) : "") + (isDeclaration ? "-declaration" : "");
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.log(Level.FINE, "LSP Semantic coloring. token kind: {0}", colorSet);
             }
@@ -159,14 +160,15 @@ public class SemanticHighlight implements BackgroundTask {
         OffsetsBag bag = (OffsetsBag) doc.getProperty(SemanticHighlight.class);
 
         if (bag == null) {
-            doc.putProperty(SemanticHighlight.class, bag = new OffsetsBag(doc));
+            bag = new OffsetsBag(doc);
+            doc.putProperty(SemanticHighlight.class, bag);
         }
 
         return bag;
     }
 
     private static AttributeSet adjustAttributes(AttributeSet as) {
-        Collection<Object> attrs = new LinkedList<Object>();
+        Collection<Object> attrs = new LinkedList<>();
 
         for (Enumeration<?> e = as.getAttributeNames(); e.hasMoreElements(); ) {
             Object key = e.nextElement();

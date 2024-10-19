@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.netbeans.modules.lsp.client.bindings;
 
 import java.util.ArrayList;
@@ -303,6 +304,7 @@ public class TextDocumentSyncServerCapabilityHandler {
                 }
             });
 
+            // @todo: the mimetype is not the language ID
             TextDocumentItem textDocumentItem = new TextDocumentItem(uri,
                                                                      FileUtil.getMIMEType(file),
                                                                      0,

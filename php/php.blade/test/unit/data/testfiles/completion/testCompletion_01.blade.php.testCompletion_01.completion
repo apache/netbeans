@@ -22,8 +22,10 @@ CONSTRUCTO <font><b>@once</b></font>
 CONSTRUCTO <font><b>@overwrite</b></font>             
 CONSTRUCTO <font><b>@php</b></font>                   
 CONSTRUCTO <font><b>@stop</b></font>                  
+CONSTRUCTO <font><b>@verbatim</b></font>              
 CONSTRUCTO @auth()                                    
 CONSTRUCTO @auth() ... @endauth                       
+CONSTRUCTO @bool()                                    v11
 CONSTRUCTO @can()                                     v5.1
 CONSTRUCTO @can() ... @endcan                         v5.1
 CONSTRUCTO @canany()                                  v5.8
@@ -92,5 +94,7 @@ CONSTRUCTO @switch() ... @endswitch
 CONSTRUCTO @unless()                                  
 CONSTRUCTO @unless() ... @endunless                   
 CONSTRUCTO @use()                                     
+CONSTRUCTO @verbatim ... @endverbatim                 
 CONSTRUCTO @vite()                                    v11
+CONSTRUCTO @when()                                    v11
 CONSTRUCTO @yield()                                   

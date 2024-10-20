@@ -87,7 +87,7 @@ public final class ColoringManager {
         put("mod-deprecated", DEPRECATED);
         put("mod-undefined", UNDEFINED);
         put("mod-unused", UNUSED);
-        put("mod-keyword", KEYWORD);
+        //put("mod-keyword", KEYWORD);
         put("javadoc-identifier", JAVADOC_IDENTIFIER);
         put("mod-unindented-text-block", UNINDENTED_TEXT_BLOCK);
     }

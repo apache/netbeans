@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<!DOCTYPE bindings PUBLIC "-//NetBeans//DTD Editor KeyBindings settings 1.1//EN" "http://www.netbeans.org/dtds/EditorKeyBindings-1_1.dtd">
+<bindings>
+  <!-- General -->
+  <bind actionName="show-command-palette" key="C-SHIFT-P"/>
+  <bind actionName="quick-open" key="C-P"/>
+  <bind actionName="new-window" key="C-SHIFT-N"/>
+  <bind actionName="close-window" key="C-SHIFT-W"/>
+  <bind actionName="user-settings" key="C-,"/>
+  <bind actionName="keyboard-shortcuts" key="C-K C-S"/>
+
+  <!-- Basic Editing -->
+  <bind actionName="cut-line" key="C-X"/>
+  <bind actionName="copy-line" key="C-C"/>
+  <bind actionName="move-line-up" key="A-UP"/>
+  <bind actionName="move-line-down" key="A-DOWN"/>
+  <bind actionName="copy-line-up" key="S-A-DOWN"/>
+  <bind actionName="copy-line-down" key="S-A-UP"/>
+  <bind actionName="delete-line" key="C-SHIFT-K"/>
+  <bind actionName="insert-line-below" key="C-ENTER"/>
+  <bind actionName="insert-line-above" key="C-SHIFT-ENTER"/>
+  <bind actionName="jump-to-matching-bracket" key="C-SHIFT-\\"/>
+  <bind actionName="indent-line" key="C-]"/>
+  <bind actionName="outdent-line" key="C-["/>
+  <bind actionName="go-to-beginning-of-line" key="HOME"/>
+  <bind actionName="go-to-end-of-line" key="END"/>
+  <bind actionName="go-to-beginning-of-file" key="C-HOME"/>
+  <bind actionName="go-to-end-of-file" key="C-END"/>
+  <bind actionName="scroll-line-up" key="C-UP"/>
+  <bind actionName="scroll-line-down" key="C-DOWN"/>
+  <bind actionName="scroll-page-up" key="A-PgUp"/>
+  <bind actionName="scroll-page-down" key="A-PgDn"/>
+  <bind actionName="fold-region" key="C-SHIFT-["/>
+  <bind actionName="unfold-region" key="C-SHIFT-]"/>
+  <bind actionName="fold-all-subregions" key="C-K C-["/>
+  <bind actionName="unfold-all-subregions" key="C-K C]"/>
+  <bind actionName="fold-all-regions" key="C-K C-0"/>
+  <bind actionName="unfold-all-regions" key="C-K C-J"/>
+  <bind actionName="add-line-comment" key="C-K C-C"/>
+  <bind actionName="remove-line-comment" key="C-K C-U"/>
+  <bind actionName="toggle-line-comment" key="C-/"/>
+  <bind actionName="toggle-block-comment" key="S-A"/>
+  <bind actionName="toggle-word-wrap" key="A-Z"/>
+
+  <!-- Navigation -->
+  <bind actionName="show-all-symbols" key="C-T"/>
+  <bind actionName="go-to-line" key="C-G"/>
+  <bind actionName="go-to-symbol" key="C-SHIFT-O"/>
+  <bind actionName="show-problems-panel" key="C-SHIFT-M"/>
+  <bind actionName="go-to-next-error" key="F8"/>
+  <bind actionName="go-to-previous-error" key="S-F8"/>
+  <bind actionName="navigate-editor-group-history" key="C-SHIFT-TAB"/>
+  <bind actionName="go-back" key="A-LEFT"/>
+  <bind actionName="go-forward" key="A-RIGHT"/>
+  <bind actionName="toggle-tab-focus" key="C-M"/>
+
+  <!-- Search and Replace -->
+  <bind actionName="find" key="C-F"/>
+  <bind actionName="replace" key="C-H"/>
+  <bind actionName="find-next" key="F3"/>
+  <bind actionName="find-previous" key="S-F3"/>
+  <bind actionName="select-all-occurrences" key="A-ENTER"/>
+  <bind actionName="add-selection-to-next-match" key="C-D"/>
+  <bind actionName="move-last-selection-to-next-match" key="C-K C-D"/>
+  <bind actionName="toggle-case-sensitive" key="A-C"/>
+  <bind actionName="toggle-regex" key="A-R"/>
+  <bind actionName="toggle-whole-word" key="A-W"/>
+
+  <!-- Multi-cursor and Selection -->
+  <bind actionName="insert-cursor" key="A-CLICK"/>
+  <bind actionName="insert-cursor-above" key="C-A-UP"/>
+  <bind actionName="insert-cursor-below" key="C-A-DOWN"/>
+  <bind actionName="undo-last-cursor-operation" key="C-U"/>
+  <bind actionName="insert-cursor-end-of-lines" key="S-A-I"/>
+  <bind actionName="select-current-line" key="C-L"/>
+  <bind actionName="select-all-occurrences" key="C-SHIFT-L"/>
+  <bind actionName="select-all-occurrences-word" key="C-F2"/>
+  <bind actionName="expand-selection" key="S-A-RIGHT"/>
+  <bind actionName="shrink-selection" key="S-A-LEFT"/>
+  <bind actionName="column-selection" key="C-SHIFT-A"/>
+  <bind actionName="column-selection-page-up" key="C-SHIFT-A PgUp"/>
+  <bind actionName="column-selection-page-down" key="C-SHIFT-A PgDn"/>
+
+  <!-- Rich Language Editing -->
+  <bind actionName="trigger-suggestion" key="C-Space"/>
+  <bind actionName="trigger-parameter-hints" key="C-SHIFT-Space"/>
+  <bind actionName="format-document" key="S-A-F"/>
+  <bind actionName="format-selection" key="C-K C-F"/>
+  <bind actionName="go-to-definition" key="F12"/>
+  <bind actionName="peek-definition" key="A-F12"/>
+  <bind actionName="open-definition-side" key="C-K F12"/>
+  <bind actionName="quick-fix" key="C-."/>
+  <bind actionName="show-references" key="S-F12"/>
+  <bind actionName="rename-symbol" key="F2"/>
+  <bind actionName="trim-trailing-whitespace" key="C-K C-X"/>
+  <bind actionName="change-file-language" key="C-K M"/>
+
+  <!-- Editor Management -->
+  <bind actionName="close-editor" key="C-F4"/>
+  <bind actionName="close-folder" key="C-K F"/>
+  <bind actionName="split-editor" key="C-\\"/>
+  <bind actionName="focus-editor-group-1" key="C-1"/>
+  <bind actionName="focus-editor-group-2" key="C-2"/>
+  <bind actionName="focus-editor-group-3" key="C-3"/>
+  <bind actionName="focus-prev-editor-group" key="C-K LEFT"/>
+  <bind actionName="focus-next-editor-group" key="C-K RIGHT"/>
+  <bind actionName="move-editor-left" key="C-SHIFT-PgUp"/>
+  <bind actionName="move-editor-right" key="C-SHIFT-PgDn"/>
+  <bind actionName="move-active-editor-group-left" key="C-K LEFT"/>
+  <bind actionName="move-active-editor-group-right" key="C-K RIGHT"/>
+
+  <!-- File Management -->
+  <bind actionName="new-file" key="C-N"/>
+  <bind actionName="open-file" key="C-O"/>
+  <bind actionName="save-file" key="C-S"/>
+  <bind actionName="save-as" key="C-SHIFT-S"/>
+  <bind actionName="save-all" key="C-K S"/>
+  <bind actionName="close-file" key="C-F4"/>
+  <bind actionName="close-all-files" key="C-K C-W"/>
+  <bind actionName="reopen-closed-editor" key="C-SHIFT-T"/>
+  <bind actionName="keep-preview-mode-open" key="C-K ENTER"/>
+  <bind actionName="open-next" key="C-TAB"/>
+  <bind actionName="open-previous" key="C-SHIFT-TAB"/>
+  <bind actionName="copy-file-path" key="C-K P"/>
+  <bind actionName="reveal-file-in-explorer" key="C-K R"/>
+  <bind actionName="show-file-in-new-window" key="C-K O"/>
+
+  <!-- Display -->
+  <bind actionName="toggle-fullscreen" key="F11"/>
+  <bind actionName="toggle-editor-layout" key="S-A-0"/>
+  <bind actionName="zoom-in" key="C-EQUAL"/>
+  <bind actionName="zoom-out" key="C-MINUS"/>
+  <bind actionName="toggle-sidebar-visibility" key="C-B"/>
+  <bind actionName="show-explorer" key="C-SHIFT-E"/>
+  <bind actionName="show-search" key="C-SHIFT-F"/>
+  <bind actionName="show-source-control" key="C-SHIFT-G"/>
+  <bind actionName="show-debug" key="C-SHIFT-D"/>
+  <bind actionName="show-extensions" key="C-SHIFT-X"/>
+  <bind actionName="replace-in-files" key="C-SHIFT-H"/>
+  <bind actionName="toggle-search-details" key="C-SHIFT-J"/>
+  <bind actionName="show-output" key="C-SHIFT-U"/>
+  <bind actionName="open-markdown-preview" key="C-SHIFT-V"/>
+  <bind actionName="open-markdown-preview-side" key="C-K V"/>
+  <bind actionName="zen-mode" key="C-K Z"/>
+
+  <!-- Debug -->
+  <bind actionName="toggle-breakpoint" key="F9"/>
+  <bind actionName="start-continue-debugging" key="F5"/>
+  <bind actionName="stop-debugging" key="S-F5"/>
+  <bind actionName="step-into-debug" key="F11"/>
+  <bind actionName="step-out-debug" key="S-F11"/>
+  <bind actionName="step-over-debug" key="F10"/>
+  <bind actionName="show-hover" key="C-K I"/>
+
+  <!-- Integrated Terminal -->
+  <bind actionName="show-integrated-terminal" key="C-`"/>
+  <bind actionName="create-new-terminal" key="C-SHIFT-`"/>
+  <bind actionName="copy-selection-terminal" key="C-C"/>
+  <bind actionName="paste-into-terminal" key="C-V"/>
+  <bind actionName="scroll-terminal-up" key="C-UP"/>
+  <bind actionName="scroll-terminal-down" key="C-DOWN"/>
+  <bind actionName="scroll-page-up-terminal" key="S-PgUp"/>
+  <bind actionName="scroll-page-down-terminal" key="S-PgDn"/>
+  <bind actionName="scroll-to-top-terminal" key="C-HOME"/>
+  <bind actionName="scroll-to-bottom-terminal" key="C-END"/>
+</bindings>

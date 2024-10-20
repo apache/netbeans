@@ -1555,7 +1555,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         refactoring[0] = new RenameRefactoring(Lookups.fixed(lookupContent.toArray(new Object[0])));
                         refactoring[0].getContext().add(JavaRefactoringUtils.getClasspathInfoFor(cc.getFileObject()));
                         refactoring[0].setNewName(params.getNewName());
-                        refactoring[0].setSearchInComments(true); //TODO?
                     }
                 }, true);
                 if (cancel.get()) return ;

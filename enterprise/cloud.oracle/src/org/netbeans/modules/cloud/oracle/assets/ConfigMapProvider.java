@@ -64,8 +64,9 @@ public class ConfigMapProvider {
     
     public void createConfigMap() {
         KubernetesUtils.runWithClient(cluster, client -> {
-            boolean configMapExist = checkIfConfigMapExist(client);
-            if (configMapExist) {
+            ConfigMapList cmList = client.configMaps().inNamespace(cluster.getNamespace()).list();
+            ConfigMap configMap = (ConfigMap) KubernetesUtils.findResource(client, cmList, projectName);
+            if (configMap != null) {
                 updateConfigMap(client);
                 return;
             }
@@ -85,16 +86,6 @@ public class ConfigMapProvider {
             .withPath(BOOTSTRAP_PROPERTIES_FILE)
             .endItem()
             .build();
-    }
-
-    private boolean checkIfConfigMapExist(KubernetesClient client) {
-        ConfigMapList cmList = client.configMaps().inNamespace(cluster.getNamespace()).list();
-        for (ConfigMap cm : cmList.getItems()) {
-            if (projectName.equals(cm.getMetadata().getName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void updateConfigMap(KubernetesClient client) {

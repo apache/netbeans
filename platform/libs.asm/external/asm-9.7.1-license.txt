@@ -1,6 +1,6 @@
 Name: OW2 ASM
-Version: 9.7
-Files: asm-tree-9.7.jar asm-commons-9.7.jar asm-9.7.jar
+Version: 9.7.1
+Files: asm-tree-9.7.1.jar asm-commons-9.7.1.jar asm-9.7.1.jar
 License: BSD-INRIA
 Origin: OW2 Consortium
 URL: https://repository.ow2.org/nexus/content/repositories/releases/org/ow2/asm/

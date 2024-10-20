@@ -34,6 +34,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.w3c.dom.Element;
 
@@ -204,18 +206,18 @@ public class EjbJarProxy implements EjbJar {
     }
 
     @Override
-    public java.util.Map getAllDescriptions() {
-        return ejbJar==null?new java.util.HashMap():ejbJar.getAllDescriptions();
+    public Map<String, String> getAllDescriptions() {
+        return ejbJar == null ? new HashMap<>() : ejbJar.getAllDescriptions();
     }
 
     @Override
-    public java.util.Map getAllDisplayNames() {
-        return ejbJar==null?new java.util.HashMap():ejbJar.getAllDisplayNames();
+    public Map<String, String> getAllDisplayNames() {
+        return ejbJar == null ? new HashMap<>() : ejbJar.getAllDisplayNames();
     }
 
     @Override
-    public java.util.Map getAllIcons() {
-        return ejbJar==null?new java.util.HashMap():ejbJar.getAllIcons();
+    public Map<String, String[]> getAllIcons() {
+        return ejbJar == null ? new HashMap<>() : ejbJar.getAllIcons();
     }
 
     @Override
@@ -357,12 +359,12 @@ public class EjbJarProxy implements EjbJar {
     }
 
     @Override
-    public void setAllDescriptions(java.util.Map descriptions) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+    public void setAllDescriptions(Map descriptions) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
         if (ejbJar!=null) ejbJar.setAllDescriptions(descriptions);
     }
 
     @Override
-    public void setAllDisplayNames(java.util.Map displayNames) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+    public void setAllDisplayNames(Map displayNames) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
         if (ejbJar!=null) ejbJar.setAllDisplayNames(displayNames);
     }
 

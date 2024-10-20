@@ -22,6 +22,8 @@ package org.netbeans.modules.j2ee.deployment.config;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
@@ -38,7 +40,7 @@ import org.openide.filesystems.FileUtil;
  */
 public abstract class AbstractFilesListener {
     protected J2eeModuleProvider provider;
-    private HashMap fileListeners = new HashMap();
+    private Map<FileObject, FileChangeListener> fileListeners = new HashMap<>();
     
     private FileChangeListener listener = new FileListener();
     

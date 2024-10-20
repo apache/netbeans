@@ -197,7 +197,7 @@ public final class TransformHistory implements Serializable {
         public static final int MAX = 5;
         
         private transient List inputList;
-        private transient Map inputOutputMap;
+        private transient Map<Object, Object> inputOutputMap;
         /** Serializable mirror of inputList and inputOutputMap fields. */
         private Object[] inputOutputArray;
 
@@ -209,7 +209,7 @@ public final class TransformHistory implements Serializable {
 
         private void init () {
             inputList = new LinkedList();
-            inputOutputMap = new HashMap();
+            inputOutputMap = new HashMap<>();
 
             if ( inputOutputArray == null ) {
                 return;

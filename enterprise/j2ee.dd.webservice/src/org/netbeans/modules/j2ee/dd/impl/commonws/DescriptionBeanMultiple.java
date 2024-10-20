@@ -105,7 +105,8 @@ public abstract class DescriptionBeanMultiple extends EnclosingBean implements D
         } catch (VersionNotSupportedException ex){return null;}
     }
 
-    public Map getAllDescriptions() {
+    @Override
+    public Map<String, String> getAllDescriptions() {
         Map<String, String> map =new HashMap<>();
         for (int i=0;i<sizeDescription();i++) {
             String desc=getDescription(i);

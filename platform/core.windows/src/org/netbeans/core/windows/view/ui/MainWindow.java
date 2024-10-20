@@ -99,6 +99,14 @@ public final class MainWindow {
                LOGGER.log(Level.INFO, "Installing MainWindow again, existing frame is: " + theInstance.frame); //NOI18N
            }
            theInstance = new MainWindow(frame);
+           /* NOTE: If we ever want to use GraphicsEnvironmentChangeAdjuster on Linux, then
+                    GraphicsEnvironmentChangeAdjuster would need to avoid using
+                    Utilities.getUsableScreenBounds, or force the latter to clear its 10-second
+                    cache. */
+           if (Utilities.isWindows()) {
+               // Ideally, we'd also register undocked windows (ModeFrame?). But handle the main window only for now.
+               GraphicsEnvironmentChangeAdjuster.registerWindow(frame);
+           }
            return theInstance;
        }
    }
@@ -166,6 +174,7 @@ public final class MainWindow {
                super.paint(g);
                LOGGER.log(Level.FINE,
                        "Paint method of main window invoked normally."); //NOI18N
+               GraphicsEnvironmentChangeAdjuster.notifyPossibleGraphicsEnvironmentChange();
                // XXX is this only needed by obsolete #24291 hack, or now needed independently?
                WindowManagerImpl.getInstance().mainWindowPainted();
            }

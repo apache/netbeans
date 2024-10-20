@@ -509,8 +509,9 @@ Nothing.
   <p>
       <api name="project.limitScanRoot" category="friend" group="systemproperty" type="export">
           <p>
-              If defined, limits search for a parent project to a certain subtree. The property defines <b>absolute path</b> of a folder
-              where upwards search for a project in parent folders is terminated. Queries outside of the root will not find any project.
+              If defined, limits search for a parent project to a certain subtree. The property defines the <b>absolute path</b> of a folder
+              where upwards search for a project in parent folders is terminated. Queries outside the root will not find any project.
+              Multiple folders may be specified when delimited with OS-specific path separators (':' on *nix, ';' on Windows).
               Currently used for tests so the tested runtime does not escape the workdir.
           </p>
       </api>

@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.projectapi;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -27,10 +28,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,6 +45,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.FileOwnerQueryImplementation;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.BaseUtilities;
 import org.openide.util.NbPreferences;
@@ -59,21 +60,19 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
     private static final Logger LOG = Logger.getLogger(SimpleFileOwnerQueryImplementation.class.getName());
     private static final URI UNOWNED_URI = URI.create("http:unowned");
     private static final Set<String> forbiddenFolders;
-    private static final String projectScanRoot;
+    private static final Set<String> projectScanRoots;
     
     static {
-        Set<String> files = new HashSet<String>();
-        String root = null;
+        Set<String> folders = null;
+        Set<String> roots = null;
         try {
-            root = System.getProperty("project.limitScanRoot"); // NOI18N
-            String forbidden = System.getProperty("project.forbiddenFolders", System.getProperty("versioning.forbiddenFolders", "")); //NOI18N
-            files.addAll(Arrays.asList(forbidden.split("\\;"))); //NOI18N
-            files.remove(""); //NOI18N
+            roots = separatePaths(System.getProperty("project.limitScanRoot"), File.pathSeparator); //NOI18N
+            folders = separatePaths(System.getProperty("project.forbiddenFolders", System.getProperty("versioning.forbiddenFolders")), ";"); //NOI18N
         } catch (Exception e) {
             LOG.log(Level.INFO, e.getMessage(), e);
         }
-        forbiddenFolders = files;
-        projectScanRoot = root;
+        forbiddenFolders = folders == null ? Collections.emptySet() : folders;
+        projectScanRoots = roots;
     }
     
     /** Do nothing */
@@ -113,7 +112,7 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
         
         deserialize();
         while (f != null) {
-            if (projectScanRoot != null && !f.getPath().startsWith(projectScanRoot)) {
+            if (projectScanRoots != null && projectScanRoots.stream().noneMatch(f.getPath()::startsWith)) {
                 break;
             }
             boolean folder = f.isFolder();
@@ -137,8 +136,8 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
                 }
                 folders.add(f);
                 if (!forbiddenFolders.contains(f.getPath()) &&
-                    !hasRoot(externalOwners.keySet(), f, folder, furi) &&
-                    !hasRoot(deserializedExternalOwners.keySet(), f, folder, furi)) {
+                    !hasRoot(externalOwners.keySet(), f, true, furi) &&
+                    !hasRoot(deserializedExternalOwners.keySet(), f, true, furi)) {
                     Project p;
                     try {
                         p = ProjectManager.getDefault().findProject(f);
@@ -414,6 +413,40 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
         assert u.toString().startsWith(nue.toString()) : "not a parent: " + nue + " of " + u;
         return nue;
     }
+
+    private static Set<String> separatePaths(String joinedPaths, String pathSeparator) {
+        if (joinedPaths == null || joinedPaths.isEmpty())
+            return null;
+
+        Set<String> paths = null;
+        for (String split : joinedPaths.split(pathSeparator)) {
+            if ((split = split.trim()).isEmpty()) continue;
+
+            // Ensure that variations in terms of ".." or "." or windows drive-letter case differences are removed.
+            // File.getCanonicalFile() will additionally resolve symlinks, which is not required.
+            File file = FileUtil.normalizeFile(new File(split));
+
+            // Store FileObject.getPath(); because getOwner() compares these with FileObject.getPath() strings.
+            // This has some peculiarities as compared to File.getAbsolutePath(); such as return "" for File("/").
+            FileObject fileObject = FileUtil.toFileObject(file);
+            // This conversion may get rid of non-existent paths.
+            if (fileObject == null) continue;
+
+            String path = fileObject.getPath();
+            if (path == null || path.isEmpty()) continue;
+
+            if (paths == null) {
+                paths = Collections.singleton(path);    // more performant in usage when only a single element is present.
+            } else {
+                if (paths.size() == 1) {
+                    paths = new LinkedHashSet<>(paths); // more performant in iteration
+                }
+                paths.add(path);
+            }
+        }
+        return paths;
+    }
+
     private static final boolean WINDOWS = BaseUtilities.isWindows();
     
 }

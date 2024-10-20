@@ -671,8 +671,8 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
         }
     }
 
-    private Lookup.Result cookieResult = null;
-    private Lookup.Result nodeResult = null;
+    private Lookup.Result<?> cookieResult = null;
+    private Lookup.Result<?> nodeResult = null;
     private Lookup cookiesLkp = null;
     private LookupListener cookiesLsnr = null;
     private LookupListener nodeLsnr = null;

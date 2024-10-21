@@ -1204,8 +1204,9 @@ public final class ClassPath {
         final StringBuilder relativePathBuilder = new StringBuilder();
         FileObject child;
         String separator = "";    //NOI18N
-        for (int i = 0; i < nameParts.length && parent != null; i += 2, parent = child) {            
-            child = parent.getFileObject(nameParts[i], nameParts[i + 1]);
+        for (int i = 0; i < nameParts.length && parent != null; i += 2, parent = child) {
+            String classDefinedInFile = nameParts[i].split("\\$")[0];
+            child = parent.getFileObject(classDefinedInFile, nameParts[i + 1]);
             if (child != null) {
                 relativePathBuilder.append(separator).append(child.getNameExt());
             }

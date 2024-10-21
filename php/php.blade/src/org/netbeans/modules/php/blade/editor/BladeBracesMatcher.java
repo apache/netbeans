@@ -18,10 +18,8 @@
  */
 package org.netbeans.modules.php.blade.editor;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.swing.text.BadLocationException;
 import org.antlr.v4.runtime.Token;

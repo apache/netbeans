@@ -120,9 +120,37 @@ public abstract class ColoringLexerAdaptor extends Lexer {
             this.more();
         }
     }
-    
-    public void consumeExprToken(){
-        this.more();
+
+    public void consumeExprToken() {
+        if (this._input.LA(1) == ')' && this.getRoundParenBalance() <= 1) {
+            this.setType(BladeAntlrColoringLexer.PHP_EXPRESSION);
+        } else {
+            this.more();
+        }
+    }
+
+    public void consumeOpenParen() {
+        this.increaseRoundParenBalance();
+        if (this.roundParenBalance == 1) {
+            this.setType(BladeAntlrColoringLexer.BLADE_PAREN);
+        } else {
+            this.more();
+        }
+    }
+
+    public void consumeCloseParen() {
+        this.decreaseRoundParenBalance();
+        if (this.roundParenBalance <= 0) {
+            this.resetRoundParenBalance();
+            this.setType(BladeAntlrColoringLexer.BLADE_PAREN);
+            this.mode(DEFAULT_MODE);
+        } else {
+            if (this._input.LA(1) == ')' && this.roundParenBalance == 1) {
+                this.setType(BladeAntlrColoringLexer.PHP_EXPRESSION);
+            } else {
+                this.more();
+            }
+        }
     }
 }
 

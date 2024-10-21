@@ -76,11 +76,11 @@ fragment SpecialChars : '°';
 
 PHP_INLINE : '<?=' .*? '?>' | '<?php' .*? ('?>' | EOF);
 
-D_GENERIC_BLOCK_DIRECTIVES : ('@' DirectivesWithEndTag | '@sectionMissing' | '@hasSection') (' ')* {this._input.LA(1) == '('}? ->pushMode(LOOK_FOR_PHP_EXPRESSION),type(DIRECTIVE);
+D_GENERIC_BLOCK_DIRECTIVES : ('@' DirectivesWithEndTag | '@sectionMissing' | '@hasSection') (' ')* {this._input.LA(1) == '('}? ->pushMode(INSIDE_PHP_EXPRESSION),type(DIRECTIVE);
 
 D_GENERIC_INLINE_DIRECTIVES : ('@elseif' |  Include | '@extends' | '@each' | '@yield' | '@props' | '@method' 
    | '@class' | '@style' | '@aware' | '@break' | '@continue' | '@selected' | '@disabled' 
-   | '@readonly' | '@required' | '@when' | '@bool') (' ')* {this._input.LA(1) == '('}? ->pushMode(LOOK_FOR_PHP_EXPRESSION),type(DIRECTIVE);
+   | '@readonly' | '@required' | '@when' | '@bool') (' ')* {this._input.LA(1) == '('}? ->pushMode(INSIDE_PHP_EXPRESSION),type(DIRECTIVE);
 
 D_GENERIC_INLINE_MIXED_DIRECTIVES : ('@break' | '@continue')->type(DIRECTIVE);
 
@@ -90,25 +90,25 @@ D_GENERIC_END_TAGS : ('@stop' | '@show' | '@overwrite' | '@viteReactRefresh' | '
 D_VERBATIM : '@verbatim' ->pushMode(VERBATIM_MODE), type(DIRECTIVE);
 D_ENDVERBATIM : '@endverbatim'->type(DIRECTIVE);
 
-D_MISC : ('@dd' | '@dump' | '@js' | '@json' | '@inject') (' ')* {this._input.LA(1) == '('}? ->pushMode(LOOK_FOR_PHP_EXPRESSION),type(DIRECTIVE);
+D_MISC : ('@dd' | '@dump' | '@js' | '@json' | '@inject') (' ')* {this._input.LA(1) == '('}? ->pushMode(INSIDE_PHP_EXPRESSION),type(DIRECTIVE);
 
 D_SIMPLE : ('@else' | '@csrf' | '@default' | '@append' | '@parent')->type(DIRECTIVE);
 
 //php emebeddings
-D_PHP_SHORT : '@php' (' ')? {this._input.LA(1) == '('}? ->type(D_PHP),pushMode(LOOK_FOR_PHP_EXPRESSION);
+D_PHP_SHORT : '@php' (' ')? {this._input.LA(1) == '('}? ->type(D_PHP),pushMode(INSIDE_PHP_EXPRESSION);
 D_PHP : '@php'->pushMode(BLADE_INLINE_PHP);
 
 //allow php expression highlight for custom directives which start with 'end' also
-D_END_ARG : ('@end' NameString) (' ')* {this._input.LA(1) == '('}?->pushMode(LOOK_FOR_PHP_EXPRESSION),type(DIRECTIVE);
+D_END_ARG : ('@end' NameString) (' ')* {this._input.LA(1) == '('}?->pushMode(INSIDE_PHP_EXPRESSION),type(DIRECTIVE);
 D_END : ('@end' NameString)->type(DIRECTIVE);
 
 //known plugins
 D_LIVEWIRE : ('@livewireStyles' | '@bukStyles' | '@livewireScripts' | '@bukScripts' | '@click' ('.away')? '=')->type(DIRECTIVE);
-D_ASSET_BUNDLER : '@vite' (' ')* {this._input.LA(1) == '('}? ->pushMode(LOOK_FOR_PHP_EXPRESSION),type(DIRECTIVE);
+D_ASSET_BUNDLER : '@vite' (' ')* {this._input.LA(1) == '('}? ->pushMode(INSIDE_PHP_EXPRESSION),type(DIRECTIVE);
 
 D_CSS_AT_RULE : ('@supports' | '@container' | '@scope' | '@media') (' ')* {this._input.LA(1) == '('}? ->type(HTML);
 //we will decide that a custom directive has expression to avoid email matching
-D_CUSTOM : ('@' NameString (' ')* {this._input.LA(1) == '('}? ) ->pushMode(LOOK_FOR_PHP_EXPRESSION);
+D_CUSTOM : ('@' NameString (' ')* {this._input.LA(1) == '('}? ) ->pushMode(INSIDE_PHP_EXPRESSION);
 
 D_UNKNOWN : '@' NameString;
 
@@ -165,27 +165,15 @@ RAW_ECHO_EXPR : ~[ !{}]+ {this.consumeNotEscapedEchoToken();};
 RAW_ECHO_EXPR_MORE : . [ ]* {this.consumeNotEscapedEchoToken();};
 EXIT_RAW_ECHO_EOF : EOF->type(ERROR),popMode;
 
-// @directive ()?
-mode LOOK_FOR_PHP_EXPRESSION;
-
-BLADE_PAREN : '(' {this.increaseRoundParenBalance();} ->pushMode(INSIDE_PHP_EXPRESSION);
-
-AFTER_DIRECTIVE : NameString->type(ERROR), popMode;
-L_OTHER : . ->type(ERROR), popMode;
-
-// @directive (?)
+// @directive ( )
 mode INSIDE_PHP_EXPRESSION;
 
-OPEN_EXPR_PAREN : {this.getRoundParenBalance() == 0}? '(' {this.increaseRoundParenBalance();} {this.consumeExprToken();};
-CLOSE_EXPR_PAREN : {this.getRoundParenBalance() <= 1}? ')' {this.resetRoundParenBalance();}->type(BLADE_PAREN),mode(DEFAULT_MODE);
-
-LPAREN : {this.getRoundParenBalance() > 0}? '(' {this.increaseRoundParenBalance();} {this.consumeExprToken();};
-RPAREN : {this.getRoundParenBalance() > 0}? ')' {this.decreaseRoundParenBalance();} {this.consumeExprToken();};
-
-//in case of lexer restart context
-EXIT_RPAREN : . {this._input.LA(1) == ')' && this.getRoundParenBalance() <= 1}?->type(PHP_EXPRESSION);
+OPEN_PAREN : '(' {this.consumeOpenParen();};
+CLOSE_PAREN : ')' {this.consumeCloseParen();};
 
 PHP_EXPRESSION_COMMENT : ('/*' .*? '*/')->skip;
+
+WS_EXPRESSION_MORE : [ ]+ {this.consumeExprToken();};
 
 PHP_EXPRESSION_MORE : . {this.consumeExprToken();};
 

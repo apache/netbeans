@@ -74,7 +74,8 @@ inline_directive:
     | stack
     | includeCond
     | each
-    | (D_INCLUDE_FIRST | D_CLASS | D_STYLE | D_METHOD | D_PROPS 
+    | D_INCLUDE_FIRST BLADE_PARAM_LPAREN  composedArgument  BL_COMMA composedArgument   BLADE_PARAM_RPAREN
+    | (D_CLASS | D_STYLE | D_METHOD | D_PROPS 
            | D_DD | D_JS | D_JS | D_AWARE | D_HTML_ATTR_EXPR | D_CASE | D_JSON) composed_php_expression
     | (D_CSRF | D_LOOP_ACTION | D_BREAK | D_LIVEWIRE | D_DEFAULT)
     | asset_bundler

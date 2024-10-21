@@ -858,7 +858,7 @@ public class ServerUtils {
         String domainsFolder = server.getDomainsFolder();
         boolean appendSeparator = domainsFolder.lastIndexOf(File.separator)
                 + OsUtils.FILE_SEPARATOR_LENGTH != domainsFolder.length();
-        StringBuilder sb = new StringBuilder(server.getDomainsFolder().length()
+        StringBuilder sb = new StringBuilder(domainsFolder.length()
                 + (appendSeparator ? OsUtils.FILE_SEPARATOR_LENGTH : 0)
                 + domainName.length());
         sb.append(domainsFolder);

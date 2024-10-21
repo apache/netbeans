@@ -86,7 +86,7 @@ public class Hk2OptionalFactory extends OptionalDeploymentManagerFactory {
         IncrementalDeployment result = null;
         if(dm instanceof Hk2DeploymentManager) {
             Hk2DeploymentManager hk2dm = (Hk2DeploymentManager) dm;
-            if(hk2dm.isLocal() || hk2dm.isDocker()) {
+            if(hk2dm.isLocal() || hk2dm.isDocker() || hk2dm.isWSL()) {
                 result = new FastDeploy(hk2dm);
             }
         }

@@ -1383,6 +1383,7 @@ meth public abstract short getUpdate()
 
 CLSS public abstract interface org.netbeans.modules.payara.tooling.data.PayaraServer
 meth public abstract boolean isDocker()
+meth public abstract boolean isWSL()
 meth public abstract boolean isRemote()
 meth public abstract int getAdminPort()
 meth public abstract int getPort()
@@ -1407,6 +1408,7 @@ cons public init()
 cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 intf org.netbeans.modules.payara.tooling.data.PayaraServer
 meth public boolean isDocker()
+meth public boolean isWSL()
 meth public boolean isRemote()
 meth public int getAdminPort()
 meth public int getPort()
@@ -1431,6 +1433,7 @@ meth public void setAdminPort(int)
 meth public void setAdminUser(java.lang.String)
 meth public void setContainerPath(java.lang.String)
 meth public void setDocker(boolean)
+meth public void setWSL(boolean)
 meth public void setDomainName(java.lang.String)
 meth public void setDomainsFolder(java.lang.String)
 meth public void setHost(java.lang.String)
@@ -1444,7 +1447,7 @@ meth public void setUrl(java.lang.String)
 meth public void setVersion(org.netbeans.modules.payara.tooling.data.PayaraVersion)
  anno 0 java.lang.Deprecated()
 supr java.lang.Object
-hfds adminInterface,adminPassword,adminPort,adminUser,containerPath,docker,domainName,domainsFolder,host,hostPath,name,platformVersion,port,serverHome,serverRoot,url,version
+hfds adminInterface,adminPassword,adminPort,adminUser,containerPath,wsl,docker,domainName,domainsFolder,host,hostPath,name,platformVersion,port,serverHome,serverRoot,url,version
 
 CLSS public abstract interface org.netbeans.modules.payara.tooling.data.PayaraServerStatus
 meth public abstract org.netbeans.modules.payara.tooling.PayaraStatus getStatus()

@@ -364,7 +364,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
                 installRoot, payaraRoot, domainsDir,
                 domainName, httpPort, adminPort,
                 userName, password,
-                false, null, null,
+                false, false, null, null,
                 target, url,
                 pip);
     }
@@ -382,6 +382,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
      * @param adminPort Payara server HTTP port for administration.
      * @param userName Payara server administrator's user name.
      * @param password Payara server administrator's password.
+     * @param wsl info about Payara server instance is running in wsl container
      * @param docker info about Payara server instance is running in docker container
      * @param hostPath The docker volume host path
      * @param containerPath The docker container path
@@ -392,11 +393,17 @@ public class PayaraInstance implements ServerInstanceImplementation,
     public static PayaraInstance create(String displayName,
             String installRoot, String payaraRoot, String domainsDir,
             String domainName, int httpPort, int adminPort,
-            String userName, String password,
+            String userName, String password, boolean wsl,
             boolean docker, String hostPath, String containerPath,
             String target, String url,
             PayaraInstanceProvider pip) {
         Map<String, String> ip = new HashMap<>();
+        ip.put(PayaraModule.WSL_ATTR, String.valueOf(wsl));
+        ip.put(PayaraModule.DOCKER_ATTR, String.valueOf(docker));
+        if(wsl && domainsDir == null) {
+            domainsDir = payaraRoot + File.separator + "domains";
+        }
+
         ip.put(PayaraModule.DISPLAY_NAME_ATTR, displayName);
         ip.put(PayaraModule.INSTALL_FOLDER_ATTR, installRoot);
         ip.put(PayaraModule.PAYARA_FOLDER_ATTR, payaraRoot);
@@ -411,7 +418,6 @@ public class PayaraInstance implements ServerInstanceImplementation,
         if (password != null) {
             ip.put(PayaraModule.PASSWORD_ATTR, password);
         }
-        ip.put(PayaraModule.DOCKER_ATTR, String.valueOf(docker));
         if(hostPath != null) {
             ip.put(PayaraModule.HOST_PATH_ATTR, hostPath);
         }
@@ -1034,6 +1040,17 @@ public class PayaraInstance implements ServerInstanceImplementation,
     public boolean isDocker() {
         return Boolean.valueOf(properties.getOrDefault(PayaraModule.DOCKER_ATTR, "false"));
     }
+    
+    /**
+     * Get information if this Payara server instance is running in wsl container.
+     * <p/>
+     * @return Value of <code>true</code> when this Payara server instance
+     *         is wsl instance or <code>false</code> otherwise.
+     */
+    @Override
+    public boolean isWSL() {
+        return Boolean.valueOf(properties.getOrDefault(PayaraModule.WSL_ATTR, "false"));
+    }
 
     /**
      * Get the docker volume host path.
@@ -1101,7 +1118,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
      */
     @Override
     public String getDomainName() {
-        return properties.get(PayaraModule.DOMAIN_NAME_ATTR);
+        return properties.getOrDefault(PayaraModule.DOMAIN_NAME_ATTR, "domain1");
     }
 
     /**
@@ -1203,7 +1220,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
      */
     @Override
     public boolean isRemote() {
-        return properties.get(PayaraModule.DOMAINS_FOLDER_ATTR) == null;
+        return properties.get(PayaraModule.DOMAINS_FOLDER_ATTR) == null || isWSL();
     }
 
     /**

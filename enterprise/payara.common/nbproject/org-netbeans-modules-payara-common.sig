@@ -1280,6 +1280,7 @@ intf org.openide.util.Lookup$Provider
 intf org.openide.util.LookupListener
 meth public boolean equals(java.lang.Object)
 meth public boolean isDocker()
+meth public boolean isWSL()
 meth public boolean isHotDeployEnabled()
 meth public boolean isHotDeployFeatureAvailable()
 meth public boolean isProcessRunning()
@@ -1338,7 +1339,7 @@ meth public org.openide.nodes.Node getFullNode()
 meth public org.openide.util.Lookup getLookup()
 meth public static java.lang.String getPasswordFromKeyring(java.lang.String,java.lang.String)
 meth public static java.lang.String passwordKey(java.lang.String,java.lang.String)
-meth public static org.netbeans.modules.payara.common.PayaraInstance create(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,java.lang.String,java.lang.String,boolean,java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.payara.common.PayaraInstanceProvider)
+meth public static org.netbeans.modules.payara.common.PayaraInstance create(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,java.lang.String,java.lang.String,boolean,boolean,java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.payara.common.PayaraInstanceProvider)
 meth public static org.netbeans.modules.payara.common.PayaraInstance create(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.payara.common.PayaraInstanceProvider)
  anno 0 java.lang.Deprecated()
 meth public static org.netbeans.modules.payara.common.PayaraInstance create(java.util.Map<java.lang.String,java.lang.String>,org.netbeans.modules.payara.common.PayaraInstanceProvider)
@@ -2148,6 +2149,7 @@ fld public final static java.lang.String USERNAME_ATTR = "username"
 fld public final static java.lang.String USE_IDE_PROXY_FLAG = "useIDEProxyOn"
 fld public final static java.lang.String USE_SHARED_MEM_ATTR = "use.shared.mem"
 fld public final static java.lang.String WEB_CONTAINER = "web"
+fld public final static java.lang.String WSL_ATTR = "wsl"
 innr public final static !enum ServerState
 meth public abstract boolean isRemote()
 meth public abstract boolean isRestfulLogAccessSupported()
@@ -2325,6 +2327,7 @@ meth public abstract short getUpdate()
 
 CLSS public abstract interface org.netbeans.modules.payara.tooling.data.PayaraServer
 meth public abstract boolean isDocker()
+meth public abstract boolean isWSL()
 meth public abstract boolean isRemote()
 meth public abstract int getAdminPort()
 meth public abstract int getPort()

@@ -349,6 +349,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static final int INITIAL_COMPLETION_SAMPLING_DELAY = 1000;
     private static final int DEFAULT_COMPLETION_WARNING_LENGTH = 10_000;
     private static final RequestProcessor COMPLETION_SAMPLER_WORKER = new RequestProcessor("java-lsp-completion-sampler", 1, false, false);
+    private static final AtomicReference<Sampler> RUNNING_SAMPLER = new AtomicReference<>();
 
     @Override
     @Messages({
@@ -366,11 +367,15 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             if (!done.get()) {
                 Sampler sampler = Sampler.createSampler("completion");
                 if (sampler != null) {
-                    sampler.start();
-                    samplerRef.set(sampler);
-                    samplingStart.set(System.currentTimeMillis());
-                    if (done.get()) {
-                        sampler.stop();
+                    Sampler witnessSampler = RUNNING_SAMPLER.compareAndExchange(null, sampler);
+
+                    if (witnessSampler == null) {
+                        sampler.start();
+                        samplerRef.set(sampler);
+                        samplingStart.set(System.currentTimeMillis());
+                        if (done.get()) {
+                            sampler.stop();
+                        }
                     }
                 }
             }
@@ -494,6 +499,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
                     done.set(true);
                     Sampler sampler = samplerRef.get();
+                    RUNNING_SAMPLER.compareAndExchange(sampler, null);
                     if (sampler != null) {
                         long samplingTime = (System.currentTimeMillis() - completionStart);
                         long minSamplingTime = Math.min(1_000, samplingWarningLength.get());

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.20
+#Version 2.21
 
 CLSS public java.lang.Object
 cons public init()
@@ -18,8 +18,6 @@ meth public java.lang.String toString()
 CLSS public abstract interface org.netbeans.modules.fish.payara.micro.plugin.Constants
 fld public final static java.lang.String ARCHETYPE_ARTIFACT_ID = "payara-micro-maven-archetype"
 fld public final static java.lang.String ARCHETYPE_GROUP_ID = "fish.payara.maven.archetypes"
-fld public final static java.lang.String STARTER_ARCHETYPE_ARTIFACT_ID = "payara-starter-archetype"
-fld public final static java.lang.String STARTER_ARCHETYPE_GROUP_ID = "fish.payara.starter"
 fld public final static java.lang.String ARCHETYPE_REPOSITORY = "https://oss.sonatype.org/content/repositories/snapshots"
 fld public final static java.lang.String BUILD_ICON = "org/netbeans/modules/fish/payara/micro/project/resources/payara-micro-build.png"
 fld public final static java.lang.String CLEAN_ICON = "org/netbeans/modules/fish/payara/micro/project/resources/payara-micro-clean.png"
@@ -47,6 +45,9 @@ fld public final static java.lang.String PROP_JAVA_EE_VERSION = "javaeeVersion"
  anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_PACKAGE = "package"
 fld public final static java.lang.String PROP_PAYARA_MICRO_VERSION = "payaraMicroVersion"
+fld public final static java.lang.String PROP_PAYARA_VERSION = "payaraVersion"
+fld public final static java.lang.String PROP_PLATFORM = "platform"
+fld public final static java.lang.String PROP_PLATFORM_MICRO_VALUE = "micro"
 fld public final static java.lang.String PROP_VERSION = "version"
 fld public final static java.lang.String REBUILD_ICON = "org/netbeans/modules/fish/payara/micro/project/resources/payara-micro-clean-build.png"
 fld public final static java.lang.String RELOAD_FILE = ".reload"
@@ -55,6 +56,8 @@ fld public final static java.lang.String RESOURCES_GOAL = "resources:resources"
 fld public final static java.lang.String RESTART_ICON = "org/netbeans/modules/fish/payara/micro/project/resources/payara-micro-restart.png"
 fld public final static java.lang.String RUN_ACTION = "run"
 fld public final static java.lang.String RUN_SINGLE_ACTION = "run.single.deploy"
+fld public final static java.lang.String STARTER_ARCHETYPE_ARTIFACT_ID = "payara-starter-archetype"
+fld public final static java.lang.String STARTER_ARCHETYPE_GROUP_ID = "fish.payara.starter"
 fld public final static java.lang.String START_GOAL = "payara-micro:start"
 fld public final static java.lang.String START_ICON = "org/netbeans/modules/fish/payara/micro/project/resources/payara-micro-start.png"
 fld public final static java.lang.String STOP_ACTION = "micro-stop"

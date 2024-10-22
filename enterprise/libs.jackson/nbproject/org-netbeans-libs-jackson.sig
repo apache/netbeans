@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.23
+#Version 2.25
 
 CLSS public abstract interface !annotation com.fasterxml.jackson.annotation.JacksonAnnotation
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -17412,6 +17412,402 @@ meth public !varargs com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper$B
 meth public !varargs com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper$Builder enable(com.fasterxml.jackson.dataformat.cbor.CBORGenerator$Feature[])
 meth public com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper$Builder configure(com.fasterxml.jackson.dataformat.cbor.CBORGenerator$Feature,boolean)
 supr com.fasterxml.jackson.databind.cfg.MapperBuilder<com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper,com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper$Builder>
+
+CLSS public com.fasterxml.jackson.dataformat.yaml.JacksonYAMLParseException
+cons public init(com.fasterxml.jackson.core.JsonParser,java.lang.String,java.lang.Exception)
+supr com.fasterxml.jackson.core.JsonParseException
+hfds serialVersionUID
+
+CLSS public final com.fasterxml.jackson.dataformat.yaml.PackageVersion
+cons public init()
+fld public final static com.fasterxml.jackson.core.Version VERSION
+intf com.fasterxml.jackson.core.Versioned
+meth public com.fasterxml.jackson.core.Version version()
+supr java.lang.Object
+
+CLSS public final com.fasterxml.jackson.dataformat.yaml.UTF8Reader
+cons public init(byte[],int,int,boolean)
+cons public init(java.io.InputStream,boolean)
+fld protected byte[] _inputBuffer
+fld protected final byte[][] _bufferHolder
+fld protected final static java.lang.ThreadLocal<java.lang.ref.SoftReference<byte[][]>> _bufferRecycler
+fld protected int _inputEnd
+fld protected int _inputPtr
+fld protected int _surrogate
+meth protected final boolean canModifyBuffer()
+meth protected final int readBytes() throws java.io.IOException
+meth protected final int readBytesAt(int) throws java.io.IOException
+meth protected final java.io.InputStream getStream()
+meth protected void reportBounds(char[],int,int) throws java.io.IOException
+meth protected void reportStrangeStream() throws java.io.IOException
+meth public final void freeBuffers()
+meth public int read() throws java.io.IOException
+meth public int read(char[]) throws java.io.IOException
+meth public int read(char[],int,int) throws java.io.IOException
+meth public void close() throws java.io.IOException
+supr java.io.Reader
+hfds DEFAULT_BUFFER_SIZE,_autoClose,_byteCount,_charCount,_inputSource,_tmpBuffer
+
+CLSS public final com.fasterxml.jackson.dataformat.yaml.UTF8Writer
+cons public init(java.io.OutputStream)
+fld protected final byte[][] _bufferHolder
+fld protected final static java.lang.ThreadLocal<java.lang.ref.SoftReference<byte[][]>> _bufferRecycler
+meth public java.io.Writer append(char) throws java.io.IOException
+meth public void close() throws java.io.IOException
+meth public void flush() throws java.io.IOException
+meth public void write(char[]) throws java.io.IOException
+meth public void write(char[],int,int) throws java.io.IOException
+meth public void write(int) throws java.io.IOException
+meth public void write(java.lang.String) throws java.io.IOException
+meth public void write(java.lang.String,int,int) throws java.io.IOException
+supr java.io.Writer
+hfds DEFAULT_BUFFER_SIZE,SURR1_FIRST,SURR1_LAST,SURR2_FIRST,SURR2_LAST,_out,_outBuffer,_outBufferEnd,_outPtr,_surrogate
+
+CLSS public com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+cons protected init(com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder)
+cons public init()
+cons public init(com.fasterxml.jackson.core.ObjectCodec)
+cons public init(com.fasterxml.jackson.dataformat.yaml.YAMLFactory,com.fasterxml.jackson.core.ObjectCodec)
+fld protected final com.fasterxml.jackson.dataformat.yaml.util.StringQuotingChecker _quotingChecker
+fld protected final org.yaml.snakeyaml.DumperOptions _dumperOptions
+fld protected final org.yaml.snakeyaml.DumperOptions$Version _version
+fld protected final org.yaml.snakeyaml.LoaderOptions _loaderOptions
+fld protected final static int DEFAULT_YAML_GENERATOR_FEATURE_FLAGS
+fld protected final static int DEFAULT_YAML_PARSER_FEATURE_FLAGS
+fld protected int _yamlGeneratorFeatures
+fld protected int _yamlParserFeatures
+fld public final static java.lang.String FORMAT_NAME_YAML = "YAML"
+meth protected com.fasterxml.jackson.dataformat.yaml.YAMLGenerator _createGenerator(java.io.Writer,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
+meth protected com.fasterxml.jackson.dataformat.yaml.YAMLGenerator _createUTF8Generator(java.io.OutputStream,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
+meth protected com.fasterxml.jackson.dataformat.yaml.YAMLParser _createParser(byte[],int,int,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
+meth protected com.fasterxml.jackson.dataformat.yaml.YAMLParser _createParser(char[],int,int,com.fasterxml.jackson.core.io.IOContext,boolean) throws java.io.IOException
+meth protected com.fasterxml.jackson.dataformat.yaml.YAMLParser _createParser(java.io.InputStream,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
+meth protected com.fasterxml.jackson.dataformat.yaml.YAMLParser _createParser(java.io.Reader,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
+meth protected java.io.Reader _createReader(byte[],int,int,com.fasterxml.jackson.core.JsonEncoding,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
+meth protected java.io.Reader _createReader(java.io.InputStream,com.fasterxml.jackson.core.JsonEncoding,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
+meth protected java.io.Writer _createWriter(java.io.OutputStream,com.fasterxml.jackson.core.JsonEncoding,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
+meth protected java.lang.Object readResolve()
+meth public boolean canUseCharArrays()
+meth public com.fasterxml.jackson.core.JsonGenerator createGenerator(java.io.File,com.fasterxml.jackson.core.JsonEncoding) throws java.io.IOException
+meth public com.fasterxml.jackson.core.Version version()
+meth public com.fasterxml.jackson.core.format.MatchStrength hasFormat(com.fasterxml.jackson.core.format.InputAccessor) throws java.io.IOException
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactory copy()
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactory disable(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactory disable(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactory enable(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactory enable(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder rebuild()
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLGenerator createGenerator(java.io.OutputStream) throws java.io.IOException
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLGenerator createGenerator(java.io.OutputStream,com.fasterxml.jackson.core.JsonEncoding) throws java.io.IOException
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLGenerator createGenerator(java.io.Writer) throws java.io.IOException
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLParser createParser(byte[]) throws java.io.IOException
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLParser createParser(byte[],int,int) throws java.io.IOException
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLParser createParser(char[]) throws java.io.IOException
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLParser createParser(char[],int,int) throws java.io.IOException
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLParser createParser(java.io.File) throws java.io.IOException
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLParser createParser(java.io.InputStream) throws java.io.IOException
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLParser createParser(java.io.Reader) throws java.io.IOException
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLParser createParser(java.lang.String) throws java.io.IOException
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLParser createParser(java.net.URL) throws java.io.IOException
+meth public final boolean isEnabled(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature)
+meth public final boolean isEnabled(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature)
+meth public final com.fasterxml.jackson.dataformat.yaml.YAMLFactory configure(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature,boolean)
+meth public final com.fasterxml.jackson.dataformat.yaml.YAMLFactory configure(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature,boolean)
+meth public int getFormatGeneratorFeatures()
+meth public int getFormatParserFeatures()
+meth public java.lang.Class<com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature> getFormatWriteFeatureType()
+meth public java.lang.Class<com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature> getFormatReadFeatureType()
+meth public java.lang.String getFormatName()
+meth public static com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder builder()
+supr com.fasterxml.jackson.core.JsonFactory
+hfds UTF8_BOM_1,UTF8_BOM_2,UTF8_BOM_3,serialVersionUID
+
+CLSS public com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder
+cons protected init()
+cons public init(com.fasterxml.jackson.dataformat.yaml.YAMLFactory)
+fld protected com.fasterxml.jackson.dataformat.yaml.util.StringQuotingChecker _quotingChecker
+fld protected int _formatGeneratorFeatures
+fld protected int _formatParserFeatures
+fld protected org.yaml.snakeyaml.DumperOptions _dumperOptions
+fld protected org.yaml.snakeyaml.DumperOptions$Version _version
+fld protected org.yaml.snakeyaml.LoaderOptions _loaderOptions
+meth public !varargs com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder disable(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature,com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature[])
+meth public !varargs com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder disable(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature,com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature[])
+meth public !varargs com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder enable(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature,com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature[])
+meth public !varargs com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder enable(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature,com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature[])
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactory build()
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder configure(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature,boolean)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder configure(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature,boolean)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder disable(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder disable(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder dumperOptions(org.yaml.snakeyaml.DumperOptions)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder enable(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder enable(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder loaderOptions(org.yaml.snakeyaml.LoaderOptions)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder stringQuotingChecker(com.fasterxml.jackson.dataformat.yaml.util.StringQuotingChecker)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder yamlVersionToWrite(org.yaml.snakeyaml.DumperOptions$Version)
+meth public com.fasterxml.jackson.dataformat.yaml.util.StringQuotingChecker stringQuotingChecker()
+meth public int formatGeneratorFeaturesMask()
+meth public int formatParserFeaturesMask()
+meth public org.yaml.snakeyaml.DumperOptions dumperOptions()
+meth public org.yaml.snakeyaml.DumperOptions$Version yamlVersionToWrite()
+meth public org.yaml.snakeyaml.LoaderOptions loaderOptions()
+supr com.fasterxml.jackson.core.TSFBuilder<com.fasterxml.jackson.dataformat.yaml.YAMLFactory,com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder>
+
+CLSS public com.fasterxml.jackson.dataformat.yaml.YAMLGenerator
+cons public init(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,java.io.Writer,org.yaml.snakeyaml.DumperOptions$Version) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.dataformat.yaml.util.StringQuotingChecker,com.fasterxml.jackson.core.ObjectCodec,java.io.Writer,org.yaml.snakeyaml.DumperOptions$Version) throws java.io.IOException
+cons public init(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.dataformat.yaml.util.StringQuotingChecker,com.fasterxml.jackson.core.ObjectCodec,java.io.Writer,org.yaml.snakeyaml.DumperOptions) throws java.io.IOException
+fld protected final com.fasterxml.jackson.core.StreamWriteConstraints _streamWriteConstraints
+fld protected final com.fasterxml.jackson.dataformat.yaml.util.StringQuotingChecker _quotingChecker
+fld protected final org.yaml.snakeyaml.DumperOptions$Version _docVersion
+fld protected final static java.lang.String TAG_BINARY
+fld protected final static java.util.regex.Pattern PLAIN_NUMBER_P
+fld protected final static long MAX_INT_AS_LONG = 2147483647
+fld protected final static long MIN_INT_AS_LONG = -2147483648
+fld protected int _formatFeatures
+fld protected int _rootValueCount
+fld protected java.io.Writer _writer
+fld protected java.lang.String _objectId
+fld protected java.lang.String _typeId
+fld protected org.yaml.snakeyaml.DumperOptions _outputOptions
+fld protected org.yaml.snakeyaml.emitter.Emitter _emitter
+innr public final static !enum Feature
+meth protected final void _emit(org.yaml.snakeyaml.events.Event) throws java.io.IOException
+meth protected final void _verifyValueWrite(java.lang.String) throws java.io.IOException
+meth protected java.lang.String _lf()
+meth protected org.yaml.snakeyaml.DumperOptions buildDumperOptions(int,int,org.yaml.snakeyaml.DumperOptions$Version)
+meth protected org.yaml.snakeyaml.events.ScalarEvent _scalarEvent(java.lang.String,org.yaml.snakeyaml.DumperOptions$ScalarStyle)
+meth protected void _emitEndDocument() throws java.io.IOException
+meth protected void _emitStartDocument() throws java.io.IOException
+meth protected void _releaseBuffers()
+meth protected void _writeScalar(java.lang.String,java.lang.String,org.yaml.snakeyaml.DumperOptions$ScalarStyle) throws java.io.IOException
+meth public boolean canUseSchema(com.fasterxml.jackson.core.FormatSchema)
+meth public boolean canWriteFormattedNumbers()
+meth public boolean canWriteObjectId()
+meth public boolean canWriteTypeId()
+meth public com.fasterxml.jackson.core.JsonGenerator overrideFormatFeatures(int,int)
+meth public com.fasterxml.jackson.core.StreamWriteConstraints streamWriteConstraints()
+meth public com.fasterxml.jackson.core.Version version()
+meth public com.fasterxml.jackson.core.util.JacksonFeatureSet<com.fasterxml.jackson.core.StreamWriteCapability> getWriteCapabilities()
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLGenerator configure(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature,boolean)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLGenerator disable(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLGenerator enable(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLGenerator setPrettyPrinter(com.fasterxml.jackson.core.PrettyPrinter)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLGenerator useDefaultPrettyPrinter()
+meth public final boolean isEnabled(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature)
+meth public final void flush() throws java.io.IOException
+meth public final void writeEndArray() throws java.io.IOException
+meth public final void writeEndObject() throws java.io.IOException
+meth public final void writeFieldName(com.fasterxml.jackson.core.SerializableString) throws java.io.IOException
+meth public final void writeFieldName(java.lang.String) throws java.io.IOException
+meth public final void writeStartArray() throws java.io.IOException
+meth public final void writeStartObject() throws java.io.IOException
+meth public final void writeString(com.fasterxml.jackson.core.SerializableString) throws java.io.IOException
+meth public final void writeUTF8String(byte[],int,int) throws java.io.IOException
+meth public int getFormatFeatures()
+meth public int getOutputBuffered()
+meth public java.lang.Object getOutputTarget()
+meth public void close() throws java.io.IOException
+meth public void writeBinary(com.fasterxml.jackson.core.Base64Variant,byte[],int,int) throws java.io.IOException
+meth public void writeBoolean(boolean) throws java.io.IOException
+meth public void writeFieldId(long) throws java.io.IOException
+meth public void writeNull() throws java.io.IOException
+meth public void writeNumber(double) throws java.io.IOException
+meth public void writeNumber(float) throws java.io.IOException
+meth public void writeNumber(int) throws java.io.IOException
+meth public void writeNumber(java.lang.String) throws java.io.IOException
+meth public void writeNumber(java.math.BigDecimal) throws java.io.IOException
+meth public void writeNumber(java.math.BigInteger) throws java.io.IOException
+meth public void writeNumber(long) throws java.io.IOException
+meth public void writeObjectId(java.lang.Object) throws java.io.IOException
+meth public void writeObjectRef(java.lang.Object) throws java.io.IOException
+meth public void writeRaw(char) throws java.io.IOException
+meth public void writeRaw(char[],int,int) throws java.io.IOException
+meth public void writeRaw(java.lang.String) throws java.io.IOException
+meth public void writeRaw(java.lang.String,int,int) throws java.io.IOException
+meth public void writeRawUTF8String(byte[],int,int) throws java.io.IOException
+meth public void writeRawValue(char[],int,int) throws java.io.IOException
+meth public void writeRawValue(java.lang.String) throws java.io.IOException
+meth public void writeRawValue(java.lang.String,int,int) throws java.io.IOException
+meth public void writeString(char[],int,int) throws java.io.IOException
+meth public void writeString(java.lang.String) throws java.io.IOException
+meth public void writeTypeId(java.lang.Object) throws java.io.IOException
+supr com.fasterxml.jackson.core.base.GeneratorBase
+hfds EXPLICIT_TAGS,NO_TAGS,STYLE_BASE64,STYLE_LITERAL,STYLE_PLAIN,STYLE_QUOTED,STYLE_SCALAR,STYLE_UNQUOTED_NAME
+
+CLSS public final static !enum com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature
+ outer com.fasterxml.jackson.dataformat.yaml.YAMLGenerator
+fld protected final boolean _defaultState
+fld protected final int _mask
+fld public final static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature ALLOW_LONG_KEYS
+fld public final static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature ALWAYS_QUOTE_NUMBERS_AS_STRINGS
+fld public final static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature CANONICAL_OUTPUT
+fld public final static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature INDENT_ARRAYS
+fld public final static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature INDENT_ARRAYS_WITH_INDICATOR
+fld public final static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature LITERAL_BLOCK_STYLE
+fld public final static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature MINIMIZE_QUOTES
+fld public final static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature SPLIT_LINES
+fld public final static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature USE_NATIVE_OBJECT_ID
+fld public final static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature USE_NATIVE_TYPE_ID
+fld public final static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature USE_PLATFORM_LINE_BREAKS
+fld public final static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature WRITE_DOC_START_MARKER
+intf com.fasterxml.jackson.core.FormatFeature
+meth public boolean enabledByDefault()
+meth public boolean enabledIn(int)
+meth public int getMask()
+meth public static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature valueOf(java.lang.String)
+meth public static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature[] values()
+meth public static int collectDefaults()
+supr java.lang.Enum<com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature>
+
+CLSS public com.fasterxml.jackson.dataformat.yaml.YAMLMapper
+cons public init()
+cons public init(com.fasterxml.jackson.dataformat.yaml.YAMLFactory)
+cons public init(com.fasterxml.jackson.dataformat.yaml.YAMLMapper)
+innr public static Builder
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLMapper configure(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature,boolean)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLMapper configure(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature,boolean)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLMapper copy()
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLMapper disable(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLMapper disable(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLMapper enable(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLMapper enable(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature)
+meth public final com.fasterxml.jackson.dataformat.yaml.YAMLFactory getFactory()
+meth public static com.fasterxml.jackson.dataformat.yaml.YAMLMapper$Builder builder()
+meth public static com.fasterxml.jackson.dataformat.yaml.YAMLMapper$Builder builder(com.fasterxml.jackson.dataformat.yaml.YAMLFactory)
+supr com.fasterxml.jackson.databind.ObjectMapper
+hfds serialVersionUID
+
+CLSS public static com.fasterxml.jackson.dataformat.yaml.YAMLMapper$Builder
+ outer com.fasterxml.jackson.dataformat.yaml.YAMLMapper
+cons public init(com.fasterxml.jackson.dataformat.yaml.YAMLMapper)
+meth public !varargs com.fasterxml.jackson.dataformat.yaml.YAMLMapper$Builder disable(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature[])
+meth public !varargs com.fasterxml.jackson.dataformat.yaml.YAMLMapper$Builder disable(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature[])
+meth public !varargs com.fasterxml.jackson.dataformat.yaml.YAMLMapper$Builder enable(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature[])
+meth public !varargs com.fasterxml.jackson.dataformat.yaml.YAMLMapper$Builder enable(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature[])
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLMapper$Builder configure(com.fasterxml.jackson.dataformat.yaml.YAMLGenerator$Feature,boolean)
+meth public com.fasterxml.jackson.dataformat.yaml.YAMLMapper$Builder configure(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature,boolean)
+supr com.fasterxml.jackson.databind.cfg.MapperBuilder<com.fasterxml.jackson.dataformat.yaml.YAMLMapper,com.fasterxml.jackson.dataformat.yaml.YAMLMapper$Builder>
+
+CLSS public com.fasterxml.jackson.dataformat.yaml.YAMLParser
+cons public init(com.fasterxml.jackson.core.io.IOContext,com.fasterxml.jackson.core.util.BufferRecycler,int,int,com.fasterxml.jackson.core.ObjectCodec,java.io.Reader)
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.core.io.IOContext,int,int,org.yaml.snakeyaml.LoaderOptions,com.fasterxml.jackson.core.ObjectCodec,java.io.Reader)
+fld protected boolean _cfgEmptyStringsToNull
+fld protected boolean _currentIsAlias
+fld protected com.fasterxml.jackson.core.ObjectCodec _objectCodec
+fld protected final java.io.Reader _reader
+fld protected final org.yaml.snakeyaml.parser.ParserImpl _yamlParser
+fld protected final org.yaml.snakeyaml.resolver.Resolver _yamlResolver
+fld protected int _formatFeatures
+fld protected java.lang.String _cleanedTextValue
+fld protected java.lang.String _currentAnchor
+fld protected java.lang.String _currentFieldName
+fld protected java.lang.String _textValue
+fld protected org.yaml.snakeyaml.events.Event _lastEvent
+fld protected org.yaml.snakeyaml.events.Event _lastTagEvent
+innr public final static !enum Feature
+meth protected com.fasterxml.jackson.core.JsonLocation _locationFor(org.yaml.snakeyaml.error.Mark)
+meth protected com.fasterxml.jackson.core.JsonToken _decodeNumberIntBinary(java.lang.String,int,int,boolean) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _decodeNumberIntHex(java.lang.String,int,int,boolean) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _decodeNumberIntOctal(java.lang.String,int,int,boolean) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _decodeNumberScalar(java.lang.String,int) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _decodeScalar(org.yaml.snakeyaml.events.ScalarEvent) throws java.io.IOException
+meth protected int _parseIntValue() throws java.io.IOException
+meth protected java.lang.Boolean _matchYAMLBoolean(java.lang.String,int)
+meth protected void _closeInput() throws java.io.IOException
+meth protected void _parseNumericValue(int) throws java.io.IOException
+meth public boolean canReadObjectId()
+meth public boolean canReadTypeId()
+meth public boolean hasTextCharacters()
+meth public boolean isCurrentAlias()
+meth public boolean isEnabled(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature)
+meth public boolean requiresCustomCodec()
+meth public char[] getTextCharacters() throws java.io.IOException
+meth public com.fasterxml.jackson.core.JsonLocation currentLocation()
+meth public com.fasterxml.jackson.core.JsonLocation currentTokenLocation()
+meth public com.fasterxml.jackson.core.JsonLocation getCurrentLocation()
+ anno 0 java.lang.Deprecated()
+meth public com.fasterxml.jackson.core.JsonLocation getTokenLocation()
+ anno 0 java.lang.Deprecated()
+meth public com.fasterxml.jackson.core.JsonParser configure(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature,boolean)
+meth public com.fasterxml.jackson.core.JsonParser disable(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature)
+meth public com.fasterxml.jackson.core.JsonParser enable(com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature)
+meth public com.fasterxml.jackson.core.JsonParser overrideFormatFeatures(int,int)
+meth public com.fasterxml.jackson.core.JsonParser$NumberTypeFP getNumberTypeFP() throws java.io.IOException
+meth public com.fasterxml.jackson.core.JsonToken nextToken() throws java.io.IOException
+meth public com.fasterxml.jackson.core.ObjectCodec getCodec()
+meth public com.fasterxml.jackson.core.Version version()
+meth public com.fasterxml.jackson.core.util.JacksonFeatureSet<com.fasterxml.jackson.core.StreamReadCapability> getReadCapabilities()
+meth public int getFormatFeatures()
+meth public int getText(java.io.Writer) throws java.io.IOException
+meth public int getTextLength() throws java.io.IOException
+meth public int getTextOffset() throws java.io.IOException
+meth public int readBinaryValue(com.fasterxml.jackson.core.Base64Variant,java.io.OutputStream) throws java.io.IOException
+meth public java.lang.Object getEmbeddedObject() throws java.io.IOException
+meth public java.lang.Object getNumberValueDeferred() throws java.io.IOException
+meth public java.lang.String currentName() throws java.io.IOException
+meth public java.lang.String getCurrentAnchor()
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String getCurrentName() throws java.io.IOException
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String getObjectId() throws java.io.IOException
+meth public java.lang.String getText() throws java.io.IOException
+meth public java.lang.String getTypeId() throws java.io.IOException
+meth public void setCodec(com.fasterxml.jackson.core.ObjectCodec)
+supr com.fasterxml.jackson.core.base.ParserBase
+
+CLSS public final static !enum com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature
+ outer com.fasterxml.jackson.dataformat.yaml.YAMLParser
+fld public final static com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature EMPTY_STRING_AS_NULL
+fld public final static com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature PARSE_BOOLEAN_LIKE_WORDS_AS_STRINGS
+intf com.fasterxml.jackson.core.FormatFeature
+meth public boolean enabledByDefault()
+meth public boolean enabledIn(int)
+meth public int getMask()
+meth public static com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature valueOf(java.lang.String)
+meth public static com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature[] values()
+meth public static int collectDefaults()
+supr java.lang.Enum<com.fasterxml.jackson.dataformat.yaml.YAMLParser$Feature>
+hfds _defaultState,_mask
+
+CLSS abstract interface com.fasterxml.jackson.dataformat.yaml.package-info
+
+CLSS public com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.Mark
+ anno 0 java.lang.Deprecated()
+cons protected init(org.yaml.snakeyaml.error.Mark)
+fld protected final org.yaml.snakeyaml.error.Mark _source
+meth public int getColumn()
+meth public int getIndex()
+meth public int getLine()
+meth public java.lang.String getName()
+meth public java.lang.String get_snippet()
+meth public java.lang.String get_snippet(int,int)
+meth public static com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.Mark from(org.yaml.snakeyaml.error.Mark)
+supr java.lang.Object
+
+CLSS public com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.MarkedYAMLException
+ anno 0 java.lang.Deprecated()
+cons protected init(com.fasterxml.jackson.core.JsonParser,org.yaml.snakeyaml.error.MarkedYAMLException)
+fld protected final org.yaml.snakeyaml.error.MarkedYAMLException _source
+meth public com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.Mark getContextMark()
+meth public com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.Mark getProblemMark()
+meth public java.lang.String getContext()
+meth public java.lang.String getProblem()
+meth public static com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.MarkedYAMLException from(com.fasterxml.jackson.core.JsonParser,org.yaml.snakeyaml.error.MarkedYAMLException)
+supr com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.YAMLException
+hfds serialVersionUID
+
+CLSS public com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.YAMLException
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.core.JsonParser,org.yaml.snakeyaml.error.YAMLException)
+meth public static com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.YAMLException from(com.fasterxml.jackson.core.JsonParser,org.yaml.snakeyaml.error.YAMLException)
+supr com.fasterxml.jackson.dataformat.yaml.JacksonYAMLParseException
+hfds serialVersionUID
+
+CLSS abstract interface com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.package-info
 
 CLSS public final com.fasterxml.jackson.datatype.jsr310.DecimalUtils
 meth public static <%0 extends java.lang.Object> {%%0} extractSecondsAndNanos(java.math.BigDecimal,java.util.function.BiFunction<java.lang.Long,java.lang.Integer,{%%0}>)

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.34.0
+#Version 9.37.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -159,10 +159,16 @@ supr org.netbeans.modules.parsing.spi.indexing.SourceIndexerFactory
 
 CLSS public org.netbeans.modules.parsing.spi.indexing.ErrorsCache
 innr public abstract interface static Convertor
+innr public abstract interface static Convertor2
+innr public abstract interface static ReverseConvertor
 innr public final static !enum ErrorKind
+innr public final static Position
+innr public final static Range
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> getErrors(org.openide.filesystems.FileObject,org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ReverseConvertor<{%%0}>) throws java.io.IOException
 meth public static <%0 extends java.lang.Object> void setErrors(java.net.URL,org.netbeans.modules.parsing.spi.indexing.Indexable,java.lang.Iterable<? extends {%%0}>,org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor<{%%0}>)
 meth public static boolean isInError(org.openide.filesystems.FileObject,boolean)
 meth public static java.util.Collection<? extends java.net.URL> getAllFilesInError(java.net.URL) throws java.io.IOException
+meth public static java.util.Collection<? extends java.net.URL> getAllFilesWithRecord(java.net.URL) throws java.io.IOException
 supr java.lang.Object
 
 CLSS public abstract interface static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor<%0 extends java.lang.Object>
@@ -170,6 +176,11 @@ CLSS public abstract interface static org.netbeans.modules.parsing.spi.indexing.
 meth public abstract int getLineNumber({org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor%0})
 meth public abstract java.lang.String getMessage({org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor%0})
 meth public abstract org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind getKind({org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor%0})
+
+CLSS public abstract interface static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor2<%0 extends java.lang.Object>
+ outer org.netbeans.modules.parsing.spi.indexing.ErrorsCache
+intf org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor<{org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor2%0}>
+meth public abstract org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Range getRange({org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Convertor2%0})
 
 CLSS public final static !enum org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind
  outer org.netbeans.modules.parsing.spi.indexing.ErrorsCache
@@ -179,6 +190,26 @@ fld public final static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Er
 meth public static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind valueOf(java.lang.String)
 meth public static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind[] values()
 supr java.lang.Enum<org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind>
+
+CLSS public final static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Position
+ outer org.netbeans.modules.parsing.spi.indexing.ErrorsCache
+cons public init(int,int)
+meth public int getColumn()
+meth public int getLine()
+supr java.lang.Object
+hfds column,line
+
+CLSS public final static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Range
+ outer org.netbeans.modules.parsing.spi.indexing.ErrorsCache
+cons public init(org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Position,org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Position)
+meth public org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Position getEnd()
+meth public org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Position getStart()
+supr java.lang.Object
+hfds end,start
+
+CLSS public abstract interface static org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ReverseConvertor<%0 extends java.lang.Object>
+ outer org.netbeans.modules.parsing.spi.indexing.ErrorsCache
+meth public abstract {org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ReverseConvertor%0} get(org.netbeans.modules.parsing.spi.indexing.ErrorsCache$ErrorKind,org.netbeans.modules.parsing.spi.indexing.ErrorsCache$Range,java.lang.String)
 
 CLSS public abstract interface org.netbeans.modules.parsing.spi.indexing.IndexabilityQueryImplementation
 innr public final static IndexabilityQueryContext

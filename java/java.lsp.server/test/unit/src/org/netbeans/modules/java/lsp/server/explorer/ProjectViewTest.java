@@ -63,6 +63,7 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.sendopts.CommandLine;
 import org.netbeans.api.templates.FileBuilder;
 import org.netbeans.junit.NbTestCase;
+import static org.netbeans.modules.java.lsp.server.LspTestUtils.tripleSlashUri;
 import org.netbeans.modules.java.lsp.server.explorer.api.CreateExplorerParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeOperationParams;
@@ -504,7 +505,7 @@ public class ProjectViewTest extends NbTestCase {
             }
         }
         
-        assertEquals(URLMapper.findURL(newFile, URLMapper.EXTERNAL).toString(), found.resourceUri);
+        assertEquals(tripleSlashUri(URLMapper.findURL(newFile, URLMapper.EXTERNAL).toString()), found.resourceUri);
     }
     
     /**

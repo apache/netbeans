@@ -39,6 +39,7 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.lang.model.SourceVersion;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
@@ -78,9 +79,16 @@ import org.openide.util.Utilities;
     "CTL_TemplateUI_SelectPackageNameSuggestion=org.yourcompany.yourproject",
     "CTL_TemplateUI_SelectName=Name of the object?",
     "# {0} - path",
-    "ERR_InvalidPath={0} isn't valid folder",
+    "ERR_InvalidPath={0} isn't valid folder or is read only",
     "# {0} - path",
     "ERR_ExistingPath={0} already exists",
+    "# {0} - packageName",
+    "ERR_InvalidPackageName={0} isn't valid package name",
+    "# {0} - path",
+    "ERR_InvalidNewPath={0} isn't valid path or is read only",
+    "# {0} - ObjectName",
+    "ERR_InvalidObjectName={0} isn't valid object name"
+
 })
 final class LspTemplateUI {
     /**
@@ -165,8 +173,20 @@ final class LspTemplateUI {
     }
 
     private static CompletionStage<String> findPackage(CompletionStage<?> uiBefore, NbCodeLanguageClient client) {
-        return uiBefore.thenCompose((__) ->
-            client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectPackageName(), Bundle.CTL_TemplateUI_SelectPackageNameSuggestion()))
+        return uiBefore.thenCompose((__) -> {
+            class ValidatePackageName implements Function<String, CompletionStage<String>> {
+
+                @Override
+                public CompletionStage<String> apply(String packageName) {
+                    if (!SourceVersion.isName(packageName)) {
+                        client.showMessage(new MessageParams(MessageType.Error, Bundle.ERR_InvalidPackageName(packageName)));
+                        return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectPackageName(), Bundle.CTL_TemplateUI_SelectPackageNameSuggestion())).thenCompose(this);
+                    }
+                    return CompletableFuture.completedFuture(packageName);
+                }
+            }
+            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectPackageName(), Bundle.CTL_TemplateUI_SelectPackageNameSuggestion())).thenCompose(new ValidatePackageName());
+        }
         );
     }
 
@@ -188,8 +208,9 @@ final class LspTemplateUI {
                         if (path == null) {
                             throw raise(RuntimeException.class, new UserCancelException(path));
                         }
-                        FileObject fo = FileUtil.toFileObject(new File(path));
-                        if (fo == null || !fo.isFolder()) {
+                        File target = new File(path);
+                        FileObject fo = FileUtil.toFileObject(target);
+                        if (!target.canWrite() || fo == null || !fo.isFolder()) {
                             client.showMessage(new MessageParams(MessageType.Error, Bundle.ERR_InvalidPath(path)));
                             return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectTarget(), suggestion.getPrimaryFile().getPath())).thenCompose(this);
                         }
@@ -202,7 +223,7 @@ final class LspTemplateUI {
 
     private static CompletionStage<Pair<DataFolder, String>> findTargetAndNameForProject(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client) {
         return findTemplate.thenCompose(__ -> client.workspaceFolders()).thenCompose(folders -> {
-            class VerifyNonExistingFolder implements Function<String, CompletionStage<Pair<DataFolder,String>>> {
+            class VerifyNewFolderCreation implements Function<String, CompletionStage<Pair<DataFolder,String>>> {
                 @Override
                 public CompletionStage<Pair<DataFolder,String>> apply(String path) {
                     if (path == null) {
@@ -215,12 +236,14 @@ final class LspTemplateUI {
                     }
                     targetPath.getParentFile().mkdirs();
                     FileObject fo = FileUtil.toFileObject(targetPath.getParentFile());
-                    if (fo == null || !fo.isFolder()) {
+                    if (fo == null || !fo.isFolder() || !targetPath.getParentFile().canWrite() || !SourceVersion.isName(targetPath.getName())) {
+                        client.showMessage(new MessageParams(MessageType.Error, Bundle.ERR_InvalidNewPath(path)));
+                        return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectProjectTarget(), suggestWorkspaceRoot(folders))).thenCompose(this);
                     }
                     return CompletableFuture.completedFuture(Pair.of(DataFolder.findFolder(fo), targetPath.getName()));
                 }
             }
-            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectProjectTarget(), suggestWorkspaceRoot(folders))).thenCompose(new VerifyNonExistingFolder());
+            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectProjectTarget(), suggestWorkspaceRoot(folders))).thenCompose(new VerifyNewFolderCreation());
         });
     }
 
@@ -229,9 +252,19 @@ final class LspTemplateUI {
         FileObject template = desc.getTemplate();
         Object handler = template.getAttribute(FileBuilder.ATTR_TEMPLATE_HANDLER);
         if (handler == null) {
-            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), desc.getProposedName())).thenApply(name -> {
-                return name != null ? builder.name(name) : null;
-            });
+            class ValidateJavaObjectName implements Function<String, CompletionStage<String>> {
+
+                @Override
+                public CompletionStage<String> apply(String name) {
+                    if (!SourceVersion.isName(name)) {
+                        client.showMessage(new MessageParams(MessageType.Error, Bundle.ERR_InvalidObjectName(name)));
+                        return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), desc.getProposedName())).thenCompose(this);
+                    }
+                    return CompletableFuture.completedFuture(name);
+                }
+            }
+            boolean isJavaTemplate = FileUtil.getMIMEType(template)!=null ? FileUtil.getMIMEType(template).equals("text/x-java"):false;
+            return isJavaTemplate ? client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), desc.getProposedName())).thenCompose(new ValidateJavaObjectName()).thenApply(name -> builder.name(name)) : client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), desc.getProposedName())).thenApply(name -> {return name != null ? builder.name(name) : null;}); 
         }
         return CompletableFuture.completedFuture(builder);
     }

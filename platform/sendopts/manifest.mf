@@ -1,5 +1,5 @@
 OpenIDE-Module: org.netbeans.modules.sendopts/2
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/sendopts/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.62
+OpenIDE-Module-Specification-Version: 2.63
 AutoUpdate-Essential-Module: true
 

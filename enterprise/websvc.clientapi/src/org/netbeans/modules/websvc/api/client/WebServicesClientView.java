@@ -41,7 +41,7 @@ import org.netbeans.modules.websvc.client.WebServicesClientViewAccessor;
 public final class WebServicesClientView {
 
 	private WebServicesClientViewImpl impl;
-	private static final Lookup.Result implementations =
+	private static final Lookup.Result<?> implementations =
 		Lookup.getDefault().lookupResult(WebServicesClientViewProvider.class);
 
 	static  {

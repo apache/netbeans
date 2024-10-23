@@ -108,7 +108,7 @@ public abstract class GrammarQueryManager {
 
         private static final String FOLDER = "Plugins/XML/GrammarQueryManagers";// NOI18N
         
-        private Lookup.Result registrations;
+        private Lookup.Result<?> registrations;
         
         private static ThreadLocal<GrammarQueryManager> transaction =
                 new ThreadLocal<GrammarQueryManager>();

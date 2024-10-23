@@ -38,6 +38,7 @@ import org.netbeans.modules.gsf.testrunner.api.Status;
 import org.netbeans.modules.gsf.testrunner.api.TestSession;
 import org.netbeans.modules.gsf.testrunner.api.Testcase;
 import org.netbeans.modules.gsf.testrunner.api.Trouble;
+import static org.netbeans.modules.java.lsp.server.LspTestUtils.tripleSlashUri;
 import org.netbeans.modules.java.lsp.server.TestCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.DecorationRenderOptions;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
@@ -130,13 +131,13 @@ public class TestProgressHandlerTest extends NbTestCase {
         TestSuiteInfo.TestCaseInfo testCase = suite.getTests().get(0);
         assertEquals("TestSuiteName:TestSuiteName.test1", testCase.getId());
         assertEquals("TestSuiteName.test1", testCase.getName());
-        assertEquals(fo.toURI().toString(), testCase.getFile());
+        assertEquals(tripleSlashUri(fo.toURI().toString()), testCase.getFile());
         assertEquals(TestSuiteInfo.State.Passed, testCase.getState());
         assertNull(testCase.getStackTrace());
         testCase = suite.getTests().get(1);
         assertEquals("TestSuiteName:TestSuiteName.test2", testCase.getId());
         assertEquals("TestSuiteName.test2", testCase.getName());
-        assertEquals(fo.toURI().toString(), testCase.getFile());
+        assertEquals(tripleSlashUri(fo.toURI().toString()), testCase.getFile());
         assertEquals(TestSuiteInfo.State.Failed, testCase.getState());
         assertNotNull(testCase.getStackTrace());
     }

@@ -18,12 +18,30 @@
  */
 package org.netbeans.modules.openide.text;
 
+import java.util.MissingResourceException;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
+import org.openide.util.UserQuestionException;
 
 public final class AskEditorQuestions {
     private AskEditorQuestions() {
+    }
+    
+    public static Boolean askUserQuestion(UserQuestionException uqe) {
+        String key = "UserQuestionAnswer_" + uqe.getClass().getName();
+        try {
+            String ask = NbBundle.getMessage(AskEditorQuestions.class, key); // NOI18N
+            if ("yes".equals(ask)) {
+                return true;
+            }
+            if ("no".equals(ask)) {
+                return false;
+            }
+        } catch (MissingResourceException ex) {
+            // expected
+        }
+        return null;
     }
 
     public static boolean askReloadDocument(String localizedMessage) {

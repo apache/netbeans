@@ -729,6 +729,9 @@ final class DocumentOpenClose {
                                 loadDoc.remove(0, loadDoc.getLength());
                             }
                         } catch (BadLocationException ex) {
+                            if (ex.getCause() instanceof IOException) {
+                                throw (IOException)ex.getCause();
+                            }
                             LOG.log(Level.INFO, null, ex);
                         }
                     }

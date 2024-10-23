@@ -70,6 +70,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -237,6 +238,7 @@ import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.modules.editor.indent.api.Reformat;
+import org.netbeans.modules.java.lsp.server.RunOnceFactory;
 import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.netbeans.modules.java.lsp.server.ui.AbstractJavaPlatformProviderOverride;
 import org.netbeans.modules.parsing.impl.SourceAccessor;
@@ -2012,11 +2014,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     Document originalDoc = server.getOpenedDocuments().getDocument(uri);
                     long originalVersion = documentVersion(originalDoc);
                     AtomicReference<Document> docHolder = new AtomicReference<>(originalDoc);
-                    List<Diagnostic> errorDiags = computeDiags(u, -1, ErrorProvider.Kind.ERRORS, originalVersion, docHolder);
+                    List<Diagnostic> errorDiags = doRunComputeDiagsOnBackground(u, ErrorProvider.Kind.ERRORS, originalVersion, docHolder);
                     if (documentVersion(originalDoc) == originalVersion) {
                         publishDiagnostics(uri, errorDiags);
                         BACKGROUND_TASKS.create(() -> {
-                            List<Diagnostic> hintDiags = computeDiags(u, -1, ErrorProvider.Kind.HINTS, originalVersion, docHolder);
+                            List<Diagnostic> hintDiags = doRunComputeDiagsOnBackground(u, ErrorProvider.Kind.HINTS, originalVersion, docHolder);
                             Document doc = server.getOpenedDocuments().getDocument(uri);
                             if (documentVersion(doc) == originalVersion) {
                                 publishDiagnostics(uri, hintDiags);
@@ -2027,7 +2029,31 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }).schedule(DELAY);
         }
     }
-    
+
+    private List<Diagnostic> doRunComputeDiagsOnBackground(String uri, ErrorProvider.Kind kind, long originalVersion, AtomicReference<Document> docHolder) {
+        return computeCancellablyOnBackground(uri, new CancellableTask<List<Diagnostic>>() {
+            private final AtomicBoolean cancelled = new AtomicBoolean();
+            private final AtomicReference<Runnable> cancelCallback = new AtomicReference<>();
+            @Override
+            public void cancel() {
+                cancelled.set(true);
+                Runnable callback = cancelCallback.get();
+                if (callback != null) {
+                    callback.run();
+                }
+            }
+            @Override
+            public List<Diagnostic> compute() {
+                return computeDiags(uri, -1, kind, originalVersion, cancelCallback -> {
+                    this.cancelCallback.set(cancelCallback);
+                    if (cancelled.get()) {
+                        cancelCallback.run();
+                    }
+                }, docHolder);
+            }
+        }, null, 100).join();
+    }
+
     CompletableFuture<List<Diagnostic>> computeDiagnostics(String uri, EnumSet<ErrorProvider.Kind> types) {
         CompletableFuture<List<Diagnostic>> r = new CompletableFuture<>();
         BACKGROUND_TASKS.post(() -> {
@@ -2068,6 +2094,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
      * @return complete list of diagnostics for the file.
      */
     private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long orgV, AtomicReference<Document> docHolder) {
+        return computeDiags(uri, offset, errorKind, orgV, c -> {}, docHolder);
+    }
+
+    private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long orgV, Consumer<Runnable> registerCancel, AtomicReference<Document> docHolder) {
         List<Diagnostic> result = new ArrayList<>();
         FileObject file = fromURI(uri);
         if (file == null) {
@@ -2435,80 +2465,103 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         put(ColoringAttributes.STATIC, Arrays.asList("static"));
     }};
 
+    private static final SemanticTokens EMPTY_TOKENS = new SemanticTokens(Collections.emptyList());
+
     @Override
     public CompletableFuture<SemanticTokens> semanticTokensFull(SemanticTokensParams params) {
-        JavaSource js = getJavaSource(params.getTextDocument().getUri());
-        List<Integer> result = new ArrayList<>();
-        if (js != null) {
-            try {
-                js.runUserActionTask(cc -> {
-                    cc.toPhase(JavaSource.Phase.RESOLVED);
-                    Document doc = cc.getSnapshot().getSource().getDocument(true);
-                    new SemanticHighlighterBase() {
-                        @Override
-                        protected boolean process(CompilationInfo info, Document doc) {
-                            process(info, doc, new ErrorDescriptionSetter() {
-                                @Override
-                                public void setHighlights(Document doc, Collection<Pair<int[], ColoringAttributes.Coloring>> highlights, Map<int[], String> preText) {
-                                    //...nothing
-                                }
+        String uri = params.getTextDocument().getUri();
+        return computeCancellablyOnBackground(uri, new CancellableTask<SemanticTokens>() {
+            private final AtomicBoolean cancel = new AtomicBoolean();
+            private final AtomicReference<SemanticHighlighterBase> computeTask = new AtomicReference<>();
+            @Override
+            public void cancel() {
+                cancel.set(true);
 
+                SemanticHighlighterBase task = computeTask.get();
+
+                if (task != null) {
+                    task.cancel();
+                }
+            }
+
+            @Override
+            public SemanticTokens compute() {
+                JavaSource js = getJavaSource(uri);
+                List<Integer> result = new ArrayList<>();
+                if (js != null) {
+                    try {
+                        js.runUserActionTask(cc -> {
+                            cc.toPhase(JavaSource.Phase.RESOLVED);
+                            Document doc = cc.getSnapshot().getSource().getDocument(true);
+                            class SemanticHighlighterBaseImpl extends SemanticHighlighterBase {
                                 @Override
-                                public void setColorings(Document doc, Map<Token, ColoringAttributes.Coloring> colorings) {
-                                    int line = 0;
-                                    long column = 0;
-                                    int lastLine = 0;
-                                    long currentLineStart = 0;
-                                    long nextLineStart = getStartPosition(line + 2);
-                                    Map<Token, ColoringAttributes.Coloring> ordered = new TreeMap<>((t1, t2) -> t1.offset(null) - t2.offset(null));
-                                    ordered.putAll(colorings);
-                                    for (Entry<Token, ColoringAttributes.Coloring> e : ordered.entrySet()) {
-                                        int currentOffset = e.getKey().offset(null);
-                                        while (nextLineStart < currentOffset) {
-                                            line++;
-                                            currentLineStart = nextLineStart;
-                                            nextLineStart = getStartPosition(line + 2);
-                                            column = 0;
+                                protected boolean process(CompilationInfo info, Document doc) {
+                                    process(info, doc, new ErrorDescriptionSetter() {
+                                        @Override
+                                        public void setHighlights(Document doc, Collection<Pair<int[], ColoringAttributes.Coloring>> highlights, Map<int[], String> preText) {
+                                            //...nothing
                                         }
-                                        Optional<Integer> tokenType = e.getValue().stream().map(c -> coloring2TokenType[c.ordinal()]).collect(Collectors.maxBy((v1, v2) -> v1.intValue() - v2.intValue()));
-                                        int modifiers = 0;
-                                        for (ColoringAttributes c : e.getValue()) {
-                                            int mod = coloring2TokenModifier[c.ordinal()];
-                                            if (mod != (-1)) {
-                                                modifiers |= mod;
+
+                                        @Override
+                                        public void setColorings(Document doc, Map<Token, ColoringAttributes.Coloring> colorings) {
+                                            int line = 0;
+                                            long column = 0;
+                                            int lastLine = 0;
+                                            long currentLineStart = 0;
+                                            long nextLineStart = getStartPosition(line + 2);
+                                            Map<Token, ColoringAttributes.Coloring> ordered = new TreeMap<>((t1, t2) -> t1.offset(null) - t2.offset(null));
+                                            ordered.putAll(colorings);
+                                            for (Entry<Token, ColoringAttributes.Coloring> e : ordered.entrySet()) {
+                                                int currentOffset = e.getKey().offset(null);
+                                                while (nextLineStart < currentOffset) {
+                                                    line++;
+                                                    currentLineStart = nextLineStart;
+                                                    nextLineStart = getStartPosition(line + 2);
+                                                    column = 0;
+                                                }
+                                                Optional<Integer> tokenType = e.getValue().stream().map(c -> coloring2TokenType[c.ordinal()]).collect(Collectors.maxBy((v1, v2) -> v1.intValue() - v2.intValue()));
+                                                int modifiers = 0;
+                                                for (ColoringAttributes c : e.getValue()) {
+                                                    int mod = coloring2TokenModifier[c.ordinal()];
+                                                    if (mod != (-1)) {
+                                                        modifiers |= mod;
+                                                    }
+                                                }
+                                                if (tokenType.isPresent() && tokenType.get() >= 0) {
+                                                    result.add(line - lastLine);
+                                                    result.add((int) (currentOffset - currentLineStart - column));
+                                                    result.add(e.getKey().length());
+                                                    result.add(tokenType.get());
+                                                    result.add(modifiers);
+                                                    lastLine = line;
+                                                    column = currentOffset - currentLineStart;
+                                                }
                                             }
                                         }
-                                        if (tokenType.isPresent() && tokenType.get() >= 0) {
-                                            result.add(line - lastLine);
-                                            result.add((int) (currentOffset - currentLineStart - column));
-                                            result.add(e.getKey().length());
-                                            result.add(tokenType.get());
-                                            result.add(modifiers);
-                                            lastLine = line;
-                                            column = currentOffset - currentLineStart;
-                                        }
-                                    }
-                                }
 
-                                private long getStartPosition(int line) {
-                                    try {
-                                        return line < 0 ? -1 : info.getCompilationUnit().getLineMap().getStartPosition(line);
-                                    } catch (Exception e) {
-                                        return info.getText().length();
-                                    }
+                                        private long getStartPosition(int line) {
+                                            try {
+                                                return line < 0 ? -1 : info.getCompilationUnit().getLineMap().getStartPosition(line);
+                                            } catch (Exception e) {
+                                                return info.getText().length();
+                                            }
+                                        }
+                                    });
+                                    return true;
                                 }
-                            });
-                            return true;
-                        }
-                    }.process(cc, doc);
-                }, true);
-            } catch (IOException ex) {
-                //TODO: include stack trace:
-                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                            };
+                            SemanticHighlighterBaseImpl task = new SemanticHighlighterBaseImpl();
+                            computeTask.set(task);
+                            task.process(cc, doc);
+                        }, true);
+                    } catch (IOException ex) {
+                        //TODO: include stack trace:
+                        client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                    }
+                }
+                return new SemanticTokens(result);
             }
-        }
-        SemanticTokens tokens = new SemanticTokens(result);
-        return CompletableFuture.completedFuture(tokens);
+        }, EMPTY_TOKENS, 10_000);
     }
 
     @Override
@@ -2711,4 +2764,56 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return t.processRequest();
     }
 
+    private static final RequestProcessor DELAYED_RESCHEDULE = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
+    private static final RequestProcessor EDITOR_BRACKGROUND = new RequestProcessor(TextDocumentServiceImpl.class.getName() + "-editor-background", 1, false, false);
+    private <T> CompletableFuture<T> computeCancellablyOnBackground(String uri, CancellableTask<T> task, T defaultValue, int priority) {
+        CompletableFuture<T> result = new CompletableFuture<T>() {
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning) {
+                task.cancel();
+                return super.cancel(mayInterruptIfRunning);
+            }
+        };
+        FileObject file = fromURI(uri);
+        if (file == null) {
+            result.complete(defaultValue);
+        } else {
+            if ("text/x-java".equals(file.getMIMEType())) {
+                RunOnceFactory.add(file, new org.netbeans.api.java.source.CancellableTask<CompilationInfo>() {
+                    private final AtomicBoolean cancel = new AtomicBoolean();
+                    @Override
+                    public void cancel() {
+                        cancel.set(true);
+                        task.cancel();
+                        if (!result.isCancelled()) {
+                            DELAYED_RESCHEDULE.post(() -> {
+                                RunOnceFactory.add(file, this);
+                            }, DELAY);
+                        }
+                    }
+                    @Override
+                    public void run(CompilationInfo parameter) throws Exception {
+                        cancel.set(false);
+                        if (result.isCancelled()) {
+                            return ;
+                        }
+                        T resultValue = task.compute();
+                        if (!cancel.get() && !result.isCancelled()) {
+                            result.complete(resultValue);
+                        }
+                    }
+                });
+            } else {
+                EDITOR_BRACKGROUND.post(() -> {
+                    result.complete(task.compute());
+                });
+            }
+        }
+        return result;
+    }
+
+    private interface CancellableTask<T> {
+        public void cancel();
+        public T compute();
+    }
 }

@@ -114,11 +114,16 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
                             compilationController.toPhase(Phase.ELEMENTS_RESOLVED);
                             Trees trees = compilationController.getTrees();
                             CompilationUnitTree compilationUnitTree = compilationController.getCompilationUnit();
+                            String[] classHierarchy = classHierarchy(node.getTestcase().getClassName());
                             List<? extends Tree> typeDecls = compilationUnitTree.getTypeDecls();
                             for (Tree tree : typeDecls) {
                                 Element element = trees.getElement(trees.getPath(compilationUnitTree, tree));
-                                if (element != null && element.getKind() == ElementKind.CLASS && element.getSimpleName().contentEquals(fo2open[0].getName())) {
-                                    List<? extends ExecutableElement> methodElements = ElementFilter.methodsIn(element.getEnclosedElements());
+                                Element classElement = getClassElement(element, classHierarchy, 0);
+                                if (classElement == null) {
+                                    classElement = getClassElement(element, new String[] {fo2open[0].getName()}, 0);
+                                }
+                                if (classElement != null) {
+                                    List<? extends ExecutableElement> methodElements = ElementFilter.methodsIn(classElement.getEnclosedElements());
                                     for (Element child : methodElements) {
                                         String name = node.getTestcase().getName(); // package.name.method.name
                                         if (child.getSimpleName().contentEquals(name.substring(name.lastIndexOf(".") + 1))) {
@@ -143,6 +148,40 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
             }
             UIJavaUtils.openFile(fo2open[0], (int) line[0]);
         }
+    }
+
+    private String[] classHierarchy(String testNodeClassName) {
+        String classNamesOnly = testNodeClassName;
+        // strip package names
+        int lastDot = testNodeClassName.lastIndexOf(".");
+        if (lastDot >= 0) {
+            classNamesOnly = classNamesOnly.substring(lastDot + 1);
+        }
+
+        // split embedded classes
+        return classNamesOnly.split("\\$");
+    }
+
+    Element getClassElement(Element element, String[] classHierarchy, int depth) {
+        if (element == null || element.getKind() != ElementKind.CLASS || depth >= classHierarchy.length) {
+            return null;
+        }
+
+        if (!element.getSimpleName().contentEquals(classHierarchy[depth])) {
+          return null;
+        }
+
+        if (depth + 1 == classHierarchy.length) {
+            return element;
+        }
+
+        for (Element enclosedElement : element.getEnclosedElements()) {
+            Element enclosedClass = getClassElement(enclosedElement, classHierarchy, depth + 1);
+            if (enclosedClass != null) {
+                return enclosedClass;
+            }
+        }
+        return null;
     }
 
     public void openCallstackFrame(Node node, @NonNull String frameInfo) {

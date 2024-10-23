@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.28
+#Version 1.30
 
 CLSS public abstract interface java.io.Serializable
 
@@ -504,6 +504,11 @@ meth public java.util.List<org.openide.util.Union2<org.netbeans.api.lsp.TextDocu
 meth public static java.util.concurrent.CompletableFuture<java.util.List<java.lang.String>> applyEdits(java.util.List<org.netbeans.api.lsp.WorkspaceEdit>,boolean)
 supr java.lang.Object
 hfds documentChanges
+
+CLSS public abstract interface !annotation org.netbeans.api.lsp.bridge.RegisterLSPServices
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[PACKAGE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String[] mimeTypes()
 
 CLSS public abstract interface !annotation org.netbeans.spi.editor.mimelookup.MimeLocation
  anno 0 java.lang.annotation.Documented()

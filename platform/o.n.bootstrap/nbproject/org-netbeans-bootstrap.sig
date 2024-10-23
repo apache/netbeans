@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.104
+#Version 2.105
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -450,7 +450,7 @@ meth public void flavorsChanged(java.awt.datatransfer.FlavorEvent)
 meth public void resultChanged(org.openide.util.LookupEvent)
 meth public void setContents(java.awt.datatransfer.Transferable,java.awt.datatransfer.ClipboardOwner)
 supr org.openide.util.datatransfer.ExClipboard
-hfds FIRING,RP,anyWindowIsActivated,convertors,getContentsTask,last,lastWindowActivated,lastWindowDeactivated,lastWindowDeactivatedSource,log,result,setContentsTask,slowSystemClipboard,systemClipboard
+hfds FIRING,RP,anyWindowIsActivated,convertors,getContentsTask,last,log,result,setContentsTask,slowSystemClipboard,systemClipboard
 hcls GetContents,LoggableTransferable,SetContents
 
 CLSS public org.netbeans.NbExecJavaStartTry

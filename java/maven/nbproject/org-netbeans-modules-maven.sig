@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.164.0
+#Version 2.165.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1267,6 +1267,9 @@ meth public java.lang.String toString()
 meth public java.net.URI getEarAppDirectory()
 meth public java.net.URI getWebAppDirectory()
 meth public java.net.URI[] getResources(boolean)
+meth public java.util.concurrent.CompletableFuture<org.apache.maven.project.MavenProject> getFreshProject()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public long getLoadTimestamp()
 meth public org.apache.maven.model.Model getRawModel() throws org.apache.maven.model.building.ModelBuildingException
 meth public org.apache.maven.project.MavenProject getEvaluatedProject(org.netbeans.api.project.ProjectActionContext)
  anno 0 org.netbeans.api.annotations.common.NonNull()

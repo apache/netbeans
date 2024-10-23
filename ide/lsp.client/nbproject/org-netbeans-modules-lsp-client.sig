@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.26.0
+#Version 1.27.0
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -29,7 +30,7 @@ meth public static org.netbeans.modules.lsp.client.spi.LanguageServerProvider$La
  anno 2 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NullAllowed()
 supr java.lang.Object
-hfds bindings,in,out,process
+hfds bindings,in,out,process,server
 
 CLSS public abstract interface org.netbeans.modules.lsp.client.spi.MultiMimeLanguageServerProvider
 intf org.netbeans.modules.lsp.client.spi.LanguageServerProvider

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 5.28
+#Version 5.29
 
 CLSS public abstract interface java.io.Serializable
 
@@ -84,10 +84,14 @@ fld public final java.lang.String type
 meth protected org.objectweb.asm.Attribute read(org.objectweb.asm.ClassReader,int,int,char[],int,org.objectweb.asm.Label[])
 meth protected org.objectweb.asm.ByteVector write(org.objectweb.asm.ClassWriter,byte[],int,int,int)
 meth protected org.objectweb.asm.Label[] getLabels()
+ anno 0 java.lang.Deprecated()
 meth public boolean isCodeAttribute()
 meth public boolean isUnknown()
+meth public static byte[] write(org.objectweb.asm.Attribute,org.objectweb.asm.ClassWriter,byte[],int,int,int)
+meth public static org.objectweb.asm.Attribute read(org.objectweb.asm.Attribute,org.objectweb.asm.ClassReader,int,int,char[],int,org.objectweb.asm.Label[])
+meth public static org.objectweb.asm.Label readLabel(org.objectweb.asm.ClassReader,int,org.objectweb.asm.Label[])
 supr java.lang.Object
-hfds content,nextAttribute
+hfds cachedContent,nextAttribute
 hcls Set
 
 CLSS public org.objectweb.asm.ByteVector
@@ -117,6 +121,7 @@ fld public final static int SKIP_DEBUG = 2
 fld public final static int SKIP_FRAMES = 4
 meth protected org.objectweb.asm.Label readLabel(int,org.objectweb.asm.Label[])
 meth protected void readBytecodeInstructionOffset(int)
+meth public byte[] readBytes(int,int)
 meth public int getAccess()
 meth public int getItem(int)
 meth public int getItemCount()
@@ -186,6 +191,7 @@ meth public final org.objectweb.asm.FieldVisitor visitField(int,java.lang.String
 meth public final org.objectweb.asm.MethodVisitor visitMethod(int,java.lang.String,java.lang.String,java.lang.String,java.lang.String[])
 meth public final org.objectweb.asm.ModuleVisitor visitModule(java.lang.String,int,java.lang.String)
 meth public final org.objectweb.asm.RecordComponentVisitor visitRecordComponent(java.lang.String,java.lang.String,java.lang.String)
+meth public final void setFlags(int)
 meth public final void visit(int,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String[])
 meth public final void visitAttribute(org.objectweb.asm.Attribute)
 meth public final void visitEnd()
@@ -564,6 +570,7 @@ fld public final static int V20 = 64
 fld public final static int V21 = 65
 fld public final static int V22 = 66
 fld public final static int V23 = 67
+fld public final static int V24 = 68
 fld public final static int V9 = 53
 fld public final static int V_PREVIEW = -65536
 fld public final static java.lang.Integer DOUBLE

@@ -1026,7 +1026,7 @@ final class DocumentOpenClose {
         
     }
     
-    private final class DocumentRef extends WeakReference<StyledDocument> implements Runnable {
+    final class DocumentRef extends WeakReference<StyledDocument> implements Runnable {
 
         public DocumentRef(StyledDocument doc) {
             super(doc, org.openide.util.Utilities.activeReferenceQueue());

@@ -245,6 +245,22 @@ public final class CloudAssets {
     }
     
     /**
+     * Returns a <code>Collection</code> of all items for a given path
+     * 
+     * @param path
+     * @return 
+     */
+    public List<OCIItem> getItems(String path) {
+        List<OCIItem> result = new ArrayList<> ();
+        for (OCIItem item : items) {
+            if (path != null && path.equals(item.getKey().getPath())) {
+                result.add(item);
+            } 
+        }
+        return result;
+    }
+    
+    /**
      * Returns a <code>Collection</code> of items assigned by user. This doesn't
      * include suggested items.
      *
@@ -292,7 +308,6 @@ public final class CloudAssets {
         refNames.put(item, refName);
         storeAssets();
         item.fireRefNameChanged(oldRefName, refName);
-//        item.fireRefNameChanged(null, refName);
         return true;
     }
 

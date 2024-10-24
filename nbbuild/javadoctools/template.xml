@@ -321,6 +321,9 @@ cause it to fail.
             <bottom>${javadoc.footer}</bottom>
             <!-- Avoid timestamp comments in _all_ html generated files, to reduce unnecessary git commits -->
             <arg value="-notimestamp" />
+            <!-- codebase has many occurrences of '///' which were never meant to appear in javadoc
+                 this disables JDK 23+ "line doc comments" for now  -->
+            <arg value="--disable-line-doc-comments" />
             <arg value="-Xdoclint:all" />
             <arg value="-Xdoclint:-missing" />
         </javadoc>

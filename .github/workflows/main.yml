@@ -416,10 +416,24 @@ jobs:
       - name: Build nbms
         run: ant $OPTS build-nbms
 
-      # 13-14 min
+      # 13-14 min for javadoc; JDK version must be synced with nb-javac
+      - name: Set up JDK 23 for javadoc
+        if: env.test_javadoc == 'true' && success()
+        uses: actions/setup-java@v4
+        with:
+          java-version: 23 
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+
       - name: Build javadoc
         if: env.test_javadoc == 'true' && success()
         run: ant $OPTS build-javadoc
+
+      - name: Set up JDK ${{ matrix.java }} 
+        if: env.test_javadoc == 'true' && success()
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       # runs only in PRs if requested; ~18 min
       - name: Build all Tests

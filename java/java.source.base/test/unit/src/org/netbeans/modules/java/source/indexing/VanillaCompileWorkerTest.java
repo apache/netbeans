@@ -685,6 +685,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        System.err.println(\"Hello, world!\");\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -729,6 +730,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.cant.resolve.location\");\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -792,6 +794,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "    private int F5a;\n" +
                 "    private int F5b;\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -834,6 +837,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        throw new java.lang.RuntimeException(\"Uncompilable code\");\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -883,6 +887,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        throw new java.lang.RuntimeException(\"Uncompilable code\");\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -932,6 +937,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        throw new java.lang.RuntimeException(\"Uncompilable code\");\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -983,6 +989,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        throw new java.lang.RuntimeException(\"Uncompilable code\");\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -1037,6 +1044,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        throw new java.lang.RuntimeException(\"Uncompilable code\");\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -1117,6 +1125,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        };\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -1165,6 +1174,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        super();\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -1239,6 +1249,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        }\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -1285,6 +1296,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.cant.apply.symbol\");\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -1336,6 +1348,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        throw new java.lang.RuntimeException(\"Uncompilable code\");\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -1412,6 +1425,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        }\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -1471,6 +1485,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        }\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -1590,6 +1605,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        }\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -1690,6 +1706,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.cant.resolve.location.args\");\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -1763,6 +1780,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        }\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -1806,6 +1824,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "    }\n" +
                 "    Test t;\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -1878,6 +1897,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "    public default void test2() {\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -1923,6 +1943,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        System.err.println();\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -2161,6 +2182,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "    \n" +
                 "    public Object test(Object o);\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -2242,6 +2264,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        throw new java.lang.RuntimeException(\"Uncompilable code\");\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -2294,6 +2317,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "        }\n" +
                 "    }\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -2339,6 +2363,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "    }\n" +
                 "    private final int wait;\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -2391,6 +2416,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "    }\n" +
                 "    private final int i;\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 
@@ -2428,6 +2454,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "    }\n" +
                 "    private final int i;\n" +
                 "}");
+        if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
     }
 

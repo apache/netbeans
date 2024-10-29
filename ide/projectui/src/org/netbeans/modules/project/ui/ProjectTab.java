@@ -22,9 +22,13 @@ package org.netbeans.modules.project.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,6 +49,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -56,11 +61,15 @@ import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -84,6 +93,7 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.StatusDisplayer;
 import org.openide.awt.UndoRedo;
+import org.openide.cookies.EditorCookie;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
@@ -140,6 +150,10 @@ public class ProjectTab extends TopComponent
     
     private String id;
     private final transient ProjectTreeView btv;
+    private JPanel projectTreeViewPanel;
+    private JLayeredPane layeredPane;
+    private JPanel buttonPanel;
+    private Timer hideButtonPanelTimer;
 
     private final JLabel noProjectsLabel = new JLabel(NbBundle.getMessage(ProjectTab.class, "NO_PROJECT_OPEN"));
 
@@ -176,8 +190,86 @@ public class ProjectTab extends TopComponent
         
         btv.setDragSource (true);
         btv.setRootVisible(false);
+
+        projectTreeViewPanel = new JPanel(new BorderLayout());
+        layeredPane = new JLayeredPane(){
+            @Override
+            public boolean isOptimizedDrawingEnabled() {
+                return false;
+            }
+        };
+
+        add(layeredPane, BorderLayout.CENTER);
+        projectTreeViewPanel.add(btv, BorderLayout.CENTER);
+
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+        buttonPanel.setOpaque(false);
+        buttonPanel.setVisible(false);
+
+        hideButtonPanelTimer = new Timer(250, e -> {
+            buttonPanel.setVisible(false);
+            buttonPanel.setEnabled(false);
+        });
+        hideButtonPanelTimer.setRepeats(false);
+
+        ImageIcon collapseTreeIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/project/ui/resources/collapseTree.svg",false);
+        JButton collapseAllButton = new JButton();
+        collapseAllButton.setIcon(collapseTreeIcon);
+        collapseAllButton.setBorderPainted(false);
+        collapseAllButton.setContentAreaFilled(false);
+        collapseAllButton.setFocusPainted(false);
+        collapseAllButton.addActionListener((ActionEvent ae ) -> {
+            collapseNodes(rootNode, this);
+        });
+        collapseAllButton.setFocusable(false);
+        JButton navigateToSelectedFileButton = new JButton();
+        ImageIcon crossHairsIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/project/ui/resources/crossHairs.svg",false);
+        navigateToSelectedFileButton.setIcon(crossHairsIcon);
+        navigateToSelectedFileButton.setBorderPainted(false);
+        navigateToSelectedFileButton.setContentAreaFilled(false);
+        navigateToSelectedFileButton.setFocusPainted(false);
+       
+        navigateToSelectedFileButton.addActionListener((ActionEvent ae ) -> {
+            navigateToCurrentFile();
+        });
+        navigateToSelectedFileButton.setFocusable(false);
+        buttonPanel.add(collapseAllButton);
+        buttonPanel.add(navigateToSelectedFileButton);
+        layeredPane.add(projectTreeViewPanel, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(buttonPanel, JLayeredPane.POPUP_LAYER);
         
-        add( btv, BorderLayout.CENTER ); 
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                resetLayeredPaneSize();
+                buttonPanel.setBounds(getWidth() - 62, 5, buttonPanel.getPreferredSize().width, buttonPanel.getPreferredSize().height);
+                projectTreeViewPanel.setBounds(0, 0, layeredPane.getWidth(), layeredPane.getHeight());
+            }
+        });
+
+        MouseAdapter mouseAdapter = new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                handleMouseEvent(e);
+                buttonPanel.setEnabled(true);
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                handleMouseEvent(e);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                Point p = e.getPoint();
+                SwingUtilities.convertPointToScreen(p, (Component) e.getSource());
+
+                // Check if mouse is still over layered pane or its children
+                if (!isOverLayeredPaneOrChildren(p)) {
+                    hideButtonPanelTimer.restart();
+                }
+            }
+        };
+        addMouseListenersToLayeredPane(mouseAdapter);
 
         OpenProjects.getDefault().addPropertyChangeListener(this);
 
@@ -205,6 +297,78 @@ public class ProjectTab extends TopComponent
         manager.addPropertyChangeListener(actualSelectionProject);
         btv.getViewport().addChangeListener(actualSelectionProject);
         add(nodeSelectionProjectPanel, BorderLayout.SOUTH);        
+    }
+
+    private boolean isPointOverComponent(Point screenPoint, Component component) {
+        if (!component.isShowing()) {
+            return false;
+        }
+
+        Point componentPoint = new Point(screenPoint);
+        SwingUtilities.convertPointFromScreen(componentPoint, component);
+
+        if (component.contains(componentPoint)) {
+            return true;
+        }
+
+        if (component instanceof Container) {
+            for (Component child : ((Container) component).getComponents()) {
+                if (isPointOverComponent(screenPoint, child)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isOverLayeredPaneOrChildren(Point screenPoint) {
+        if (!layeredPane.isShowing()) {
+            return false;
+        }
+
+        // Convert screen point to layered pane coordinates
+        Point layeredPanePoint = new Point(screenPoint);
+        SwingUtilities.convertPointFromScreen(layeredPanePoint, layeredPane);
+
+        // Check if point is within layered pane bounds
+        if (!layeredPane.getBounds().contains(layeredPanePoint)) {
+            return false;
+        }
+
+        // Check all components in layered pane
+        for (Component comp : layeredPane.getComponents()) {
+            if (isPointOverComponent(screenPoint, comp)) {
+                return true;
+            }
+        }
+
+        return layeredPane.contains(layeredPanePoint);
+    }
+
+    private void handleMouseEvent(MouseEvent e) {
+        buttonPanel.setVisible(true);
+        hideButtonPanelTimer.stop();
+    }
+
+    private void addMouseListenersToLayeredPane(MouseAdapter adapter) {
+        layeredPane.addMouseListener(adapter);
+        layeredPane.addMouseMotionListener(adapter);
+
+        for (Component comp : layeredPane.getComponents()) {
+            addMouseListenersRecursively(comp, adapter);
+        }
+    }
+
+    private void addMouseListenersRecursively(Component component, MouseAdapter mouseAdapter) {
+        component.addMouseListener(mouseAdapter);
+        component.addMouseMotionListener(mouseAdapter);
+
+        if (component instanceof Container) {
+            for (Component child : ((Container) component).getComponents()) {
+                addMouseListenersRecursively(child, mouseAdapter);
+            }
+        }
     }
 
     /**
@@ -365,6 +529,52 @@ public class ProjectTab extends TopComponent
     public void requestFocus() {
         super.requestFocus();
         btv.requestFocus();
+    }
+    
+    public static FileObject getActiveEditorFile() {
+        // Get all opened windows
+        Set<TopComponent> opened = WindowManager.getDefault().getRegistry().getOpened();
+        
+        // Find the editor window
+        for (TopComponent tc : opened) {
+            // Check if this component is an editor window and is focused
+            if (tc.isShowing() && isEditorWindow(tc)) {
+                // Get the DataObject from the editor
+                DataObject dataObj = tc.getLookup().lookup(DataObject.class);
+                if (dataObj != null) {
+                    return dataObj.getPrimaryFile();
+                }
+            }
+        }        
+        return null;
+    }
+    
+    private static boolean isEditorWindow(TopComponent tc) {
+        // Check if this is an editor window by looking for EditorCookie
+        EditorCookie ec = tc.getLookup().lookup(EditorCookie.class);
+        if (ec != null) {
+            // Additional check - verify the component's class name
+            // Editor windows typically have "EditorTopComponent" in their class name
+            String className = tc.getClass().getName().toLowerCase();
+            return className.contains("editor") || className.contains("multiview");
+        }
+        return false;
+    }
+    
+    private void navigateToCurrentFile() {
+        FileObject selectedFileInCodeEditor = getActiveEditorFile();
+        if (selectedFileInCodeEditor != null) {
+            Node nodeToSelect = findNode(selectedFileInCodeEditor);
+            if (nodeToSelect != null) {
+                try {
+                    getExplorerManager().setSelectedNodes(new Node[]{nodeToSelect});
+                    btv.scrollToNode(nodeToSelect);
+
+                } catch (Exception ex) {
+                    org.openide.util.Exceptions.printStackTrace(ex);
+                }
+            }
+        }
     }
     
     // PERSISTENCE
@@ -681,8 +891,19 @@ public class ProjectTab extends TopComponent
         if (noProjectsLabel.isShowing()) {
             return;
         }
-        remove(btv);
+        remove(layeredPane);
         add(noProjectsLabel, BorderLayout.CENTER);
+        revalidate();
+        repaint();
+    }
+
+    private void resetLayeredPaneSize() {
+        projectTreeViewPanel.setBounds(0, 0, getWidth(), getHeight());
+        projectTreeViewPanel.setPreferredSize(new Dimension(getWidth(), getHeight()));
+        layeredPane.setBounds(0, 0, getWidth(), getHeight());
+        layeredPane.setPreferredSize(new Dimension(getWidth(), getHeight()));
+        btv.setBounds(0, 0, getWidth(), getHeight());
+        btv.setPreferredSize(new Dimension(getWidth(), getHeight()));
         revalidate();
         repaint();
     }
@@ -692,9 +913,9 @@ public class ProjectTab extends TopComponent
             return;
         }
         remove(noProjectsLabel);
-        add(btv, BorderLayout.CENTER );
-        revalidate();
-        repaint();
+        projectTreeViewPanel.add(btv, BorderLayout.CENTER);
+        add(layeredPane, BorderLayout.CENTER);
+        resetLayeredPaneSize();
     }
 
     // Private innerclasses ----------------------------------------------------
@@ -869,6 +1090,17 @@ public class ProjectTab extends TopComponent
         }
 
     }
+    
+    private static void collapseNodes(Node node, ProjectTab tab) {
+        if (  node.getChildren().getNodesCount() != 0 ) {
+            for ( Node nodeIter : node.getChildren().getNodes() ) {
+                if( tab.btv.isExpanded(nodeIter) ) {
+                    collapseNodes(nodeIter, tab);
+                    tab.btv.collapseNode(nodeIter);
+                }
+            }
+        }
+    }    
 
     @ActionID(category="Project", id="org.netbeans.modules.project.ui.collapseAllNodes")
     @ActionRegistration(displayName="#collapseAllNodes")
@@ -939,18 +1171,6 @@ public class ProjectTab extends TopComponent
             });
             
         }
-        
-        private void collapseNodes(Node node, ProjectTab tab) {
-            if (  node.getChildren().getNodesCount() != 0 ) {
-                for ( Node nodeIter : node.getChildren().getNodes() ) {
-                    if( tab.btv.isExpanded(nodeIter) ) {
-                        collapseNodes(nodeIter, tab);
-                        tab.btv.collapseNode(nodeIter);
-                    }
-                }
-            }
-        }
-
     }
     
     @ActionID(category="Project", id="org.netbeans.modules.project.ui.NodeSelectionProjectAction")

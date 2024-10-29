@@ -59,6 +59,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
@@ -122,6 +123,7 @@ import org.eclipse.lsp4j.DocumentRangeFormattingParams;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.FoldingRange;
+import org.eclipse.lsp4j.FoldingRangeCapabilities;
 import org.eclipse.lsp4j.FoldingRangeKind;
 import org.eclipse.lsp4j.FoldingRangeRequestParams;
 import org.eclipse.lsp4j.Hover;
@@ -154,6 +156,7 @@ import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SignatureInformation;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
@@ -1554,7 +1557,19 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         if (source == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
-        final boolean lineFoldingOnly = client.getNbCodeCapabilities().getClientCapabilities().getTextDocument().getFoldingRange().getLineFoldingOnly() == Boolean.TRUE;
+        final boolean lineFoldingOnly;
+        {
+            final NbCodeClientCapabilities nbCodeCapabilities;
+            final ClientCapabilities clientCapabilities;
+            final TextDocumentClientCapabilities textDocument;
+            final FoldingRangeCapabilities foldingRange;
+            lineFoldingOnly = client != null
+                    && (nbCodeCapabilities = client.getNbCodeCapabilities()) != null
+                    && (clientCapabilities = nbCodeCapabilities.getClientCapabilities()) != null
+                    && (textDocument = clientCapabilities.getTextDocument()) != null
+                    && (foldingRange = textDocument.getFoldingRange()) != null
+                    && Objects.equals(foldingRange.getLineFoldingOnly(), Boolean.TRUE);
+        }
         CompletableFuture<List<FoldingRange>> result = new CompletableFuture<>();
         try {
             source.runUserActionTask(cc -> {

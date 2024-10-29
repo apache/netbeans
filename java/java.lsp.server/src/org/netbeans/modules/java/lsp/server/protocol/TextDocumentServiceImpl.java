@@ -128,6 +128,7 @@ import org.eclipse.lsp4j.DocumentRangeFormattingParams;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.FoldingRange;
+import org.eclipse.lsp4j.FoldingRangeCapabilities;
 import org.eclipse.lsp4j.FoldingRangeKind;
 import org.eclipse.lsp4j.FoldingRangeRequestParams;
 import org.eclipse.lsp4j.Hover;
@@ -160,6 +161,7 @@ import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SignatureInformation;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
@@ -1638,7 +1640,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         if (source == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
-        final boolean lineFoldingOnly = client.getNbCodeCapabilities().getClientCapabilities().getTextDocument().getFoldingRange().getLineFoldingOnly() == Boolean.TRUE;
+        ClientCapabilities clientCapabilities = client.getNbCodeCapabilities()
+                                                      .getClientCapabilities();
+        TextDocumentClientCapabilities textDocumentCapabilities = clientCapabilities != null ? clientCapabilities.getTextDocument() : null;
+        FoldingRangeCapabilities foldingRangeCapabilities = textDocumentCapabilities != null ? textDocumentCapabilities.getFoldingRange() : null;
+        Boolean lineFoldingOnlyCapability = foldingRangeCapabilities != null ? foldingRangeCapabilities.getLineFoldingOnly() : null;
+        final boolean lineFoldingOnly = lineFoldingOnlyCapability == Boolean.TRUE;
         CompletableFuture<List<FoldingRange>> result = new CompletableFuture<>();
         try {
             source.runUserActionTask(cc -> {

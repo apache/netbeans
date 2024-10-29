@@ -48,13 +48,17 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Deque;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -1634,12 +1638,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         if (source == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
+        final boolean lineFoldingOnly = client.getNbCodeCapabilities().getClientCapabilities().getTextDocument().getFoldingRange().getLineFoldingOnly() == Boolean.TRUE;
         CompletableFuture<List<FoldingRange>> result = new CompletableFuture<>();
         try {
             source.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
                 Document doc = cc.getSnapshot().getSource().getDocument(true);
-                JavaElementFoldVisitor v = new JavaElementFoldVisitor(cc, cc.getCompilationUnit(), cc.getTrees().getSourcePositions(), doc, new FoldCreator<FoldingRange>() {
+                JavaElementFoldVisitor<FoldingRange> v = new JavaElementFoldVisitor<>(cc, cc.getCompilationUnit(), cc.getTrees().getSourcePositions(), doc, new FoldCreator<FoldingRange>() {
                     @Override
                     public FoldingRange createImportsFold(int start, int end) {
                         return createFold(start, end, FoldingRangeKind.Imports);
@@ -1684,13 +1689,86 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 });
                 v.checkInitialFold();
                 v.scan(cc.getCompilationUnit(), null);
-                result.complete(v.getFolds());
+                List<FoldingRange> folds = v.getFolds();
+                if (lineFoldingOnly)
+                    folds = convertToLineOnlyFolds(folds);
+                result.complete(folds);
             }, true);
         } catch (IOException ex) {
             result.completeExceptionally(ex);
         }
         return result;
     }
+
+    /**
+     * Converts a list of code-folds to a line-only Range form, in place of the
+     * finer-grained form of {@linkplain Position Position-based} (line, column) Ranges.
+     * <p>
+     * This is needed for LSP clients that do not support the finer grained Range
+     * specification. This is expected to be advertised by the client in
+     * {@code FoldingRangeClientCapabilities.lineFoldingOnly}.
+     *
+     * @implSpec The line-only ranges computed uphold the code-folding invariant that:
+     * <em>a fold <b>does not end</b> at the same point <b>where</b> another fold <b>starts</b></em>.
+     *
+     * @implNote This is performed in {@code O(n log n) + O(n)} time and {@code O(n)} space for the returned list.
+     *
+     * @param folds List of code-folding ranges computed for a textDocument,
+     *              containing fine-grained {@linkplain Position Position-based}
+     *              (line, column) ranges.
+     * @return List of code-folding ranges computed for a textDocument,
+     * containing coarse-grained line-only ranges.
+     *
+     * @see <a href="https://microsoft.github.io/language-server-protocol/specifications/specification-current/#foldingRangeClientCapabilities">
+     *     LSP FoldingRangeClientCapabilities</a>
+     */
+    static List<FoldingRange> convertToLineOnlyFolds(List<FoldingRange> folds) {
+        if (folds != null && folds.size() > 1) {
+            // Ensure that the folds are sorted in increasing order of their start position
+            folds = new ArrayList<>(folds);
+            folds.sort(Comparator.comparingInt(FoldingRange::getStartLine)
+                    .thenComparing(FoldingRange::getStartCharacter));
+            // Maintain a stack of enclosing folds
+            Deque<FoldingRange> enclosingFolds = new ArrayDeque<>();
+            for (FoldingRange fold : folds) {
+                FoldingRange last;
+                while ((last = enclosingFolds.peek()) != null &&
+                        (last.getEndLine() < fold.getEndLine() || 
+                        (last.getEndLine() == fold.getEndLine() && last.getEndCharacter() < fold.getEndCharacter()))) {
+                    // The last enclosingFold does not enclose this fold.
+                    // Due to sortedness of the folds, last also ends before this fold starts.
+                    enclosingFolds.pop();
+                    // If needed, adjust last to end on a line prior to this fold start
+                    if (last.getEndLine() == fold.getStartLine()) {
+                        last.setEndLine(last.getEndLine() - 1);
+                    }
+                    last.setEndCharacter(null);       // null denotes the end of the line.
+                    last.setStartCharacter(null);     // null denotes the end of the line.
+                }
+                enclosingFolds.push(fold);
+            }
+            // empty the stack; since each fold completely encloses the next higher one.
+            FoldingRange fold;
+            while ((fold = enclosingFolds.poll()) != null) {
+                fold.setEndCharacter(null);       // null denotes the end of the line.
+                fold.setStartCharacter(null);     // null denotes the end of the line.
+            }
+            // Remove invalid or duplicate folds
+            Iterator<FoldingRange> it = folds.iterator();
+            FoldingRange prev = null;
+            while(it.hasNext()) {
+                FoldingRange next = it.next();
+                if (next.getEndLine() <= next.getStartLine() || 
+                        (prev != null && prev.equals(next))) {
+                    it.remove();
+                } else {
+                    prev = next;
+                }
+            }
+        }
+        return folds;
+    }
+
 
     @Override
     public void didOpen(DidOpenTextDocumentParams params) {

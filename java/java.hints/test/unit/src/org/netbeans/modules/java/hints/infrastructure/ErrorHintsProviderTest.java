@@ -180,7 +180,7 @@ public class ErrorHintsProviderTest extends NbTestCase {
     }
     
     public void testShortErrors5() throws Exception {
-        performTest("TestShortErrors5", true);
+        performTest("TestShortErrors5", false);
     }
     
     public void testShortErrors6() throws Exception {
@@ -228,7 +228,7 @@ public class ErrorHintsProviderTest extends NbTestCase {
         TestCompilerSettings.commandLine = "-Xlint:serial";
 
         try {
-            performTest("TestShortErrorsSVUIDWarning", true);
+            performTest("TestShortErrorsSVUIDWarning", false);
         } finally {
             TestCompilerSettings.commandLine = null;
         }

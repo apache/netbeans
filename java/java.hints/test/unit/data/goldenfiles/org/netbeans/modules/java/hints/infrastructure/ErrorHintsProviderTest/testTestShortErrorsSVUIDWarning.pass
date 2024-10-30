@@ -1,1 +1,1 @@
-2:13-2:40:warning:serializable class javahints.TestShortErrorsSVUIDWarning has no definition of serialVersionUID
+2:13-2:40:warning:[serial] serializable class TestShortErrorsSVUIDWarning has no definition of serialVersionUID

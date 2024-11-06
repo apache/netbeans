@@ -23,6 +23,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
 import static org.netbeans.modules.cloud.oracle.NotificationUtils.showMessage;
+import org.netbeans.modules.cloud.oracle.assets.CloudAssets;
 import org.netbeans.modules.cloud.oracle.assets.ConfigMapProvider;
 import org.netbeans.modules.cloud.oracle.assets.Steps;
 import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
@@ -40,22 +41,25 @@ import org.openide.util.lookup.Lookups;
  * @author Dusan Petrovic
  */
 @NbBundle.Messages({
-    "SuggestRerun=The changes will take place only after restarting the application"
+    "SuggestRerun=The changes will take place only after restarting the application",
+    "ClusterNotPresent=Please add the OKE Cluster first"
 })
 public class ConfigMapUploader {
     
     
     public static void uploadConfigMap(CompletableFuture<Object> future) {
+        ClusterItem cluster = CloudAssets.getDefault().getItem(ClusterItem.class);
+        if (cluster == null) {
+            showMessage(Bundle.ClusterNotPresent());
+            return;
+        }
         Steps.NextStepProvider nsProvider = Steps.NextStepProvider.builder()
             .stepForClass(ProjectStep.class, (s) -> new TenancyStep())
-            .stepForClass(TenancyStep.class, (s) -> new CompartmentStep())
-            .stepForClass(CompartmentStep.class, (s) -> new SuggestedStep("Cluster"))
             .build();
         Lookup lookup = Lookups.fixed(nsProvider);
         Steps.getDefault().executeMultistep(new ProjectStep(), lookup)
                 .thenAccept(values -> {
                     Project project = values.getValueForStep(ProjectStep.class);
-                    ClusterItem cluster = (ClusterItem) values.getValueForStep(SuggestedStep.class);
                     ProjectInformation projectInfo = ProjectUtils.getInformation(project); 
                     ConfigMapProvider configMapProvider = new ConfigMapProvider(projectInfo.getDisplayName(), cluster);
                     configMapProvider.createConfigMap();

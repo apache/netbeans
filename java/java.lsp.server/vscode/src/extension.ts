@@ -1035,12 +1035,22 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
 function runCommandInTerminal(command: string, name: string) {
     const isWindows = process.platform === 'win32';
 
+    const shell = process.env.SHELL || '/bin/bash';
+    const shellName = shell.split('/').pop();
+    const isZsh = shellName === 'zsh';
+
     const defaultShell = isWindows
       ? process.env.ComSpec || 'cmd.exe'
-      : process.env.SHELL || '/bin/bash';
+      : shell;
 
-    const pauseCommand = 'echo "Press any key to close..."; node -e "process.stdin.setRawMode(true); process.stdin.resume(); process.stdin.on(\'data\', process.exit.bind(process, 0));"';
-    const commandWithPause = `${command} 2>&1; ${pauseCommand}`;
+    const pauseCommand = isWindows
+      ? 'pause'
+      : 'echo "Press any key to close..."; ' + (isZsh
+        ? 'read -rs -k1'
+        : 'read -rsn1');
+
+    const commandWithPause = `${command} && ${pauseCommand}`;
+
     const terminal = vscode.window.createTerminal({
       name: name,
       shellPath: defaultShell,
@@ -1098,13 +1108,37 @@ async function runDockerSSH(username: string, host: string, dockerImage: string,
         micronautConfigFilesEnv += `${bootstrapProperties ? "," : ""}${applicationPropertiesContainerPath}`;
     } 
 
-    let dockerPullCommand = "";
-    if (isRepositoryPrivate) {
-        dockerPullCommand = `cat ${bearerTokenRemotePath} | docker login --username=BEARER_TOKEN --password-stdin ${ocirServer} && `;
-    }
-    dockerPullCommand += `docker pull ${dockerImage} && `;
+    let script = `#!/bin/sh\n`;
+    script += `set -e\n`;
+    script += `CONTAINER_ID_FILE="/home/${username}/.vscode.container.id"\n`;
+    script += `if [ -f "$CONTAINER_ID_FILE" ]; then\n`;
+    script += `  CONTAINER_ID=$(cat "$CONTAINER_ID_FILE")\n`;
+    script += `  if [ ! -z "$CONTAINER_ID" ] && docker ps -q --filter "id=$CONTAINER_ID" | grep -q .; then\n`;
+    script += `    echo "Stopping existing container with ID $CONTAINER_ID..."\n`;
+    script += `    docker stop "$CONTAINER_ID"\n`;
+    script += `  fi\n`;
+    script += `  rm -f "$CONTAINER_ID_FILE"\n`;
+    script += `fi\n`;
 
-    sshCommand += `ssh ${username}@${host} "${dockerPullCommand} docker run -p 8080:8080 ${mountVolume} -e MICRONAUT_CONFIG_FILES=${micronautConfigFilesEnv} -it ${dockerImage}"`;
+    if (isRepositoryPrivate) {
+        script += `cat ${bearerTokenRemotePath} | docker login --username=BEARER_TOKEN --password-stdin ${ocirServer} \n`;
+    }
+    script += `docker pull ${dockerImage} \n`;
+
+    script += `NEW_CONTAINER_ID=$(docker run -p 8080:8080 ${mountVolume} -e MICRONAUT_CONFIG_FILES=${micronautConfigFilesEnv} -d ${dockerImage})\n`;
+
+    script += `if [ -n "$NEW_CONTAINER_ID" ]; then\n`
+    script += `  echo $NEW_CONTAINER_ID > $CONTAINER_ID_FILE\n`
+    script += `fi\n`
+    script += `docker logs -f "$NEW_CONTAINER_ID"\n`
+
+    const tempDir = process.env.TEMP || process.env.TMP || '/tmp';
+    const runContainerScript = path.join(tempDir, `run-container-${Date.now()}.sh`);
+    fs.writeFileSync(runContainerScript, script);
+
+    sshCommand += `scp "${runContainerScript}" ${username}@${host}:run-container.sh && `
+    
+    sshCommand += `ssh ${username}@${host} "chmod +x run-container.sh && ./run-container.sh" `
 
     runCommandInTerminal(sshCommand, `Container: ${username}@${host}`)
 }

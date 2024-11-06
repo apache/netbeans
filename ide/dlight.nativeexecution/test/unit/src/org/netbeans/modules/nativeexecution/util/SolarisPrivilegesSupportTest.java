@@ -28,7 +28,6 @@ import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
 import org.netbeans.modules.nativeexecution.api.util.ConnectionManager;
 import org.netbeans.modules.nativeexecution.api.util.ConnectionManager.CancellationException;
 import org.netbeans.modules.nativeexecution.api.util.SolarisPrivilegesSupport;
-import org.netbeans.modules.nativeexecution.api.util.SolarisPrivilegesSupport.NotOwnerException;
 import org.netbeans.modules.nativeexecution.api.util.SolarisPrivilegesSupportProvider;
 import org.netbeans.modules.nativeexecution.test.ForAllEnvironments;
 import org.netbeans.modules.nativeexecution.test.NativeExecutionBaseTestSuite;
@@ -38,6 +37,7 @@ import org.openide.util.Exceptions;
  *
  * @author ak119685
  */
+@SuppressWarnings("removal")
 public class SolarisPrivilegesSupportTest extends NativeExecutionBaseTestCase {
 
     public SolarisPrivilegesSupportTest(String name) {
@@ -85,13 +85,11 @@ public class SolarisPrivilegesSupportTest extends NativeExecutionBaseTestCase {
                 sps.requestPrivileges(Arrays.asList("dtrace_kernel"), true); // NOI18N
             } catch (InterruptedException ex) {
                 Exceptions.printStackTrace(ex);
-            } catch (NotOwnerException ex) {
+            } catch (SolarisPrivilegesSupport.NotOwnerException ex) {
                 System.out.println(ex);
             }
             System.out.println(sps.getExecutionPrivileges());
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (CancellationException ex) {
+        } catch (IOException | CancellationException ex) {
             Exceptions.printStackTrace(ex);
         }
     }

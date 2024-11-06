@@ -37,8 +37,6 @@ import org.netbeans.modules.nativeexecution.api.util.ShellScriptRunner.BufferedL
 import org.netbeans.modules.nativeexecution.spi.support.NativeExecutionUserNotification;
 import org.netbeans.modules.nativeexecution.support.Logger;
 import org.netbeans.modules.nativeexecution.support.MiscUtils;
-//import org.openide.DialogDisplayer;
-//import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 
 public final class SPSRemoteImpl extends SPSCommonImpl {
@@ -68,17 +66,16 @@ public final class SPSRemoteImpl extends SPSCommonImpl {
             if (scriptRunner.execute() != 0) {
                 throw new IOException("Unable to get sshd pid"); // NOI18N
             }
-        } catch (IOException ex) {
+        } catch (IOException | CancellationException ex) {
+            // TODO:CancellationException error processing
             Logger.getInstance().fine(ex.toString());
-        } catch (CancellationException ex) {
-            Logger.getInstance().fine(ex.toString()); // TODO:CancellationException error processing
         }
 
         String pidCandidate = null;
 
         for (String line : blp.getBuffer()) {
-            line = line.trim();
-            if (line.endsWith("sshd")) { // NOI18N
+            String trimmedLine = line.trim();
+            if (trimmedLine.endsWith("sshd")) { // NOI18N
                 try {
                     pidCandidate = line.substring(0, line.indexOf(' '));
                 } catch (NumberFormatException ex) {
@@ -117,12 +114,11 @@ public final class SPSRemoteImpl extends SPSCommonImpl {
         cmd.append(user).append(" -c \""); // NOI18N
         cmd.append(script).append("\"; echo ExitStatus:$?\n"); // NOI18N
 
-        ChannelShell channel = null;
         PrintWriter w = null;
         int status = 1;
 
         try {
-            channel = (ChannelShell) ConnectionManagerAccessor.getDefault().openAndAcquireChannel(execEnv, "shell", true); // NOI18N+
+            ChannelShell channel = (ChannelShell) ConnectionManagerAccessor.getDefault().openAndAcquireChannel(execEnv, "shell", true); // NOI18N+
             if (channel == null) {
                 return false;
             }
@@ -163,11 +159,8 @@ public final class SPSRemoteImpl extends SPSCommonImpl {
             if (status != 0) {
                 if (!Boolean.getBoolean("nativeexecution.mode.unittest") && !"true".equals(System.getProperty("cnd.command.line.utility"))) { // NOI18N)
                     NativeExecutionUserNotification.getDefault().
-                            notify(NbBundle.getMessage(SPSRemoteImpl.class, 
+                            notify(NbBundle.getMessage(SPSRemoteImpl.class,
                                     "TaskPrivilegesSupport_GrantPrivileges_Failed"));//NOI18N
-//                    NotifyDescriptor dd =
-//                            new NotifyDescriptor.Message(NbBundle.getMessage(SPSRemoteImpl.class, "TaskPrivilegesSupport_GrantPrivileges_Failed"));
-//                    DialogDisplayer.getDefault().notify(dd);
                 }
             }
 

@@ -20,6 +20,7 @@ package org.netbeans.modules.nativeexecution.api.util;
 
 import java.util.Collection;
 import java.util.List;
+import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
 import org.netbeans.modules.nativeexecution.api.util.ConnectionManager.CancellationException;
 
 /**
@@ -44,9 +45,8 @@ public interface SolarisPrivilegesSupport {
 
     /**
      * Retrieves a list of currently effective execution privileges in the
-     * <tt>ExecutionEnvironment</tt>
+     * {@link ExecutionEnvironment}
      *
-     * @param execEnv <tt>ExecutionEnvironment</tt> to get privileges list from
      * @return a list of currently effective execution privileges
      */
     public List<String> getExecutionPrivileges();
@@ -60,12 +60,12 @@ public interface SolarisPrivilegesSupport {
             String user, char[] passwd) throws NotOwnerException, InterruptedException, CancellationException;
 
     /**
-     * Tests whether the <tt>ExecutionEnvironment</tt> has all needed
+     * Tests whether the {@link ExecutionEnvironment} has all needed
      * execution privileges.
-     * @param execEnv - <tt>ExecutionEnvironment</tt> to be tested
-     * @param privs - list of priveleges to be tested
-     * @return true if <tt>execEnv</tt> has all execution privileges listed in
-     *         <tt>privs</tt>
+     *
+     * @param privs list of priveleges to be tested
+     * @return true if {@link ExecutionEnvironment} has all execution privileges
+     * listed in {@code privs}
      */
     public boolean hasPrivileges(Collection<String> privs);
 
@@ -73,11 +73,10 @@ public interface SolarisPrivilegesSupport {
      * Returns {@link Action javax.swing.Action} that can be invoked in order
      * to request needed execution privileges
      *
-     * @param execEnv <tt>ExecutionEnvironment</tt> where to request privileges
      * @param requestedPrivileges a list of execution privileges to request
      * @param onPrivilegesGranted Runnable that is executed on successful
      *        privileges gain
-     * @return <tt>Action</tt> that can be invoked in order
+     * @return {@link AsynchronousAction} that can be invoked in order
      *        to request needed execution privileges
      */
     public AsynchronousAction getRequestPrivilegesAction(

@@ -61,21 +61,21 @@ public class UnixHostInfoProvider implements HostInfoProvider {
     private static final String PATH_VAR = "PATH"; // NOI18N
     private static final String PATH_TO_PREPEND = System.getProperty("hostinfo.prepend.path", null); // NOI18N
     private static final String ERROR_MESSAGE_PREFIX = "Error: TMPDIRBASE is not writable: "; // NOI18N
-    private static final java.util.logging.Logger log = Logger.getInstance();
-    private static final File hostinfoScript;
+    private static final java.util.logging.Logger LOG = Logger.getInstance();
+    private static final File HOSTINFO_SCRIPT;
 
     static {
         InstalledFileLocator fl = InstalledFileLocatorProvider.getDefault();
-        hostinfoScript = fl.locate("bin/nativeexecution/hostinfo.sh", "org.netbeans.modules.dlight.nativeexecution", false); // NOI18N
+        HOSTINFO_SCRIPT = fl.locate("bin/nativeexecution/hostinfo.sh", "org.netbeans.modules.dlight.nativeexecution", false); // NOI18N
 
-        if (hostinfoScript == null) {
-            log.severe("Unable to find hostinfo.sh script!"); // NOI18N
+        if (HOSTINFO_SCRIPT == null) {
+            LOG.severe("Unable to find hostinfo.sh script!"); // NOI18N
         }
     }
 
     @Override
     public HostInfo getHostInfo(ExecutionEnvironment execEnv) throws IOException, InterruptedException {
-        if (hostinfoScript == null) {
+        if (HOSTINFO_SCRIPT == null) {
             return null;
         }
 
@@ -94,7 +94,7 @@ public class UnixHostInfoProvider implements HostInfoProvider {
         HostInfo result = HostInfoFactory.newHostInfo(execEnv, info, environment);
 
         if (execEnv.isLocal()) {
-            getLocalUserEnvironment(result, environment);
+            getLocalUserEnvironment(environment);
         } else {
             getRemoteUserEnvironment(execEnv, result, environment);
         }
@@ -117,14 +117,14 @@ public class UnixHostInfoProvider implements HostInfoProvider {
         Properties hostInfo = new Properties();
 
         ProcessBuilder pb = new ProcessBuilder("/bin/sh", // NOI18N
-                hostinfoScript.getAbsolutePath());
+                HOSTINFO_SCRIPT.getAbsolutePath());
 
         String tmpDirBase = null;
         if (TMPBASE != null) {
             if (pathIsOK(TMPBASE, false)) {
                 tmpDirBase = TMPBASE;
             } else {
-                log.log(Level.WARNING, "Ignoring cnd.tmpbase property [{0}] as it contains illegal characters", TMPBASE); // NOI18N
+                LOG.log(Level.WARNING, "Ignoring cnd.tmpbase property [{0}] as it contains illegal characters", TMPBASE); // NOI18N
             }
         }
 
@@ -148,7 +148,7 @@ public class UnixHostInfoProvider implements HostInfoProvider {
         int result = res.exitCode;
 
         for (String errLine : errorLines) {
-            log.log(Level.WARNING, "UnixHostInfoProvider: {0}", errLine); // NOI18N
+            LOG.log(Level.WARNING, "UnixHostInfoProvider: {0}", errLine); // NOI18N
             if (errLine.startsWith(ERROR_MESSAGE_PREFIX)) {
                 String title = NbBundle.getMessage(UnixHostInfoProvider.class, "TITLE_PermissionDenied");
                 String shortMsg = NbBundle.getMessage(UnixHostInfoProvider.class, "SHORTMSG_PermissionDenied", tmpDirBase, "localhost");
@@ -158,7 +158,7 @@ public class UnixHostInfoProvider implements HostInfoProvider {
         }
 
         if (result != 0) {
-            throw new IOException(hostinfoScript + " rc == " + result); // NOI18N
+            throw new IOException(HOSTINFO_SCRIPT + " rc == " + result); // NOI18N
         }
 
         fillProperties(hostInfo, res.getOutputLines());
@@ -171,7 +171,7 @@ public class UnixHostInfoProvider implements HostInfoProvider {
         ChannelStreams sh_channels = null;
 
         try {
-            log.log(Level.FINEST, "Getting remote host info for {0}", execEnv); // NOI18N
+            LOG.log(Level.FINEST, "Getting remote host info for {0}", execEnv); // NOI18N
             sh_channels = JschSupport.startCommand(execEnv, "/bin/sh -s", null); // NOI18N
 
             long localStartTime = System.currentTimeMillis();
@@ -186,41 +186,36 @@ public class UnixHostInfoProvider implements HostInfoProvider {
                 if (pathIsOK(TMPBASE, true)) {
                     out.write(("TMPBASE=" + TMPBASE + '\n').getBytes()); // NOI18N
                 } else {
-                    log.log(Level.WARNING, "Ignoring cnd.tmpbase property [{0}] as it contains illegal characters", TMPBASE); // NOI18N
+                    LOG.log(Level.WARNING, "Ignoring cnd.tmpbase property [{0}] as it contains illegal characters", TMPBASE); // NOI18N
                 }
             }
             out.flush();
 
-            BufferedReader scriptReader = new BufferedReader(new FileReader(hostinfoScript));
-            String scriptLine = scriptReader.readLine();
+            try (BufferedReader scriptReader = new BufferedReader(new FileReader(HOSTINFO_SCRIPT))) {
+                String scriptLine = scriptReader.readLine();
 
-            while (scriptLine != null) {
-                out.write((scriptLine + '\n').getBytes());
-                out.flush();
-                scriptLine = scriptReader.readLine();
+                while (scriptLine != null) {
+                    out.write((scriptLine + '\n').getBytes());
+                    out.flush();
+                    scriptLine = scriptReader.readLine();
+                }
             }
 
-            scriptReader.close();
-
-            NativeTaskExecutorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        BufferedReader errReader = new BufferedReader(new InputStreamReader(err));
-                        String errLine;
-                        while ((errLine = errReader.readLine()) != null) {
-                            log.log(Level.WARNING, "UnixHostInfoProvider: {0}", errLine); // NOI18N
-                            if (errLine.startsWith(ERROR_MESSAGE_PREFIX)) {
-                                errLine = errLine.replace(ERROR_MESSAGE_PREFIX, "");
-                                String title = NbBundle.getMessage(UnixHostInfoProvider.class, "TITLE_PermissionDenied");
-                                String shortMsg = NbBundle.getMessage(UnixHostInfoProvider.class, "SHORTMSG_PermissionDenied", errLine, execEnv);
-                                String msg = NbBundle.getMessage(UnixHostInfoProvider.class, "MSG_PermissionDenied", errLine, execEnv);
-                                MiscUtils.showNotification(title, shortMsg, msg);
-                            }
+            NativeTaskExecutorService.submit(() -> {
+                try {
+                    BufferedReader errReader = new BufferedReader(new InputStreamReader(err));
+                    for(String errLine = errReader.readLine(); errLine != null; errLine = errReader.readLine()) {
+                        LOG.log(Level.WARNING, "UnixHostInfoProvider: {0}", errLine); // NOI18N
+                        if (errLine.startsWith(ERROR_MESSAGE_PREFIX)) {
+                            errLine = errLine.replace(ERROR_MESSAGE_PREFIX, "");
+                            String title = NbBundle.getMessage(UnixHostInfoProvider.class, "TITLE_PermissionDenied");
+                            String shortMsg = NbBundle.getMessage(UnixHostInfoProvider.class, "SHORTMSG_PermissionDenied", errLine, execEnv);
+                            String msg = NbBundle.getMessage(UnixHostInfoProvider.class, "MSG_PermissionDenied", errLine, execEnv);
+                            MiscUtils.showNotification(title, shortMsg, msg);
                         }
-                    } catch (IOException ex) {
-                        ex.printStackTrace(System.err);
                     }
+                } catch (IOException ex) {
+                    ex.printStackTrace(System.err);
                 }
             }, "reading hostInfo script error"); //NOPI18N // NOI18N
 
@@ -228,7 +223,7 @@ public class UnixHostInfoProvider implements HostInfoProvider {
 
             long localEndTime = System.currentTimeMillis();
 
-            hostInfo.put("LOCALTIME", Long.valueOf((localStartTime + localEndTime) / 2)); // NOI18N
+            hostInfo.put("LOCALTIME", (localStartTime + localEndTime) / 2); // NOI18N
         } catch (JSchException ex) {
             throw new IOException("Exception while receiving HostInfo for " + execEnv.toString() + ": " + ex); // NOI18N
         } finally {
@@ -267,7 +262,7 @@ public class UnixHostInfoProvider implements HostInfoProvider {
         try {
             nbstart = NbStartUtility.getInstance(execEnv.isLocal()).getPath(execEnv, hostInfo);
         } catch (IOException ex) {
-            log.log(Level.WARNING, "Failed to get remote path of NbStartUtility", ex); // NOI18N
+            LOG.log(Level.WARNING, "Failed to get remote path of NbStartUtility", ex); // NOI18N
             Exceptions.printStackTrace(ex);
         }
 
@@ -295,7 +290,7 @@ public class UnixHostInfoProvider implements HostInfoProvider {
             if (iex != null) {
                 throw iex;
             }
-            log.log(Level.WARNING, "Failed to get getRemoteUserEnvironment for " + execEnv.getDisplayName(), ex); // NOI18N
+            LOG.log(Level.WARNING, "Failed to get getRemoteUserEnvironment for " + execEnv.getDisplayName(), ex); // NOI18N
         } finally {
             RemoteStatistics.stopChannelActivity(activityID);
             if (login_shell_channels != null) {
@@ -311,16 +306,18 @@ public class UnixHostInfoProvider implements HostInfoProvider {
     }
 
     InterruptedException toInterruptedException(Exception ex) {
-        if (ex instanceof InterruptedException) {
-            return (InterruptedException) ex;
-        } else if (ex.getCause() instanceof InterruptedException) {
-            return (InterruptedException) ex.getCause();
+        if (ex == null) {
+            return null;
+        } else if (ex instanceof InterruptedException interruptedException) {
+            return interruptedException;
+        } else if (ex.getCause() instanceof InterruptedException interruptedException) {
+            return interruptedException;
         }
         InterruptedIOException iioe = null;
-        if (ex instanceof InterruptedIOException) {
-            iioe = (InterruptedIOException) ex;
-        } else if (ex.getCause() instanceof InterruptedIOException) {
-            iioe = (InterruptedIOException) ex.getCause();
+        if (ex instanceof InterruptedIOException interruptedIOException) {
+            iioe = interruptedIOException;
+        } else if (ex.getCause() instanceof InterruptedIOException interruptedIOException) {
+            iioe = interruptedIOException;
         }
         if (iioe != null) {
             InterruptedException wrapper = new InterruptedException(ex.getMessage());
@@ -330,7 +327,7 @@ public class UnixHostInfoProvider implements HostInfoProvider {
         return null;
     }
     
-    private void getLocalUserEnvironment(HostInfo hostInfo, Map<String, String> environmentToFill) {
+    private void getLocalUserEnvironment(Map<String, String> environmentToFill) {
         environmentToFill.putAll(System.getenv());
     }
 
@@ -366,18 +363,13 @@ public class UnixHostInfoProvider implements HostInfoProvider {
             return Collections.<String>emptyList();
         }
         final List<String> result = new LinkedList<>();
-        final BufferedReader br = ProcessUtils.getReader(stream, remoteStream);
 
-        try {
-            String line;
-            while ((line = br.readLine()) != null) {
+        try (BufferedReader br = ProcessUtils.getReader(stream, remoteStream)) {
+            for(String line = br.readLine(); line != null; line = br.readLine()) {
                 result.add(line);
             }
-        } finally {
-            if (br != null) {
-                br.close();
-            }
         }
+
         return result;
     }
 }

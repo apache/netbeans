@@ -32,7 +32,6 @@ import org.netbeans.modules.nativeexecution.api.util.WindowsSupport;
 import org.netbeans.modules.nativeexecution.pty.IOConnector;
 import org.netbeans.modules.nativeexecution.pty.PtyAllocator;
 import org.netbeans.modules.nativeexecution.pty.SttySupport;
-import org.netbeans.modules.nativeexecution.support.Logger;
 import org.openide.util.Exceptions;
 import org.openide.windows.InputOutput;
 
@@ -43,8 +42,6 @@ import org.openide.windows.InputOutput;
  */
 public final class PtySupport {
 
-    private static final java.util.logging.Logger log = Logger.getInstance();
-
     private PtySupport() {
     }
 
@@ -53,12 +50,12 @@ public final class PtySupport {
      * (if any).
      *
      * @param process - process to get pty of
-     * @return Pty that is currently associated with the process or <tt>null</tt>
+     * @return Pty that is currently associated with the process or {@code null}
      * if ptocess was started in non-pty mode.
      */
     public static String getTTY(NativeProcess process) {
-        if (process instanceof ExProcessInfoProvider) {
-            return ((ExProcessInfoProvider) process).getTTY();
+        if (process instanceof ExProcessInfoProvider exProcessInfoProvider) {
+            return exProcessInfoProvider.getTTY();
         }
 
         return null;
@@ -66,37 +63,38 @@ public final class PtySupport {
 
     /**
      * Connects process' IO streams with the specified InputOutput.
-     * 
-     * @param io - <tt>InputOutput</tt> to connect process' IO with
+     *
+     * @param io - {@code InputOutput} to connect process' IO with
      * @param process - the process which should be connected with the io
      *
-     * @return <tt>true</tt> if operation was successfull. <tt>false</tt> otherwise.
+     * @return {@code true} if operation was successfull. {@code false} otherwise.
      */
     public static boolean connect(InputOutput io, NativeProcess process) {
         return IOConnector.getInstance().connect(io, process);
     }
-    
+
     /**
      * Connects process' IO streams with the specified InputOutput.
-     * 
-     * @param io - <tt>InputOutput</tt> to connect process' IO with
-     * @param process - the process which should be connected with the io
      *
-     * @return <tt>true</tt> if operation was successfull. <tt>false</tt> otherwise.
+     * @param io {@link InputOutput} to connect process' IO with
+     * @param process the process which should be connected with the io
+     * @param postConnectRunnabel the task to be executed *after* the connection is established
+     *
+     * @return {@code true} if operation was successfull. {@code false} otherwise.
      */
     public static boolean connect(InputOutput io, NativeProcess process, Runnable postConnectRunnabel) {
         return IOConnector.getInstance().connect(io, process, postConnectRunnabel);
-    }    
-    
+    }
+
     /**
-     * Connects pty's IO streams (master side) with the specified <tt>InputOutput</tt>.
+     * Connects pty's IO streams (master side) with the specified {@link InputOutput}.
      * So that IO of the process that will do input/output to the specified pty'
-     * slave will go to the specified <tt>InputOutput</tt>.
+     * slave will go to the specified {@link InputOutput}.
      *
-     * @param io - <tt>InputOutput</tt> to connect pty's IO with
-     * @param pty - the pty to connect InputOutput with
+     * @param io {@link InputOutput} to connect pty's IO with
+     * @param pty the pty to connect InputOutput with
      *
-     * @return <tt>true</tt> if operation was successfull. <tt>false</tt> otherwise.
+     * @return {@code true} if operation was successfull. {@code false} otherwise.
      */
     public static boolean connect(InputOutput io, Pty pty) {
         return IOConnector.getInstance().connect(io, pty);
@@ -104,8 +102,9 @@ public final class PtySupport {
 
     /**
      * Allocates a new 'unconnected' pty
-     * @param env - environmant in which a pty should be allocated
-     * @return newly allocated pty or <tt>null</tt> if allocation failed
+     * @param env environmant in which a pty should be allocated
+     * @return newly allocated pty or {@code null} if allocation failed
+     * @throws java.io.IOException
      */
     public static Pty allocate(ExecutionEnvironment env) throws IOException {
         if (!ConnectionManager.getInstance().isConnectedTo(env)) {
@@ -124,8 +123,8 @@ public final class PtySupport {
      * @param env - environmant in which a tty is used
      * @param tty - tty name
      */
-    public static void disableEcho(ExecutionEnvironment exEnv, String tty) {
-        SttySupport.apply(exEnv, tty, "-echo"); //NOI18N
+    public static void disableEcho(ExecutionEnvironment env, String tty) {
+        SttySupport.apply(env, tty, "-echo"); //NOI18N
     }
 
     /**
@@ -139,6 +138,9 @@ public final class PtySupport {
      *
      * There is an option in pty utility - --set-erase-key that could be used to
      * achieve needed effect.
+     *
+     * @param exEnv
+     * @param tty
      */
     @Deprecated
     public static void setBackspaceAsEraseChar(ExecutionEnvironment exEnv, String tty) {
@@ -154,28 +156,34 @@ public final class PtySupport {
             HostInfo hostInfo = HostInfoUtils.getHostInfo(executionEnvironment);
 
             switch (hostInfo.getOSFamily()) {
-                case WINDOWS:
+                case WINDOWS -> {
                     // for now pty mode only supported with Cygwin
                     Shell shell = WindowsSupport.getInstance().getActiveShell();
 
                     if (shell == null) {
                         return false;
                     }
-                    
+
                     return shell.type == Shell.ShellType.CYGWIN || shell.type == Shell.ShellType.WSL;
-                case MACOSX:
+                }
+                case MACOSX -> {
                     return true;
-                case LINUX:
-                    return hostInfo.getCpuFamily().equals(CpuFamily.X86) 
+                }
+                case LINUX -> {
+                    return hostInfo.getCpuFamily().equals(CpuFamily.X86)
                             || hostInfo.getCpuFamily().equals(CpuFamily.SPARC)
                             || (hostInfo.getCpuFamily().equals(CpuFamily.ARM) && Boolean.getBoolean("cnd.pty.arm.support"))
                             || hostInfo.getCpuFamily().equals(CpuFamily.AARCH64);
-                case SUNOS:
+                }
+                case SUNOS -> {
                     return true;
-                case FREEBSD:
+                }
+                case FREEBSD -> {
                     return false;
-                default:
+                }
+                default -> {
                     return false;
+                }
             }
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);

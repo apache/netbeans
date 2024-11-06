@@ -118,17 +118,18 @@ public final class PtyAllocator {
 
             if (ptyInfo == null) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(streams.err));
-                String errorLine;
                 StringBuilder err_msg = new StringBuilder();
-                while ((errorLine = br.readLine()) != null) {
+                for(String errorLine = br.readLine(); errorLine != null; errorLine = br.readLine()) {
                     err_msg.append(errorLine).append('\n');
                 }
                 throw new IOException(err_msg.toString());
             }
 
             result = new PtyImplementation(env, ptyInfo.tty, ptyInfo.pid, streams);
-        } catch (Exception ex) {
-            throw (ex instanceof IOException) ? (IOException) ex : new IOException(ex);
+        } catch (IOException ex) {
+            throw ex;
+        } catch (JSchException | InterruptedException | RuntimeException ex) {
+            throw new IOException(ex);
         } finally {
             if (result == null && streams != null) {
                 if (streams.in != null) {

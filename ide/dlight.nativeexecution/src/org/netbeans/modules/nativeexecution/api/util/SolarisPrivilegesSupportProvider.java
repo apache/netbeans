@@ -28,6 +28,7 @@ import org.netbeans.modules.nativeexecution.sps.impl.SPSRemoteImpl;
 import org.netbeans.modules.nativeexecution.support.Logger;
 
 @Deprecated(forRemoval = true)
+@SuppressWarnings("removal")
 public final class SolarisPrivilegesSupportProvider {
 
     private static final ConcurrentHashMap<ExecutionEnvironment, SolarisPrivilegesSupport> instances =

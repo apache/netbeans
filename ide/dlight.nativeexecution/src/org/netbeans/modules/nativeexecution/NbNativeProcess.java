@@ -53,6 +53,7 @@ public abstract class NbNativeProcess extends AbstractNativeProcess {
     private final String nbStartPath;
     private volatile ProcessStatusEx statusEx;
 
+    @SuppressWarnings("this-escape")
     public NbNativeProcess(final NativeProcessInfo info) {
         super(new NativeProcessInfo(info, true));
         String _nbStartPath = null;
@@ -182,9 +183,7 @@ public abstract class NbNativeProcess extends AbstractNativeProcess {
     }
 
     private void readProcessInfo(InputStream fromProcessStream) throws IOException {
-        String line;
-
-        while (!(line = readLine(fromProcessStream).trim()).isEmpty()) {
+        for(String line = readLine(fromProcessStream); ! line.isBlank(); line = readLine(fromProcessStream)) {
             addProcessInfo(line);
         }
 
@@ -192,13 +191,13 @@ public abstract class NbNativeProcess extends AbstractNativeProcess {
 
         if (pidProperty == null) {
             InputStream error = getErrorStream();
-            while (!(line = readLine(error).trim()).isEmpty()) {
+            for(String line = readLine(error); ! line.isBlank(); line = readLine(error)) {
                 LOG.info(line);
             }
             throw new InternalError("Failed to get process PID"); // NOI18N
         }
 
-        setPID(Integer.parseInt(pidProperty)); // NOI18N    
+        setPID(Integer.parseInt(pidProperty)); // NOI18N
     }
 
     @Override

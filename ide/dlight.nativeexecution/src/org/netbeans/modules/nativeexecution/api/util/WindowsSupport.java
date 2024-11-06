@@ -51,7 +51,7 @@ public final class WindowsSupport {
     private boolean initialized = false;
     private Shell activeShell = null;
     private PathConverter pathConverter = null;
-    private AtomicReference<String> pathKeyRef = new AtomicReference<>();
+    private final AtomicReference<String> pathKeyRef = new AtomicReference<>();
     private Charset charset;
 
     private WindowsSupport() {
@@ -245,14 +245,11 @@ public final class WindowsSupport {
         String psCommand = psFile.getAbsolutePath();
 
         switch (activeShell.type) {
-            case CYGWIN:
-                pb = new ProcessBuilder(psCommand, "-W", "-p", Integer.toString(shellPID)); // NOI18N
-                break;
-            case MSYS:
-                pb = new ProcessBuilder(psCommand, "-W"); // NOI18N
-                break;
-            default:
+            case CYGWIN -> pb = new ProcessBuilder(psCommand, "-W", "-p", Integer.toString(shellPID)); // NOI18N
+            case MSYS -> pb = new ProcessBuilder(psCommand, "-W"); // NOI18N
+            default -> {
                 return shellPID;
+            }
         }
 
         ExitStatus res = ProcessUtils.execute(pb);
@@ -261,7 +258,7 @@ public final class WindowsSupport {
         for (String s : output) {
             Matcher m = pat.matcher(s);
             if (m.matches()) {
-                Integer pid = Integer.parseInt(m.group(1));
+                int pid = Integer.parseInt(m.group(1));
                 if (pid == shellPID) {
                     return Integer.parseInt(m.group(4));
                 }
@@ -310,6 +307,9 @@ public final class WindowsSupport {
     /**
      * Cygwin is preferrable shell (over msys). So it cygwin is installed we
      * will always use it's for shell
+     *
+     * @param path
+     * @return
      */
     public String convertToShellPath(String path) {
         return activeShell == null ? null : convert(PathType.WINDOWS, activeShell.type.toPathType(), path, true);

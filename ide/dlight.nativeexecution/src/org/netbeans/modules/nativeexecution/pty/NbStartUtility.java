@@ -85,9 +85,7 @@ public class NbStartUtility extends HelperUtility {
     public boolean isSupported(ExecutionEnvironment executionEnvironment) {
         try {
             return isSupported(HostInfoUtils.getHostInfo(executionEnvironment));
-        } catch (IOException ex) {
-            return false;
-        } catch (CancellationException ex) {
+        } catch (IOException | CancellationException ex) {
             return false;
         }
     }
@@ -99,22 +97,22 @@ public class NbStartUtility extends HelperUtility {
 
         try {
             switch (hostInfo.getOS().getFamily()) {
-                case MACOSX:
-                case SUNOS:
-                case LINUX:
+                case MACOSX, SUNOS, LINUX -> {
                     try {
                         return getLocalFile(hostInfo) != null;
                     } catch (MissingResourceException ex) {
                     }
                     return false;
-                case WINDOWS:
+                }
+                case WINDOWS -> {
                     Shell shell = WindowsSupport.getInstance().getActiveShell();
                     if(shell != null && shell.getValidationStatus().isValid() && shell.type == ShellType.WSL) {
                         return true;
                     } else {
                         return false;
                     }
-                case FREEBSD:
+                }
+                case FREEBSD -> {
                     // For now will disable it on Windows, as there are some
                     // side-effects with paths (need deeper studying)
 //                    Shell activeShell = WindowsSupport.getInstance().getActiveShell();
@@ -123,8 +121,10 @@ public class NbStartUtility extends HelperUtility {
 //                    }
 //                    return getPath(executionEnvironment) != null;
                     return false;
-                default:
+                }
+                default -> {
                     return false;
+                }
             }
         } catch (Exception ex) {
             return false;

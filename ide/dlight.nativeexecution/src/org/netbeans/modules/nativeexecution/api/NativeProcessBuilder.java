@@ -123,7 +123,7 @@ public final class NativeProcessBuilder implements Callable<Process> {
     }
 
     /**
-     * Register passed <tt>NativeProcess.Listener</tt>.
+     * Register passed {@code NativeProcess.Listener}.
      *
      * @param listener NativeProcess.Listener to be registered to receive
      * process's state change events.
@@ -170,11 +170,8 @@ public final class NativeProcessBuilder implements Callable<Process> {
             throw new UserQuestionException("No connection to " + execEnv.getDisplayName()) {// NOI18N
                 @Override
                 public void confirmed() throws IOException {
-                    RequestProcessor.getDefault().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ConnectionManager.getInstance().connect(execEnv);
-                        }
+                    RequestProcessor.getDefault().post(() -> {
+                        ConnectionManager.getInstance().connect(execEnv);
                     });
                 }
 
@@ -199,21 +196,17 @@ public final class NativeProcessBuilder implements Callable<Process> {
                     process = new RemoteNativeProcess(info);
                 } else {
                     if (externalTerminal != null) {
-                        boolean canProceed = true;
                         boolean available = externalTerminal.isAvailable(info.getExecutionEnvironment());
 
                         if (!available) {
                             if (Boolean.getBoolean("nativeexecution.mode.unittest") || "true".equals(System.getProperty("cnd.command.line.utility"))) { // NOI18N
                                 System.err.println(loc("NativeProcessBuilder.processCreation.NoTermianl.text"));
                             } else {
-                                        NativeExecutionUserNotification.getDefault().notify(loc("NativeProcessBuilder.processCreation.NoTermianl.text"), // NOI18N
-                                                NativeExecutionUserNotification.Descriptor.WARNING);                                
-//                                DialogDisplayer.getDefault().notify(
-//                                        new NotifyDescriptor.Message(loc("NativeProcessBuilder.processCreation.NoTermianl.text"), // NOI18N
-//                                        NotifyDescriptor.WARNING_MESSAGE));
+                                NativeExecutionUserNotification.getDefault().notify(loc("NativeProcessBuilder.processCreation.NoTermianl.text"), // NOI18N
+                                        NativeExecutionUserNotification.Descriptor.WARNING);
                             }
-                            canProceed = false;
                         } else {
+                            boolean canProceed = true;
                             if (Utilities.isWindows()) {
                                 Shell shell = WindowsSupport.getInstance().getActiveShell();
                                 if (shell == null) {
@@ -222,9 +215,6 @@ public final class NativeProcessBuilder implements Callable<Process> {
                                     } else {
                                         NativeExecutionUserNotification.getDefault().notify(loc("NativeProcessBuilder.processCreation.NoShell.text"), // NOI18N
                                                 NativeExecutionUserNotification.Descriptor.WARNING);
-//                                        DialogDisplayer.getDefault().notify(
-//                                                new NotifyDescriptor.Message(loc("NativeProcessBuilder.processCreation.NoShell.text"), // NOI18N
-//                                                NotifyDescriptor.WARNING_MESSAGE));
                                     }
                                     canProceed = false;
                                 } else {

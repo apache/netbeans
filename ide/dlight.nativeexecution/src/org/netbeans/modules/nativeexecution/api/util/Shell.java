@@ -48,10 +48,10 @@ public class Shell {
         if (validationStatus == null) {
             validationStatus = ShellValidationSupport.getValidationStatus(this);
         }
-        
+
         return validationStatus;
     }
-    
+
     public enum ShellType {
 
         NO_SHELL,
@@ -61,16 +61,12 @@ public class Shell {
         WSL;
 
         public PathType toPathType() {
-            switch (this) {
-                case CYGWIN:
-                    return PathType.CYGWIN;
-                case MSYS:
-                    return PathType.MSYS;
-                case WSL:
-                    return PathType.WSL;
-                default:
-                    return null;
-            }
+            return switch (this) {
+                case CYGWIN -> PathType.CYGWIN;
+                case MSYS -> PathType.MSYS;
+                case WSL -> PathType.WSL;
+                default -> null;
+            };
         }
     }
 

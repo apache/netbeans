@@ -205,8 +205,8 @@ public class HelperUtility {
                         throw new IOException(ex);
                     }
                 } catch (ParseException | InterruptedException ex) {
-                    if (ex.getCause() instanceof IOException) {
-                        throw (IOException) ex.getCause();
+                    if (ex.getCause() instanceof IOException ioException) {
+                        throw ioException;
                     }
                     throw new IOException(ex);
                 }

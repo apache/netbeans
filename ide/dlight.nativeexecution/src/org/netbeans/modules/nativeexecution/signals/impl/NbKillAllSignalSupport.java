@@ -56,26 +56,28 @@ public final class NbKillAllSignalSupport extends HelperUtility implements Signa
             }
 
             switch (hostInfo.getOSFamily()) {
-                case LINUX:
-                case SUNOS:
+                case LINUX, SUNOS -> {
                     return true;
-                case FREEBSD:
+                }
+                case FREEBSD -> {
                     return false;
-                case WINDOWS:
+                }
+                case WINDOWS -> {
                     Shell activeShell = WindowsSupport.getInstance().getActiveShell();
                     if (scope == SIGNAL_SCOPE.SIGNAL_BY_ENV && (activeShell == null || activeShell.type != Shell.ShellType.WSL)) {
                         return false;
                     }
                     return (activeShell != null && (activeShell.type == Shell.ShellType.CYGWIN || activeShell.type == Shell.ShellType.WSL));
-                case MACOSX:
-                    if (scope == SIGNAL_SCOPE.SIGQUEUE_PROCESS) {
-                        return false;
-                    }
-                    return true;
-                default:
+                }
+                case MACOSX -> {
+                    return scope != SIGNAL_SCOPE.SIGQUEUE_PROCESS;
+                }
+
+                default -> {
                     return false;
+                }
             }
-        } catch (Exception ex) {
+        } catch (IOException | ConnectionManager.CancellationException | RuntimeException ex) {
             return false;
         }
     }

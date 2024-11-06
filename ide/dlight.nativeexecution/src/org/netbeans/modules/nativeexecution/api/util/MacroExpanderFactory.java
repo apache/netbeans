@@ -53,7 +53,7 @@ public final class MacroExpanderFactory {
     }
 
     public static MacroExpander getExpander(
-            ExecutionEnvironment execEnv, ExpanderStyle style) {        
+            ExecutionEnvironment execEnv, ExpanderStyle style) {
         return getExpander(execEnv, style, true);
     }
 
@@ -69,22 +69,22 @@ public final class MacroExpanderFactory {
 
         String key = ExecutionEnvironmentFactory.toUniqueID(execEnv) + '_' + style;
         MacroExpander result = expanderCache.get(key);
-        
+
         if (result != null) {
             return result;
         }
 
-        HostInfo hostInfo = null;        
+        HostInfo hostInfo = null;
         try {
             if (connectIfNeed || HostInfoUtils.isHostInfoAvailable(execEnv)) {
                 hostInfo = HostInfoUtils.getHostInfo(execEnv);
-            }            
+            }
         } catch (IOException ex) {
-            // ideally, the method should throw IOException, 
+            // ideally, the method should throw IOException,
             // but it's to dangerous to change signature right now
             ex.printStackTrace(System.err);
         } catch (CancellationException ex) {
-            // ideally, the method should throw CancellationException, 
+            // ideally, the method should throw CancellationException,
             // but it's to dangerous to change signature right now
         }
 
@@ -95,7 +95,7 @@ public final class MacroExpanderFactory {
                 result = existing;
             }
         }
-        
+
         return result;
     }
 
@@ -118,7 +118,7 @@ public final class MacroExpanderFactory {
             {7, 3, 3, 3, 8, 8}
         };
         protected final Map<String, String> predefinedMacros =
-                Collections.synchronizedMap(new HashMap<String, String>());
+                Collections.synchronizedMap(new HashMap<>());
         protected final HostInfo hostInfo;
         private final boolean local;
 
@@ -183,57 +183,54 @@ public final class MacroExpanderFactory {
                 c = chars[pos];
 
                 switch (ttable[state][getCharClass(c)]) {
-                    case 0:
+                    case 0 -> {
                         if (c != 0) {
                             res.append(c);
                         }
-                        break;
-                    case 1:
+                    }
+                    case 1 -> {
                         mpos = pos;
                         buf.setLength(0);
                         state = 1;
-                        break;
-                    case 2:
+                    }
+                    case 2 -> {
                         buf.append(c);
                         state = 2;
-                        break;
-                    case 3:
+                    }
+                    case 3 -> {
                         res.append(string.substring(mpos, pos + (c == 0 ? 0 : 1)));
                         buf.setLength(0);
                         state = 0;
-                        break;
-                    case 4:
-                        state = 4;
-                        break;
-                    case 5:
+                    }
+                    case 4 -> state = 4;
+                    case 5 -> {
                         res.append(valueOf(buf.toString().trim(), map));
                         pos--;
                         buf.setLength(0);
                         state = 0;
-                        break;
-                    case 6:
+                    }
+                    case 6 -> {
                         res.append(valueOf(buf.toString().trim(), map));
                         mpos = pos;
                         buf.setLength(0);
                         state = 1;
-                        break;
-                    case 7:
+                    }
+                    case 7 -> {
                         buf.append(c);
                         state = 3;
-                        break;
-                    case 8:
-                        throw new ParseException("Bad substitution", pos); // NOI18N
-                    case 9:
+                    }
+                    case 8 -> throw new ParseException("Bad substitution", pos); // NOI18N
+                    case 9 -> {
                         res.append(valueOf(buf.toString().trim(), map));
                         buf.setLength(0);
                         state = 0;
-                        break;
-                    case 10:
+                    }
+                    case 10 -> {
                         res.append(string.substring(mpos, pos));
                         pos--;
                         buf.setLength(0);
                         state = 0;
-                        break;
+                    }
                 }
                 pos++;
             }
@@ -248,29 +245,30 @@ public final class MacroExpanderFactory {
             String soext;
             String osname;
             switch (hostInfo.getOSFamily()) {
-                case WINDOWS:
+                case WINDOWS -> {
                     soext = "dll"; // NOI18N
                     osname = "Windows"; // NOI18N
-                    break;
-                case MACOSX:
+                }
+                case MACOSX -> {
                     soext = "dylib"; // NOI18N
                     osname = "MacOSX"; // NOI18N
-                    break;
-                case SUNOS:
+                }
+                case SUNOS -> {
                     soext = "so"; // NOI18N
                     osname = "SunOS"; // NOI18N
-                    break;
-                case LINUX:
+                }
+                case LINUX -> {
                     soext = "so"; // NOI18N
                     osname = "Linux"; // NOI18N
-                    break;
-                case FREEBSD:
+                }
+                case FREEBSD -> {
                     soext = "so"; // NOI18N
                     osname = "FreeBSD"; // NOI18N
-                    break;
-                default:
+                }
+                default -> {
                     osname = hostInfo.getOSFamily().name();
                     soext = "so"; // NOI18N
+                }
             }
 
             OS os = hostInfo.getOS();

@@ -25,18 +25,17 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.nativeexecution.api.NativeProcessBuilder;
 import org.netbeans.modules.nativeexecution.api.util.ProcessUtils;
-import org.netbeans.modules.nativeexecution.api.util.SolarisPrivilegesSupport.NotOwnerException;
+import org.netbeans.modules.nativeexecution.api.util.SolarisPrivilegesSupport;
 import org.netbeans.modules.nativeexecution.spi.support.GrantPrivilegesProvider;
 import org.netbeans.modules.nativeexecution.spi.support.GrantPrivilegesProviderFactory;
 import org.netbeans.modules.nativeexecution.sps.impl.RequestPrivilegesTask.RequestPrivilegesTaskParams;
 import org.netbeans.modules.nativeexecution.support.Computable;
 import org.netbeans.modules.nativeexecution.support.Logger;
 import org.netbeans.modules.nativeexecution.support.NativeTaskExecutorService;
-//import org.netbeans.module.nativeexecution.ui.GrantPrivilegesDialog;
-import org.openide.util.Cancellable;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
@@ -45,24 +44,22 @@ public final class RequestPrivilegesTask implements Computable<RequestPrivileges
     private static final java.util.logging.Logger log = Logger.getInstance();
     private WeakReference<GrantPrivilegesProvider> dialogRef = null;
 
+    @Override
     public Boolean compute(RequestPrivilegesTaskParams args) throws InterruptedException {
         final RequestPrivilegesTaskPerformer performer = new RequestPrivilegesTaskPerformer(args);
         final Future<Boolean> result = NativeTaskExecutorService.submit(performer, "RequestPrivilegesTask"); // NOI18N
 
         final ProgressHandle ph = ProgressHandle.createHandle(
-                loc("TaskPrivilegesSupport_Progress_RequestPrivileges"), new Cancellable() { // NOI18N
-
-            public boolean cancel() {
-                return result.cancel(true);
-            }
-        });
+                loc("TaskPrivilegesSupport_Progress_RequestPrivileges"), // NOI18N
+                () -> result.cancel(true)
+        );
 
         ph.start();
 
         try {
             return result.get();
         } catch (ExecutionException ex) {
-            log.fine("ExecutionException in RequestPrivilegesTask : " + ex.toString()); // NOI18N
+            log.log(Level.FINE, "ExecutionException in RequestPrivilegesTask", ex); // NOI18N
         } catch (CancellationException ex) {
             // skip. Will return false
         } finally {
@@ -91,7 +88,7 @@ public final class RequestPrivilegesTask implements Computable<RequestPrivileges
             this.requestedPrivileges = requestedPrivileges;
             this.askForPassword = askForPassword;
 
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
             for (String priv : requestedPrivileges) {
                 sb.append(priv).append(","); // NOI18N
@@ -131,6 +128,8 @@ public final class RequestPrivilegesTask implements Computable<RequestPrivileges
             this.args = args;
         }
 
+        @Override
+        @SuppressWarnings({"AccessingNonPublicFieldOfAnotherObject", "removal"})
         public Boolean call() throws Exception {
             // An attempt to grant privileges using pfexec
             NativeProcessBuilder npb = NativeProcessBuilder.newProcessBuilder(args.support.getExecEnv());
@@ -168,7 +167,7 @@ public final class RequestPrivilegesTask implements Computable<RequestPrivileges
                         Arrays.fill(clearPassword, (char) 0);
                         provider.clearPassword();
                         return Boolean.TRUE;
-                    } catch (NotOwnerException ex) {
+                    } catch (SolarisPrivilegesSupport.NotOwnerException ex) {
                         // wrong password or not enough privileges...
                         // Continue with password requests...
                     }

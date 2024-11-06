@@ -110,7 +110,7 @@ public class WindowsHostInfoProvider implements HostInfoProvider {
 
             try {
                 _cpuNum = Integer.parseInt(env.get("NUMBER_OF_PROCESSORS")); // NOI18N
-            } catch (Exception ex) {
+            } catch (RuntimeException ex) {
             }
 
             cpuNum = _cpuNum;
@@ -212,40 +212,10 @@ public class WindowsHostInfoProvider implements HostInfoProvider {
         }
 
         public void initUserDirs() throws IOException {
-            File _userDirFile = null;
-            String _userDir = null;
             String ioUserDir = System.getProperty("user.home"); // NOI18N
 
-            /**
-             * Some magic with temp dir... In case of non-ascii chars in
-             * username use hashcode instead of plain name as in case of MinGW
-             * (without cygwin) execution may (will) fail...
-             */
-            String username = environment.get("USERNAME"); // NOI18N
-
-            if (username != null) {
-                for (int i = 0; i < username.length(); i++) {
-                    char c = username.charAt(i);
-
-                    if (Character.isDigit(c) || c == '_') {
-                        continue;
-                    }
-
-                    if (c >= 'A' && c <= 'Z') {
-                        continue;
-                    }
-
-                    if (c >= 'a' && c <= 'z') {
-                        continue;
-                    }
-
-                    username = "" + username.hashCode(); // NOI18N
-                    break;
-                }
-            }
-
-            _userDirFile = new File(ioUserDir); // NOI18N
-            _userDir = _userDirFile.getAbsolutePath();
+            File _userDirFile = new File(ioUserDir);
+            String _userDir = _userDirFile.getAbsolutePath();
 
             if (shell != null) {
                 _userDir = WindowsSupport.getInstance().convertToShellPath(_userDir);
@@ -317,6 +287,7 @@ public class WindowsHostInfoProvider implements HostInfoProvider {
         }
 
         @Override
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public Map<String, String> getEnvironment() {
             return environment;
         }

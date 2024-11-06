@@ -593,6 +593,9 @@ jobs:
       - name: ide/docker.api
         run: ant $OPTS -f ide/docker.api test
 
+      - name: ide/dlight.nativeexecution
+        run: ant $OPTS -f ide/dlight.nativeexecution test
+
       - name: ide/docker.ui
         run: ant $OPTS -f ide/docker.ui test
 

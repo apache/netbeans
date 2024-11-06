@@ -613,6 +613,8 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
                     final TypeProvider.Result result = TypeProviderAccessor.DEFAULT.createResult(items, message, context);
                     provider.computeTypeNames(context, result);
                     retry[0] = mergeRetryTimeOut(retry[0], TypeProviderAccessor.DEFAULT.getRetry(result));
+                } catch (Exception ex) {
+                    LOGGER.log(Level.SEVERE, "Provider ''" + provider.getDisplayName() + "'' yields an exception", ex);
                 } finally {
                     current = null;
                 }

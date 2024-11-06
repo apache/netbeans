@@ -25,6 +25,11 @@ import com.oracle.bmc.http.client.HttpRequest;
 import com.oracle.bmc.http.client.Method;
 import com.oracle.bmc.http.client.jersey.JerseyHttpProvider;
 import com.oracle.bmc.http.signing.RequestSigningFilter;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.api.model.KubernetesResourceList;
+import io.fabric8.kubernetes.api.model.batch.v1.CronJob;
+import io.fabric8.kubernetes.api.model.batch.v1.CronJobList;
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientBuilder;
@@ -139,5 +144,16 @@ public class KubernetesUtils {
         } catch (URISyntaxException | UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }
+    }
+    
+    public static KubernetesResource findResource(KubernetesClient client, KubernetesResourceList<? extends HasMetadata> existingResources, String resourceName) {
+        if (resourceName == null) return null;
+        
+        for (HasMetadata resource : existingResources.getItems()) {
+            if (resourceName.equals(resource.getMetadata().getName())) {
+                return resource;
+            }
+        }
+        return null;
     }
 }

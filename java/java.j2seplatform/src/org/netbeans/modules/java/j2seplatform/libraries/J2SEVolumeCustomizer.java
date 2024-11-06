@@ -60,6 +60,7 @@ import org.netbeans.spi.project.libraries.LibraryImplementation;
 import org.netbeans.spi.project.libraries.LibraryStorageArea;
 import org.netbeans.spi.project.libraries.support.LibrariesSupport;
 import org.openide.DialogDescriptor;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.Utilities;
 
 /**
@@ -532,8 +533,25 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
             @NullAllowed final File baseFolder) throws MalformedURLException, URISyntaxException {
         final List<URI> result = new ArrayList<URI>(fileNames.length);
         for (String fileName : fileNames) {
-            final URI uri = pathToURI(baseFolder,fileName,volume);
-            if (uri != null) {
+            final URI uri = pathToURI(baseFolder, fileName, volume);
+            if (volume.equals(J2SELibraryTypeProvider.VOLUME_TYPE_SRC) && (FileUtil.isArchiveFile(uri.toURL()) || FileUtil.isArchiveArtifact(uri.toURL()))) {
+                // Handle src.jars, that hold the sources for multiple jars (observed for the JDK and OpenJFX)
+                URL archiveUrl = uri.toURL();
+                if(FileUtil.isArchiveFile(uri.toURL())) {
+                    archiveUrl = FileUtil.getArchiveRoot(uri.toURL());
+                }
+                FileObject archiveFO = URLMapper.findFileObject(archiveUrl);
+                boolean moduleInfoOnSecondLevel = false;
+                for (FileObject topLevelFolder : archiveFO.getChildren()) {
+                    if (topLevelFolder.isFolder() && topLevelFolder.getFileObject("module-info.java") != null) {
+                        moduleInfoOnSecondLevel = true;
+                        result.add(topLevelFolder.toURI());
+                    }
+                }
+                if(!moduleInfoOnSecondLevel) {
+                    result.add(uri);
+                }
+            } else if (uri != null) {
                 result.add(uri);
             }
         }
@@ -669,9 +687,6 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
             if (uri != null && uri.toString().startsWith("http")) {
                 displayName = uri.toString();
             } else if (uri != null) {
-                if (uri.toString().contains("!/")) {   //NOI18N
-                    uri = LibrariesSupport.getArchiveFile(uri);
-                }
                 boolean broken = false;
                 VolumeContentModel model = (VolumeContentModel)list.getModel();
                 LibraryStorageArea area = model.getArea();

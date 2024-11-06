@@ -19,7 +19,6 @@
 package org.netbeans.modules.nativeexecution.sps.impl;
 
 import java.lang.ref.WeakReference;
-import java.security.acl.NotOwnerException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.Callable;
@@ -29,6 +28,7 @@ import java.util.concurrent.Future;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.nativeexecution.api.NativeProcessBuilder;
 import org.netbeans.modules.nativeexecution.api.util.ProcessUtils;
+import org.netbeans.modules.nativeexecution.api.util.SolarisPrivilegesSupport.NotOwnerException;
 import org.netbeans.modules.nativeexecution.spi.support.GrantPrivilegesProvider;
 import org.netbeans.modules.nativeexecution.spi.support.GrantPrivilegesProviderFactory;
 import org.netbeans.modules.nativeexecution.sps.impl.RequestPrivilegesTask.RequestPrivilegesTaskParams;

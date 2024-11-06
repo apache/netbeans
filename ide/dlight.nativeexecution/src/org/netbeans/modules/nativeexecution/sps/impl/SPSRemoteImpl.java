@@ -27,7 +27,6 @@ import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.security.acl.NotOwnerException;
 import java.util.Collection;
 import org.netbeans.modules.nativeexecution.api.util.ConnectionManager.CancellationException;
 import java.util.logging.Level;

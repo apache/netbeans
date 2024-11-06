@@ -19,7 +19,6 @@
 package org.netbeans.modules.nativeexecution.util;
 
 import java.io.IOException;
-import java.security.acl.NotOwnerException;
 import java.util.Arrays;
 import junit.framework.Test;
 import org.junit.AfterClass;
@@ -29,6 +28,7 @@ import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
 import org.netbeans.modules.nativeexecution.api.util.ConnectionManager;
 import org.netbeans.modules.nativeexecution.api.util.ConnectionManager.CancellationException;
 import org.netbeans.modules.nativeexecution.api.util.SolarisPrivilegesSupport;
+import org.netbeans.modules.nativeexecution.api.util.SolarisPrivilegesSupport.NotOwnerException;
 import org.netbeans.modules.nativeexecution.api.util.SolarisPrivilegesSupportProvider;
 import org.netbeans.modules.nativeexecution.test.ForAllEnvironments;
 import org.netbeans.modules.nativeexecution.test.NativeExecutionBaseTestSuite;

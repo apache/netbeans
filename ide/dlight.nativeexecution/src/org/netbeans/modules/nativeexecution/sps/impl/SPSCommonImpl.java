@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.nativeexecution.sps.impl;
 
-import java.security.acl.NotOwnerException;
 import java.util.Collection;
 import java.util.List;
 import org.netbeans.modules.nativeexecution.api.util.ConnectionManager.CancellationException;

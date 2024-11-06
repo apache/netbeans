@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.nativeexecution.api.util;
 
-import java.security.acl.NotOwnerException;
 import java.util.Collection;
 import java.util.List;
 import org.netbeans.modules.nativeexecution.api.util.ConnectionManager.CancellationException;
@@ -88,4 +87,7 @@ public interface SolarisPrivilegesSupport {
      *  This method is invoked when connection to the ExecutionEnviroment is lost
      */
     public void invalidate();
+
+    public class NotOwnerException extends Exception {
+    }
 }

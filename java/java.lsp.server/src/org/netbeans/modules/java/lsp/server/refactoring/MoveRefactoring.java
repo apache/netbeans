@@ -420,6 +420,9 @@ public final class MoveRefactoring extends CodeRefactoring {
         }
 
         private static Project getSelectedProject(NamedPath selectedProject) {
+            if (selectedProject == null) {
+                return null;
+            }
             try {
                 String path = selectedProject.getPath();
                 return path != null ? FileOwnerQuery.getOwner(Utils.fromUri(path)) : null;
@@ -429,6 +432,9 @@ public final class MoveRefactoring extends CodeRefactoring {
         }
 
         private static FileObject getSelectedRoot(NamedPath selectedRoot) {
+            if (selectedRoot == null) {
+                return null;
+            }
             try {
                 String path = selectedRoot.getPath();
                 return path != null ? Utils.fromUri(path) : null;

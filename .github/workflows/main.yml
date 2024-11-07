@@ -2000,6 +2000,9 @@ jobs:
 #      - name: j2ee.ejbverification
 #        run: ant $OPTS -f enterprise/j2ee.ejbverification test
 
+      - name: j2ee.persistence
+        run: ant $OPTS -f java/j2ee.persistence test
+
 # Fails
 #      - name: j2eeserver
 #        run: ant $OPTS -f enterprise/j2eeserver test

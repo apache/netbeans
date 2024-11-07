@@ -246,7 +246,7 @@ public class ProviderUtilTest extends NbTestCase {
     
     public void testGetProvider5() {
         persistenceUnit5.setProvider(ProviderUtil.DATANUCLEUS_PROVIDER3_0.getProviderClass());
-        assertEquals(ProviderUtil.ECLIPSELINK_PROVIDER2_2, ProviderUtil.getProvider(persistenceUnit5));
+        assertEquals(ProviderUtil.DATANUCLEUS_PROVIDER3_0, ProviderUtil.getProvider(persistenceUnit5));
     }
     
     public void testSetProvider5(){
@@ -260,7 +260,7 @@ public class ProviderUtilTest extends NbTestCase {
     
     public void testGetProvider6() {
         persistenceUnit6.setProvider(ProviderUtil.ECLIPSELINK_PROVIDER3_1.getProviderClass());
-        assertEquals(ProviderUtil.ECLIPSELINK_PROVIDER3_1, ProviderUtil.getProvider(persistenceUnit4));
+        assertEquals(ProviderUtil.ECLIPSELINK_PROVIDER3_1, ProviderUtil.getProvider(persistenceUnit6));
     }
     
     public void testSetProvider6(){

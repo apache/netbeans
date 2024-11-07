@@ -26,7 +26,7 @@
             <code-name-base>org.openide.util.ui.svg</code-name-base>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>org.netbeans.libs.batik.read</code-name-base>
+                    <code-name-base>org.netbeans.libs.jsvg</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>

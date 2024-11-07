@@ -44,7 +44,19 @@ public class SVGLoaderImplTest extends NbTestCase {
         assertNotNull("Image must not load", im);
     }
     
-    public void testLoadImageWithExternalHref() throws Exception {
+    public void testLoadImageWithExternalUseHrefXlink() throws Exception {
+      testLoadImageWithExternalHref("org/openide/util/svg/externalHref.svg");
+    }
+
+    public void testLoadImageWithExternalImageHrefXLink() throws Exception {
+      testLoadImageWithExternalHref("org/openide/util/svg/externalImageHrefXLink.svg");
+    }
+
+    public void testLoadImageWithExternalImageHref() throws Exception {
+      testLoadImageWithExternalHref("org/openide/util/svg/externalImageHref.svg");
+    }
+
+    public void testLoadImageWithExternalHref(String image) throws Exception {
         class H extends Handler {
             List<LogRecord> recorded = new ArrayList<>();
 
@@ -64,7 +76,7 @@ public class SVGLoaderImplTest extends NbTestCase {
         H h = new H();
         Logger.getLogger(ImageUtilities.class.getName()).addHandler(h);
         try {
-            Image im = ImageUtilities.loadImage("org/openide/util/svg/externalHref.svg", false); // NOI18N
+            Image im = ImageUtilities.loadImage(image, false); // NOI18N
             assertNull("Image must not load", im);
         } finally {
             Logger.getLogger(ImageUtilities.class.getName()).removeHandler(h);

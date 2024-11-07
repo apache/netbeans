@@ -23,7 +23,6 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
-import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.io.IOException;
@@ -35,21 +34,17 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
-import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
-import org.apache.batik.bridge.BridgeContext;
-import org.apache.batik.bridge.DocumentLoader;
-import org.apache.batik.bridge.ExternalResourceSecurity;
-import org.apache.batik.bridge.GVTBuilder;
-import org.apache.batik.bridge.NoLoadExternalResourceSecurity;
-import org.apache.batik.bridge.UserAgent;
-import org.apache.batik.bridge.UserAgentAdapter;
-import org.apache.batik.ext.awt.image.GraphicsUtil;
-import org.apache.batik.gvt.GraphicsNode;
-import org.apache.batik.util.ParsedURL;
-import org.apache.batik.util.XMLResourceDescriptor;
+import com.github.weisj.jsvg.SVGDocument;
+import com.github.weisj.jsvg.geometry.size.FloatSize;
+import com.github.weisj.jsvg.parser.LoaderContext;
+import com.github.weisj.jsvg.parser.ResourceLoader;
+import com.github.weisj.jsvg.parser.SVGLoader;
+import com.github.weisj.jsvg.renderer.awt.NullPlatformSupport;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import org.openide.util.CachedHiDPIIcon;
 import org.openide.util.Parameters;
-import org.w3c.dom.Document;
 
 /**
  * An icon loaded from an SVG file resource. Renders in high resolution on HiDPI displays.
@@ -62,62 +57,64 @@ final class SVGIcon extends CachedHiDPIIcon {
     enough to avoid an OutOfMemoryError but large enough to cater for most SVG loading scenarios.
     Photoshop had 10000 pixels as a maximum limit for many years. */
     private static final int MAX_DIMENSION_PIXELS = 8192;
-    // XML document factories are expensive to initialize, so do it once per thread only.
-    private static final ThreadLocal<SAXSVGDocumentFactory> DOCUMENT_FACTORY =
-            new ThreadLocal<SAXSVGDocumentFactory>()
+    /* XML document factories are expensive to initialize, so do it once per thread only. This
+    optimization was originally done for the Batik SVG library, but I suspect it might be beneficial
+    for JSVG as well. The SVGLoader constructor does initialize some XML parser stuff. */
+    private static final ThreadLocal<SVGLoader> SVG_LOADER =
+            new ThreadLocal<SVGLoader>()
     {
         @Override
-        protected SAXSVGDocumentFactory initialValue() {
-            return new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName());
+        protected SVGLoader initialValue() {
+            return new SVGLoader();
         }
     };
 
     private final URL url;
     /**
-     * Cache of the parsed SVG document. Just painting the GraphicsNode is much faster than also
+     * Cache of the parsed SVG document. Just painting the SVGDocument is probably faster than also
      * re-parsing the underlying SVG file, yet we want to avoid keeping potentially complex object
-     * trees in memory for the lifetime of the Icon instance. Thus we allow the GraphicsNode to be
+     * trees in memory for the lifetime of the Icon instance. Thus we allow the SVGDocument to be
      * garbage collected after the first paint. The rasterized bitmap will be cached separately by
      * the superclass.
      */
-    private WeakReference<GraphicsNode> graphicsNodeWeakRef;
+    private WeakReference<SVGDocument> svgDocumentWeakRef;
     /**
-     * A strong reference version of {@link #graphicsNodeWeakRef}, which can be set to ensure that
-     * the latter is not yet garbage collected. Used to ensure that the initially loaded
-     * GraphicsNode is cached at least until the first time the icon is painted. May be null.
+     * A strong reference version of {@link #svgDocumentWeakRef}, which can be set to ensure that
+     * the latter is not yet garbage collected. Used to ensure that the initially loaded SVGDocument
+     * is cached at least until the first time the icon is painted. May be null.
      */
-    private GraphicsNode graphicsNodeStrongRef;
+    private SVGDocument svgDocumentStrongRef;
 
-    private SVGIcon(URL url, GraphicsNode initialGraphicsNode, int width, int height) {
+    private SVGIcon(URL url, SVGDocument initialSVGDocument, int width, int height) {
         super(width, height);
         Parameters.notNull("url", url);
-        Parameters.notNull("initialGraphicsNode", initialGraphicsNode);
+        Parameters.notNull("initialSVGDocument", initialSVGDocument);
         this.url = url;
-        this.graphicsNodeStrongRef = initialGraphicsNode;
-        this.graphicsNodeWeakRef = new WeakReference<GraphicsNode>(initialGraphicsNode);
+        this.svgDocumentStrongRef = initialSVGDocument;
+        this.svgDocumentWeakRef = new WeakReference<SVGDocument>(initialSVGDocument);
     }
 
     public static Icon load(URL url) throws IOException {
         Parameters.notNull("url", url);
         Dimension size = new Dimension();
-        GraphicsNode initialGraphicsNode = loadGraphicsNode(url, size);
-        return new SVGIcon(url, initialGraphicsNode, size.width, size.height);
+        SVGDocument initialSVGDocument = loadSVGDocument(url, size);
+        return new SVGIcon(url, initialSVGDocument, size.width, size.height);
     }
 
     /**
-     * Get the {@code GraphicsNode}, re-loading it from the original resource if a cached instance
+     * Get the {@code SVGDocument}, re-loading it from the original resource if a cached instance
      * is no longer available. Once this method has been called at least once, garbage collection
      * may cause the cache to be cleared.
      */
-    private synchronized GraphicsNode getGraphicsNode() throws IOException {
-        GraphicsNode ret = graphicsNodeWeakRef.get();
+    private synchronized SVGDocument getSVGDocument() throws IOException {
+        SVGDocument ret = svgDocumentWeakRef.get();
         if (ret != null) {
-            // Allow the GraphicsNode to be garbage collected after the initial paint.
-            graphicsNodeStrongRef = null;
+            // Allow the SVGDocument to be garbage collected after the initial paint.
+            svgDocumentStrongRef = null;
             return ret;
         }
-        ret = loadGraphicsNode(url, null);
-        graphicsNodeWeakRef = new WeakReference<GraphicsNode>(ret);
+        ret = loadSVGDocument(url, null);
+        svgDocumentWeakRef = new WeakReference<SVGDocument>(ret);
         return ret;
     }
 
@@ -126,40 +123,50 @@ final class SVGIcon extends CachedHiDPIIcon {
      *
      * @param toSize if not null, will be set to the image's size
      */
-    private static GraphicsNode loadGraphicsNode(URL url, Dimension toSize)
-            throws IOException
-    {
+    private static SVGDocument loadSVGDocument(URL url, Dimension toSize) throws IOException {
         Parameters.notNull("url", url);
-        final GraphicsNode graphicsNode;
-        final Dimension2D documentSize;
-        final Document doc;
+
+        final SVGDocument svgDocument;
+        FloatSize documentSize;
         InputStream is = url.openStream();
         try {
-            // See http://batik.2283329.n4.nabble.com/rendering-directly-to-java-awt-Graphics2D-td3716202.html
-            SAXSVGDocumentFactory factory = DOCUMENT_FACTORY.get();
-            /* Don't provide an URI here; we shouldn't commit to supporting relative links from
-            loaded SVG documents. */
-            doc = factory.createDocument(null, is);
-            // Disallow external resource dereferences
-            UserAgent userAgent = new UserAgentAdapter() {
-              @Override
-              public ExternalResourceSecurity getExternalResourceSecurity(
-                  ParsedURL resourceURL, ParsedURL docURL) {
-                return new NoLoadExternalResourceSecurity();
-              }
+            // Explicitly deny loading of external URLs.
+
+            /* Handle e.g. <image href="https://example.com/image.png"> elements. Tested in
+            testLoadImageWithExternalImageHref. */
+            List<IOException> externalResourceExceptions = new ArrayList<>();
+            ResourceLoader resourceLoader = (URI nnuri) -> {
+              IOException e = new IOException("External resource loading from SVG file not permitted ("+
+                  nnuri + " from " + url + ")");
+              externalResourceExceptions.add(e);
+              throw e;
             };
-            DocumentLoader loader = new DocumentLoader(userAgent);
-            BridgeContext bctx = new BridgeContext(userAgent, loader);
-            try {
-                bctx.setDynamicState(BridgeContext.STATIC);
-                graphicsNode = new GVTBuilder().build(bctx, doc);
-                documentSize = bctx.getDocumentSize();
-            } finally {
-                bctx.dispose();
+            /* Handle e.g. <use xlink:href="http://foobar/not/exists#text"> elements. Tested in
+            testLoadImageWithExternalUseXlinkHref. */
+            DenyingElementLoader elementLoader = new DenyingElementLoader();
+
+            svgDocument = SVG_LOADER.get().load(is, null, LoaderContext.builder()
+                .resourceLoader(resourceLoader)
+                .elementLoader(elementLoader)
+                .build());
+            if (!elementLoader.getAttemptedExternalURLsLoaded().isEmpty()) {
+              throw new IOException("SVG loading failed; external document loading prohibited (" +
+                  elementLoader.getAttemptedExternalURLsLoaded() + ")");
             }
+            if (!externalResourceExceptions.isEmpty()) {
+              IOException e = new IOException("SVG loading failed due to disallowed external resources");
+              for (IOException e2 : externalResourceExceptions) {
+                  e.addSuppressed(e2);
+              }
+              throw e;
+            }
+            if (svgDocument == null) {
+                throw new IOException(
+                        "SVG loading failed for " + url + " (SVGLoader.load returned null)");
+            }
+            documentSize = svgDocument.size();
         } catch (RuntimeException e) {
-            /* Rethrow the many different exceptions that can occur when parsing invalid SVG files;
-            DOMException, BridgeException etc. */
+            /* Rethrow any uncaught exceptions that could be thrown when parsing invalid SVG files. */
             throw new IOException("Error parsing SVG file", e);
         } finally {
             is.close();
@@ -180,7 +187,7 @@ final class SVGIcon extends CachedHiDPIIcon {
             toSize.width = widthLimited;
             toSize.height = heightLimited;
         }
-        return graphicsNode;
+        return svgDocument;
     }
 
     private static RenderingHints createHints() {
@@ -188,7 +195,8 @@ final class SVGIcon extends CachedHiDPIIcon {
         hints.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         hints.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         /* Ensure that outlined strokes (strokes converted to solid shapes) appear the same as
-        regular strokes, as they do during editing in Adobe Illustrator. */
+        regular strokes, as they do during editing in Adobe Illustrator. This hint is also
+        specifically recommended by JSVG's README ( https://github.com/weisJ/jsvg ). */
         hints.put(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
         return new RenderingHints(hints);
     }
@@ -198,15 +206,13 @@ final class SVGIcon extends CachedHiDPIIcon {
             Component c, ColorModel colorModel, int deviceWidth, int deviceHeight, double scale)
     {
         BufferedImage img = createBufferedImage(colorModel, deviceWidth, deviceHeight);
-        /* Use Batik's createGraphics method to improve performance and avoid the
-        "Graphics2D from BufferedImage lacks BUFFERED_IMAGE hint" warning. */
-        final Graphics2D g = GraphicsUtil.createGraphics(img);
+        final Graphics2D g = img.createGraphics();
         try {
             g.scale(scale, scale);
             try {
-                GraphicsNode graphicsNode = getGraphicsNode();
+                SVGDocument svgDocument = getSVGDocument();
                 g.addRenderingHints(createHints());
-                graphicsNode.paint(g);
+                svgDocument.renderWithPlatform(NullPlatformSupport.INSTANCE, g, null);
             } catch (IOException e) {
                 LOG.log(Level.WARNING,
                         "Unexpected exception while re-loading an SVG file that previously loaded successfully", e);

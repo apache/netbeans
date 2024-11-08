@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -38,6 +39,7 @@ import org.netbeans.modules.db.metadata.model.api.Table;
 import org.netbeans.modules.db.metadata.model.api.Tuple;
 import org.netbeans.modules.db.metadata.model.api.View;
 import org.netbeans.modules.db.sql.analyzer.QualIdent;
+import org.netbeans.modules.db.sql.editor.OptionsUtils;
 import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletionResultSet;
 import org.netbeans.modules.db.sql.editor.api.completion.SubstitutionHandler;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
@@ -48,7 +50,7 @@ import org.netbeans.spi.editor.completion.CompletionResultSet;
  */
 public class SQLCompletionItems implements Iterable<SQLCompletionItem> {
 
-    private final List<SQLCompletionItem> items = new ArrayList<SQLCompletionItem>();
+    private final List<SQLCompletionItem> items = new ArrayList<>();
     private final Quoter quoter;
     private final SubstitutionHandler substitutionHandler;
 
@@ -67,32 +69,28 @@ public class SQLCompletionItems implements Iterable<SQLCompletionItem> {
     }
 
     public Set<String> addCatalogs(Metadata metadata, Set<String> restrict, String prefix, final boolean quote, final int substitutionOffset) {
-        Set<String> result = new TreeSet<String>();
-        filterMetadata(metadata.getCatalogs(), restrict, prefix, new Handler<Catalog>() {
-            public void handle(Catalog catalog) {
-                String catalogName = catalog.getName();
-                items.add(SQLCompletionItem.catalog(
-                        catalogName,
-                        doQuote(catalogName, quote),
-                        substitutionOffset,
-                        substitutionHandler));
-            }
+        Set<String> result = new TreeSet<>();
+        filterMetadata(metadata.getCatalogs(), restrict, prefix, (Catalog catalog) -> {
+            String catalogName = catalog.getName();
+            items.add(SQLCompletionItem.catalog(
+                    catalogName,
+                    doQuote(catalogName, quote),
+                    substitutionOffset,
+                    substitutionHandler));
         });
         return result;
     }
 
     public Set<String> addSchemas(Catalog catalog, Set<String> restrict, String prefix, final boolean quote, final int substitutionOffset) {
-        Set<String> result = new TreeSet<String>();
-        filterMetadata(catalog.getSchemas(), restrict, prefix, new Handler<Schema>() {
-            public void handle(Schema schema) {
-                if (!schema.isSynthetic()) {
-                    String schemaName = schema.getName();
-                    items.add(SQLCompletionItem.schema(
-                            schemaName,
-                            doQuote(schemaName, quote),
-                            substitutionOffset,
-                            substitutionHandler));
-                }
+        Set<String> result = new TreeSet<>();
+        filterMetadata(catalog.getSchemas(), restrict, prefix, (Schema schema) -> {
+            if (!schema.isSynthetic()) {
+                String schemaName = schema.getName();
+                items.add(SQLCompletionItem.schema(
+                        schemaName,
+                        doQuote(schemaName, quote),
+                        substitutionOffset,
+                        substitutionHandler));
             }
         });
         return result;
@@ -110,17 +108,15 @@ public class SQLCompletionItems implements Iterable<SQLCompletionItem> {
         final String schema4display = fullyTypedIdent == null ? "" : fullyTypedIdent.getSimpleName () + '.'; // NOI18N
         final int ownOffset = fullyTypedIdent == null ? substitutionOffset :
             substitutionOffset - (fullyTypedIdent.getSimpleName ().length () + 1);
-        filterMetadata(schema.getTables(), restrict, prefix, new Handler<Table>() {
-            public void handle(Table table) {
-                String tableName = table.getName();
-                items.add(SQLCompletionItem.table(
-                        tableName,
-                        doQuote(tableName, quote),
-                        ownOffset,
-                        ownHandler ?
+        filterMetadata(schema.getTables(), restrict, prefix, (Table table) -> {
+            String tableName = table.getName();
+            items.add(SQLCompletionItem.table(
+                    tableName,
+                    doQuote(tableName, quote),
+                    ownOffset,
+                    ownHandler ?
                             new ExtendedSubstitutionHandler (substitutionHandler, schema4display, " (") // NOI18N
                             : substitutionHandler));
-            }
         });
     }
 
@@ -136,26 +132,22 @@ public class SQLCompletionItems implements Iterable<SQLCompletionItem> {
         final String schema4display = fullyTypedIdent == null ? "" : fullyTypedIdent.getSimpleName () + '.'; // NOI18N
         final int ownOffset = fullyTypedIdent == null ? substitutionOffset :
             substitutionOffset - (fullyTypedIdent.getSimpleName ().length () + 1);
-        filterMetadata(schema.getViews(), restrict, prefix, new Handler<View>() {
-            public void handle(View view) {
-                String viewName = view.getName();
-                items.add(SQLCompletionItem.view(
-                        viewName,
-                        doQuote(viewName, quote),
-                        ownOffset,
-                        ownHandler ?
+        filterMetadata(schema.getViews(), restrict, prefix, (View view) -> {
+            String viewName = view.getName();
+            items.add(SQLCompletionItem.view(
+                    viewName,
+                    doQuote(viewName, quote),
+                    ownOffset,
+                    ownHandler ?
                             new ExtendedSubstitutionHandler (substitutionHandler, schema4display, " (") // NOI18N
                             : substitutionHandler));
-            }
         });
     }
 
     public void addAliases(Map<String, QualIdent> aliases, String prefix, final boolean quote, final int substitutionOffset) {
-        filterMap(aliases, null, prefix, new ParamHandler<String, QualIdent>() {
-            public void handle(String alias, QualIdent tableName) {
-                // Issue 145173: do not quote aliases.
-                items.add(SQLCompletionItem.alias(alias, tableName, alias, substitutionOffset, substitutionHandler));
-            }
+        filterMap(aliases, null, prefix, (String alias, QualIdent tableName) -> {
+            // Issue 145173: do not quote aliases.
+            items.add(SQLCompletionItem.alias(alias, tableName, alias, substitutionOffset, substitutionHandler));
         });
     }
 
@@ -170,7 +162,7 @@ public class SQLCompletionItems implements Iterable<SQLCompletionItem> {
     private void addColumns(final Tuple tuple, QualIdent fullyTypedIdent, String prefix, final boolean quote, final int substitutionOffset, final boolean ownHandler) {
         Schema schema = tuple.getParent();
         Catalog catalog = schema.getParent();
-        List<String> parts = new ArrayList<String>(3);
+        List<String> parts = new ArrayList<>(3);
         if (!catalog.isDefault()) {
             parts.add(catalog.getName());
         }
@@ -183,20 +175,18 @@ public class SQLCompletionItems implements Iterable<SQLCompletionItem> {
             fullyTypedIdent.getFirstQualifier () + '.' + fullyTypedIdent.getSecondQualifier (); // NOI18N
         final int ownOffset = fullyTypedIdent == null ? substitutionOffset :
             substitutionOffset - (fullyTypedIdent.getFirstQualifier ().length () + fullyTypedIdent.getSecondQualifier ().length () + 2);
-        filterMetadata(tuple.getColumns(), null, prefix, new Handler<Column>() {
-            public void handle(Column column) {
-                String columnName = column.getName();
-                items.add(SQLCompletionItem.column (
-                        tuple instanceof View,
-                        qualTableName,
-                        columnName,
-                        column.getTypeName(),
-                        doQuote(columnName, quote),
-                        ownOffset,
-                        ownHandler ?
+        filterMetadata(tuple.getColumns(), null, prefix, (Column column) -> {
+            String columnName = column.getName();
+            items.add(SQLCompletionItem.column (
+                    tuple instanceof View,
+                    qualTableName,
+                    columnName,
+                    column.getTypeName(),
+                    doQuote(columnName, quote),
+                    ownOffset,
+                    ownHandler ?
                             new ExtendedSubstitutionHandler (substitutionHandler, table4display + " (", null) // NOI18N
                             : substitutionHandler));
-            }
         });
     }
 
@@ -208,6 +198,7 @@ public class SQLCompletionItems implements Iterable<SQLCompletionItem> {
         resultSet.addAllItems(items);
     }
 
+    @Override
     public Iterator<SQLCompletionItem> iterator() {
         return items.iterator();
     }
@@ -224,8 +215,18 @@ public class SQLCompletionItems implements Iterable<SQLCompletionItem> {
         return text.regionMatches(true, 0, prefix, 0, prefix.length());
     }
 
+    private static boolean containsIgnoreCase(String text, String prefix) {
+        return text.toLowerCase(Locale.ROOT).contains(prefix.toLowerCase(Locale.ROOT));
+    }
+
     private static boolean filter(String string, String prefix) {
-        return prefix == null || startsWithIgnoreCase(string, prefix);
+        if(prefix == null) {
+            return true;
+        } else if (OptionsUtils.isSqlCompletionSubwords()) {
+            return containsIgnoreCase(string, prefix);
+        } else {
+            return startsWithIgnoreCase(string, prefix);
+        }
     }
 
     private static <P> void filterMap(Map<String, P> strings, Set<String> restrict, String prefix, ParamHandler<String, P> handler) {
@@ -267,6 +268,7 @@ public class SQLCompletionItems implements Iterable<SQLCompletionItem> {
             this.prefix = prefix == null ? "" : prefix;
             this.postfix = postfix == null ? "" : postfix;
         }
+        @Override
         public void substituteText (JTextComponent component, int offset, String text) {
             original.substituteText (component, offset, prefix + text + postfix);
         }

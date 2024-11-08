@@ -353,6 +353,7 @@
                 <friend>org.netbeans.modules.cnd.completion</friend>
                 <friend>org.netbeans.modules.cnd.editor</friend>
                 <friend>org.netbeans.modules.csl.api</friend>
+                <friend>org.netbeans.modules.db.sql.editor</friend>
                 <friend>org.netbeans.modules.diff</friend>
                 <friend>org.netbeans.modules.editor.indent.project</friend>
                 <friend>org.netbeans.modules.groovy.grailsproject</friend>

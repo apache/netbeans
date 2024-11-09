@@ -49,10 +49,10 @@ public class CtorAnalyzer implements ElementAnalyzer {
             if ( cancel.get() ){
                 return;
             }
-            boolean isDisposer = AnnotationUtil.hasAnnotation(param, 
-                    AnnotationUtil.DISPOSES_FQN, result.getInfo());
-            boolean isObserver = AnnotationUtil.hasAnnotation(param, 
-                    AnnotationUtil.OBSERVES_FQN, result.getInfo());
+            boolean isDisposer = AnnotationUtil.hasAnnotation(param, AnnotationUtil.DISPOSES_FQN, result.getInfo())
+                    || AnnotationUtil.hasAnnotation(param, AnnotationUtil.DISPOSES_FQN_JAKARTA, result.getInfo());
+            boolean isObserver = AnnotationUtil.hasAnnotation(param, AnnotationUtil.OBSERVES_FQN, result.getInfo())
+                    || AnnotationUtil.hasAnnotation(param, AnnotationUtil.OBSERVES_FQN_JAKARTA, result.getInfo());
             if ( isDisposer || isObserver ){
                 result.requireCdiEnabled(element);
                 String annotation = isDisposer ? AnnotationUtil.DISPOSES : 

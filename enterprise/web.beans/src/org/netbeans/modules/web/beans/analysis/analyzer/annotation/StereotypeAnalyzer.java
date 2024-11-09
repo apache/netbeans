@@ -57,8 +57,8 @@ public class StereotypeAnalyzer extends AbstractScopedAnalyzer implements Annota
             AtomicBoolean cancel , 
             Result result)
     {
-        boolean isStereotype = AnnotationUtil.hasAnnotation(element, 
-                AnnotationUtil.STEREOTYPE_FQN, model.getCompilationController());
+        boolean isStereotype = AnnotationUtil.hasAnnotation(element, AnnotationUtil.STEREOTYPE_FQN, model.getCompilationController())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.STEREOTYPE_FQN_JAKARTA, model.getCompilationController());
         if ( !isStereotype ){
             return;
         }
@@ -100,8 +100,11 @@ public class StereotypeAnalyzer extends AbstractScopedAnalyzer implements Annota
         for (AnnotationMirror annotationMirror : qualifiers) {
             Element annotation = annotationMirror.getAnnotationType().asElement();
             if ( annotation instanceof TypeElement && 
-                    ((TypeElement)annotation).getQualifiedName().contentEquals( 
-                            AnnotationUtil.NAMED))
+                    (
+                        ((TypeElement)annotation).getQualifiedName().contentEquals(AnnotationUtil.NAMED)
+                        || ((TypeElement)annotation).getQualifiedName().contentEquals(AnnotationUtil.NAMED_JAKARTA)
+                    )
+                )
             {
                 continue;
             }
@@ -117,8 +120,10 @@ public class StereotypeAnalyzer extends AbstractScopedAnalyzer implements Annota
     private void checkTyped( TypeElement element, WebBeansModel model,
             Result result )
     {
-        AnnotationMirror typed = AnnotationUtil.getAnnotationMirror(element, 
-                model.getCompilationController(), AnnotationUtil.TYPED);
+        AnnotationMirror typed = AnnotationUtil.getAnnotationMirror(element, model.getCompilationController(), AnnotationUtil.TYPED_JAKARTA);
+        if (typed == null) {
+            typed = AnnotationUtil.getAnnotationMirror(element, model.getCompilationController(), AnnotationUtil.TYPED);
+        }
         if ( typed != null ){
             result.addNotification( Severity.WARNING , element, model,  
                     NbBundle.getMessage(StereotypeAnalyzer.class, 
@@ -205,8 +210,10 @@ public class StereotypeAnalyzer extends AbstractScopedAnalyzer implements Annota
     private void checkName( TypeElement element, WebBeansModel model,
             Result result  )
     {
-        AnnotationMirror named = AnnotationUtil.getAnnotationMirror(element, 
-                AnnotationUtil.NAMED , model.getCompilationController());
+        AnnotationMirror named = AnnotationUtil.getAnnotationMirror(element, AnnotationUtil.NAMED_JAKARTA, model.getCompilationController());
+        if (named == null) {
+            named = AnnotationUtil.getAnnotationMirror(element, AnnotationUtil.NAMED, model.getCompilationController());
+        }
         if ( named == null ){
             return;
         }

@@ -32,7 +32,6 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
 import org.netbeans.api.java.source.CompilationController;
 
 import org.netbeans.api.java.source.ElementHandle;
@@ -141,8 +140,9 @@ public class InterceptedMethodAnalyzer extends AbstractInterceptedElementAnalyze
                             InterceptedMethodAnalyzer.class,
                         "ERR_FinalInterceptedMethod")); // NOI18N
             }
-            if ( finalClass && !AnnotationUtil.hasAnnotation(parent, 
-                    AnnotationUtil.INTERCEPTOR, model.getCompilationController()))
+            if (finalClass
+                    && !AnnotationUtil.hasAnnotation(parent, AnnotationUtil.INTERCEPTOR, model.getCompilationController())
+                    && !AnnotationUtil.hasAnnotation(parent, AnnotationUtil.INTERCEPTOR_JAKARTA, model.getCompilationController()))
             {
                 result.addError(element, model,   
                             NbBundle.getMessage(

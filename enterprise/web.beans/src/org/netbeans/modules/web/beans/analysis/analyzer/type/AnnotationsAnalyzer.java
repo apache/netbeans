@@ -56,10 +56,10 @@ public class AnnotationsAnalyzer implements ClassAnalyzer {
             AtomicBoolean cancel , CdiAnalysisResult result )
     {
         CompilationInfo compInfo = result.getInfo();
-        boolean isDecorator = AnnotationUtil.hasAnnotation(element, 
-                AnnotationUtil.DECORATOR, compInfo);
-        boolean isInterceptor = AnnotationUtil.hasAnnotation(element, 
-                AnnotationUtil.INTERCEPTOR, compInfo);
+        boolean isDecorator = AnnotationUtil.hasAnnotation(element, AnnotationUtil.DECORATOR, compInfo)
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.DECORATOR_JAKARTA, compInfo);
+        boolean isInterceptor = AnnotationUtil.hasAnnotation(element, AnnotationUtil.INTERCEPTOR, compInfo)
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.INTERCEPTOR_JAKARTA, compInfo);
         if ( isDecorator && isInterceptor ){
             result.addError( element, NbBundle.getMessage(
                         AnnotationsAnalyzer.class, "ERR_DecoratorInterceptor"));// NOI18N
@@ -101,8 +101,8 @@ public class AnnotationsAnalyzer implements ClassAnalyzer {
 
     private void checkSpecializes( TypeElement element, CdiAnalysisResult result )
     {
-        if ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES, 
-                result.getInfo()) )
+        if (AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES, result.getInfo())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES_JAKARTA, result.getInfo()))
         {
             result.addNotification(Severity.WARNING, element, NbBundle.getMessage(
                     AnnotationsAnalyzer.class,  
@@ -113,8 +113,8 @@ public class AnnotationsAnalyzer implements ClassAnalyzer {
     private void checkAlternatives( TypeElement element,
             CdiAnalysisResult result )
     {
-        if ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.ALTERNATVE, 
-                result.getInfo()))
+        if (AnnotationUtil.hasAnnotation(element, AnnotationUtil.ALTERNATVE, result.getInfo())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.ALTERNATVE_JAKARTA, result.getInfo()))
         {
             result.addNotification(Severity.WARNING, element, NbBundle.getMessage(
                     AnnotationsAnalyzer.class,  
@@ -123,8 +123,8 @@ public class AnnotationsAnalyzer implements ClassAnalyzer {
     }
 
     private void checkNamed( TypeElement element, CdiAnalysisResult result ) {
-        if ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.NAMED, 
-                result.getInfo()))
+        if ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.NAMED, result.getInfo())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.NAMED_JAKARTA, result.getInfo()))
         {
             result.addNotification(Severity.WARNING, element, NbBundle.getMessage(
                     AnnotationsAnalyzer.class,  "WARN_NamedInterceptorDecorator")); // NOI18N
@@ -142,14 +142,17 @@ public class AnnotationsAnalyzer implements ClassAnalyzer {
             {
                 count +=delegateInjectionPointCount(child, compInfo);
             }
-            else if ( ! AnnotationUtil.hasAnnotation(child, AnnotationUtil.INJECT_FQN, 
-                    compInfo ))
+            else if ( ! (
+                    AnnotationUtil.hasAnnotation(child, AnnotationUtil.INJECT_FQN, compInfo )
+                    || AnnotationUtil.hasAnnotation(child, AnnotationUtil.INJECT_FQN_JAKARTA, compInfo )
+            ))
             {
                 continue;
             }
-            if ( child.getKind() == ElementKind.FIELD && AnnotationUtil.
-                    hasAnnotation(child, AnnotationUtil.DELEGATE_FQN, compInfo ))
-            {
+            if ((child.getKind() == ElementKind.FIELD
+                    && AnnotationUtil.hasAnnotation(child, AnnotationUtil.DELEGATE_FQN, compInfo))
+                    || (child.getKind() == ElementKind.FIELD
+                    && AnnotationUtil.hasAnnotation(child, AnnotationUtil.DELEGATE_FQN_JAKARTA, compInfo))) {
                 count++;
             }
             else if (  child.getKind() ==ElementKind.METHOD )
@@ -170,8 +173,10 @@ public class AnnotationsAnalyzer implements ClassAnalyzer {
         ExecutableElement method = (ExecutableElement)element;
         List<? extends VariableElement> parameters = method.getParameters();
         for (VariableElement par : parameters) {
-            if ( AnnotationUtil.hasAnnotation(par, AnnotationUtil.DELEGATE_FQN, 
-                    compInfo))
+            if ( 
+                    AnnotationUtil.hasAnnotation(par, AnnotationUtil.DELEGATE_FQN, compInfo)
+                    || AnnotationUtil.hasAnnotation(par, AnnotationUtil.DELEGATE_FQN_JAKARTA, compInfo)
+            )
             {
                 result++;
             }
@@ -196,20 +201,19 @@ public class AnnotationsAnalyzer implements ClassAnalyzer {
         List<ExecutableElement> methods = ElementFilter.methodsIn( 
                 element.getEnclosedElements());
         for (ExecutableElement method : methods) {
-            boolean isProducer = AnnotationUtil.hasAnnotation(method, 
-                    AnnotationUtil.PRODUCES_FQN, compInfo);     
+            boolean isProducer = AnnotationUtil.hasAnnotation(method, AnnotationUtil.PRODUCES_FQN, compInfo)
+                    || AnnotationUtil.hasAnnotation(method, AnnotationUtil.PRODUCES_FQN_JAKARTA, compInfo);
             boolean isDisposer = false;
             boolean isObserver = false;
             List<? extends VariableElement> parameters = method.getParameters();
             for (VariableElement param : parameters) {
-                if ( AnnotationUtil.hasAnnotation( param , AnnotationUtil.DISPOSES_FQN, 
-                        compInfo))
-                {
+                if (AnnotationUtil.hasAnnotation(param, AnnotationUtil.DISPOSES_FQN, compInfo)
+                        || AnnotationUtil.hasAnnotation(param, AnnotationUtil.DISPOSES_FQN_JAKARTA, compInfo)) {
                     isDisposer = true;
                     break;
                 }
-                if ( AnnotationUtil.hasAnnotation( param , AnnotationUtil.OBSERVES_FQN, 
-                        compInfo))
+                if ( AnnotationUtil.hasAnnotation( param , AnnotationUtil.OBSERVES_FQN, compInfo)
+                        || AnnotationUtil.hasAnnotation( param , AnnotationUtil.OBSERVES_FQN_JAKARTA, compInfo))
                 {
                     isObserver = true;
                     break;
@@ -260,8 +264,8 @@ public class AnnotationsAnalyzer implements ClassAnalyzer {
         List<VariableElement> fields = ElementFilter.fieldsIn( 
                 element.getEnclosedElements() );
         for (VariableElement field : fields) {
-            if ( AnnotationUtil.hasAnnotation(field, AnnotationUtil.PRODUCES_FQN, 
-                    result.getInfo()))
+            if ( AnnotationUtil.hasAnnotation(field, AnnotationUtil.PRODUCES_FQN_JAKARTA, result.getInfo())
+                    || AnnotationUtil.hasAnnotation(field, AnnotationUtil.PRODUCES_FQN, result.getInfo()))
             {
                 String key= isDecorator ? "ERR_DecoratorHasProducerField":
                     "ERR_IntrerceptorHasProducerField";                 // NOI18N

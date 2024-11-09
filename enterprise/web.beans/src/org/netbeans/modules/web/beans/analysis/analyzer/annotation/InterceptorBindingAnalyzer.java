@@ -49,8 +49,8 @@ public class InterceptorBindingAnalyzer implements AnnotationAnalyzer {
             AtomicBoolean cancel ,
             Result result )
     {
-        if ( !AnnotationUtil.hasAnnotation(element, 
-                AnnotationUtil.INTERCEPTOR_BINDING_FQN , model.getCompilationController()))
+        if (!(AnnotationUtil.hasAnnotation(element, AnnotationUtil.INTERCEPTOR_BINDING_FQN, model.getCompilationController())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.INTERCEPTOR_BINDING_FQN_JAKARTA, model.getCompilationController())))
         {
             return;
         }

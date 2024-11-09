@@ -51,8 +51,8 @@ public class ScopedMethodAnalyzer extends AbstractScopedAnalyzer implements
             TypeElement parent, WebBeansModel model,
             AtomicBoolean cancel,  Result result )
     {
-        if ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN, 
-                model.getCompilationController()))
+        if (AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN, model.getCompilationController())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN_JAKARTA, model.getCompilationController()))
         {
             result.requireCdiEnabled(element,model);
             analyzeScope(element, model, cancel,  result );
@@ -66,7 +66,8 @@ public class ScopedMethodAnalyzer extends AbstractScopedAnalyzer implements
     protected void checkScope( TypeElement scopeElement, Element element,
             WebBeansModel model, AtomicBoolean cancel, Result result )
     {
-        if ( scopeElement.getQualifiedName().contentEquals( AnnotationUtil.DEPENDENT)){
+        if (scopeElement.getQualifiedName().contentEquals(AnnotationUtil.DEPENDENT)
+                || scopeElement.getQualifiedName().contentEquals(AnnotationUtil.DEPENDENT_JAKARTA)) {
             return;
         }
         TypeMirror methodType = element.asType();

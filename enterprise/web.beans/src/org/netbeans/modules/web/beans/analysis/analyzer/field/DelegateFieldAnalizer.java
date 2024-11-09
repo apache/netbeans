@@ -53,22 +53,25 @@ public class DelegateFieldAnalizer implements FieldAnalyzer {
             CdiAnalysisResult result )
     {
         CompilationInfo compInfo = result.getInfo();
-        if (!AnnotationUtil.hasAnnotation(element, AnnotationUtil.DELEGATE_FQN, 
-                compInfo))
+        if (! (AnnotationUtil.hasAnnotation(element, AnnotationUtil.DELEGATE_FQN, compInfo)
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.DELEGATE_FQN_JAKARTA, compInfo)
+            ))
         {
             return;
         }
         result.requireCdiEnabled(element);
-        if (!AnnotationUtil.hasAnnotation(element, AnnotationUtil.INJECT_FQN,
-                compInfo))
+        if (! (AnnotationUtil.hasAnnotation(element, AnnotationUtil.INJECT_FQN, compInfo)
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.INJECT_FQN_JAKARTA, compInfo)
+        ))
         {
             result.addError(element,  NbBundle.getMessage(
                             DelegateFieldAnalizer.class,
                             "ERR_DelegateHasNoInject"));        // NOI18N
         }
         Element clazz = element.getEnclosingElement();
-        if (!AnnotationUtil.hasAnnotation(clazz, AnnotationUtil.DECORATOR,
-                compInfo))
+        if (! (AnnotationUtil.hasAnnotation(clazz, AnnotationUtil.DECORATOR, compInfo)
+                || AnnotationUtil.hasAnnotation(clazz, AnnotationUtil.DECORATOR_JAKARTA, compInfo)
+        ))
         {
             result.addError(element,  NbBundle.getMessage(
                             DelegateFieldAnalizer.class,

@@ -46,7 +46,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class InterceptorBindingsTest extends CommonTestCase {
 
     public InterceptorBindingsTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
 
     public void testClassInterceptorBindings() throws IOException{

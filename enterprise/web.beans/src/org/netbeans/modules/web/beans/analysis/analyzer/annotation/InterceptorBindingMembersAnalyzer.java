@@ -50,8 +50,8 @@ public class InterceptorBindingMembersAnalyzer implements AnnotationAnalyzer {
     public void analyze( TypeElement element, AtomicBoolean cancel,
             CdiAnalysisResult result )
     {
-        if ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.INTERCEPTOR_BINDING_FQN, 
-                result.getInfo()))
+        if (AnnotationUtil.hasAnnotation(element, AnnotationUtil.INTERCEPTOR_BINDING_FQN, result.getInfo())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.INTERCEPTOR_BINDING_FQN_JAKARTA, result.getInfo()))
         {
             checkMembers(element, result, NbBundle.getMessage(
                     QualifierAnalyzer.class,  
@@ -78,8 +78,8 @@ public class InterceptorBindingMembersAnalyzer implements AnnotationAnalyzer {
             if ( !warning ){
                 continue;
             }
-            if (AnnotationUtil.hasAnnotation(executableElement, 
-                    AnnotationUtil.NON_BINDING,  result.getInfo()) )
+            if (AnnotationUtil.hasAnnotation(executableElement, AnnotationUtil.NON_BINDING, result.getInfo())
+                    || AnnotationUtil.hasAnnotation(executableElement, AnnotationUtil.NON_BINDING_JAKARTA, result.getInfo()))
             {
                 continue;
             }

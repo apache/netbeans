@@ -49,14 +49,14 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class ModelTest extends CommonTestCase {
 
     public ModelTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
     
     public void testInjectionPointInitialization() throws MetadataModelException, 
         IOException, InterruptedException 
     {
         createQualifier("CustomBinding");
-        
+
         TestUtilities.copyStringToFileObject(srcFO, "foo/CustomClass.java",
                 "package foo; " +
                 "import javax.enterprise.inject.*; "+
@@ -65,44 +65,44 @@ public class ModelTest extends CommonTestCase {
                 " @Inject @foo.CustomBinding Object myFieldA = new Object();  "+
                 " @Inject @foo.CustomBinding Object myFieldB ;  "+
                 "}");
-        
+
         TestUtilities.copyStringToFileObject(srcFO, "foo/One.java",
                 "package foo; " +
                 "@foo.CustomBinding " +
                 "public class One  {}" );
-        
-        
+
+
         TestWebBeansModelImpl modelImpl = createModelImpl();
         MetadataModel<WebBeansModel> testModel = modelImpl.createTestModel();
-        
+
         testModel.runReadAction( new MetadataModelAction<WebBeansModel,Void>(){
-    
+
             @Override
             public Void run( WebBeansModel model ) throws Exception {
                 TypeMirror mirror = model.resolveType( "foo.CustomClass" );
                 Element clazz = ((DeclaredType)mirror).asElement();
                 List<VariableElement> fields = ElementFilter.fieldsIn(
                         clazz.getEnclosedElements());
-                Map<String,VariableElement> variables = 
+                Map<String,VariableElement> variables =
                     new HashMap<String, VariableElement>();
                 for (VariableElement field : fields) {
                     variables.put(field.getSimpleName().toString(), field);
                 }
                 VariableElement fieldA = variables.get("myFieldA");
                 assertNotNull( fieldA );
-                DependencyInjectionResult result = model.lookupInjectables(fieldA, 
+                DependencyInjectionResult result = model.lookupInjectables(fieldA,
                         null, new AtomicBoolean(false));
                 assertEquals(DependencyInjectionResult.ResultKind.INJECTABLE_RESOLVED,
                         result.getKind());
-                
+
                 VariableElement fieldB = variables.get("myFieldB");
                 assertNotNull( fieldB );
                 result = model.lookupInjectables(fieldB, null, new AtomicBoolean(false));
-                assertEquals(DependencyInjectionResult.ResultKind.INJECTABLE_RESOLVED,  
+                assertEquals(DependencyInjectionResult.ResultKind.INJECTABLE_RESOLVED,
                         result.getKind());
                 return null;
             }
-    
+
         });
     }
     

@@ -61,14 +61,22 @@ public class ArchiveTypeBindingTypeFilter<T extends Element> extends Filter<T> {
                         Element element = iterator.next();
                         //TODO: reqwrite with ScopeChecker, avoid duplicates
                         boolean isNormalScopeOrScopeOrSingleton = AnnotationUtil.getAnnotationMirror(element, compInfo,
-                                AnnotationUtil.NORMAL_SCOPE_FQN, 
-                                AnnotationUtil.SCOPE_FQN, 
-                                AnnotationUtil.REQUEST_SCOPE_FQN, 
+                                AnnotationUtil.NORMAL_SCOPE_FQN,
+                                AnnotationUtil.NORMAL_SCOPE_FQN_JAKARTA,
+                                AnnotationUtil.SCOPE_FQN,
+                                AnnotationUtil.SCOPE_FQN_JAKARTA,
+                                AnnotationUtil.REQUEST_SCOPE_FQN,
+                                AnnotationUtil.REQUEST_SCOPE_FQN_JAKARTA,
                                 AnnotationUtil.SESSION_SCOPE_FQN,
-                                AnnotationUtil.APPLICATION_SCOPE_FQN, 
-                                AnnotationUtil.CONVERSATION_SCOPE_FQN, 
+                                AnnotationUtil.SESSION_SCOPE_FQN_JAKARTA,
+                                AnnotationUtil.APPLICATION_SCOPE_FQN,
+                                AnnotationUtil.APPLICATION_SCOPE_FQN_JAKARTA,
+                                AnnotationUtil.CONVERSATION_SCOPE_FQN,
+                                AnnotationUtil.CONVERSATION_SCOPE_FQN_JAKARTA,
                                 AnnotationUtil.DEPENDENT_SCOPE_FQN,
-                                AnnotationUtil.CDISINGLETON) != null;
+                                AnnotationUtil.DEPENDENT_SCOPE_FQN_JAKARTA,
+                                AnnotationUtil.CDISINGLETON,
+                                AnnotationUtil.CDISINGLETON_JAKARTA) != null;
                         if (isNormalScopeOrScopeOrSingleton) {
                             continue;
                         } 

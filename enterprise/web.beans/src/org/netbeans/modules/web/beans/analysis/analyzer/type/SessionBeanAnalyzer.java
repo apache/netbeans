@@ -45,18 +45,20 @@ public class SessionBeanAnalyzer implements ClassAnalyzer {
             WebBeansModel model, AtomicBoolean cancel ,
             Result result )
     {
-        boolean isSingleton = AnnotationUtil.hasAnnotation(element, 
-                AnnotationUtil.SINGLETON, model.getCompilationController());
-        boolean isStateless = AnnotationUtil.hasAnnotation(element, 
-                AnnotationUtil.STATELESS, model.getCompilationController());
+        boolean isSingleton = AnnotationUtil.hasAnnotation(element, AnnotationUtil.SINGLETON, model.getCompilationController())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.SINGLETON_JAKARTA, model.getCompilationController());
+        boolean isStateless = AnnotationUtil.hasAnnotation(element, AnnotationUtil.STATELESS, model.getCompilationController())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.STATELESS_JAKARTA, model.getCompilationController());
         if ( cancel.get() ){
             return;
         }
         try {
             String scope = model.getScope( element );
             if ( isSingleton ) {
-                if ( AnnotationUtil.APPLICATION_SCOPED.equals( scope ) || 
-                        AnnotationUtil.DEPENDENT.equals( scope ) )
+                if ( AnnotationUtil.APPLICATION_SCOPED.equals( scope ) 
+                        || AnnotationUtil.DEPENDENT.equals( scope )
+                        || AnnotationUtil.APPLICATION_SCOPED_JAKARTA.equals( scope )
+                        || AnnotationUtil.DEPENDENT_JAKARTA.equals( scope ) )
                 {
                     return;
                 }
@@ -66,7 +68,8 @@ public class SessionBeanAnalyzer implements ClassAnalyzer {
                             "ERR_InvalidSingletonBeanScope"));              // NOI18N
             }
             else if ( isStateless ) {
-                if ( !AnnotationUtil.DEPENDENT.equals( scope ) )
+                if (!AnnotationUtil.DEPENDENT.equals(scope)
+                        && !AnnotationUtil.DEPENDENT_JAKARTA.equals(scope))
                 {
                     result.addError( element, model,   
                         NbBundle.getMessage(SessionBeanAnalyzer.class, 

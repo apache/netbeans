@@ -45,14 +45,16 @@ public class NamedModelAnalyzer implements ClassAnalyzer {
             WebBeansModel model, AtomicBoolean cancel,
             Result result )
     {
-        if ( !AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES, 
-                model.getCompilationController()))
+        if ( ! ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES, model.getCompilationController()))
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES_JAKARTA, model.getCompilationController()))
         {
             return;
         }
         result.requireCdiEnabled(element, model);
-        if ( !AnnotationUtil.hasAnnotation(element, AnnotationUtil.NAMED, 
-                model.getCompilationController()))
+        if ( !(
+                AnnotationUtil.hasAnnotation(element, AnnotationUtil.NAMED, model.getCompilationController())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.NAMED_JAKARTA, model.getCompilationController())
+            ))
         {
             return;
         }

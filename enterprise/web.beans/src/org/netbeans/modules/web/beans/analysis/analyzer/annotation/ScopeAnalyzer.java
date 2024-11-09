@@ -43,10 +43,10 @@ public class ScopeAnalyzer implements AnnotationAnalyzer {
             CdiAnalysisResult result)
     {
         CompilationInfo compInfo = result.getInfo();
-        boolean isScope = AnnotationUtil.hasAnnotation(element, 
-                AnnotationUtil.SCOPE_FQN , compInfo);
-        boolean isNormalScope = AnnotationUtil.hasAnnotation(element, 
-                AnnotationUtil.NORMAL_SCOPE_FQN, compInfo);
+        boolean isScope = AnnotationUtil.hasAnnotation(element, AnnotationUtil.SCOPE_FQN, compInfo)
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.SCOPE_FQN_JAKARTA, compInfo);
+        boolean isNormalScope = AnnotationUtil.hasAnnotation(element, AnnotationUtil.NORMAL_SCOPE_FQN, compInfo)
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.NORMAL_SCOPE_FQN_JAKARTA, compInfo);
         if ( isScope || isNormalScope ){
             result.requireCdiEnabled(element);
             ScopeTargetAnalyzer analyzer = new ScopeTargetAnalyzer(element, 

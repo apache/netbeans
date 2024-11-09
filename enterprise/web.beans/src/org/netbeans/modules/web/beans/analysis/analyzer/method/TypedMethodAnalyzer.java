@@ -85,8 +85,8 @@ public class TypedMethodAnalyzer extends AbstractTypedAnalyzer implements
             List<TypeMirror> restrictedTypes, AtomicBoolean cancel , CdiAnalysisResult result )
     {
         CompilationInfo compInfo = result.getInfo();
-        if (!AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN, 
-                compInfo))
+        if (!AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN, compInfo)
+                && !AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN_JAKARTA, compInfo))
         {
             return;
         }

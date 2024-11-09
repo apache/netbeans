@@ -58,8 +58,8 @@ public class DelegateMethodAnalyzer implements MethodAnalyzer {
             if (cancel.get()) {
                 return;
             }
-            if (AnnotationUtil.hasAnnotation(param,
-                    AnnotationUtil.DELEGATE_FQN, result.getInfo()))
+            if (AnnotationUtil.hasAnnotation(param, AnnotationUtil.DELEGATE_FQN_JAKARTA, result.getInfo())
+                    || AnnotationUtil.hasAnnotation(param, AnnotationUtil.DELEGATE_FQN, result.getInfo()))
             {
                 result.requireCdiEnabled(element);
                 if (cancel.get()) {
@@ -90,8 +90,8 @@ public class DelegateMethodAnalyzer implements MethodAnalyzer {
             ExecutableElement element, VariableElement param,
             CdiAnalysisResult result)
     {
-        if ( !AnnotationUtil.hasAnnotation(parent, AnnotationUtil.DECORATOR, 
-                result.getInfo()))
+        if ( ! ( AnnotationUtil.hasAnnotation(parent, AnnotationUtil.DECORATOR, result.getInfo())
+                || AnnotationUtil.hasAnnotation(parent, AnnotationUtil.DECORATOR_JAKARTA, result.getInfo())))
         {
             result.addError( param, 
                 NbBundle.getMessage(DelegateFieldAnalizer.class, 
@@ -126,8 +126,8 @@ public class DelegateMethodAnalyzer implements MethodAnalyzer {
         if ( element.getKind() == ElementKind.CONSTRUCTOR ){
             return;
         }
-        if ( !AnnotationUtil.hasAnnotation(element, AnnotationUtil.INJECT_FQN, 
-                result.getInfo()))
+        if (!(AnnotationUtil.hasAnnotation(element, AnnotationUtil.INJECT_FQN, result.getInfo())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.INJECT_FQN_JAKARTA, result.getInfo())))
         {
             result.addError( param, 
                 NbBundle.getMessage(DelegateMethodAnalyzer.class, 

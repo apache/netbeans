@@ -78,7 +78,7 @@ public class InjectionPointParameterAnalyzer
                         return;
                     }
                     if (!model.isDynamicInjectionPoint(var)) {
-                        isDelegate =AnnotationUtil.isDelegate(var, parent, model);
+                        isDelegate = AnnotationUtil.isDelegate(var, parent, model);
                         if (!checkBuiltInBeans(var,
                                 getParameterType(var, element, parent,
                                         model.getCompilationController()),
@@ -103,8 +103,9 @@ public class InjectionPointParameterAnalyzer
                     }
                     checkInjectionPointMetadata( var, element, parent , model , 
                             cancel , result );
-                    if ( isDelegate || AnnotationUtil.hasAnnotation(element, 
-                            AnnotationUtil.DELEGATE_FQN, model.getCompilationController()))
+                    if ( isDelegate
+                            || AnnotationUtil.hasAnnotation(element, AnnotationUtil.DELEGATE_FQN, model.getCompilationController())
+                            || AnnotationUtil.hasAnnotation(element, AnnotationUtil.DELEGATE_FQN_JAKARTA, model.getCompilationController()))
                     {
                         return;
                     }
@@ -173,8 +174,10 @@ public class InjectionPointParameterAnalyzer
             ExecutableElement method, TypeElement parent, WebBeansModel model,
             AtomicBoolean cancel , Result result )
     {
-        TypeElement injectionPointType = model.getCompilationController()
-                .getElements().getTypeElement(AnnotationUtil.INJECTION_POINT);
+        TypeElement injectionPointType = model.getCompilationController().getElements().getTypeElement(AnnotationUtil.INJECTION_POINT_JAKARTA);
+        if (injectionPointType == null) {
+            injectionPointType = model.getCompilationController().getElements().getTypeElement(AnnotationUtil.INJECTION_POINT);
+        }
         if (injectionPointType == null) {
             return;
         }
@@ -194,7 +197,8 @@ public class InjectionPointParameterAnalyzer
                 .getAnnotationsByType(qualifiers);
         boolean hasDefault = model.hasImplicitDefaultQualifier(varElement);
         if (!hasDefault
-                && qualifiersFqns.containsKey(AnnotationUtil.DEFAULT_FQN))
+                && (qualifiersFqns.containsKey(AnnotationUtil.DEFAULT_FQN)
+                || qualifiersFqns.containsKey(AnnotationUtil.DEFAULT_FQN_JAKARTA)))
         {
             hasDefault = true;
         }
@@ -203,7 +207,8 @@ public class InjectionPointParameterAnalyzer
         }
         try {
             String scope = model.getScope(parent);
-            if (scope != null && !AnnotationUtil.DEPENDENT.equals(scope)) {
+            if (scope != null && !AnnotationUtil.DEPENDENT.equals(scope)
+                    && !AnnotationUtil.DEPENDENT_JAKARTA.equals(scope)) {
                 result.addError(var, method, model, 
                         NbBundle.getMessage(InjectionPointParameterAnalyzer.class,"ERR_WrongQualifierInjectionPointMeta")); // NOI18N
             }
@@ -217,9 +222,13 @@ public class InjectionPointParameterAnalyzer
     private void checkName( ExecutableElement element, VariableElement var,
             WebBeansModel model, Result result)
     {
-        AnnotationMirror annotation = AnnotationUtil.getAnnotationMirror( 
-                var , AnnotationUtil.NAMED, model.getCompilationController());
-        if ( annotation!= null){
+        AnnotationMirror annotation = AnnotationUtil.getAnnotationMirror(
+                var, AnnotationUtil.NAMED_JAKARTA, model.getCompilationController());
+        if (annotation == null) {
+            annotation = AnnotationUtil.getAnnotationMirror(
+                    var, AnnotationUtil.NAMED, model.getCompilationController());
+        }
+        if (annotation != null) {
             result.addNotification( Severity.WARNING , var, element , model,  
                         NbBundle.getMessage(InjectionPointAnalyzer.class, 
                                 "WARN_NamedInjectionPoint"));                       // NOI18N

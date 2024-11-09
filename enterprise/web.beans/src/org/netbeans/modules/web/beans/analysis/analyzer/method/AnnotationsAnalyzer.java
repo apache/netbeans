@@ -66,10 +66,10 @@ public class AnnotationsAnalyzer implements MethodAnalyzer {
             CdiAnalysisResult result )
     {
         CompilationInfo compInfo = result.getInfo();
-        boolean isProducer = AnnotationUtil.hasAnnotation(element, 
-                AnnotationUtil.PRODUCES_FQN, compInfo);
-        boolean isInitializer = AnnotationUtil.hasAnnotation(element, 
-                AnnotationUtil.INJECT_FQN, compInfo);
+        boolean isProducer = AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN, compInfo)
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN_JAKARTA, compInfo);
+        boolean isInitializer = AnnotationUtil.hasAnnotation(element, AnnotationUtil.INJECT_FQN, compInfo)
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.INJECT_FQN_JAKARTA, compInfo);
         int observesCount = 0;
         int disposesCount = 0;
         List<? extends VariableElement> parameters = element.getParameters();
@@ -77,13 +77,13 @@ public class AnnotationsAnalyzer implements MethodAnalyzer {
             if ( cancel.get() ){
                 return;
             }
-            if ( AnnotationUtil.hasAnnotation( param, AnnotationUtil.OBSERVES_FQN, 
-                    compInfo))
+            if ( AnnotationUtil.hasAnnotation( param, AnnotationUtil.OBSERVES_FQN, compInfo)
+                    || AnnotationUtil.hasAnnotation( param, AnnotationUtil.OBSERVES_FQN_JAKARTA, compInfo))
             {
                 observesCount++;
             }
-            if ( AnnotationUtil.hasAnnotation( param, AnnotationUtil.DISPOSES_FQN, 
-                    compInfo))
+            if (AnnotationUtil.hasAnnotation(param, AnnotationUtil.DISPOSES_FQN, compInfo)
+                    || AnnotationUtil.hasAnnotation(param, AnnotationUtil.DISPOSES_FQN_JAKARTA, compInfo))
             {
                 disposesCount++;
             }

@@ -53,8 +53,8 @@ public class InterceptedBeanAnalyzer extends AbstractInterceptedElementAnalyzer
             WebBeansModel model, AtomicBoolean cancel,
             Result result )
     {
-        if ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.INTERCEPTOR, 
-                model.getCompilationController() ))
+        if (AnnotationUtil.hasAnnotation(element, AnnotationUtil.INTERCEPTOR, model.getCompilationController())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.INTERCEPTOR_JAKARTA, model.getCompilationController()))
         {
             result.requireCdiEnabled(element, model);
             // rule should not be applied to interceptor 

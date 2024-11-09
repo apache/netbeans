@@ -123,8 +123,8 @@ class MemberCheckerFilter<T extends Element> extends Filter<T> {
             
             @Override
             public boolean visit( ExecutableElement overridenElement ) {
-                if ( FieldInjectionPointLogic.DEFAULT_QUALIFIER_ANNOTATION.
-                        equals( annotationName))
+                if (FieldInjectionPointLogic.DEFAULT_QUALIFIER_ANNOTATION.equals(annotationName)
+                        || FieldInjectionPointLogic.DEFAULT_QUALIFIER_ANNOTATION_JAKARTA.equals(annotationName))
                 {
                     if ( AnnotationObjectProvider.checkSpecializedDefault(
                             overridenElement, helper))

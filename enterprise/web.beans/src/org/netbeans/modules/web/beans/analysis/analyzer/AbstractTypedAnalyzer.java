@@ -67,8 +67,8 @@ public abstract class AbstractTypedAnalyzer {
         if ( cancel.get()){
             return;
         }
-        if ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES, 
-                compInfo))
+        if (AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES, compInfo)
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES_JAKARTA, compInfo))
         {
             result.requireCdiEnabled(element);
             checkSpecializes( element , elementType , list,  cancel , result );
@@ -118,8 +118,10 @@ public abstract class AbstractTypedAnalyzer {
     protected List<TypeMirror> getRestrictedTypes(Element element, 
             CompilationInfo compInfo , AtomicBoolean cancel)
     {
-        AnnotationMirror typedMirror = AnnotationUtil.getAnnotationMirror(element, 
-                AnnotationUtil.TYPED, compInfo);
+        AnnotationMirror typedMirror = AnnotationUtil.getAnnotationMirror(element, AnnotationUtil.TYPED_JAKARTA, compInfo);
+        if (typedMirror == null) {
+            typedMirror = AnnotationUtil.getAnnotationMirror(element, AnnotationUtil.TYPED, compInfo);
+        }
         if ( typedMirror == null ){
             return null;
         }

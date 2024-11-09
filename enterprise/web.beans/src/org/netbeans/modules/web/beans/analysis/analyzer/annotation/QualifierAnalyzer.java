@@ -49,8 +49,8 @@ public class QualifierAnalyzer extends InterceptorBindingMembersAnalyzer {
     public void analyze( TypeElement element, AtomicBoolean cancel,
             CdiAnalysisResult result )
     {
-        if ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.QUALIFIER_FQN, 
-                result.getInfo()))
+        if (AnnotationUtil.hasAnnotation(element, AnnotationUtil.QUALIFIER_FQN, result.getInfo())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.QUALIFIER_FQN_JAKARTA, result.getInfo()))
         {
             result.requireCdiEnabled(element);
             QualifierTargetAnalyzer analyzer = new QualifierTargetAnalyzer(element, 

@@ -51,8 +51,10 @@ public class CtorsAnalyzer implements ClassAnalyzer {
             if ( cancel.get() ){
                 return;
             }
-            if ( AnnotationUtil.hasAnnotation( ctor , AnnotationUtil.INJECT_FQN, 
-                    result.getInfo()))
+            if (
+                    AnnotationUtil.hasAnnotation( ctor , AnnotationUtil.INJECT_FQN, result.getInfo())
+                    || AnnotationUtil.hasAnnotation( ctor , AnnotationUtil.INJECT_FQN_JAKARTA, result.getInfo())
+            )
             {
                 result.requireCdiEnabled( ctor );
                 injectCtorCount++;

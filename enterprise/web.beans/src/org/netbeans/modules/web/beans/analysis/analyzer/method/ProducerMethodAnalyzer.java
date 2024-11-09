@@ -50,8 +50,8 @@ public class ProducerMethodAnalyzer extends AbstractProducerAnalyzer
     public void analyze( ExecutableElement element, TypeMirror returnType,
             TypeElement parent,  AtomicBoolean cancel , CdiAnalysisResult result )
     {
-        if  ( !AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN, 
-                result.getInfo() ))
+        if (!(AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN, result.getInfo())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN_JAKARTA, result.getInfo())))
         {
             return;
         }
@@ -90,8 +90,8 @@ public class ProducerMethodAnalyzer extends AbstractProducerAnalyzer
     
     private void checkSpecializes(ExecutableElement element, CdiAnalysisResult result )
     {
-        if ( !AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES, 
-                result.getInfo() ))
+        if (!(AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES, result.getInfo())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES_JAKARTA, result.getInfo())))
         {
             return;
         }
@@ -112,9 +112,9 @@ public class ProducerMethodAnalyzer extends AbstractProducerAnalyzer
         TypeElement containingClass = compInfo.getElementUtilities().
             enclosingTypeElement( element );
         TypeMirror typeDirectSuper = containingClass.getSuperclass();
-        if ( !superClass.equals(compInfo.getTypes().asElement(typeDirectSuper)) || 
-                !AnnotationUtil.hasAnnotation(overridenMethod, 
-                        AnnotationUtil.PRODUCES_FQN, compInfo))
+        if (!superClass.equals(compInfo.getTypes().asElement(typeDirectSuper))
+                || (!AnnotationUtil.hasAnnotation(overridenMethod, AnnotationUtil.PRODUCES_FQN, compInfo)
+                && !AnnotationUtil.hasAnnotation(overridenMethod, AnnotationUtil.PRODUCES_FQN_JAKARTA, compInfo)))
         {
             result.addError( element, NbBundle.getMessage(
                         ProducerMethodAnalyzer.class, 

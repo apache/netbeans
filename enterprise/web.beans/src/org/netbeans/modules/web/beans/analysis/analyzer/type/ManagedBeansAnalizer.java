@@ -47,6 +47,7 @@ import org.openide.util.NbBundle;
 public class ManagedBeansAnalizer implements ClassAnalyzer {
     
     private static final String EXTENSION = "javax.enterprise.inject.spi.Extension";  //NOI18N
+    private static final String EXTENSION_JAKARTA = "jakarta.enterprise.inject.spi.Extension";  //NOI18N
     
     /* (non-Javadoc)
      * @see org.netbeans.modules.web.beans.analysis.analyzer.ClassModelAnalyzer.ClassAnalyzer#analyze(javax.lang.model.element.TypeElement, javax.lang.model.element.TypeElement, org.netbeans.modules.web.beans.api.model.WebBeansModel, java.util.List, org.netbeans.api.java.source.CompilationInfo, java.util.concurrent.atomic.AtomicBoolean)
@@ -99,8 +100,10 @@ public class ManagedBeansAnalizer implements ClassAnalyzer {
     private void checkImplementsExtension( TypeElement element,
             WebBeansModel model, Result result )
     {
-        TypeElement extension = model.getCompilationController().getElements().
-            getTypeElement(EXTENSION);
+        TypeElement extension = model.getCompilationController().getElements().getTypeElement(EXTENSION_JAKARTA);
+        if (extension == null) {
+            extension = model.getCompilationController().getElements().getTypeElement(EXTENSION);
+        }
         if ( extension == null ){
             return;
         }
@@ -117,12 +120,12 @@ public class ManagedBeansAnalizer implements ClassAnalyzer {
             WebBeansModel model, Result result )
     {
         Set<Modifier> modifiers = element.getModifiers();
-        if ( modifiers.contains( Modifier.ABSTRACT )){
-            if ( AnnotationUtil.hasAnnotation(element, 
-                    AnnotationUtil.DECORATOR, model.getCompilationController()) ){
+        if (modifiers.contains(Modifier.ABSTRACT)) {
+            if (AnnotationUtil.hasAnnotation(element, AnnotationUtil.DECORATOR, model.getCompilationController())
+                    || AnnotationUtil.hasAnnotation(element, AnnotationUtil.DECORATOR_JAKARTA, model.getCompilationController())) {
                 return;
             }
-                
+
             // element is abstract and has no Decorator annotation
             result.addNotification( Severity.WARNING, element, model,
                         NbBundle.getMessage(ManagedBeansAnalizer.class, 
@@ -158,8 +161,10 @@ public class ManagedBeansAnalizer implements ClassAnalyzer {
             if ( parameters.size() ==0 ){
                 return;
             }
-            if ( AnnotationUtil.hasAnnotation(ctor, AnnotationUtil.INJECT_FQN, 
-                    model.getCompilationController()))
+            if (
+                    AnnotationUtil.hasAnnotation(ctor, AnnotationUtil.INJECT_FQN, model.getCompilationController())
+                    || AnnotationUtil.hasAnnotation(ctor, AnnotationUtil.INJECT_FQN_JAKARTA, model.getCompilationController())
+            )
             {
                 return;
             }

@@ -94,8 +94,10 @@ public class InjectionPointAnalyzer extends AbstractDecoratorAnalyzer<Void> impl
                                 modelHandle.resolve(result.getInfo()));
                     }
                 }
-                else if ( isDelegate || AnnotationUtil.hasAnnotation(element, 
-                        AnnotationUtil.DELEGATE_FQN, model.getCompilationController()))
+                else if ( isDelegate
+                        || AnnotationUtil.hasAnnotation(element, AnnotationUtil.DELEGATE_FQN, model.getCompilationController())
+                        || AnnotationUtil.hasAnnotation(element, AnnotationUtil.DELEGATE_FQN_JAKARTA, model.getCompilationController())
+                )
                 {
                     return;
                 }
@@ -122,8 +124,10 @@ public class InjectionPointAnalyzer extends AbstractDecoratorAnalyzer<Void> impl
         if( cancel.get() ){
             return;
         }
-        if ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.NAMED, 
-                model.getCompilationController()) )
+        if (
+                AnnotationUtil.hasAnnotation(element, AnnotationUtil.NAMED, model.getCompilationController())
+                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.NAMED_JAKARTA, model.getCompilationController())
+        )
         {
             result.addNotification( Severity.WARNING , element, model,  
                     NbBundle.getMessage(InjectionPointAnalyzer.class, 
@@ -164,9 +168,11 @@ public class InjectionPointAnalyzer extends AbstractDecoratorAnalyzer<Void> impl
             TypeMirror elementType , TypeElement parent, WebBeansModel model,
             AtomicBoolean cancel , Result result )
     {
-        TypeElement injectionPointType = model.getCompilationController().
-            getElements().getTypeElement(AnnotationUtil.INJECTION_POINT);
-        if ( injectionPointType == null ){
+        TypeElement injectionPointType = model.getCompilationController().getElements().getTypeElement(AnnotationUtil.INJECTION_POINT_JAKARTA);
+        if (injectionPointType == null) {
+            injectionPointType = model.getCompilationController().getElements().getTypeElement(AnnotationUtil.INJECTION_POINT);
+        }
+        if (injectionPointType == null) {
             return;
         }
         Element varElement = model.getCompilationController().getTypes().asElement( 
@@ -182,7 +188,7 @@ public class InjectionPointAnalyzer extends AbstractDecoratorAnalyzer<Void> impl
         Map<String, ? extends AnnotationMirror> qualifiersFqns = helper.
             getAnnotationsByType(qualifiers);
         boolean hasDefault = model.hasImplicitDefaultQualifier( element );
-        if ( !hasDefault && qualifiersFqns.containsKey(AnnotationUtil.DEFAULT_FQN)){
+        if ( !hasDefault && (qualifiersFqns.containsKey(AnnotationUtil.DEFAULT_FQN) || qualifiersFqns.containsKey(AnnotationUtil.DEFAULT_FQN_JAKARTA))){
             hasDefault = true;
         }
         if ( !hasDefault || cancel.get() ){
@@ -190,7 +196,7 @@ public class InjectionPointAnalyzer extends AbstractDecoratorAnalyzer<Void> impl
         }
         try {
             String scope = model.getScope( parent );
-            if ( scope != null && !AnnotationUtil.DEPENDENT.equals( scope )){
+            if ( scope != null && !AnnotationUtil.DEPENDENT.equals( scope ) && !AnnotationUtil.DEPENDENT_JAKARTA.equals( scope )){
                 result.addError(element , model,  
                         NbBundle.getMessage(
                         InjectionPointAnalyzer.class, "ERR_WrongQualifierInjectionPointMeta"));            // NOI18N

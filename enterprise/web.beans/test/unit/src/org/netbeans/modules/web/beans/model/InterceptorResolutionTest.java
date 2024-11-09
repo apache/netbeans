@@ -46,7 +46,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class InterceptorResolutionTest extends CommonTestCase {
 
     public InterceptorResolutionTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
 
     public void testSimpleInterceptorCase() throws IOException{

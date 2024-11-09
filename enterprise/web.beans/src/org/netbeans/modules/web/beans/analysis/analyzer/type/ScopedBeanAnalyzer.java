@@ -101,8 +101,10 @@ public class ScopedBeanAnalyzer extends AbstractScopedAnalyzer
             return;
         }
         if ( AnnotationUtil.isSessionBean(element, model.getCompilationController())){
-            if ( AnnotationUtil.hasAnnotation(element,
-                    AnnotationUtil.STATEFUL,  model.getCompilationController()))
+            if (
+                    AnnotationUtil.hasAnnotation(element, AnnotationUtil.STATEFUL,  model.getCompilationController())
+                    || AnnotationUtil.hasAnnotation(element, AnnotationUtil.STATEFUL_JAKARTA,  model.getCompilationController())
+            )
             {
                 return;
             }
@@ -126,12 +128,18 @@ public class ScopedBeanAnalyzer extends AbstractScopedAnalyzer
     private void checkInterceptorDecorator( TypeElement scopeElement,
             Element element, WebBeansModel model, Result result )
     {
-        if ( scopeElement.getQualifiedName().contentEquals(AnnotationUtil.DEPENDENT)){
+        if ( scopeElement.getQualifiedName().contentEquals(AnnotationUtil.DEPENDENT)
+                || scopeElement.getQualifiedName().contentEquals(AnnotationUtil.DEPENDENT_JAKARTA)){
             return;
         }
         AnnotationMirror annotationMirror = AnnotationUtil.getAnnotationMirror(
                 element, model.getCompilationController(),
-                AnnotationUtil.INTERCEPTOR, AnnotationUtil.DECORATOR);
+                AnnotationUtil.INTERCEPTOR_JAKARTA, AnnotationUtil.DECORATOR_JAKARTA);
+        if (annotationMirror == null) {
+            annotationMirror = AnnotationUtil.getAnnotationMirror(
+                    element, model.getCompilationController(),
+                    AnnotationUtil.INTERCEPTOR, AnnotationUtil.DECORATOR);
+        }
         if ( annotationMirror!= null ){
             result.addNotification( Severity.WARNING, element, model,  
                     NbBundle.getMessage(ScopedBeanAnalyzer.class,
@@ -143,9 +151,8 @@ public class ScopedBeanAnalyzer extends AbstractScopedAnalyzer
             Element element, WebBeansModel model,
             Result result )
     {
-        if ( AnnotationUtil.DEPENDENT.contentEquals( 
-                scopeElement.getQualifiedName()))
-        {
+        if ( scopeElement.getQualifiedName().contentEquals(AnnotationUtil.DEPENDENT)
+                || scopeElement.getQualifiedName().contentEquals(AnnotationUtil.DEPENDENT_JAKARTA)){
             return;
         }  
         result.requireCdiEnabled(element, model);
@@ -163,9 +170,8 @@ public class ScopedBeanAnalyzer extends AbstractScopedAnalyzer
     private void checkPublicField( TypeElement scopeElement, Element element,
             WebBeansModel model, Result result )
     {
-        if ( AnnotationUtil.DEPENDENT.contentEquals( 
-                scopeElement.getQualifiedName()))
-        {
+        if ( scopeElement.getQualifiedName().contentEquals(AnnotationUtil.DEPENDENT)
+                || scopeElement.getQualifiedName().contentEquals(AnnotationUtil.DEPENDENT_JAKARTA)){
             return;
         }
         result.requireCdiEnabled(element, model);
@@ -187,8 +193,8 @@ public class ScopedBeanAnalyzer extends AbstractScopedAnalyzer
     private void checkProxiability( TypeElement scopeElement, Element element,
             WebBeansModel model, Result result )
     {
-        boolean isNormal = AnnotationUtil.hasAnnotation(scopeElement, 
-                AnnotationUtil.NORMAL_SCOPE_FQN, model.getCompilationController());
+        boolean isNormal = AnnotationUtil.hasAnnotation(scopeElement, AnnotationUtil.NORMAL_SCOPE_FQN, model.getCompilationController())
+                || AnnotationUtil.hasAnnotation(scopeElement, AnnotationUtil.NORMAL_SCOPE_FQN_JAKARTA, model.getCompilationController());
         if ( isNormal ){
             result.requireCdiEnabled(element, model);
             checkFinal( element , model, result );

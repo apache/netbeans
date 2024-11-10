@@ -139,17 +139,28 @@ public final class CloudAssets {
         return instance;
     }
 
-    public synchronized void addItem(OCIItem newItem) {
+    public synchronized boolean addItem(OCIItem newItem) {
         Parameters.notNull("newItem cannot be null", newItem);
         long presentCount = items.stream()
                 .filter(i -> i.getKey().getPath().equals(newItem.getKey().getPath()))
                 .count();
         if (newItem.maxInProject() > presentCount && isTenancyCompatible(newItem, true)) {
+            if (newItem instanceof Validator) {
+                Validator.Result result = ((Validator) newItem).validate();
+                if (result.status == Validator.ValidationStatus.WARNING) {
+                    showWarningMessage(result.message);
+                }
+                if (result.status == Validator.ValidationStatus.ERROR) {
+                    showWarningMessage(result.message);
+                    return false;
+                }
+            }
             items.add(newItem);
             newItem.addChangeListener(itemsListener);
             update();
             storeAssets();
         }
+        return true;
     }
 
     synchronized void removeItem(OCIItem item) {
@@ -184,7 +195,7 @@ public final class CloudAssets {
     }
     
     public synchronized boolean isTenancyCompatible(OCIItem toCheck, boolean showWarning) {
-        List<OCIItem> itemsMissingInfo = new ArrayList();
+        List<OCIItem> itemsMissingInfo = new ArrayList<> ();
         for(OCIItem item: items) {
             if (item != null && item.getTenancyId() == null) {
                 itemsMissingInfo.add(item);

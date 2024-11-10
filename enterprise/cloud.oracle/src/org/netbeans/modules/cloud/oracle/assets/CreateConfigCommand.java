@@ -40,7 +40,7 @@ public class CreateConfigCommand implements CommandProvider {
     private static final String COMMAND_UPLOAD_TO_CONFIGMAP_WITHIN_DEVOPS = "nbls.cloud.assets.configmap.devops.upload"; //NOI18N
     private static final String COMMAND_UPLOAD_TO_CONFIGMAP = "nbls.cloud.assets.configmap.upload"; //NOI18N
 
-    private static final Set COMMANDS = new HashSet<>(Arrays.asList(
+    private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
             COMMAND_CREATE_CONFIG,
             COMMAND_UPLOAD_TO_CONFIGMAP_WITHIN_DEVOPS,
             COMMAND_UPLOAD_TO_CONFIGMAP
@@ -53,7 +53,7 @@ public class CreateConfigCommand implements CommandProvider {
 
     @Override
     public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
-        CompletableFuture future = new CompletableFuture();
+        CompletableFuture<Object> future = new CompletableFuture<>();
         if (COMMAND_CREATE_CONFIG.equals(command)) {
             PropertiesGenerator propGen = new PropertiesGenerator(false);
             ApplicationPropertiesGenerator appPropGen = new ApplicationPropertiesGenerator(propGen);

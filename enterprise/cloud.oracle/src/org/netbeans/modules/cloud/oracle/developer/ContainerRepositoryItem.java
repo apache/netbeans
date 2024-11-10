@@ -18,14 +18,20 @@
  */
 package org.netbeans.modules.cloud.oracle.developer;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import org.netbeans.modules.cloud.oracle.adm.URLProvider;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import org.openide.util.Exceptions;
 
 /**
  *
  * @author Jan Horvath
  */
-public final class ContainerRepositoryItem extends OCIItem {
+public final class ContainerRepositoryItem extends OCIItem implements URLProvider {
 
     private Boolean isPublic;
     private Integer imageCount;
@@ -64,6 +70,19 @@ public final class ContainerRepositoryItem extends OCIItem {
     
     public String getRegistry() {
         return String.format("%s.ocir.io", getRegionCode());
+    }
+
+    @Override
+    public URL getURL() {
+        if (getKey().getValue() != null && getRegion() != null) {
+            try {
+                URI uri = new URI(String.format("https://cloud.oracle.com/compute/registry/containers?region=%s", getRegion()));
+                return uri.toURL();
+            } catch (MalformedURLException | URISyntaxException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } 
+        return null;
     }
     
 }

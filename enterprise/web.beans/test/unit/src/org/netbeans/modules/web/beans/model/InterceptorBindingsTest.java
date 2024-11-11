@@ -239,21 +239,21 @@ public class InterceptorBindingsTest extends CommonTestCase {
                 "package foo; " +
                 "@IBinding1 "+
                 "public class One {" +
-                " void @IBinding3 method1(){} "+
-                " void @Stereotype2 method2(){} "+
+                " @IBinding3 void method1(){} "+
+                " @Stereotype2 void method2(){} "+
                 "}" );
         
         TestUtilities.copyStringToFileObject(srcFO, "foo/Two.java",
                 "package foo; " +
                 "@Stereotype2 "+
                 "public class Two {" +
-                " void @IBinding1 method(){} "+
+                " @IBinding1 void method(){} "+
                 "}" );
         
         TestUtilities.copyStringToFileObject(srcFO, "foo/Three.java",
                 "package foo; " +
                 "public class Three {" +
-                " void @IBinding1 method(){} "+
+                " @IBinding1 void method(){} "+
                 "}" );
         
         TestWebBeansModelImpl modelImpl = createModelImpl(true );

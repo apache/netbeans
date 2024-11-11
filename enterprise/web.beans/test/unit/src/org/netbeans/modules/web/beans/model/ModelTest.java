@@ -92,9 +92,8 @@ public class ModelTest extends CommonTestCase {
                 assertNotNull( fieldA );
                 DependencyInjectionResult result = model.lookupInjectables(fieldA, 
                         null, new AtomicBoolean(false));
-                assertEquals(DependencyInjectionResult.ResultKind.DEFINITION_ERROR,  
+                assertEquals(DependencyInjectionResult.ResultKind.INJECTABLE_RESOLVED,
                         result.getKind());
-                assertTrue( result instanceof DependencyInjectionResult.Error);
                 
                 VariableElement fieldB = variables.get("myFieldB");
                 assertNotNull( fieldB );

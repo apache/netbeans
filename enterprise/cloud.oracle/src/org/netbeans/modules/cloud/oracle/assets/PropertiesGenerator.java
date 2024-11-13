@@ -139,6 +139,7 @@ public final class PropertiesGenerator {
         }
         if (vault != null) {
             bootstrap.put("oci.vault.config.enabled", "true"); // NOI18N
+            bootstrap.put("micronaut.config-client.enabled", "true"); // NOI18N
             bootstrap.put("oci.vault.vaults[0].ocid", vault.getKey().getValue()); //NOI18N
             bootstrap.put("oci.vault.vaults[0].compartment-ocid", vault.getCompartmentId()); //NOI18N
         }

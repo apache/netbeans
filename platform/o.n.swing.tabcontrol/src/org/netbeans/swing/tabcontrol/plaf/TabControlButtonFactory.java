@@ -40,6 +40,7 @@ import org.netbeans.swing.tabcontrol.TabListPopupAction;
 import org.netbeans.swing.tabcontrol.WinsysInfoForTabbedContainer;
 import org.netbeans.swing.tabcontrol.event.TabActionEvent;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle;
 import org.openide.windows.WindowManager;
 
 /**
@@ -115,13 +116,13 @@ public class TabControlButtonFactory {
     
     public static TabControlButton createScrollLeftButton( TabDisplayer displayer, Action scrollAction, boolean showBorder ) {
         TabControlButton button = new TimerButton( TabControlButton.ID_SCROLL_LEFT_BUTTON, displayer, scrollAction, showBorder );
-        button.setToolTipText( java.util.ResourceBundle.getBundle("org/netbeans/swing/tabcontrol/plaf/Bundle").getString("Tip_Scroll_Documents_Left") );
+        button.setToolTipText( NbBundle.getBundle(TabControlButtonFactory.class).getString("Tip_Scroll_Documents_Left") );
         return button;
     }
     
     public static TabControlButton createScrollRightButton( TabDisplayer displayer, Action scrollAction, boolean showBorder ) {
         TabControlButton button = new TimerButton( TabControlButton.ID_SCROLL_RIGHT_BUTTON, displayer, scrollAction, showBorder );
-        button.setToolTipText( java.util.ResourceBundle.getBundle("org/netbeans/swing/tabcontrol/plaf/Bundle").getString("Tip_Scroll_Documents_Right") );
+        button.setToolTipText( NbBundle.getBundle(TabControlButtonFactory.class).getString("Tip_Scroll_Documents_Right") );
         return button;
     }
     
@@ -133,7 +134,7 @@ public class TabControlButtonFactory {
         
         public CloseButton( TabDisplayer displayer ) {
             super( TabControlButton.ID_CLOSE_BUTTON, displayer );
-            setToolTipText( java.util.ResourceBundle.getBundle("org/netbeans/swing/tabcontrol/plaf/Bundle").getString("Tip_Close_Window") );
+            setToolTipText( NbBundle.getBundle(TabControlButtonFactory.class).getString("Tip_Close_Window") );
         }
         
         @Override
@@ -150,7 +151,7 @@ public class TabControlButtonFactory {
         
         public CloseGroupButton( TabDisplayer displayer ) {
             super( TabControlButton.ID_CLOSE_BUTTON, displayer );
-            setToolTipText( java.util.ResourceBundle.getBundle("org/netbeans/swing/tabcontrol/plaf/Bundle").getString("Tip_Close_Window_Group") );
+            setToolTipText( NbBundle.getBundle(TabControlButtonFactory.class).getString("Tip_Close_Window_Group") );
         }
         
         @Override
@@ -197,8 +198,8 @@ public class TabControlButtonFactory {
         @Override
         public String getToolTipText() {
             if( getButtonId() == TabControlButton.ID_PIN_BUTTON )
-                return java.util.ResourceBundle.getBundle("org/netbeans/swing/tabcontrol/plaf/Bundle").getString("Tip_Pin");
-            return java.util.ResourceBundle.getBundle("org/netbeans/swing/tabcontrol/plaf/Bundle").getString("Tip_Minimize_Window");
+                return NbBundle.getBundle(TabControlButtonFactory.class).getString("Tip_Pin");
+            return NbBundle.getBundle(TabControlButtonFactory.class).getString("Tip_Minimize_Window");
         }
         
         @Override
@@ -233,7 +234,7 @@ public class TabControlButtonFactory {
 
         @Override
         public String getToolTipText() {
-            return java.util.ResourceBundle.getBundle("org/netbeans/swing/tabcontrol/plaf/Bundle").getString("Tip_Minimize_Window_Group"); //NOI18N
+            return NbBundle.getBundle(TabControlButtonFactory.class).getString("Tip_Minimize_Window_Group"); //NOI18N
         }
         
         @Override
@@ -279,7 +280,7 @@ public class TabControlButtonFactory {
 
         @Override
         public String getToolTipText() {
-            return java.util.ResourceBundle.getBundle("org/netbeans/swing/tabcontrol/plaf/Bundle").getString("Tip_Restore_Window_Group"); //NOI18N
+            return NbBundle.getBundle(TabControlButtonFactory.class).getString("Tip_Restore_Window_Group"); //NOI18N
         }
 
         /**
@@ -342,8 +343,8 @@ public class TabControlButtonFactory {
         @Override
         public String getToolTipText() {
             if( getButtonId() == TabControlButton.ID_MAXIMIZE_BUTTON )
-                return java.util.ResourceBundle.getBundle("org/netbeans/swing/tabcontrol/plaf/Bundle").getString("Tip_Maximize_Window");
-            return java.util.ResourceBundle.getBundle("org/netbeans/swing/tabcontrol/plaf/Bundle").getString("Tip_Restore_Window");
+                return NbBundle.getBundle(TabControlButtonFactory.class).getString("Tip_Maximize_Window");
+            return NbBundle.getBundle(TabControlButtonFactory.class).getString("Tip_Restore_Window");
         }
     }
 
@@ -456,7 +457,7 @@ public class TabControlButtonFactory {
         public DropDownButton( TabDisplayer displayer, boolean showBorder ) {
             super( TabControlButton.ID_DROP_DOWN_BUTTON, displayer, showBorder );
             setAction( new TabListPopupAction( displayer ) );
-            setToolTipText( java.util.ResourceBundle.getBundle("org/netbeans/swing/tabcontrol/plaf/Bundle").getString("Tip_Show_Opened_Documents_List") );
+            setToolTipText( NbBundle.getBundle(TabControlButtonFactory.class).getString("Tip_Show_Opened_Documents_List") );
         }
 
         @Override

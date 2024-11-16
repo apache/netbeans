@@ -757,6 +757,9 @@ jobs:
       - name: ide/team.commons
         run: ant $OPTS -f ide/team.commons test
 
+      - name: ide/textmate.lexer
+        run: ant $OPTS -f ide/textmate.lexer test
+
       - name: ide/terminal.nb
         run: ant $OPTS -f ide/terminal.nb test
 

@@ -1,5 +1,5 @@
 Name: TextMate support for Eclipse
-Version: 0.4.1-pack1
+Version: 0.14.0
 License: EPL-v20
 Description: Used to interpret TextMate grammars
 Origin: https://github.com/eclipse/tm4e

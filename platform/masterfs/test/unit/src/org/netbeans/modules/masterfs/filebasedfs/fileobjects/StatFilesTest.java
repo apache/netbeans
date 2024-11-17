@@ -163,7 +163,7 @@ public class StatFilesTest extends NbTestCase {
                 expectedCount++;
                 // sun.awt.PlatformGraphicsInfo.getDefaultHeadlessProperty probes a .so or .dylib
                 // Runtime.version().feature() > 18
-                if (Integer.parseInt(System.getProperty("java.version").split("\\.")[0]) > 18) {
+                if (Integer.parseInt(System.getProperty("java.version").split("\\.")[0].split("-")[0]) > 18) {
                     expectedCount++;
                 }
             }

@@ -179,7 +179,11 @@ suite('Extension Test Suite', () => {
     async function getProjectInfo() {
         let folder: string = assertWorkspace();
 
-        await prepareProject(folder);
+        function projectFileUri(...p: string[]) : string{
+            return vscode.Uri.file(path.join(folder, ...p)).toString();
+        }
+    
+            await prepareProject(folder);
         vscode.workspace.saveAll();
 
         try {
@@ -188,31 +192,31 @@ suite('Extension Test Suite', () => {
             console.log(`Test: get project java source roots finished with ${res}`);
             assert.ok(res, "No java source root returned");
             assert.strictEqual(res.length, 2, `Invalid number of java roots returned`);
-            assert.strictEqual(res[0], path.join('file:', folder, 'src', 'main', 'java') + path.sep, `Invalid java main source root returned`);
-            assert.strictEqual(res[1], path.join('file:', folder, 'src', 'test', 'java') + path.sep, `Invalid java test source root returned`);
+            assert.strictEqual(res[0], projectFileUri('src', 'main', 'java') + path.sep, `Invalid java main source root returned`);
+            assert.strictEqual(res[1], projectFileUri('src', 'test', 'java') + path.sep, `Invalid java test source root returned`);
 
             console.log("Test: get project resource roots");
             res = await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".java.get.project.source.roots", Uri.file(folder).toString(), 'resources');
             console.log(`Test: get project resource roots finished with ${res}`);
             assert.ok(res, "No resource root returned");
             assert.strictEqual(res.length, 1, `Invalid number of resource roots returned`);
-            assert.strictEqual(res[0], path.join('file:', folder, 'src', 'main', 'resources') + path.sep, `Invalid resource root returned`);
+            assert.strictEqual(res[0], projectFileUri('src', 'main', 'resources') + path.sep, `Invalid resource root returned`);
 
             console.log("Test: get project compile classpath");
             res = await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".java.get.project.classpath", Uri.file(folder).toString());
             console.log(`Test: get project compile classpath finished with ${res}`);
             assert.ok(res, "No compile classpath returned");
             assert.strictEqual(res.length, 9, `Invalid number of compile classpath roots returned`);
-            assert.ok(res.find((item: any) => item === path.join('file:', folder, 'target', 'classes') + path.sep, `Invalid compile classpath root returned`));
+            assert.ok(res.find((item: any) => item === projectFileUri('target', 'classes') + path.sep, `Invalid compile classpath root returned`));
 
             console.log("Test: get project source classpath");
             res = await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".java.get.project.classpath", Uri.file(folder).toString(), 'SOURCE');
             console.log(`Test: get project source classpath finished with ${res}`);
             assert.ok(res, "No source classpath returned");
             assert.strictEqual(res.length, 3, `Invalid number of source classpath roots returned`);
-            assert.ok(res.find((item: any) => item === path.join('file:', folder, 'src', 'main', 'java') + path.sep, `Invalid source classpath root returned`));
-            assert.ok(res.find((item: any) => item === path.join('file:', folder, 'src', 'main', 'resources') + path.sep, `Invalid source classpath root returned`));
-            assert.ok(res.find((item: any) => item === path.join('file:', folder, 'src', 'test', 'java') + path.sep, `Invalid source classpath root returned`));
+            assert.ok(res.find((item: any) => item === projectFileUri('src', 'main', 'java') + path.sep, `Invalid source classpath root returned`));
+            assert.ok(res.find((item: any) => item === projectFileUri('src', 'main', 'resources') + path.sep, `Invalid source classpath root returned`));
+            assert.ok(res.find((item: any) => item === projectFileUri('src', 'test', 'java') + path.sep, `Invalid source classpath root returned`));
 
             console.log("Test: get project boot classpath");
             res = await vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".java.get.project.classpath", Uri.file(folder).toString(), 'BOOT');

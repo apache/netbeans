@@ -2882,7 +2882,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     public void printFlags(long flags, boolean addSpace) {
 	print(flagNames(flags & ~INTERFACE & ~ANNOTATION & ~ENUM));
-        if ((flags & StandardFlags) != 0) {
+        if ((flags & (StandardFlags | Flags.SEALED | Flags.NON_SEALED)) != 0) {
             if (cs.placeNewLineAfterModifiers())
                 toColExactly(out.leftMargin);
             else if (addSpace)
@@ -2896,6 +2896,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         for (Flag flag : Flag.values()) {
             flagLowerCaseNames[flag.ordinal()] = flag.name().toLowerCase(Locale.ENGLISH);
         }
+        flagLowerCaseNames[Flag.NON_SEALED.ordinal()] = "non-sealed";
     }
     
     /**

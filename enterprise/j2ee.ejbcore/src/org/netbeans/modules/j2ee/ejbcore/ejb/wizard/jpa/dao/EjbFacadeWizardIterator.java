@@ -318,6 +318,7 @@ import org.openide.util.NbBundle;
                             Arrays.asList(maker.TypeParameter(genericsTypeName, Collections.<ExpressionTree>emptyList())),
                             null,
                             Collections.<Tree>emptyList(),
+                            Collections.<Tree>emptyList(),
                             members);
 
                     workingCopy.rewrite(classTree, newClassTree);
@@ -452,6 +453,7 @@ import org.openide.util.NbBundle;
                         classTree.getTypeParameters(),
                         extendsClause,
                         implementsClause,
+                        classTree.getPermitsClause(),
                         members);
 
                 wc.rewrite(classTree, newClassTree);
@@ -631,7 +633,7 @@ import org.openide.util.NbBundle;
                 TreeMaker make = workingCopy.getTreeMaker();
                 AnnotationTree annotations = genUtils.createAnnotation(annotationType);
                 ModifiersTree modifiers = make.Modifiers(clazz.getModifiers(), Collections.<AnnotationTree>singletonList(annotations));
-                ClassTree modifiedClass = make.Class(modifiers, clazz.getSimpleName(), clazz.getTypeParameters(), clazz.getExtendsClause(), Collections.<ExpressionTree>emptyList(), Collections.<Tree>emptyList());
+                ClassTree modifiedClass = make.Class(modifiers, clazz.getSimpleName(), clazz.getTypeParameters(), clazz.getExtendsClause(), Collections.<ExpressionTree>emptyList(), Collections.<ExpressionTree>emptyList(), Collections.<Tree>emptyList());
                 workingCopy.rewrite(clazz, modifiedClass);
             }
         });

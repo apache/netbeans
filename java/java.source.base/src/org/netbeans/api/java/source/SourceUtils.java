@@ -114,6 +114,7 @@ import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.project.NestedClass;
 
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -1477,14 +1478,21 @@ public class SourceUtils {
      *
      * @param info the ClasspathInfo used to resolve
      * @param relativePath input source file path relative to the corresponding source root
+     * @param nestedClass nested class which name is searched
      * @return class name for the corresponding input source file
-     * @since 2.73
+     * @since 2.74
      */
-    public static String classNameFor(ClasspathInfo info, String relativePath) {
+    public static String classNameFor(ClasspathInfo info, String relativePath, NestedClass nestedClass) {
         ClassPath cachedCP = ClasspathInfoAccessor.getINSTANCE().getCachedClassPath(info, PathKind.COMPILE);
         int idx = relativePath.indexOf('.');
         String rel = idx < 0 ? relativePath : relativePath.substring(0, idx);
         String className = rel.replace('/', '.');
+        int lastDotIndex = className.lastIndexOf('.');
+        String fqnForNestedClass = null;
+        if (lastDotIndex > -1 && nestedClass != null) {
+            String packageName = className.substring(0, lastDotIndex);
+            fqnForNestedClass = nestedClass.getFQN(packageName, "$");
+        }
         FileObject rsFile = cachedCP.findResource(rel + '.' + FileObjects.RS);
         if (rsFile != null) {
             List<String> lines = new ArrayList<>();
@@ -1493,6 +1501,8 @@ public class SourceUtils {
                 while ((line = in.readLine())!=null) {
                     if (className.equals(line)) {
                         return className;
+                    } else if (fqnForNestedClass != null && fqnForNestedClass.equals(line)) {
+                        return line;
                     }
                     lines.add(line);
                 }

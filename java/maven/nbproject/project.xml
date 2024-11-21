@@ -201,7 +201,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>2.73</specification-version>
+                        <specification-version>2.74</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -324,7 +324,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.89</specification-version>
+                        <specification-version>1.99</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

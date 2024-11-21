@@ -468,7 +468,11 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                 assert prjNode != null;
                 ExecProject p = (ExecProject) prjNode.getStartEvent();
                 handle.progress(p.gav.artifactId + " " + tag);
-                CommandLineOutputHandler.this.processStart(getEventId(SEC_MOJO_EXEC, tag), stdOut);
+                if (contextImpl != null) {
+                    Project pr = exec.findProject();
+                    contextImpl.setCurrentProject(pr);
+                    CommandLineOutputHandler.this.processStart(getEventId(SEC_MOJO_EXEC, tag), stdOut);
+                }
             }
             if (ExecutionEvent.Type.MojoSucceeded.equals(obj.type)) {
                 if (MavenSettings.getDefault().isCollapseSuccessFolds()) {
@@ -479,7 +483,11 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                 mergeClasspath(exec, mavencoreurls);
                 trimTree(exec);
                 String tag = goalPrefixFromArtifactId(exec.plugin.artifactId) + ":" + exec.goal;
-                CommandLineOutputHandler.this.processEnd(getEventId(SEC_MOJO_EXEC, tag), stdOut);
+                if (contextImpl != null) {
+                    Project pr = exec.findProject();
+                    contextImpl.setCurrentProject(pr);
+                    CommandLineOutputHandler.this.processEnd(getEventId(SEC_MOJO_EXEC, tag), stdOut);
+                }
             }
             else if (ExecutionEvent.Type.MojoFailed.equals(obj.type)) {
                 currentTreeNode.finishFold();
@@ -487,7 +495,11 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                 mergeClasspath(exec, mavencoreurls);
                 trimTree(exec);
                 String tag = goalPrefixFromArtifactId(exec.plugin.artifactId) + ":" + exec.goal;
-                CommandLineOutputHandler.this.processFail(getEventId(SEC_MOJO_EXEC, tag), stdOut);
+                if (contextImpl != null) {
+                    Project pr = exec.findProject();
+                    contextImpl.setCurrentProject(pr);
+                    CommandLineOutputHandler.this.processFail(getEventId(SEC_MOJO_EXEC, tag), stdOut);
+                }
             }
             else if (ExecutionEvent.Type.ProjectStarted.equals(obj.type)) {
                 growTree(obj);
@@ -496,7 +508,7 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                     ExecProject pr = (ExecProject)obj;
                     Project project = pr.findProject();
                     contextImpl.setCurrentProject(project);
-                    CommandLineOutputHandler.this.processStart(getEventId(PRJ_EXECUTE, null), stdOut);                    
+                    CommandLineOutputHandler.this.processStart(getEventId(PRJ_EXECUTE, null), stdOut);
                 }
             }
             else if (ExecutionEvent.Type.ProjectSkipped.equals(obj.type)) {
@@ -510,12 +522,22 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                 }
                 currentTreeNode.finishFold();
                 trimTree(obj);
-                CommandLineOutputHandler.this.processEnd(getEventId(PRJ_EXECUTE, null), stdOut);                    
+                if (contextImpl != null) {
+                    ExecProject pr = (ExecProject)obj;
+                    Project project = pr.findProject();
+                    contextImpl.setCurrentProject(project);
+                    CommandLineOutputHandler.this.processEnd(getEventId(PRJ_EXECUTE, null), stdOut);
+                }
             }
             else if (ExecutionEvent.Type.ProjectFailed.equals(obj.type)) {
                 currentTreeNode.finishFold();
                 trimTree(obj);
-                CommandLineOutputHandler.this.processEnd(getEventId(PRJ_EXECUTE, null), stdOut);                    
+                if (contextImpl != null) {
+                    ExecProject pr = (ExecProject)obj;
+                    Project project = pr.findProject();
+                    contextImpl.setCurrentProject(project);
+                    CommandLineOutputHandler.this.processEnd(getEventId(PRJ_EXECUTE, null), stdOut);
+                }
             } else if (ExecutionEvent.Type.ForkStarted.equals(obj.type)) {
                 growTree(obj);
             } else if (ExecutionEvent.Type.ForkedProjectStarted.equals(obj.type)) {

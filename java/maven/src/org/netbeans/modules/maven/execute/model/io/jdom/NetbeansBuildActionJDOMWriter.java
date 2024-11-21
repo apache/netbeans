@@ -401,6 +401,7 @@ public class NetbeansBuildActionJDOMWriter {
         findAndReplaceSimpleLists(innerCount, root, value.getPackagings(), "packagings", "packaging");
         findAndReplaceSimpleLists(innerCount, root, value.getGoals(), "goals", "goal");
         findAndReplaceProperties(innerCount, root,  "properties", value.getProperties());
+        findAndReplaceProperties(innerCount, root,  "options", value.getOptions());
         findAndReplaceSimpleLists(innerCount, root, value.getActivatedProfiles(), "activatedProfiles", "activatedProfile");
     } //-- void updateNetbeansActionMapping(NetbeansActionMapping, String, Counter, Element) 
 

@@ -49,6 +49,9 @@
     </profiles>
     <!-- @end region="configuration-declaration-xml" -->
 
+    <action name="test.parallel">
+        <args>--parallel --rerun-tasks ${taskWithProjects}</args>
+    </action>
     <apply-for plugins="java">
         <action name="test.single">
             <args>cleanTest test --tests "${selectedClass}"</args>

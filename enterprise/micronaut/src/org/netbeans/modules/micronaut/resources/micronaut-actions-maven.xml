@@ -35,6 +35,20 @@
             <packaging>native-image</packaging>
         </properties>
     </action>
+    <action>
+        <actionName>test.single</actionName>
+        <packagings>
+            <packaging>*</packaging>
+        </packagings>
+        <goals>
+            <goal>io.micronaut.maven:micronaut-maven-plugin:start-testresources-service</goal>
+            <goal>process-test-classes</goal>
+            <goal>surefire:test</goal>
+        </goals>
+        <properties>
+            <test>${packageClassName}</test>
+        </properties>
+    </action>
     
     <profiles>
         <profile>

@@ -328,7 +328,6 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
                     break LOAD; // XXX does it suffice to just return here, or is code after block needed?
                 }
             }
-            LOGGER.log(Level.FINE, "Loading Context: {0}", info.getId());
 
             List<IndexCreator> creators;
             if (info.isLocal()) {
@@ -348,7 +347,13 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
                     new NotifyingIndexCreator()
                 );
             }
+
+            if (info.isRemoteDownloadable() && !indexExists(getIndexDirectory(info))) {
+                tryMoveRemoteIndexFromOldCache(info);
+            }
+
             try {
+                LOGGER.log(Level.FINE, "Loading Context: {0}", info.getId());
                 addIndexingContextForced(info, creators);
                 LOGGER.log(Level.FINE, "using index creators: {0}", creators);
             } catch (IOException | IllegalArgumentException ex) { // IAE thrown by lucene on index version incompatibilites
@@ -387,6 +392,62 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
         }
     }
 
+    /// Moves the index from the previous cache folder to the current folder if:
+    ///  - both cache folders share the same parent
+    ///  - the cache folder is from an older release
+    ///  - the index itself is still somewhat up to date
+    ///  - current NB instance is not a dev build
+    private void tryMoveRemoteIndexFromOldCache(RepositoryInfo info) {
+
+        String buildnumber = System.getProperty("netbeans.buildnumber");
+        if (buildnumber == null) {
+            return; // tests
+        }
+        int ourVersion;
+        try {
+            String debugRelease = System.getProperty("maven.indexing.diag.release");
+            ourVersion = debugRelease != null
+                    ? Integer.parseInt(debugRelease)
+                    : Integer.parseInt(buildnumber.split("-")[0]);
+        } catch (NumberFormatException ignore) {
+            return;
+        }
+
+        Path cacheParent = Places.getCacheDirectory().toPath().getParent();
+        if (cacheParent != null) {
+            try (Stream<Path> caches = Files.list(cacheParent)) {
+                record CacheFolder(Path path, int version) {}
+
+                Optional<CacheFolder> oldCache = caches
+                        .filter(path -> Files.exists(path.resolve(".lastUsedVersion")))
+                        .map(path -> {
+                            try {
+                                int version = Integer.parseInt(Files.readString(path.resolve(".lastUsedVersion")));
+                                return new CacheFolder(path, version);
+                            } catch (IOException | NumberFormatException ex) {
+                                return null;
+                            }
+                        })
+                        .filter(Objects::nonNull)
+                        .filter(cache -> cache.version < ourVersion)
+                        .max((c1, c2) -> c1.version - c2.version);
+
+                if (oldCache.isPresent()) {
+                    Path oldIndex = getIndexDirectory(oldCache.get().path, info);
+                    if (indexExists(oldIndex)) {
+                        Instant lastUse = Files.getLastModifiedTime(oldIndex.resolve("timestamp")).toInstant();
+                        if (Instant.now().minus(30, ChronoUnit.DAYS).isBefore(lastUse)) {
+                            LOGGER.log(Level.INFO, "moving index from old cache [{0}]", oldIndex);
+                            Files.move(oldIndex, getIndexDirectory(info));
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                LOGGER.log(Level.WARNING, "index import failed: {0}", ex.getMessage());
+            }
+        }
+    }
+
     //always call from mutex.writeAccess
     private void unloadIndexingContext(final String repo) throws IOException {
         assert getRepoMutex(repo).isWriteAccess();
@@ -415,9 +476,8 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
             indexingMutexes.add(mutex);
         }
         boolean fetchFailed = false;
+        boolean fullUpdate = false;
         long t = System.currentTimeMillis();
-        IndexUpdateResult fetchUpdateResult = null;
-        RemoteIndexTransferListener listener = null;
         try {
             IndexingContext indexingContext = getIndexingContexts().get(repo.getId());
             if (indexingContext == null) {
@@ -426,8 +486,7 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
             }
             if (repo.isRemoteDownloadable()) {
                 LOGGER.log(Level.FINE, "Indexing Remote Repository: {0}", repo.getId());
-                listener = new RemoteIndexTransferListener(repo);
-                try {
+                try (RemoteIndexTransferListener listener = new RemoteIndexTransferListener(repo)) {
                     String protocol = URI.create(indexingContext.getIndexUpdateUrl()).getScheme();
                     SettingsDecryptionResult settings = embedder.lookup(SettingsDecrypter.class).decrypt(new DefaultSettingsDecryptionRequest(EmbedderFactory.getOnlineEmbedder().getSettings()));
                     AuthenticationInfo wagonAuth = null;
@@ -496,16 +555,40 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
                     }
                     try {
                         removeGroupCache(repo);
-                        fetchUpdateResult = remoteIndexUpdater.fetchAndUpdateIndex(iur);
+                        IndexUpdateResult result = remoteIndexUpdater.fetchAndUpdateIndex(iur);
+                        fullUpdate = result.isFullUpdate();
                         storeGroupCache(repo, indexingContext);
                         // register indexed repo in services view
-                        if (fetchUpdateResult.isFullUpdate() && fetchUpdateResult.isSuccessful()) {
+                        if (result.isFullUpdate() && result.isSuccessful()) {
                             RepositoryPreferences.getInstance().addOrModifyRepositoryInfo(repo);
                         }
                     } catch (IOException | AlreadyClosedException | IllegalArgumentException ex) {
                         // AlreadyClosedException can happen in low storage situations when lucene is trying to handle IOEs
                         // IllegalArgumentException signals remote archive format problems
                         fetchFailed = true;
+                        
+                        Path tmpFolder = Path.of(System.getProperty("java.io.tmpdir"));
+                        Path cacheFolder = getIndexDirectory();
+
+                        long freeTmpSpace = getFreeSpaceInMB(tmpFolder);
+                        long freeCacheSpace = getFreeSpaceInMB(cacheFolder);
+
+                        if (isNoSpaceLeftOnDevice(ex) || freeCacheSpace < 1000 || freeTmpSpace < 1000) {
+
+                            long downloaded = listener.getUnits() * 1024;
+                            LOGGER.log(Level.INFO, "Downloaded maven index file has size {0} (zipped). The usable space in [cache]:{1} is {2} MB and in [tmp]:{3} is {4} MB.",
+                                    new Object[] {downloaded, cacheFolder, freeCacheSpace, tmpFolder, freeTmpSpace});
+                            LOGGER.log(Level.WARNING, "Download/Extraction failed due to low storage, indexing is now disabled.", ex);
+
+                            // disable indexing and tell user about it
+                            RepositoryPreferences.setIndexRepositories(false);
+
+                            IndexingNotificationProvider np = Lookup.getDefault().lookup(IndexingNotificationProvider.class);
+                            if(np != null) {
+                                np.notifyError(Bundle.MSG_NoSpace(repo.getName(), "[cache]:"+cacheFolder.toString(), freeCacheSpace, "[tmp]:"+tmpFolder.toString(), freeTmpSpace));
+                            }
+                            unloadIndexingContext(repo.getId());
+                        }
                         throw new IOException("Failed to load maven-index for: " + indexingContext.getRepositoryUrl(), ex);
                     } catch (RuntimeException ex) {
                         // thread pools, like the one used in maven-indexer's IndexDataReader, may suppress cancellation exceptions
@@ -529,10 +612,8 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
                             LOGGER.log(Level.WARNING, "cleanup failed");
                         }
                     }
-                } finally {
-                    listener.close();
                 }
-            } else {
+            } else if (repo.isLocal()) {
                 LOGGER.log(Level.FINE, "Indexing Local Repository: {0}", repo.getId());
                 if (!indexingContext.getRepository().exists()) {
                     //#210743
@@ -553,28 +634,6 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
             if(e.getCause() instanceof ResourceDoesNotExistException) {
                 fireChange(repo, () -> repo.fireNoIndex());
             }
-            Path tmpFolder = Path.of(System.getProperty("java.io.tmpdir"));
-            Path cacheFolder = getIndexDirectory();
-
-            long freeTmpSpace = getFreeSpaceInMB(tmpFolder);
-            long freeCacheSpace = getFreeSpaceInMB(cacheFolder);
-
-            if (isNoSpaceLeftOnDevice(e) || freeCacheSpace < 1000 || freeTmpSpace < 1000) {
-
-                long downloaded = listener != null ? listener.getUnits() * 1024 : -1;
-                LOGGER.log(Level.INFO, "Downloaded maven index file has size {0} (zipped). The usable space in [cache]:{1} is {2} MB and in [tmp]:{3} is {4} MB.",
-                        new Object[] {downloaded, cacheFolder, freeCacheSpace, tmpFolder, freeTmpSpace});
-                LOGGER.log(Level.WARNING, "Download/Extraction failed due to low storage, indexing is now disabled.", e);
-
-                // disable indexing and tell user about it
-                RepositoryPreferences.setIndexRepositories(false);
-
-                IndexingNotificationProvider np = Lookup.getDefault().lookup(IndexingNotificationProvider.class);
-                if(np != null) {
-                    np.notifyError(Bundle.MSG_NoSpace(repo.getName(), "[cache]:"+cacheFolder.toString(), freeCacheSpace, "[tmp]:"+tmpFolder.toString(), freeTmpSpace));
-                }
-                unloadIndexingContext(repo.getId());
-            }
             throw e;
         } catch (Cancellation x) {
             pauseRemoteRepoIndexing(120); // pause a while
@@ -583,12 +642,12 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
             throw new IOException("could not find protocol handler for " + repo.getRepositoryUrl(), x);
         } finally {
             String kind;
-            if (fetchUpdateResult != null) {
-                kind = fetchUpdateResult.isFullUpdate() ? "download, create" : "incremental download, update";
+            if (repo.isRemoteDownloadable()) {
+                kind = fullUpdate ? "download, create" : "incremental download, update";
             } else {
-                kind = "scan";
+                kind = repo.isLocal() ? "scan" : "none";
             }
-            LOGGER.log(Level.INFO, "Indexing [{0}] of {1} took {2}s.", new Object[]{kind, repo.getId(), String.format("%.2f", (System.currentTimeMillis() - t)/1000.0f)});
+            LOGGER.log(Level.INFO, "Indexing [{0}] of {1} took {2}s.", new Object[]{kind, repo.getId(), "%.2f".formatted((System.currentTimeMillis() - t)/1000.0f)});
             synchronized (indexingMutexes) {
                 indexingMutexes.remove(mutex);
             }
@@ -934,6 +993,10 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
 
     static Path getIndexDirectory(final RepositoryInfo info) {
         return getIndexDirectory().resolve(info.getId());
+    }
+
+    private static Path getIndexDirectory(Path cache, RepositoryInfo info) {
+        return cache.resolve("mavenindex").resolve(info.getId());
     }
 
     private static Path getAllGroupCacheFile(final RepositoryInfo info) {

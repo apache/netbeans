@@ -501,7 +501,7 @@ public class Utilities {
                 newMembers.add(make.ExpressionStatement(make.Identifier("$$1$")));
                 newMembers.addAll(members.subList(syntheticOffset, members.size()));
 
-                patternTree = make.Class(mt, "$", List.of(), null, List.of(), newMembers);
+                patternTree = make.Class(mt, "$", List.of(), null, List.of(), List.of(), newMembers);
             } else {
                 patternTree = members.get(0 + syntheticOffset);
             }

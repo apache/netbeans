@@ -631,6 +631,7 @@ public abstract class EntityResourcesGenerator extends AbstractGenerator
                         classTree.getTypeParameters(),
                         classTree.getExtendsClause(),
                         implementsClause,
+                        classTree.getPermitsClause(),
                         members);
 
                 workingCopy.rewrite(classTree, newClassTree);

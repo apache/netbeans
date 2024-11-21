@@ -247,7 +247,7 @@ public class CreateSubclass {
                                         return;
                                     }
                                 }
-                                parameter.rewrite(source, make.Class(source.getModifiers(), simpleName, typeParameters, make.Type(superTypeElement.asType()), source.getImplementsClause(), source.getMembers()));
+                                parameter.rewrite(source, make.Class(source.getModifiers(), simpleName, typeParameters, make.Type(superTypeElement.asType()), source.getImplementsClause(), source.getPermitsClause(), source.getMembers()));
                                 for (ExecutableElement ctor : ElementFilter.constructorsIn(superTypeElement.getEnclosedElements())) {
                                     if (!ctor.getParameters().isEmpty()) {
                                         hasNonDefaultConstructor = true;
@@ -259,7 +259,7 @@ public class CreateSubclass {
                                 List<Tree> newImpls = new ArrayList<Tree>(impls.size() + 1);
                                 newImpls.addAll(impls);
                                 newImpls.add(make.Type(superTypeElement.asType()));
-                                parameter.rewrite(source, make.Class(source.getModifiers(), source.getSimpleName(), typeParameters, source.getExtendsClause(), newImpls, source.getMembers()));
+                                parameter.rewrite(source, make.Class(source.getModifiers(), source.getSimpleName(), typeParameters, source.getExtendsClause(), newImpls, source.getPermitsClause(), source.getMembers()));
                             }
                             if (parameter.getFileObject() == null) {
                                 parameter.rewrite(null, cut);

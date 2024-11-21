@@ -315,7 +315,8 @@ public class PushDownTransformer extends RefactoringVisitor {
             njuClass = make.Class(RefactoringUtils.makeAbstract(make,
                     njuClass.getModifiers()), njuClass.getSimpleName(),
                     njuClass.getTypeParameters(), njuClass.getExtendsClause(),
-                    njuClass.getImplementsClause(), njuClass.getMembers());
+                    njuClass.getImplementsClause(), njuClass.getPermitsClause(),
+                    njuClass.getMembers());
         }
 
         return njuClass;

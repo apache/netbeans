@@ -44,7 +44,7 @@ import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 import org.netbeans.modules.parsing.spi.indexing.ErrorsCache;
-import org.netbeans.modules.parsing.spi.indexing.ErrorsCache.Convertor2;
+import org.netbeans.modules.parsing.spi.indexing.ErrorsCache.Convertor;
 import org.netbeans.modules.parsing.spi.indexing.ErrorsCache.ErrorKind;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.spi.tasklist.TaskScanningScope;
@@ -141,7 +141,7 @@ public final class TLIndexerFactory extends EmbeddingIndexerFactory {
         return INDEXER_VERSION;
     }
 
-    private static final class ErrorConvertorImpl implements Convertor2<SimpleError>{
+    private static final class ErrorConvertorImpl implements Convertor<SimpleError>{
         private final List<Integer> lineStartOffsets;
         public ErrorConvertorImpl(List<Integer> lineStartOffsets) {
             this.lineStartOffsets = lineStartOffsets;
@@ -176,29 +176,6 @@ public final class TLIndexerFactory extends EmbeddingIndexerFactory {
             }
 
             return lineNumber;
-        }
-        @Override
-        public ErrorsCache.Range getRange(SimpleError error) {
-            int originalOffset = error.getStartPosition(); //snapshot offset
-            int lineNumber = 1;
-            int colNumber = 1;
-            if (originalOffset >= 0) {
-                int idx = Collections.binarySearch(lineStartOffsets, originalOffset);
-                if (idx < 0) {
-                    // idx == (-(insertion point) - 1) -> (insertion point) == -idx - 1
-                    int ln = -idx - 1;
-                    assert ln >= 1 && ln <= lineStartOffsets.size() :
-                        "idx=" + idx + ", lineNumber=" + ln + ", lineStartOffsets.size()=" + lineStartOffsets.size(); //NOI18N
-                    if (ln >= 1 && ln <= lineStartOffsets.size()) {
-                        lineNumber = ln;
-                        colNumber = originalOffset - lineStartOffsets.get(ln - 1);
-                    }
-                } else {
-                    lineNumber = idx + 1;
-                }
-            }
-
-            return new ErrorsCache.Range(new ErrorsCache.Position(lineNumber, colNumber), null);
         }
         @Override
         public String getMessage(SimpleError error) {

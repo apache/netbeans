@@ -39,16 +39,21 @@ import org.netbeans.modules.web.beans.hints.EditorAnnotationsHelper;
 import org.netbeans.spi.editor.hints.Severity;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DECORATOR;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DECORATOR_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INJECT_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INJECT_FQN_JAKARTA;
+
 
 /**
  * @author ads
  *
  */
 public class ManagedBeansAnalizer implements ClassAnalyzer {
-    
+
     private static final String EXTENSION = "javax.enterprise.inject.spi.Extension";  //NOI18N
     private static final String EXTENSION_JAKARTA = "jakarta.enterprise.inject.spi.Extension";  //NOI18N
-    
+
     /* (non-Javadoc)
      * @see org.netbeans.modules.web.beans.analysis.analyzer.ClassModelAnalyzer.ClassAnalyzer#analyze(javax.lang.model.element.TypeElement, javax.lang.model.element.TypeElement, org.netbeans.modules.web.beans.api.model.WebBeansModel, java.util.List, org.netbeans.api.java.source.CompilationInfo, java.util.concurrent.atomic.AtomicBoolean)
      */
@@ -57,7 +62,7 @@ public class ManagedBeansAnalizer implements ClassAnalyzer {
             WebBeansModel model, AtomicBoolean cancel,
             Result result )
     {
-        boolean cdiManaged = model.getQualifiers( element,  true ).size()>0;
+        boolean cdiManaged = !model.getQualifiers(element, true).isEmpty();
         if ( !cdiManaged ){
                 return;
         }
@@ -88,7 +93,7 @@ public class ManagedBeansAnalizer implements ClassAnalyzer {
             Result result )
     {
         Collection<TypeElement> decorators = model.getDecorators(element);
-        if ( decorators!= null && decorators.size() >0 ){
+        if (decorators != null && !decorators.isEmpty()) {
             EditorAnnotationsHelper helper = EditorAnnotationsHelper.getInstance(result);
             ElementHandle<TypeElement> handle = ElementHandle.create(element);
             if ( helper != null ){
@@ -108,10 +113,10 @@ public class ManagedBeansAnalizer implements ClassAnalyzer {
             return;
         }
         TypeMirror elementType = element.asType();
-        if ( model.getCompilationController().getTypes().isSubtype( 
+        if ( model.getCompilationController().getTypes().isSubtype(
                 elementType,  extension.asType())){
-            result.addNotification(Severity.WARNING, element, 
-                        model,  NbBundle.getMessage( ManagedBeansAnalizer.class, 
+            result.addNotification(Severity.WARNING, element,
+                        model,  NbBundle.getMessage( ManagedBeansAnalizer.class,
                                 "WARN_QualifiedElementExtension"));     // NOI18N
         }
     }
@@ -121,16 +126,15 @@ public class ManagedBeansAnalizer implements ClassAnalyzer {
     {
         Set<Modifier> modifiers = element.getModifiers();
         if (modifiers.contains(Modifier.ABSTRACT)) {
-            if (AnnotationUtil.hasAnnotation(element, AnnotationUtil.DECORATOR, model.getCompilationController())
-                    || AnnotationUtil.hasAnnotation(element, AnnotationUtil.DECORATOR_JAKARTA, model.getCompilationController())) {
+            if (AnnotationUtil.hasAnnotation(element, model, DECORATOR_JAKARTA, DECORATOR)) {
                 return;
             }
 
             // element is abstract and has no Decorator annotation
             result.addNotification( Severity.WARNING, element, model,
-                        NbBundle.getMessage(ManagedBeansAnalizer.class, 
+                        NbBundle.getMessage(ManagedBeansAnalizer.class,
                                 "WARN_QualifierAbstractClass"));        // NOI18N
-        }        
+        }
     }
 
     private void checkInner( TypeElement element, TypeElement parent,
@@ -141,8 +145,8 @@ public class ManagedBeansAnalizer implements ClassAnalyzer {
         }
         Set<Modifier> modifiers = element.getModifiers();
         if ( !modifiers.contains( Modifier.STATIC )){
-            result.addError(element, model, 
-                    NbBundle.getMessage(ManagedBeansAnalizer.class, 
+            result.addError(element, model,
+                    NbBundle.getMessage(ManagedBeansAnalizer.class,
                     "ERR_NonStaticInnerType")); // NOI18N
         }
     }
@@ -150,7 +154,7 @@ public class ManagedBeansAnalizer implements ClassAnalyzer {
     private void checkCtor( TypeElement element, WebBeansModel model,
            Result result )
     {
-        List<ExecutableElement> ctors = ElementFilter.constructorsIn( 
+        List<ExecutableElement> ctors = ElementFilter.constructorsIn(
                 element.getEnclosedElements());
         for (ExecutableElement ctor : ctors) {
             Set<Modifier> modifiers = ctor.getModifiers();
@@ -158,20 +162,17 @@ public class ManagedBeansAnalizer implements ClassAnalyzer {
                 continue;
             }
             List<? extends VariableElement> parameters = ctor.getParameters();
-            if ( parameters.size() ==0 ){
+            if (parameters.isEmpty()) {
                 return;
             }
-            if (
-                    AnnotationUtil.hasAnnotation(ctor, AnnotationUtil.INJECT_FQN, model.getCompilationController())
-                    || AnnotationUtil.hasAnnotation(ctor, AnnotationUtil.INJECT_FQN_JAKARTA, model.getCompilationController())
-            )
+            if (AnnotationUtil.hasAnnotation(ctor, model, INJECT_FQN_JAKARTA, INJECT_FQN))
             {
                 return;
             }
         }
         // there is no non-private ctors without params or annotated with @Inject
-        result.addNotification( Severity.WARNING, element, model, 
-                NbBundle.getMessage(ManagedBeansAnalizer.class, 
+        result.addNotification( Severity.WARNING, element, model,
+                NbBundle.getMessage(ManagedBeansAnalizer.class,
                 "WARN_QualifierNoCtorClass")); // NOI18N
     }
 

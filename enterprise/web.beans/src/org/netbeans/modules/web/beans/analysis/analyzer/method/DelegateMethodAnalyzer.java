@@ -38,6 +38,13 @@ import org.netbeans.modules.web.beans.analysis.analyzer.field.DelegateFieldAnali
 import org.netbeans.modules.web.beans.hints.EditorAnnotationsHelper;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DECORATOR;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DECORATOR_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DELEGATE_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DELEGATE_FQN_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INJECT_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INJECT_FQN_JAKARTA;
+
 
 /**
  * @author ads
@@ -58,8 +65,7 @@ public class DelegateMethodAnalyzer implements MethodAnalyzer {
             if (cancel.get()) {
                 return;
             }
-            if (AnnotationUtil.hasAnnotation(param, AnnotationUtil.DELEGATE_FQN_JAKARTA, result.getInfo())
-                    || AnnotationUtil.hasAnnotation(param, AnnotationUtil.DELEGATE_FQN, result.getInfo()))
+            if (AnnotationUtil.hasAnnotation(param, result.getInfo(), DELEGATE_FQN_JAKARTA, DELEGATE_FQN))
             {
                 result.requireCdiEnabled(element);
                 if (cancel.get()) {
@@ -90,13 +96,12 @@ public class DelegateMethodAnalyzer implements MethodAnalyzer {
             ExecutableElement element, VariableElement param,
             CdiAnalysisResult result)
     {
-        if ( ! ( AnnotationUtil.hasAnnotation(parent, AnnotationUtil.DECORATOR, result.getInfo())
-                || AnnotationUtil.hasAnnotation(parent, AnnotationUtil.DECORATOR_JAKARTA, result.getInfo())))
+        if (!AnnotationUtil.hasAnnotation(parent, result.getInfo(), DECORATOR_JAKARTA, DECORATOR))
         {
-            result.addError( param, 
-                NbBundle.getMessage(DelegateFieldAnalizer.class, 
+            result.addError( param,
+                NbBundle.getMessage(DelegateFieldAnalizer.class,
                         "ERR_DelegateIsNotInDecorator")); // NOI18N
-        }        
+        }
     }
 
     private void checkDelegateType( VariableElement element, int i,
@@ -120,17 +125,16 @@ public class DelegateMethodAnalyzer implements MethodAnalyzer {
         }
     }
 
-    private void checkMethodDefinition( ExecutableElement element, 
+    private void checkMethodDefinition( ExecutableElement element,
             VariableElement param,  CdiAnalysisResult result  )
     {
         if ( element.getKind() == ElementKind.CONSTRUCTOR ){
             return;
         }
-        if (!(AnnotationUtil.hasAnnotation(element, AnnotationUtil.INJECT_FQN, result.getInfo())
-                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.INJECT_FQN_JAKARTA, result.getInfo())))
+        if (!AnnotationUtil.hasAnnotation(element, result.getInfo(), INJECT_FQN_JAKARTA, INJECT_FQN))
         {
-            result.addError( param, 
-                NbBundle.getMessage(DelegateMethodAnalyzer.class, 
+            result.addError( param,
+                NbBundle.getMessage(DelegateMethodAnalyzer.class,
                         "ERR_WrongDelegateMethod"));                        // NOI18N
         }
     }

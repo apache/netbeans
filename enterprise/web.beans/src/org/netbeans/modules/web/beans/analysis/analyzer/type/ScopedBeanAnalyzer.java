@@ -18,22 +18,17 @@
  */
 package org.netbeans.modules.web.beans.analysis.analyzer.type;
 
-import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 
@@ -45,15 +40,19 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 import org.netbeans.spi.editor.hints.Severity;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.NORMAL_SCOPE_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.NORMAL_SCOPE_FQN_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.STATEFUL;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.STATEFUL_JAKARTA;
 
 /**
  * @author ads
  *
  */
-public class ScopedBeanAnalyzer extends AbstractScopedAnalyzer 
-    implements ClassAnalyzer 
+public class ScopedBeanAnalyzer extends AbstractScopedAnalyzer
+    implements ClassAnalyzer
 {
-    
+
     /* (non-Javadoc)
      * @see org.netbeans.modules.web.beans.analysis.analyzer.ClassModelAnalyzer.ClassAnalyzer#analyze(javax.lang.model.element.TypeElement, javax.lang.model.element.TypeElement, org.netbeans.modules.web.beans.api.model.WebBeansModel, java.util.List, org.netbeans.api.java.source.CompilationInfo, java.util.concurrent.atomic.AtomicBoolean)
      */
@@ -101,26 +100,23 @@ public class ScopedBeanAnalyzer extends AbstractScopedAnalyzer
             return;
         }
         if ( AnnotationUtil.isSessionBean(element, model.getCompilationController())){
-            if (
-                    AnnotationUtil.hasAnnotation(element, AnnotationUtil.STATEFUL,  model.getCompilationController())
-                    || AnnotationUtil.hasAnnotation(element, AnnotationUtil.STATEFUL_JAKARTA,  model.getCompilationController())
-            )
+            if (AnnotationUtil.hasAnnotation(element, model, STATEFUL_JAKARTA, STATEFUL))
             {
                 return;
             }
             else {
-                result.addError(element, model ,  
+                result.addError(element, model ,
                         NbBundle.getMessage(ScopedBeanAnalyzer.class,
                             "ERR_NotPassivationSessionBean",        // NOI18N
-                            scopeElement.getQualifiedName().toString()));       
+                            scopeElement.getQualifiedName().toString()));
                 return;
             }
         }
         if ( !isSerializable(element, model) ){
-            result.addError(element, model ,  
+            result.addError(element, model ,
                     NbBundle.getMessage(ScopedBeanAnalyzer.class,
                         "ERR_NotPassivationManagedBean",        // NOI18N
-                        scopeElement.getQualifiedName().toString())); 
+                        scopeElement.getQualifiedName().toString()));
         }
         // TODO : all interceptors ans decorators of bean should be also passivation capable
     }
@@ -141,7 +137,7 @@ public class ScopedBeanAnalyzer extends AbstractScopedAnalyzer
                     AnnotationUtil.INTERCEPTOR, AnnotationUtil.DECORATOR);
         }
         if ( annotationMirror!= null ){
-            result.addNotification( Severity.WARNING, element, model,  
+            result.addNotification( Severity.WARNING, element, model,
                     NbBundle.getMessage(ScopedBeanAnalyzer.class,
                         "WARN_ScopedDecoratorInterceptor" ));    // NOI18N
         }
@@ -154,13 +150,13 @@ public class ScopedBeanAnalyzer extends AbstractScopedAnalyzer
         if ( scopeElement.getQualifiedName().contentEquals(AnnotationUtil.DEPENDENT)
                 || scopeElement.getQualifiedName().contentEquals(AnnotationUtil.DEPENDENT_JAKARTA)){
             return;
-        }  
+        }
         result.requireCdiEnabled(element, model);
         TypeMirror type = element.asType();
         if ( type instanceof DeclaredType ){
             List<? extends TypeMirror> typeArguments = ((DeclaredType)type).getTypeArguments();
-            if ( typeArguments.size() != 0 ){
-                result.addError(element, model,  
+            if (!typeArguments.isEmpty()) {
+                result.addError(element, model,
                     NbBundle.getMessage(ScopedBeanAnalyzer.class,
                         "ERR_IncorrectScopeForParameterizedBean" ));    // NOI18N
             }
@@ -175,15 +171,15 @@ public class ScopedBeanAnalyzer extends AbstractScopedAnalyzer
             return;
         }
         result.requireCdiEnabled(element, model);
-        List<VariableElement> fields = ElementFilter.fieldsIn( 
+        List<VariableElement> fields = ElementFilter.fieldsIn(
                 element.getEnclosedElements());
         for (VariableElement field : fields) {
             Set<Modifier> modifiers = field.getModifiers();
             if ( modifiers.contains(Modifier.PUBLIC )
                     && (!modifiers.contains(Modifier.STATIC) || !model.isCdi11OrLater())){
-                result.addError(element, model ,  
+                result.addError(element, model ,
                         NbBundle.getMessage(ScopedBeanAnalyzer.class,
-                            "ERR_IcorrectScopeWithPublicField", 
+                            "ERR_IcorrectScopeWithPublicField",
                             field.getSimpleName().toString()));
                 return;
             }
@@ -193,8 +189,7 @@ public class ScopedBeanAnalyzer extends AbstractScopedAnalyzer
     private void checkProxiability( TypeElement scopeElement, Element element,
             WebBeansModel model, Result result )
     {
-        boolean isNormal = AnnotationUtil.hasAnnotation(scopeElement, AnnotationUtil.NORMAL_SCOPE_FQN, model.getCompilationController())
-                || AnnotationUtil.hasAnnotation(scopeElement, AnnotationUtil.NORMAL_SCOPE_FQN_JAKARTA, model.getCompilationController());
+        boolean isNormal = AnnotationUtil.hasAnnotation(scopeElement, model, NORMAL_SCOPE_FQN_JAKARTA, NORMAL_SCOPE_FQN);
         if ( isNormal ){
             result.requireCdiEnabled(element, model);
             checkFinal( element , model, result );
@@ -209,8 +204,8 @@ public class ScopedBeanAnalyzer extends AbstractScopedAnalyzer
         }
         Set<Modifier> modifiers = element.getModifiers();
         if ( modifiers.contains( Modifier.FINAL) ){
-            result.addError( element, model,  
-                    NbBundle.getMessage(ScopedBeanAnalyzer.class, 
+            result.addError( element, model,
+                    NbBundle.getMessage(ScopedBeanAnalyzer.class,
                             "ERR_FinalScopedClass"));
             return;
         }
@@ -219,7 +214,7 @@ public class ScopedBeanAnalyzer extends AbstractScopedAnalyzer
         for (ExecutableElement method : methods) {
             modifiers = method.getModifiers();
             if (modifiers.contains(Modifier.FINAL)) {
-                result.addNotification( Severity.WARNING, method, model, 
+                result.addNotification( Severity.WARNING, method, model,
                                 NbBundle.getMessage(
                                 ScopedBeanAnalyzer.class,
                                 "WARN_FinalScopedClassMethod"));

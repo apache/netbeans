@@ -173,29 +173,42 @@ public final class AnnotationUtil {
     private AnnotationUtil(){
     }
 
-    public static boolean hasAnnotation(Element element, String annotation,
-            CompilationInfo info )
-    {
-        return getAnnotationMirror(element, annotation, info)!=null;
-    }
-
-    public static AnnotationMirror getAnnotationMirror(Element element,
-            String annotation,CompilationInfo info )
-    {
-        return getAnnotationMirror(element, info, annotation);
-    }
-
     /**
-     * return AnnotationMirror for first found annotation from annotationFqns
      * @param element
      * @param info
      * @param annotationFqns
-     * @return
+     * @return true if at least one annotation from {@code annotationFqns} is
+     * present
+     */
+    public static boolean hasAnnotation(Element element,
+            CompilationInfo info, String... annotationFqns )
+    {
+        return getAnnotationMirror(element, info, annotationFqns) != null;
+    }
+
+    /**
+     * @param element
+     * @param model
+     * @param annotationFqns
+     * @return true if at least one annotation from {@code annotationFqns} is
+     * present
+     */
+    public static boolean hasAnnotation(Element element,
+            WebBeansModel model, String... annotationFqns)
+    {
+        return hasAnnotation(element, model.getCompilationController(), annotationFqns);
+    }
+
+    /**
+     * @param element
+     * @param info
+     * @param annotationFqns
+     * @return AnnotationMirror for first found annotation from annotationFqns
      */
     public static AnnotationMirror getAnnotationMirror(Element element,
             CompilationInfo info , String... annotationFqns)
     {
-        Set<TypeElement> set = new HashSet<TypeElement>();
+        Set<TypeElement> set = new HashSet<>();
         Elements els = info.getElements();
         for( String annotation : annotationFqns){
             TypeElement annotationElement = els.getTypeElement(
@@ -220,26 +233,25 @@ public final class AnnotationUtil {
     public static boolean isSessionBean(Element element ,
             CompilationInfo compInfo )
     {
-        return getAnnotationMirror(element, compInfo, STATEFUL, STATELESS, SINGLETON, STATEFUL_JAKARTA, STATELESS_JAKARTA, SINGLETON_JAKARTA) != null;
+        return hasAnnotation(element, compInfo, STATEFUL, STATELESS, SINGLETON, STATEFUL_JAKARTA, STATELESS_JAKARTA, SINGLETON_JAKARTA);
     }
 
     public static boolean isDelegate(Element element, TypeElement parent,
             WebBeansModel model )
     {
-        return (AnnotationUtil.hasAnnotation(element, AnnotationUtil.DELEGATE_FQN, model.getCompilationController())
-                && AnnotationUtil.hasAnnotation(parent, AnnotationUtil.DECORATOR, model.getCompilationController()))
-                || (AnnotationUtil.hasAnnotation(element, AnnotationUtil.DELEGATE_FQN_JAKARTA, model.getCompilationController())
-                && AnnotationUtil.hasAnnotation(parent, AnnotationUtil.DECORATOR_JAKARTA, model.getCompilationController()));
+        return (AnnotationUtil.hasAnnotation(element, model, DELEGATE_FQN)
+                && AnnotationUtil.hasAnnotation(parent, model, DECORATOR))
+                || (AnnotationUtil.hasAnnotation(element, model, DELEGATE_FQN_JAKARTA)
+                && AnnotationUtil.hasAnnotation(parent, model, DECORATOR_JAKARTA));
     }
 
     public static boolean isLifecycleCallback( ExecutableElement element ,
             CompilationInfo info )
     {
-        AnnotationMirror annotationMirror = getAnnotationMirror(element, info,
+        return hasAnnotation(element, info,
                 POST_ACTIVATE, POST_CONSTRUCT, PRE_DESTROY, PRE_PASSIVATE,
                 POST_ACTIVATE_JAKARTA, POST_CONSTRUCT_JAKARTA, PRE_DESTROY_JAKARTA, PRE_PASSIVATE_JAKARTA
         );
-        return annotationMirror != null;
     }
 
 }

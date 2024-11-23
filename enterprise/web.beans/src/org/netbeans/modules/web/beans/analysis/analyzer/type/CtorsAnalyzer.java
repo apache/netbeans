@@ -30,6 +30,9 @@ import org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil;
 import org.netbeans.modules.web.beans.analysis.analyzer.ClassElementAnalyzer.ClassAnalyzer;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INJECT_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INJECT_FQN_JAKARTA;
+
 
 /**
  * @author ads
@@ -51,10 +54,7 @@ public class CtorsAnalyzer implements ClassAnalyzer {
             if ( cancel.get() ){
                 return;
             }
-            if (
-                    AnnotationUtil.hasAnnotation( ctor , AnnotationUtil.INJECT_FQN, result.getInfo())
-                    || AnnotationUtil.hasAnnotation( ctor , AnnotationUtil.INJECT_FQN_JAKARTA, result.getInfo())
-            )
+            if (AnnotationUtil.hasAnnotation(ctor, result.getInfo(), INJECT_FQN_JAKARTA, INJECT_FQN))
             {
                 result.requireCdiEnabled( ctor );
                 injectCtorCount++;

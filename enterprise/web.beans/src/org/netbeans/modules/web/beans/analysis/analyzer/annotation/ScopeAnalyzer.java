@@ -28,6 +28,11 @@ import org.netbeans.modules.web.beans.analysis.analyzer.AnnotationElementAnalyze
 import org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.NORMAL_SCOPE_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.NORMAL_SCOPE_FQN_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.SCOPE_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.SCOPE_FQN_JAKARTA;
+
 
 /**
  * @author ads
@@ -43,36 +48,34 @@ public class ScopeAnalyzer implements AnnotationAnalyzer {
             CdiAnalysisResult result)
     {
         CompilationInfo compInfo = result.getInfo();
-        boolean isScope = AnnotationUtil.hasAnnotation(element, AnnotationUtil.SCOPE_FQN, compInfo)
-                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.SCOPE_FQN_JAKARTA, compInfo);
-        boolean isNormalScope = AnnotationUtil.hasAnnotation(element, AnnotationUtil.NORMAL_SCOPE_FQN, compInfo)
-                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.NORMAL_SCOPE_FQN_JAKARTA, compInfo);
+        boolean isScope = AnnotationUtil.hasAnnotation(element, compInfo, SCOPE_FQN_JAKARTA, SCOPE_FQN);
+        boolean isNormalScope = AnnotationUtil.hasAnnotation(element, compInfo, NORMAL_SCOPE_FQN_JAKARTA, NORMAL_SCOPE_FQN);
         if ( isScope || isNormalScope ){
             result.requireCdiEnabled(element);
-            ScopeTargetAnalyzer analyzer = new ScopeTargetAnalyzer(element, 
+            ScopeTargetAnalyzer analyzer = new ScopeTargetAnalyzer(element,
                     result, isNormalScope);
             if ( cancel.get() ){
                 return;
             }
             if ( !analyzer.hasRuntimeRetention() ){
-                result.addError( element, 
-                            NbBundle.getMessage(ScopeAnalyzer.class, 
+                result.addError( element,
+                            NbBundle.getMessage(ScopeAnalyzer.class,
                                     INCORRECT_RUNTIME));
             }
             if ( cancel.get() ){
                 return;
             }
             if ( !analyzer.hasTarget()){
-                result.addError( element, 
-                            NbBundle.getMessage(ScopeAnalyzer.class, 
+                result.addError( element,
+                            NbBundle.getMessage(ScopeAnalyzer.class,
                                     "ERR_IncorrectScopeTarget"));                // NOI18N
             }
         }
     }
-    
+
     private static class ScopeTargetAnalyzer extends CdiAnnotationAnalyzer {
-        
-        ScopeTargetAnalyzer(TypeElement element, CdiAnalysisResult result, 
+
+        ScopeTargetAnalyzer(TypeElement element, CdiAnalysisResult result,
                 boolean normalScope )
         {
             super( element , result );
@@ -100,7 +103,7 @@ public class ScopeAnalyzer implements AnnotationAnalyzer {
             }
         }
 
-        private boolean isNormalScope; 
+        private final boolean isNormalScope;
     }
 
 }

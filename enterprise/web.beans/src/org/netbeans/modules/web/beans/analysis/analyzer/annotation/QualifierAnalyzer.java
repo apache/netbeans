@@ -18,23 +18,16 @@
  */
 package org.netbeans.modules.web.beans.analysis.analyzer.annotation;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
 
 import org.netbeans.modules.web.beans.analysis.CdiAnalysisResult;
-import org.netbeans.modules.web.beans.analysis.analyzer.AnnotationElementAnalyzer.AnnotationAnalyzer;
 import org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil;
 import org.openide.util.NbBundle;
-import org.netbeans.spi.editor.hints.Severity;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.QUALIFIER_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.QUALIFIER_FQN_JAKARTA;
 
 /**
  * @author ads
@@ -49,31 +42,30 @@ public class QualifierAnalyzer extends InterceptorBindingMembersAnalyzer {
     public void analyze( TypeElement element, AtomicBoolean cancel,
             CdiAnalysisResult result )
     {
-        if (AnnotationUtil.hasAnnotation(element, AnnotationUtil.QUALIFIER_FQN, result.getInfo())
-                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.QUALIFIER_FQN_JAKARTA, result.getInfo()))
+        if (AnnotationUtil.hasAnnotation(element, result.getInfo(), QUALIFIER_FQN_JAKARTA, QUALIFIER_FQN))
         {
             result.requireCdiEnabled(element);
-            QualifierTargetAnalyzer analyzer = new QualifierTargetAnalyzer(element, 
+            QualifierTargetAnalyzer analyzer = new QualifierTargetAnalyzer(element,
                     result );
             if ( !analyzer.hasRuntimeRetention() ){
-                result.addError( element, 
-                        NbBundle.getMessage(QualifierTargetAnalyzer.class, 
+                result.addError( element,
+                        NbBundle.getMessage(QualifierTargetAnalyzer.class,
                                 INCORRECT_RUNTIME));
             }
             if ( !analyzer.hasTarget()){
-                result.addError( element, 
-                            NbBundle.getMessage(QualifierTargetAnalyzer.class, 
+                result.addError( element,
+                            NbBundle.getMessage(QualifierTargetAnalyzer.class,
                                     "ERR_IncorrectQualifierTarget"));  // NOI18N
             }
             if ( cancel.get() ){
                 return;
             }
             checkMembers( element, result , NbBundle.getMessage(
-                    QualifierAnalyzer.class,  
+                    QualifierAnalyzer.class,
                         "WARN_ArrayAnnotationValuedQualifierMember"));  // NOI18N
         }
     }
-    
+
     private static class QualifierTargetAnalyzer extends CdiAnnotationAnalyzer{
 
         QualifierTargetAnalyzer( TypeElement element, CdiAnalysisResult result)
@@ -96,6 +88,6 @@ public class QualifierAnalyzer extends InterceptorBindingMembersAnalyzer {
         protected TargetVerifier getTargetVerifier() {
             return QualifierVerifier.getInstance( true );
         }
-        
+
     }
 }

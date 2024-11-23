@@ -29,6 +29,10 @@ import javax.lang.model.element.VariableElement;
 import org.netbeans.modules.web.beans.analysis.CdiAnalysisResult;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DISPOSES_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DISPOSES_FQN_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.OBSERVES_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.OBSERVES_FQN_JAKARTA;
 
 /**
  * @author ads
@@ -49,16 +53,14 @@ public class CtorAnalyzer implements ElementAnalyzer {
             if ( cancel.get() ){
                 return;
             }
-            boolean isDisposer = AnnotationUtil.hasAnnotation(param, AnnotationUtil.DISPOSES_FQN, result.getInfo())
-                    || AnnotationUtil.hasAnnotation(param, AnnotationUtil.DISPOSES_FQN_JAKARTA, result.getInfo());
-            boolean isObserver = AnnotationUtil.hasAnnotation(param, AnnotationUtil.OBSERVES_FQN, result.getInfo())
-                    || AnnotationUtil.hasAnnotation(param, AnnotationUtil.OBSERVES_FQN_JAKARTA, result.getInfo());
+            boolean isDisposer = AnnotationUtil.hasAnnotation(param, result.getInfo(), DISPOSES_FQN_JAKARTA, DISPOSES_FQN);
+            boolean isObserver = AnnotationUtil.hasAnnotation(param, result.getInfo(), OBSERVES_FQN_JAKARTA, OBSERVES_FQN);
             if ( isDisposer || isObserver ){
                 result.requireCdiEnabled(element);
-                String annotation = isDisposer ? AnnotationUtil.DISPOSES : 
+                String annotation = isDisposer ? AnnotationUtil.DISPOSES :
                     AnnotationUtil.OBSERVES;
                 result.addError( element, NbBundle.getMessage(
-                    CtorAnalyzer.class, "ERR_BadAnnotationParamCtor", annotation)); // NOI18N 
+                    CtorAnalyzer.class, "ERR_BadAnnotationParamCtor", annotation)); // NOI18N
                 break;
             }
         }

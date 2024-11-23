@@ -32,7 +32,6 @@ import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeMirror;
 
 import org.netbeans.api.java.source.CompilationController;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.AnnotationHelper;
 import org.netbeans.modules.web.beans.analysis.CdiEditorAnalysisFactory;
 import org.netbeans.modules.web.beans.analysis.analyzer.AbstractDecoratorAnalyzer;
@@ -49,13 +48,18 @@ import org.netbeans.modules.web.beans.hints.EditorAnnotationsHelper;
 import org.netbeans.spi.editor.hints.Severity;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DELEGATE_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DELEGATE_FQN_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.NAMED;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.NAMED_JAKARTA;
+
 
 /**
  * @author ads
  *
  */
-public class InjectionPointParameterAnalyzer 
-   extends AbstractDecoratorAnalyzer<ExecutableElement> implements MethodAnalyzer 
+public class InjectionPointParameterAnalyzer
+   extends AbstractDecoratorAnalyzer<ExecutableElement> implements MethodAnalyzer
 {
 
     /* (non-Javadoc)
@@ -63,7 +67,7 @@ public class InjectionPointParameterAnalyzer
      */
     @Override
     public void analyze( ExecutableElement element, TypeMirror returnType,
-            TypeElement parent, WebBeansModel model , 
+            TypeElement parent, WebBeansModel model ,
             AtomicBoolean cancel , Result result )
     {
         for (VariableElement var : element.getParameters()) {
@@ -101,11 +105,9 @@ public class InjectionPointParameterAnalyzer
                     if ( cancel.get()){
                         return;
                     }
-                    checkInjectionPointMetadata( var, element, parent , model , 
+                    checkInjectionPointMetadata( var, element, parent , model ,
                             cancel , result );
-                    if ( isDelegate
-                            || AnnotationUtil.hasAnnotation(element, AnnotationUtil.DELEGATE_FQN, model.getCompilationController())
-                            || AnnotationUtil.hasAnnotation(element, AnnotationUtil.DELEGATE_FQN_JAKARTA, model.getCompilationController()))
+                    if ( isDelegate || AnnotationUtil.hasAnnotation(element, model, DELEGATE_FQN_JAKARTA, DELEGATE_FQN))
                     {
                         return;
                     }
@@ -127,7 +129,7 @@ public class InjectionPointParameterAnalyzer
         }
 
     }
-    
+
     /* (non-Javadoc)
      * @see org.netbeans.modules.web.beans.analysis.analyzer.AbstractDecoratorAnalyzer#addClassError(javax.lang.model.element.VariableElement, java.lang.Object, javax.lang.model.element.TypeElement, org.netbeans.modules.web.beans.api.model.WebBeansModel, org.netbeans.api.java.source.CompilationInfo, java.util.List)
      */
@@ -136,12 +138,12 @@ public class InjectionPointParameterAnalyzer
             TypeElement decoratedBean, WebBeansModel model,
             Result result )
     {
-        result.addError( element , method, model,  
-                    NbBundle.getMessage(InjectionPointParameterAnalyzer.class, 
+        result.addError( element , method, model,
+                    NbBundle.getMessage(InjectionPointParameterAnalyzer.class,
                             "ERR_FinalDecoratedBean",                   // NOI18N
                             decoratedBean.getQualifiedName().toString()));
     }
-    
+
     /* (non-Javadoc)
      * @see org.netbeans.modules.web.beans.analysis.analyzer.AbstractDecoratorAnalyzer#addMethodError(javax.lang.model.element.VariableElement, java.lang.Object, javax.lang.model.element.TypeElement, javax.lang.model.element.Element, org.netbeans.modules.web.beans.api.model.WebBeansModel, org.netbeans.modules.web.beans.analysis.analyzer.ModelAnalyzer.Result)
      */
@@ -157,9 +159,9 @@ public class InjectionPointParameterAnalyzer
                         decoratedBean.getQualifiedName().toString(),
                         decoratedMethod.getSimpleName().toString()));
     }
-    
+
     private TypeMirror getParameterType( VariableElement var,
-            ExecutableElement element, TypeElement parent , 
+            ExecutableElement element, TypeElement parent ,
             CompilationController controller )
     {
         ExecutableType method = (ExecutableType)controller.getTypes().asMemberOf(
@@ -169,7 +171,8 @@ public class InjectionPointParameterAnalyzer
         int paramIndex = parameters.indexOf(var);
         return parameterTypes.get(paramIndex);
     }
-    
+
+    @SuppressWarnings("UnnecessaryReturnStatement")
     private void checkInjectionPointMetadata( VariableElement var,
             ExecutableElement method, TypeElement parent, WebBeansModel model,
             AtomicBoolean cancel , Result result )
@@ -209,7 +212,7 @@ public class InjectionPointParameterAnalyzer
             String scope = model.getScope(parent);
             if (scope != null && !AnnotationUtil.DEPENDENT.equals(scope)
                     && !AnnotationUtil.DEPENDENT_JAKARTA.equals(scope)) {
-                result.addError(var, method, model, 
+                result.addError(var, method, model,
                         NbBundle.getMessage(InjectionPointParameterAnalyzer.class,"ERR_WrongQualifierInjectionPointMeta")); // NOI18N
             }
         }
@@ -223,18 +226,14 @@ public class InjectionPointParameterAnalyzer
             WebBeansModel model, Result result)
     {
         AnnotationMirror annotation = AnnotationUtil.getAnnotationMirror(
-                var, AnnotationUtil.NAMED_JAKARTA, model.getCompilationController());
-        if (annotation == null) {
-            annotation = AnnotationUtil.getAnnotationMirror(
-                    var, AnnotationUtil.NAMED, model.getCompilationController());
-        }
+                var, model.getCompilationController(), NAMED_JAKARTA, NAMED);
         if (annotation != null) {
-            result.addNotification( Severity.WARNING , var, element , model,  
-                        NbBundle.getMessage(InjectionPointAnalyzer.class, 
+            result.addNotification( Severity.WARNING , var, element , model,
+                        NbBundle.getMessage(InjectionPointAnalyzer.class,
                                 "WARN_NamedInjectionPoint"));                       // NOI18N
-            if ( annotation.getElementValues().size() == 0 ){
-                result.addError(var, element,  model, 
-                        NbBundle.getMessage( InjectionPointParameterAnalyzer.class, 
+            if ( annotation.getElementValues().isEmpty() ){
+                result.addError(var, element,  model,
+                        NbBundle.getMessage( InjectionPointParameterAnalyzer.class,
                                 "ERR_ParameterNamedInjectionPoint"));        // NOI18N
             }
         }
@@ -251,13 +250,13 @@ public class InjectionPointParameterAnalyzer
                 severity = Severity.ERROR;
             }
             String message = ((DependencyInjectionResult.Error)res).getMessage();
-            result.addNotification(severity, element , method , 
+            result.addNotification(severity, element , method ,
                         model,  message);
         }
     }
 
-    private void informInjectionPointDefError(InjectionPointDefinitionError exception , 
-            Element element, WebBeansModel model, 
+    private void informInjectionPointDefError(InjectionPointDefinitionError exception ,
+            Element element, WebBeansModel model,
             Result result )
     {
         result.addError(element, model, exception.getMessage());

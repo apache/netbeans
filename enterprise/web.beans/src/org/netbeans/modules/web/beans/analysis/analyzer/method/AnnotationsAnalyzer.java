@@ -38,13 +38,22 @@ import org.netbeans.modules.web.beans.analysis.analyzer.MethodElementAnalyzer.Me
 import org.netbeans.modules.web.beans.hints.EditorAnnotationsHelper;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DISPOSES_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DISPOSES_FQN_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INJECT_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INJECT_FQN_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.OBSERVES_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.OBSERVES_FQN_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.PRODUCES_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.PRODUCES_FQN_JAKARTA;
+
 
 /**
  * @author ads
  *
  */
 public class AnnotationsAnalyzer implements MethodAnalyzer {
-    
+
     private static final String EJB = "ejb";            // NOI18N
 
     /* (non-Javadoc)
@@ -54,7 +63,7 @@ public class AnnotationsAnalyzer implements MethodAnalyzer {
     public void analyze( ExecutableElement element, TypeMirror returnType,
             TypeElement parent, AtomicBoolean cancel , CdiAnalysisResult result )
     {
-        checkProductionObserverDisposerInject( element , parent , 
+        checkProductionObserverDisposerInject( element , parent ,
                 cancel , result );
         if ( cancel.get()){
             return;
@@ -66,10 +75,8 @@ public class AnnotationsAnalyzer implements MethodAnalyzer {
             CdiAnalysisResult result )
     {
         CompilationInfo compInfo = result.getInfo();
-        boolean isProducer = AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN, compInfo)
-                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN_JAKARTA, compInfo);
-        boolean isInitializer = AnnotationUtil.hasAnnotation(element, AnnotationUtil.INJECT_FQN, compInfo)
-                || AnnotationUtil.hasAnnotation(element, AnnotationUtil.INJECT_FQN_JAKARTA, compInfo);
+        boolean isProducer = AnnotationUtil.hasAnnotation(element, compInfo, PRODUCES_FQN_JAKARTA, PRODUCES_FQN);
+        boolean isInitializer = AnnotationUtil.hasAnnotation(element, compInfo, INJECT_FQN_JAKARTA, INJECT_FQN);
         int observesCount = 0;
         int disposesCount = 0;
         List<? extends VariableElement> parameters = element.getParameters();
@@ -77,13 +84,11 @@ public class AnnotationsAnalyzer implements MethodAnalyzer {
             if ( cancel.get() ){
                 return;
             }
-            if ( AnnotationUtil.hasAnnotation( param, AnnotationUtil.OBSERVES_FQN, compInfo)
-                    || AnnotationUtil.hasAnnotation( param, AnnotationUtil.OBSERVES_FQN_JAKARTA, compInfo))
+            if (AnnotationUtil.hasAnnotation(param, compInfo, OBSERVES_FQN_JAKARTA, OBSERVES_FQN))
             {
                 observesCount++;
             }
-            if (AnnotationUtil.hasAnnotation(param, AnnotationUtil.DISPOSES_FQN, compInfo)
-                    || AnnotationUtil.hasAnnotation(param, AnnotationUtil.DISPOSES_FQN_JAKARTA, compInfo))
+            if (AnnotationUtil.hasAnnotation(param, compInfo, DISPOSES_FQN_JAKARTA, DISPOSES_FQN))
             {
                 disposesCount++;
             }
@@ -128,7 +133,7 @@ public class AnnotationsAnalyzer implements MethodAnalyzer {
                     AnnotationsAnalyzer.class, "ERR_BothAnnotationsMethod", // NOI18N
                     firstAnnotation, secondAnnotation ));
         }
-        
+
         // Test quantity of observer parameters
         if ( observesCount > 1){
             result.addError( element, NbBundle.getMessage(
@@ -139,21 +144,21 @@ public class AnnotationsAnalyzer implements MethodAnalyzer {
             result.addError( element, NbBundle.getMessage(
                 AnnotationsAnalyzer.class, "ERR_ManyDisposesParameter"));    // NOI18N
         }
-        
-        // A producer/disposer method must be a non-abstract method . 
+
+        // A producer/disposer method must be a non-abstract method .
         checkAbstractMethod(element, result, isProducer,
                 disposesCount>0);
-        
-        checkBusinessMethod( element , result, isProducer, 
+
+        checkBusinessMethod( element , result, isProducer,
                 disposesCount >0 , observesCount > 0);
-        
+
         if ( isInitializer ){
             checkInitializerMethod(element, parent , result );
         }
     }
 
     /**
-     *  A producer/disposer/observer non-static method of a session bean class 
+     *  A producer/disposer/observer non-static method of a session bean class
      *  should be a business method of the session bean.
      */
     private void checkBusinessMethod( ExecutableElement element,
@@ -197,11 +202,11 @@ public class AnnotationsAnalyzer implements MethodAnalyzer {
                 key = "ERR_ObserverNotBusiness";         // NOI18N
             }
             result.addError( element, NbBundle.getMessage(
-                AnnotationsAnalyzer.class, key)); 
+                AnnotationsAnalyzer.class, key));
         }
     }
 
-    private void checkInitializerMethod( ExecutableElement element, 
+    private void checkInitializerMethod( ExecutableElement element,
             TypeElement parent, CdiAnalysisResult result )
     {
         Set<Modifier> modifiers = element.getModifiers();
@@ -212,13 +217,13 @@ public class AnnotationsAnalyzer implements MethodAnalyzer {
                 "ERR_StaticInitMethod";           // NOI18N
             result.addError( element, NbBundle.getMessage(
                 AnnotationsAnalyzer.class, key ));
-        }    
+        }
         TypeMirror method = result.getInfo().getTypes().asMemberOf(
                 (DeclaredType)parent.asType() , element);
         if ( method instanceof ExecutableType ){
-            List<? extends TypeVariable> typeVariables = 
+            List<? extends TypeVariable> typeVariables =
                 ((ExecutableType)method).getTypeVariables();
-            if ( typeVariables != null && typeVariables.size() > 0 ){
+            if (typeVariables != null && !typeVariables.isEmpty()) {
                 result.addError( element, NbBundle.getMessage(
                             AnnotationsAnalyzer.class, "ERR_GenericInitMethod" ));// NOI18N
             }

@@ -296,13 +296,6 @@ jobs:
           echo "::error::PRs must be labeled, see: https://cwiki.apache.org/confluence/display/NETBEANS/PRs+and+You+-+A+reviewer+Guide"
           exit 1
 
-      - name: Set up JDK ${{ matrix.java }} 
-        if: ${{ !cancelled() }}
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{ matrix.java }} 
-          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
         if: ${{ !cancelled() }}
         uses: actions/checkout@v4
@@ -310,11 +303,24 @@ jobs:
           persist-credentials: false
           submodules: false
           show-progress: false
-          fetch-depth: 10
 
-      - name: Print last 10 Commits
+      - name: Set up JDK 23 for scripts
         if: ${{ github.event_name == 'pull_request' && !cancelled() }}
-        run: git log --oneline -n10 --pretty=format:'%h %an [%ae] %s'
+        uses: actions/setup-java@v4
+        with:
+          java-version: 23
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+
+      - name: Check Commit Headers
+        if: ${{ github.event_name == 'pull_request' && !cancelled() }}
+        run: java --enable-preview .github/scripts/CommitHeaderChecker.java ${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
+
+      - name: Set up JDK ${{ matrix.java }} 
+        if: ${{ !cancelled() }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Check line endings and verify RAT report
         if: ${{ !cancelled() }}
@@ -2616,13 +2622,14 @@ jobs:
           env "netbeans.extra.options=-J-Dnetbeans.logger.console=true" ant $OPTS test-vscode-ext
  
 
-# last job depends on everything so that it is forced to run last even if a long job fails early
+# cleanup job depends on everything so that it is forced to run last even if a long job fails early.
+# 'paperwork' is left out intentionally, since it doesn't run unit tests (hopefully doesn't need restarts)
+# and shouldn't prevent cleanup on validation failure - which might be common during dev time
   cleanup:
     name: Cleanup Workflow Artifacts
     needs:
       - base-build
       - commit-validation
-      - paperwork
       - build-system-test
       - build-from-src-zip
       - ide-modules-test

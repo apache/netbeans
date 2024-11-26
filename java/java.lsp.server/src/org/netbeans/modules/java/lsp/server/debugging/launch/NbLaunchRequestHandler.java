@@ -87,9 +87,10 @@ public final class NbLaunchRequestHandler {
         String filePath = (String)launchArguments.get("file");
         String projectFilePath = (String)launchArguments.get("projectFile");
         String mainFilePath = (String)launchArguments.get("mainClass");
+        boolean testRun = (Boolean) launchArguments.getOrDefault("testRun", Boolean.FALSE);
 
         if (!isNative && (StringUtils.isBlank(mainFilePath) && StringUtils.isBlank(filePath) && StringUtils.isBlank(projectFilePath)
-                          || modulePaths.isEmpty() && classPaths.isEmpty())) {
+                          || modulePaths.isEmpty() && classPaths.isEmpty()) && !testRun) {
             if (modulePaths.isEmpty() && classPaths.isEmpty()) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                     "Failed to launch debuggee VM. Missing modulePaths/classPaths options in launch configuration.",
@@ -244,7 +245,6 @@ public final class NbLaunchRequestHandler {
             context.setSourcePaths((String[]) launchArguments.get("sourcePaths"));
         }
         String singleMethod = (String)launchArguments.get("methodName");
-        boolean testRun = (Boolean) launchArguments.getOrDefault("testRun", Boolean.FALSE);
         activeLaunchHandler.nbLaunch(file, preferProjActions, nativeImageFile, singleMethod, launchArguments, context, !noDebug, testRun, new OutputListener(context)).thenRun(() -> {
             activeLaunchHandler.postLaunch(launchArguments, context);
             resultFuture.complete(null);

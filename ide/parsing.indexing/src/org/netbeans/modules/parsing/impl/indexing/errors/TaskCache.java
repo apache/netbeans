@@ -229,6 +229,7 @@ public class TaskCache {
                 }
             });
         } catch (IOException ex) {
+            Exceptions.attachMessage(ex, "can't dump errors for: " + String.valueOf(i));
             Exceptions.printStackTrace(ex);
         }
     }

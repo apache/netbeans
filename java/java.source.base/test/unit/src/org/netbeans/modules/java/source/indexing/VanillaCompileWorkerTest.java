@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -53,11 +54,16 @@ import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
+import org.netbeans.modules.parsing.impl.indexing.errors.TaskCache;
 import org.netbeans.modules.parsing.spi.indexing.Context;
+import org.netbeans.modules.parsing.spi.indexing.ErrorsCache;
+import org.netbeans.modules.parsing.spi.indexing.ErrorsCache.ErrorKind;
+import org.netbeans.modules.parsing.spi.indexing.ErrorsCache.Range;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.Pair;
 
 /**
  *
@@ -2429,6 +2435,54 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "    private final int i;\n" +
                 "}");
         assertEquals(expected, file2Fixed);
+    }
+
+    public void testBrokenWarningEndPos() throws Exception { //NETBEANS-7981
+        setCompilerOptions(Arrays.asList("-Xlint:deprecation"));
+
+        String code = """
+                      package test;
+                      public class Test {
+                          void t() {
+                              new D() {};
+                          }
+                      }
+                      class D {
+                          @Deprecated
+                          D() {}
+                      }
+                      """;
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java",
+                                                                      code)),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig",
+                                                       "cache/s1/java/15/classes/test/Test$1.sig",
+                                                       "cache/s1/java/15/classes/test/D.sig")),
+                     createdFiles);
+        record Data(ErrorKind kind, Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> range) {}
+        List<Data> errors = TaskCache.getDefault().getErrors(getRoot().getFileObject("test/Test.java"), new ErrorsCache.ReverseConvertor<Data>() {
+            @Override
+            public Data get(ErrorKind kind, Range range, String message) {
+                return new Data(kind, Pair.of(Pair.of(range.getStart().getLine(),
+                                                      range.getStart().getColumn()),
+                                              range.getEnd() != null ? Pair.of(range.getEnd().getLine(),
+                                                                               range.getEnd().getColumn())
+                                                                     : null));
+            }
+        });
+        assertEquals(List.of(new Data(ErrorKind.WARNING, Pair.of(Pair.of(4, 9), Pair.of(4, 19))),
+                             new Data(ErrorKind.WARNING, Pair.of(Pair.of(4, 17), null))),
+                     errors);
     }
 
     public static void noop() {}

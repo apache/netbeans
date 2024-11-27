@@ -1321,7 +1321,7 @@ public class JavaCustomIndexer extends CustomIndexer {
         }
         @Override
         public ErrorsCache.Range getRange(Diagnostic<?> t) {
-            if (lm == null) {
+            if (lm == null || t.getStartPosition() == (-1)) {
                 return new ErrorsCache.Range(new ErrorsCache.Position((int) t.getLineNumber(), (int) t.getColumnNumber()), null);
             }
             ErrorsCache.Position endPos;

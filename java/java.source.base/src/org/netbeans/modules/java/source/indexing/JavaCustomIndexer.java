@@ -1324,15 +1324,9 @@ public class JavaCustomIndexer extends CustomIndexer {
             if (lm == null) {
                 return new ErrorsCache.Range(new ErrorsCache.Position((int) t.getLineNumber(), (int) t.getColumnNumber()), null);
             }
-            ErrorsCache.Position endPos;
-            if (t.getEndPosition() == (-1)) {
-                endPos = null;
-            } else {
-                endPos = new ErrorsCache.Position((int) lm.getLineNumber(t.getEndPosition()), (int) lm.getColumnNumber(t.getEndPosition()));
-            }
             return new ErrorsCache.Range(
                     new ErrorsCache.Position((int) lm.getLineNumber(t.getStartPosition()), (int) lm.getColumnNumber(t.getStartPosition())),
-                    endPos
+                    new ErrorsCache.Position((int) lm.getLineNumber(t.getEndPosition()), (int) lm.getColumnNumber(t.getEndPosition()))
             );
         }
         @Override

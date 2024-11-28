@@ -59,11 +59,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.LineMap;
-
 import javax.lang.model.SourceVersion;
+
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
@@ -71,8 +68,8 @@ import javax.management.MBeanServer;
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
-
 import org.netbeans.api.annotations.common.CheckForNull;
+
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -109,7 +106,7 @@ import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.CustomIndexer;
 import org.netbeans.modules.parsing.spi.indexing.CustomIndexerFactory;
 import org.netbeans.modules.parsing.spi.indexing.ErrorsCache;
-import org.netbeans.modules.parsing.spi.indexing.ErrorsCache.Convertor2;
+import org.netbeans.modules.parsing.spi.indexing.ErrorsCache.Convertor;
 import org.netbeans.modules.parsing.spi.indexing.ErrorsCache.ErrorKind;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -805,10 +802,10 @@ public class JavaCustomIndexer extends CustomIndexer {
         }
     }
 
-    public static void setErrors(Context context, CompileTuple active, CompilationUnitTree cut, DiagnosticListenerImpl errors) {
+    public static void setErrors(Context context, CompileTuple active, DiagnosticListenerImpl errors) {
         if (!active.virtual) {
             Iterable<Diagnostic<? extends JavaFileObject>> filteredErrorsList = Iterators.filter(errors.getDiagnostics(active.jfo), new FilterOutJDK7AndLaterWarnings());
-            ErrorsCache.setErrors(context.getRootURI(), active.indexable, filteredErrorsList, new ErrorConvertorImpl(active.aptGenerated ? ErrorKind.ERROR_NO_BADGE : ErrorKind.ERROR, cut.getLineMap()));
+            ErrorsCache.setErrors(context.getRootURI(), active.indexable, filteredErrorsList, active.aptGenerated ? ERROR_CONVERTOR_NO_BADGE : ERROR_CONVERTOR);
         }
     }
 
@@ -1301,15 +1298,13 @@ public class JavaCustomIndexer extends CustomIndexer {
         }
     }
 
-    private static final Convertor2<Diagnostic<?>> ERROR_CONVERTOR = new ErrorConvertorImpl(ErrorKind.ERROR, null);
-    private static final Convertor2<Diagnostic<?>> ERROR_CONVERTOR_NO_BADGE = new ErrorConvertorImpl(ErrorKind.ERROR_NO_BADGE, null);
+    private static final Convertor<Diagnostic<?>> ERROR_CONVERTOR = new ErrorConvertorImpl(ErrorKind.ERROR);
+    private static final Convertor<Diagnostic<?>> ERROR_CONVERTOR_NO_BADGE = new ErrorConvertorImpl(ErrorKind.ERROR_NO_BADGE);
     
-    private static final class ErrorConvertorImpl implements Convertor2<Diagnostic<?>> {
+    private static final class ErrorConvertorImpl implements Convertor<Diagnostic<?>> {
         private final ErrorKind errorKind;
-        private final LineMap lm;
-        public ErrorConvertorImpl(ErrorKind errorKind, LineMap lm) {
+        public ErrorConvertorImpl(ErrorKind errorKind) {
             this.errorKind = errorKind;
-            this.lm = lm;
         }
         @Override
         public ErrorKind getKind(Diagnostic<?> t) {
@@ -1318,16 +1313,6 @@ public class JavaCustomIndexer extends CustomIndexer {
         @Override
         public int getLineNumber(Diagnostic<?> t) {
             return (int) t.getLineNumber();
-        }
-        @Override
-        public ErrorsCache.Range getRange(Diagnostic<?> t) {
-            if (lm == null) {
-                return new ErrorsCache.Range(new ErrorsCache.Position((int) t.getLineNumber(), (int) t.getColumnNumber()), null);
-            }
-            return new ErrorsCache.Range(
-                    new ErrorsCache.Position((int) lm.getLineNumber(t.getStartPosition()), (int) lm.getColumnNumber(t.getStartPosition())),
-                    new ErrorsCache.Position((int) lm.getLineNumber(t.getEndPosition()), (int) lm.getColumnNumber(t.getEndPosition()))
-            );
         }
         @Override
         public String getMessage(Diagnostic<?> t) {

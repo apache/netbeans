@@ -87,20 +87,6 @@ is the proper place.
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
-      <change id="ErrorsCache.getErrors">
-          <api name="IndexingAPI"/>
-          <summary>Added method to ErrorsCache to return all errors or warnings for the given file</summary>
-          <version major="9" minor="37"/>
-          <date day="6" month="9" year="2024"/>
-          <author login="dbalek"/>
-          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
-          <description>
-              <p>
-                  Added the <a href="@TOP@/org/netbeans/modules/parsing/spi/indexing/ErrorsCache.html#getErrors-org.openide.filesystems.FileObject-org.netbeans.modules.parsing.spi.indexing.ErrorsCache.ReverseConvertor-">getErrors()</a> method to return errors or warnings for the given file.
-              </p>
-          </description>
-          <class package="org.netbeans.modules.parsing.spi.indexing" name="ErrorsCache"/>
-      </change>
       <change id="ErrorsCache.getAllFilesWithRecord">
           <api name="IndexingAPI"/>
           <summary>Added method to ErrorsCache to return all files with error or warning</summary>

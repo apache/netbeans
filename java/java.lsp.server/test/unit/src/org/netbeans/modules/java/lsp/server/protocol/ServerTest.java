@@ -1733,7 +1733,6 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         List<Diagnostic>[] diags = new List[1];
-        AtomicBoolean checkForDiags = new AtomicBoolean(false);
         CountDownLatch indexingComplete = new CountDownLatch(1);
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
@@ -1745,11 +1744,9 @@ public class ServerTest extends NbTestCase {
         
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
-                if (checkForDiags.get()) {
-                    synchronized (diags) {
-                        diags[0] = params.getDiagnostics();
-                        diags.notifyAll();
-                    }
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
                 }
             }
         }, client.getInputStream(), client.getOutputStream());
@@ -1762,7 +1759,6 @@ public class ServerTest extends NbTestCase {
         InitializeResult result = server.initialize(initParams).get();
         indexingComplete.await();
         String uri = toURI(src);
-        checkForDiags.set(true);
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
 
         Diagnostic unresolvable = assertDiags(diags, "Error:2:8-2:12").get(0);

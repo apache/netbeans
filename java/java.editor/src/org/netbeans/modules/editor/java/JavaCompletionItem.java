@@ -248,12 +248,12 @@ public abstract class JavaCompletionItem implements CompletionItem {
         return new AttributeValueItem(info, value, documentation, element, substitutionOffset, referencesCount, whiteList);
     }
 
-    public static JavaCompletionItem createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon, WhiteListQuery.WhiteList whiteList) {
+    public static JavaCompletionItem createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon, boolean smartType, WhiteListQuery.WhiteList whiteList) {
         switch (memberElem.getKind()) {
             case METHOD:
             case ENUM_CONSTANT:
             case FIELD:
-                return new StaticMemberItem(info, type, memberElem, memberType, multipleVersions, substitutionOffset, isDeprecated, addSemicolon, whiteList);
+                return new StaticMemberItem(info, type, memberElem, memberType, multipleVersions, substitutionOffset, isDeprecated, addSemicolon, smartType, whiteList);
             default:
                 throw new IllegalArgumentException("kind=" + memberElem.getKind());
         }
@@ -3357,8 +3357,9 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private String sortText;
         private String leftText;
         private String rightText;
+        private final boolean smartType;
 
-        private StaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon, WhiteListQuery.WhiteList whiteList) {
+        private StaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon, boolean smartType, WhiteListQuery.WhiteList whiteList) {
             super(substitutionOffset, ElementHandle.create(memberElem), whiteList);
             type = (DeclaredType) info.getTypes().erasure(type);
             this.typeHandle = TypeMirrorHandle.create(type);
@@ -3378,11 +3379,12 @@ public abstract class JavaCompletionItem implements CompletionItem {
                     this.params.add(new ParamDesc(tm.toString(), Utilities.getTypeName(info, tm, false, ((ExecutableElement)memberElem).isVarArgs() && !tIt.hasNext()).toString(), it.next().getSimpleName().toString()));
                 }
             }
+            this.smartType = smartType;
         }
 
         @Override
         public int getSortPriority() {
-            int p = (getElementHandle().getKind().isField() ? 720 : 750) - SMART_TYPE;
+            int p = (getElementHandle().getKind().isField() ? 720 : 750) - (smartType ? SMART_TYPE : 0);
             return isDeprecated ? p + DEPRECATED : p;
         }
 

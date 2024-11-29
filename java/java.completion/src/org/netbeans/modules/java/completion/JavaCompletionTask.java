@@ -26,6 +26,7 @@ import com.sun.source.util.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -106,9 +107,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
         T createAttributeValueItem(CompilationInfo info, String value, String documentation, TypeElement element, int substitutionOffset, ReferencesCount referencesCount);
 
-        T createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon);
+        T createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon, boolean smartType);
 
-        T createStaticMemberItem(ElementHandle<TypeElement> handle, String name, int substitutionOffset, boolean addSemicolon, ReferencesCount referencesCount, Source source);
+        T createStaticMemberItem(ElementHandle<TypeElement> handle, String name, int substitutionOffset, boolean addSemicolon, ReferencesCount referencesCount, Source source, boolean smartType);
 
         T createChainedMembersItem(CompilationInfo info, List<? extends Element> chainedElems, List<? extends TypeMirror> chainedTypes, int substitutionOffset, boolean isDeprecated, boolean addSemicolon);
 
@@ -218,6 +219,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private static final String RECORD_KEYWORD = "record"; //NOI18N
     private static final String JAVA_LANG_CLASS = "java.lang.Class"; //NOI18N
     private static final String JAVA_LANG_OBJECT = "java.lang.Object"; //NOI18N
+    private static final String JAVA_LANG_STRING = "java.lang.String"; //NOI18N
     private static final String JAVA_LANG_ITERABLE = "java.lang.Iterable"; //NOI18N
 
     private static final String[] PRIM_KEYWORDS = new String[]{
@@ -252,6 +254,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
     private final ItemFactory<T> itemFactory;
     private final Set<Options> options;
+    private final AddSwitchRelatedItem addSwitchItemDefault;
 
     private ArrayList<T> results;
     private boolean hasAdditionalClasses;
@@ -262,6 +265,17 @@ public final class JavaCompletionTask<T> extends BaseTask {
         super(caretOffset, cancel);
         this.itemFactory = factory;
         this.options = options;
+        addSwitchItemDefault = new AddSwitchRelatedItem() {
+            @Override
+            public void addTypeItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars, boolean addSimpleName, boolean smartType, boolean autoImportEnclosingType) {
+                results.add(itemFactory.createTypeItem(info, elem, type, substitutionOffset, referencesCount, isDeprecated, insideNew, addTypeVars, addSimpleName, smartType, autoImportEnclosingType));
+            }
+
+            @Override
+            public void addVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean smartType, int assignToVarOffset) {
+                results.add(itemFactory.createVariableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, smartType, assignToVarOffset));
+            }
+        };
     }
 
     public List<T> getResults() {
@@ -1650,6 +1664,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
             ExpressionTree exp = fa.getExpression();
             TreePath expPath = new TreePath(path, exp);
             TypeMirror type = controller.getTrees().getTypeMirror(expPath);
+            TypeMirror tempSwitchSelectorType;
+            AddSwitchRelatedItem switchItemAdder = addSwitchItemDefault;
+            AddSwitchRelatedItem tempSwitchItemAdder;
             if (type != null) {
                 Element el = controller.getTrees().getElement(expPath);
                 TreeUtilities tu = controller.getTreeUtilities();
@@ -1798,6 +1815,15 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     kinds = withinProvidesService(env) ? EnumSet.of(ANNOTATION_TYPE, CLASS, INTERFACE) : EnumSet.of(CLASS);
                 } else if (tu.getPathElementOfKind(Tree.Kind.USES, path) != null) {
                     kinds = EnumSet.of(ANNOTATION_TYPE, CLASS, INTERFACE);
+                } else if (parent.getKind() == Kind.CONSTANT_CASE_LABEL &&
+                           grandParent != null &&
+                           grandParent.getKind() == Kind.CASE &&
+                           (tempSwitchSelectorType = getSwitchSelectorType(env, grandParentPath.getParentPath())) != null &&
+                           tempSwitchSelectorType.getKind() == TypeKind.DECLARED &&
+                           (tempSwitchItemAdder = itemAdderForSwitchOrNull(env, grandParentPath.getParentPath())) != null) {
+                    kinds = EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE, RECORD, ENUM_CONSTANT);
+                    baseType = (DeclaredType) tempSwitchSelectorType;
+                    switchItemAdder = tempSwitchItemAdder;
                 } else {
                     kinds = EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE, RECORD, FIELD, METHOD, ENUM_CONSTANT, RECORD_COMPONENT);
                 }
@@ -1840,7 +1866,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                 String typeName = controller.getElementUtilities().getElementName(el, true) + "." + prefix; //NOI18N
                                 TypeMirror tm = controller.getTreeUtilities().parseType(typeName, env.getScope().getEnclosingClass());
                                 if (tm != null && tm.getKind() == TypeKind.DECLARED) {
-                                    addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, inImport, insideNew, false);
+                                    addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, inImport, insideNew, false, switchItemAdder);
                                 }
                             }
                         }
@@ -1875,7 +1901,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                     }
                                 }
                             }
-                            addMembers(env, type, el, kinds, baseType, inImport, insideNew, false);
+                            addMembers(env, type, el, kinds, baseType, inImport, insideNew, false, switchItemAdder);
                         }
                         break;
                     default:
@@ -1888,7 +1914,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                 String typeName = controller.getElementUtilities().getElementName(el, true) + "." + prefix; //NOI18N
                                 TypeMirror tm = controller.getTreeUtilities().parseType(typeName, env.getScope().getEnclosingClass());
                                 if (tm != null && tm.getKind() == TypeKind.DECLARED) {
-                                    addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, inImport, insideNew, false);
+                                    addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, inImport, insideNew, false, switchItemAdder);
                                 }
                             }
                             if (exs != null && !exs.isEmpty()) {
@@ -1898,12 +1924,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                         Element e = ((DeclaredType) ex).asElement();
                                         if (e.getEnclosingElement() == el && startsWith(env, e.getSimpleName().toString()) && (Utilities.isShowDeprecatedMembers() || !elements.isDeprecated(e)) && !Utilities.isExcluded(((TypeElement)e).getQualifiedName())) {
                                             env.addToExcludes(e);
-                                            results.add(itemFactory.createTypeItem(env.getController(), (TypeElement) e, (DeclaredType) ex, anchorOffset, env.getReferencesCount(), elements.isDeprecated(e), false, env.isInsideClass(), true, true, false));
+                                            switchItemAdder.addTypeItem(env.getController(), (TypeElement) e, (DeclaredType) ex, anchorOffset, env.getReferencesCount(), elements.isDeprecated(e), false, env.isInsideClass(), true, true, false);
                                         }
                                     }
                                 }
                             }
-                            addPackageContent(env, (PackageElement) el, kinds, baseType, insideNew, srcOnly);
+                            addPackageContent(env, (PackageElement) el, kinds, baseType, insideNew, srcOnly, switchItemAdder);
                             if (results.isEmpty() && ((PackageElement) el).getQualifiedName() == el.getSimpleName()) {
                                 // no package content? Check for unimported class
                                 ClassIndex ci = controller.getClasspathInfo().getClassIndex();
@@ -1913,7 +1939,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                     for (ElementHandle<TypeElement> teHandle : ci.getDeclaredTypes(el.getSimpleName().toString(), ClassIndex.NameKind.SIMPLE_NAME, EnumSet.allOf(ClassIndex.SearchScope.class))) {
                                         TypeElement te = teHandle.resolve(controller);
                                         if (te != null && trees.isAccessible(scope, te)) {
-                                            addMembers(env, te.asType(), te, kinds, baseType, inImport, insideNew, true);
+                                            addMembers(env, te.asType(), te, kinds, baseType, inImport, insideNew, true, switchItemAdder);
                                         }
                                     }
                                 }
@@ -1927,6 +1953,21 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 }
             }
         }
+    }
+
+    private TypeMirror getSwitchSelectorType(Env env, TreePath swtch) {
+        TreePath selector;
+        Tree leaf = swtch.getLeaf();
+
+        switch (leaf.getKind()) {
+            case SWITCH -> selector = new TreePath(swtch, ((SwitchTree) leaf).getExpression());
+            case SWITCH_EXPRESSION -> selector = new TreePath(swtch, ((SwitchExpressionTree) leaf).getExpression());
+            default -> {
+                return null;
+            }
+        }
+
+        return env.getController().getTrees().getTypeMirror(selector);
     }
 
     private void insideMemberReference(Env env) throws IOException {
@@ -2496,8 +2537,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 }
                 TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(parentPath, exprTree));
                 if (tm.getKind() == TypeKind.DECLARED) {
-                    if (((DeclaredType) tm).asElement().getKind() == ENUM) {
-                        addEnumConstants(env, (TypeElement) ((DeclaredType) tm).asElement());
+                    DeclaredType selectorDeclaredType = (DeclaredType) tm;
+                    Element selectorTypeElement = selectorDeclaredType.asElement();
+                    if (selectorTypeElement.getKind() == ENUM) {
+                        addEnumConstants(env, (TypeElement) selectorTypeElement);
                     } else {
                         if (env.getController().getSourceVersion().compareTo(RELEASE_21) >= 0) {
                             if (prefix != null) {
@@ -2510,9 +2553,21 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                     }
                                 }
                             }
-                            addCaseLabels(env, cst);
+                            addCaseLabels(env, cst); //TODO: this belongs to the enum branch as well
                         }
-                        addLocalConstantsAndTypes(env);
+
+                        AddSwitchRelatedItem addType = itemAdderForSwitchOrNull(env, parentPath);
+
+                        if (addType == null) {
+                            //if no filter can be determined, add all:
+                            addLocalConstantsAndTypes(env);
+                        } else {
+                            EnumSet<ElementKind> allClassKind =
+                                    EnumSet.of(ElementKind.ANNOTATION_TYPE, ElementKind.CLASS,
+                                               ElementKind.ENUM, ElementKind.INTERFACE,
+                                               ElementKind.RECORD);
+                            addTypes(env, allClassKind, (DeclaredType) tm, addType);
+                        }
                     }
                 } else {
                     addLocalConstantsAndTypes(env);
@@ -2544,6 +2599,90 @@ public final class JavaCompletionTask<T> extends BaseTask {
             } else if (ts != null && ts.token().id() != JavaTokenId.NULL && ts.token().id() != JavaTokenId.DEFAULT) {
                 localResult(env);
                 addKeywordsForBlock(env);
+            }
+        }
+    }
+
+    private AddSwitchRelatedItem itemAdderForSwitchOrNull(Env env, TreePath switchPath) {
+        TypeMirror selectorType = getSwitchSelectorType(env, switchPath);
+
+        if (selectorType == null || selectorType.getKind() != TypeKind.DECLARED) {
+            return null;
+        }
+
+        TypeElement jlObject = env.getController().getElements().getTypeElement(JAVA_LANG_OBJECT);
+        TypeElement jlString = env.getController().getElements().getTypeElement(JAVA_LANG_STRING);
+        Element selectorTypeElement = ((DeclaredType) selectorType).asElement();
+
+        if (Objects.equals(selectorTypeElement, jlObject) ||
+            Objects.equals(selectorTypeElement, jlString)) {
+            //for java.lang.Object, any type can be a subtype,
+            //so just use all types
+            //for String, types might contain constant fields of
+            //type String, give up and show all types:
+            return null;
+        } else {
+            boolean selectorSealed = selectorTypeElement.getModifiers().contains(Modifier.SEALED);
+
+            if (selectorSealed) {
+                options.add(Options.ALL_COMPLETION);
+            }
+
+            Pair<Set<Element>, Set<TypeMirror>> alreadyUsed = computedUsedInSwitch(env, switchPath);
+            Predicate<TypeMirror> checkTypeCovered = type -> {
+                Types types = env.getController().getTypes();
+                TypeMirror typeErasure = types.erasure(type);
+
+                for (TypeMirror usedType : alreadyUsed.second()) {
+                    if (env.getController().getTypes().isSubtype(typeErasure, usedType)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            };
+
+            if (env.getController().getSourceVersion().compareTo(RELEASE_21) >= 0) {
+                return new AddSwitchRelatedItem() {
+                    @Override
+                    public void addTypeItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars, boolean addSimpleName, boolean smartType, boolean autoImportEnclosingType) {
+                        if (!checkTypeCovered.test(type)) {
+                            addSwitchItemDefault.addTypeItem(info, elem, type, substitutionOffset, referencesCount, isDeprecated, insideNew, addTypeVars, addSimpleName, smartType, autoImportEnclosingType);
+                            if (elem.getKind() == ElementKind.ENUM) {
+                                for (VariableElement enumConstant : ElementFilter.fieldsIn(elem.getEnclosedElements())) {
+                                    if (enumConstant.getKind() != ElementKind.ENUM_CONSTANT || alreadyUsed.first().contains(enumConstant)) {
+                                        continue;
+                                    }
+                                    //not filtering deprecated, etc., as those may be needed for exhaustiveness:
+                                    results.add(itemFactory.createStaticMemberItem(info, type, enumConstant, enumConstant.asType(), false, anchorOffset, info.getElements().isDeprecated(enumConstant), false, selectorSealed));
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void addVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean smartType, int assignToVarOffset) {
+                        if (!alreadyUsed.first().contains(elem)) {
+                            addSwitchItemDefault.addVariableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, smartType, assignToVarOffset);
+                        }
+                    }
+                };
+            } else {
+                return new AddSwitchRelatedItem() {
+                    @Override
+                    public void addTypeItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars, boolean addSimpleName, boolean smartType, boolean autoImportEnclosingType) {
+                        if (!checkTypeCovered.test(type)) {
+                            addSwitchItemDefault.addTypeItem(info, elem, type, substitutionOffset, referencesCount, isDeprecated, insideNew, addTypeVars, addSimpleName, smartType, autoImportEnclosingType);
+                        }
+                    }
+
+                    @Override
+                    public void addVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean smartType, int assignToVarOffset) {
+                        if (!alreadyUsed.first().contains(elem)) {
+                            addSwitchItemDefault.addVariableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, smartType, assignToVarOffset);
+                        }
+                    }
+                };
             }
         }
     }
@@ -3440,7 +3579,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                             };
                             for (Element ee : controller.getElementUtilities().getMembers(type, acceptor)) {
                                 if (Utilities.isShowDeprecatedMembers() || !elements.isDeprecated(ee)) {
-                                    results.add(itemFactory.createStaticMemberItem(env.getController(), type, ee, asMemberOf(ee, type, types), false, anchorOffset, elements.isDeprecated(ee), false));
+                                    results.add(itemFactory.createStaticMemberItem(env.getController(), type, ee, asMemberOf(ee, type, types), false, anchorOffset, elements.isDeprecated(ee), false, true));
                                 }
                             }
                         }
@@ -3524,7 +3663,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         };
                         for (Element ee : controller.getElementUtilities().getMembers(type, acceptor)) {
                             if (Utilities.isShowDeprecatedMembers() || !elements.isDeprecated(ee)) {
-                                results.add(itemFactory.createStaticMemberItem(env.getController(), type, ee, asMemberOf(ee, type, types), false, anchorOffset, elements.isDeprecated(ee), env.addSemicolon()));
+                                results.add(itemFactory.createStaticMemberItem(env.getController(), type, ee, asMemberOf(ee, type, types), false, anchorOffset, elements.isDeprecated(ee), env.addSemicolon(), true));
                             }
                         }
                     }
@@ -3561,7 +3700,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     }
                     ExecutableType et = (ExecutableType) asMemberOf(e, enclClass != null ? enclClass.asType() : null, types);
                     if (e.getEnclosingElement() != enclClass && conflictsWithLocalMethods(e.getSimpleName(), enclClass, methodsIn)) {
-                        results.add(itemFactory.createStaticMemberItem(env.getController(), (DeclaredType)e.getEnclosingElement().asType(), e, et, false, anchorOffset, elements.isDeprecated(e), env.addSemicolon()));
+                        results.add(itemFactory.createStaticMemberItem(env.getController(), (DeclaredType)e.getEnclosingElement().asType(), e, et, false, anchorOffset, elements.isDeprecated(e), env.addSemicolon(), true));
                     } else {
                         results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, env.getScope().getEnclosingClass() != e.getEnclosingElement(), elements.isDeprecated(e), false, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, enclClass != null ? enclClass.asType() : null), smartTypes), env.assignToVarPos(), false));
                     }
@@ -3733,7 +3872,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             for (DeclaredType dt : dts) {
                 if (startsWith(env, dt.asElement().getSimpleName().toString())) {
                     for (Element ee : controller.getElementUtilities().getMembers(dt, acceptor)) {
-                        results.add(itemFactory.createStaticMemberItem(env.getController(), dt, ee, asMemberOf(ee, dt, types), false, anchorOffset, elements.isDeprecated(ee), env.addSemicolon()));
+                        results.add(itemFactory.createStaticMemberItem(env.getController(), dt, ee, asMemberOf(ee, dt, types), false, anchorOffset, elements.isDeprecated(ee), env.addSemicolon(), true));
                     }
                 }
             }
@@ -3830,7 +3969,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 }
                 for (String name : symbols.getSymbols()) {
                     if (!Utilities.isExcludeMethods() || !Utilities.isExcluded(symbols.getEnclosingType().getQualifiedName() + '.' + name)) {
-                        results.add(itemFactory.createStaticMemberItem(symbols.getEnclosingType(), name, anchorOffset, env.addSemicolon(), env.getReferencesCount(), controller.getSnapshot().getSource()));
+                        results.add(itemFactory.createStaticMemberItem(symbols.getEnclosingType(), name, anchorOffset, env.addSemicolon(), env.getReferencesCount(), controller.getSnapshot().getSource(), true));
                     }
                 }
             }
@@ -3933,7 +4072,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
-    private void addMembers(final Env env, final TypeMirror type, final Element elem, final EnumSet<ElementKind> kinds, final DeclaredType baseType, final boolean inImport, final boolean insideNew, final boolean autoImport) throws IOException {        
+    private void addMembers(final Env env, final TypeMirror type, final Element elem, final EnumSet<ElementKind> kinds, final DeclaredType baseType, final boolean inImport, final boolean insideNew, final boolean autoImport) throws IOException {
+        addMembers(env, type, elem, kinds, baseType, inImport, insideNew, autoImport, addSwitchItemDefault);
+    }
+
+    private void addMembers(final Env env, final TypeMirror type, final Element elem, final EnumSet<ElementKind> kinds, final DeclaredType baseType, final boolean inImport, final boolean insideNew, final boolean autoImport, AddSwitchRelatedItem addSwitchItem) throws IOException {
         Set<? extends TypeMirror> smartTypes = getSmartTypes(env);
         final TreePath path = env.getPath();
         TypeMirror actualType = type;
@@ -4071,7 +4214,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         if (addCast && itemFactory instanceof TypeCastableItemFactory) {
                             results.add(((TypeCastableItemFactory<T>)itemFactory).createTypeCastableVariableItem(env.getController(), (VariableElement) e, tm, actualType, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), isOfSmartType(env, tm, smartTypes), env.assignToVarPos()));
                         } else {
-                            results.add(itemFactory.createVariableItem(env.getController(), (VariableElement) e, tm, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), isOfSmartType(env, tm, smartTypes), env.assignToVarPos()));
+                            addSwitchItem.addVariableItem(env.getController(), (VariableElement) e, tm, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), isOfSmartType(env, tm, smartTypes), env.assignToVarPos());
                         }
                     }
                     break;
@@ -4094,7 +4237,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case INTERFACE:
                 case ANNOTATION_TYPE:
                     DeclaredType dt = (DeclaredType) asMemberOf(e, actualType, types);
-                    results.add(itemFactory.createTypeItem(env.getController(), (TypeElement) e, dt, anchorOffset, null, elements.isDeprecated(e), insideNew, insideNew || env.isInsideClass(), true, isOfSmartType(env, dt, smartTypes), autoImport));
+                    addSwitchItem.addTypeItem(env.getController(), (TypeElement) e, dt, anchorOffset, null, elements.isDeprecated(e), insideNew, insideNew || env.isInsideClass(), true, isOfSmartType(env, dt, smartTypes), autoImport);
                     break;
             }
         }
@@ -4152,36 +4295,64 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
     private void addEnumConstants(Env env, TypeElement elem) {
         Elements elements = env.getController().getElements();
-        Trees trees = env.getController().getTrees();
         TreePath path = env.getPath().getParentPath();
-        Set<Element> alreadyUsed = new HashSet<>();
-        List<? extends CaseTree> caseTrees = null;
-        if (path != null && path.getLeaf().getKind() == Tree.Kind.SWITCH) {
-            SwitchTree st = (SwitchTree) path.getLeaf();
-            caseTrees = st.getCases();
-        } else if (path != null && path.getLeaf().getKind() == Tree.Kind.SWITCH_EXPRESSION) {
-            caseTrees = ((SwitchExpressionTree) path.getLeaf()).getCases();
-        }
-
-        if (caseTrees != null) {
-            for (CaseTree ct : caseTrees) {
-                for (ExpressionTree et : ct.getExpressions()) {
-                    Element e = et != null ? trees.getElement(new TreePath(path, et)) : null;
-                    if (e != null && e.getKind() == ENUM_CONSTANT) {
-                        alreadyUsed.add(e);
-                    }
-                }
-            }
-        }
+        Pair<Set<Element>, Set<TypeMirror>> alreadyUsed = computedUsedInSwitch(env, path);
 
         for (Element e : elem.getEnclosedElements()) {
-            if (e.getKind() == ENUM_CONSTANT && !alreadyUsed.contains(e)) {
+            if (e.getKind() == ENUM_CONSTANT && !alreadyUsed.first().contains(e)) {
                 String name = e.getSimpleName().toString();
                 if (startsWith(env, name) && (Utilities.isShowDeprecatedMembers() || !elements.isDeprecated(e))) {
                     results.add(itemFactory.createVariableItem(env.getController(), (VariableElement) e, e.asType(), anchorOffset, null, false, elements.isDeprecated(e), false, env.assignToVarPos()));
                 }
             }
         }
+    }
+
+    private Pair<Set<Element>, Set<TypeMirror>> computedUsedInSwitch(Env env, TreePath switchPath) {
+        Trees trees = env.getController().getTrees();
+        Types types = env.getController().getTypes();
+        Set<Element> alreadyUsedElements = new HashSet<>();
+        Set<TypeMirror> alreadyUsedTypes = new HashSet<>();
+        List<? extends CaseTree> caseTrees = null;
+        if (switchPath != null && switchPath.getLeaf().getKind() == Tree.Kind.SWITCH) {
+            SwitchTree st = (SwitchTree) switchPath.getLeaf();
+            caseTrees = st.getCases();
+        } else if (switchPath != null && switchPath.getLeaf().getKind() == Tree.Kind.SWITCH_EXPRESSION) {
+            caseTrees = ((SwitchExpressionTree) switchPath.getLeaf()).getCases();
+        }
+
+        if (caseTrees != null) {
+            for (CaseTree ct : caseTrees) {
+                for (CaseLabelTree label : ct.getLabels()) {
+                    TreePath labelPath = new TreePath(switchPath, label);
+                    switch (label.getKind()) {
+                        case CONSTANT_CASE_LABEL -> {
+                            //note that cases with constant case labels can't legally have guards
+                            ConstantCaseLabelTree ccl = (ConstantCaseLabelTree) label;
+                            Element e = ccl.getConstantExpression() != null ? trees.getElement(new TreePath(labelPath, ccl.getConstantExpression())) : null;
+                            if (e != null && e.getKind() == ENUM_CONSTANT) {
+                                alreadyUsedElements.add(e);
+                            }
+                        }
+                        case PATTERN_CASE_LABEL -> {
+                            PatternCaseLabelTree pcl = (PatternCaseLabelTree) label;
+                            if (ct.getGuard() == null && pcl.getPattern().getKind() == Kind.BINDING_PATTERN) {
+                                BindingPatternTree bp = (BindingPatternTree) pcl.getPattern();
+                                TreePath typePath = new TreePath(new TreePath(new TreePath(labelPath, bp),
+                                                                              bp.getVariable()),
+                                                                 bp.getVariable().getType());
+                                TypeMirror type = trees.getTypeMirror(typePath);
+                                if (type != null) {
+                                    alreadyUsedTypes.add(types.erasure(type));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return Pair.of(alreadyUsedElements, alreadyUsedTypes);
     }
 
     private void addCaseLabels(Env env, CaseTree cst) {
@@ -4225,6 +4396,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
     }
 
     private void addPackageContent(final Env env, PackageElement pe, EnumSet<ElementKind> kinds, DeclaredType baseType, boolean insideNew, boolean srcOnly) throws IOException {
+        addPackageContent(env, pe, kinds, baseType, insideNew, srcOnly, addSwitchItemDefault);
+    }
+
+    private void addPackageContent(final Env env, PackageElement pe, EnumSet<ElementKind> kinds, DeclaredType baseType, boolean insideNew, boolean srcOnly, AddSwitchRelatedItem addSwitchItem) throws IOException {
         if (isRecordSupported(env)) {
             kinds.add(RECORD);
         }
@@ -4243,7 +4418,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         && trees.isAccessible(scope, (TypeElement) e)
                         && isOfKindAndType(e.asType(), e, kinds, baseType, scope, trees, types)
                         && !Utilities.isExcluded(eu.getElementName(e, true))) {
-                    results.add(itemFactory.createTypeItem(env.getController(), (TypeElement) e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), insideNew, insideNew || env.isInsideClass(), true, isOfSmartType(env, e.asType(), smartTypes), false));
+                    addSwitchItem.addTypeItem(env.getController(), (TypeElement) e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), insideNew, insideNew || env.isInsideClass(), true, isOfSmartType(env, e.asType(), smartTypes), false);
                 }
             }
         }
@@ -4293,6 +4468,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
     }
 
     private void addTypes(Env env, EnumSet<ElementKind> kinds, DeclaredType baseType) throws IOException {
+        addTypes(env, kinds, baseType, addSwitchItemDefault);
+    }
+
+    private void addTypes(Env env, EnumSet<ElementKind> kinds, DeclaredType baseType, AddSwitchRelatedItem addTypeItem) throws IOException {
         if (options.contains(Options.ALL_COMPLETION) || options.contains(Options.COMBINED_COMPLETION)) {
             if (baseType == null) {
                 addAllTypes(env, kinds);
@@ -4302,18 +4481,18 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 for (DeclaredType subtype : getSubtypesOf(env, baseType)) {
                     TypeElement elem = (TypeElement) subtype.asElement();
                     if ((excludes == null || !excludes.contains(elem)) && (Utilities.isShowDeprecatedMembers() || !elements.isDeprecated(elem)) && !Utilities.isExcluded(elem.getQualifiedName()) && (!env.isAfterExtends() || !elem.getModifiers().contains(Modifier.FINAL))) {
-                        results.add(itemFactory.createTypeItem(env.getController(), elem, subtype, anchorOffset, env.getReferencesCount(), elements.isDeprecated(elem), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), false, true, false));
+                        addTypeItem.addTypeItem(env.getController(), elem, subtype, anchorOffset, env.getReferencesCount(), elements.isDeprecated(elem), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), false, true, false);
                     }
                 }
             }
         } else {
-            addLocalAndImportedTypes(env, kinds, baseType);
+            addLocalAndImportedTypes(env, kinds, baseType, addTypeItem);
             hasAdditionalClasses = true;
         }
         addPackages(env, null, kinds.isEmpty());
     }
 
-    private void addLocalAndImportedTypes(final Env env, final EnumSet<ElementKind> kinds, final DeclaredType baseType) throws IOException {
+    private void addLocalAndImportedTypes(final Env env, final EnumSet<ElementKind> kinds, final DeclaredType baseType, AddSwitchRelatedItem addTypeItem) throws IOException {
         final CompilationController controller = env.getController();
         final Trees trees = controller.getTrees();
         final Elements elements = controller.getElements();
@@ -4345,7 +4524,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case INTERFACE:
                 case ANNOTATION_TYPE:
                 case RECORD:
-                    results.add(itemFactory.createTypeItem(env.getController(), (TypeElement) e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), false, false, false));
+                    addTypeItem.addTypeItem(env.getController(), (TypeElement) e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), false, false, false);
                     env.addToExcludes(e);
                     break;
                 case TYPE_PARAMETER:
@@ -4372,9 +4551,14 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     && ts != null && ts.token().id() == JavaTokenId.INSTANCEOF) {
                 results.add(((RecordPatternItemFactory<T>) itemFactory).createRecordPatternItem(controller, e, (DeclaredType) e.asType(), anchorOffset, null, controller.getElements().isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass()));
             } else {
-                results.add(itemFactory.createTypeItem(env.getController(), e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), false, false, false));
+                addTypeItem.addTypeItem(env.getController(), e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), false, false, false);
             }
         }
+    }
+
+    private interface AddSwitchRelatedItem {
+        public void addTypeItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars, boolean addSimpleName, boolean smartType, boolean autoImportEnclosingType);
+        public void addVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean smartType, int assignToVarOffset);
     }
 
     private void addAllTypes(Env env, EnumSet<ElementKind> kinds) {

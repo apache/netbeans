@@ -71,6 +71,7 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         copyToWorkDir(new File(getDataDir(), "org/netbeans/modules/java/completion/data/" + source + ".java"), testSource);
         FileObject testSourceFO = FileUtil.toFileObject(testSource);
         assertNotNull(testSourceFO);
+        afterTestSetup();
         DataObject testSourceDO = DataObject.find(testSourceFO);
         assertNotNull(testSourceDO);
         EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
@@ -111,6 +112,8 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         
         LifecycleManager.getDefault().saveAll();
     }
+
+    protected void afterTestSetup() throws Exception {}
 
     private static class CIFactory implements JavaCompletionTask.ModuleItemFactory<CI>, JavaCompletionTask.RecordPatternItemFactory<CI> {
 
@@ -522,7 +525,7 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         }
 
         @Override
-        public CI createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon) {
+        public CI createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon, boolean smartType) {
             switch (memberElem.getKind()) {
                 case METHOD:
                 case ENUM_CONSTANT:
@@ -574,14 +577,14 @@ public class CompletionTestBase extends CompletionTestBaseBase {
                         sb.append(')');
                         sortParams.append(')');
                     }
-                    return new CI(sb.toString(), (memberElem.getKind().isField() ? 720 : 750) - SMART_TYPE, memberElem.getKind().isField() ? memberName + "#" + typeName : memberName + "#" + ((cnt < 10 ? "0" : "") + cnt) + "#" + sortParams.toString() + "#" + typeName); //NOI18N
+                    return new CI(sb.toString(), (memberElem.getKind().isField() ? 720 : 750) - (smartType ? SMART_TYPE : 0), memberElem.getKind().isField() ? memberName + "#" + typeName : memberName + "#" + ((cnt < 10 ? "0" : "") + cnt) + "#" + sortParams.toString() + "#" + typeName); //NOI18N
                 default:
                     throw new IllegalArgumentException("kind=" + memberElem.getKind());
             }
         }
 
         @Override
-        public CI createStaticMemberItem(ElementHandle<TypeElement> handle, String name, int substitutionOffset, boolean addSemicolon, ReferencesCount referencesCount, Source source) {
+        public CI createStaticMemberItem(ElementHandle<TypeElement> handle, String name, int substitutionOffset, boolean addSemicolon, ReferencesCount referencesCount, Source source, boolean smartType) {
             String fqn = handle.getQualifiedName();
             int weight = 50;
             if (fqn.startsWith("java.lang") || fqn.startsWith("java.util")) { // NOI18N

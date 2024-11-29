@@ -109,11 +109,9 @@ public class MicronautConfigErrorProvider extends CustomIndexer implements Error
                                     scan(text, scanner.scan((ParserResult) result), structure -> {
                                         int start = (int) structure.getPosition();
                                         int end = (int) structure.getEndPosition();
-                                        String[] startLines = text.substring(0, start).split("\n");
-                                        String[] endLines = text.substring(0, end).split("\n");
                                         diags.add(Diagnostic.Builder.create(() -> start, () -> end, Bundle.ERR_PropertyWithoutValue())
                                                 .setSeverity(Diagnostic.Severity.Warning)
-                                                .setCode(ERR_CODE_PREFIX + startLines.length + ',' + (startLines[startLines.length - 1].length() + 1) + '-' + endLines.length + ',' + (endLines[endLines.length - 1].length() + 1))
+                                                .setCode(ERR_CODE_PREFIX + text.substring(0, start).split("\n").length)
                                                 .build());
                                     });
                                 }
@@ -137,7 +135,7 @@ public class MicronautConfigErrorProvider extends CustomIndexer implements Error
                             int end = offset + line.length();
                             diags.add(Diagnostic.Builder.create(() -> start, () -> end, Bundle.ERR_PropertyWithoutValue())
                                     .setSeverity(Diagnostic.Severity.Warning)
-                                    .setCode(ERR_CODE_PREFIX + (i + 1) + ",1-" + (i + 1) + "," + line.length() + 1)
+                                    .setCode(ERR_CODE_PREFIX + (i + 1))
                                     .build());
                         }
                     }
@@ -200,26 +198,14 @@ public class MicronautConfigErrorProvider extends CustomIndexer implements Error
         }
     }
 
-    private static final class ErrorConvertorImpl implements ErrorsCache.Convertor2<Diagnostic> {
+    private static final class ErrorConvertorImpl implements ErrorsCache.Convertor<Diagnostic> {
         @Override
         public ErrorsCache.ErrorKind getKind(Diagnostic t) {
             return t.getSeverity() == Diagnostic.Severity.Error ? ErrorsCache.ErrorKind.ERROR : ErrorsCache.ErrorKind.WARNING;
         }
         @Override
         public int getLineNumber(Diagnostic t) {
-            String text = t.getCode().substring(ERR_CODE_PREFIX.length());
-            int idx = text.indexOf(',');
-            return Integer.parseInt(text.substring(0, idx));
-        }
-        @Override
-        public ErrorsCache.Range getRange(Diagnostic t) {
-            String text = t.getCode().substring(ERR_CODE_PREFIX.length());
-            int idx1 = text.indexOf(',');
-            int idx2 = text.indexOf('-');
-            int idx3 = text.indexOf(',', idx2);
-            ErrorsCache.Position start = new ErrorsCache.Position(Integer.parseInt(text.substring(0, idx1)), Integer.parseInt(text.substring(idx1 + 1, idx2)));
-            ErrorsCache.Position end = new ErrorsCache.Position(Integer.parseInt(text.substring(idx2 + 1, idx3)), Integer.parseInt(text.substring(idx3 + 1, text.length())));
-            return new ErrorsCache.Range(start, end);
+            return Integer.parseInt(t.getCode().substring(ERR_CODE_PREFIX.length()));
         }
         @Override
         public String getMessage(Diagnostic t) {

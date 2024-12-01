@@ -142,7 +142,7 @@ public final class HighlightImpl {
         int    columnEnd  = ((Long) args[4]).intValue();
         
         String[] attrElements = attributesString.split(",");
-        List<ColoringAttributes> attributes = new ArrayList<ColoringAttributes>();
+        List<ColoringAttributes> attributes = new ArrayList<>();
         
         for (String a : attrElements) {
             a = a.trim();

@@ -37,7 +37,6 @@ import javax.swing.LayoutStyle;
 import org.netbeans.modules.analysis.spi.Analyzer;
 import org.netbeans.modules.php.analysis.commands.PHPStan;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
-import org.netbeans.modules.php.analysis.ui.PHPStanLevelListCellRenderer;
 import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
 import org.netbeans.modules.php.analysis.options.ValidatorPHPStanParameter;
 import org.netbeans.modules.php.analysis.ui.AnalysisDefaultDocumentListener;
@@ -121,7 +120,6 @@ public class PHPStanCustomizerPanel extends JPanel {
             phpStanLevelComboBox.addItem(String.valueOf(i));
         }
         phpStanLevelComboBox.addItem(PHPStan.MAX_LEVEL);
-        phpStanLevelComboBox.setRenderer(new PHPStanLevelListCellRenderer(phpStanLevelComboBox.getRenderer()));
         phpStanLevelComboBox.setSelectedItem(getValidLevel());
         phpStanLevelComboBox.addItemListener(e -> setLevel());
     }

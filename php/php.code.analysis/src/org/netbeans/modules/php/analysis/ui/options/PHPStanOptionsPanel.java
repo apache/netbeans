@@ -39,7 +39,6 @@ import org.netbeans.modules.php.analysis.commands.PHPStan;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
 import org.netbeans.modules.php.analysis.ui.AnalysisDefaultDocumentListener;
-import org.netbeans.modules.php.analysis.ui.PHPStanLevelListCellRenderer;
 import org.netbeans.modules.php.analysis.options.ValidatorPHPStanParameter;
 import org.netbeans.modules.php.analysis.util.AnalysisUiUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
@@ -78,7 +77,6 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
             phpStanLevelComboBox.addItem(String.valueOf(i));
         }
         phpStanLevelComboBox.addItem(PHPStan.MAX_LEVEL);
-        phpStanLevelComboBox.setRenderer(new PHPStanLevelListCellRenderer(phpStanLevelComboBox.getRenderer()));
         // add listener
         DocumentListener defaultDocumentListener = new AnalysisDefaultDocumentListener(() -> fireChange());
         phpStanTextField.getDocument().addDocumentListener(defaultDocumentListener);

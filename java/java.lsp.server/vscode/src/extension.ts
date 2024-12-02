@@ -803,7 +803,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             debugConfig['testRun'] = testRun;
 
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
-            if (project) {
+            if (project || testRun) {
                 debugConfig['projectFile'] = docUri.toString();
                 debugConfig['project'] = true;
             } else {

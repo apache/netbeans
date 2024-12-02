@@ -64,8 +64,8 @@ public abstract class LazyJavaCompletionItem<T extends Element> extends JavaComp
         return new TypeItem(handle, kinds, substitutionOffset, referencesCount, source, insideNew, addTypeVars, afterExtends, whiteList);
     }
 
-    public static JavaCompletionItem createStaticMemberItem(ElementHandle<TypeElement> handle, String name, int substitutionOffset, boolean addSemicolon, ReferencesCount referencesCount, Source source, WhiteListQuery.WhiteList whiteList) {
-        return new StaticMemberItem(handle, name, substitutionOffset, addSemicolon, referencesCount, source, whiteList);
+    public static JavaCompletionItem createStaticMemberItem(ElementHandle<TypeElement> handle, String name, int substitutionOffset, boolean addSemicolon, ReferencesCount referencesCount, Source source, boolean smartType, WhiteListQuery.WhiteList whiteList) {
+        return new StaticMemberItem(handle, name, substitutionOffset, addSemicolon, referencesCount, source, smartType, whiteList);
     }
 
     private LazyJavaCompletionItem(int substitutionOffset, ElementHandle<? extends Element> handle, Source source, WhiteListQuery.WhiteList whiteList) {
@@ -241,12 +241,14 @@ public abstract class LazyJavaCompletionItem<T extends Element> extends JavaComp
         private boolean addSemicolon;
         private String name;
         private CharSequence sortText;
+        private final boolean smartType;
 
-        private StaticMemberItem(ElementHandle<TypeElement> handle, String name, int substitutionOffset, boolean addSemicolon, ReferencesCount referencesCount, Source source, WhiteListQuery.WhiteList whiteList) {
+        private StaticMemberItem(ElementHandle<TypeElement> handle, String name, int substitutionOffset, boolean addSemicolon, ReferencesCount referencesCount, Source source, boolean smartType, WhiteListQuery.WhiteList whiteList) {
             super(substitutionOffset, handle, source, whiteList);
             this.name = name;
             this.sortText = new LazySortText(this.name, handle.getQualifiedName(), handle, referencesCount);
             this.addSemicolon = addSemicolon;
+            this.smartType = smartType;
         }
 
         @Override
@@ -271,7 +273,7 @@ public abstract class LazyJavaCompletionItem<T extends Element> extends JavaComp
                 }
                 if (element != null) {
                     name = element.getSimpleName().toString();
-                    return createStaticMemberItem(info, (DeclaredType) te.asType(), element, element.asType(), multiVersion, substitutionOffset, elements.isDeprecated(element), addSemicolon, getWhiteList());
+                    return createStaticMemberItem(info, (DeclaredType) te.asType(), element, element.asType(), multiVersion, substitutionOffset, elements.isDeprecated(element), addSemicolon, smartType, getWhiteList());
                 }
             }
             return null;

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.11.0
+#Version 2.13.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -18,6 +20,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -32,6 +35,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -68,6 +72,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public final org.netbeans.modules.java.completion.JavaCompletionTask<%0 extends java.lang.Object>
 fld protected final int caretOffset
 fld protected final java.util.concurrent.Callable<java.lang.Boolean> cancel
@@ -88,7 +95,8 @@ meth public static <%0 extends java.lang.Object> org.netbeans.modules.java.compl
  anno 4 org.netbeans.api.annotations.common.NullAllowed()
 meth public void run(org.netbeans.modules.parsing.api.ResultIterator) throws java.lang.Exception
 supr org.netbeans.modules.parsing.api.UserTask
-hfds ABSTRACT_KEYWORD,ASSERT_KEYWORD,BLOCK_KEYWORDS,BOOLEAN_KEYWORD,BREAK_KEYWORD,BYTE_KEYWORD,CASE_KEYWORD,CATCH_KEYWORD,CHAR_KEYWORD,CLASS_BODY_KEYWORDS,CLASS_KEYWORD,COLON,CONTINUE_KEYWORD,DEFAULT_KEYWORD,DOUBLE_KEYWORD,DO_KEYWORD,ELSE_KEYWORD,EMPTY,ENUM_KEYWORD,ERROR,EXPORTS_KEYWORD,EXTENDS_KEYWORD,FALSE_KEYWORD,FINALLY_KEYWORD,FINAL_KEYWORD,FLOAT_KEYWORD,FOR_KEYWORD,IF_KEYWORD,IMPLEMENTS_KEYWORD,IMPORT_KEYWORD,INIT,INSTANCEOF_KEYWORD,INTERFACE_KEYWORD,INT_KEYWORD,JAVA_LANG_CLASS,JAVA_LANG_ITERABLE,JAVA_LANG_OBJECT,LONG_KEYWORD,MODULE_BODY_KEYWORDS,MODULE_KEYWORD,NATIVE_KEYWORD,NEW_KEYWORD,NON_SEALED_KEYWORD,NULL_KEYWORD,OPENS_KEYWORD,OPEN_KEYWORD,PACKAGE_KEYWORD,PERMITS_KEYWORD,PRIM_KEYWORDS,PRIVATE_KEYWORD,PROTECTED_KEYWORD,PROVIDES_KEYWORD,PUBLIC_KEYWORD,RECORD_KEYWORD,REQUIRES_KEYWORD,RETURN_KEYWORD,SEALED_KEYWORD,SEMI,SHORT_KEYWORD,SPACE,STATEMENT_KEYWORDS,STATEMENT_SPACE_KEYWORDS,STATIC_KEYWORD,STRICT_KEYWORD,SUPER_KEYWORD,SWITCH_KEYWORD,SYNCHRONIZED_KEYWORD,THIS_KEYWORD,THROWS_KEYWORD,THROW_KEYWORD,TO_KEYWORD,TRANSIENT_KEYWORD,TRANSITIVE_KEYWORD,TRUE_KEYWORD,TRY_KEYWORD,USES_KEYWORD,VAR_KEYWORD,VOID_KEYWORD,VOLATILE_KEYWORD,WHEN_KEYWORD,WHILE_KEYWORD,WITH_KEYWORD,YIELD_KEYWORD,anchorOffset,hasAdditionalClasses,hasAdditionalMembers,itemFactory,options,results
+hfds ABSTRACT_KEYWORD,ASSERT_KEYWORD,BLOCK_KEYWORDS,BOOLEAN_KEYWORD,BREAK_KEYWORD,BYTE_KEYWORD,CASE_KEYWORD,CATCH_KEYWORD,CHAR_KEYWORD,CLASS_BODY_KEYWORDS,CLASS_KEYWORD,COLON,CONTINUE_KEYWORD,DEFAULT_KEYWORD,DOUBLE_KEYWORD,DO_KEYWORD,ELSE_KEYWORD,EMPTY,ENUM_KEYWORD,ERROR,EXPORTS_KEYWORD,EXTENDS_KEYWORD,FALSE_KEYWORD,FINALLY_KEYWORD,FINAL_KEYWORD,FLOAT_KEYWORD,FOR_KEYWORD,IF_KEYWORD,IMPLEMENTS_KEYWORD,IMPORT_KEYWORD,INIT,INSTANCEOF_KEYWORD,INTERFACE_KEYWORD,INT_KEYWORD,JAVA_LANG_CLASS,JAVA_LANG_ITERABLE,JAVA_LANG_OBJECT,JAVA_LANG_STRING,LONG_KEYWORD,MODULE_BODY_KEYWORDS,MODULE_KEYWORD,NATIVE_KEYWORD,NEW_KEYWORD,NON_SEALED_KEYWORD,NULL_KEYWORD,OPENS_KEYWORD,OPEN_KEYWORD,PACKAGE_KEYWORD,PERMITS_KEYWORD,PRIM_KEYWORDS,PRIVATE_KEYWORD,PROTECTED_KEYWORD,PROVIDES_KEYWORD,PUBLIC_KEYWORD,RECORD_KEYWORD,REQUIRES_KEYWORD,RETURN_KEYWORD,SEALED_KEYWORD,SEMI,SHORT_KEYWORD,SPACE,STATEMENT_KEYWORDS,STATEMENT_SPACE_KEYWORDS,STATIC_KEYWORD,STRICT_KEYWORD,SUPER_KEYWORD,SWITCH_KEYWORD,SYNCHRONIZED_KEYWORD,THIS_KEYWORD,THROWS_KEYWORD,THROW_KEYWORD,TO_KEYWORD,TRANSIENT_KEYWORD,TRANSITIVE_KEYWORD,TRUE_KEYWORD,TRY_KEYWORD,USES_KEYWORD,VAR_KEYWORD,VOID_KEYWORD,VOLATILE_KEYWORD,WHEN_KEYWORD,WHILE_KEYWORD,WITH_KEYWORD,YIELD_KEYWORD,addSwitchItemDefault,anchorOffset,hasAdditionalClasses,hasAdditionalMembers,itemFactory,options,results
+hcls AddSwitchRelatedItem
 
 CLSS public abstract interface static org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory<%0 extends java.lang.Object>
  outer org.netbeans.modules.java.completion.JavaCompletionTask
@@ -105,8 +113,8 @@ meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$It
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createOverrideMethodItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.ExecutableElement,javax.lang.model.type.ExecutableType,int,boolean)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createPackageItem(java.lang.String,int,boolean)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createParametersItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.ExecutableElement,javax.lang.model.type.ExecutableType,int,boolean,int,java.lang.String)
-meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createStaticMemberItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.type.DeclaredType,javax.lang.model.element.Element,javax.lang.model.type.TypeMirror,boolean,int,boolean,boolean)
-meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createStaticMemberItem(org.netbeans.api.java.source.ElementHandle<javax.lang.model.element.TypeElement>,java.lang.String,int,boolean,org.netbeans.api.java.source.support.ReferencesCount,org.netbeans.modules.parsing.api.Source)
+meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createStaticMemberItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.type.DeclaredType,javax.lang.model.element.Element,javax.lang.model.type.TypeMirror,boolean,int,boolean,boolean,boolean)
+meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createStaticMemberItem(org.netbeans.api.java.source.ElementHandle<javax.lang.model.element.TypeElement>,java.lang.String,int,boolean,org.netbeans.api.java.source.support.ReferencesCount,org.netbeans.modules.parsing.api.Source,boolean)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createThisOrSuperConstructorItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.ExecutableElement,javax.lang.model.type.ExecutableType,int,boolean,java.lang.String)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createTypeItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.TypeElement,javax.lang.model.type.DeclaredType,int,org.netbeans.api.java.source.support.ReferencesCount,boolean,boolean,boolean,boolean,boolean,boolean)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createTypeItem(org.netbeans.api.java.source.ElementHandle<javax.lang.model.element.TypeElement>,java.util.EnumSet<javax.lang.model.element.ElementKind>,int,org.netbeans.api.java.source.support.ReferencesCount,org.netbeans.modules.parsing.api.Source,boolean,boolean,boolean)

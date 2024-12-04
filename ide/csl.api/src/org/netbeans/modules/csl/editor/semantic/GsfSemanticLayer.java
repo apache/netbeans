@@ -311,23 +311,17 @@ public class GsfSemanticLayer extends AbstractHighlightsContainer implements Doc
 
         @Override
         public int getStartOffset() {
-            return (element != null)
-                    ? layer.getShiftedPos(element.range.getStart())
-                    : Integer.MAX_VALUE;
+            return  layer.getShiftedPos(element.range.getStart());
         }
 
         @Override
         public int getEndOffset() {
-            return (element != null)
-                    ? Math.min(layer.getShiftedPos(element.range.getEnd()), nextElementStartOffset)
-                    : Integer.MAX_VALUE;
+            return layer.getShiftedPos(element.range.getEnd());
         }
 
         @Override
         public AttributeSet getAttributes() {
-            return (element != null)
-                    ? layer.getColoring(element.coloring, element.language)
-                    : SimpleAttributeSet.EMPTY;
+            return layer.getColoring(element.coloring, element.language);
         }
     }
 }

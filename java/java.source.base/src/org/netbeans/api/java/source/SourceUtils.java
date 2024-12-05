@@ -62,6 +62,9 @@ import com.sun.tools.javac.comp.Check;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Predicate;
 import javax.lang.model.util.ElementScanner14;
 
@@ -1467,5 +1470,37 @@ public class SourceUtils {
             throw new IllegalStateException("Must invoke before running toPhase!");
         }
         cc.addForceSource(file);
+    }
+
+    /**
+     * Computes class name for the corresponding input source file.
+     *
+     * @param info the ClasspathInfo used to resolve
+     * @param relativePath input source file path relative to the corresponding source root
+     * @return class name for the corresponding input source file
+     * @since 2.73
+     */
+    public static String classNameFor(ClasspathInfo info, String relativePath) {
+        ClassPath cachedCP = ClasspathInfoAccessor.getINSTANCE().getCachedClassPath(info, PathKind.COMPILE);
+        int idx = relativePath.indexOf('.');
+        String rel = idx < 0 ? relativePath : relativePath.substring(0, idx);
+        String className = rel.replace('/', '.');
+        FileObject rsFile = cachedCP.findResource(rel + '.' + FileObjects.RS);
+        if (rsFile != null) {
+            List<String> lines = new ArrayList<>();
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(rsFile.getInputStream(), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = in.readLine())!=null) {
+                    if (className.equals(line)) {
+                        return className;
+                    }
+                    lines.add(line);
+                }
+            } catch (IOException ioe) {}
+            if (!lines.isEmpty()) {
+                return lines.get(0);
+            }
+        }
+        return className;
     }
 }

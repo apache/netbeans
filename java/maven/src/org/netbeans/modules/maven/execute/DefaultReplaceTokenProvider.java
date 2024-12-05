@@ -148,9 +148,9 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
                     classname.append(',');
                     classnameExt.append(',');
                 }
+                String rel = FileUtil.getRelativePath(group.getRootFolder(), file);
+                assert rel != null;
                 if (file.isFolder()) {
-                    String rel = FileUtil.getRelativePath(group.getRootFolder(), file);
-                    assert rel != null;
                     String pkg = rel.replace('/', '.');
                     if (!pkg.isEmpty()) {
                         packClassname.append(pkg).append(".**."); // test everything under this package recusively
@@ -162,22 +162,18 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
                     classname.append(pkg); // ?
                     classnameExt.append(pkg); // ??
                 } else { // XXX do we need to limit to text/x-java? What about files of other type?
-                    String relP = FileUtil.getRelativePath(group.getRootFolder(), file.getParent());
-                    assert relP != null;
-                    StringBuilder cn = new StringBuilder();
-                    if (!relP.isEmpty()) {
-                        cn.append(relP.replace('/', '.')).append('.');
-                    }
-                    String n = file.getName();
-                    cn.append(n);
-                    if (uniqueClassNames.add(cn.toString())) {
+                    String cn = SourceUtils.classNameFor(ClasspathInfo.create(file), rel);
+                    int idx = cn.lastIndexOf('.');
+                    String n = idx < 0 ? cn : cn.substring(idx + 1);
+                    if (uniqueClassNames.add(cn)) {
                         packClassname.append(cn);
                         classname.append(n);
                     } else {
                         packClassname.deleteCharAt(packClassname.length() - 1); // Delete the comma
                         classname.deleteCharAt(classname.length() - 1);
                     }
-                    classnameExt.append(file.getNameExt());
+                    classnameExt.append(n).append('.').append(file.getExt());
+                    String relP = FileUtil.getRelativePath(group.getRootFolder(), file.getParent());
                     if (MavenSourcesImpl.NAME_SOURCE.equals(group.getName()) &&
                         (ActionProvider.COMMAND_TEST_SINGLE.equals(actionName) ||
                          ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(actionName) ||

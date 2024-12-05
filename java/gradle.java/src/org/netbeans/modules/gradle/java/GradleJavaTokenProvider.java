@@ -31,6 +31,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
@@ -139,11 +141,11 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
             if (sourceSet != null) {
                 String relPath = sourceSet.relativePath(f);
                 if (relPath != null) {
-                    ret = (relPath.lastIndexOf('.') > 0 ?
-                            relPath.substring(0, relPath.lastIndexOf('.')) :
-                            relPath).replace('/', '.');
                     if (fo.isFolder()) {
+                        ret = relPath.replace('/', '.');
                         ret = ret + '*';
+                    } else {
+                        ret = SourceUtils.classNameFor(ClasspathInfo.create(fo), relPath);
                     }
                 }
             }

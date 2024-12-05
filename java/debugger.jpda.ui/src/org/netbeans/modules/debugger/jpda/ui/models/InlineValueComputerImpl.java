@@ -33,14 +33,20 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.Document;
 import org.netbeans.api.debugger.DebuggerManagerAdapter;
 import org.netbeans.api.debugger.LazyDebuggerManagerListener;
@@ -49,7 +55,6 @@ import org.netbeans.api.debugger.jpda.CallStackFrame;
 import org.netbeans.api.debugger.jpda.InvalidExpressionException;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.Variable;
-import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.java.source.CancellableTask;
@@ -61,9 +66,7 @@ import org.netbeans.api.java.source.JavaSourceTaskFactory;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.api.lsp.InlineValue;
-import org.netbeans.api.lsp.Position;
 import org.netbeans.api.lsp.Range;
-import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InvalidStackFrameExceptionWrapper;
@@ -93,7 +96,7 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
     private static final RequestProcessor EVALUATOR = new RequestProcessor(InlineValueProviderImpl.class.getName(), 1, false, false);
     private static final String JAVA_STRATUM = "Java"; //XXX: this is probably already defined somewhere
     private final JPDADebuggerImpl debugger;
-    private Document lastDocument;
+    private TaskDescription currentTask;
 
     public InlineValueComputerImpl(ContextProvider contextProvider) {
         debugger = (JPDADebuggerImpl) contextProvider.lookupFirst(null, JPDADebugger.class);
@@ -102,6 +105,11 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        if (JPDADebugger.PROP_STATE.equals(evt.getPropertyName()) &&
+            debugger.getState() == JPDADebugger.STATE_DISCONNECTED) {
+            setNewTask(null);
+        }
+
         if (JPDADebugger.PROP_CURRENT_CALL_STACK_FRAME.equals(evt.getPropertyName())) {
             CallStackFrame frame = debugger.getCurrentCallStackFrame();
 
@@ -126,46 +134,99 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
                 }
             }
 
-            synchronized (this) {
-                if (lastDocument != frameDocument) {
-                    if (lastDocument != null) {
-                        getHighlightsBag(lastDocument).clear();
-                    }
-
-                    lastDocument = frameDocument;
-                }
-            }
+            TaskDescription newTask;
 
             if (frameFile != null && frameDocument != null) {
-                //TODO: cancel any already running computation if the configuration is different:
-                OffsetsBag currentDocumentBag = getHighlightsBag(frameDocument);
-                OffsetsBag runningBag = new OffsetsBag(frameDocument);
+                newTask = new TaskDescription(frameFile, frameLineNumber, frameDocument);
+            } else {
+                newTask = null;
+            }
 
-                Lookup.getDefault().lookup(ComputeInlineVariablesFactory.class).set(frameFile, frameLineNumber, variables -> {
+            if (setNewTask(newTask)) {
+                return;
+            }
+
+            if (newTask != null) {
+                //TODO: cancel any already running computation if the configuration is different:
+                CountDownLatch computationDone = new CountDownLatch(1);
+
+                newTask.addCancelCallback(computationDone::countDown);
+
+                AtomicReference<Collection<InlineVariable>> values = new AtomicReference<>();
+
+                EVALUATOR.post(() -> {
+                    OffsetsBag currentDocumentBag = getHighlightsBag(newTask.frameDocument);
+                    OffsetsBag runningBag = new OffsetsBag(newTask.frameDocument);
+
+                    Lookup.getDefault().lookup(ComputeInlineVariablesFactory.class).set(newTask.frameFile, newTask.frameLineNumber, variables -> {
+                        values.set(variables);
+                        computationDone.countDown();
+                    });
+
+                    try {
+                        computationDone.await();
+                    } catch (InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+
+                    if (newTask.isCancelled()) {
+                        return ;
+                    }
+
+                    Collection<InlineVariable> variables = values.get();
+
+                    if (values == null) {
+                        return ;
+                    }
+
                     Map<String, Variable> expression2Value = new HashMap<>();
                     Map<Integer, Map<String, String>> line2Values = new HashMap<>();
 
                     for (InlineVariable v : variables) {
-                        EVALUATOR.post(() -> {
-                            Variable value = expression2Value.computeIfAbsent(v.expression, expr -> {
-                                try {
-                                    return debugger.evaluate(expr);
-                                } catch (InvalidExpressionException ex) {
-                                    Exceptions.printStackTrace(ex);
-                                    return null; //TODO: avoid re-evaluation(!)
-                                }
-                            });
-                            if (value != null) {
-                                line2Values.computeIfAbsent(v.lineEnd, __ -> new LinkedHashMap<>())
-                                           .putIfAbsent(v.expression, v.expression + " = " + value.getValue());
-                                runningBag.addHighlight(v.lineEnd, v.lineEnd + 1, AttributesUtilities.createImmutable("virtual-text-prepend", "  " + line2Values.get(v.lineEnd).values().stream().collect(Collectors.joining(", "))));
-                                currentDocumentBag.setHighlights(runningBag);
+                        if (newTask.isCancelled()) {
+                            return ;
+                        }
+
+                        Variable value = expression2Value.computeIfAbsent(v.expression, expr -> {
+                            try {
+                                return debugger.evaluate(expr);
+                            } catch (InvalidExpressionException ex) {
+                                Exceptions.printStackTrace(ex);
+                                return null; //TODO: avoid re-evaluation(!)
                             }
                         });
+                        if (value != null) {
+                            line2Values.computeIfAbsent(v.lineEnd, __ -> new LinkedHashMap<>())
+                                       .putIfAbsent(v.expression, v.expression + " = " + value.getValue());
+                            String mergedValues = line2Values.get(v.lineEnd).values().stream().collect(Collectors.joining(", ", "  ", ""));
+                            AttributeSet attrs = AttributesUtilities.createImmutable("virtual-text-prepend", mergedValues);
+
+                            runningBag.addHighlight(v.lineEnd, v.lineEnd + 1, attrs);
+
+                            if (!newTask.isCancelled()) {
+                                //TODO: a slight race condition:
+                                currentDocumentBag.setHighlights(runningBag);
+                            }
+                        }
                     }
                 });
             }
         }
+    }
+
+    private synchronized boolean setNewTask(TaskDescription newTask) {
+        if (Objects.equals(currentTask, newTask)) {
+            return true; //nothing changed, nothing to do
+        }
+
+        if (currentTask != null) {
+            currentTask.cancel();
+            getHighlightsBag(currentTask.frameDocument).clear();
+        }
+
+        currentTask = newTask;
+
+        return false;
     }
 
     @DebuggerServiceRegistration(types=LazyDebuggerManagerListener.class)
@@ -194,13 +255,17 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
         @Override
         protected CancellableTask<CompilationInfo> createTask(FileObject file) {
             return new CancellableTask<CompilationInfo>() {
+                private final AtomicBoolean cancel = new AtomicBoolean();
+
                 @Override
                 public void cancel() {
-                    //TODO
+                    cancel.set(true);
                 }
 
                 @Override
                 public void run(CompilationInfo info) throws Exception {
+                    cancel.set(false);
+
                     int line;
                     Consumer<Collection<InlineVariable>> target;
 
@@ -212,7 +277,7 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
                         target = currentTarget;
                     }
 
-                    Collection<InlineVariable> variables = computeVariables(info, line, 1);
+                    Collection<InlineVariable> variables = computeVariables(info, line, 1, cancel);
 
                     target.accept(variables);
                 }
@@ -236,7 +301,7 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
     }
 
     //TODO: cancel
-    private static Collection<InlineVariable> computeVariables(CompilationInfo info, int stackLine, int stackCol) {
+    private static Collection<InlineVariable> computeVariables(CompilationInfo info, int stackLine, int stackCol, AtomicBoolean cancel) {
         Collection<InlineVariable> result = new ArrayList<>();
         int donePos = (int) info.getCompilationUnit().getLineMap().getPosition(stackLine, stackCol);
         int upcomingPos = (int) info.getCompilationUnit().getLineMap().getStartPosition(stackLine + 1);
@@ -253,7 +318,7 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
             relevantPoint = relevantPoint.getParentPath();
         }
         LineMap lm = info.getCompilationUnit().getLineMap();
-        new CancellableTreePathScanner<Void, Void>() {
+        new CancellableTreePathScanner<Void, Void>(cancel) {
             @Override
             public Void visitVariable(VariableTree node, Void p) {
                 int end = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), node);
@@ -320,6 +385,77 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
 
     }
 
+    private static final class TaskDescription {
+        public final FileObject frameFile;
+        public final int frameLineNumber;
+        public final Document frameDocument;
+        private final AtomicBoolean cancelled = new AtomicBoolean();
+        private final List<Runnable> cancelCallbacks =
+                Collections.synchronizedList(new ArrayList<>());
+
+        public TaskDescription(FileObject frameFile, int frameLineNumber, Document frameDocument) {
+            this.frameFile = frameFile;
+            this.frameLineNumber = frameLineNumber;
+            this.frameDocument = frameDocument;
+        }
+
+        public void cancel() {
+            cancelled.set(true);
+
+            List<Runnable> callbacks;
+
+            synchronized (cancelCallbacks) {
+                callbacks = new ArrayList<>(cancelCallbacks);
+            }
+
+            for (Runnable r : callbacks) {
+                r.run();
+            }
+        }
+
+        public void addCancelCallback(Runnable r) {
+            cancelCallbacks.add(r);
+
+            if (cancelled.get()) {
+                r.run();
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 53 * hash + Objects.hashCode(this.frameFile);
+            hash = 53 * hash + this.frameLineNumber;
+            hash = 53 * hash + System.identityHashCode(this.frameDocument);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final TaskDescription other = (TaskDescription) obj;
+            if (this.frameLineNumber != other.frameLineNumber) {
+                return false;
+            }
+            if (!Objects.equals(this.frameFile, other.frameFile)) {
+                return false;
+            }
+            return this.frameDocument == other.frameDocument;
+        }
+
+        public boolean isCancelled() {
+            return cancelled.get();
+        }
+
+    }
     @MimeRegistration(mimeType="text/x-java", service=HighlightsLayerFactory.class)
     public static HighlightsLayerFactory createHighlightsLayerFactory() {
         return new HighlightsLayerFactory() {
@@ -356,7 +492,7 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
                         int stackLine = (int) cc.getCompilationUnit().getLineMap().getLineNumber(currentExecutionPosition);
                         int stackCol = (int) cc.getCompilationUnit().getLineMap().getColumnNumber(currentExecutionPosition);
 
-                        for (InlineVariable var : computeVariables(cc, stackLine, stackCol)) {
+                        for (InlineVariable var : computeVariables(cc, stackLine, stackCol, new AtomicBoolean())) {
                             resultValues.add(InlineValue.createInlineVariable(new Range(var.start, var.end), var.expression));
                         }
                     }, true);

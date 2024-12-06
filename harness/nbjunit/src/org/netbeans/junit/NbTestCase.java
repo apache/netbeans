@@ -752,6 +752,8 @@ public abstract class NbTestCase extends TestCase implements NbTest {
         } else {
             try {
                 if (diffImpl.diff(test, pass, diffFile)) {
+                    System.out.println("test: "+test+"\n"+Files.readString(test.toPath()));
+                    System.out.println("pass: "+pass+"\n"+Files.readString(pass.toPath()));
                     throw new AssertionFileFailedError(message+"\n diff: "+diffFile, null == diffFile ? "" : diffFile.getAbsolutePath());
                 }
             } catch (IOException e) {

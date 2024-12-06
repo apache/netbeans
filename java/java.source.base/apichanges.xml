@@ -25,6 +25,18 @@
     <apidef name="javasource_base">Java Source API</apidef>
 </apidefs>
 <changes>
+    <change id="SourceUtils.classNameFor">
+        <api name="javasource_base" />
+        <summary>Adding SourceUtils.classNameFor</summary>
+        <version major="1" minor="2.73"/>
+        <date day="5" month="12" year="2024"/>
+        <author login="dbalek"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+                Adding SourceUtils.classNameFor.
+        </description>
+        <class name="SourceUtils" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="TreeMaker.RawText">
         <api name="javasource_base" />
         <summary>Adding TreeMaker.RawText</summary>

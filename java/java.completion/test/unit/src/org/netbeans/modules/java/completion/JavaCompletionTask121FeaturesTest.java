@@ -179,9 +179,10 @@ public class JavaCompletionTask121FeaturesTest extends CompletionTestBase {
 
     @Override
     protected void tearDown() throws Exception {
-        if (classPathRegistered != null) {
+        if (getName().startsWith("testSealed") && classPathRegistered != null) {
             GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, new ClassPath[] {classPathRegistered});
             SourceUtils.waitScanFinished();
+            classPathRegistered = null;
         }
         super.tearDown();
     }

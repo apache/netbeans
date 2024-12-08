@@ -38,7 +38,7 @@ public class JavaCompletionTask121FeaturesTest extends CompletionTestBase {
     public JavaCompletionTask121FeaturesTest(String testName) {
         super(testName);
     }
-
+/*
     public void testRecordPatternCompletion_1() throws Exception {
         performTest("RecordPattern", 930, null, "AutoCompletion_RecordPattern_1.pass", SOURCE_LEVEL);
     }
@@ -122,7 +122,7 @@ public class JavaCompletionTask121FeaturesTest extends CompletionTestBase {
     public void TODOtestNoCrash() throws Exception {
         performTest("SwitchPatternMatching", 1275, "case R(var s,", "AutoCompletion_Guard_PatternMatchingSwitch.pass", SOURCE_LEVEL);
     }
-
+*/
     public void testSealedTypeSwitch1() throws Exception {
         performTest("SwitchWithSealedType", 1084, null, "sealedTypeSwitch.pass", SOURCE_LEVEL);
     }

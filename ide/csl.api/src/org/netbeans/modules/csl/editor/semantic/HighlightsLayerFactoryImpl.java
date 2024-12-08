@@ -35,6 +35,7 @@ import org.netbeans.spi.editor.highlighting.ZOrder;
  */
 public class HighlightsLayerFactoryImpl implements HighlightsLayerFactory {
     
+    @Override
     public HighlightsLayer[] createLayers(Context context) {
         //LexerBasedHighlightLayer semantic = LexerBasedHighlightLayer.getLayer(SemanticHighlighter.class, context.getDocument());
         GsfSemanticLayer semantic = GsfSemanticLayer.getLayer(SemanticHighlighter.class, context.getDocument());

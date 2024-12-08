@@ -19,7 +19,6 @@
 package org.netbeans.modules.csl.editor.semantic;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -63,8 +62,8 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
     private final CancelSupportImplementation cancel = SchedulerTaskCancelSupportImpl.create(this);
     private final Language language;
     private final Snapshot snapshot;
-    private int version;
-    static Coloring MO = ColoringAttributes.add(ColoringAttributes.empty(), ColoringAttributes.MARK_OCCURRENCES);
+
+    static final Coloring MO = ColoringAttributes.add(ColoringAttributes.empty(), ColoringAttributes.MARK_OCCURRENCES);
     
     /** Creates a new instance of SemanticHighlighter */
     MarkOccurrencesHighlighter(Language language, Snapshot snapshot) {
@@ -78,6 +77,7 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
 //        return snapshot.getSource().getDocument(false);
 //    }
 //
+    @Override
     public void run(ParserResult info, SchedulerEvent event) {
         SpiSupportAccessor.getInstance().setCancelSupport(cancel);
         try {
@@ -107,29 +107,20 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
             }
 
             List<OffsetRange> bag = processImpl(info, doc, caretPosition);
-            if(bag == null) {
+            if (bag.isEmpty() || cancel.isCancelled()) {
                 //the occurrences finder haven't found anything, just ignore the result
                 //and keep the previous occurrences
                 return ;
             }
 
-            if (cancel.isCancelled()) {
-                return;
-            }
-
             GsfSemanticLayer layer = GsfSemanticLayer.getLayer(MarkOccurrencesHighlighter.class, doc);
             SortedSet seqs = new TreeSet<SequenceElement>();
 
-            if (bag.size() > 0) {
-                for (OffsetRange range : bag) {
-                    if (range != OffsetRange.NONE) {
-                        SequenceElement s = new SequenceElement(language, range, MO);
-                        seqs.add(s);
-                    }
-                }
-            }
-
-            layer.setColorings(seqs, version++);
+            bag.stream()
+                    .filter(range -> range != OffsetRange.NONE)
+                    .forEach(range -> seqs.add(new SequenceElement(language, range, MO)));
+        
+            layer.setColorings(seqs);
 
             OccurrencesMarkProvider.get(doc).setOccurrences(OccurrencesMarkProvider.createMarks(doc, bag, ES_COLOR, NbBundle.getMessage(MarkOccurrencesHighlighter.class, "LBL_ES_TOOLTIP")));
         } finally {
@@ -155,7 +146,7 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
 
         Map<OffsetRange, ColoringAttributes> highlights = finder.getOccurrences();
 
-        return highlights == null ? null : new ArrayList<OffsetRange>(highlights.keySet());
+        return List.copyOf(highlights.keySet());
     }
     
     @Override

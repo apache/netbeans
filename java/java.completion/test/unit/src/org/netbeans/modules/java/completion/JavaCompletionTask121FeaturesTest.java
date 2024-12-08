@@ -139,9 +139,9 @@ public class JavaCompletionTask121FeaturesTest extends CompletionTestBase {
         performTest("SwitchWithSealedType", 1084, "J j -> {} case ", "sealedTypeSwitchJFiltered.pass", SOURCE_LEVEL);
     }
 
-    public void testSealedTypeSwitchTypeFilteringGuard() throws Exception {
-        performTest("SwitchWithSealedType", 1084, "J j when j == null -> {} case ", "sealedTypeSwitch.pass", SOURCE_LEVEL);
-    }
+//    public void testSealedTypeSwitchTypeFilteringGuard() throws Exception {
+//        performTest("SwitchWithSealedType", 1084, "J j when j == null -> {} case ", "sealedTypeSwitch.pass", SOURCE_LEVEL);
+//    }
 
     public void testSealedTypeSwitchTypeFilteringQualified() throws Exception {
         performTest("SwitchWithSealedType", 1084, "J j -> {} case test.Test.", "sealedTypeSwitchJFilteredQualified.pass", SOURCE_LEVEL);

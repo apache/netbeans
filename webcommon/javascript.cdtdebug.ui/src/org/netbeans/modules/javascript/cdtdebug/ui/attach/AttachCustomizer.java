@@ -25,6 +25,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -38,8 +40,11 @@ import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 public class AttachCustomizer extends javax.swing.JPanel {
+
+    private static final Logger LOG = Logger.getLogger(ConnectController.class.getName());
 
     private final ConnectController controller;
     private final ConnectProperties cproperties = new ConnectProperties();
@@ -51,6 +56,7 @@ public class AttachCustomizer extends javax.swing.JPanel {
     public AttachCustomizer() {
         controller = new ConnectController();
         initComponents();
+        controller.init();
         portTextField.getDocument().addDocumentListener(validityDocumentListener);
         localSourcesTextField.getDocument().addDocumentListener(validityDocumentListener);
         serverPathTextField.getDocument().addDocumentListener(validityDocumentListener);
@@ -272,7 +278,7 @@ public class AttachCustomizer extends javax.swing.JPanel {
 
     public class ConnectController implements PersistentController {
 
-        private static final String V8_ATTACH_PROPERTIES = "v8_attach_settings";
+        private static final String CDT_ATTACH_PROPERTIES = "cdt_attach_settings";
         private static final String PROP_HOST = "host";
         private static final String PROP_PORT = "port";
         private static final String PROP_HAS_SOURCES = "hasSources";
@@ -290,18 +296,19 @@ public class AttachCustomizer extends javax.swing.JPanel {
         @Override
         public boolean load(Properties props) {
             assert !SwingUtilities.isEventDispatchThread();
-            final Properties attachProps = props.getProperties(V8_ATTACH_PROPERTIES);
+            final Properties attachProps = props.getProperties(CDT_ATTACH_PROPERTIES);
             try {
                 SwingUtilities.invokeAndWait(new Runnable() {
                     @Override
                     public void run() {
-                        hostTextField.setText(attachProps.getString(PROP_HOST, ""));
-                        portTextField.setText(Integer.toString(attachProps.getInt(PROP_PORT, 0)));
+                        hostTextField.setText(attachProps.getString(PROP_HOST, "localhost"));
+                        portTextField.setText(Integer.toString(attachProps.getInt(PROP_PORT, 9229)));
                         localSourcesCheckBox.setSelected(attachProps.getBoolean(PROP_HAS_SOURCES, false));
                         String localPath = attachProps.getString(PROP_LOCAL_PATH, "");
                         localSourcesTextField.setText(localPath);
                         String serverPath = attachProps.getString(PROP_SERVER_PATH, "");
                         serverPathTextField.setText(serverPath);
+                        localSourcesCheckBoxActionPerformed(null);
                     }
                 });
             } catch (InterruptedException | InvocationTargetException ex) {
@@ -312,13 +319,15 @@ public class AttachCustomizer extends javax.swing.JPanel {
 
         @Override
         public void save(Properties props) {
-            final Properties attachProps = props.getProperties(V8_ATTACH_PROPERTIES);
+            final Properties attachProps = props.getProperties(CDT_ATTACH_PROPERTIES);
             if (SwingUtilities.isEventDispatchThread()) {
                 saveToProps(attachProps);
+                saveToProps(Properties.getDefault().getProperties(CDT_ATTACH_PROPERTIES));
             } else {
                 try {
                     SwingUtilities.invokeAndWait(() -> {
                         saveToProps(attachProps);
+                        saveToProps(Properties.getDefault().getProperties(CDT_ATTACH_PROPERTIES));
                     });
                 } catch (InterruptedException | InvocationTargetException ex) {
                     Exceptions.printStackTrace(ex);
@@ -350,7 +359,12 @@ public class AttachCustomizer extends javax.swing.JPanel {
             try {
                 Connector.connect(cp, null);
             } catch (IOException ioex) {
-                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(ioex.getLocalizedMessage(), NotifyDescriptor.ERROR_MESSAGE));
+                LOG.log(Level.INFO, "Failed to connect", ioex);
+                String message = ioex.getLocalizedMessage();
+                if(message == null) {
+                    message = ioex.toString();
+                }
+                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(message, NotifyDescriptor.ERROR_MESSAGE));
                 return false;
             }
             return true;
@@ -393,6 +407,9 @@ public class AttachCustomizer extends javax.swing.JPanel {
             pcs.removePropertyChangeListener(l);
         }
 
+        public void init() {
+            RequestProcessor.getDefault().execute(() -> load(Properties.getDefault()));
+        }
     }
 
     private static final class ConnectProperties {

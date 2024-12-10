@@ -178,4 +178,25 @@
             </folder>
         </folder>
     </folder>
+    <folder name="Editors">
+        <folder name="Keybindings">
+            <folder name="NetBeans">
+                <folder name="Defaults">
+                    <file name="org-netbeans-modules-editor-keybindings.xml_hidden"/>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="text">
+            <folder name="x-java">
+                <folder name="Keybindings">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-editor-java-keybindings.xml_hidden"/>
+                            <file name="org-netbeans-modules-editor-java-keybindings-mac.xml_hidden"/>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
 </filesystem>

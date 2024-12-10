@@ -18,7 +18,9 @@
  */
 package org.netbeans.modules.debugger.jpda.ui.models;
 
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
 import static com.sun.source.tree.Tree.Kind.BLOCK;
@@ -300,8 +302,7 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
         }
     }
 
-    //TODO: cancel
-    private static Collection<InlineVariable> computeVariables(CompilationInfo info, int stackLine, int stackCol, AtomicBoolean cancel) {
+    static Collection<InlineVariable> computeVariables(CompilationInfo info, int stackLine, int stackCol, AtomicBoolean cancel) {
         Collection<InlineVariable> result = new ArrayList<>();
         int donePos = (int) info.getCompilationUnit().getLineMap().getPosition(stackLine, stackCol);
         int upcomingPos = (int) info.getCompilationUnit().getLineMap().getStartPosition(stackLine + 1);
@@ -351,6 +352,16 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
                 }
 
                 return super.visitIdentifier(node, p);
+            }
+
+            @Override
+            public Void visitClass(ClassTree node, Void p) {
+                return null;
+            }
+
+            @Override
+            public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
+                return null;
             }
 
             @Override

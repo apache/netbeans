@@ -21,7 +21,7 @@ package org.netbeans.modules.cloud.oracle.assets;
 import java.net.URISyntaxException;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
+import org.netbeans.modules.cloud.oracle.assets.k8s.ClusterItem;
 import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;

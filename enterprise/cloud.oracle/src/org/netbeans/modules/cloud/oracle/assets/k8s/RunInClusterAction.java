@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.assets;
+package org.netbeans.modules.cloud.oracle.assets.k8s;
 
+import org.netbeans.modules.cloud.oracle.assets.k8s.KubernetesUtils;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import io.fabric8.kubernetes.api.model.apps.DeploymentList;
@@ -29,10 +30,12 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
-import static org.netbeans.modules.cloud.oracle.assets.ConfigMapProvider.CONFIG_VOLUME_NAME;
-import static org.netbeans.modules.cloud.oracle.assets.ConfigMapProvider.ENVIRONMENT;
-import static org.netbeans.modules.cloud.oracle.assets.ConfigMapProvider.VOLUME_MOUNT_PATH;
-import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
+import org.netbeans.modules.cloud.oracle.NotificationUtils;
+import org.netbeans.modules.cloud.oracle.assets.CloudAssets;
+import org.netbeans.modules.cloud.oracle.assets.Steps;
+import static org.netbeans.modules.cloud.oracle.assets.k8s.ConfigMapProvider.CONFIG_VOLUME_NAME;
+import static org.netbeans.modules.cloud.oracle.assets.k8s.ConfigMapProvider.ENVIRONMENT;
+import static org.netbeans.modules.cloud.oracle.assets.k8s.ConfigMapProvider.VOLUME_MOUNT_PATH;
 import org.netbeans.modules.cloud.oracle.developer.ContainerTagItem;
 import org.netbeans.modules.cloud.oracle.steps.ProjectStep;
 import org.openide.awt.ActionID;
@@ -142,7 +145,7 @@ public class RunInClusterAction implements ActionListener {
                             .addToLabels(APP, projectName)
                             .endMetadata()
                             .withNewSpec()
-                            .withReplicas(3)
+                            .withReplicas(2)
                             .withNewSelector()
                             .addToMatchLabels(APP, projectName)
                             .endSelector()
@@ -188,8 +191,13 @@ public class RunInClusterAction implements ActionListener {
                             .create();
                 }
             });
+        } catch (ThreadDeath x) {
+                throw x;
+        } catch(Throwable t) {
+            NotificationUtils.showErrorMessage(t.getMessage());
         } finally {
             h.finish();
         }
     }
+    
 }

@@ -63,7 +63,7 @@ import org.openide.util.Task;
  */
 public abstract class CLIHandler extends Object {
     /** lenght of the key used for connecting */
-    private static final int KEY_LENGTH = 10;
+    private static final int KEY_LENGTH = 64;
     private static final byte[] VERSION = {
         'N', 'B', 'C', 'L', 'I', 0, 0, 0, 0, 1
     };
@@ -579,7 +579,19 @@ public abstract class CLIHandler extends Object {
                 enterState(10, block);
                 
                 final byte[] arr = new byte[KEY_LENGTH];
-                new SecureRandom().nextBytes(arr);
+                SecureRandom secureRandom = new SecureRandom();
+                boolean isPrefix;
+                // making sure arr doesn't have VERSION as prefix, rare occurance
+                do{
+                    secureRandom.nextBytes(arr);
+                    isPrefix = true;
+                    for(int j = 0; j < VERSION.length; j++) {
+                        if (arr[j] != VERSION[j]) {
+                            isPrefix = false;
+                            break;
+                        }
+                    }
+                } while(isPrefix);
 
                 
                 final RandomAccessFile os = raf;
@@ -741,7 +753,7 @@ public abstract class CLIHandler extends Object {
                         } else {
                             os.write(key);
                         }
-                        assert VERSION.length == key.length;
+                        assert VERSION.length <= key.length;
                         os.flush();
                         
                         enterState(30, block);
@@ -1144,7 +1156,7 @@ public abstract class CLIHandler extends Object {
             
             enterState(70, block);
 
-            is.readFully(check);
+            is.readFully(check, 0, VERSION.length);
 
             final DataOutputStream os = new DataOutputStream(s.getOutputStream());
 
@@ -1162,6 +1174,9 @@ public abstract class CLIHandler extends Object {
                 is.readFully(check);
             } else {
                 requestedVersion = 0;
+                if(check.length > VERSION.length){
+                    is.readFully(check, VERSION.length, check.length);
+                }
             }
             
             enterState(90, block);

@@ -107,14 +107,14 @@ public class CLIHowHardIsToGuessKeyTest extends NbTestCase {
         LOG.info("lock file exists" + lock);
         for (int i = 0; i < 500; i++) {
             LOG.info(i + ": testing its size: " + lock.length());
-            if (lock.length() >= 14) {
+            if (lock.length() >= 68) {
                 break;
             }
             Thread.sleep(500);
         }
-        assertTrue("Lock must contain the key now: " + lock.length(), lock.length() >= 14);//fail("Ok");
+        assertTrue("Lock must contain the key now: " + lock.length(), lock.length() >= 68);//fail("Ok");
         
-        final byte[] arr = new byte[10]; // CLIHandler.KEY_LENGTH
+        final byte[] arr = new byte[64]; // CLIHandler.KEY_LENGTH
         DataInputStream is = new DataInputStream(new FileInputStream(lock));
         final int port = is.readInt();
         int read = is.read(arr);

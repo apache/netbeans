@@ -52,7 +52,7 @@ import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
 import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, MutliStepInputRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
-         ExecInHtmlPageRequest, SetTextEditorDecorationParams, ProjectActionParams, UpdateConfigurationRequest, QuickPickStep, InputBoxStep, SaveDocumentsRequest, SaveDocumentRequestParams
+         ExecInHtmlPageRequest, SetTextEditorDecorationParams, ProjectActionParams, UpdateConfigurationRequest, QuickPickStep, InputBoxStep, SaveDocumentsRequest, SaveDocumentRequestParams, OutputMessage, WriteOutputRequest, ShowOutputRequest, CloseOutputRequest, ResetOutputRequest 
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
@@ -375,6 +375,107 @@ function getValueAfterPrefix(input: string | undefined, prefix: string): string 
         }
     }
     return '';
+}
+
+class LineBufferingPseudoterminal implements vscode.Pseudoterminal {
+    private static instances = new Map<string, LineBufferingPseudoterminal>();
+
+    private writeEmitter = new vscode.EventEmitter<string>();
+    onDidWrite: vscode.Event<string> = this.writeEmitter.event;
+
+    private closeEmitter = new vscode.EventEmitter<void>();
+    onDidClose?: vscode.Event<void> = this.closeEmitter.event;
+
+    private buffer: string = ''; 
+    private isOpen = false;
+    private readonly name: string;
+    private terminal: vscode.Terminal | undefined;
+
+    private constructor(name: string) {
+        this.name = name;
+    }
+
+    open(): void {
+        this.isOpen = true;
+    }
+
+    close(): void {
+        this.isOpen = false;
+        this.closeEmitter.fire();
+    }
+
+    /**
+     * Accepts partial input strings and logs complete lines when they are formed.
+     * Also processes carriage returns (\r) to overwrite the current line.
+     * @param input The string input to the pseudoterminal.
+     */
+    public acceptInput(input: string): void {
+        if (!this.isOpen) {
+            return;
+        }
+
+        for (const char of input) {
+            if (char === '\n') {
+                // Process a newline: log the current buffer and reset it
+                this.logLine(this.buffer.trim());
+                this.buffer = '';
+            } else if (char === '\r') {
+                // Process a carriage return: log the current buffer on the same line
+                this.logInline(this.buffer.trim());
+                this.buffer = '';
+            } else {
+                // Append characters to the buffer
+                this.buffer += char;
+            }
+        }
+    }
+
+    private logLine(line: string): void {
+        console.log('[Gradle Debug]', line.toString());
+        this.writeEmitter.fire(`${line}\r\n`);
+    }
+
+    private logInline(line: string): void {
+        // Clear the current line and move the cursor to the start
+        this.writeEmitter.fire(`\x1b[2K\x1b[1G${line}`);
+    }
+
+    public flushBuffer(): void {
+        if (this.buffer.trim().length > 0) {
+            this.logLine(this.buffer.trim());
+            this.buffer = '';
+        }
+    }
+
+    public clear(): void {
+        this.writeEmitter.fire('\x1b[2J\x1b[3J\x1b[H'); // Clear screen and move cursor to top-left
+    }
+
+    public show(): void {
+        if (!this.terminal) {
+            this.terminal = vscode.window.createTerminal({
+                name: this.name,
+                pty: this,
+            });
+        }
+        this.terminal.show(true);
+    }
+
+    /**
+     * Gets an existing instance or creates a new one by the terminal name.
+     * The terminal is also created and managed internally.
+     * @param name The name of the pseudoterminal.
+     * @returns The instance of the pseudoterminal.
+     */
+    public static getInstance(name: string): LineBufferingPseudoterminal {
+        if (!this.instances.has(name)) {
+            const instance = new LineBufferingPseudoterminal(name);
+            this.instances.set(name, instance);
+        }
+        const instance = this.instances.get(name)!;
+        instance.show(); 
+        return instance;
+    }
 }
 
 export function activate(context: ExtensionContext): VSNetBeansAPI {    
@@ -1507,6 +1608,22 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             let decorationType = vscode.window.createTextEditorDecorationType(param);
             decorations.set(decorationType.key, decorationType);
             return decorationType.key;
+        });
+        c.onRequest(WriteOutputRequest.type, param => {
+            const outputTerminal = LineBufferingPseudoterminal.getInstance(param.outputName)
+            outputTerminal.acceptInput(param.message);
+        });
+        c.onRequest(ShowOutputRequest.type, param => {
+            const outputTerminal = LineBufferingPseudoterminal.getInstance(param)
+            outputTerminal.show();
+        });
+        c.onRequest(CloseOutputRequest.type, param => {
+            const outputTerminal = LineBufferingPseudoterminal.getInstance(param)
+            outputTerminal.close();
+        });
+        c.onRequest(ResetOutputRequest.type, param => {
+            const outputTerminal = LineBufferingPseudoterminal.getInstance(param)
+            outputTerminal.clear();
         });
         c.onNotification(TextEditorDecorationSetNotification.type, param => {
             let decorationType = decorations.get(param.key);

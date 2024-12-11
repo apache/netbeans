@@ -323,3 +323,25 @@ export function asRange(value: Range | undefined | null): vscode.Range | undefin
 export function asRanges(value: Range[]): vscode.Range[] {
     return value.map(value => asRange(value));
 }
+
+export interface OutputMessage {
+    outputName: string;
+    message: string;
+    stdIO: boolean;
+}
+
+export namespace WriteOutputRequest {
+    export const type = new ProtocolRequestType<OutputMessage, void, void, void, void>('output/write');
+}
+
+export namespace ShowOutputRequest {
+    export const type = new ProtocolRequestType<string, void, void, void, void>('output/show');
+}
+
+export namespace CloseOutputRequest {
+    export const type = new ProtocolRequestType<string, void, void, void, void>('output/close');
+}
+
+export namespace ResetOutputRequest {
+    export const type = new ProtocolRequestType<string, void, void, void, void>('output/reset');
+}

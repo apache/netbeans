@@ -77,6 +77,7 @@ import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.protocol.OutputMessage;
 import org.netbeans.modules.java.lsp.server.protocol.SaveDocumentRequestParams;
 import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
@@ -284,6 +285,26 @@ public class ProjectViewTest extends NbTestCase {
         @Override
         public CompletableFuture<Boolean> requestDocumentSave(SaveDocumentRequestParams documentUris) {
             return CompletableFuture.completedFuture(false);
+        }
+
+        @Override
+        public CompletableFuture<Void> writeOutput(OutputMessage message) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Void> showOutput(String outputName) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Void> closeOutput(String outputName) {
+            return CompletableFuture.completedFuture(null);
+        }
+        
+        @Override
+        public CompletableFuture<Void> resetOutput(String outputName) {
+            return CompletableFuture.completedFuture(null);
         }
     }
 

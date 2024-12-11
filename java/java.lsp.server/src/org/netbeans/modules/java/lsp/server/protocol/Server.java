@@ -1358,6 +1358,30 @@ public final class Server {
             logWarning(Arrays.asList(documentUris));
             return CompletableFuture.completedFuture(false);
         }
+
+        @Override
+        public CompletableFuture<Void> writeOutput(OutputMessage lm) {
+            logWarning(lm.message);
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Void> showOutput(String outputName) {
+            logWarning("Show output: " + outputName); //NOI18N
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Void> closeOutput(String outputName) {
+            logWarning("Close output: " + outputName); //NOI18N
+            return CompletableFuture.completedFuture(null);
+        }
+        
+        @Override
+        public CompletableFuture<Void> resetOutput(String outputName) {
+            logWarning("Reset output: " + outputName); //NOI18N
+            return CompletableFuture.completedFuture(null);
+        }
     };
 
 

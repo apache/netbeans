@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.assets;
+package org.netbeans.modules.cloud.oracle.assets.k8s;
 
 import io.fabric8.kubernetes.api.model.PodTemplateSpec;
 import io.fabric8.kubernetes.api.model.PodTemplateSpecBuilder;
@@ -53,6 +53,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 import org.netbeans.modules.cloud.oracle.NotificationUtils;
+import org.netbeans.modules.cloud.oracle.assets.CloudAssets;
 import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
 import org.openide.util.NbBundle;
 
@@ -93,7 +94,7 @@ public class CreateSecretRotationCronJobCommand implements CommandProvider {
     }
 
     public CompletableFuture<Object> createSecretRotationCronJob() {
-        CompletableFuture completableFuture = new CompletableFuture();
+        CompletableFuture<Object> completableFuture = new CompletableFuture<> ();
         this.cluster = CloudAssets.getDefault().getItem(ClusterItem.class);
         KubernetesUtils.runWithClient(cluster, client -> {
             try {

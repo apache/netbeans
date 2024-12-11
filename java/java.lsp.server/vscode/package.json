@@ -530,6 +530,10 @@
 				"title": "Open in OCI Console"
 			},
 			{
+				"command": "nbls.cloud.openInBrowser",
+				"title": "Open in Browser"
+			},
+			{
 				"command": "nbls.cloud.imageUrl.copy",
 				"title": "Copy pull command"
 			},
@@ -640,6 +644,11 @@
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.SetClusterNamespace",
 				"title": "Set a Cluster Namespace",
 				"icon": "$(edit)"
+			},
+			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.PortForwardAction",
+				"title": "Start port forwarding",
+				"icon": "$(arrow-small-right)"
 			},
 			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.RemoveFromProject",
@@ -882,6 +891,10 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls.cloud.openInBrowser",
+					"when": "false"
+				},
+				{
 					"command": "nbls.cloud.imageUrl.copy",
 					"when": "false"
 				},
@@ -935,6 +948,10 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.SetClusterNamespace",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.PortForwardAction",
 					"when": "false"
 				},
 				{
@@ -1139,6 +1156,11 @@
 					"group": "oci@2000"
 				},
 				{
+					"command": "nbls.cloud.openInBrowser",
+					"when": "viewItem =~ /portForward:.*/",
+					"group": "oci@2000"
+				},
+				{
 					"command": "nbls.cloud.imageUrl.copy",
 					"when": "viewItem =~ /imageUrl:.*/",
 					"group": "oci@1000"
@@ -1199,8 +1221,13 @@
 					"group": "inline@14"
 				},
 				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.PortForwardAction",
+					"when": "viewItem =~ /class:oracle.compute.PodItem/",
+					"group": "inline@14"
+				},
+				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.RemoveFromProject",
-					"when": "viewItem =~ /^(?!.*(Suggested|ContainerTagItem)).*/ && view == cloud.assets",
+					"when": "viewItem =~ /^(?!.*(Suggested|ContainerTagItem|PodItem|PortForwardItem)).*/ && view == cloud.assets",
 					"group": "inline@17"
 				},
 				{
@@ -1210,7 +1237,7 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CloudRefresh",
-					"when": "viewItem =~ /^(?!.*(ContainerTagItem|Suggested)).*class:oracle.*$/",
+					"when": "viewItem =~ /^(?!.*(ContainerTagItem|Suggested|PortForwardItem)).*class:oracle.*$/",
 					"group": "inline@13"
 				},
 				{
@@ -1331,6 +1358,14 @@
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/cluster.svg",
 				"codeicon": "compass"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/pod.svg",
+				"codeicon": "vm"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/port_forward.svg",
+				"codeicon": "arrow-small-right"
 			},
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/vault.svg",

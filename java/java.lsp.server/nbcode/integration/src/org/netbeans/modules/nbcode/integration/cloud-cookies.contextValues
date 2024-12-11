@@ -24,6 +24,8 @@ org.netbeans.modules.cloud.oracle.devops.DevopsProjectItem
 org.netbeans.modules.cloud.oracle.assets.SuggestedItem
 org.netbeans.modules.cloud.oracle.compute.ClusterItem
 org.netbeans.modules.cloud.oracle.compute.ComputeInstanceItem
+org.netbeans.modules.cloud.oracle.compute.PodItem
+org.netbeans.modules.cloud.oracle.compute.PortForwardItem
 org.netbeans.modules.cloud.oracle.bucket.BucketItem
 org.netbeans.modules.cloud.oracle.vault.VaultItem
 org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryItem

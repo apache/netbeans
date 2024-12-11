@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.assets;
+package org.netbeans.modules.cloud.oracle.assets.k8s;
 
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
@@ -26,7 +26,7 @@ import io.fabric8.kubernetes.api.model.ConfigMapVolumeSourceBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import java.util.Map;
 import java.util.TreeMap;
-import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
+import org.netbeans.modules.cloud.oracle.assets.PropertiesGenerator;
 
 /**
  *

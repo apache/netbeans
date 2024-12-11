@@ -31,7 +31,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Jan Horvath
  */
-public class CloudChildFactory extends ChildFactory<OCIItem> {
+public class CloudChildFactory extends ChildFactory<OCIItem> implements RefreshableKeys {
     private static final Logger LOG = Logger.getLogger(CloudChildFactory.class.getName());
     
     private final OCIItem parent;
@@ -81,6 +81,7 @@ public class CloudChildFactory extends ChildFactory<OCIItem> {
         return new Node[]{nodeProvider.apply(key, session)};
     }
     
+    @Override
     public void refreshKeys() {
         refresh(false);
     }

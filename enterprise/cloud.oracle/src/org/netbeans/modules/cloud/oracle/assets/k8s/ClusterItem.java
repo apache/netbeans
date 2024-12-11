@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.compute;
+package org.netbeans.modules.cloud.oracle.assets.k8s;
 
 import com.oracle.bmc.containerengine.ContainerEngineClient;
 import com.oracle.bmc.containerengine.requests.CreateKubeconfigRequest;

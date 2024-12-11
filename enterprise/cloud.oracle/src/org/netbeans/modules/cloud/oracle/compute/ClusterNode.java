@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.cloud.oracle.compute;
 
+import org.netbeans.modules.cloud.oracle.assets.k8s.ClusterItem;
+import org.netbeans.modules.cloud.oracle.assets.k8s.PodChildFactory;
 import com.oracle.bmc.containerengine.requests.ListClustersRequest;
 import com.oracle.bmc.core.model.Instance;
 import java.util.stream.Collectors;
@@ -26,7 +28,6 @@ import org.netbeans.modules.cloud.oracle.NodeProvider;
 import org.netbeans.modules.cloud.oracle.OCINode;
 import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.netbeans.modules.cloud.oracle.items.OCID;
-import org.openide.nodes.Children;
 import org.openide.util.NbBundle;
 
 import com.oracle.bmc.containerengine.ContainerEngineClient;
@@ -43,7 +44,7 @@ public class ClusterNode extends OCINode {
     private static final String CLUSTER_ICON = "org/netbeans/modules/cloud/oracle/resources/cluster.svg"; // NOI18N
 
     public ClusterNode(ClusterItem cluster) {
-        super(cluster, Children.LEAF);
+        super(cluster, new PodChildFactory(cluster));
         setName(cluster.getName());
         setDisplayName(cluster.getName());
         setIconBaseWithExtension(CLUSTER_ICON);

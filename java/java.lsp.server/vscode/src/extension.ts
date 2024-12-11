@@ -1013,6 +1013,14 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         }
     ));
 
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.cloud.openInBrowser',
+        async (node) => {
+            const portForward = getValueAfterPrefix(node.contextValue, 'portForward:');
+            const url = vscode.Uri.parse(portForward);
+            vscode.env.openExternal(url);
+        }
+    ));
+
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.cloud.imageUrl.copy',
         async (node) => {
             const imageUrl = getValueAfterPrefix(node.contextValue, 'imageUrl:');

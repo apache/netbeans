@@ -26,6 +26,7 @@ import java.util.List;
 import javax.swing.Action;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.openide.nodes.AbstractNode;
+import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.ContextAwareAction;
@@ -42,7 +43,7 @@ public class OCINode extends AbstractNode {
     private RefreshListener refreshListener;
 
     private final OCIItem item;
-    private final CloudChildFactory factory;
+    private final ChildFactory factory;
     private final OCISessionInitiator session;
 
     public OCINode(OCIItem item) {
@@ -53,7 +54,11 @@ public class OCINode extends AbstractNode {
         this(new CloudChildFactory(session, item), item, session, Lookups.fixed(item, session));
     }
     
-    private OCINode(CloudChildFactory factory, OCIItem item, OCISessionInitiator session, Lookup lookup) {
+    public OCINode(OCIItem item, ChildFactory factory) {
+        this(factory, item, null, Lookups.singleton(item));
+    }
+    
+    private OCINode(ChildFactory factory, OCIItem item, OCISessionInitiator session, Lookup lookup) {
         super(Children.create(factory, true), lookup);
         setName(item.getName());
         this.item = item;
@@ -113,8 +118,8 @@ public class OCINode extends AbstractNode {
     
     public void refresh() {
         RequestProcessor.getDefault().post(() -> {
-            if (factory != null) {
-                factory.refreshKeys();
+            if (factory != null && factory instanceof RefreshableKeys) {
+                ((RefreshableKeys) factory).refreshKeys();
             }
             update(item);
         });

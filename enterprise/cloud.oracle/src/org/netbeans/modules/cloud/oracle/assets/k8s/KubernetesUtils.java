@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cloud.oracle.assets;
+package org.netbeans.modules.cloud.oracle.assets.k8s;
 
 import com.oracle.bmc.Region;
 import com.oracle.bmc.http.Priorities;
@@ -28,8 +28,6 @@ import com.oracle.bmc.http.signing.RequestSigningFilter;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.api.model.KubernetesResourceList;
-import io.fabric8.kubernetes.api.model.batch.v1.CronJob;
-import io.fabric8.kubernetes.api.model.batch.v1.CronJobList;
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientBuilder;
@@ -44,8 +42,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.OCIProfile;
-import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
-import org.openide.util.Exceptions;
 import org.snakeyaml.engine.v2.api.Dump;
 import org.snakeyaml.engine.v2.api.DumpSettings;
 import org.snakeyaml.engine.v2.api.Load;
@@ -57,7 +53,7 @@ import org.snakeyaml.engine.v2.api.LoadSettings;
  */
 public class KubernetesUtils {
 
-    static void runWithClient(ClusterItem cluster, Consumer<KubernetesClient> consumer) {
+    public static void runWithClient(ClusterItem cluster, Consumer<KubernetesClient> consumer) {
         if (cluster.getConfig() == null) {
             cluster.update();
         }
@@ -67,9 +63,7 @@ public class KubernetesUtils {
         Config config = prepareConfig(cluster.getConfig(), cluster);
         try (KubernetesClient client = new KubernetesClientBuilder().withConfig(config).build();) {
             consumer.accept(client);
-        } catch (Exception e) {
-            Exceptions.printStackTrace(e);
-        }
+        } 
     }
 
     private static Config prepareConfig(String content, ClusterItem cluster) {

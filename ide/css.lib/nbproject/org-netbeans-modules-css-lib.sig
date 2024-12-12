@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.5
+#Version 2.6
 
 CLSS public abstract interface java.io.Serializable
 
@@ -498,6 +498,7 @@ fld public final static org.netbeans.modules.css.lib.api.NodeType at_rule
 fld public final static org.netbeans.modules.css.lib.api.NodeType body
 fld public final static org.netbeans.modules.css.lib.api.NodeType bodyItem
 fld public final static org.netbeans.modules.css.lib.api.NodeType braceBlock
+fld public final static org.netbeans.modules.css.lib.api.NodeType braceBlock2
 fld public final static org.netbeans.modules.css.lib.api.NodeType bracketBlock
 fld public final static org.netbeans.modules.css.lib.api.NodeType charSet
 fld public final static org.netbeans.modules.css.lib.api.NodeType charSetValue

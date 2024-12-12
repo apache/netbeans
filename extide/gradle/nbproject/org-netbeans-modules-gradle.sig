@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.41
+#Version 2.43.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -335,6 +335,7 @@ fld public final static java.lang.String GRADLE_PROJECT_TYPE = "org-netbeans-mod
 fld public final static java.lang.String PROP_PROJECT_INFO = "ProjectInfo"
 fld public final static java.lang.String PROP_RESOURCES = "resources"
 innr public final static !enum Quality
+innr public final static LoadOptions
 meth public <%0 extends java.lang.Object> {%%0} projectLookup(java.lang.Class<{%%0}>)
 meth public boolean isGradleProjectLoaded()
 meth public boolean isUnloadable()
@@ -344,14 +345,19 @@ meth public java.util.concurrent.CompletionStage<org.netbeans.modules.gradle.api
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NullAllowed()
  anno 2 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.concurrent.CompletionStage<org.netbeans.modules.gradle.api.NbGradleProject> toQuality(org.netbeans.modules.gradle.api.NbGradleProject$LoadOptions)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public java.util.prefs.Preferences getPreferences(boolean)
+meth public long getEvaluateTime()
 meth public org.netbeans.modules.gradle.api.NbGradleProject$Quality getAimedQuality()
 meth public org.netbeans.modules.gradle.api.NbGradleProject$Quality getQuality()
 meth public org.netbeans.modules.gradle.spi.GradleFiles getGradleFiles()
+meth public org.openide.util.Lookup curretLookup()
 meth public org.openide.util.Lookup refreshableProjectLookup()
 meth public static java.util.prefs.Preferences getPreferences(org.netbeans.api.project.Project,boolean)
 meth public static javax.swing.ImageIcon getIcon()
 meth public static org.netbeans.modules.gradle.api.NbGradleProject get(org.netbeans.api.project.Project)
+meth public static org.netbeans.modules.gradle.api.NbGradleProject$LoadOptions loadOptions(org.netbeans.modules.gradle.api.NbGradleProject$Quality)
 meth public static void addPropertyChangeListener(org.netbeans.api.project.Project,java.beans.PropertyChangeListener)
 meth public static void fireGradleProjectReload(org.netbeans.api.project.Project)
 meth public static void removePropertyChangeListener(org.netbeans.api.project.Project,java.beans.PropertyChangeListener)
@@ -360,6 +366,24 @@ meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 supr java.lang.Object
 hfds FCHSL,GRADLE_ICON,LOG,WARNING_BADGE,lookupProxy,privatePrefs,project,resources,sharedPrefs,support,warningIcon
 hcls AccessorImpl
+
+CLSS public final static org.netbeans.modules.gradle.api.NbGradleProject$LoadOptions
+ outer org.netbeans.modules.gradle.api.NbGradleProject
+meth public boolean isCheckFiles()
+meth public boolean isForce()
+meth public boolean isIgnoreCache()
+meth public boolean isInteractive()
+meth public boolean isOffline()
+meth public java.lang.String getDescription()
+meth public org.netbeans.modules.gradle.api.NbGradleProject$LoadOptions setCheckFiles(boolean)
+meth public org.netbeans.modules.gradle.api.NbGradleProject$LoadOptions setDescription(java.lang.String)
+meth public org.netbeans.modules.gradle.api.NbGradleProject$LoadOptions setForce(boolean)
+meth public org.netbeans.modules.gradle.api.NbGradleProject$LoadOptions setIgnoreCache(boolean)
+meth public org.netbeans.modules.gradle.api.NbGradleProject$LoadOptions setInteractive(boolean)
+meth public org.netbeans.modules.gradle.api.NbGradleProject$LoadOptions setOffline(boolean)
+meth public org.netbeans.modules.gradle.api.NbGradleProject$Quality getAim()
+supr java.lang.Object
+hfds aim,checkFiles,description,force,ignoreCache,interactive,offline
 
 CLSS public final static !enum org.netbeans.modules.gradle.api.NbGradleProject$Quality
  outer org.netbeans.modules.gradle.api.NbGradleProject

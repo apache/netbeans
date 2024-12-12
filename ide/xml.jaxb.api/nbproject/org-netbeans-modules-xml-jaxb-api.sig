@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.51
+#Version 1.52
 
 CLSS public java.awt.datatransfer.DataFlavor
 cons public init()

@@ -158,7 +158,10 @@ public final class Splash implements Stamps.Updater {
 
         if (running) {
             if (frame == null) {
-                frame = new Frame(NbBundle.getMessage(Splash.class, "LBL_splash_window_title")); // e.g. for window tray display
+		PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+		GraphicsDevice gd = pointerInfo == null ? GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice() : pointerInfo.getDevice();
+		GraphicsConfiguration gc = gd.getDefaultConfiguration();
+                frame = new Frame(NbBundle.getMessage(Splash.class, "LBL_splash_window_title"), gc); // e.g. for window tray display
                 //#215320
                 frame.setType(Window.Type.POPUP);
                 initFrameIcons(frame); // again, only for possible window tray display

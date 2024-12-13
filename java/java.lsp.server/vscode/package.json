@@ -4,7 +4,7 @@
 	"description": "Apache NetBeans Language Server Extension for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
-	"version": "99.99.9",
+	"version": "0.1.0",
 	"preview": false,
 	"repository": {
 		"type": "git",

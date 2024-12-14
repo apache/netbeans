@@ -351,7 +351,7 @@ public class BreadCrumbComponent<T extends JLabel&Renderer> extends JComponent i
             renderer.setText(html);
         } else {
             renderer.setHtml(false);
-            renderer.setText(node.getDisplayName());
+            renderer.setText(node.getDisplayName().replace('\n', ' '));
         }
         renderer.setFont(getFont());
     }

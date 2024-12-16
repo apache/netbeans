@@ -61,7 +61,7 @@ jobs:
   source:
 
     name: Package Sources
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
 
@@ -96,7 +96,7 @@ jobs:
   build-linux:
 
     name: Build with MinGW
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: source
 
     steps:
@@ -160,7 +160,7 @@ jobs:
   build-zip-with-build-artifacts:
 
     name: Package Binaries
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     # Only run when the platform specific builds are finished
     needs: [build-linux]

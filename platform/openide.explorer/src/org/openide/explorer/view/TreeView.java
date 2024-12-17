@@ -378,13 +378,21 @@ public abstract class TreeView extends JScrollPane {
     public void setDefaultActionAllowed(boolean value) {
         defaultActionEnabled = value;
 
-        if (value) {
-            tree.registerKeyboardAction(
-                defaultActionListener, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), JComponent.WHEN_FOCUSED
-            );
-        } else {
-            // Switch off.
-            tree.unregisterKeyboardAction(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false));
+        List<KeyStroke> defaultActionKeyStrokes = new ArrayList<>();
+        defaultActionKeyStrokes.add(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false));
+        if (Utilities.isMac()) {
+            // On MacOS, allow Command+O to trigger the default action, like in Finder.
+            defaultActionKeyStrokes.add(
+                    KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.META_DOWN_MASK, false));
+        }
+
+        for (KeyStroke ks : defaultActionKeyStrokes) {
+            if (value) {
+                tree.registerKeyboardAction(defaultActionListener, ks, JComponent.WHEN_FOCUSED);
+            } else {
+                // Switch off.
+                tree.unregisterKeyboardAction(ks);
+            }
         }
     }
 

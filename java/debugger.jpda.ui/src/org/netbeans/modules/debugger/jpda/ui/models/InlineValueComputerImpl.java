@@ -56,6 +56,7 @@ import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.CallStackFrame;
 import org.netbeans.api.debugger.jpda.InvalidExpressionException;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.editor.settings.AttributesUtilities;
@@ -198,8 +199,18 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
                             }
                         });
                         if (value != null) {
+                            String valueText;
+                            if (value instanceof ObjectVariable ov) {
+                                try {
+                                    valueText = String.valueOf(ov.getToStringValue()).replace("\n", "\\n");
+                                } catch (InvalidExpressionException ex) {
+                                    valueText = value.getValue();
+                                }
+                            } else {
+                                valueText = value.getValue();
+                            }
                             line2Values.computeIfAbsent(v.lineEnd, __ -> new LinkedHashMap<>())
-                                       .putIfAbsent(v.expression, v.expression + " = " + value.getValue());
+                                       .putIfAbsent(v.expression, v.expression + " = " + valueText);
                             String mergedValues = line2Values.get(v.lineEnd).values().stream().collect(Collectors.joining(", ", "  ", ""));
                             AttributeSet attrs = AttributesUtilities.createImmutable("virtual-text-prepend", mergedValues);
 

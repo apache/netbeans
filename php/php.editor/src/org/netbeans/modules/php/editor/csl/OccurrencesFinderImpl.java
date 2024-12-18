@@ -69,7 +69,9 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
     @Override
     public Map<OffsetRange, ColoringAttributes> getOccurrences() {
         // must not return null
-        return Collections.unmodifiableMap(range2Attribs);
+        return range2Attribs != null
+                ? Collections.unmodifiableMap(range2Attribs)
+                : Collections.emptyMap();
     }
 
     @Override

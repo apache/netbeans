@@ -179,6 +179,17 @@ public class NetbeansBuildActionXpp3Writer {
                 }
                 serializer.endTag( NAMESPACE, "properties" );
             }
+            if ( netbeansActionMapping.getOptions()!= null && netbeansActionMapping.getOptions().size() > 0 )
+            {
+                serializer.startTag( NAMESPACE, "options" );
+                for ( Iterator iter = netbeansActionMapping.getOptions().keySet().iterator(); iter.hasNext(); )
+                {
+                    String key = (String) iter.next();
+                    String value = (String) netbeansActionMapping.getOptions().get( key );
+                    serializer.startTag( NAMESPACE, "" + key + "" ).text( value ).endTag( NAMESPACE, "" + key + "" );
+                }
+                serializer.endTag( NAMESPACE, "options" );
+            }
             if ( netbeansActionMapping.getActivatedProfiles() != null && netbeansActionMapping.getActivatedProfiles().size() > 0 )
             {
                 serializer.startTag( NAMESPACE, "activatedProfiles" );

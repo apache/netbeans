@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.165.0
+#Version 2.167.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1764,6 +1764,8 @@ meth public abstract java.lang.String getExecutionName()
 meth public abstract java.lang.String getTaskDisplayName()
 meth public abstract java.util.List<java.lang.String> getActivatedProfiles()
 meth public abstract java.util.List<java.lang.String> getGoals()
+meth public abstract java.util.Map<? extends java.lang.String,? extends java.lang.String> getOptions()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public abstract java.util.Map<? extends java.lang.String,? extends java.lang.String> getProperties()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public abstract java.util.Map<? extends java.lang.String,?> getInternalProperties()
@@ -1773,6 +1775,8 @@ meth public abstract org.netbeans.api.project.Project getProject()
 meth public abstract org.netbeans.modules.maven.api.execute.RunConfig getPreExecution()
 meth public abstract org.netbeans.modules.maven.api.execute.RunConfig$ReactorStyle getReactorStyle()
 meth public abstract org.openide.filesystems.FileObject getSelectedFileObject()
+meth public abstract void addOptions(java.util.Map<java.lang.String,java.lang.String>)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public abstract void addProperties(java.util.Map<java.lang.String,java.lang.String>)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public abstract void setActivatedProfiles(java.util.List<java.lang.String>)
@@ -1781,6 +1785,9 @@ meth public abstract void setInternalProperty(java.lang.String,java.lang.Object)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
 meth public abstract void setOffline(java.lang.Boolean)
+meth public abstract void setOption(java.lang.String,java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
 meth public abstract void setPreExecution(org.netbeans.modules.maven.api.execute.RunConfig)
 meth public abstract void setProperty(java.lang.String,java.lang.String)
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -1964,6 +1971,7 @@ cons protected init(org.netbeans.api.project.Project,org.netbeans.api.progress.P
 fld protected final static java.lang.String PRJ_EXECUTE = "project-execute"
 fld protected final static java.lang.String SESSION_EXECUTE = "session-execute"
 fld protected java.util.HashMap<java.lang.String,java.util.Set<org.netbeans.modules.maven.api.output.OutputProcessor>> processors
+fld protected java.util.HashMap<java.lang.String,java.util.concurrent.atomic.AtomicInteger> id2count
 fld protected java.util.Set<org.netbeans.modules.maven.api.output.NotifyFinishOutputProcessor> toFinishProcessors
 fld protected java.util.Set<org.netbeans.modules.maven.api.output.OutputProcessor> currentProcessors
 fld protected org.netbeans.modules.maven.api.output.OutputVisitor visitor
@@ -2066,16 +2074,19 @@ meth public final void setShowError(boolean)
 meth public final void setTaskDisplayName(java.lang.String)
 meth public final void setUpdateSnapshots(boolean)
 meth public java.lang.String getActionName()
+meth public java.util.Map<? extends java.lang.String,? extends java.lang.String> getOptions()
 meth public org.netbeans.modules.maven.api.execute.RunConfig getPreExecution()
 meth public org.openide.filesystems.FileObject getSelectedFileObject()
 meth public org.openide.util.Lookup getActionContext()
+meth public void addOptions(java.util.Map<java.lang.String,java.lang.String>)
 meth public void reassignMavenProjectFromParent()
 meth public void setActionContext(org.openide.util.Lookup)
 meth public void setActionName(java.lang.String)
 meth public void setFileObject(org.openide.filesystems.FileObject)
+meth public void setOption(java.lang.String,java.lang.String)
 meth public void setPreExecution(org.netbeans.modules.maven.api.execute.RunConfig)
 supr java.lang.Object
-hfds actionContext,actionName,activate,executionDirectory,executionName,goals,interactive,internalProperties,mp,offline,parent,preexecution,project,projectDirectory,properties,reactor,recursive,selectedFO,showDebug,showError,taskName,updateSnapshots
+hfds actionContext,actionName,activate,executionDirectory,executionName,goals,interactive,internalProperties,mp,offline,options,parent,preexecution,project,projectDirectory,properties,reactor,recursive,selectedFO,showDebug,showError,taskName,updateSnapshots
 
 CLSS public org.netbeans.modules.maven.execute.CommandLineOutputHandler
 cons public init(org.openide.windows.InputOutput,org.netbeans.api.project.Project,org.netbeans.api.progress.ProgressHandle,org.netbeans.modules.maven.api.execute.RunConfig,boolean)
@@ -2119,7 +2130,7 @@ meth public java.lang.String convert(java.lang.String,org.openide.util.Lookup)
 meth public java.util.Map<java.lang.String,java.lang.String> createReplacements(java.lang.String,org.openide.util.Lookup)
 meth public static java.util.Map<java.lang.String,java.lang.String> readVariables()
 supr java.lang.Object
-hfds ABSOLUTE_PATH,ARTIFACTID,CLASSNAME,CLASSNAME_EXT,CLASSPATHSCOPE,GROUPID,PACK_CLASSNAME,VARIABLE_PREFIX,project
+hfds ABSOLUTE_PATH,ARTIFACTID,CLASSNAME,CLASSNAME_EXT,CLASSPATHSCOPE,GROUPID,PACK_CLASSNAME,PROJECTS,VARIABLE_PREFIX,project
 
 CLSS public org.netbeans.modules.maven.execute.MavenCommandLineExecutor
 cons public init(org.netbeans.modules.maven.api.execute.RunConfig,org.openide.windows.InputOutput,org.netbeans.modules.maven.execute.AbstractMavenExecutor$TabContext)
@@ -2136,6 +2147,12 @@ CLSS public static org.netbeans.modules.maven.execute.MavenCommandLineExecutor$E
 cons public init()
 meth public org.openide.execution.ExecutorTask execute(org.netbeans.modules.maven.api.execute.RunConfig,org.openide.windows.InputOutput,org.netbeans.modules.maven.execute.AbstractMavenExecutor$TabContext)
 supr java.lang.Object
+
+CLSS public org.netbeans.modules.maven.execute.MavenCommandLineOptions
+cons public init()
+meth public static boolean optionRequiresValue(java.lang.String)
+supr java.lang.Object
+hfds OPTIONS_WITH_VALUES
 
 CLSS public abstract interface org.netbeans.modules.maven.execute.MavenExecutor
 intf java.lang.Runnable
@@ -2276,13 +2293,16 @@ meth public java.lang.String getReactor()
 meth public java.util.List<java.lang.String> getActivatedProfiles()
 meth public java.util.List<java.lang.String> getGoals()
 meth public java.util.List<java.lang.String> getPackagings()
+meth public java.util.Map<java.lang.String,java.lang.String> getOptions()
 meth public java.util.Map<java.lang.String,java.lang.String> getProperties()
 meth public void addActivatedProfile(java.lang.String)
 meth public void addGoal(java.lang.String)
+meth public void addOption(java.lang.String,java.lang.String)
 meth public void addPackaging(java.lang.String)
 meth public void addProperty(java.lang.String,java.lang.String)
 meth public void removeActivatedProfile(java.lang.String)
 meth public void removeGoal(java.lang.String)
+meth public void removeOption(java.lang.String)
 meth public void removePackaging(java.lang.String)
 meth public void setActionName(java.lang.String)
 meth public void setActivatedProfiles(java.util.List<java.lang.String>)
@@ -2290,13 +2310,14 @@ meth public void setBasedir(java.lang.String)
 meth public void setDisplayName(java.lang.String)
 meth public void setGoals(java.util.List<java.lang.String>)
 meth public void setModelEncoding(java.lang.String)
+meth public void setOptions(java.util.Map<java.lang.String,java.lang.String>)
 meth public void setPackagings(java.util.List<java.lang.String>)
 meth public void setPreAction(java.lang.String)
 meth public void setProperties(java.util.Map<java.lang.String,java.lang.String>)
 meth public void setReactor(java.lang.String)
 meth public void setRecursive(boolean)
 supr java.lang.Object
-hfds actionName,activatedProfiles,basedir,displayName,goals,modelEncoding,packagings,preAction,properties,reactor,recursive
+hfds actionName,activatedProfiles,basedir,displayName,goals,modelEncoding,options,packagings,preAction,properties,reactor,recursive
 
 CLSS public org.netbeans.modules.maven.execute.model.NetbeansActionProfile
 cons public init()

@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.api.output.ContextOutputProcessorFactory;
@@ -60,6 +61,7 @@ public abstract class AbstractOutputHandler {
     protected static final String SESSION_EXECUTE = "session-execute"; //NOI18N
     
     protected HashMap<String, Set<OutputProcessor>> processors;
+    protected HashMap<String, AtomicInteger> id2count;
     protected Set<OutputProcessor> currentProcessors;
     protected Set<NotifyFinishOutputProcessor> toFinishProcessors;
     protected OutputVisitor visitor;
@@ -70,6 +72,7 @@ public abstract class AbstractOutputHandler {
 
     protected AbstractOutputHandler(Project proj, final ProgressHandle hand, RunConfig config, OutputVisitor visitor) {
         processors = new HashMap<String, Set<OutputProcessor>>();
+        id2count = new HashMap<>();
         currentProcessors = new HashSet<OutputProcessor>();
         this.visitor = visitor;
         toFinishProcessors = new HashSet<NotifyFinishOutputProcessor>();
@@ -175,9 +178,12 @@ public abstract class AbstractOutputHandler {
     
     protected final void processStart(String id, OutputWriter writer) {
         checkSleepiness();
-        Set<OutputProcessor> set = processors.get(id);
-        if (set != null) {
-            currentProcessors.addAll(set);
+        AtomicInteger count = id2count.computeIfAbsent(id, s -> new AtomicInteger());
+        if (count.getAndIncrement() == 0) {
+            Set<OutputProcessor> set = processors.get(id);
+            if (set != null) {
+                currentProcessors.addAll(set);
+            }
         }
         visitor.resetVisitor();
         for (OutputProcessor proc : currentProcessors) {
@@ -226,12 +232,16 @@ public abstract class AbstractOutputHandler {
                 writer.println(visitor.getLine());
             }
         }
-        Set set = processors.get(id);
-        if (set != null) {
-            //TODO a bulletproof way would be to keep a list of currently started
-            // sections and compare to the list of getRegisteredOutputSequences fo each of the
-            // processors in set..
-            currentProcessors.removeAll(set);
+        AtomicInteger count = id2count.getOrDefault(id, new AtomicInteger(1));
+        if (count.decrementAndGet() == 0) {
+            Set set = processors.get(id);
+            if (set != null) {
+                //TODO a bulletproof way would be to keep a list of currently started
+                // sections and compare to the list of getRegisteredOutputSequences fo each of the
+                // processors in set..
+                currentProcessors.removeAll(set);
+            }
+            id2count.remove(id);
         }
     }
     

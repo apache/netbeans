@@ -25,6 +25,18 @@
     <apidef name="javasource_base">Java Source API</apidef>
 </apidefs>
 <changes>
+    <change id="SourceUtils.classNameFor-nestedClass">
+        <api name="javasource_base" />
+        <summary>SourceUtils.classNameFor nested classes support</summary>
+        <version major="1" minor="2.74"/>
+        <date day="18" month="12" year="2024"/>
+        <author login="petrovic-d"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+                SourceUtils.classNameFor support for nested classes.
+        </description>
+        <class name="SourceUtils" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="SourceUtils.classNameFor">
         <api name="javasource_base" />
         <summary>Adding SourceUtils.classNameFor</summary>

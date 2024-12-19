@@ -40,6 +40,16 @@ public final class TestSuiteInfo {
     private String name;
 
     /**
+     * The optional module name to be displayed by the Test Explorer.
+     */
+    private String moduleName;
+    
+    /**
+     * The optional module path used by the Test Explorer.
+     */
+    private String modulePath;
+
+    /**
      * The file containing this suite (if known).
      */
     private String file;
@@ -70,8 +80,10 @@ public final class TestSuiteInfo {
         this.state = Preconditions.checkNotNull(state, "state");
     }
 
-    public TestSuiteInfo(@NonNull final String name, final String file, final Range range, @NonNull final String state, final List<TestCaseInfo> tests) {
+    public TestSuiteInfo(@NonNull final String name, final String moduleName, final String modulePath, final String file, final Range range, @NonNull final String state, final List<TestCaseInfo> tests) {
         this(name, state);
+        this.moduleName = moduleName;
+        this.modulePath = modulePath;
         this.file = file;
         this.range = range;
         this.tests = tests;
@@ -89,8 +101,41 @@ public final class TestSuiteInfo {
     /**
      * The test suite name to be displayed by the Test Explorer.
      */
-    public void setSuiteName(@NonNull final String name) {
+    public TestSuiteInfo setSuiteName(@NonNull final String name) {
         this.name = Preconditions.checkNotNull(name, "name");
+        return this;
+    }
+
+    /**
+     * The optional module name to be displayed by the Test Explorer.
+     */
+    @Pure
+    public String getModuleName() {
+        return moduleName;
+    }
+
+    /**
+     * The optional module name to be displayed by the Test Explorer.
+     */
+    public TestSuiteInfo setModuleName(final String moduleName) {
+        this.moduleName = moduleName;
+        return this;
+    }
+    
+    /**
+     * The optional module path used by the Test Explorer.
+     */
+    @Pure
+    public String getModulePath() {
+        return modulePath;
+    }
+
+    /**
+     * The optional module path used by the Test Explorer.
+     */
+    public TestSuiteInfo setModulePath(final String modulePath) {
+        this.modulePath = modulePath;
+        return this;
     }
 
     /**
@@ -104,8 +149,9 @@ public final class TestSuiteInfo {
     /**
      * The file containing this suite (if known).
      */
-    public void setFile(final String file) {
+    public TestSuiteInfo setFile(final String file) {
         this.file = file;
+        return this;
     }
 
     /**
@@ -119,8 +165,9 @@ public final class TestSuiteInfo {
     /**
      * The range within the specified file where the suite definition is located (if known).
      */
-    public void setRange(final Range range) {
+    public TestSuiteInfo setRange(final Range range) {
         this.range = range;
+        return this;
     }
 
     /**
@@ -137,8 +184,9 @@ public final class TestSuiteInfo {
      * The state of the tests suite. Can be one of the following values:
      * "loaded" | "started" | "passed" | "failed" | "skipped" | "errored"
      */
-    public void setState(@NonNull final String state) {
+    public TestSuiteInfo setState(@NonNull final String state) {
         this.state = Preconditions.checkNotNull(state, "state");
+        return this;
     }
 
     /**
@@ -152,8 +200,9 @@ public final class TestSuiteInfo {
     /**
      * The test cases of the test suite.
      */
-    public void setTests(List<TestCaseInfo> tests) {
+    public TestSuiteInfo setTests(List<TestCaseInfo> tests) {
         this.tests = tests;
+        return this;
     }
 
     @Override
@@ -161,6 +210,8 @@ public final class TestSuiteInfo {
     public String toString() {
         ToStringBuilder b = new ToStringBuilder(this);
         b.add("name", name);
+        b.add("moduleName", moduleName);
+        b.add("modulePath", modulePath);
         b.add("file", file);
         b.add("range", range);
         b.add("state", state);
@@ -173,6 +224,8 @@ public final class TestSuiteInfo {
     public int hashCode() {
         int hash = 7;
         hash = 67 * hash + Objects.hashCode(this.name);
+        hash = 67 * hash + Objects.hashCode(this.moduleName);
+        hash = 67 * hash + Objects.hashCode(this.modulePath);
         hash = 67 * hash + Objects.hashCode(this.file);
         hash = 67 * hash + Objects.hashCode(this.range);
         hash = 67 * hash + Objects.hashCode(this.state);
@@ -194,6 +247,12 @@ public final class TestSuiteInfo {
         }
         final TestSuiteInfo other = (TestSuiteInfo) obj;
         if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.moduleName, other.moduleName)) {
+            return false;
+        }
+        if (!Objects.equals(this.modulePath, other.modulePath)) {
             return false;
         }
         if (!Objects.equals(this.file, other.file)) {
@@ -279,8 +338,9 @@ public final class TestSuiteInfo {
         /**
          * The test case ID.
          */
-        public void setId(@NonNull final String id) {
+        public TestCaseInfo setId(@NonNull final String id) {
             this.id = Preconditions.checkNotNull(id, "id");
+            return this;
         }
 
         /**
@@ -295,8 +355,9 @@ public final class TestSuiteInfo {
         /**
          * The name to be displayed by the Test Explorer for this test case.
          */
-        public void setName(@NonNull final String name) {
+        public TestCaseInfo setName(@NonNull final String name) {
             this.name = Preconditions.checkNotNull(name, "name");
+            return this;
         }
 
         /**
@@ -310,8 +371,9 @@ public final class TestSuiteInfo {
         /**
          * The file containing this test case (if known).
          */
-        public void setFile(final String file) {
+        public TestCaseInfo setFile(final String file) {
             this.file = file;
+            return this;
         }
 
         /**
@@ -325,8 +387,9 @@ public final class TestSuiteInfo {
         /**
          * The range within the specified file where the test case definition is located (if known).
          */
-        public void setRange(final Range range) {
+        public TestCaseInfo setRange(final Range range) {
             this.range = range;
+            return this;
         }
 
         /**
@@ -343,8 +406,9 @@ public final class TestSuiteInfo {
          * The state of the test case. Can be one of the following values:
          * "loaded" | "started" | "passed" | "failed" | "skipped" | "errored"
          */
-        public void setState(@NonNull final String state) {
+        public TestCaseInfo setState(@NonNull final String state) {
             this.state = Preconditions.checkNotNull(state, "state");
+            return this;
         }
 
         /**
@@ -358,8 +422,9 @@ public final class TestSuiteInfo {
         /**
          * Stack trace for a test failure.
          */
-        public void setStackTrace(final List<String> stackTrace) {
+        public TestCaseInfo setStackTrace(final List<String> stackTrace) {
             this.stackTrace = stackTrace;
+            return this;
         }
 
         @Override

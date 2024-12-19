@@ -83,6 +83,18 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="action-for-running-tests-in-parallel">
+            <api name="general"/>
+            <summary>Added action for running tests in parallel</summary>
+            <version major="2" minor="45"/>
+            <date day="18" month="12" year="2024"/>
+            <author login="petrovic-d"/>
+            <compatibility semantic="compatible" addition="yes" deprecation="yes"/>
+            <description>
+                Added action for running tests in parallel with ability to specify the projects on which
+                the action will be applied.
+            </description>
+        </change>
         <change id="load-options-lookup">
             <api name="general"/>
             <summary>LoadOptions object replaces growing number of argumetns to project load APIs. Access to current Lookup added.</summary>

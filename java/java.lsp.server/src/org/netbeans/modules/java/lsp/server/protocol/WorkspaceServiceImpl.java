@@ -43,6 +43,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -124,6 +125,7 @@ import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
+import org.netbeans.modules.java.lsp.server.progress.ModuleInfo;
 import org.netbeans.modules.java.lsp.server.project.LspProjectInfo;
 import org.netbeans.modules.java.lsp.server.singlesourcefile.SingleFileOptionsQueryImpl;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
@@ -401,11 +403,15 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     LOG.log(Level.INFO, "Project {2}: {0} test roots opened in {1}ms", new Object[] { testRoots.size(), (System.currentTimeMillis() - t), file});
                     BiFunction<FileObject, Collection<TestMethodController.TestMethod>, Collection<TestSuiteInfo>> f = (fo, methods) -> {
                         String url = Utils.toUri(fo);
+                        Project owner = FileOwnerQuery.getOwner(fo);
+                        String moduleName = owner != null ? ProjectUtils.getInformation(owner).getDisplayName(): null;
+                        List<String> paths = getModuleTestPaths(owner);
+                        String modulePath = firstModulePath(paths, moduleName);
                         Map<String, TestSuiteInfo> suite2infos = new LinkedHashMap<>();
                         for (TestMethodController.TestMethod testMethod : methods) {
                             TestSuiteInfo suite = suite2infos.computeIfAbsent(testMethod.getTestClassName(), name -> {
                                 Position pos = testMethod.getTestClassPosition() != null ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()) : null;
-                                return new TestSuiteInfo(name, url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
+                                return new TestSuiteInfo(name, moduleName, modulePath, url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
                             });
                             String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
                             Position startPos = testMethod.start() != null ? Utils.createPosition(fo, testMethod.start().getOffset()) : null;
@@ -803,6 +809,33 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
+    }
+    
+    private String firstModulePath(List<String> paths, String moduleName) {
+        if (paths == null || paths.isEmpty()) {
+            return null;
+        } else if (paths.size() > 1) {
+            LOG.log(Level.WARNING, "Mutliple test roots are not yet supported for module {0}", moduleName);
+        }
+        return paths.iterator().next();
+    }
+    
+    private static List<String> getModuleTestPaths(Project project) {        
+        if (project == null) {
+            return null;
+        }
+        SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+        Set<String> paths = new LinkedHashSet<>();
+        for (SourceGroup sourceGroup : sourceGroups) {
+            URL[] urls = UnitTestForSourceQuery.findUnitTests(sourceGroup.getRootFolder());
+            for (URL u : urls) {
+                FileObject f = URLMapper.findFileObject(u);
+                if (f != null) {
+                    paths.add(f.getPath());
+                }
+            }
+        }
+        return paths.isEmpty() ? null : new ArrayList<>(paths);
     }
     
     private class ProjectInfoWorker {

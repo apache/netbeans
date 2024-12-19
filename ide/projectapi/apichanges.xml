@@ -83,6 +83,27 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="run-test-in-parallel-action">
+            <api name="general"/>
+            <summary>Added action for running tests in parallel</summary>
+            <version major="1" minor="99"/>
+            <date day="2" month="12" year="2024"/>
+            <author login="petrovic-d"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code><a href="@TOP@/org/netbeans/spi/project/ActionProvider.html">ActionProvider.COMMAND_TEST_PARALLEL</a></code> was introduced in order to
+                    allow running tests in parallel.
+                    <code><a href="@TOP@/org/netbeans/api/project/ContainedProjectFilter.html">ContainedProjectFilter</a></code> was added and
+                    it can be used to pass list of projects the project action should apply to.
+                    <code><a href="@TOP@/org/netbeans/spi/project/NestedClass">NestedClass</a></code> was added in order to support
+                    nested classes.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project" name="ContainedProjectFilter"/>
+            <class package="org.netbeans.spi.project" name="ActionProvider"/>
+            <class package="org.netbeans.spi.project" name="NestedClass"/>
+        </change>
         <change id="project-action-context">
             <api name="general"/>
             <summary>Added <code>ProjectActionContext</code> that can pass action-like environment to project queries</summary>

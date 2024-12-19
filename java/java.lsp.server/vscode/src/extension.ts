@@ -70,11 +70,11 @@ import { shouldHideGuideFor } from './panels/guidesUtil';
 const API_VERSION : string = "1.0";
 export const COMMAND_PREFIX : string = "nbls";
 const DATABASE: string = 'Database';
-const listeners = new Map<string, string[]>();
+export const listeners = new Map<string, string[]>();
 export let client: Promise<NbLanguageClient>;
 export let clientRuntimeJDK : string | null = null;
 export const MINIMAL_JDK_VERSION = 17;
-
+export const TEST_PROGRESS_EVENT: string = "testProgress";
 let testAdapter: NbTestAdapter | undefined;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
@@ -458,7 +458,10 @@ class LineBufferingPseudoterminal implements vscode.Pseudoterminal {
                 pty: this,
             });
         }
-        this.terminal.show(true);
+        // Prevent 'stealing' of the focus when running tests in parallel 
+        if (!testAdapter?.testInParallelProfileExist()) {
+            this.terminal.show(true);
+        }
     }
 
     /**
@@ -882,7 +885,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         });
     }
 
-    const runDebug = async (noDebug: boolean, testRun: boolean, uri: any, methodName?: string, launchConfiguration?: string, project : boolean = false, ) => {
+    const runDebug = async (noDebug: boolean, testRun: boolean, uri: any, methodName?: string, nestedClass?: string, launchConfiguration?: string, project : boolean = false, testInParallel : boolean = false, projects: string[] | undefined = undefined) => {
     const docUri = contextUri(uri);
         if (docUri) {
             // attempt to find the active configuration in the vsode launch settings; undefined if no config is there.
@@ -893,6 +896,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             };
             if (methodName) {
                 debugConfig['methodName'] = methodName;
+            }
+            if (nestedClass) {
+                debugConfig['nestedClass'] = nestedClass;
             }
             if (launchConfiguration == '') {
                 if (debugConfig['launchConfiguration']) {
@@ -914,8 +920,13 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             const debugOptions : vscode.DebugSessionOptions = {
                 noDebug: noDebug,
             }
-            
-            
+            if (testInParallel) {
+                debugConfig['testInParallel'] = testInParallel;
+            }
+            if (projects?.length) {
+                debugConfig['projects'] = projects;
+            }
+
             const ret = await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions);
             return ret ? new Promise((resolve) => {
                 const listener = vscode.debug.onDidTerminateDebugSession(() => {
@@ -925,30 +936,38 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             }) : ret;
         }
     };
-    
-    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test', async (uri, methodName?, launchConfiguration?) => {
-        await runDebug(true, true, uri, methodName, launchConfiguration);
+
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test.parallel', async (projects?) => {        
+        testAdapter?.runTestsWithParallelParallel(projects);
     }));
-    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.debug.test', async (uri, methodName?, launchConfiguration?) => {
-        await runDebug(false, true, uri, methodName, launchConfiguration);
+
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test.parallel.createProfile', async (projects?) => {        
+        testAdapter?.registerRunInParallelProfile(projects);
     }));
-    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.single', async (uri, methodName?, launchConfiguration?) => {
-        await runDebug(true, false, uri, methodName, launchConfiguration);
+
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test', async (uri, methodName?, nestedClass?, launchConfiguration?, testInParallel?, projects?) => {
+        await runDebug(true, true, uri, methodName, nestedClass, launchConfiguration, false, testInParallel, projects);
     }));
-    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.debug.single', async (uri, methodName?, launchConfiguration?) => {
-        await runDebug(false, false, uri, methodName, launchConfiguration);
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.debug.test', async (uri, methodName?, nestedClass?, launchConfiguration?) => {
+        await runDebug(false, true, uri, methodName, nestedClass, launchConfiguration);
+    }));
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.single', async (uri, methodName?, nestedClass?, launchConfiguration?) => {
+        await runDebug(true, false, uri, methodName, nestedClass, launchConfiguration);
+    }));
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.debug.single', async (uri, methodName?, nestedClass?, launchConfiguration?) => {
+        await runDebug(false, false, uri, methodName, nestedClass, launchConfiguration);
     }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.project.run', async (node, launchConfiguration?) => {
-        return runDebug(true, false, contextUri(node)?.toString() || '',  undefined, launchConfiguration, true);
+        return runDebug(true, false, contextUri(node)?.toString() || '',  undefined, undefined, launchConfiguration, true);
     }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.project.debug', async (node, launchConfiguration?) => {
-        return runDebug(false, false, contextUri(node)?.toString() || '',  undefined, launchConfiguration, true);
+        return runDebug(false, false, contextUri(node)?.toString() || '',  undefined, undefined, launchConfiguration, true);
     }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.project.test', async (node, launchConfiguration?) => {
-        return runDebug(true, true, contextUri(node)?.toString() || '',  undefined, launchConfiguration, true);
+        return runDebug(true, true, contextUri(node)?.toString() || '',  undefined, undefined, launchConfiguration, true);
     }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.package.test', async (uri, launchConfiguration?) => {
-        await runDebug(true, true, uri, undefined, launchConfiguration);
+        await runDebug(true, true, uri, undefined, undefined, launchConfiguration);
     }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.open.stacktrace', async (uri, methodName, fileName, line) => {
         const location: string | undefined = uri ? await commands.executeCommand(COMMAND_PREFIX + '.resolve.stacktrace.location', uri, methodName, fileName) : undefined;
@@ -1598,6 +1617,10 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             return data;
         });
         c.onNotification(TestProgressNotification.type, param => {
+            const testProgressListeners = listeners.get(TEST_PROGRESS_EVENT);
+            testProgressListeners?.forEach(listener => {
+                commands.executeCommand(listener, param.suite);
+            })
             if (testAdapter) {
                 testAdapter.testProgress(param.suite);
             }

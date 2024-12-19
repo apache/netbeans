@@ -55,7 +55,6 @@
             <test>${packageClassName}</test>
         </properties>
     </action>
-
     <action>
         <actionName>run</actionName>
         <packagings>

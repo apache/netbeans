@@ -158,6 +158,8 @@ export interface TestProgressParams {
 
 export interface TestSuite {
     name: string;
+    moduleName?: string;
+    modulePath?: string;
     file?: string;
     range?: Range;
     state: 'loaded' | 'started' | 'passed' | 'failed' | 'skipped' | 'errored';

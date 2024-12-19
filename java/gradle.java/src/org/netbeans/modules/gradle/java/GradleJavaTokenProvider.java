@@ -34,6 +34,7 @@ import java.util.Set;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
+import org.netbeans.spi.project.NestedClass;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -84,8 +85,9 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
 
     private void processSelectedPackageAndClass(final Map<String, String> map, Lookup context) {
         FileObject fo = RunUtils.extractFileObjectfromLookup(context);
+        NestedClass nestedClass = context.lookup(NestedClass.class);
         GradleJavaProject gjp = GradleJavaProject.get(project);
-        String className = evaluateClassName(gjp, fo);
+        String className = evaluateClassName(gjp, fo, nestedClass);
         if (className != null) {
             map.put(SELECTED_CLASS, className);
             int dot = className.lastIndexOf('.');
@@ -104,7 +106,8 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
         FileObject fo = method != null ? method.getFile() : RunUtils.extractFileObjectfromLookup(context);
         if ((fo != null) && fo.isData()) {
             GradleJavaProject gjp = GradleJavaProject.get(project);
-            String className = evaluateClassName(gjp, fo);
+            NestedClass nestedClass = method != null ? method.getNestedClass() : context.lookup(NestedClass.class);
+            String className = evaluateClassName(gjp, fo, nestedClass);
             String selectedMethod = method != null ? className + '.' + method.getMethodName() : className;
             map.put(SELECTED_METHOD, selectedMethod);
         }
@@ -133,7 +136,7 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
         }
     }
 
-    private String evaluateClassName(GradleJavaProject gjp, FileObject fo) {
+    private String evaluateClassName(GradleJavaProject gjp, FileObject fo, NestedClass nestedClass) {
         String ret = null;
         if ((gjp != null) && (fo != null)) {
             File f = FileUtil.toFile(fo);
@@ -145,7 +148,7 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
                         ret = relPath.replace('/', '.');
                         ret = ret + '*';
                     } else {
-                        ret = SourceUtils.classNameFor(ClasspathInfo.create(fo), relPath);
+                        ret = SourceUtils.classNameFor(ClasspathInfo.create(fo), relPath, nestedClass);
                     }
                 }
             }

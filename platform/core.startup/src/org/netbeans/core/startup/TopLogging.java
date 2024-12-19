@@ -32,16 +32,19 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -51,6 +54,7 @@ import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.netbeans.TopSecurityManager;
 import org.netbeans.core.startup.logging.NbLogging;
 import org.openide.filesystems.FileUtil;
@@ -294,6 +298,7 @@ public final class TopLogging {
         }
         ps.println("  Application Classpath   = " + cp); // NOI18N
         ps.println("  Startup Classpath       = " + System.getProperty("netbeans.dynamic.classpath", "unknown")); // NOI18N
+        ps.println("  Java Boot Modules       = " + createJavaBootModuleList());
         ps.println("-------------------------------------------------------------------------------"); // NOI18N
     }
 
@@ -307,6 +312,32 @@ public final class TopLogging {
         findBootJars(System.getProperty("java.ext.dirs"), sb);
         findBootJars(System.getProperty("java.endorsed.dirs"), sb);
         return sb.toString();
+    }
+
+    private List<String> createJavaBootModuleList() {
+        // TODO JDK 11 equivalent
+//        return ModuleLayer.boot().modules().stream()
+//                .map(Module::getName)
+//                .sorted()
+//                .collect(Collectors.toList());
+        try {
+            Class<?> ml_class = Class.forName("java.lang.ModuleLayer");
+            Method mod_getName = Class.forName("java.lang.Module").getMethod("getName");
+            @SuppressWarnings("unchecked")
+            Set<?> mods = (Set<?>)ml_class.getDeclaredMethod("modules").invoke(
+                ml_class.getDeclaredMethod("boot").invoke(null)
+            );
+            return mods.stream().map(mod -> {
+                try {
+                    return (String) mod_getName.invoke(mod);
+                } catch (ReflectiveOperationException ex) {
+                    return "unknown"; // outer try would fail first
+                }
+            })
+            .sorted().collect(Collectors.toList());
+        } catch (ReflectiveOperationException ex) {
+            return Collections.emptyList();
+        }
     }
 
     /** Scans path list for something that can be added to classpath.

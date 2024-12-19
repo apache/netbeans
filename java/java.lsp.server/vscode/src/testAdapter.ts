@@ -18,10 +18,12 @@
  */
 'use strict';
 
-import { commands, debug, tests, workspace, CancellationToken, TestController, TestItem, TestRunProfileKind, TestRunRequest, Uri, TestRun, TestMessage, Location, Position, MarkdownString } from "vscode";
+import { commands, debug, tests, workspace, CancellationToken, TestController, TestItem, TestRunProfileKind, TestRunRequest, Uri, TestRun, TestMessage, Location, Position, MarkdownString, TestRunProfile, CancellationTokenSource } from "vscode";
 import * as path from 'path';
 import { asRange, TestCase, TestSuite } from "./protocol";
-import { COMMAND_PREFIX } from "./extension";
+import { COMMAND_PREFIX, listeners, TEST_PROGRESS_EVENT } from "./extension";
+
+type SuiteState = 'enqueued' | 'started' | 'passed' | 'failed' | 'skipped' | 'errored';
 
 export class NbTestAdapter {
 
@@ -30,6 +32,8 @@ export class NbTestAdapter {
     private currentRun: TestRun | undefined;
     private itemsToRun: Set<TestItem> | undefined;
     private started: boolean = false;
+    private suiteStates: Map<TestItem, SuiteState>;
+    private parallelRunProfile: TestRunProfile | undefined;
 
     constructor() {
         this.testController = tests.createTestController('apacheNetBeansController', 'Apache NetBeans');
@@ -38,6 +42,24 @@ export class NbTestAdapter {
         this.testController.createRunProfile('Debug Tests', TestRunProfileKind.Debug, runHandler);
         this.disposables.push(this.testController);
         this.load();
+        this.suiteStates = new Map();
+    }
+
+    public registerRunInParallelProfile(projects: string[]) {
+        const runHandler = (request: TestRunRequest, cancellation: CancellationToken) => this.run(request, cancellation, true, projects);
+        this.parallelRunProfile = this.testController.createRunProfile("Run Tests In Parallel", TestRunProfileKind.Run, runHandler, true);
+        this.testController.items.replace([]);
+        this.load();
+    }
+
+    public testInParallelProfileExist(): boolean {
+        return this.parallelRunProfile ? true : false;
+    }
+
+    public runTestsWithParallelParallel(projects?: string[]) {
+        if (this.parallelRunProfile) {
+            this.run(new TestRunRequest(undefined, undefined, this.parallelRunProfile), new CancellationTokenSource().token, true, projects);
+        }
     }
 
     async load(): Promise<void> {
@@ -51,9 +73,11 @@ export class NbTestAdapter {
         }
     }
 
-    async run(request: TestRunRequest, cancellation: CancellationToken): Promise<void> {
+    async run(request: TestRunRequest, cancellation: CancellationToken, testInParallel: boolean = false, projects?: string[]): Promise<void> {
         if (!this.currentRun) {
-            commands.executeCommand('workbench.debug.action.focusRepl');
+            if (!testInParallel) {
+                commands.executeCommand('workbench.debug.action.focusRepl');
+            }
             cancellation.onCancellationRequested(() => this.cancel());
             this.currentRun = this.testController.createTestRun(request);
             this.itemsToRun = new Set();
@@ -63,9 +87,23 @@ export class NbTestAdapter {
                 for (let item of include) {
                     if (item.uri) {
                         this.set(item, 'enqueued');
+                        item.parent?.children.forEach(child => {
+                            if (child.id?.includes(item.id)) {
+                                this.set(child, 'enqueued');
+                            }
+                        })
                         const idx = item.id.indexOf(':');
+                        const isNestedClass = item.id.includes('$');
+                        const topLevelClassName = item.id.lastIndexOf('.');
+                        let nestedClass: string | undefined;
+                        if (isNestedClass && topLevelClassName > 0) {
+                            nestedClass = idx < 0 
+                                ? item.id.slice(topLevelClassName + 1)
+                                : item.id.substring(topLevelClassName + 1, idx);
+                            nestedClass = nestedClass.replace('$', '.');
+                        }
                         if (!cancellation.isCancellationRequested) {
-                            await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.single' : COMMAND_PREFIX + '.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1));
+                            await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.single' : COMMAND_PREFIX + '.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1), nestedClass);
                         }
                     }
                 }
@@ -73,12 +111,20 @@ export class NbTestAdapter {
                 this.testController.items.forEach(item => this.set(item, 'enqueued'));
                 for (let workspaceFolder of workspace.workspaceFolders || []) {
                     if (!cancellation.isCancellationRequested) {
-                        await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.test': COMMAND_PREFIX + '.run.test', workspaceFolder.uri.toString());
+                        if (testInParallel) {
+                            await commands.executeCommand(COMMAND_PREFIX + '.run.test', workspaceFolder.uri.toString(), undefined, undefined, undefined, true, projects);
+                        } else {
+                            await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.test': COMMAND_PREFIX + '.run.test', workspaceFolder.uri.toString());
+                        }
                     }
                 }
             }
             if (this.started) {
                 this.itemsToRun.forEach(item => this.set(item, 'skipped'));
+            } 
+            // TBD - message
+            else {
+                this.itemsToRun.forEach(item => this.set(item, 'failed', new TestMessage('Build failure'), false, true));    
             }
             this.itemsToRun = undefined;
             this.currentRun.end();
@@ -86,29 +132,78 @@ export class NbTestAdapter {
         }
     }
 
-    set(item: TestItem, state: 'enqueued' | 'started' | 'passed' | 'failed' | 'skipped' | 'errored', message?: TestMessage | readonly TestMessage[], noPassDown? : boolean): void {
+    set(item: TestItem, state: SuiteState, message?: TestMessage | readonly TestMessage[], noPassDown? : boolean, dispatchBuildFailEvent?: boolean): void {
         if (this.currentRun) {
             switch (state) {
                 case 'enqueued':
+                    this.dispatchTestEvent(state, item);
                     this.itemsToRun?.add(item);
                     this.currentRun.enqueued(item);
                     break;
+                case 'skipped':
+                    this.dispatchTestEvent(state, item);
                 case 'started':
                 case 'passed':
-                case 'skipped':
                     this.itemsToRun?.delete(item);
                     this.currentRun[state](item);
                     break;
                 case 'failed':
                 case 'errored':
+                    if (dispatchBuildFailEvent) {
+                        this.dispatchTestEvent(state, item);
+                    }
                     this.itemsToRun?.delete(item);
                     this.currentRun[state](item, message || new TestMessage(""));
                     break;
             }
+            this.suiteStates.set(item, state);
             if (!noPassDown) {
-                item.children.forEach(child => this.set(child, state, message, noPassDown));
+                item.children.forEach(child => this.set(child, state, message, noPassDown, dispatchBuildFailEvent));
             }
         }
+    }
+    
+    dispatchTestEvent(state: SuiteState, testItem: TestItem): void {
+        if (testItem.parent && testItem.children.size > 0) {
+            this.dispatchEvent({
+                name: testItem.id,
+                moduleName: testItem.parent.id,
+                modulePath: testItem.parent.uri?.path,
+                state,
+            });
+        } else if (testItem.children.size === 0) {
+            const testSuite = testItem.parent;
+            if (testSuite) {
+                const testSuiteEvent: any = {
+                    name: testSuite.id,
+                    moduleName: testSuite.parent?.id,
+                    modulePath: testSuite.parent?.uri?.path,
+                    state,
+                    tests: []
+                }
+                testSuite?.children.forEach(suite => {
+                    if (suite.id === testItem.id) {
+                        const idx = suite.id.indexOf(':');
+                        if (idx >= 0) {
+                            const name = suite.id.slice(idx + 1);
+                            testSuiteEvent.tests?.push({
+                                id: suite.id,
+                                name,
+                                state
+                            })
+                        }
+                    }
+                })
+                this.dispatchEvent(testSuiteEvent);
+            }
+        }
+    }
+
+    dispatchEvent(event: any): void {
+        const testProgressListeners = listeners.get(TEST_PROGRESS_EVENT);
+        testProgressListeners?.forEach(listener => {
+            commands.executeCommand(listener, event);
+        })
     }
 
     cancel(): void {
@@ -130,7 +225,9 @@ export class NbTestAdapter {
     }
 
     testProgress(suite: TestSuite): void {
-        const currentSuite = this.testController.items.get(suite.name);
+        const currentModule = this.testController.items.get(this.getModuleItemId(suite.moduleName));
+        const currentSuite = currentModule?.children.get(suite.name);
+
         switch (suite.state) {
             case 'loaded':
                 this.updateTests(suite);
@@ -147,7 +244,7 @@ export class NbTestAdapter {
             case 'skipped':
                 if (suite.tests) {
                     this.updateTests(suite, true);
-                    if (currentSuite) {
+                    if (currentSuite && currentModule) {
                         const suiteMessages: TestMessage[] = [];
                         suite.tests?.forEach(test => {
                             if (this.currentRun) {
@@ -198,19 +295,42 @@ export class NbTestAdapter {
                         } else {
                             this.set(currentSuite, suite.state, undefined, true);
                         }
+                        this.set(currentModule, this.calculateStateFor(currentModule), undefined, true);
                     }
                 }
                 break;
         }
     }
 
+    calculateStateFor(testItem: TestItem): 'passed' | 'failed' | 'skipped' | 'errored' {
+        let passed: number = 0;
+        testItem.children.forEach(item => {
+            const state = this.suiteStates.get(item);
+            if (state === 'enqueued' || state === 'failed') return state;
+            if (state === 'passed') passed++;
+        })
+        if (passed > 0) return 'passed';
+        return 'skipped';
+    }
+
     updateTests(suite: TestSuite, testExecution?: boolean): void {
-        let currentSuite = this.testController.items.get(suite.name);
+        const moduleName = this.getModuleItemId(suite.moduleName);
+        let currentModule = this.testController.items.get(moduleName);
+        if (!currentModule) {
+            const parsedName = this.parseModuleName(moduleName);
+            currentModule = this.testController.createTestItem(moduleName, this.getNameWithIcon(parsedName, 'module'), this.getModulePath(suite));
+            this.testController.items.add(currentModule);
+        }
+
+        const suiteChildren: TestItem[] = []
+        let currentSuite = currentModule.children.get(suite.name);
         const suiteUri = suite.file ? Uri.parse(suite.file) : undefined;
         if (!currentSuite || suiteUri && currentSuite.uri?.toString() !== suiteUri.toString()) {
-            currentSuite = this.testController.createTestItem(suite.name, suite.name, suiteUri);
-            this.testController.items.add(currentSuite);
+            currentSuite = this.testController.createTestItem(suite.name, this.getNameWithIcon(suite.name, 'class'), suiteUri);
+            suiteChildren.push(currentSuite);
         }
+        currentModule.children.forEach(suite => suiteChildren.push(suite));
+
         const suiteRange = asRange(suite.range);
         if (!testExecution && suiteRange && suiteRange !== currentSuite.range) {
             currentSuite.range = suiteRange;
@@ -222,7 +342,7 @@ export class NbTestAdapter {
             const testUri = test.file ? Uri.parse(test.file) : undefined;
             if (currentTest) {
                 if (testUri && currentTest.uri?.toString() !== testUri?.toString()) {
-                    currentTest = this.testController.createTestItem(test.id, test.name, testUri);
+                    currentTest = this.testController.createTestItem(test.id, this.getNameWithIcon(test.name, 'method'), testUri);
                     currentSuite?.children.add(currentTest);
                 }
                 const testRange = asRange(test.range);
@@ -246,10 +366,10 @@ export class NbTestAdapter {
                             parentTests.set(parent.test, arr = []);
                             children.push(parent.test);
                         }
-                        arr.push(this.testController.createTestItem(test.id, parent.label));
+                        arr.push(this.testController.createTestItem(test.id, this.getNameWithIcon(parent.label, 'method')));
                     }
                 } else {
-                    currentTest = this.testController.createTestItem(test.id, test.name, testUri);
+                    currentTest = this.testController.createTestItem(test.id, this.getNameWithIcon(test.name, 'method'), testUri);
                     currentTest.range = asRange(test.range);
                     children.push(currentTest);
                     currentSuite?.children.add(currentTest);
@@ -265,14 +385,53 @@ export class NbTestAdapter {
             });
         } else {
             currentSuite.children.replace(children);
+            currentModule.children.replace(suiteChildren);
         }
+    }
+
+    getModuleItemId(moduleName?: string): string {
+        return moduleName?.replace(":", "-") || "";
+    }
+    
+    parseModuleName(moduleName: string): string {
+        if (!this.parallelRunProfile) {
+            return moduleName.replace(":", "-");
+        }
+        const index = moduleName.indexOf(":");
+        if (index !== -1) {
+            return moduleName.slice(index + 1);
+        }
+        const parts = moduleName.split("-");
+        return parts[parts.length - 1];
+    }
+    
+    getModulePath(suite: TestSuite): Uri {
+        return Uri.parse(suite.modulePath || "");
+    }
+
+    getNameWithIcon(itemName: string, itemType: 'module' | 'class' | 'method'): string  {
+        switch (itemType) {
+            case 'module':
+                return `$(project) ${itemName}`;
+            case 'class':
+                return `$(symbol-class) ${itemName}`;
+            case 'method':
+                return `$(symbol-method) ${itemName}`;
+            default:
+                return itemName;
+        }
+    }
+
+    getNameWithoutIcon(itemName: string): string {
+        return itemName.replace(/^\$\([^)]+\)\s*/, "");
     }
 
     subTestName(item: TestItem, test: TestCase): string | undefined {
         if (test.id.startsWith(item.id)) {
             let label = test.name;
-            if (label.startsWith(item.label)) {
-                label = label.slice(item.label.length).trim();
+            const nameWithoutIcon = this.getNameWithoutIcon(item.label);
+            if (label.startsWith(nameWithoutIcon)) {
+                label = label.slice(nameWithoutIcon.length).trim();
             }
             return label;
         } else {

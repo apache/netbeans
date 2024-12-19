@@ -19,9 +19,14 @@
 
 package org.netbeans.modules.java.completion;
 
+import java.util.concurrent.CountDownLatch;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.api.java.source.ClassIndexListener;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.RootsEvent;
 import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.api.java.source.TypesEvent;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -171,8 +176,27 @@ public class JavaCompletionTask121FeaturesTest extends CompletionTestBase {
     protected void afterTestSetup() throws Exception {
         if (getName().startsWith("testSealed")) {
             classPathRegistered = ClassPathSupport.createClassPath(getWorkDir().toURI().toURL());
+            CountDownLatch started = new CountDownLatch(1);
+            ClasspathInfo info = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, classPathRegistered);
+            ClassIndexListener listener = new ClassIndexListener() {
+                @Override
+                public void typesAdded(TypesEvent event) {}
+                @Override
+                public void typesRemoved(TypesEvent event) {}
+                @Override
+                public void typesChanged(TypesEvent event) {}
+                @Override
+                public void rootsAdded(RootsEvent event) {
+                    started.countDown();
+                }
+                @Override
+                public void rootsRemoved(RootsEvent event) {}
+            };
+            info.getClassIndex().addClassIndexListener(listener);
             GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, new ClassPath[] {classPathRegistered});
             IndexingManager.getDefault().refreshAllIndices(true, true, getWorkDir());
+            started.await();
+            info.getClassIndex().removeClassIndexListener(listener);
             SourceUtils.waitScanFinished();
         }
     }

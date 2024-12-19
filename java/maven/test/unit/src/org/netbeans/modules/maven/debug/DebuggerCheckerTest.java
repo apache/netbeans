@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import static junit.framework.TestCase.fail;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
@@ -57,7 +58,8 @@ public class DebuggerCheckerTest extends NbTestCase {
     
     private static final class MockConfig implements RunConfig, Project {
         private Map<String,String> props = new HashMap<>();
-        
+        private Map<String,String> options = new HashMap<>();
+
         @Override
         public File getExecutionDirectory() {
             fail();
@@ -214,6 +216,21 @@ public class DebuggerCheckerTest extends NbTestCase {
         public Lookup getLookup() {
             fail();
             return null;
+        }
+
+        @Override
+        public Map<? extends String, ? extends String> getOptions() {
+            return Collections.unmodifiableMap(options);
+        }
+
+        @Override
+        public void setOption(String key, String value) {
+            options.put(key, value);
+        }
+
+        @Override
+        public void addOptions(Map<String, String> properties) {
+            fail();
         }
         
     }

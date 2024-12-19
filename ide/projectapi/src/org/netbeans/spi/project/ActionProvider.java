@@ -83,6 +83,13 @@ public interface ActionProvider {
      */    
     String COMMAND_TEST_SINGLE = "test.single";  // NOI18N
     
+    /** 
+     * Standard command for running tests in parallel on given projects sub-modules 
+     * 
+     * @since 1.99
+     */    
+    String COMMAND_TEST_PARALLEL = "test.parallel";  // NOI18N
+    
     /**
      * Standard command for running the project in debugger
      */    

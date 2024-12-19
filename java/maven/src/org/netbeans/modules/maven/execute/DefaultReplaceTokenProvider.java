@@ -74,6 +74,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
     static final String PACK_CLASSNAME = "packageClassName";//NOI18N
     static final String ABSOLUTE_PATH = "absolutePathName";
     public static final String METHOD_NAME = "nb.single.run.methodName"; //NOI18N
+    public static final String ENCLOSING_TYPE_NAME = "nb.single.run.enclosingType"; //NOI18N
     private static final String VARIABLE_PREFIX = "var."; //NOI18N
     // as defined in org.netbeans.modules.project.ant.VariablesModel
     public static String[] fileBasedProperties = new String[] {
@@ -235,6 +236,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
             //sort of hack to push the method name through the current apis..
             SingleMethod method = methods.iterator().next();
             replaceMap.put(METHOD_NAME, method.getMethodName());
+            replaceMap.put(ENCLOSING_TYPE_NAME, method.getEnclosingType());
         }
 
         if (group != null &&

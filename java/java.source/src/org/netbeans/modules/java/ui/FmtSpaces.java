@@ -336,10 +336,70 @@ public class FmtSpaces extends JPanel implements TreeCellRenderer, MouseListener
     }
     
     private static final class SpacesCategorySupport extends CategorySupport {
-
+        // copied from Bundle.properties for easier maintanance
+        static String sampleSpaces ="""
+                                    @Anno(paramA="aValue", paramB="bValue")
+                                    public class ClassA {
+                                    public int number = 1;
+                                    private String text ="A";
+                                    static float[] floats = new float[3];
+                                    protected double[] doubles = new double[]{3.67,40,2e-30};
+                                    
+                                    static {
+                                        floats[0]=12.6f;
+                                    }
+                                    
+                                    public ClassA() {
+                                    }
+                                    public int meth(String text, int number) {
+                                    BinaryOperator plus = (a, b) -> a + b;
+                                    BinaryOperator plusOp = this::add;
+                                    if (number==13) {
+                                    return (int)System.currentTimeMillis();
+                                    }else {
+                                    }
+                                    
+                                    for( int i = 20; i < 100; i++) {
+                                        synchronized(this) {
+                                            while(i%13>5)
+                                                meth( text + " ", number++);
+                                        }
+                                    }
+                                    
+                                    for(float f : floats)
+                                        System.out.println(f);
+                                    
+                                    switch(number) {
+                                    case 1:
+                                        do { out( (2+3)*this.number--); } while(this.number > 6);
+                                        return 10;
+                                    case 2:
+                                        try {
+                                            toString();
+                                        }
+                                        catch ( IllegalStateException illegalStateException ) {
+                                            illegalStateException.printStackTrace();
+                                        }
+                                        finally {
+                                            return 20;
+                                        }
+                                    default:
+                                       return number > 100 ? -1 : -2;
+                                    }
+                                    }
+                                    public int add(int a, int b) {
+                                        return a + b;
+                                    }
+                                    public record LocalRecord(String name, int age){
+                                    }
+                                    }
+                                    record TopLevelRecord(String name, double value){
+                                    }
+                                    """; //NOI18N
+        
         public SpacesCategorySupport(Preferences preferences, FmtSpaces panel) {
             super(preferences, "spaces", panel, //NOI18N
-                  NbBundle.getMessage( FmtSpaces.class ,"SAMPLE_Spaces"), // NOI18N
+                  sampleSpaces, // NOI18N
                   new String[] {FmtOptions.placeCatchOnNewLine, Boolean.FALSE.toString()},
                   new String[] {FmtOptions.placeElseOnNewLine, Boolean.FALSE.toString()},
                   new String[] {FmtOptions.placeWhileOnNewLine, Boolean.FALSE.toString()},

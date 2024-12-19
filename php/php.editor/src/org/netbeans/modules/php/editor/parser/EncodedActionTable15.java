@@ -29,8 +29,6 @@ public class EncodedActionTable15 {
     protected EncodedActionTable15() {
         sb = new StringBuilder();
         sb.append("\uff02");
-        sb.append("\247");
-        sb.append("\uff02");
         sb.append("\250");
         sb.append("\uff02");
         sb.append("\252");
@@ -4528,5 +4526,7 @@ public class EncodedActionTable15 {
         sb.append("\027");
         sb.append("\uff7c");
         sb.append("\032");
+        sb.append("\uff7c");
+        sb.append("\034");
     }
 }

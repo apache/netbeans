@@ -1531,6 +1531,10 @@ public class ASTPHP5ParserTest extends ParserTestBase {
     }
 
     // PHP 8.3
+    public void testArbitraryStaticVariableInitializers_01() throws Exception {
+        performTest("parser/php83/arbitraryStaticVariableInitializers_01");
+    }
+
     public void testDynamicClassConstantFetch_01() throws Exception {
         performTest("parser/php83/dynamicClassConstantFetch_01");
     }

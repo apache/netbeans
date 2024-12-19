@@ -28,8 +28,6 @@ public class EncodedActionTable19 {
     }
     protected EncodedActionTable19() {
         sb = new StringBuilder();
-        sb.append("\073");
-        sb.append("\214");
         sb.append("\113");
         sb.append("\216");
         sb.append("\100");
@@ -4528,5 +4526,7 @@ public class EncodedActionTable19 {
         sb.append("\122");
         sb.append("\013");
         sb.append("\123");
+        sb.append("\064");
+        sb.append("\124");
     }
 }

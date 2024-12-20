@@ -1,0 +1,4 @@
+Code completion result for source line:
+static $example4 = $this->metho|d();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     method()                        [PUBLIC]   Example

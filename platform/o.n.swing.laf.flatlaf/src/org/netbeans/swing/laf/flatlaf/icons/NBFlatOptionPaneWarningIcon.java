@@ -18,9 +18,9 @@
  */
 package org.netbeans.swing.laf.flatlaf.icons;
 
-public class NBFlatTreeOpenIcon extends NBFlatAdapterIcon {
-    public NBFlatTreeOpenIcon() {
+public class NBFlatOptionPaneWarningIcon extends NBFlatAdapterIcon {
+    public NBFlatOptionPaneWarningIcon() {
         // Will load the SVG version if an SVG loader is available.
-        super("org/netbeans/swing/plaf/resources/hidpi-folder-open.png");
+        super("org/netbeans/swing/laf/flatlaf/resources/warning32.png");
     }
 }

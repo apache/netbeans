@@ -20,12 +20,17 @@
 package org.netbeans.modules.maven.api;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.model.Dependency;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
+import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
@@ -202,6 +207,7 @@ public class PluginPropertyUtilsTest extends NbTestCase {
 
         // Matching filter for propertyItemName should yield correct result
         PluginPropertyUtils.DependencyListBuilder bld = new PluginPropertyUtils.DependencyListBuilder(
+                null,
                 "annotationProcessorPaths",
                 null
         );
@@ -266,10 +272,109 @@ public class PluginPropertyUtilsTest extends NbTestCase {
         // Filter with null value for propertyItemName should yield full list
         Xpp3Dom configRoot2 = Xpp3DomBuilder.build(new StringReader(testPom2)).getChild("build").getChild("plugins").getChildren()[0].getChild("configuration");
         PluginPropertyUtils.DependencyListBuilder bld2 = new PluginPropertyUtils.DependencyListBuilder(
+                null,
                 "annotationProcessorPaths",
                 null
         );
         List<Dependency> dependencies3 = bld2.build(configRoot2, PluginPropertyUtils.DUMMY_EVALUATOR);
         assertEquals(2, dependencies3.size());
+    }
+
+    public void testDependencyBuilderWithDependencyManagement() throws IOException {
+        TestFileUtils.writeFile(d, "pom.xml",
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>let.me.reproduce</groupId>
+                    <artifactId>annotation-processor-netbeans-reproducer</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <dependencyManagement>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>1.18.36</version>
+                            </dependency>
+                        </dependencies>
+                    </dependencyManagement>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.13.0</version>
+                                <configuration>
+                                    <annotationProcessorPaths>
+                                        <path>
+                                            <groupId>org.projectlombok</groupId>
+                                            <artifactId>lombok</artifactId>
+                                            <type>jar</type>
+                                        </path>
+                                    </annotationProcessorPaths>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """
+        );
+        Project project = ProjectManager.getDefault().findProject(d);
+        assert project != null;
+        PluginPropertyUtils.PluginConfigPathParams query = new PluginPropertyUtils.PluginConfigPathParams("org.apache.maven.plugins", "maven-compiler-plugin", "annotationProcessorPaths");
+        query.setDefaultScope(Artifact.SCOPE_RUNTIME);
+        query.setGoal("runtime");
+        List<ArtifactResolutionException> errorList = new ArrayList<>();
+        List<Artifact> artifacts = PluginPropertyUtils.getPluginPathProperty(project, query, true, errorList);
+        assertNotNull(artifacts);
+        assert artifacts != null;
+        assertEquals(1, artifacts.size());
+        assertEquals("org.projectlombok", artifacts.get(0).getGroupId());
+        assertEquals("lombok", artifacts.get(0).getArtifactId());
+        assertEquals("1.18.36", artifacts.get(0).getVersion());
+        assertNull(artifacts.get(0).getClassifier());
+    }
+
+    public void testDependencyBuilderWithoutVersion() throws IOException {
+        TestFileUtils.writeFile(d, "pom.xml",
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>let.me.reproduce</groupId>
+                    <artifactId>annotation-processor-netbeans-reproducer</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <packaging>jar</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.13.0</version>
+                                <configuration>
+                                    <annotationProcessorPaths>
+                                        <path>
+                                            <groupId>org.projectlombok</groupId>
+                                            <artifactId>lombok</artifactId>
+                                        </path>
+                                    </annotationProcessorPaths>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """
+        );
+        Project project = ProjectManager.getDefault().findProject(d);
+        assert project != null;
+        PluginPropertyUtils.PluginConfigPathParams query = new PluginPropertyUtils.PluginConfigPathParams("org.apache.maven.plugins", "maven-compiler-plugin", "annotationProcessorPaths");
+        query.setDefaultScope(Artifact.SCOPE_RUNTIME);
+        query.setGoal("runtime");
+        List<ArtifactResolutionException> errorList = new ArrayList<>();
+        List<Artifact> artifacts = PluginPropertyUtils.getPluginPathProperty(project, query, true, errorList);
+        assertNotNull(artifacts);
+        assert artifacts != null;
+        assertEquals(0, artifacts.size());
     }
 }

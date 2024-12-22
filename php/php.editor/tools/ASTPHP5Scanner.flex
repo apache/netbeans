@@ -970,6 +970,7 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 
 <ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"${" {
     pushState(ST_LOOKING_FOR_VARNAME);
+    bracket++;
     return createSymbol(ASTPHP5Symbols.T_DOLLAR_OPEN_CURLY_BRACES);
 }
 

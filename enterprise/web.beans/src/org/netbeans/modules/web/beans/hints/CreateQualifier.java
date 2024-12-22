@@ -34,10 +34,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
-
-import org.netbeans.api.editor.EditorRegistry;
-import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
@@ -47,8 +43,6 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
-import org.netbeans.modules.editor.NbEditorUtilities;
-import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.beans.navigation.actions.WebBeansActionHelper;
 import org.netbeans.spi.editor.hints.Fix;
 import org.openide.filesystems.FileObject;
@@ -64,22 +58,22 @@ import com.sun.source.util.TreePath;
  *
  */
 public class CreateQualifier implements ErrorRule<Void> {
-    
-    private static final String INJECT_ANNOTATION = 
-        "javax.inject.Inject";                                  // NOI18N
-    
-    private static final String DISPOSES_ANNOTATION = 
-        "javax.enterprise.inject.Disposes";                     // NOI18N
 
-    private static final String OBSERVES_ANNOTATION = 
-        "javax.enterprise.event.Observes";                      // NOI18N
-    
-    private static final String PRODUCER_ANNOTATION = 
-        "javax.enterprise.inject.Produces";                     // NOI18N
-    
-    private static final String INTERCEPTOR_ANNOTATION = 
-        "javax.interceptor.Interceptor";                        // NOI18N
-    
+    private static final String INJECT_ANNOTATION = "javax.inject.Inject"; // NOI18N
+    private static final String INJECT_ANNOTATION_JAKARTA = "jakarta.inject.Inject"; // NOI18N
+
+    private static final String DISPOSES_ANNOTATION = "javax.enterprise.inject.Disposes"; // NOI18N
+    private static final String DISPOSES_ANNOTATION_JAKARTA = "jakarta.enterprise.inject.Disposes"; // NOI18N
+
+    private static final String OBSERVES_ANNOTATION = "javax.enterprise.event.Observes"; // NOI18N
+    private static final String OBSERVES_ANNOTATION_JAKARTA = "jakarta.enterprise.event.Observes"; // NOI18N
+
+    private static final String PRODUCER_ANNOTATION = "javax.enterprise.inject.Produces"; // NOI18N
+    private static final String PRODUCER_ANNOTATION_JAKARTA = "jakarta.enterprise.inject.Produces"; // NOI18N
+
+    private static final String INTERCEPTOR_ANNOTATION = "javax.interceptor.Interceptor"; // NOI18N
+    private static final String INTERCEPTOR_ANNOTATION_JAKARTA = "jakarta.interceptor.Interceptor"; // NOI18N
+
 
     /* (non-Javadoc)
      * @see org.netbeans.modules.java.hints.spi.Rule#getId()
@@ -212,10 +206,12 @@ public class CreateQualifier implements ErrorRule<Void> {
         for (AnnotationMirror annotationMirror : allAnnotationMirrors) {
             TypeElement annotationElement = (TypeElement)annotationMirror.
                 getAnnotationType().asElement();
-            if ( annotationElement != null && annotationElement.getQualifiedName().
-                    contentEquals(INJECT_ANNOTATION) || 
-                    annotationElement.getQualifiedName().
-                        contentEquals(PRODUCER_ANNOTATION))
+            if (annotationElement != null && (
+                    annotationElement.getQualifiedName().contentEquals(INJECT_ANNOTATION)
+                    || annotationElement.getQualifiedName().contentEquals(PRODUCER_ANNOTATION)
+                    || annotationElement.getQualifiedName().contentEquals(INJECT_ANNOTATION_JAKARTA)
+                    || annotationElement.getQualifiedName().contentEquals(PRODUCER_ANNOTATION_JAKARTA)
+                ))
             {
 
                 return createQualifierFix(compilationInfo, annotation, parent);
@@ -230,10 +226,12 @@ public class CreateQualifier implements ErrorRule<Void> {
             for (AnnotationMirror annotationMirror : allAnnotationMirrors) {
                 TypeElement annotationElement = (TypeElement)annotationMirror.
                     getAnnotationType().asElement();
-                if ( annotationElement != null && annotationElement.getQualifiedName().
-                        contentEquals( OBSERVES_ANNOTATION ) || 
-                        annotationElement.getQualifiedName().
-                            contentEquals( DISPOSES_ANNOTATION ))
+                if ( annotationElement != null && (
+                        annotationElement.getQualifiedName().contentEquals( OBSERVES_ANNOTATION )
+                        || annotationElement.getQualifiedName().contentEquals( DISPOSES_ANNOTATION )
+                        || annotationElement.getQualifiedName().contentEquals( OBSERVES_ANNOTATION_JAKARTA )
+                        || annotationElement.getQualifiedName().contentEquals( DISPOSES_ANNOTATION_JAKARTA )
+                    ))
                 {
                         hasDisposesObserves= true;
                 }
@@ -294,11 +292,13 @@ public class CreateQualifier implements ErrorRule<Void> {
             {
                 hasRequiredAnnotation = true;
             }
-            else if ( annotationTypeElement!= null && 
-                    annotationTypeElement.getQualifiedName().contentEquals(
-                            INJECT_ANNOTATION) || 
-                                annotationTypeElement.getQualifiedName().
-                                    contentEquals(PRODUCER_ANNOTATION))
+            else if ( annotationTypeElement!= null && (
+                        annotationTypeElement.getQualifiedName().contentEquals(INJECT_ANNOTATION)
+                        || annotationTypeElement.getQualifiedName().contentEquals(PRODUCER_ANNOTATION)
+                        || annotationTypeElement.getQualifiedName().contentEquals(INJECT_ANNOTATION_JAKARTA)
+                        || annotationTypeElement.getQualifiedName().contentEquals(PRODUCER_ANNOTATION_JAKARTA)
+                    )
+                )
             {
                 isInjectionPoint = true;
             }
@@ -322,8 +322,11 @@ public class CreateQualifier implements ErrorRule<Void> {
                 hasAnnotation = true;
             }
             if ( annotationElement instanceof TypeElement && 
-                    ((TypeElement)annotationElement).getQualifiedName().
-                    contentEquals(INTERCEPTOR_ANNOTATION))
+                    (
+                        ((TypeElement)annotationElement).getQualifiedName().contentEquals(INTERCEPTOR_ANNOTATION)
+                        || ((TypeElement)annotationElement).getQualifiedName().contentEquals(INTERCEPTOR_ANNOTATION_JAKARTA)
+                    )
+                )
             {
                 isInterceptor = true;
             }

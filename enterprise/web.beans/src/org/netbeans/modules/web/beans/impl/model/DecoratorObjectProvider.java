@@ -18,9 +18,11 @@
  */
 package org.netbeans.modules.web.beans.impl.model;
 
+import java.util.List;
 import javax.lang.model.element.TypeElement;
 
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.AnnotationModelHelper;
+import org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil;
 
 
 /**
@@ -30,7 +32,7 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.Annotatio
 class DecoratorObjectProvider extends AbstractObjectProvider<DecoratorObject> {
 
     DecoratorObjectProvider( AnnotationModelHelper helper ) {
-        super( EnableBeansFilter.DECORATOR, helper);
+        super(List.of(AnnotationUtil.DECORATOR_JAKARTA, AnnotationUtil.DECORATOR), helper);
     }
 
     /* (non-Javadoc)

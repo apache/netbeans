@@ -34,13 +34,16 @@ import org.netbeans.modules.web.beans.analysis.CdiAnalysisResult;
 import org.netbeans.modules.web.beans.analysis.analyzer.FieldElementAnalyzer.FieldAnalyzer;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.PRODUCES_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.PRODUCES_FQN_JAKARTA;
+
 
 /**
  * @author ads
  *
  */
-public class ProducerFieldAnalyzer extends AbstractProducerAnalyzer 
-    implements FieldAnalyzer 
+public class ProducerFieldAnalyzer extends AbstractProducerAnalyzer
+    implements FieldAnalyzer
 {
 
     /* (non-Javadoc)
@@ -52,8 +55,7 @@ public class ProducerFieldAnalyzer extends AbstractProducerAnalyzer
             CdiAnalysisResult result )
     {
         CompilationInfo compInfo = result.getInfo();
-        if  ( !AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN, 
-                compInfo ))
+        if (!AnnotationUtil.hasAnnotation(element, compInfo, PRODUCES_FQN_JAKARTA, PRODUCES_FQN))
         {
             return;
         }
@@ -75,7 +77,7 @@ public class ProducerFieldAnalyzer extends AbstractProducerAnalyzer
         result.addError( element, NbBundle.getMessage(
                             ProducerFieldAnalyzer.class, "ERR_ProducerHasTypeVar"));    // NOI18N
     }
-    
+
     /* (non-Javadoc)
      * @see org.netbeans.modules.web.beans.analysis.analyzer.AbstractProducerAnalyzer#hasWildCard(javax.lang.model.element.Element, javax.lang.model.type.TypeMirror, org.netbeans.api.java.source.CompilationInfo, java.util.List)
      */
@@ -96,7 +98,7 @@ public class ProducerFieldAnalyzer extends AbstractProducerAnalyzer
         Set<Modifier> modifiers = element.getModifiers();
         if ( !modifiers.contains(Modifier.STATIC)){
             result.addError( element,  NbBundle.getMessage(
-                    ProducerFieldAnalyzer.class, 
+                    ProducerFieldAnalyzer.class,
                     "ERR_NonStaticProducerSessionBean"));    // NOI18N
         }
     }

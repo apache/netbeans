@@ -43,7 +43,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class TypedTest extends CommonTestCase {
 
     public TypedTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
 
     public void testCommon() throws MetadataModelException, IOException,

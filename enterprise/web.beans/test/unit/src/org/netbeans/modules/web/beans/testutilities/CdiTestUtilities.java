@@ -19,6 +19,11 @@
 package org.netbeans.modules.web.beans.testutilities;
 
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
@@ -34,9 +39,10 @@ import org.openide.filesystems.FileObject;
  *
  */
 public class CdiTestUtilities {
-    
-    public CdiTestUtilities( FileObject fileObject ){
-        mySourceRoot = fileObject;
+
+    public CdiTestUtilities(FileObject fileObject, boolean jakartaVariant) {
+        this.mySourceRoot = fileObject;
+        this.jakartaVariant = jakartaVariant;
     }
     
     public void clearRoot() throws IOException {
@@ -62,8 +68,8 @@ public class CdiTestUtilities {
                 "import static java.lang.annotation.ElementType.PARAMETER; "+
                 "import static java.lang.annotation.ElementType.TYPE; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
-                "import javax.enterprise.inject.*; "+
-                "import javax.inject.*; "+
+                "import " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.inject.*; "+
+                "import " + (jakartaVariant ? "jakarta" : "javax") + ".inject.*; "+
                 "import java.lang.annotation.*; "+
                 "@Qualifier " +
                 "@Retention(RUNTIME) "+
@@ -77,10 +83,10 @@ public class CdiTestUtilities {
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import static java.lang.annotation.ElementType.TYPE; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
-                "import javax.enterprise.inject.*; "+
-                "import javax.inject.*; "+
+                "import " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.inject.*; "+
+                "import " + (jakartaVariant ? "jakarta" : "javax") + ".inject.*; "+
                 "import java.lang.annotation.*; "+
-                "import javax.interceptor.*; "+
+                "import " + (jakartaVariant ? "jakarta" : "javax") + ".interceptor.*; "+
                 "@InterceptorBinding " +
                 "@Retention(RUNTIME) "+
                 "@Target({METHOD, TYPE}) "+
@@ -89,7 +95,7 @@ public class CdiTestUtilities {
     
     public void initEnterprise()  throws IOException{
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/ejb/Singleton.java",
-                "package javax.ejb; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".ejb; " +
                 "import static java.lang.annotation.ElementType; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
@@ -99,7 +105,7 @@ public class CdiTestUtilities {
                 "public @interface Singleton  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/ejb/Stateless.java",
-                "package javax.ejb; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".ejb; " +
                 "import static java.lang.annotation.ElementType; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
@@ -109,7 +115,7 @@ public class CdiTestUtilities {
                 "public @interface Stateless  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/ejb/Stateful.java",
-                "package javax.ejb; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".ejb; " +
                 "import static java.lang.annotation.ElementType; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
@@ -119,7 +125,7 @@ public class CdiTestUtilities {
                 "public @interface Stateful  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/ejb/PostActivate.java",
-                "package javax.ejb; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".ejb; " +
                 "import static java.lang.annotation.ElementType; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
@@ -129,7 +135,7 @@ public class CdiTestUtilities {
                 "public @interface PostActivate  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/ejb/PrePassivate.java",
-                "package javax.ejb; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".ejb; " +
                 "import static java.lang.annotation.ElementType; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
@@ -141,7 +147,7 @@ public class CdiTestUtilities {
     
     public  void initAnnotations() throws IOException{
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/inject/Qualifier.java",
-                "package javax.inject; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".inject; " +
                 "import static java.lang.annotation.ElementType.ANNOTATION_TYPE; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
@@ -151,7 +157,7 @@ public class CdiTestUtilities {
                 "public @interface Qualifier  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/inject/Named.java",
-                "package javax.inject; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".inject; " +
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
                 "import java.lang.annotation.RetentionPolicy; "+
@@ -162,7 +168,7 @@ public class CdiTestUtilities {
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/inject/Inject.java",
-                "package javax.inject; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".inject; " +
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import static java.lang.annotation.ElementType.FIELD; "+
                 "import static java.lang.annotation.ElementType.CONSTRUCTOR; "+
@@ -174,7 +180,7 @@ public class CdiTestUtilities {
                 "public @interface Inject  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/inject/Any.java",
-                "package javax.enterprise.inject; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.inject; " +
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import static java.lang.annotation.ElementType.FIELD; "+
                 "import static java.lang.annotation.ElementType.PARAMETER; "+
@@ -182,20 +188,20 @@ public class CdiTestUtilities {
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
                 "import java.lang.annotation.RetentionPolicy; "+
-                "import javax.inject.Qualifier; "+
+                "import " + (jakartaVariant ? "jakarta" : "javax") + ".inject.Qualifier; "+
                 "@Qualifier " +
                 "@Retention(RUNTIME) "+
                 "@Target({METHOD, FIELD, PARAMETER, TYPE}) "+          
                 "public @interface Any  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/inject/New.java",
-                "package javax.enterprise.inject; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.inject; " +
                 "import static java.lang.annotation.ElementType.FIELD; "+
                 "import static java.lang.annotation.ElementType.PARAMETER; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
                 "import java.lang.annotation.RetentionPolicy; "+
-                "import javax.inject.Qualifier; "+
+                "import " + (jakartaVariant ? "jakarta" : "javax") + ".inject.Qualifier; "+
                 "@Qualifier " +
                 "@Retention(RUNTIME) "+
                 "@Target({FIELD, PARAMETER}) "+          
@@ -204,21 +210,21 @@ public class CdiTestUtilities {
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/inject/Default.java",
-                "package javax.enterprise.inject; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.inject; " +
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import static java.lang.annotation.ElementType.FIELD; "+
                 "import static java.lang.annotation.ElementType.PARAMETER; "+
                 "import static java.lang.annotation.ElementType.TYPE; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
-                "import javax.inject.Qualifier; "+
+                "import " + (jakartaVariant ? "jakarta" : "javax") + ".inject.Qualifier; "+
                 "@Qualifier " +
                 "@Retention(RUNTIME) "+
                 "@Target({METHOD, FIELD, PARAMETER, TYPE}) "+          
                 "public @interface Default  {} ");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/inject/Produces.java",
-                "package javax.enterprise.inject; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.inject; " +
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import static java.lang.annotation.ElementType.FIELD; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
@@ -229,7 +235,7 @@ public class CdiTestUtilities {
                 "public @interface Produces  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/util/Nonbinding.java",
-                "package javax.enterprise.util; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.util; " +
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
@@ -239,7 +245,7 @@ public class CdiTestUtilities {
                 "public @interface Nonbinding  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/event/Observes.java",
-                "package javax.enterprise.event; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.event; " +
                 "import static java.lang.annotation.ElementType.PARAMETER; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
@@ -250,7 +256,7 @@ public class CdiTestUtilities {
         
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/inject/Disposes.java",
-                "package javax.enterprise.inject; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.inject; " +
                 "import static java.lang.annotation.ElementType.PARAMETER; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
@@ -260,7 +266,7 @@ public class CdiTestUtilities {
                 "public @interface Disposes  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/inject/Specializes.java",
-                "package javax.enterprise.inject; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.inject; " +
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import static java.lang.annotation.ElementType.TYPE; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
@@ -271,7 +277,7 @@ public class CdiTestUtilities {
                 "public @interface Specializes  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/inject/Alternative.java",
-                "package javax.enterprise.inject; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.inject; " +
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import static java.lang.annotation.ElementType.FIELD; "+
                 "import static java.lang.annotation.ElementType.TYPE; "+
@@ -283,7 +289,7 @@ public class CdiTestUtilities {
                 "public @interface Alternative  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/inject/Stereotype.java",
-                "package javax.enterprise.inject; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.inject; " +
                 "import static java.lang.annotation.ElementType.ANNOTATION_TYPE; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
@@ -293,7 +299,7 @@ public class CdiTestUtilities {
                 "public @interface Stereotype  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/context/NormalScope.java",
-                "package javax.enterprise.context; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.context; " +
                 "import static java.lang.annotation.ElementType.ANNOTATION_TYPE; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
@@ -305,7 +311,7 @@ public class CdiTestUtilities {
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/inject/Scope.java",
-                "package javax.inject; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".inject; " +
                 "import static java.lang.annotation.ElementType.ANNOTATION_TYPE; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
@@ -315,7 +321,7 @@ public class CdiTestUtilities {
                 "public @interface Scope  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/context/ApplicationScoped.java",
-                "package javax.enterprise.context; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.context; " +
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import static java.lang.annotation.ElementType.FIELD; "+
                 "import static java.lang.annotation.ElementType.TYPE; "+
@@ -329,7 +335,7 @@ public class CdiTestUtilities {
                 "public @interface ApplicationScoped  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/context/ConversationScoped.java",
-                "package javax.enterprise.context; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.context; " +
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import static java.lang.annotation.ElementType.FIELD; "+
                 "import static java.lang.annotation.ElementType.TYPE; "+
@@ -343,14 +349,14 @@ public class CdiTestUtilities {
                 "public @interface ConversationScoped  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/context/Dependent.java",
-                "package javax.enterprise.context; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.context; " +
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import static java.lang.annotation.ElementType.FIELD; "+
                 "import static java.lang.annotation.ElementType.TYPE; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import java.lang.annotation.*; "+
                 "import java.lang.annotation.RetentionPolicy; "+
-                "import javax.inject.Scope; "+
+                "import " + (jakartaVariant ? "jakarta" : "javax") + ".inject.Scope; "+
                 "@Retention(RUNTIME) "+
                 "@Scope "+
                 "@Inherited "+
@@ -358,7 +364,7 @@ public class CdiTestUtilities {
                 "public @interface Dependent  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/context/RequestScoped.java",
-                "package javax.enterprise.context; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.context; " +
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import static java.lang.annotation.ElementType.FIELD; "+
                 "import static java.lang.annotation.ElementType.TYPE; "+
@@ -372,7 +378,7 @@ public class CdiTestUtilities {
                 "public @interface RequestScoped  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/context/SessionScoped.java",
-                "package javax.enterprise.context; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.context; " +
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import static java.lang.annotation.ElementType.FIELD; "+
                 "import static java.lang.annotation.ElementType.TYPE; "+
@@ -386,7 +392,7 @@ public class CdiTestUtilities {
                 "public @interface SessionScoped  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/inject/Typed.java",
-                "package javax.enterprise.inject; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.inject; " +
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import static java.lang.annotation.ElementType.FIELD; "+
                 "import static java.lang.annotation.ElementType.TYPE; "+
@@ -400,13 +406,13 @@ public class CdiTestUtilities {
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/event/Event.java",
-                "package javax.enterprise.event; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.event; " +
                 "public interface Event<T>  {" +
                 " void fire( T event ); "+
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/decorator/Delegate.java",
-                "package javax.decorator; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".decorator; " +
                 "import static java.lang.annotation.ElementType.FIELD; "+
                 "import static java.lang.annotation.ElementType.PARAMETER; "+
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
@@ -418,7 +424,7 @@ public class CdiTestUtilities {
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/decorator/Decorator.java",
-                "package javax.decorator; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".decorator; " +
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import static java.lang.annotation.ElementType.TYPE; "+
                 "import java.lang.annotation.*; "+
@@ -430,17 +436,17 @@ public class CdiTestUtilities {
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/inject/Instance.java",
-                "package javax.enterprise.inject; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.inject; " +
                 "public interface Instance<T>  extends java.lang.Iterable<T> {" +
                 " void fire( T event ); "+
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/inject/spi/Extension.java",
-                "package javax.enterprise.inject.spi; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.inject.spi; " +
                 "public interface Extension  {}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/interceptor/InterceptorBinding.java",
-                "package javax.interceptor; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".interceptor; " +
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import static java.lang.annotation.ElementType.ANNOTATION_TYPE; "+
                 "import java.lang.annotation.*; "+
@@ -451,7 +457,7 @@ public class CdiTestUtilities {
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/interceptor/Interceptor.java",
-                "package javax.interceptor; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".interceptor; " +
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import static java.lang.annotation.ElementType.TYPE; "+
                 "import java.lang.annotation.*; "+
@@ -462,7 +468,7 @@ public class CdiTestUtilities {
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/interceptor/Interceptors.java",
-                "package javax.interceptor; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".interceptor; " +
                 "import static java.lang.annotation.RetentionPolicy.RUNTIME; "+
                 "import static java.lang.annotation.ElementType.TYPE; "+
                 "import static java.lang.annotation.ElementType.METHOD; "+
@@ -475,7 +481,7 @@ public class CdiTestUtilities {
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/ejb/Singleton.java",
-                "package javax.ejb; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".ejb; " +
                 "import static java.lang.annotation.ElementType.TYPE; "+
                 "import java.lang.annotation.*; "+
                 "import java.lang.annotation.RetentionPolicy; "+
@@ -488,7 +494,7 @@ public class CdiTestUtilities {
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/ejb/Stateful.java",
-                "package javax.ejb; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".ejb; " +
                 "import static java.lang.annotation.ElementType.TYPE; "+
                 "import java.lang.annotation.*; "+
                 "import java.lang.annotation.RetentionPolicy; "+
@@ -501,7 +507,7 @@ public class CdiTestUtilities {
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/ejb/PostActivate.java",
-                "package javax.ejb; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".ejb; " +
                 "import static java.lang.annotation.ElementType.METHOD; "+
                 "import java.lang.annotation.*; "+
                 "import java.lang.annotation.RetentionPolicy; "+
@@ -511,15 +517,55 @@ public class CdiTestUtilities {
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/inject/spi/InjectionPoint.java",
-                "package javax.enterprise.inject.spi; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.inject.spi; " +
                 "public interface InjectionPoint  {" +
                 "}");
         
         TestUtilities.copyStringToFileObject(mySourceRoot, "javax/enterprise/context/spi/Context.java",
-                "package javax.enterprise.context.spi; " +
+                "package " + (jakartaVariant ? "jakarta" : "javax") + ".enterprise.context.spi; " +
                 "public interface Context  {" +
                 "}");
     }
-    
-    private FileObject mySourceRoot;
+
+    public Path setupJakartaMarker() throws IOException {
+        Path tempDir = Files.createTempDirectory("jakartaMarker");
+        Path packageDir;
+        if(jakartaVariant) {
+            packageDir = tempDir.resolve("jakarta/inject");
+        } else {
+            packageDir = tempDir.resolve("javax/inject");
+        }
+        Files.createDirectories(packageDir);
+        TestUtilities.copyStringToFile(packageDir.resolve("Qualifier.class").toFile(), "");
+        return tempDir;
+    }
+
+    public void deleteTree(Path targetPath) throws IOException {
+        Files.walkFileTree(targetPath, new FileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path t, BasicFileAttributes bfa) throws IOException {
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path t, BasicFileAttributes bfa) throws IOException {
+                Files.delete(t);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path t, IOException ioe) throws IOException {
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path t, IOException ioe) throws IOException {
+                Files.delete(t);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    private final FileObject mySourceRoot;
+    private final boolean jakartaVariant;
 }

@@ -19,28 +19,21 @@
     under the License.
 
 -->
-<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="11" height="17" version="1.1" viewBox="0 0 11 17">
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="11" height="17" version="1.1" viewBox="0 0 11 17">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
   <defs>
     <style>
-      .cls-1 {
-        fill: #000;
-      }
-
-      .cls-1, .cls-2 {
-        stroke-width: 0px;
-      }
-
-      .cls-3 {
-        opacity: .33;
-      }
-
-      .cls-2 {
+      .st0 {
         fill: #e9e9e9;
+      }
+
+      .st1 {
+        opacity: .33;
       }
     </style>
   </defs>
-  <polygon class="cls-2" points="2.5 .5 10.5 8.5 2.5 16.5 .5 14.5 6.5 8.5 .5 2.5 2.5 .5"/>
-  <g class="cls-3">
-    <path class="cls-1" d="M2.5,1.914l6.586,6.586-6.586,6.586-.586-.586,5.293-5.293.707-.707-.707-.707L1.914,2.5l.586-.586M2.5.5L.5,2.5l6,6L.5,14.5l2,2,8-8L2.5.5h0Z"/>
+  <polygon class="st0" points="2.5 .5 10.5 8.5 2.5 16.5 .5 14.5 6.5 8.5 .5 2.5 2.5 .5"/>
+  <g class="st1">
+    <path d="M2.5,1.914l6.586,6.586-6.586,6.586-.586-.586,5.293-5.293.707-.707-.707-.707L1.914,2.5l.586-.586M2.5.5L.5,2.5l6,6L.5,14.5l2,2,8-8L2.5.5h0Z"/>
   </g>
 </svg>

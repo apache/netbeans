@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #ecc66b;
+      }
+
+      .st1 {
+        fill: #f0c373;
+      }
+
+      .st2 {
+        fill: #af9447;
+      }
+
+      .st3 {
+        opacity: .33;
+      }
+
+      .st4 {
+        fill: #ead4a7;
+        opacity: .5;
+      }
+
+      .st5 {
+        fill: #775e20;
+      }
+
+      .st6 {
+        fill: #f5eedc;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="st1" x="7.111" y="6.111" width="7.778" height="7.778" transform="translate(-3.849 10.707) rotate(-45)"/>
+    <g class="st3">
+      <path d="M11,5.914l4.086,4.086-4.086,4.086-4.086-4.086,4.086-4.086M11,4.5l-5.5,5.5,5.5,5.5,5.5-5.5-5.5-5.5h0Z"/>
+    </g>
+  </g>
+  <g>
+    <g>
+      <polygon class="st0" points=".5 9.5 .5 2.286 1.611 .5 8.389 .5 9.5 2.286 9.5 9.5 .5 9.5"/>
+      <path class="st5" d="M8.111,1l.889,1.429v6.571H1V2.429l.889-1.429h6.222M8.667,0H1.333L0,2.143v7.857h10V2.143l-1.333-2.143h0Z"/>
+    </g>
+    <polygon class="st4" points="10 2.143 8.667 0 1.333 0 0 2.143 1 2.359 9 2.359 10 2.143"/>
+    <rect class="st2" y="5.5" width="10" height=".5"/>
+    <rect class="st2" x="-.083" y="4.75" width="10" height=".5" transform="translate(9.917 .083) rotate(90)"/>
+    <rect class="st2" x="1" y="2.359" width="8" height=".5"/>
+    <rect class="st6" x="6" y="4" width="2" height="1"/>
+  </g>
+</svg>

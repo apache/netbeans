@@ -19,49 +19,46 @@
     under the License.
 
 -->
-<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
   <defs>
     <style>
-      .cls-1 {
+      .st0 {
         fill: #5b5b5b;
       }
 
-      .cls-1, .cls-2, .cls-3 {
-        stroke-width: 0px;
-      }
-
-      .cls-2 {
+      .st1 {
         fill: #4a4a4a;
       }
 
-      .cls-3 {
+      .st2 {
         fill: #ececec;
       }
     </style>
   </defs>
   <g>
-    <rect class="cls-2" y="2" width="1" height="1"/>
-    <rect class="cls-2" y="4" width="1" height="1"/>
-    <rect class="cls-2" y="6" width="1" height="1"/>
-    <rect class="cls-2" y="8" width="1" height="1"/>
-    <rect class="cls-2" y="10" width="1" height="1"/>
-    <rect class="cls-2" x="12" y="2" width="1" height="1"/>
-    <rect class="cls-2" x="12" y="4" width="1" height="1"/>
-    <rect class="cls-2" x="12" y="6" width="1" height="1"/>
-    <rect class="cls-2" width="1" height="1"/>
-    <rect class="cls-2" x="2" width="1" height="1"/>
-    <rect class="cls-2" x="4" width="1" height="1"/>
-    <rect class="cls-2" x="6" width="1" height="1"/>
-    <rect class="cls-2" x="8" width="1" height="1"/>
-    <rect class="cls-2" x="10" width="1" height="1"/>
-    <rect class="cls-2" x="12" width="1" height="1"/>
-    <rect class="cls-2" x="2" y="10" width="1" height="1"/>
-    <rect class="cls-2" x="4" y="10" width="1" height="1"/>
-    <rect class="cls-2" x="6" y="10" width="1" height="1"/>
-    <rect class="cls-2" x="8" y="10" width="1" height="1"/>
+    <rect class="st1" y="2" width="1" height="1"/>
+    <rect class="st1" y="4" width="1" height="1"/>
+    <rect class="st1" y="6" width="1" height="1"/>
+    <rect class="st1" y="8" width="1" height="1"/>
+    <rect class="st1" y="10" width="1" height="1"/>
+    <rect class="st1" x="12" y="2" width="1" height="1"/>
+    <rect class="st1" x="12" y="4" width="1" height="1"/>
+    <rect class="st1" x="12" y="6" width="1" height="1"/>
+    <rect class="st1" width="1" height="1"/>
+    <rect class="st1" x="2" width="1" height="1"/>
+    <rect class="st1" x="4" width="1" height="1"/>
+    <rect class="st1" x="6" width="1" height="1"/>
+    <rect class="st1" x="8" width="1" height="1"/>
+    <rect class="st1" x="10" width="1" height="1"/>
+    <rect class="st1" x="12" width="1" height="1"/>
+    <rect class="st1" x="2" y="10" width="1" height="1"/>
+    <rect class="st1" x="4" y="10" width="1" height="1"/>
+    <rect class="st1" x="6" y="10" width="1" height="1"/>
+    <rect class="st1" x="8" y="10" width="1" height="1"/>
   </g>
   <g>
-    <polygon class="cls-3" points="10.375 6.905 15.205 11.735 12.323 12.146 10.375 14.095 10.375 6.905"/>
-    <path class="cls-1" d="M10.75,7.811l3.659,3.659-2.015.288-.247.035-.177.177-1.22,1.22v-5.379M10,6v9l2.5-2.5,3.5-.5-6-6h0Z"/>
+    <polygon class="st2" points="10.375 6.905 15.205 11.735 12.323 12.146 10.375 14.095 10.375 6.905"/>
+    <path class="st0" d="M10.75,7.811l3.659,3.659-2.015.288-.247.035-.177.177-1.22,1.22v-5.379M10,6v9l2.5-2.5,3.5-.5-6-6h0Z"/>
   </g>
 </svg>

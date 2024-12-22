@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="enterprise/libs.jackson">
+<project basedir="." default="build" name="ide/libs.jackson">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

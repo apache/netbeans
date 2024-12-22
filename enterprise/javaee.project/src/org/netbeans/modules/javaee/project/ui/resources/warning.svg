@@ -19,32 +19,25 @@
     under the License.
 
 -->
-<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
   <defs>
     <style>
-      .cls-1 {
-        fill: #000;
-      }
-
-      .cls-1, .cls-2 {
-        stroke-width: 0px;
-      }
-
-      .cls-3 {
-        opacity: .33;
-      }
-
-      .cls-2 {
+      .st0 {
         fill: #ffdb43;
+      }
+
+      .st1 {
+        opacity: .33;
       }
     </style>
   </defs>
   <g>
-    <polygon class="cls-2" points="1.5 14 15.5 14 8.5 .5 1.5 14"/>
-    <g class="cls-3">
-      <path class="cls-1" d="M8.5,2.672l5.355,10.328H3.145L8.5,2.672M8.5.5L1.5,14h14L8.5.5h0Z"/>
+    <polygon class="st0" points="1.5 14 15.5 14 8.5 .5 1.5 14"/>
+    <g class="st1">
+      <path d="M8.5,2.672l5.355,10.328H3.145L8.5,2.672M8.5.5L1.5,14h14L8.5.5h0Z"/>
     </g>
   </g>
-  <path class="cls-1" d="M8.495,12.15c-.378,0-.678-.288-.678-.659,0-.353.301-.641.678-.641.388,0,.689.288.689.641,0,.372-.301.659-.689.659Z"/>
-  <polygon class="cls-1" points="8.05 9.75 7.9 5.75 9.1 5.75 8.95 9.75 8.05 9.75"/>
+  <path d="M8.495,12.15c-.378,0-.678-.288-.678-.659,0-.353.301-.641.678-.641.388,0,.689.288.689.641,0,.372-.301.659-.689.659Z"/>
+  <polygon points="8.05 9.75 7.9 5.75 9.1 5.75 8.95 9.75 8.05 9.75"/>
 </svg>

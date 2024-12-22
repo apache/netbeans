@@ -19,52 +19,45 @@
     under the License.
 
 -->
-<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
   <defs>
     <style>
-      .cls-1 {
-        fill: #000;
+      .st0 {
+        fill: #e9e9e9;
       }
 
-      .cls-1, .cls-2, .cls-3, .cls-4 {
-        stroke-width: 0px;
-      }
-
-      .cls-5 {
+      .st1 {
         opacity: .33;
       }
 
-      .cls-2 {
-        fill: #f5c47a;
-      }
-
-      .cls-3 {
+      .st2 {
         fill: #4a4a4a;
       }
 
-      .cls-4 {
-        fill: #e9e9e9;
+      .st3 {
+        fill: #f5c47a;
       }
     </style>
   </defs>
   <g>
-    <rect class="cls-2" width="12" height="7"/>
-    <g class="cls-5">
-      <path class="cls-1" d="M11,1v5H1V1h10M12,0H0v7h12V0h0Z"/>
+    <rect class="st3" width="12" height="7"/>
+    <g class="st1">
+      <path d="M11,1v5H1V1h10M12,0H0v7h12V0h0Z"/>
     </g>
   </g>
   <g>
-    <rect class="cls-4" x="4" y="8" width="12" height="7"/>
-    <g class="cls-5">
-      <path class="cls-1" d="M15,9v5H5v-5h10M16,8H4v7h12v-7h0Z"/>
+    <rect class="st0" x="4" y="8" width="12" height="7"/>
+    <g class="st1">
+      <path d="M15,9v5H5v-5h10M16,8H4v7h12v-7h0Z"/>
     </g>
   </g>
   <g>
-    <rect class="cls-3" x="1" y="10" width="1" height="1"/>
-    <rect class="cls-3" y="8" width="1" height="1"/>
-    <rect class="cls-3" x="13" y="2" width="1" height="1"/>
-    <rect class="cls-3" x="14" y="4" width="1" height="1"/>
-    <rect class="cls-3" x="15" y="6" width="1" height="1"/>
-    <rect class="cls-3" x="2" y="12" width="1" height="1"/>
+    <rect class="st2" x="1" y="10" width="1" height="1"/>
+    <rect class="st2" y="8" width="1" height="1"/>
+    <rect class="st2" x="13" y="2" width="1" height="1"/>
+    <rect class="st2" x="14" y="4" width="1" height="1"/>
+    <rect class="st2" x="15" y="6" width="1" height="1"/>
+    <rect class="st2" x="2" y="12" width="1" height="1"/>
   </g>
 </svg>

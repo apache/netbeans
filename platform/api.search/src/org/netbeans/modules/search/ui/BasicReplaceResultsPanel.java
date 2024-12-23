@@ -109,9 +109,7 @@ public class BasicReplaceResultsPanel extends BasicAbstractResultsPanel {
 
     private void initSplitDividerLocationHandling() {
         int location = FindDialogMemory.getDefault().getReplaceResultsDivider();
-        if (location > 0) {
-            splitPane.setDividerLocation(location);
-        }
+        splitPane.setDividerLocation(Math.max(location, 250));
         splitPane.addPropertyChangeListener((PropertyChangeEvent evt) -> {
             String pn = evt.getPropertyName();
             if (pn.equals(JSplitPane.DIVIDER_LOCATION_PROPERTY)) {

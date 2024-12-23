@@ -46,24 +46,17 @@ public class BasicSearchResultsPanel extends BasicAbstractResultsPanel {
     }
 
     private void init() {
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
-        leftPanel.add(resultsOutlineSupport.getOutlineView());
-
-        this.splitPane = new JSplitPane();
-        splitPane.setLeftComponent(leftPanel);
-        splitPane.setRightComponent(new ContextView(resultModel,
-                getExplorerManager()));
+        splitPane = new JSplitPane();
+        splitPane.setLeftComponent(resultsOutlineSupport.getOutlineView());
+        splitPane.setRightComponent(new ContextView(resultModel, getExplorerManager()));
         initSplitDividerLocationHandling();
         getContentPanel().add(splitPane);
     }
 
     private void initSplitDividerLocationHandling() {
         int location = FindDialogMemory.getDefault().getReplaceResultsDivider();
-        if (location > 0) {
-            splitPane.setDividerLocation(location);
-        }
-        splitPane.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+        splitPane.setDividerLocation(Math.max(location, 250));
+        splitPane.addPropertyChangeListener(evt -> {
             String pn = evt.getPropertyName();
             if (pn.equals(JSplitPane.DIVIDER_LOCATION_PROPERTY)) {
                 SAVE_TASK.schedule(1000);

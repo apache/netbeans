@@ -1139,6 +1139,11 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/php83/typedClassConstants_02.php", options, false, true);
     }
 
+    public void testArbitraryStaticVariableInitializers_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php83/arbitraryStaticVariableInitializers_01.php", options, false, true);
+    }
+
     public void testGH7185_01() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/issueGH7185_01.php", options, false, false);

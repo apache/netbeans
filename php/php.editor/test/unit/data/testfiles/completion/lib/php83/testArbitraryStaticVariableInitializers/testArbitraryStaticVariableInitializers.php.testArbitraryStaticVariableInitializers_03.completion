@@ -1,0 +1,4 @@
+Code completion result for source line:
+static $example3 = $this->fi|eld;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int field                       [PRIVATE]  Example

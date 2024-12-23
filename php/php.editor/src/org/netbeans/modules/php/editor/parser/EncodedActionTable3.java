@@ -4288,10 +4288,8 @@ public class EncodedActionTable3 {
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
-        sb.append("\010");
+        sb.append("\006");
         sb.append("\127");
-        sb.append("\ufd8d");
-        sb.append("\151");
         sb.append("\ufd8d");
         sb.append("\231");
         sb.append("\ufd8d");
@@ -4528,5 +4526,7 @@ public class EncodedActionTable3 {
         sb.append("\156");
         sb.append("\ufef2");
         sb.append("\230");
+        sb.append("\ufef2");
+        sb.append("\244");
     }
 }

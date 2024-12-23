@@ -29,8 +29,6 @@ public class EncodedActionTable18 {
     protected EncodedActionTable18() {
         sb = new StringBuilder();
         sb.append("\uff3d");
-        sb.append("\075");
-        sb.append("\uff3d");
         sb.append("\077");
         sb.append("\uff3d");
         sb.append("\100");
@@ -4528,5 +4526,7 @@ public class EncodedActionTable18 {
         sb.append("\212");
         sb.append("\062");
         sb.append("\213");
+        sb.append("\073");
+        sb.append("\214");
     }
 }

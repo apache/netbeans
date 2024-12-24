@@ -75,6 +75,7 @@ export let client: Promise<NbLanguageClient>;
 export let clientRuntimeJDK : string | null = null;
 export const MINIMAL_JDK_VERSION = 17;
 export const TEST_PROGRESS_EVENT: string = "testProgress";
+const TEST_ADAPTER_CREATED_EVENT: string = "testAdapterCreated";
 let testAdapter: NbTestAdapter | undefined;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
@@ -1534,6 +1535,10 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     c.start().then(() => {
         if (isJavaSupportEnabled()) {
             testAdapter = new NbTestAdapter();
+            const testAdapterCreatedListeners = listeners.get(TEST_ADAPTER_CREATED_EVENT);
+            testAdapterCreatedListeners?.forEach(listener => {
+                commands.executeCommand(listener);
+            })
         }
         c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
         c.onRequest(HtmlPageRequest.type, showHtmlPage);

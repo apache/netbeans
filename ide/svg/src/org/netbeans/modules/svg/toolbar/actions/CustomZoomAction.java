@@ -28,7 +28,9 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.actions.CallableSystemAction;
 import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.windows.TopComponent;
 
 /**
  * Action that can always be invoked and work procedurally.
@@ -44,78 +46,69 @@ public class CustomZoomAction extends CallableSystemAction {
      */
     static final long serialVersionUID = 8247068408606777895L;
 
-    private SVGViewerElement svgViewerElement;
-
-    public void setSVGViewerElement(SVGViewerElement svgViewerElement) {
-        this.svgViewerElement = svgViewerElement;
-    }
-
     /**
      * Actually performs action.
      */
     @Override
     public void performAction() {
-        final Dialog[] dialogs = new Dialog[1];
-        final CustomZoomPanel zoomPanel = new CustomZoomPanel();
+        TopComponent currentComponent = TopComponent.getRegistry().getActivated();
+        Lookup tcLookup = currentComponent != null ? currentComponent.getLookup() : null;
+        SVGViewerElement svgViewerElement = tcLookup != null ? tcLookup.lookup(SVGViewerElement.class) : null;
+        if (svgViewerElement != null) {
+            final Dialog[] dialogs = new Dialog[1];
+            final CustomZoomPanel zoomPanel = new CustomZoomPanel();
 
-        zoomPanel.setEnlargeFactor(1);
-        zoomPanel.setDecreaseFactor(1);
+            zoomPanel.setEnlargeFactor(1);
+            zoomPanel.setDecreaseFactor(1);
 
-        DialogDescriptor dd = new DialogDescriptor(
-            zoomPanel,
-            NbBundle.getMessage(CustomZoomAction.class, "LBL_CustomZoomAction"),
-            true,
-            DialogDescriptor.OK_CANCEL_OPTION,
-            DialogDescriptor.OK_OPTION,
-            new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ev) {
-                if (ev.getSource() == DialogDescriptor.OK_OPTION) {
-                    int enlargeFactor;
-                    int decreaseFactor;
+            DialogDescriptor dd = new DialogDescriptor(
+                zoomPanel,
+                NbBundle.getMessage(CustomZoomAction.class, "LBL_CustomZoomAction"),
+                true,
+                DialogDescriptor.OK_CANCEL_OPTION,
+                DialogDescriptor.OK_OPTION,
+                new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ev) {
+                    if (ev.getSource() == DialogDescriptor.OK_OPTION) {
+                        int enlargeFactor;
+                        int decreaseFactor;
 
-                    try {
-                        enlargeFactor = zoomPanel.getEnlargeFactor();
-                        decreaseFactor = zoomPanel.getDecreaseFactor();
-                    } catch (NumberFormatException nfe) {
-                        notifyInvalidInput();
-                        return;
+                        try {
+                            enlargeFactor = zoomPanel.getEnlargeFactor();
+                            decreaseFactor = zoomPanel.getDecreaseFactor();
+                        } catch (NumberFormatException nfe) {
+                            notifyInvalidInput();
+                            return;
+                        }
+
+                        // Invalid values.
+                        if (enlargeFactor == 0 || decreaseFactor == 0) {
+                            notifyInvalidInput();
+                            return;
+                        }
+
+                        svgViewerElement.customZoom(enlargeFactor, decreaseFactor);
+                        dialogs[0].setVisible(false);
+                        dialogs[0].dispose();
+                    } else {
+                        dialogs[0].setVisible(false);
+                        dialogs[0].dispose();
                     }
-
-                    // Invalid values.
-                    if (enlargeFactor == 0 || decreaseFactor == 0) {
-                        notifyInvalidInput();
-                        return;
-                    }
-
-                    performZoom(enlargeFactor, decreaseFactor);
-                    dialogs[0].setVisible(false);
-                    dialogs[0].dispose();
-                } else {
-                    dialogs[0].setVisible(false);
-                    dialogs[0].dispose();
                 }
-            }
 
-            private void notifyInvalidInput() {
-                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(
-                    NbBundle.getMessage(CustomZoomAction.class, "MSG_InvalidValues"),
-                    NotifyDescriptor.ERROR_MESSAGE
-                ));
-            }
+                private void notifyInvalidInput() {
+                    DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(
+                        NbBundle.getMessage(CustomZoomAction.class, "MSG_InvalidValues"),
+                        NotifyDescriptor.ERROR_MESSAGE
+                    ));
+                }
 
-        } // End of annonymnous ActionListener.
-        );
-        dialogs[0] = DialogDisplayer.getDefault().createDialog(dd);
-        dialogs[0].setVisible(true);
-
-    }
-
-    /**
-     * Performs customized zoom.
-     */
-    private void performZoom(int enlargeFactor, int decreaseFactor) {
-        svgViewerElement.customZoom(enlargeFactor, decreaseFactor);
+            } // End of annonymnous ActionListener.
+            );
+            dialogs[0] = DialogDisplayer.getDefault().createDialog(dd);
+            dialogs[0].setVisible(true);
+        }
     }
 
     /**

@@ -23,7 +23,9 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.actions.CallableSystemAction;
 import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.windows.TopComponent;
 
 /**
  * Action which zooms out of an svg.
@@ -39,18 +41,17 @@ public class ZoomOutAction extends CallableSystemAction {
      */
     static final long serialVersionUID = 1859897546585041051L;
 
-    private SVGViewerElement svgViewerElement;
-
-    public void setSVGViewerElement(SVGViewerElement svgViewerElement) {
-        this.svgViewerElement = svgViewerElement;
-    }
-
     /**
      * Peforms action.
      */
     @Override
     public void performAction() {
-        svgViewerElement.zoomOut();
+        TopComponent currentComponent = TopComponent.getRegistry().getActivated();
+        Lookup tcLookup = currentComponent != null ? currentComponent.getLookup() : null;
+        SVGViewerElement svgViewerElement = tcLookup != null ? tcLookup.lookup(SVGViewerElement.class) : null;
+        if (svgViewerElement != null) {
+            svgViewerElement.zoomOut();
+        }
     }
 
     /**

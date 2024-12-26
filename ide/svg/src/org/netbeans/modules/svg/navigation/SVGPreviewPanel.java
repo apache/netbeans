@@ -41,7 +41,7 @@ public class SVGPreviewPanel extends JPanel {
     private final Color background = UIManager.getColor("Table.background");
     private final Color foreground = UIManager.getColor("Table.foreground");
 
-    public void setSvg(SVGDocument svgDoc) {
+    public void setSVG(SVGDocument svgDoc) {
         this.svgDocument = svgDoc;
         this.setBackground(background);
         this.revalidate();

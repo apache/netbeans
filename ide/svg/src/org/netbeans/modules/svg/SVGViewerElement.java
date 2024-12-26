@@ -43,6 +43,8 @@ import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 
 /**
@@ -63,6 +65,7 @@ public class SVGViewerElement implements MultiViewElement {
     private static final Logger LOG = Logger.getLogger(SVGViewerElement.class.getName());
 
     private final SVGDataObject dataObject;
+    private final Lookup lookup;
     private transient JToolBar toolbar;
     private transient JComponent component;
     private transient MultiViewElementCallback callback;
@@ -97,8 +100,13 @@ public class SVGViewerElement implements MultiViewElement {
         }
     };
 
+    @SuppressWarnings({"this-escape", "LeakingThisInConstructor"})
     public SVGViewerElement(Lookup lookup) {
-        dataObject = lookup.lookup(SVGDataObject.class);
+        this.dataObject = lookup.lookup(SVGDataObject.class);
+        this.lookup = new ProxyLookup(
+                Lookups.proxy(() -> dataObject.getLookup()),
+                Lookups.singleton(this)
+        );
     }
 
     @Override
@@ -127,7 +135,7 @@ public class SVGViewerElement implements MultiViewElement {
 
     @Override
     public Lookup getLookup() {
-        return dataObject.getLookup();
+        return lookup;
     }
 
     @Override

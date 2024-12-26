@@ -52,7 +52,7 @@ import org.xml.sax.InputSource;
     displayName = "#LBL_SVG_LOADER",
     mimeType = SVGDataObject.MIME_TYPE,
     extension = {"svg", "SVG"},
-    position = 20367
+    position = 21367
 )
 @DataObject.Registration(
     mimeType = SVGDataObject.MIME_TYPE,

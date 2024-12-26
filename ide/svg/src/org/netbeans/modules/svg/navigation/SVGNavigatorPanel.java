@@ -20,7 +20,6 @@ package org.netbeans.modules.svg.navigation;
 
 import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.parser.SVGLoader;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -108,7 +107,7 @@ public class SVGNavigatorPanel implements NavigatorPanel {
         }
 
         if (fileChangeListener == null) {
-            fileChangeListener = new SvgFileChangeAdapter();
+            fileChangeListener = new SVGFileChangeAdapter();
         }
         currentDataObject.getPrimaryFile().addFileChangeListener(fileChangeListener);
         setNewContent(currentDataObject);
@@ -143,14 +142,14 @@ public class SVGNavigatorPanel implements NavigatorPanel {
             }
 
             if (panelUI == null) {
-                return;
+                getComponent();
             }
 
             try {
                 SVGLoader svgLoader = new SVGLoader();
                 SVGDocument svgDocument = svgLoader.load(fo.toURL());
 
-                SwingUtilities.invokeLater(() -> panelUI.setSvg(svgDocument));
+                SwingUtilities.invokeLater(() -> panelUI.setSVG(svgDocument));
             } catch (Exception ex) {
                 LOG.log(Level.SEVERE, ex.getMessage());
             }
@@ -187,7 +186,7 @@ public class SVGNavigatorPanel implements NavigatorPanel {
         }
     }
 
-    private class SvgFileChangeAdapter extends FileChangeAdapter {
+    private class SVGFileChangeAdapter extends FileChangeAdapter {
 
         @Override
         public void fileChanged(final FileEvent fe) {

@@ -34,6 +34,7 @@ import org.netbeans.modules.svg.SVGViewerElement;
 import org.netbeans.modules.svg.toolbar.actions.ZoomOutAction;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
+import org.openide.util.actions.SystemAction;
 
 /**
  *
@@ -52,12 +53,6 @@ public class SVGViewerToolbar {
     public JToolBar createToolbar(SVGViewerElement svgViewerElement) {
         this.svgViewerElement = svgViewerElement;
 
-        // Initialisiere die CustomZoomAction nur einmal
-        if (customZoomAction == null) {
-            customZoomAction = new CustomZoomAction();
-            customZoomAction.setSVGViewerElement(svgViewerElement);
-        }
-
         JToolBar toolBar = new JToolBar();
 
         toolBar.putClientProperty("JToolBar.isRollover", Boolean.TRUE); //NOI18N
@@ -65,30 +60,20 @@ public class SVGViewerToolbar {
         toolBar.setName(NbBundle.getMessage(SVGViewerToolbar.class, "ACSN_Toolbar"));
         toolBar.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(SVGViewerToolbar.class, "ACSD_Toolbar"));
 
-        ZoomOutAction zoomOutAction = new ZoomOutAction();
-        zoomOutAction.setSVGViewerElement(svgViewerElement);
-        JButton outButton = new JButton(zoomOutAction);
+        JButton outButton = new JButton(SystemAction.get(ZoomOutAction.class));
         outButton.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/image/zoomOut.gif", false));
         outButton.setToolTipText(NbBundle.getMessage(ZoomOutAction.class, "LBL_ZoomOut"));
         outButton.setMnemonic(NbBundle.getMessage(SVGViewerToolbar.class, "ACS_Out_BTN_Mnem").charAt(0));
         outButton.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(SVGViewerToolbar.class, "ACSD_Out_BTN"));
         outButton.setText("");
-        outButton.addActionListener((ActionEvent e) -> {
-            svgViewerElement.zoomOut();
-        });
         toolBar.add(outButton);
         toolbarButtons.add(outButton);
 
-        ZoomInAction zoomInAction = new ZoomInAction();
-        zoomInAction.setSVGViewerElement(svgViewerElement);
-        JButton inButton = new JButton(zoomInAction);
+        JButton inButton = new JButton(SystemAction.get(ZoomInAction.class));
         inButton.setToolTipText(NbBundle.getMessage(ZoomInAction.class, "LBL_ZoomIn"));
         inButton.setMnemonic(NbBundle.getMessage(SVGViewerToolbar.class, "ACS_In_BTN_Mnem").charAt(0));
         inButton.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(SVGViewerToolbar.class, "ACSD_In_BTN"));
         inButton.setText("");
-        inButton.addActionListener((ActionEvent e) -> {
-            svgViewerElement.zoomIn();
-        });
         toolBar.add(inButton);
         toolbarButtons.add(inButton);
 
@@ -182,7 +167,7 @@ public class SVGViewerToolbar {
 
     private JButton createZoomButton() {
         // PENDING buttons should have their own icons.
-        JButton button = new JButton(customZoomAction);
+        JButton button = new JButton(SystemAction.get(CustomZoomAction.class));
         button.setToolTipText(NbBundle.getMessage(CustomZoomAction.class, "LBL_CustomZoom"));
         button.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(SVGViewerToolbar.class, "ACS_Zoom_BTN"));
 

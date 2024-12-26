@@ -18,9 +18,7 @@
  */
 package org.netbeans.modules.search.ui;
 
-import java.beans.PropertyChangeEvent;
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
+import javax.swing.JComponent;
 import javax.swing.JSplitPane;
 import org.netbeans.modules.search.BasicComposition;
 import org.netbeans.modules.search.ContextView;
@@ -34,44 +32,37 @@ import org.openide.util.RequestProcessor;
  * @author jhavlin
  */
 public class BasicSearchResultsPanel extends BasicAbstractResultsPanel {
-    private final RequestProcessor.Task SAVE_TASK = RequestProcessor.getDefault().create(new BasicSearchResultsPanel.SaveTask());
-    private JSplitPane splitPane;
 
-    public BasicSearchResultsPanel(ResultModel resultModel,
-            BasicComposition composition, boolean details, Node infoNode) {
-        super(resultModel, composition, details,
-                new ResultsOutlineSupport(false, details, resultModel,
-                composition, infoNode));
-        init();
+    public BasicSearchResultsPanel(ResultModel resultModel, BasicComposition composition, boolean details, Node infoNode) {
+        this(resultModel, composition, details, 
+                new ResultsOutlineSupport(false, details, resultModel, composition, infoNode));
     }
 
-    private void init() {
-        splitPane = new JSplitPane();
-        splitPane.setLeftComponent(resultsOutlineSupport.getOutlineView());
-        splitPane.setRightComponent(new ContextView(resultModel, getExplorerManager()));
-        initSplitDividerLocationHandling();
+    BasicSearchResultsPanel(ResultModel resultModel, BasicComposition composition, boolean details, ResultsOutlineSupport resultsOutlineSupport) {
+        super(resultModel, composition, details, resultsOutlineSupport);
+
+        JSplitPane splitPane = new JSplitPane();
+        splitPane.setLeftComponent(createLeftComponent());
+        splitPane.setRightComponent(createRightComponent());
         getContentPanel().add(splitPane);
-    }
 
-    private void initSplitDividerLocationHandling() {
+        // divider persistance
+        RequestProcessor.Task dividerSaveTask = RequestProcessor.getDefault().create(() ->
+            FindDialogMemory.getDefault().setReplaceResultsDivider(splitPane.getDividerLocation())
+        );
         int location = FindDialogMemory.getDefault().getReplaceResultsDivider();
         splitPane.setDividerLocation(Math.max(location, 250));
-        splitPane.addPropertyChangeListener(evt -> {
-            String pn = evt.getPropertyName();
-            if (pn.equals(JSplitPane.DIVIDER_LOCATION_PROPERTY)) {
-                SAVE_TASK.schedule(1000);
-            }
-        });
+        splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, e ->
+            dividerSaveTask.schedule(1000)
+        );
     }
 
-    private class SaveTask implements Runnable {
-
-        @Override
-        public void run() {
-            if (splitPane != null) {
-                FindDialogMemory.getDefault().setReplaceResultsDivider(
-                        splitPane.getDividerLocation());
-            }
-        }
+    protected JComponent createLeftComponent() {
+        return resultsOutlineSupport.getOutlineView();
     }
+
+    protected JComponent createRightComponent() {
+        return new ContextView(resultModel, getExplorerManager());
+    }
+
 }

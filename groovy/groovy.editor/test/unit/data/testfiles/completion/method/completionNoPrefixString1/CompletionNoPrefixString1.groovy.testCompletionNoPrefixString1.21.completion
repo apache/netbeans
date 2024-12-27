@@ -1,5 +1,5 @@
 Code completion result for source line:
-['cat', 'elephant']*.|
+println "Hello $name!".|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 METHOD     addShutdownHook(Closure)                   void
@@ -8,6 +8,7 @@ METHOD     any(Closure)                               boolean
 METHOD     asBoolean()                                boolean
 METHOD     asType(Class)                              Object
 METHOD     bitwiseNegate()                            Pattern
+METHOD     build(GroovyObject)             [PUBLIC]   void
 METHOD     capitalize()                               String
 METHOD     center(Number)                             String
 METHOD     center(Number, CharSequence)               String
@@ -23,10 +24,12 @@ METHOD     collect(Collection, Closure)               Collection
 METHOD     collectReplacements(Closure)               String
 METHOD     collectReplacements(List)                  String
 METHOD     compare(CharSequence, CharSequ  [STATIC,   int
+METHOD     compareTo(Object)               [PUBLIC]   int
 METHOD     compareTo(String)               [PUBLIC]   int
+METHOD     compareTo(T)                    [PUBLIC]   int
 METHOD     compareToIgnoreCase(String)     [PUBLIC]   int
 METHOD     concat(String)                  [PUBLIC]   String
-METHOD     contains(CharSequence)          [PUBLIC]   boolean
+METHOD     contains(CharSequence)                     boolean
 METHOD     containsIgnoreCase(CharSequenc             boolean
 METHOD     contentEquals(CharSequence)     [PUBLIC]   boolean
 METHOD     contentEquals(StringBuffer)     [PUBLIC]   boolean
@@ -47,12 +50,13 @@ METHOD     each(Closure)                              Object
 METHOD     eachLine(Closure)                          Object
 METHOD     eachLine(int, Closure)                     Object
 METHOD     eachMatch(CharSequence, Closur             CharSequence
-METHOD     eachMatch(Pattern, Closure)                String
+METHOD     eachMatch(Pattern, Closure)                CharSequence
 METHOD     eachMatch(String, Closure)                 String
 METHOD     eachWithIndex(Closure)                     Object
 METHOD     endsWith(String)                [PUBLIC]   boolean
 METHOD     endsWithAny(CharSequence[])                boolean
 METHOD     endsWithIgnoreCase(CharSequenc             boolean
+METHOD     equals(GString)                 [PUBLIC]   boolean
 METHOD     equals(Object)                  [PUBLIC]   boolean
 METHOD     equalsIgnoreCase(String)        [PUBLIC]   boolean
 METHOD     every()                                    boolean
@@ -102,6 +106,11 @@ METHOD     getClass()                      [PUBLIC]   Class<?>
 METHOD     getMetaClass()                             MetaClass
 METHOD     getMetaPropertyValues()                    List
 METHOD     getProperties()                            Map
+METHOD     getProperty(String)             [PUBLIC]   Object
+METHOD     getStrings()                    [PUBLIC]   String[]
+METHOD     getValue(int)                   [PUBLIC]   Object
+METHOD     getValueCount()                 [PUBLIC]   int
+METHOD     getValues()                     [PUBLIC]   Object[]
 METHOD     grep()                                     Collection
 METHOD     grep(Object)                               Collection
 METHOD     hasProperty(String)                        MetaProperty
@@ -110,19 +119,21 @@ METHOD     identity(Closure)                          Object
 METHOD     indent(int)                     [PUBLIC]   String
 METHOD     indexOf(String)                 [PUBLIC]   int
 METHOD     indexOf(String, int)            [PUBLIC]   int
+METHOD     indexOf(String, int, int)       [PUBLIC]   int
 METHOD     indexOf(int)                    [PUBLIC]   int
 METHOD     indexOf(int, int)               [PUBLIC]   int
+METHOD     indexOf(int, int, int)          [PUBLIC]   int
 METHOD     inject(Closure)                            Object
 METHOD     inject(Object, Closure)                    Object
 METHOD     inspect()                                  String
 METHOD     intern()                        [PUBLIC]   String
-METHOD     invokeMethod(String, Object)               Object
+METHOD     invokeMethod(String, Object)    [PUBLIC]   Object
 METHOD     is(Object)                                 boolean
 METHOD     isAllWhitespace()                          boolean
 METHOD     isAtLeast(String)                          Boolean
 METHOD     isBigDecimal()                             boolean
 METHOD     isBigInteger()                             boolean
-METHOD     isBlank()                       [PUBLIC]   boolean
+METHOD     isBlank()                                  boolean
 METHOD     isCase(Object)                             boolean
 METHOD     isDouble()                                 boolean
 METHOD     isEmpty()                       [PUBLIC]   boolean
@@ -137,7 +148,7 @@ METHOD     lastIndexOf(String)             [PUBLIC]   int
 METHOD     lastIndexOf(String, int)        [PUBLIC]   int
 METHOD     lastIndexOf(int)                [PUBLIC]   int
 METHOD     lastIndexOf(int, int)           [PUBLIC]   int
-METHOD     leftShift(Object)                          StringBuffer
+METHOD     leftShift(Object)                          StringBuilder
 METHOD     length()                        [PUBLIC]   int
 METHOD     lines()                         [PUBLIC]   Stream<String>
 METHOD     matches(Pattern)                           boolean
@@ -147,6 +158,7 @@ METHOD     metaClass(Closure)                         MetaClass
 METHOD     minus(Object)                              String
 METHOD     minus(Pattern)                             String
 METHOD     multiply(Number)                           String
+METHOD     negate()                        [PUBLIC]   Pattern
 METHOD     next()                                     String
 METHOD     normalize()                                String
 METHOD     notify()                        [PUBLIC]   void
@@ -158,7 +170,9 @@ METHOD     padLeft(Number, CharSequence)              String
 METHOD     padRight(Number)                           String
 METHOD     padRight(Number, CharSequence)             String
 METHOD     plus(CharSequence)                         String
+METHOD     plus(GString)                   [PUBLIC]   GString
 METHOD     plus(Object)                               String
+METHOD     plus(String)                    [PUBLIC]   GString
 METHOD     previous()                                 String
 METHOD     print(Object)                              void
 METHOD     print(PrintWriter)                         void
@@ -191,6 +205,7 @@ METHOD     respondsTo(String)                         List
 METHOD     respondsTo(String, Object)                 List
 METHOD     reverse()                                  String
 METHOD     setMetaClass(MetaClass)                    void
+METHOD     setProperty(String, Object)     [PUBLIC]   void
 METHOD     sha256()                                   String
 METHOD     size()                                     int
 METHOD     sleep(long)                                void
@@ -201,6 +216,7 @@ METHOD     split(String)                   [PUBLIC]   String[]
 METHOD     split(String, int)              [PUBLIC]   String[]
 METHOD     splitEachLine(CharSequence, Cl             Object
 METHOD     splitEachLine(Pattern, Closure             Object
+METHOD     splitWithDelimiters(String, in  [PUBLIC]   String[]
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
 METHOD     startsWith(String)              [PUBLIC]   boolean
@@ -209,7 +225,7 @@ METHOD     startsWithAny(CharSequence[])              boolean
 METHOD     startsWithIgnoreCase(CharSeque             boolean
 METHOD     stream()                                   Stream
 METHOD     strip()                         [PUBLIC]   String
-METHOD     stripIndent()                   [PUBLIC]   String
+METHOD     stripIndent()                              String
 METHOD     stripIndent(boolean)                       String
 METHOD     stripIndent(int)                           String
 METHOD     stripLeading()                  [PUBLIC]   String
@@ -279,8 +295,15 @@ METHOD     wait(long, int)                 [PUBLIC]   void
 METHOD     with(Closure)                              Object
 METHOD     with(boolean, Closure)                     Object
 METHOD     withTraits(Class[])                        Object
+METHOD     writeTo(Writer)                 [PUBLIC]   Writer
 FIELD      CASE_INSENSITIVE_ORDER          [STATIC,   Comparator<String>
+FIELD      EMPTY                           [STATIC,   GString
+FIELD      EMPTY_OBJECT_ARRAY              [STATIC,   Object[]
+FIELD      EMPTY_STRING_ARRAY              [STATIC,   String[]
 FIELD      blank                           [PUBLIC]   boolean
 FIELD      bytes                           [PUBLIC]   byte[]
 FIELD      class                           [PUBLIC]   Class
 FIELD      empty                           [PUBLIC]   boolean
+FIELD      strings                         [PUBLIC]   String[]
+FIELD      valueCount                      [PUBLIC]   int
+FIELD      values                          [PUBLIC]   Object[]

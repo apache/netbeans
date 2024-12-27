@@ -110,8 +110,10 @@ METHOD     identity(Closure)                          Object
 METHOD     indent(int)                     [PUBLIC]   String
 METHOD     indexOf(String)                 [PUBLIC]   int
 METHOD     indexOf(String, int)            [PUBLIC]   int
+METHOD     indexOf(String, int, int)       [PUBLIC]   int
 METHOD     indexOf(int)                    [PUBLIC]   int
 METHOD     indexOf(int, int)               [PUBLIC]   int
+METHOD     indexOf(int, int, int)          [PUBLIC]   int
 METHOD     inject(Closure)                            Object
 METHOD     inject(Object, Closure)                    Object
 METHOD     inspect()                                  String
@@ -201,6 +203,7 @@ METHOD     split(String)                   [PUBLIC]   String[]
 METHOD     split(String, int)              [PUBLIC]   String[]
 METHOD     splitEachLine(CharSequence, Cl             Object
 METHOD     splitEachLine(Pattern, Closure             Object
+METHOD     splitWithDelimiters(String, in  [PUBLIC]   String[]
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
 METHOD     startsWith(String)              [PUBLIC]   boolean

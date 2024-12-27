@@ -1,6 +1,11 @@
 Code completion result for source line:
-(1..3).any {println |}
+Bar bar = new Bar(|)
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PARAMETER  a: int                                     null
+PARAMETER  b: int                                     null
+PARAMETER  c: int                                     null
+PARAMETER  d: int                                     null
+PARAMETER  e: Object                                  null
 ------------------------------------
 PACKAGE    com                                        null
 PACKAGE    groovy                                     null
@@ -32,6 +37,7 @@ CLASS      Arrays                                     null
 CLASS      AssertionError                             null
 CLASS      Authenticator                              null
 CLASS      AutoCloseable                              null
+CLASS      Bar                                        null
 CLASS      Base64                                     null
 CLASS      BenchmarkInterceptor                       null
 CLASS      BigDecimal                                 null
@@ -79,7 +85,6 @@ CLASS      Collection                                 null
 CLASS      Collections                                null
 CLASS      Comparable                                 null
 CLASS      Comparator                                 null
-CLASS      Compiler                                   null
 CLASS      ConcurrentModificationExceptio             null
 CLASS      ConfigBinding                              null
 CLASS      ConfigObject                               null
@@ -114,6 +119,7 @@ CLASS      Double                                     null
 CLASS      DoubleSummaryStatistics                    null
 CLASS      DuplicateFormatFlagsException              null
 CLASS      EOFException                               null
+CLASS      EmptyConstructor                           null
 CLASS      EmptyRange                                 null
 CLASS      EmptyStackException                        null
 CLASS      Enum                                       null
@@ -154,6 +160,7 @@ CLASS      FilterWriter                               null
 CLASS      Float                                      null
 CLASS      Flushable                                  null
 CLASS      FormatFlagsConversionMismatchE             null
+CLASS      FormatProcessor                            null
 CLASS      Formattable                                null
 CLASS      FormattableFlags                           null
 CLASS      Formatter                                  null
@@ -219,7 +226,6 @@ CLASS      InheritableThreadLocal                     null
 CLASS      InputMismatchException                     null
 CLASS      InputStream                                null
 CLASS      InputStreamReader                          null
-CLASS      InsideClosure1                             null
 CLASS      InstantiationError                         null
 CLASS      InstantiationException                     null
 CLASS      IntRange                                   null
@@ -255,6 +261,7 @@ CLASS      MalformedURLException                      null
 CLASS      Map                                        null
 CLASS      MapEntry                                   null
 CLASS      MapWithDefault                             null
+CLASS      MatchException                             null
 CLASS      Math                                       null
 CLASS      MetaArrayLengthProperty                    null
 CLASS      MetaBeanProperty                           null
@@ -383,6 +390,7 @@ CLASS      RuntimeException                           null
 CLASS      RuntimePermission                          null
 CLASS      SafeVarargs                                null
 CLASS      Scanner                                    null
+CLASS      ScopedValue                                null
 CLASS      Script                                     null
 CLASS      ScriptException                            null
 CLASS      SecureCacheResponse                        null
@@ -390,6 +398,9 @@ CLASS      SecurityException                          null
 CLASS      SecurityManager                            null
 CLASS      Sequence                                   null
 CLASS      SequenceInputStream                        null
+CLASS      SequencedCollection                        null
+CLASS      SequencedMap                               null
+CLASS      SequencedSet                               null
 CLASS      Serial                                     null
 CLASS      Serializable                               null
 CLASS      SerializablePermission                     null
@@ -433,6 +444,7 @@ CLASS      StringBuilder                              null
 CLASS      StringIndexOutOfBoundsExceptio             null
 CLASS      StringJoiner                               null
 CLASS      StringReader                               null
+CLASS      StringTemplate                             null
 CLASS      StringTokenizer                            null
 CLASS      StringWriter                               null
 CLASS      StringWriterIOException                    null
@@ -501,136 +513,7 @@ CLASS      WeakHashMap                                null
 CLASS      Writable                                   null
 CLASS      WriteAbortedException                      null
 CLASS      Writer                                     null
-METHOD     addShutdownHook(Closure)                   void
-METHOD     any()                                      boolean
-METHOD     any(Closure)                               boolean
-METHOD     asBoolean()                                boolean
-METHOD     asType(Class)                              Object
-METHOD     clone()                         [PROTECTE  Object
-METHOD     collect()                                  Collection
-METHOD     collect(Closure)                           List
-METHOD     collect(Collection, Closure)               Collection
-METHOD     dump()                                     String
-METHOD     each(Closure)                              Object
-METHOD     eachWithIndex(Closure)                     Object
-METHOD     equals(Object)                  [PUBLIC]   boolean
-METHOD     evaluate(File)                  [PUBLIC]   Object
-METHOD     evaluate(String)                [PUBLIC]   Object
-METHOD     every()                                    boolean
-METHOD     every(Closure)                             boolean
-METHOD     finalize()                      [PROTECTE  void
-METHOD     find()                                     Object
-METHOD     find(Closure)                              Object
-METHOD     findAll()                                  List
-METHOD     findAll(Closure)                           List
-METHOD     findIndexOf(Closure)                       int
-METHOD     findIndexOf(int, Closure)                  int
-METHOD     findIndexValues(Closure)                   List
-METHOD     findIndexValues(Number, Closur             List
-METHOD     findLastIndexOf(Closure)                   int
-METHOD     findLastIndexOf(int, Closure)              int
-METHOD     findResult(Closure)                        Object
-METHOD     findResult(Object, Closure)                Object
-METHOD     getAt(String)                              Object
-METHOD     getBinding()                    [PUBLIC]   Binding
-METHOD     getClass()                      [PUBLIC]   Class<?>
-METHOD     getMetaClass()                             MetaClass
-METHOD     getMetaPropertyValues()                    List
-METHOD     getProperties()                            Map
-METHOD     getProperty(String)             [PUBLIC]   Object
-METHOD     grep()                                     Collection
-METHOD     grep(Object)                               Collection
-METHOD     hasProperty(String)                        MetaProperty
-METHOD     hashCode()                      [PUBLIC]   int
-METHOD     identity(Closure)                          Object
-METHOD     inject(Closure)                            Object
-METHOD     inject(Object, Closure)                    Object
-METHOD     inspect()                                  String
-METHOD     invokeMethod(String, Object)               Object
-METHOD     is(Object)                                 boolean
-METHOD     isCase(Object)                             boolean
-METHOD     iterator()                                 Iterator
-METHOD     main(String[])                  [STATIC,   void
-METHOD     metaClass(Closure)                         MetaClass
-METHOD     notify()                        [PUBLIC]   void
-METHOD     notifyAll()                     [PUBLIC]   void
-METHOD     print(Object)                              void
-METHOD     print(PrintWriter)                         void
-METHOD     printf(String, Object)                     void
-METHOD     printf(String, Object)                     void
-METHOD     println()                                  void
-METHOD     println(Object)                            void
-METHOD     println(PrintWriter)                       void
-METHOD     putAt(String, Object)                      void
-METHOD     respondsTo(String)                         List
-METHOD     respondsTo(String, Object)                 List
-METHOD     run()                           [PUBLIC]   Object
-METHOD     run(File, String[])             [PUBLIC]   void
-METHOD     setBinding(Binding)             [PUBLIC]   void
-METHOD     setMetaClass(MetaClass)                    void
-METHOD     setProperty(String, Object)     [PUBLIC]   void
-METHOD     sleep(long)                                void
-METHOD     sleep(long, Closure)                       void
-METHOD     split(Closure)                             Collection
-METHOD     sprintf(String, Object)                    String
-METHOD     sprintf(String, Object)                    String
-METHOD     stream()                                   Stream
-METHOD     tap(Closure)                               Object
-METHOD     test()                          [PUBLIC]   boolean
-METHOD     toString()                                 String
-METHOD     use(Class, Closure)                        Object
-METHOD     use(List, Closure)                         Object
-METHOD     use(Object[])                              Object
-METHOD     wait()                          [PUBLIC]   void
-METHOD     wait(long)                      [PUBLIC]   void
-METHOD     wait(long, int)                 [PUBLIC]   void
-METHOD     with(Closure)                              Object
-METHOD     with(boolean, Closure)                     Object
-METHOD     withTraits(Class[])                        Object
+CLASS      WrongThreadException                       null
 FIELD      binding                         [PUBLIC]   Binding
 FIELD      class                           [PUBLIC]   Class
 FIELD      defaultMetaClass                [PRIVATE]  MetaClass
-VARIABLE   it                                         Object
-KEYWORD    assert                                     null
-KEYWORD    boolean                                    null
-KEYWORD    break                                      null
-KEYWORD    byte                                       null
-KEYWORD    case                                       null
-KEYWORD    catch                                      null
-KEYWORD    char                                       null
-KEYWORD    continue                                   null
-KEYWORD    def                                        null
-KEYWORD    default                                    null
-KEYWORD    do                                         null
-KEYWORD    double                                     null
-KEYWORD    else                                       null
-KEYWORD    extends                                    null
-KEYWORD    final                                      null
-KEYWORD    finally                                    null
-KEYWORD    float                                      null
-KEYWORD    for                                        null
-KEYWORD    if                                         null
-KEYWORD    in                                         null
-KEYWORD    instanceof                                 null
-KEYWORD    int                                        null
-KEYWORD    long                                       null
-KEYWORD    native                                     null
-KEYWORD    new                                        null
-KEYWORD    private                                    null
-KEYWORD    property                                   null
-KEYWORD    protected                                  null
-KEYWORD    public                                     null
-KEYWORD    return                                     null
-KEYWORD    short                                      null
-KEYWORD    static                                     null
-KEYWORD    strictfp                                   null
-KEYWORD    super                                      null
-KEYWORD    switch                                     null
-KEYWORD    synchronized                               null
-KEYWORD    this                                       null
-KEYWORD    throw                                      null
-KEYWORD    transient                                  null
-KEYWORD    try                                        null
-KEYWORD    void                                       null
-KEYWORD    volatile                                   null
-KEYWORD    while                                      null

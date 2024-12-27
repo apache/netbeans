@@ -69,10 +69,10 @@ METHOD     find(CharSequence, Closure)                String
 METHOD     find(Closure)                              Object
 METHOD     find(Pattern)                              String
 METHOD     find(Pattern, Closure)                     String
-METHOD     findAll()                                  Collection
+METHOD     findAll()                                  List
 METHOD     findAll(CharSequence)                      List
 METHOD     findAll(CharSequence, Closure)             List
-METHOD     findAll(Closure)                           Collection
+METHOD     findAll(Closure)                           List
 METHOD     findAll(Pattern)                           List
 METHOD     findAll(Pattern, Closure)                  List
 METHOD     findIndexOf(Closure)                       int

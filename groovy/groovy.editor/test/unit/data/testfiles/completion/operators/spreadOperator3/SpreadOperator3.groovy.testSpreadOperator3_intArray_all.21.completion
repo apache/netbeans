@@ -1,5 +1,5 @@
 Code completion result for source line:
-new Byte().|
+[1,2]*.|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 METHOD     abs()                                      int
@@ -9,20 +9,23 @@ METHOD     any()                                      boolean
 METHOD     any(Closure)                               boolean
 METHOD     asBoolean()                                boolean
 METHOD     asType(Class)                              Object
+METHOD     bitCount(int)                   [STATIC,   int
 METHOD     bitwiseNegate()                            Number
 METHOD     byteValue()                     [PUBLIC]   byte
 METHOD     collect()                                  Collection
 METHOD     collect(Closure)                           List
 METHOD     collect(Collection, Closure)               Collection
-METHOD     compare(byte, byte)             [STATIC,   int
-METHOD     compareTo(Byte)                 [PUBLIC]   int
+METHOD     compare(int, int)               [STATIC,   int
 METHOD     compareTo(Character)                       int
+METHOD     compareTo(Integer)              [PUBLIC]   int
 METHOD     compareTo(Number)                          int
-METHOD     compareUnsigned(byte, byte)     [STATIC,   int
-METHOD     decode(String)                  [STATIC,   Byte
-METHOD     describeConstable()             [PUBLIC]   Optional<DynamicConstantDesc<Byte>>
+METHOD     compareUnsigned(int, int)       [STATIC,   int
+METHOD     compress(int, int)              [STATIC,   int
+METHOD     decode(String)                  [STATIC,   Integer
+METHOD     describeConstable()             [PUBLIC]   Optional<Integer>
 METHOD     div(Character)                             Number
 METHOD     div(Number)                                Number
+METHOD     divideUnsigned(int, int)        [STATIC,   int
 METHOD     doubleValue()                   [PUBLIC]   double
 METHOD     downto(Number, Closure)                    void
 METHOD     dump()                                     String
@@ -31,6 +34,7 @@ METHOD     eachWithIndex(Closure)                     Object
 METHOD     equals(Object)                  [PUBLIC]   boolean
 METHOD     every()                                    boolean
 METHOD     every(Closure)                             boolean
+METHOD     expand(int, int)                [STATIC,   int
 METHOD     find()                                     Object
 METHOD     find(Closure)                              Object
 METHOD     findAll()                                  List
@@ -45,7 +49,11 @@ METHOD     findResult(Closure)                        Object
 METHOD     findResult(Object, Closure)                Object
 METHOD     floatValue()                    [PUBLIC]   float
 METHOD     getAt(String)                              Object
+METHOD     getChars(int, int, byte[])      [STATIC]   int
 METHOD     getClass()                      [PUBLIC]   Class<?>
+METHOD     getInteger(String)              [STATIC,   Integer
+METHOD     getInteger(String, Integer)     [STATIC,   Integer
+METHOD     getInteger(String, int)         [STATIC,   Integer
 METHOD     getMetaClass()                             MetaClass
 METHOD     getMetaPropertyValues()                    List
 METHOD     getProperties()                            Map
@@ -53,7 +61,8 @@ METHOD     grep()                                     Collection
 METHOD     grep(Object)                               Collection
 METHOD     hasProperty(String)                        MetaProperty
 METHOD     hashCode()                      [PUBLIC]   int
-METHOD     hashCode(byte)                  [STATIC,   int
+METHOD     hashCode(int)                   [STATIC,   int
+METHOD     highestOneBit(int)              [STATIC,   int
 METHOD     identity(Closure)                          Object
 METHOD     inject(Closure)                            Object
 METHOD     inject(Object, Closure)                    Object
@@ -68,7 +77,10 @@ METHOD     isCase(Object)                             boolean
 METHOD     iterator()                                 Iterator
 METHOD     leftShift(Number)                          Number
 METHOD     longValue()                     [PUBLIC]   long
+METHOD     lowestOneBit(int)               [STATIC,   int
+METHOD     max(int, int)                   [STATIC,   int
 METHOD     metaClass(Closure)                         MetaClass
+METHOD     min(int, int)                   [STATIC,   int
 METHOD     minus(Character)                           Number
 METHOD     minus(Number)                              Number
 METHOD     mod(Number)                                Number
@@ -78,12 +90,19 @@ METHOD     next()                                     Number
 METHOD     notify()                        [PUBLIC]   void
 METHOD     notifyAll()                     [PUBLIC]   void
 METHOD     numberAwareCompareTo(Comparabl             int
+METHOD     numberOfLeadingZeros(int)       [STATIC,   int
+METHOD     numberOfTrailingZeros(int)      [STATIC,   int
 METHOD     or(Number)                                 Number
-METHOD     parseByte(String)               [STATIC,   byte
-METHOD     parseByte(String, int)          [STATIC,   byte
+METHOD     parseInt(CharSequence, int, in  [STATIC,   int
+METHOD     parseInt(String)                [STATIC,   int
+METHOD     parseInt(String, int)           [STATIC,   int
+METHOD     parseUnsignedInt(CharSequence,  [STATIC,   int
+METHOD     parseUnsignedInt(String)        [STATIC,   int
+METHOD     parseUnsignedInt(String, int)   [STATIC,   int
 METHOD     plus(Character)                            Number
 METHOD     plus(Number)                               Number
 METHOD     plus(String)                               String
+METHOD     power(Integer)                             Number
 METHOD     power(Number)                              Number
 METHOD     previous()                                 Number
 METHOD     print(Object)                              void
@@ -94,12 +113,19 @@ METHOD     println()                                  void
 METHOD     println(Object)                            void
 METHOD     println(PrintWriter)                       void
 METHOD     putAt(String, Object)                      void
+METHOD     remainderUnsigned(int, int)     [STATIC,   int
+METHOD     resolveConstantDesc(Lookup)     [PUBLIC]   Integer
 METHOD     respondsTo(String)                         List
 METHOD     respondsTo(String, Object)                 List
+METHOD     reverse(int)                    [STATIC,   int
+METHOD     reverseBytes(int)               [STATIC,   int
 METHOD     rightShift(Number)                         Number
 METHOD     rightShiftUnsigned(Number)                 Number
+METHOD     rotateLeft(int, int)            [STATIC,   int
+METHOD     rotateRight(int, int)           [STATIC,   int
 METHOD     setMetaClass(MetaClass)                    void
 METHOD     shortValue()                    [PUBLIC]   short
+METHOD     signum(int)                     [STATIC,   int
 METHOD     sleep(long)                                void
 METHOD     sleep(long, Closure)                       void
 METHOD     split(Closure)                             Collection
@@ -107,27 +133,34 @@ METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
 METHOD     step(Number, Number, Closure)              void
 METHOD     stream()                                   Stream
+METHOD     stringSize(int)                 [STATIC]   int
+METHOD     sum(int, int)                   [STATIC,   int
 METHOD     tap(Closure)                               Object
 METHOD     times(Closure)                             void
 METHOD     toBigDecimal()                             BigDecimal
 METHOD     toBigInteger()                             BigInteger
+METHOD     toBinaryString(int)             [STATIC,   String
 METHOD     toDouble()                                 Double
 METHOD     toFloat()                                  Float
+METHOD     toHexString(int)                [STATIC,   String
 METHOD     toInteger()                                Integer
 METHOD     toLong()                                   Long
+METHOD     toOctalString(int)              [STATIC,   String
 METHOD     toString()                      [PUBLIC]   String
-METHOD     toString(byte)                  [STATIC,   String
-METHOD     toUnsignedInt(byte)             [STATIC,   int
-METHOD     toUnsignedLong(byte)            [STATIC,   long
+METHOD     toString(int)                   [STATIC,   String
+METHOD     toString(int, int)              [STATIC,   String
+METHOD     toUnsignedLong(int)             [STATIC,   long
+METHOD     toUnsignedString(int)           [STATIC,   String
+METHOD     toUnsignedString(int, int)      [STATIC,   String
 METHOD     unaryMinus()                               Number
 METHOD     unaryPlus()                                Number
 METHOD     upto(Number, Closure)                      void
 METHOD     use(Class, Closure)                        Object
 METHOD     use(List, Closure)                         Object
 METHOD     use(Object[])                              Object
-METHOD     valueOf(String)                 [STATIC,   Byte
-METHOD     valueOf(String, int)            [STATIC,   Byte
-METHOD     valueOf(byte)                   [STATIC,   Byte
+METHOD     valueOf(String)                 [STATIC,   Integer
+METHOD     valueOf(String, int)            [STATIC,   Integer
+METHOD     valueOf(int)                    [STATIC,   Integer
 METHOD     wait()                          [PUBLIC]   void
 METHOD     wait(long)                      [PUBLIC]   void
 METHOD     wait(long, int)                 [PUBLIC]   void
@@ -135,9 +168,4 @@ METHOD     with(Closure)                              Object
 METHOD     with(boolean, Closure)                     Object
 METHOD     withTraits(Class[])                        Object
 METHOD     xor(Number)                                Number
-FIELD      BYTES                           [STATIC,   int
-FIELD      MAX_VALUE                       [STATIC,   byte
-FIELD      MIN_VALUE                       [STATIC,   byte
-FIELD      SIZE                            [STATIC,   int
-FIELD      TYPE                            [STATIC,   Class<Byte>
 FIELD      class                           [PUBLIC]   Class

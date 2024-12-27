@@ -39,7 +39,7 @@ METHOD     every()                                    boolean
 METHOD     every(Closure)                             boolean
 METHOD     find()                                     Object
 METHOD     find(Closure)                              Entry
-METHOD     findAll()                                  Collection
+METHOD     findAll()                                  List
 METHOD     findAll(Closure)                           Map
 METHOD     findIndexOf(Closure)                       int
 METHOD     findIndexOf(int, Closure)                  int

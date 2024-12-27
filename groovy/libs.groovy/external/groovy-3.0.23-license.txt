@@ -1,6 +1,6 @@
 Name: Groovy
-Version: 3.0.8
-Files: groovy-3.0.8.jar groovy-ant-3.0.8.jar
+Version: 3.0.23
+Files: groovy-3.0.23.jar groovy-ant-3.0.23.jar
 Description: Groovy Language distribution.
 License: Apache-2.0-groovy
 Origin: http://groovy-lang.org/

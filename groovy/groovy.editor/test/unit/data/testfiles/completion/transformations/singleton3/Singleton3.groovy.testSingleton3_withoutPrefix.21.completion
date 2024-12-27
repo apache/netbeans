@@ -2,6 +2,7 @@ Code completion result for source line:
 Singleton3.|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
+METHOD     accessFlags()                   [PUBLIC]   Set<AccessFlag>
 METHOD     addShutdownHook(Closure)                   void
 METHOD     any()                                      boolean
 METHOD     any(Closure)                               boolean
@@ -123,6 +124,7 @@ METHOD     isPrimitive()                   [PUBLIC]   boolean
 METHOD     isRecord()                      [PUBLIC]   boolean
 METHOD     isSealed()                      [PUBLIC]   boolean
 METHOD     isSynthetic()                   [PUBLIC]   boolean
+METHOD     isUnnamedClass()                [PUBLIC]   boolean
 METHOD     iterator()                                 Iterator
 METHOD     metaClass(Closure)                         MetaClass
 METHOD     mixin(Class)                               void
@@ -213,3 +215,4 @@ FIELD      superclass                      [PUBLIC]   Class
 FIELD      synthetic                       [PUBLIC]   boolean
 FIELD      typeName                        [PUBLIC]   String
 FIELD      typeParameters                  [PUBLIC]   TypeVariable[]
+FIELD      unnamedClass                    [PUBLIC]   boolean

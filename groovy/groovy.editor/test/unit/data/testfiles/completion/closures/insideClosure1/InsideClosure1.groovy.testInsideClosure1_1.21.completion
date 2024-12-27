@@ -79,7 +79,6 @@ CLASS      Collection                                 null
 CLASS      Collections                                null
 CLASS      Comparable                                 null
 CLASS      Comparator                                 null
-CLASS      Compiler                                   null
 CLASS      ConcurrentModificationExceptio             null
 CLASS      ConfigBinding                              null
 CLASS      ConfigObject                               null
@@ -154,6 +153,7 @@ CLASS      FilterWriter                               null
 CLASS      Float                                      null
 CLASS      Flushable                                  null
 CLASS      FormatFlagsConversionMismatchE             null
+CLASS      FormatProcessor                            null
 CLASS      Formattable                                null
 CLASS      FormattableFlags                           null
 CLASS      Formatter                                  null
@@ -255,6 +255,7 @@ CLASS      MalformedURLException                      null
 CLASS      Map                                        null
 CLASS      MapEntry                                   null
 CLASS      MapWithDefault                             null
+CLASS      MatchException                             null
 CLASS      Math                                       null
 CLASS      MetaArrayLengthProperty                    null
 CLASS      MetaBeanProperty                           null
@@ -383,6 +384,7 @@ CLASS      RuntimeException                           null
 CLASS      RuntimePermission                          null
 CLASS      SafeVarargs                                null
 CLASS      Scanner                                    null
+CLASS      ScopedValue                                null
 CLASS      Script                                     null
 CLASS      ScriptException                            null
 CLASS      SecureCacheResponse                        null
@@ -390,6 +392,9 @@ CLASS      SecurityException                          null
 CLASS      SecurityManager                            null
 CLASS      Sequence                                   null
 CLASS      SequenceInputStream                        null
+CLASS      SequencedCollection                        null
+CLASS      SequencedMap                               null
+CLASS      SequencedSet                               null
 CLASS      Serial                                     null
 CLASS      Serializable                               null
 CLASS      SerializablePermission                     null
@@ -433,6 +438,7 @@ CLASS      StringBuilder                              null
 CLASS      StringIndexOutOfBoundsExceptio             null
 CLASS      StringJoiner                               null
 CLASS      StringReader                               null
+CLASS      StringTemplate                             null
 CLASS      StringTokenizer                            null
 CLASS      StringWriter                               null
 CLASS      StringWriterIOException                    null
@@ -501,6 +507,7 @@ CLASS      WeakHashMap                                null
 CLASS      Writable                                   null
 CLASS      WriteAbortedException                      null
 CLASS      Writer                                     null
+CLASS      WrongThreadException                       null
 METHOD     addShutdownHook(Closure)                   void
 METHOD     any()                                      boolean
 METHOD     any(Closure)                               boolean

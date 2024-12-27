@@ -145,14 +145,14 @@ public class SVGNavigatorPanel implements NavigatorPanel {
                 getComponent();
             }
 
-            try {
-                SVGLoader svgLoader = new SVGLoader();
-                SVGDocument svgDocument = svgLoader.load(fo.toURL());
+            SVGLoader svgLoader = new SVGLoader();
+            SVGDocument svgDocument = svgLoader.load(fo.toURL());
 
-                SwingUtilities.invokeLater(() -> panelUI.setSVG(svgDocument));
-            } catch (Exception ex) {
-                LOG.log(Level.SEVERE, ex.getMessage());
+            if (svgDocument == null) {
+                return;
             }
+
+            SwingUtilities.invokeLater(() -> panelUI.setSVG(svgDocument));
         });
     }
 
@@ -199,7 +199,7 @@ public class SVGNavigatorPanel implements NavigatorPanel {
                         currentDataObject = DataObject.find(fe.getFile());
                         setNewContent(currentDataObject);
                     } catch (DataObjectNotFoundException ex) {
-                        Logger.getLogger(SVGNavigatorPanel.class.getName()).info(NbBundle.getMessage(SVGNavigatorPanel.class, "ERR_DataObject"));
+                        LOG.log(Level.INFO, NbBundle.getMessage(SVGNavigatorPanel.class, "ERR_DataObject"));
                     }
                 });
             }

@@ -19,13 +19,18 @@
 package org.netbeans.modules.svg.navigation;
 
 import com.github.weisj.jsvg.SVGDocument;
+import com.github.weisj.jsvg.SVGRenderingHints;
 import com.github.weisj.jsvg.geometry.size.FloatSize;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import org.netbeans.modules.svg.SVGViewerElement;
 import org.openide.awt.GraphicsUtils;
 import org.openide.util.NbBundle;
 
@@ -35,6 +40,8 @@ import org.openide.util.NbBundle;
  * @author christian lenz
  */
 public class SVGPreviewPanel extends JPanel {
+
+    private static final Logger LOG = Logger.getLogger(SVGViewerElement.class.getName());
 
     private SVGDocument svgDocument;
     private final int stringGapSize = 10;
@@ -78,11 +85,19 @@ public class SVGPreviewPanel extends JPanel {
 
             Graphics2D g2d = (Graphics2D) g.create((this.getWidth() - scaledWidth) / 2, (this.getHeight() - scaledHeight) / 2, scaledWidth, scaledHeight);
 
-            g2d.scale(1.0 / ratio, 1.0 / ratio);
+            try {
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+                g2d.setRenderingHint(SVGRenderingHints.KEY_MASK_CLIP_RENDERING, SVGRenderingHints.VALUE_MASK_CLIP_RENDERING_ACCURACY);
 
-            svgDocument.render(this, g2d);
+                g2d.scale(1.0 / ratio, 1.0 / ratio);
 
-            g2d.dispose();
+                svgDocument.render(this, g2d);
+            } catch (Exception ex) {
+                LOG.log(Level.SEVERE, ex.getMessage());
+            } finally {
+                g2d.dispose();
+            }
         } else {
             g.setColor(Color.RED);
             FontMetrics fm = this.getFontMetrics(g.getFont());

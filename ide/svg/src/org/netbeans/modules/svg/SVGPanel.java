@@ -19,8 +19,10 @@
 package org.netbeans.modules.svg;
 
 import com.github.weisj.jsvg.SVGDocument;
-
+import com.github.weisj.jsvg.SVGRenderingHints;
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -28,6 +30,8 @@ import javax.swing.*;
  * @author Christian Lenz
  */
 public class SVGPanel extends JPanel {
+
+    private static final Logger LOG = Logger.getLogger(SVGViewerElement.class.getName());
 
     private SVGDocument svgDocument;
     private double scale = 1.0D;
@@ -84,9 +88,13 @@ public class SVGPanel extends JPanel {
         try {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+            g2d.setRenderingHint(SVGRenderingHints.KEY_MASK_CLIP_RENDERING, SVGRenderingHints.VALUE_MASK_CLIP_RENDERING_ACCURACY);
+
             g2d.scale(scale, scale);
 
             svgDocument.render(this, g2d);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, ex.getMessage());
         } finally {
             g2d.dispose();
         }

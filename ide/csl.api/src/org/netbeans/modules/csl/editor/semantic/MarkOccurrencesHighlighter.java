@@ -146,6 +146,14 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
 
         Map<OffsetRange, ColoringAttributes> highlights = finder.getOccurrences();
 
+        // Many implementatios of the OccurencesFinder don't follow the contract,
+        // that getOccurrences must not return null. Instead of blowing up with
+        // a NullPointer exception, log that problem and continue execution.
+        if (highlights == null) {
+            LOG.log(Level.WARNING, "org.netbeans.modules.csl.api.OccurrencesFinder.getOccurrences() non-null contract violation by {0}", language.getMimeType());
+            highlights = Map.of();
+        }
+
         return List.copyOf(highlights.keySet());
     }
     

@@ -280,11 +280,18 @@ public class FormatVisitor extends DefaultVisitor {
         List<Expression> expressions = node.getExpressions();
         for (Expression expression : expressions) {
             addAllUntilOffset(expression.getStartOffset());
+            // e.g. static $variable = new class() {}
+            boolean addIndent = !(expression instanceof Assignment
+                    && isAnonymousClass(((Assignment) expression).getRightHandSide()));
             if (moveNext() && lastIndex < ts.index()) {
                 addFormatToken(formatTokens); // add the first token of the expression and then add the indentation
-                formatTokens.add(new FormatToken.IndentToken(ts.offset() + ts.token().length(), options.continualIndentSize));
+                if (addIndent) {
+                    formatTokens.add(new FormatToken.IndentToken(ts.offset() + ts.token().length(), options.continualIndentSize));
+                }
                 scan(expression);
-                formatTokens.add(new FormatToken.IndentToken(expression.getEndOffset(), -1 * options.continualIndentSize));
+                if (addIndent) {
+                    formatTokens.add(new FormatToken.IndentToken(expression.getEndOffset(), -1 * options.continualIndentSize));
+                }
             }
         }
     }

@@ -14,14 +14,22 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+<#if jakartaNamespace?? && jakartaNamespace>
+import jakarta.inject.Scope;
+<#else>
 import javax.inject.Scope;
+</#if>
 
 /**
  *
  * @author ${user}
  */
 @Inherited
+<#if jakartaNamespace?? && jakartaNamespace>
+@Scope // or @jakarta.enterprise.context.NormalScope
+<#else>
 @Scope // or @javax.enterprise.context.NormalScope
+</#if>
 @Retention(RUNTIME)
 @Target({METHOD, FIELD, TYPE})
 public @interface ${name} {

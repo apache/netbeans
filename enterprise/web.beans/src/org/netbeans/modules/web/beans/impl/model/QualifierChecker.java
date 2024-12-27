@@ -20,6 +20,7 @@ package org.netbeans.modules.web.beans.impl.model;
 
 import java.lang.annotation.ElementType;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,16 +30,20 @@ import javax.lang.model.element.AnnotationMirror;
 import org.netbeans.modules.web.beans.analysis.analyzer.annotation.QualifierVerifier;
 import org.netbeans.modules.web.beans.analysis.analyzer.annotation.TargetVerifier;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.QUALIFIER_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.QUALIFIER_FQN_JAKARTA;
+
 
 /**
  * @author ads
  *
  */
 class QualifierChecker extends RuntimeAnnotationChecker implements Checker {
-    
-    private static final String QUALIFIER_TYPE_ANNOTATION=
-        "javax.inject.Qualifier";                               // NOI18N
-    
+
+    private static final List<String> ANNOTATIONS = List.of(
+            QUALIFIER_FQN, QUALIFIER_FQN_JAKARTA
+    );
+
     QualifierChecker(){
         this( false );
     }
@@ -75,8 +80,8 @@ class QualifierChecker extends RuntimeAnnotationChecker implements Checker {
      * @see org.netbeans.modules.web.beans.impl.model.RuntimeAnnotationChecker#getAnnotation()
      */
     @Override
-    protected String getAnnotation() {
-        return QUALIFIER_TYPE_ANNOTATION;
+    protected List<String> getAnnotation() {
+        return ANNOTATIONS;
     }
     
 
@@ -126,9 +131,13 @@ class QualifierChecker extends RuntimeAnnotationChecker implements Checker {
     
     static {
         BUILT_IN_QUALIFIERS.add(WebBeansModelProviderImpl.ANY_QUALIFIER_ANNOTATION);
+        BUILT_IN_QUALIFIERS.add(WebBeansModelProviderImpl.ANY_QUALIFIER_ANNOTATION_JAKARTA);
         BUILT_IN_QUALIFIERS.add(WebBeansModelProviderImpl.NEW_QUALIFIER_ANNOTATION);
+        BUILT_IN_QUALIFIERS.add(WebBeansModelProviderImpl.NEW_QUALIFIER_ANNOTATION_JAKARTA);
         BUILT_IN_QUALIFIERS.add(WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION);
+        BUILT_IN_QUALIFIERS.add(WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION_JAKARTA);
         BUILT_IN_QUALIFIERS.add(WebBeansModelProviderImpl.NAMED_QUALIFIER_ANNOTATION);
+        BUILT_IN_QUALIFIERS.add(WebBeansModelProviderImpl.NAMED_QUALIFIER_ANNOTATION_JAKARTA);
     }
 
     private boolean isEvent;

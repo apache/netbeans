@@ -38,6 +38,9 @@ import org.netbeans.modules.web.beans.analysis.CdiAnalysisResult;
 import org.netbeans.modules.web.beans.analysis.analyzer.MethodElementAnalyzer.MethodAnalyzer;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.PRODUCES_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.PRODUCES_FQN_JAKARTA;
+
 
 /**
  * @author ads
@@ -85,8 +88,7 @@ public class TypedMethodAnalyzer extends AbstractTypedAnalyzer implements
             List<TypeMirror> restrictedTypes, AtomicBoolean cancel , CdiAnalysisResult result )
     {
         CompilationInfo compInfo = result.getInfo();
-        if (!AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN, 
-                compInfo))
+        if (!AnnotationUtil.hasAnnotation(element, compInfo, PRODUCES_FQN_JAKARTA, PRODUCES_FQN))
         {
             return;
         }
@@ -107,25 +109,25 @@ public class TypedMethodAnalyzer extends AbstractTypedAnalyzer implements
         if ( cancel.get()){
             return;
         }
-        List<TypeMirror> restrictedSuper = getRestrictedTypes(overriddenMethod, 
+        List<TypeMirror> restrictedSuper = getRestrictedTypes(overriddenMethod,
                 compInfo, cancel);
         if ( cancel.get()){
             return;
         }
         if ( restrictedSuper == null ) {
-            if (!hasUnrestrictedOverridenType(elementType, 
+            if (!hasUnrestrictedOverridenType(elementType,
                     restrictedTypes, compInfo,overriddenMethod, superClass) )
             {
                 result.addError( element, NbBundle.getMessage(
-                            TypedMethodAnalyzer.class, "ERR_BadSpecializesMethod"));  // NOI18N 
+                            TypedMethodAnalyzer.class, "ERR_BadSpecializesMethod"));  // NOI18N
             }
         }
-        else { 
+        else {
             if (!hasRestrictedType(elementType, restrictedTypes, compInfo,
                     restrictedSuper))
             {
                 result.addError( element,  NbBundle.getMessage(
-                            TypedMethodAnalyzer.class, "ERR_BadSpecializesMethod"));  // NOI18N 
+                            TypedMethodAnalyzer.class, "ERR_BadSpecializesMethod"));  // NOI18N
             }
         }
     }
@@ -150,11 +152,11 @@ public class TypedMethodAnalyzer extends AbstractTypedAnalyzer implements
             return true;
         }
         else {
-            Set<TypeElement> specializedBeanTypes = getElements( 
+            Set<TypeElement> specializedBeanTypes = getElements(
                     restrictedSuper, compInfo);
-            Set<TypeElement> restrictedElements = getElements(restrictedTypes, 
+            Set<TypeElement> restrictedElements = getElements(restrictedTypes,
                     compInfo);
-            restrictedElements.add( compInfo.getElements().getTypeElement( 
+            restrictedElements.add( compInfo.getElements().getTypeElement(
                     Object.class.getCanonicalName()));
             return restrictedElements.containsAll( specializedBeanTypes );
         }
@@ -183,7 +185,7 @@ public class TypedMethodAnalyzer extends AbstractTypedAnalyzer implements
         else if ( returnOverriden instanceof DeclaredType ){
             Element returnElement = compInfo.getTypes().asElement( returnOverriden);
             if ( returnElement instanceof TypeElement ){
-                return hasUnrestrictedType((TypeElement)returnElement, 
+                return hasUnrestrictedType((TypeElement)returnElement,
                         restrictedTypes, compInfo);
             }
         }
@@ -195,9 +197,9 @@ public class TypedMethodAnalyzer extends AbstractTypedAnalyzer implements
     {
         Set<TypeElement> specializedBeanTypes = getUnrestrictedBeanTypes(
                     overriden, compInfo);
-        Set<TypeElement> restrictedElements = getElements(restrictedTypes, 
+        Set<TypeElement> restrictedElements = getElements(restrictedTypes,
                 compInfo);
-        restrictedElements.add( compInfo.getElements().getTypeElement( 
+        restrictedElements.add( compInfo.getElements().getTypeElement(
                 Object.class.getCanonicalName()));
         return restrictedElements.containsAll(specializedBeanTypes);
     }

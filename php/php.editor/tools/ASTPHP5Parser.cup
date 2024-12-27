@@ -2886,7 +2886,7 @@ static_var_list:list T_COMMA T_VARIABLE:var
     RESULT = list;
 :}
 
-| static_var_list:list T_COMMA T_VARIABLE:var T_EQUAL static_scalar:expr
+| static_var_list:list T_COMMA T_VARIABLE:var T_EQUAL expr:expr
 {:
     Variable v = new Variable(varleft, varright, var);
     Assignment assignment = new Assignment(varleft, exprright, v, Assignment.Type.EQUAL, expr);
@@ -2902,7 +2902,7 @@ static_var_list:list T_COMMA T_VARIABLE:var
     RESULT = list;
 :}
 
-| T_VARIABLE:var T_EQUAL static_scalar_with_class_instance:expr
+| T_VARIABLE:var T_EQUAL expr:expr
 {:
     Variable v = new Variable(varleft, varright, var);
     Assignment assignment = new Assignment(varleft, exprright, v, Assignment.Type.EQUAL, expr);

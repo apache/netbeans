@@ -677,10 +677,6 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     }
 
     private static boolean isCdiEnabled(Project project) {
-        org.netbeans.modules.jakarta.web.beans.CdiUtil jakartaCdiUtil = project.getLookup().lookup(org.netbeans.modules.jakarta.web.beans.CdiUtil.class);
-        if(jakartaCdiUtil != null && jakartaCdiUtil.isCdiEnabled()) {
-            return true;
-        }
         org.netbeans.modules.web.beans.CdiUtil javaxCdiUtil = project.getLookup().lookup(org.netbeans.modules.web.beans.CdiUtil.class);
         if(javaxCdiUtil != null && javaxCdiUtil.isCdiEnabled()) {
             return true;

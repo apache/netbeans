@@ -1352,6 +1352,7 @@ public class Reformatter implements ReformatTask {
                 if (!recParams.isEmpty()) {
                     spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
                     wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, recParams);
+                    spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true); // #7043
                 }
                 accept(RPAREN);
                 List<? extends Tree> impls = node.getImplementsClause();

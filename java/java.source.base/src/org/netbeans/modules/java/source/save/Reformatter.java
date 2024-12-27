@@ -109,24 +109,23 @@ public class Reformatter implements ReformatTask {
 
     public static String reformat(String text, CodeStyle style, int rightMargin) {
         StringBuilder sb = new StringBuilder(text);
-            ClassPath empty = ClassPathSupport.createClassPath(new URL[0]);
-            ClasspathInfo cpInfo = ClasspathInfo.create(JavaPlatformManager.getDefault().getDefaultPlatform().getBootstrapLibraries(), empty, empty);
-            JavacTaskImpl javacTask = JavacParser.createJavacTask(cpInfo, null, null, null, null, null, null, null, Arrays.asList(FileObjects.memoryFileObject("","Scratch.java", text)));
-            com.sun.tools.javac.util.Context ctx = javacTask.getContext();
-            JavaCompiler.instance(ctx).genEndPos = true;
-            CompilationUnitTree tree = javacTask.parse().iterator().next(); //NOI18N
-            SourcePositions sp = JavacTrees.instance(ctx).getSourcePositions();
-            TokenSequence<JavaTokenId> tokens = TokenHierarchy.create(text, JavaTokenId.language()).tokenSequence(JavaTokenId.language());
-            for (Diff diff : Pretty.reformat(text, tokens, new TreePath(tree), sp, style, rightMargin)) {
-                int start = diff.getStartOffset();
-                int end = diff.getEndOffset();
-                sb.delete(start, end);
-                String t = diff.getText();
-                if (t != null && t.length() > 0) {
-                    sb.insert(start, t);
-                }
+        ClassPath empty = ClassPathSupport.createClassPath(new URL[0]);
+        ClasspathInfo cpInfo = ClasspathInfo.create(JavaPlatformManager.getDefault().getDefaultPlatform().getBootstrapLibraries(), empty, empty);
+        JavacTaskImpl javacTask = JavacParser.createJavacTask(cpInfo, null, null, null, null, null, null, null, Arrays.asList(FileObjects.memoryFileObject("", "Scratch.java", text)));
+        com.sun.tools.javac.util.Context ctx = javacTask.getContext();
+        JavaCompiler.instance(ctx).genEndPos = true;
+        CompilationUnitTree tree = javacTask.parse().iterator().next(); //NOI18N
+        SourcePositions sp = JavacTrees.instance(ctx).getSourcePositions();
+        TokenSequence<JavaTokenId> tokens = TokenHierarchy.create(text, JavaTokenId.language()).tokenSequence(JavaTokenId.language());
+        for (Diff diff : Pretty.reformat(text, tokens, new TreePath(tree), sp, style, rightMargin)) {
+            int start = diff.getStartOffset();
+            int end = diff.getEndOffset();
+            sb.delete(start, end);
+            String t = diff.getText();
+            if (t != null && t.length() > 0) {
+                sb.insert(start, t);
             }
-
+        }
         return sb.toString();
     }
 
@@ -1337,7 +1336,6 @@ public class Reformatter implements ReformatTask {
                 accept(LPAREN);
                 List<? extends Tree> members = node.getMembers();
                 List recParams = new ArrayList<Tree>();
-
                 for (Tree member : members) {
                     if (member.getKind() == Tree.Kind.VARIABLE) {
                         ModifiersTree modifiers = ((VariableTree) member).getModifiers();
@@ -1348,7 +1346,6 @@ public class Reformatter implements ReformatTask {
                         }
                     }
                 }
-
                 if (!recParams.isEmpty()) {
                     spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
                     wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, recParams);
@@ -1400,7 +1397,6 @@ public class Reformatter implements ReformatTask {
                             }
                         }
 
-                        spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
                     }
                 } finally {
                     indent = oldIndent;
@@ -1414,7 +1410,7 @@ public class Reformatter implements ReformatTask {
                 continuationIndent = old;
             }
             return true;
-        }
+        } // scanRecord
 
         private void classLeftBracePlacement() {
             CodeStyle.BracePlacement bracePlacement = cs.getClassDeclBracePlacement();
@@ -1550,7 +1546,7 @@ public class Reformatter implements ReformatTask {
                 accept(SEMICOLON);
             }
             return true;
-        }
+        } //visitMethod
 
         @Override
         public Boolean visitModifiers(ModifiersTree node, Void p) {
@@ -4227,6 +4223,7 @@ public class Reformatter implements ReformatTask {
             }
         }
 
+        // ensures that diffs are in monotonous descending order 
         private void addDiff(Diff diff) {
             Diff d = diffs.isEmpty() ? null : diffs.getFirst();
             if (d == null || d.getStartOffset() <= diff.getStartOffset())
@@ -5717,7 +5714,7 @@ public class Reformatter implements ReformatTask {
 
         @Override
         public String toString() {
-            return "Diff<" + start + "," + end + ">:" + text; //NOI18N
+            return "Diff<" + start + "," + end + ">:'" + text+'\''; //NOI18N
         }
     }
 }

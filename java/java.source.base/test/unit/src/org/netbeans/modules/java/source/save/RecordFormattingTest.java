@@ -77,9 +77,32 @@ public class RecordFormattingTest extends NbTestCase {
 
     String content
             = """
-              record Student(String id,String lastname,String firstname) implements Serializable {
+              record Student(int id,String lastname,String firstname) implements Serializable {
+              int m(int x){ 
+              return id+x;
+              }
               } // should stay flush to left margin
               """;
+
+    public void test7043NoSpaces() throws Exception {
+        run7043("""
+                  record Student(int id, String lastname, String firstname) implements Serializable {
+                      int m(int x) {
+                          return id + x;
+                      }
+                  } // should stay flush to left margin
+                  """, false);
+    }
+
+    public void test7043WithSpaces() throws Exception {
+        run7043("""
+                  record Student( int id, String lastname, String firstname ) implements Serializable {
+                      int m( int x ) {
+                          return id + x;
+                      }
+                  } // should stay flush to left margin
+                  """, true);
+    }
 
     /**
      * The java formatter indents the final brace '}' of a record to far to the
@@ -107,28 +130,14 @@ public class RecordFormattingTest extends NbTestCase {
 
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
-
-        System.err.println("golden = " + golden.trim().length());
-        System.err.println("content = " + content.trim().length());
+//        System.err.println("\n============== start test ========================");
+        System.err.println("golden length = " + golden.trim().length());
+        System.err.println("content length = " + content.trim().length());
         reformat(doc, content, golden);
+//        System.err.println("============== passed  test ========================");
 
     }
 
-    
-    public void test7043NoSpaces() throws Exception{
-        run7043("""
-                  record Student(String id, String lastname, String firstname) implements Serializable {
-                  } // should stay flush to left margin
-                  """, false);
-    }
-
-    public void test7043WithSpaces() throws Exception{
-        run7043("""
-                  record Student( String id, String lastname, String firstname ) implements Serializable {
-                  } // should stay flush to left margin
-                  """, true);
-    }
-    
     private void reformat(Document doc, String content, String golden) throws Exception {
         reformat(doc, content, golden, 0, content.length());
     }
@@ -154,23 +163,37 @@ public class RecordFormattingTest extends NbTestCase {
         var expectedLines = expected.trim().split("\n");
         var actualLines = actual.trim().split("\n");
         // fail if not of equal length
-        assertEquals("number of lines differ :\n expected lines ='" + expected
-                + "'\n actual lines='\n" + actual
-                + "'", expectedLines.length, actualLines.length);
         String assertResult = "";
-        for (int i = 0; i < expectedLines.length; i++) {
+        if (expectedLines.length != actualLines.length) {
+            assertResult
+                    = "number of lines differ :\n expected nr of lines = " + expectedLines.length
+                    + " actual nr of lines= " + actualLines.length;
+        }
+
+        for (int i = 0; i < expectedLines.length && i < actualLines.length; i++) {
             String actualLine = actualLines[i];
             String expLine = expectedLines[i];
             if (expLine.equals(actualLine)) {
                 continue;
             }
-            assertResult += "\n at line " + (i + 1) + ": \n'" + expLine + "'\n <> \n'" + actualLine + "'";
+            assertResult += "\n expected at line " + (i + 1) + ": \n'" + expLine + "'\n not equal to actual  \n'" + actualLine + "'";
         }
         if (assertResult.equals("")) {
             return;
         }
         System.err.println(assertResult);
-        fail(assertResult);
+        System.err.println("expected");
+        for (int i = 1; i <= expectedLines.length; i++) {
+            String line = expectedLines[i-1];
+            System.err.format("%3d:  %s\n", i,line);
+            
+        }
+        System.err.println("actual");
+        for (int i = 1; i <= actualLines.length; i++) {
+            String line = actualLines[i-1];
+            System.err.format("%3d:  %s\n", i,line);
+        }
+        fail("not golden, see stderr for more info");
 
     }
 

@@ -23,6 +23,7 @@ METHOD     collect(Closure)                           List
 METHOD     collect(Collection, Closure)               Collection
 METHOD     collectReplacements(Closure)               String
 METHOD     collectReplacements(List)                  String
+METHOD     compare(CharSequence, CharSequ  [STATIC,   int
 METHOD     compareTo(Object)               [PUBLIC]   int
 METHOD     compareTo(String)               [PUBLIC]   int
 METHOD     compareTo(T)                    [PUBLIC]   int
@@ -39,6 +40,7 @@ METHOD     decodeBase64()                             byte[]
 METHOD     decodeBase64Url()                          byte[]
 METHOD     decodeHex()                                byte[]
 METHOD     denormalize()                              String
+METHOD     describeConstable()             [PUBLIC]   Optional<String>
 METHOD     digest(String)                             String
 METHOD     drop(int)                                  String
 METHOD     dropRight(int)                             String
@@ -87,6 +89,7 @@ METHOD     findResult(Closure)                        Object
 METHOD     findResult(Object, Closure)                Object
 METHOD     format(Locale, String, Object.  [STATIC,   String
 METHOD     format(String, Object...)       [STATIC,   String
+METHOD     formatted(Object...)            [PUBLIC]   String
 METHOD     getAt(Collection)                          String
 METHOD     getAt(EmptyRange)                          String
 METHOD     getAt(IntRange)                            String
@@ -113,6 +116,7 @@ METHOD     grep(Object)                               Collection
 METHOD     hasProperty(String)                        MetaProperty
 METHOD     hashCode()                      [PUBLIC]   int
 METHOD     identity(Closure)                          Object
+METHOD     indent(int)                     [PUBLIC]   String
 METHOD     indexOf(String)                 [PUBLIC]   int
 METHOD     indexOf(String, int)            [PUBLIC]   int
 METHOD     indexOf(int)                    [PUBLIC]   int
@@ -144,6 +148,7 @@ METHOD     lastIndexOf(int)                [PUBLIC]   int
 METHOD     lastIndexOf(int, int)           [PUBLIC]   int
 METHOD     leftShift(Object)                          StringBuilder
 METHOD     length()                        [PUBLIC]   int
+METHOD     lines()                         [PUBLIC]   Stream<String>
 METHOD     matches(Pattern)                           boolean
 METHOD     matches(String)                 [PUBLIC]   boolean
 METHOD     md5()                                      String
@@ -178,6 +183,7 @@ METHOD     putAt(String, Object)                      void
 METHOD     readLines()                                List
 METHOD     regionMatches(boolean, int, St  [PUBLIC]   boolean
 METHOD     regionMatches(int, String, int  [PUBLIC]   boolean
+METHOD     repeat(int)                     [PUBLIC]   String
 METHOD     replace(CharSequence, CharSequ  [PUBLIC]   String
 METHOD     replace(Map)                               String
 METHOD     replace(char, char)             [PUBLIC]   String
@@ -192,6 +198,7 @@ METHOD     replaceFirst(CharSequence, Clo             String
 METHOD     replaceFirst(Pattern, CharSequ             String
 METHOD     replaceFirst(Pattern, Closure)             String
 METHOD     replaceFirst(String, String)    [PUBLIC]   String
+METHOD     resolveConstantDesc(Lookup)     [PUBLIC]   String
 METHOD     respondsTo(String)                         List
 METHOD     respondsTo(String, Object)                 List
 METHOD     reverse()                                  String
@@ -214,12 +221,15 @@ METHOD     startsWith(String, int)         [PUBLIC]   boolean
 METHOD     startsWithAny(CharSequence[])              boolean
 METHOD     startsWithIgnoreCase(CharSeque             boolean
 METHOD     stream()                                   Stream
+METHOD     strip()                         [PUBLIC]   String
 METHOD     stripIndent()                              String
 METHOD     stripIndent(boolean)                       String
 METHOD     stripIndent(int)                           String
+METHOD     stripLeading()                  [PUBLIC]   String
 METHOD     stripMargin()                              String
 METHOD     stripMargin(CharSequence)                  String
 METHOD     stripMargin(char)                          String
+METHOD     stripTrailing()                 [PUBLIC]   String
 METHOD     subSequence(int, int)           [PUBLIC]   CharSequence
 METHOD     substring(int)                  [PUBLIC]   String
 METHOD     substring(int, int)             [PUBLIC]   String
@@ -257,6 +267,8 @@ METHOD     tokenize()                                 List
 METHOD     tokenize(CharSequence)                     List
 METHOD     tokenize(Character)                        List
 METHOD     tr(CharSequence, CharSequence)             String
+METHOD     transform(Function<? super Str  [PUBLIC]   R
+METHOD     translateEscapes()              [PUBLIC]   String
 METHOD     trim()                          [PUBLIC]   String
 METHOD     uncapitalize()                             String
 METHOD     unexpand()                                 String
@@ -285,6 +297,7 @@ FIELD      CASE_INSENSITIVE_ORDER          [STATIC,   Comparator<String>
 FIELD      EMPTY                           [STATIC,   GString
 FIELD      EMPTY_OBJECT_ARRAY              [STATIC,   Object[]
 FIELD      EMPTY_STRING_ARRAY              [STATIC,   String[]
+FIELD      blank                           [PUBLIC]   boolean
 FIELD      bytes                           [PUBLIC]   byte[]
 FIELD      class                           [PUBLIC]   Class
 FIELD      empty                           [PUBLIC]   boolean

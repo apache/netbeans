@@ -18,7 +18,9 @@ METHOD     compare(byte, byte)             [STATIC,   int
 METHOD     compareTo(Byte)                 [PUBLIC]   int
 METHOD     compareTo(Character)                       int
 METHOD     compareTo(Number)                          int
+METHOD     compareUnsigned(byte, byte)     [STATIC,   int
 METHOD     decode(String)                  [STATIC,   Byte
+METHOD     describeConstable()             [PUBLIC]   Optional<DynamicConstantDesc<Byte>>
 METHOD     div(Character)                             Number
 METHOD     div(Number)                                Number
 METHOD     doubleValue()                   [PUBLIC]   double

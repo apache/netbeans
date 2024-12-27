@@ -23,6 +23,7 @@ METHOD     computeIfAbsent(K, Function<?   [PUBLIC]   V
 METHOD     computeIfPresent(K, BiFunction  [PUBLIC]   V
 METHOD     containsKey(Object)             [PUBLIC]   boolean
 METHOD     containsValue(Object)           [PUBLIC]   boolean
+METHOD     copyOf(Map<? extends K, ? exte  [STATIC,   Map<K, V>
 METHOD     count(Closure)                             Number
 METHOD     countBy(Closure)                           Map
 METHOD     drop(int)                                  Map
@@ -30,6 +31,7 @@ METHOD     dropWhile(Closure)                         Map
 METHOD     dump()                                     String
 METHOD     each(Closure)                              Map
 METHOD     eachWithIndex(Closure)                     Map
+METHOD     entry(K, V)                     [STATIC,   Entry<K, V>
 METHOD     entrySet()                      [PUBLIC]   Set<Entry<K, V>>
 METHOD     equals(Map)                                boolean
 METHOD     equals(Object)                  [PUBLIC]   boolean
@@ -86,6 +88,18 @@ METHOD     min(Closure)                               Entry
 METHOD     minus(Map)                                 Map
 METHOD     notify()                        [PUBLIC]   void
 METHOD     notifyAll()                     [PUBLIC]   void
+METHOD     of()                            [STATIC,   Map<K, V>
+METHOD     of(K, V)                        [STATIC,   Map<K, V>
+METHOD     of(K, V, K, V)                  [STATIC,   Map<K, V>
+METHOD     of(K, V, K, V, K, V)            [STATIC,   Map<K, V>
+METHOD     of(K, V, K, V, K, V, K, V)      [STATIC,   Map<K, V>
+METHOD     of(K, V, K, V, K, V, K, V, K,   [STATIC,   Map<K, V>
+METHOD     of(K, V, K, V, K, V, K, V, K,   [STATIC,   Map<K, V>
+METHOD     of(K, V, K, V, K, V, K, V, K,   [STATIC,   Map<K, V>
+METHOD     of(K, V, K, V, K, V, K, V, K,   [STATIC,   Map<K, V>
+METHOD     of(K, V, K, V, K, V, K, V, K,   [STATIC,   Map<K, V>
+METHOD     of(K, V, K, V, K, V, K, V, K,   [STATIC,   Map<K, V>
+METHOD     ofEntries(Entry<? extends K, ?  [STATIC,   Map<K, V>
 METHOD     plus(Collection)                           Map
 METHOD     plus(Map)                                  Map
 METHOD     print(Object)                              void

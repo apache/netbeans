@@ -5,6 +5,7 @@ Singleton3.|
 METHOD     addShutdownHook(Closure)                   void
 METHOD     any()                                      boolean
 METHOD     any(Closure)                               boolean
+METHOD     arrayType()                     [PUBLIC]   Class<?>
 METHOD     asBoolean()                                boolean
 METHOD     asSubclass(Class<U>)            [PUBLIC]   Class<? extends U>
 METHOD     asType(Class)                              Object
@@ -12,6 +13,9 @@ METHOD     cast(Object)                    [PUBLIC]   T
 METHOD     collect()                                  Collection
 METHOD     collect(Closure)                           List
 METHOD     collect(Collection, Closure)               Collection
+METHOD     componentType()                 [PUBLIC]   Class<?>
+METHOD     describeConstable()             [PUBLIC]   Optional<ClassDesc>
+METHOD     descriptorString()              [PUBLIC]   String
 METHOD     desiredAssertionStatus()        [PUBLIC]   boolean
 METHOD     dump()                                     String
 METHOD     each(Closure)                              Object
@@ -31,6 +35,7 @@ METHOD     findLastIndexOf(Closure)                   int
 METHOD     findLastIndexOf(int, Closure)              int
 METHOD     findResult(Closure)                        Object
 METHOD     findResult(Object, Closure)                Object
+METHOD     forName(Module, String)         [STATIC,   Class<?>
 METHOD     forName(String)                 [STATIC,   Class<?>
 METHOD     forName(String, boolean, Class  [STATIC,   Class<?>
 METHOD     getAnnotatedInterfaces()        [PUBLIC]   AnnotatedType[]
@@ -74,10 +79,16 @@ METHOD     getMetaPropertyValues()                    List
 METHOD     getMethod(String, Class<?>...)  [PUBLIC]   Method
 METHOD     getMethods()                    [PUBLIC]   Method[]
 METHOD     getModifiers()                  [PUBLIC]   int
+METHOD     getModule()                     [PUBLIC]   Module
 METHOD     getName()                       [PUBLIC]   String
+METHOD     getNestHost()                   [PUBLIC]   Class<?>
+METHOD     getNestMembers()                [PUBLIC]   Class<?>[]
 METHOD     getPackage()                    [PUBLIC]   Package
+METHOD     getPackageName()                [PUBLIC]   String
+METHOD     getPermittedSubclasses()        [PUBLIC]   Class<?>[]
 METHOD     getProperties()                            Map
 METHOD     getProtectionDomain()           [PUBLIC]   ProtectionDomain
+METHOD     getRecordComponents()           [PUBLIC]   RecordComponent[]
 METHOD     getResource(String)             [PUBLIC]   URL
 METHOD     getResourceAsStream(String)     [PUBLIC]   InputStream
 METHOD     getSigners()                    [PUBLIC]   Object[]
@@ -102,11 +113,15 @@ METHOD     isArray()                       [PUBLIC]   boolean
 METHOD     isAssignableFrom(Class<?>)      [PUBLIC]   boolean
 METHOD     isCase(Object)                             boolean
 METHOD     isEnum()                        [PUBLIC]   boolean
+METHOD     isHidden()                      [PUBLIC]   boolean
 METHOD     isInstance(Object)              [PUBLIC]   boolean
 METHOD     isInterface()                   [PUBLIC]   boolean
 METHOD     isLocalClass()                  [PUBLIC]   boolean
 METHOD     isMemberClass()                 [PUBLIC]   boolean
+METHOD     isNestmateOf(Class<?>)          [PUBLIC]   boolean
 METHOD     isPrimitive()                   [PUBLIC]   boolean
+METHOD     isRecord()                      [PUBLIC]   boolean
+METHOD     isSealed()                      [PUBLIC]   boolean
 METHOD     isSynthetic()                   [PUBLIC]   boolean
 METHOD     iterator()                                 Iterator
 METHOD     metaClass(Closure)                         MetaClass
@@ -173,6 +188,7 @@ FIELD      enumConstants                   [PUBLIC]   Object[]
 FIELD      fields                          [PUBLIC]   Field[]
 FIELD      genericInterfaces               [PUBLIC]   Type[]
 FIELD      genericSuperclass               [PUBLIC]   Type
+FIELD      hidden                          [PUBLIC]   boolean
 FIELD      instance                        [STATIC,   Singleton3
 FIELD      interface                       [PUBLIC]   boolean
 FIELD      interfaces                      [PUBLIC]   Class[]
@@ -180,11 +196,18 @@ FIELD      localClass                      [PUBLIC]   boolean
 FIELD      memberClass                     [PUBLIC]   boolean
 FIELD      methods                         [PUBLIC]   Method[]
 FIELD      modifiers                       [PUBLIC]   int
+FIELD      module                          [PUBLIC]   Module
 FIELD      name                            [PUBLIC]   String
+FIELD      nestHost                        [PUBLIC]   Class
+FIELD      nestMembers                     [PUBLIC]   Class[]
 FIELD      package                         [PUBLIC]   Package
+FIELD      packageName                     [PUBLIC]   String
+FIELD      permittedSubclasses             [PUBLIC]   Class[]
 FIELD      primitive                       [PUBLIC]   boolean
 FIELD      protectionDomain                [PUBLIC]   ProtectionDomain
-FIELD      signers                         [PUBLIC]   Object[]
+FIELD      record                          [PUBLIC]   boolean
+FIELD      recordComponents                [PUBLIC]   RecordComponent[]
+FIELD      sealed                          [PUBLIC]   boolean
 FIELD      simpleName                      [PUBLIC]   String
 FIELD      superclass                      [PUBLIC]   Class
 FIELD      synthetic                       [PUBLIC]   boolean

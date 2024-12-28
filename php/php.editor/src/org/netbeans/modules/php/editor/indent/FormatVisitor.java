@@ -58,9 +58,13 @@ import org.netbeans.modules.php.editor.parser.astnodes.CastExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.DeclareStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.DereferencableVariable;
+import org.netbeans.modules.php.editor.parser.astnodes.DereferencedArrayAccess;
+import org.netbeans.modules.php.editor.parser.astnodes.Dispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.DoStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
@@ -89,12 +93,14 @@ import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamedArgument;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
+import org.netbeans.modules.php.editor.parser.astnodes.ParenthesisExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.ReflectionVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Statement;
+import org.netbeans.modules.php.editor.parser.astnodes.StaticDispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticStatement;
@@ -299,7 +305,7 @@ public class FormatVisitor extends DefaultVisitor {
     @Override
     public void visit(AnonymousObjectVariable node) {
         // (new Test)->method();
-        super.visit(node);
+        scan(node.getName());
         // avoid adding incorrect space for "within a method call"
         // e.g. (new Test)->method(); -> (new Test )->method();
         addAllUntilOffset(node.getEndOffset());
@@ -876,7 +882,7 @@ public class FormatVisitor extends DefaultVisitor {
             ts.movePrevious();
             scan(node.getBody());
         } else {
-            if (node.ctorParams() != null && node.ctorParams().size() > 0) {
+            if (node.ctorParams() != null && !node.ctorParams().isEmpty()) {
                 boolean addIndentation = !(path.get(1) instanceof ReturnStatement
                         || path.get(1) instanceof Assignment
                         || path.get(1) instanceof ExpressionStatement)
@@ -890,7 +896,10 @@ public class FormatVisitor extends DefaultVisitor {
                 }
                 addAllUntilOffset(node.getEndOffset());
             } else {
-                super.visit(node);
+                // e.g. new Example(); new $className();
+                // ctorParams() is empty, so, add tokens until the end offset
+                // to add WHITESPACE_WITHIN_METHOD_CALL_PARENS
+                addAllUntilOffset(node.getEndOffset());
             }
         }
     }
@@ -1259,7 +1268,9 @@ public class FormatVisitor extends DefaultVisitor {
             if (moveNext() && lastIndex < ts.index()) {
                 addFormatToken(formatTokens); // add the first token of the expression and then add the indentation
                 Expression expression = node.getExpression();
-                boolean addIndent = !(expression instanceof MethodInvocation || expression instanceof StaticMethodInvocation);
+                boolean addIndent = !(expression instanceof MethodInvocation
+                        || expression instanceof StaticMethodInvocation
+                        || isAnonymousClass(expression));
                 if (expression instanceof Assignment) {
                     // anonymous classes
                     Assignment assignment = (Assignment) expression;
@@ -2681,6 +2692,18 @@ public class FormatVisitor extends DefaultVisitor {
         ts.movePrevious();
     }
 
+    @Override
+    public void visit(DereferencableVariable node) {
+        scan(node.getExpression());
+        addAllUntilOffset(node.getEndOffset());
+    }
+
+    @Override
+    public void visit(ParenthesisExpression node) {
+        scan(node.getExpression());
+        addAllUntilOffset(node.getEndOffset());
+    }
+
     private void processUnionOrIntersectionType(List<Expression> types) {
         assert !types.isEmpty();
         final Expression lastType = types.get(types.size() - 1);
@@ -2896,6 +2919,12 @@ public class FormatVisitor extends DefaultVisitor {
                     } else if (parent instanceof UnionType) {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_DNF_TYPE_PARENS, ts.offset() + ts.token().length()));
+                    } else if (isParenthesisExpression(parent)
+                            || parent instanceof DereferencableVariable
+                            || isAnonymousObjectVariable(parent)
+                            ) {
+                        tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_OTHER_PARENS, ts.offset() + ts.token().length()));
                     } else {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     }
@@ -2936,6 +2965,11 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     } else if (parent instanceof UnionType) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_DNF_TYPE_PARENS, ts.offset()));
+                        tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                    } else if (parent instanceof ParenthesisExpression
+                            || parent instanceof DereferencableVariable
+                            || parent instanceof AnonymousObjectVariable) {
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_OTHER_PARENS, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     } else {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
@@ -3652,10 +3686,49 @@ public class FormatVisitor extends DefaultVisitor {
         return TokenUtilities.textEquals(")", token.text()); // NOI18N
     }
 
+    private static boolean isParenthesisExpression(ASTNode astNode) {
+        ASTNode node = astNode;
+        if (node instanceof ExpressionStatement) {
+            // ($example == 1);
+            node = ((ExpressionStatement) node).getExpression();
+        }
+        return node instanceof ParenthesisExpression;
+    }
+
+    private static boolean isAnonymousObjectVariable(ASTNode astNode) {
+        ASTNode node = astNode;
+        if (node instanceof ExpressionStatement) {
+            // (new $class());
+            node = ((ExpressionStatement) node).getExpression();
+            if (node instanceof DereferencedArrayAccess) {
+                // (new $class())['key'];
+                node = ((DereferencedArrayAccess) node).getMember();
+            }
+        }
+        return node instanceof AnonymousObjectVariable;
+    }
+
     private static boolean isAnonymousClass(ASTNode astNode) {
         ASTNode node = astNode;
         if (astNode instanceof NamedArgument) {
             node = ((NamedArgument) astNode).getExpression();
+        }
+
+        // new class(){}['key'], new class(){}->method()
+        while (node instanceof Dispatch
+                || node instanceof StaticDispatch
+                || node instanceof ClassInstanceCreationVariable
+                || node instanceof FunctionInvocation) {
+            if (node instanceof Dispatch) {
+                node = ((Dispatch) node).getDispatcher();
+            } else if (node instanceof StaticDispatch) {
+                node = ((StaticDispatch) node).getDispatcher();
+            } else if (node instanceof ClassInstanceCreationVariable) {
+                node = ((ClassInstanceCreationVariable) node).getName();
+            } else if (node instanceof FunctionInvocation) {
+                // $c = new class{}();
+                node = ((FunctionInvocation) node).getFunctionName().getName();
+            }
         }
         return node instanceof ClassInstanceCreation && ((ClassInstanceCreation) node).isAnonymous();
     }

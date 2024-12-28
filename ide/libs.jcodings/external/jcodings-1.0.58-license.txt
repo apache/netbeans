@@ -1,5 +1,5 @@
 Name: jcodings
-Version: 1.0.18
+Version: 1.0.58
 Description: Java-based codings helper classes for Joni and JRuby
 License: MIT-nocopyright
 Origin: https://github.com/jruby/jcodings

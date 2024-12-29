@@ -25,6 +25,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -116,10 +117,13 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
             GsfSemanticLayer layer = GsfSemanticLayer.getLayer(MarkOccurrencesHighlighter.class, doc);
             SortedSet seqs = new TreeSet<SequenceElement>();
 
-            bag.stream()
-                    .filter(range -> range != OffsetRange.NONE)
-                    .forEach(range -> seqs.add(new SequenceElement(language, range, MO)));
-        
+            for (OffsetRange range : bag) {
+                if (range != OffsetRange.NONE) {
+                    try {
+                        seqs.add(new SequenceElement(language, doc.createPosition(range.getStart()), doc.createPosition(range.getEnd()), MO));
+                    } catch (BadLocationException ex) {}
+                }
+            }
             layer.setColorings(seqs);
 
             OccurrencesMarkProvider.get(doc).setOccurrences(OccurrencesMarkProvider.createMarks(doc, bag, ES_COLOR, NbBundle.getMessage(MarkOccurrencesHighlighter.class, "LBL_ES_TOOLTIP")));

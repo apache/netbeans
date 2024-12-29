@@ -85,26 +85,34 @@ public class SVGPreviewPanel extends JPanel {
 
             Graphics2D g2d = (Graphics2D) g.create((this.getWidth() - scaledWidth) / 2, (this.getHeight() - scaledHeight) / 2, scaledWidth, scaledHeight);
 
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+            g2d.setRenderingHint(SVGRenderingHints.KEY_MASK_CLIP_RENDERING, SVGRenderingHints.VALUE_MASK_CLIP_RENDERING_ACCURACY);
+
+            g2d.scale(1.0 / ratio, 1.0 / ratio);
+
             try {
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-                g2d.setRenderingHint(SVGRenderingHints.KEY_MASK_CLIP_RENDERING, SVGRenderingHints.VALUE_MASK_CLIP_RENDERING_ACCURACY);
-
-                g2d.scale(1.0 / ratio, 1.0 / ratio);
-
                 svgDocument.render(this, g2d);
             } catch (Exception ex) {
-                LOG.log(Level.SEVERE, ex.getMessage());
+                LOG.log(Level.INFO, ex.getMessage());
+
+                drawErrorMesage(g);
             } finally {
                 g2d.dispose();
             }
         } else {
-            g.setColor(Color.RED);
-            FontMetrics fm = this.getFontMetrics(g.getFont());
-            String errMessage = NbBundle.getMessage(SVGPreviewPanel.class, "ERR_Thumbnail");
-            int stringWidth = fm.stringWidth(errMessage);
-            g.drawString(errMessage, (this.getWidth() - stringWidth) / 2, this.getHeight() / 2);
+            drawErrorMesage(g);
         }
     }
 
+    // HINT: Not yet finished
+    private void drawErrorMesage(Graphics g) {
+        g.setColor(Color.RED);
+
+        FontMetrics fm = this.getFontMetrics(g.getFont());
+        String errMessage = NbBundle.getMessage(SVGPreviewPanel.class, "ERR_Thumbnail");
+        int stringWidth = fm.stringWidth(errMessage);
+
+        g.drawString(errMessage, (this.getWidth() - stringWidth) / 2, this.getHeight() / 2);
+    }
 }

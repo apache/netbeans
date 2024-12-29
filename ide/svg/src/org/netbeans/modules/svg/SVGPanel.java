@@ -24,6 +24,7 @@ import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -80,21 +81,25 @@ public class SVGPanel extends JPanel {
         }
 
         if (svgDocument == null) {
+            drawErrorMesage(g);
+
             return;
         }
 
         Graphics2D g2d = (Graphics2D) g.create();
 
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+        g2d.setRenderingHint(SVGRenderingHints.KEY_MASK_CLIP_RENDERING, SVGRenderingHints.VALUE_MASK_CLIP_RENDERING_ACCURACY);
+
+        g2d.scale(scale, scale);
+
         try {
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-            g2d.setRenderingHint(SVGRenderingHints.KEY_MASK_CLIP_RENDERING, SVGRenderingHints.VALUE_MASK_CLIP_RENDERING_ACCURACY);
-
-            g2d.scale(scale, scale);
-
             svgDocument.render(this, g2d);
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, ex.getMessage());
+            LOG.log(Level.INFO, ex.getMessage());
+
+            drawErrorMesage(g);
         } finally {
             g2d.dispose();
         }
@@ -133,5 +138,16 @@ public class SVGPanel extends JPanel {
         }
 
         return null;
+    }
+
+    // HINT: Not yet finished
+    private void drawErrorMesage(Graphics g) {
+        g.setColor(Color.RED);
+
+        FontMetrics fm = this.getFontMetrics(g.getFont());
+        String errMessage = NbBundle.getMessage(SVGPanel.class, "ERR_Thumbnail");
+        int stringWidth = fm.stringWidth(errMessage);
+
+        g.drawString(errMessage, (this.getWidth() - stringWidth) / 2, this.getHeight() / 2);
     }
 }

@@ -38,7 +38,7 @@ import org.openide.util.NbBundle.Messages;
 
 final class LanguageServersPanel extends javax.swing.JPanel {
 
-    private static final LanguageDescription PROTOTYPE = new LanguageDescription(null, null, null, null, "MMMMMMMMMMMMMMMMM", null);
+    private static final LanguageDescription PROTOTYPE = new LanguageDescription(null, null, null, null, "MMMMMMMMMMMMMMMMM", null, false);
     private final LanguageServersOptionsPanelController controller;
     private final DefaultListModel<LanguageDescription> languages;
     private final Set<String> usedIds;

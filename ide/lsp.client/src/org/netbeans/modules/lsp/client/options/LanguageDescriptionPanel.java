@@ -53,11 +53,12 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
             this.server.setText(desc.languageServer);
             this.name.setText(desc.name);
             this.icon.setText(desc.icon);
+            this.debugger.setSelected(desc.debugger);
         }
     }
 
     public LanguageDescription getDescription() {
-        return new LanguageDescription(id, this.extensions.getText(), this.syntax.getText(), this.server.getText(), this.name.getText(), this.icon.getText());
+        return new LanguageDescription(id, this.extensions.getText(), this.syntax.getText(), this.server.getText(), this.name.getText(), this.icon.getText(), this.debugger.isSelected());
     }
 
     /**
@@ -85,6 +86,7 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         icon = new javax.swing.JTextField();
         browseIcon = new javax.swing.JButton();
+        debugger = new javax.swing.JCheckBox();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -250,6 +252,16 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 94, 12);
         add(browseIcon, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(debugger, org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.debugger.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridwidth = 6;
+        gridBagConstraints.ipadx = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(17, 12, 0, 0);
+        add(debugger, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     @Messages("DESC_JSONFilter=Grammars (.json, .xml, .tmLanguage)")
@@ -314,6 +326,7 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
     private javax.swing.JButton browseGrammar;
     private javax.swing.JButton browseIcon;
     private javax.swing.JButton browseServer;
+    private javax.swing.JCheckBox debugger;
     private javax.swing.JTextField extensions;
     private javax.swing.JTextField icon;
     private javax.swing.JLabel jLabel1;

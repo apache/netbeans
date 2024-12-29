@@ -19,22 +19,28 @@
 package org.netbeans.modules.csl.editor.semantic;
 
 import java.util.List;
+import java.util.TreeSet;
+import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.Document;
+import javax.swing.text.SimpleAttributeSet;
 import org.junit.Test;
 import org.netbeans.modules.csl.api.ColoringAttributes;
-import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.core.Language;
 
 import static org.junit.Assert.assertEquals;
+import org.netbeans.spi.editor.highlighting.HighlightsSequence;
 
 
 public class GsfSemanticLayerTest {
 
     @Test
-    public void testFirstSequenceElement() {
+    public void testFirstSequenceElement() throws Exception {
+        Document doc = new DefaultEditorKit().createDefaultDocument();
+        doc.insertString(0, "Hello World!/n".repeat(10), SimpleAttributeSet.EMPTY);
         List<SequenceElement> elements = List.of(
-                new SequenceElement(new Language("text/x-dummy"), new OffsetRange(10, 20), ColoringAttributes.empty()),
-                new SequenceElement(new Language("text/x-dummy"), new OffsetRange(30, 40), ColoringAttributes.empty()),
-                new SequenceElement(new Language("text/x-dummy"), new OffsetRange(50, 60), ColoringAttributes.empty())
+                new SequenceElement(new Language("text/x-dummy"), doc.createPosition(10), doc.createPosition(20), ColoringAttributes.empty()),
+                new SequenceElement(new Language("text/x-dummy"), doc.createPosition(30), doc.createPosition(40), ColoringAttributes.empty()),
+                new SequenceElement(new Language("text/x-dummy"), doc.createPosition(50), doc.createPosition(60), ColoringAttributes.empty())
         );
 
         assertEquals(0, GsfSemanticLayer.firstSequenceElement(elements, -1));
@@ -61,4 +67,34 @@ public class GsfSemanticLayerTest {
         assertEquals(0, GsfSemanticLayer.firstSequenceElement(List.of(), 120));
     }
 
+    @Test
+    public void testHighlightSequence() throws Exception {
+        Document doc = new DefaultEditorKit().createDefaultDocument();
+        doc.insertString(0, "Hello World!/n".repeat(10), SimpleAttributeSet.EMPTY);
+
+        GsfSemanticLayer layer = GsfSemanticLayer.getLayer(GsfSemanticLayer.class, doc);
+        Language lang = new Language("text/x-dummy");
+
+        TreeSet<SequenceElement> highlights = new TreeSet<>(SequenceElement.POSITION_ORDER);
+
+        highlights.add(new SequenceElement(lang, doc.createPosition(10), doc.createPosition(20), ColoringAttributes.empty()));
+        highlights.add(new SequenceElement(lang, doc.createPosition(50), doc.createPosition(60), ColoringAttributes.empty()));
+        highlights.add(new SequenceElement(lang, doc.createPosition(30), doc.createPosition(40), ColoringAttributes.empty()));
+        highlights.add(new SequenceElement(lang, doc.createPosition(70), doc.createPosition(80), ColoringAttributes.empty()));
+
+        layer.setColorings(highlights);
+
+        HighlightsSequence seq = layer.getHighlights(0, doc.getLength());
+        assertEquals(4, countSequenceElements(seq));
+
+        doc.remove(30, 40); //remove thw two highlighted area in the middle
+        seq = layer.getHighlights(0, doc.getLength());
+        assertEquals(2, countSequenceElements(seq));
+    }
+
+    private static int countSequenceElements(HighlightsSequence seq) {
+        int ret = 0;
+        while (seq.moveNext()) ret++;
+        return ret;
+    }
 }

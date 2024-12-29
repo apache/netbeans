@@ -26,6 +26,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.ColoringAttributes.Coloring;
@@ -89,7 +90,7 @@ public final class SemanticHighlighter extends IndexingAwareParserResultTask<Par
             long startTime = System.currentTimeMillis();
 
             Source source = info.getSnapshot().getSource();
-            final SortedSet<SequenceElement> newColoring = new TreeSet<>();
+            final SortedSet<SequenceElement> newColoring = new TreeSet<>(SequenceElement.POSITION_ORDER);
             try {
                 ParserManager.parse(Collections.singleton(source), (ResultIterator ri) -> processColorings(ri, newColoring));
             } catch (ParseException e) {
@@ -157,7 +158,7 @@ public final class SemanticHighlighter extends IndexingAwareParserResultTask<Par
             task.cancel();
             return;
         }
-
+        Document doc = result.getSnapshot().getSource().getDocument(false);
         Map<OffsetRange,Set<ColoringAttributes>> highlights = task.getHighlights();
         for (Map.Entry<OffsetRange, Set<ColoringAttributes>> entry : highlights.entrySet()) {
 
@@ -168,8 +169,11 @@ public final class SemanticHighlighter extends IndexingAwareParserResultTask<Par
             }
 
             Coloring c = manager.getColoring(colors);
+            try {
+                newColoring.add(new SequenceElement(language, doc.createPosition(range.getStart()), doc.createPosition(range.getEnd()), c));
+            } catch (BadLocationException ex) {
 
-            newColoring.add(new SequenceElement(language, range, c));
+            }
 
             if (cancel.isCancelled()) {
                 return;

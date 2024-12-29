@@ -74,21 +74,9 @@ public class FlowScopedBeanWithoutCdi {
         CompilationInfo info = hintContext.getInfo();
         for (TypeElement typeElement : info.getTopLevelElements()) {
             for (AnnotationMirror annotationMirror : typeElement.getAnnotationMirrors()) {
-                if (FLOW_SCOPED.equals(annotationMirror.getAnnotationType().toString())) {
+                if (FLOW_SCOPED.equals(annotationMirror.getAnnotationType().toString()) || FLOW_SCOPED_JAKARTA.equals(annotationMirror.getAnnotationType().toString())) {
                     // it's FlowScoped bean -> check the CDI
                     org.netbeans.modules.web.beans.CdiUtil cdiUtil = project.getLookup().lookup(org.netbeans.modules.web.beans.CdiUtil.class);
-                    if (cdiUtil == null || !cdiUtil.isCdiEnabled()) {
-                        Tree tree = info.getTrees().getTree(typeElement, annotationMirror);
-                        problems.add(JsfHintsUtils.createProblem(
-                                tree,
-                                info,
-                                Bundle.FlowScopedBeanWithoutCdi_display_name(),
-                                Severity.WARNING,
-                                Arrays.<Fix>asList(new FixCdiAvailability(project))));
-                    }
-                } else if (FLOW_SCOPED_JAKARTA.equals(annotationMirror.getAnnotationType().toString())) {
-                    // it's FlowScoped bean -> check the CDI
-                    org.netbeans.modules.jakarta.web.beans.CdiUtil cdiUtil = project.getLookup().lookup(org.netbeans.modules.jakarta.web.beans.CdiUtil.class);
                     if (cdiUtil == null || !cdiUtil.isCdiEnabled()) {
                         Tree tree = info.getTrees().getTree(typeElement, annotationMirror);
                         problems.add(JsfHintsUtils.createProblem(
@@ -127,10 +115,6 @@ public class FlowScopedBeanWithoutCdi {
 
         @Override
         public ChangeInfo implement() throws Exception {
-            org.netbeans.modules.jakarta.web.beans.CdiUtil jakartaCdiUtil = project.getLookup().lookup(org.netbeans.modules.jakarta.web.beans.CdiUtil.class);
-            if (jakartaCdiUtil != null) {
-                jakartaCdiUtil.enableCdi();
-            }
             org.netbeans.modules.web.beans.CdiUtil cdiUtil = project.getLookup().lookup(org.netbeans.modules.web.beans.CdiUtil.class);
             if (cdiUtil != null) {
                 cdiUtil.enableCdi();

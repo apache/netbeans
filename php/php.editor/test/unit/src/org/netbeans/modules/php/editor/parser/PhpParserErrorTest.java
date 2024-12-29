@@ -1449,6 +1449,10 @@ public class PhpParserErrorTest extends PHPTestBase {
     }
 
     // PHP 8.3
+    public void testArbitraryStaticVariableInitializers_01() throws Exception {
+        checkErrors("testfiles/parser/php83/arbitraryStaticVariableInitializers_01.php");
+    }
+
     public void testDynamicClassConstantFetch_01() throws Exception {
         checkErrors("testfiles/parser/php83/dynamicClassConstantFetch_01.php");
     }

@@ -93,10 +93,10 @@ abstract class CDIPanel extends javax.swing.JPanel {
     private static final long serialVersionUID = 9033410521614864413L;
 
     public static final Icon FQN_ICON = ImageUtilities.loadImageIcon(
-            "org/netbeans/modules/java/navigation/resources/fqn.gif", false);       // NOI18N
+            "org/netbeans/modules/web/beans/resources/fqn.png", false);       // NOI18N
 
     public static final Icon EXPAND_ALL_ICON = ImageUtilities.loadImageIcon(
-            "org/netbeans/modules/java/navigation/resources/expandall.gif", false); // NOI18N
+            "org/netbeans/modules/web/beans/resources/expandTree.png", false); // NOI18N
     
     private static TreeModel pleaseWaitTreeModel;
     static

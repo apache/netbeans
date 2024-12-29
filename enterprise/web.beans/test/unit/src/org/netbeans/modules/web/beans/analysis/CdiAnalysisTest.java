@@ -47,7 +47,7 @@ public class CdiAnalysisTest extends BaseAnalisysTestCase {
      * @param testName
      */
     public CdiAnalysisTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
     
     /* (non-Javadoc)

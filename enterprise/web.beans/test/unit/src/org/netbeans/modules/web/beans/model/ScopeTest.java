@@ -19,6 +19,13 @@
 package org.netbeans.modules.web.beans.model;
 
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.DeclaredType;
@@ -29,6 +36,8 @@ import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelAction;
 import org.netbeans.modules.j2ee.metadata.model.support.TestUtilities;
 import org.netbeans.modules.web.beans.api.model.CdiException;
 import org.netbeans.modules.web.beans.api.model.WebBeansModel;
+import org.netbeans.modules.web.beans.testutilities.CdiTestUtilities;
+import org.openide.filesystems.FileUtil;
 
 
 /**
@@ -38,7 +47,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class ScopeTest extends CommonTestCase {
 
     public ScopeTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
     
     public void testInheritedScope() throws IOException{ 
@@ -90,9 +99,9 @@ public class ScopeTest extends CommonTestCase {
     }
     
     public void testDependentScope() throws IOException{ 
-        
+
         TestUtilities.copyStringToFileObject(srcFO, "foo/Clazz.java",
-                "package foo; " +
+                "package foo; " + 
                 "public class Clazz  { " +
                 "}" );
         final TestWebBeansModelImpl modelImpl = createModelImpl(true );
@@ -100,9 +109,9 @@ public class ScopeTest extends CommonTestCase {
         testModel.runReadAction( new MetadataModelAction<WebBeansModel,Void>(){
 
             @Override
-            public Void run( WebBeansModel model ) throws Exception {
-                TypeMirror mirror = model.resolveType( "foo.Clazz" );
-                Element clazz = ((DeclaredType)mirror).asElement();
+            public Void run(WebBeansModel model) throws Exception {
+                TypeMirror mirror = model.resolveType("foo.Clazz");
+                Element clazz = ((DeclaredType) mirror).asElement();
                 checkScope(model, clazz, "javax.enterprise.context.Dependent");
                 return null;
             }

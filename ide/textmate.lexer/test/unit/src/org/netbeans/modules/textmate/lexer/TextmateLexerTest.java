@@ -203,7 +203,7 @@ public class TextmateLexerTest extends NbTestCase {
         assertTokenProperties(ts, "test", "ident.test");
         LexerTestUtilities.assertNextTokenEquals(ts, TextmateTokenId.TEXTMATE, "  ");
         assertTokenProperties(ts, "test");
-        LexerTestUtilities.assertNextTokenEquals(ts, TextmateTokenId.TEXTMATE, "\n");
+        LexerTestUtilities.assertNextTokenEquals(ts, TextmateTokenId.UNTOKENIZED, "\n");
         assertFalse(ts.moveNext());
     }
 

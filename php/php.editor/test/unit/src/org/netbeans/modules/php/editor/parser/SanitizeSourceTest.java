@@ -255,6 +255,10 @@ public class SanitizeSourceTest extends ParserTestBase {
         performTest("sanitize/constructorPropertyPromotionParameter01");
     }
 
+    public void testArbitraryStaticVariableInitializers01() throws Exception {
+        performTest("sanitize/arbitraryStaticVariableInitializers01");
+    }
+
     protected String getTestResult(String filename) throws Exception {
         return getTestResult(filename, null);
     }

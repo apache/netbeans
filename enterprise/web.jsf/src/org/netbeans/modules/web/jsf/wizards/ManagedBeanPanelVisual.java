@@ -94,13 +94,8 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
             }
         }
         Object[] scopes;
-        if(profile != null && (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB))){
-            org.netbeans.modules.jakarta.web.beans.CdiUtil cdiUtil = proj.getLookup().lookup(org.netbeans.modules.jakarta.web.beans.CdiUtil.class);
-            isCDIEnabled = cdiUtil != null && cdiUtil.isCdiEnabled();
-        } else {
-            org.netbeans.modules.web.beans.CdiUtil cdiUtil = proj.getLookup().lookup(org.netbeans.modules.web.beans.CdiUtil.class);
-            isCDIEnabled = cdiUtil != null && cdiUtil.isCdiEnabled();
-        }
+        org.netbeans.modules.web.beans.CdiUtil cdiUtil = proj.getLookup().lookup(org.netbeans.modules.web.beans.CdiUtil.class);
+        isCDIEnabled = cdiUtil != null && cdiUtil.isCdiEnabled();
         if (isCDIEnabled && !addToFacesConfig) {
             scopes = ManagedBeanIterator.NamedScope.values();
         } else {

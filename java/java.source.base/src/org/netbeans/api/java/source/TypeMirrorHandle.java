@@ -426,7 +426,7 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
 
         @Override
         public TypeTag getTag() {
-            return TypeTag.UNKNOWN;
+            return TypeTag.NONE;
         }
 
         @Override

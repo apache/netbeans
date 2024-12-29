@@ -107,6 +107,9 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
     private Action callback = null;
     
     private static final int MAX_ROWS = 50;
+    private static final int MIN_DIVIDER_LOCATION = 250;
+    /* last user modified divider position shared between all instances */
+    private static int dividerPosMemory = -1; 
     
     private transient JToggleButton logicalViewButton = null;
     private transient JToggleButton physicalViewButton = null;
@@ -125,7 +128,6 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
     private FiltersManagerImpl filtersManager;
     private JComponent filterBar;
     private JPanel toolbars;
-
     
     static Image PACKAGE_BADGE = ImageUtilities.loadImage( "org/netbeans/spi/java/project/support/ui/packageBadge.gif" ); // NOI18N
     
@@ -179,6 +181,11 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         add(splitPane, BorderLayout.CENTER);
         splitPane.setRightComponent(new JLabel(org.openide.util.NbBundle.getMessage(RefactoringPanel.class, "LBL_Preview_not_Available"), SwingConstants.CENTER));
         splitPane.setBorder(null);
+        splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, evt -> {
+            if (evt.getNewValue() instanceof Integer pos && pos > MIN_DIVIDER_LOCATION) {
+                RefactoringPanel.dividerPosMemory = pos;
+            }
+        });
         // add panel with buttons
         JButton[] buttons = getButtons();
         // there will be at least one button on panel
@@ -706,7 +713,6 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         if (currentView == GRAPHICAL) {
             assert ui instanceof RefactoringCustomUI;
             assert customComponent != null;
-            RefactoringCustomUI cui = (RefactoringCustomUI) ui;
             this.left.remove(scrollPane);
             this.left.add(customComponent, BorderLayout.CENTER);
             UI.setComponentForRefactoringPreview(null);
@@ -738,7 +744,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                     final Map<Object, CheckNode> nodes = new HashMap<Object, CheckNode>();
                     
                     if (isQuery && showParametersPanel) {
-                        setupInstantTree(root, showParametersPanel);
+                        setupInstantTree(root);
                     }
                     
                     if (!isQuery) {
@@ -897,8 +903,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             @Override
             public void run() {
                 createTree(root);
-
-                splitPane.setDividerLocation(0.3);
+                initDivider();
                 expandTreeIfNeeded(showParametersPanel, size);
 
                 tree.setSelectionRow(0);
@@ -908,6 +913,16 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                 }
             }
         });
+    }
+
+    private void initDivider() {
+        if (splitPane.getDividerLocation() < MIN_DIVIDER_LOCATION) {
+            if (dividerPosMemory > MIN_DIVIDER_LOCATION) {
+                splitPane.setDividerLocation(dividerPosMemory);
+            } else {
+                splitPane.setDividerLocation(0.3);
+            }
+        }
     }
 
     private void expandTreeIfNeeded(boolean showParametersPanel, int size) {
@@ -1005,14 +1020,14 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         });
     }
 
-    private void setupInstantTree(final CheckNode root, final boolean showParametersPanel) {
+    private void setupInstantTree(final CheckNode root) {
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
                 createTree(root);
                 tree.setSelectionRow(0);
-                splitPane.setDividerLocation(0.3);
+                initDivider();
                 if (refactorButton != null) {
                     refactorButton.requestFocusInWindow();
                 } else if (tree != null) {
@@ -1212,30 +1227,6 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         }
         cancelRequest.set(true);
         ui.getRefactoring().cancelRequest();
-    }
-    
-    private static String normalize(String input) {
-        int size = input.length();
-        char[] c = new char[size];
-        input.getChars(0, size, c, 0);
-        boolean wb = false;
-        int pos = 0;
-        char[] nc = new char[size];
-        
-        for (int i = 0; i < size; i++) {
-            if (Character.isWhitespace(c[i])) {
-                if (!wb) {
-                    nc[pos++] = ' ';
-
-                    wb = true;
-                }
-            }
-            else {
-                nc[pos++] = c[i];
-                wb = false;
-            }
-        }
-        return new String(nc, 0, pos);
     }
 
     /** Processes returned problems from refactoring operations and notifies

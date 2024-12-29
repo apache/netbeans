@@ -27,7 +27,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +36,8 @@ import javax.swing.event.ChangeEvent;
 import org.eclipse.tm4e.core.registry.IRegistryOptions;
 import org.eclipse.tm4e.core.registry.Registry;
 import org.netbeans.modules.lsp.client.debugger.api.RegisterDAPBreakpoints;
+import org.eclipse.tm4e.core.internal.grammar.raw.RawGrammarReader;
+import org.eclipse.tm4e.core.registry.IGrammarSource;
 import org.netbeans.modules.textmate.lexer.TextmateTokenId;
 import org.netbeans.spi.navigator.NavigatorPanel;
 import org.openide.filesystems.FileObject;
@@ -234,23 +235,9 @@ public class LanguageStorage {
     }
 
     private static String findScope(File grammar) throws Exception {
-        IRegistryOptions opts = new IRegistryOptions() {
-            @Override
-            public String getFilePath(String scopeName) {
-                return null;
-            }
-            @Override
-            public InputStream getInputStream(String scopeName) throws IOException {
-                return null;
-            }
-            @Override
-            public Collection<String> getInjections(String scopeName) {
-                return null;
-            }
-        };
-        return new Registry(opts).loadGrammarFromPathSync(grammar).getScopeName();
+        return RawGrammarReader.readGrammar(IGrammarSource.fromFile(grammar.toPath())).getScopeName();
     }
-    
+
     public static class LanguageDescription {
 
         public String id;

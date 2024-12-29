@@ -757,6 +757,9 @@ jobs:
       - name: ide/team.commons
         run: ant $OPTS -f ide/team.commons test
 
+      - name: ide/textmate.lexer
+        run: ant $OPTS -f ide/textmate.lexer test
+
       - name: ide/terminal.nb
         run: ant $OPTS -f ide/terminal.nb test
 
@@ -2016,10 +2019,6 @@ jobs:
 #      - name: j2ee.sun.ddui
 #        run: ant $OPTS -f enterprise/j2ee.sun.ddui test
 
-# Fails + Slow
-#      - name: jakarta.web.beans
-#        run: ant $OPTS -f enterprise/jakarta.web.beans test
-
       - name: javaee.wildfly
         run: .github/retry.sh ant $OPTS -f enterprise/javaee.wildfly test
 
@@ -2061,9 +2060,8 @@ jobs:
       - name: tomcat5
         run: ant $OPTS -f enterprise/tomcat5 test
 
-# Fails
-#      - name: web.beans
-#        run: ant $OPTS -f enterprise/web.beans test
+      - name: web.beans
+        run: ant $OPTS -f enterprise/web.beans test
 
 # Fails + Slow
 #      - name: web.core.syntax

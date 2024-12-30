@@ -69,6 +69,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.AnonymousObjectVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.CloneExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
@@ -441,13 +442,18 @@ public final class VariousUtils {
         return extractVariableTypeFromExpression(expression, allAssignments);
     }
 
-    static String extractVariableTypeFromExpression(Expression expression, Map<String, AssignmentImpl> allAssignments) {
+    static String extractVariableTypeFromExpression(Expression expr, Map<String, AssignmentImpl> allAssignments) {
+        Expression expression = expr;
         if (expression instanceof Assignment) {
             // handle nested assignments, e.g. $l = $m = new ObjectName;
             return extractVariableTypeFromAssignment((Assignment) expression, allAssignments);
         } else if (expression instanceof Reference) {
             Reference ref = (Reference) expression;
             expression = ref.getExpression();
+        }
+        if (expression instanceof ClassInstanceCreationVariable) {
+            // e.g. new Example()::$staticField;
+            expression = ((ClassInstanceCreationVariable) expression).getName();
         }
         if (expression instanceof ClassInstanceCreation) {
             ClassInstanceCreation classInstanceCreation = (ClassInstanceCreation) expression;
@@ -1124,6 +1130,7 @@ public final class VariousUtils {
         }
     }
 
+    @CheckForNull
     private static String extractVariableTypeFromVariableBase(VariableBase varBase, Map<String, AssignmentImpl> allAssignments) {
         if (varBase instanceof AnonymousObjectVariable) {
             AnonymousObjectVariable aov = (AnonymousObjectVariable) varBase;
@@ -1137,9 +1144,13 @@ public final class VariousUtils {
                 }
             }
             if (clsName instanceof ClassInstanceCreation) {
-                ClassInstanceCreation cis = (ClassInstanceCreation) clsName;
-                String className = CodeUtils.extractClassName(cis.getClassName());
-                return PRE_OPERATION_TYPE_DELIMITER + CONSTRUCTOR_TYPE_PREFIX + className;
+                return getVariableType((ClassInstanceCreation) clsName);
+            }
+        } else if (varBase instanceof ClassInstanceCreationVariable) {
+            ClassInstanceCreationVariable classInstanceCreationVariable = (ClassInstanceCreationVariable) varBase;
+            Expression clsName = classInstanceCreationVariable.getName();
+            if (clsName instanceof ClassInstanceCreation) {
+                return getVariableType((ClassInstanceCreation) clsName);
             }
         } else if (varBase instanceof Variable) {
             String varName = CodeUtils.extractVariableName((Variable) varBase);
@@ -1206,6 +1217,11 @@ public final class VariousUtils {
         }
 
         return null;
+    }
+
+    private static String getVariableType(ClassInstanceCreation classInstanceCreation) {
+        String className = CodeUtils.extractClassName(classInstanceCreation.getClassName());
+        return PRE_OPERATION_TYPE_DELIMITER + CONSTRUCTOR_TYPE_PREFIX + className;
     }
 
     public static String resolveFileName(Include include) {

@@ -1,0 +1,2 @@
+    public string $|>MARK_OCCURRENCES:publ^icField<| = 'public field'; // anon2
+}->|>MARK_OCCURRENCES:publicField<|;

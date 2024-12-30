@@ -67,7 +67,7 @@ public class DebuggingJSTreeModel implements TreeModelFilter {
             Object ch = children[i];
             if (ch instanceof CallStackFrame) {
                 CallStackFrame csf = (CallStackFrame) ch;
-                if (csf.getClassName().startsWith(JSUtils.NASHORN_SCRIPT)) {
+                if (csf.getClassName().startsWith(JSUtils.NASHORN_SCRIPT_JDK) || csf.getClassName().startsWith(JSUtils.NASHORN_SCRIPT_EXT)) {
                     if (!isJSStack) {
                         Object[] children2 = new Object[children.length];
                         System.arraycopy(children, 0, children2, 0, children.length);

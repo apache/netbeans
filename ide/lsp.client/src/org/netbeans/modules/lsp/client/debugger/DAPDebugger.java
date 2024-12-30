@@ -318,6 +318,8 @@ public final class DAPDebugger implements IDebugProtocolClient {
         //some servers (e.g. the GraalVM DAP server) require the threadId to be always set, even if singleThread is set to false
         args.setThreadId(currentThreadId);
         args.setSingleThread(Boolean.FALSE);
+
+        continued();
         server.continue_(args);
     }
 

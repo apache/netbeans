@@ -226,7 +226,7 @@ public final class GsfSemanticLayer extends AbstractHighlightsContainer implemen
      * @param offset The offset in the document.
      * @return the index of the first SequenceElement that is left to the offset
      */
-    private static int firstSequenceElement(List<SequenceElement> l, int offset) {
+    static int firstSequenceElement(List<SequenceElement> l, int offset) {
         int low = 0;
         int high = l.size() - 1;
 
@@ -235,12 +235,19 @@ public final class GsfSemanticLayer extends AbstractHighlightsContainer implemen
             SequenceElement midVal = l.get(mid);
             int cmp = midVal.range().getStart() - offset;
 
-            if (cmp < 0)
-                low = mid + 1;
-            else if (cmp > 0)
-                high = mid - 1;
-            else
+            if (cmp == 0) {
                 return mid;
+            } else if (low == high) {
+                if (mid > 0 && cmp >= 0) {
+                    return mid - 1;
+                } else {
+                    return low;
+                }
+            } else if (cmp < 0) {
+                low = mid + 1;
+            } else if (cmp > 0) {
+                high = mid - 1;
+            }
         }
         return low;
     }

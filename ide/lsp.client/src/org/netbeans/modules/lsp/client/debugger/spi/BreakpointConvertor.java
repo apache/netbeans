@@ -26,7 +26,7 @@ import org.netbeans.modules.lsp.client.debugger.SPIAccessor;
  * @since 1.29
  */
 public interface BreakpointConvertor {
-    public void covert(org.netbeans.api.debugger.Breakpoint b,
+    public void convert(org.netbeans.api.debugger.Breakpoint b,
                        ConvertedBreakpointConsumer breakpointConsumer);
     public static class ConvertedBreakpointConsumer {
         private final List<LineBreakpointData> lineBreakpoints;
@@ -35,8 +35,8 @@ public interface BreakpointConvertor {
             this.lineBreakpoints = lineBreakpoints;
         }
 
-        public void lineBreakpoint(String url, int lineNumner, String condition) {
-            lineBreakpoints.add(new LineBreakpointData(url, lineNumner, condition));
+        public void lineBreakpoint(String url, int lineNumber, String condition) {
+            lineBreakpoints.add(new LineBreakpointData(url, lineNumber, condition));
         }
 
         static {

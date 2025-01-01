@@ -20,15 +20,19 @@ package org.netbeans.modules.csl.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.swing.Action;
 
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.DataLoadersBridge;
 import org.netbeans.modules.csl.api.DeclarationFinder;
+import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.HintsProvider;
 import org.netbeans.modules.csl.api.IndexSearcher;
 import org.netbeans.modules.csl.api.InstantRenamer;
@@ -42,10 +46,15 @@ import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.editor.semantic.ColoringManager;
 import org.netbeans.modules.csl.hints.infrastructure.GsfHintsManager;
+import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.modules.parsing.impl.Utilities;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.ParserFactory;
+import org.netbeans.modules.parsing.spi.Scheduler;
+import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
+import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.openide.filesystems.FileObject;
 
 
@@ -64,6 +73,97 @@ import org.openide.filesystems.FileObject;
  * @author <a href="mailto:tor.norbye@sun.com">Tor Norbye</a>
  */
 public final class Language {
+    // LanguageConfig#getOverridingMethods may return null,
+    // Language#getOverridingMethods may not, so return this dummy implementation
+    private static final OverridingMethods EMPTY_OVERRIDING_METHODS = new OverridingMethods() {
+        @Override
+        public Collection<? extends DeclarationFinder.AlternativeLocation> overrides(ParserResult info, ElementHandle handle) {
+            return Collections.emptySet();
+        }
+
+        @Override
+        public boolean isOverriddenBySupported(ParserResult info, ElementHandle handle) {
+            return false;
+        }
+
+        @Override
+        public Collection<? extends DeclarationFinder.AlternativeLocation> overriddenBy(ParserResult info, ElementHandle handle) {
+            return Collections.emptySet();
+        }
+    };
+
+    // LanguageConfig#getIndexSearcher may return null,
+    // Language#getIndexSearcher may not, so return this dummy implementation
+    private static final IndexSearcher EMPTY_INDEX_SEARCHER = new IndexSearcher() {
+        @Override
+        public Set<? extends IndexSearcher.Descriptor> getTypes(Project project, String textForQuery, QuerySupport.Kind searchType, IndexSearcher.Helper helper) {
+            return Collections.emptySet();
+        }
+
+        @Override
+        public Set<? extends IndexSearcher.Descriptor> getSymbols(Project project, String textForQuery, QuerySupport.Kind searchType, IndexSearcher.Helper helper) {
+            return Collections.emptySet();
+        }
+    };
+
+    // LanguageConfig#getSemanticAnalyser may return null,
+    // Language#getSemanticAnalyzer may not, so return this dummy implementation
+    private static final SemanticAnalyzer EMPTY_SEMANTIC_ANALYSER = new SemanticAnalyzer() {
+        @Override
+        public Map getHighlights() {
+            return Collections.emptyMap();
+        }
+
+        @Override
+        public void run(Parser.Result result, SchedulerEvent event) {
+        }
+
+        @Override
+        public int getPriority() {
+            return Integer.MAX_VALUE;
+        }
+
+        @Override
+        public Class<? extends Scheduler> getSchedulerClass() {
+            return Utilities.NopScheduler.class;
+        }
+
+        @Override
+        public void cancel() {
+        }
+    };
+
+    // LanguageConfig#getOccurrencesFinder may return null,
+    // Language#getOccurrencesFinder may not, so return this dummy implementation
+    private static final OccurrencesFinder EMPTY_OCCURRENCES_FINDER = new OccurrencesFinder() {
+        @Override
+        public void setCaretPosition(int position) {
+        }
+
+        @Override
+        public Map getOccurrences() {
+            return Collections.emptyMap();
+        }
+
+        @Override
+        public void run(Parser.Result result, SchedulerEvent event) {
+        }
+
+        @Override
+        public int getPriority() {
+            return Integer.MAX_VALUE;
+        }
+
+        @Override
+        public Class<? extends Scheduler> getSchedulerClass() {
+            return Utilities.NopScheduler.class;
+        }
+
+        @Override
+        public void cancel() {
+        }
+    };
+
     private ColoringManager coloringManager;
     private String iconBase;
     private String mime;
@@ -631,7 +731,11 @@ public final class Language {
                 }
             }
         }
-        return occurrences;
+        if (occurrences != null) {
+            return occurrences;
+        } else {
+            return EMPTY_OCCURRENCES_FINDER;
+        }
     }
 
     void setOccurrencesFinderFile(FileObject occurrencesFile) {
@@ -669,7 +773,11 @@ public final class Language {
                 }
             }
         }
-        return semantic;
+        if (semantic != null) {
+            return semantic;
+        } else {
+            return EMPTY_SEMANTIC_ANALYSER;
+        }
     }
 
     void setSemanticAnalyzer(FileObject semanticFile) {
@@ -695,7 +803,11 @@ public final class Language {
                 }
             }
         }
-        return indexSearcher;
+        if(indexSearcher != null) {
+            return indexSearcher;
+        } else {
+            return EMPTY_INDEX_SEARCHER;
+        }
     }
 
     void setIndexSearcher(FileObject indexSearcherFile) {
@@ -751,7 +863,11 @@ public final class Language {
                 }
             }
         }
-        return overridingMethods;
+        if (overridingMethods != null) {
+            return overridingMethods;
+        } else {
+            return EMPTY_OVERRIDING_METHODS;
+        }
     }
 
     void setOverridingMethodsFile(FileObject fo) {

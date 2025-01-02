@@ -80,12 +80,6 @@ public class SVGPanel extends JPanel {
             }
         }
 
-        if (svgDocument == null) {
-            drawErrorMesage(g);
-
-            return;
-        }
-
         Graphics2D g2d = (Graphics2D) g.create();
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -140,12 +134,11 @@ public class SVGPanel extends JPanel {
         return null;
     }
 
-    // HINT: Not yet finished
     private void drawErrorMesage(Graphics g) {
         g.setColor(Color.RED);
 
         FontMetrics fm = this.getFontMetrics(g.getFont());
-        String errMessage = NbBundle.getMessage(SVGPanel.class, "ERR_Thumbnail");
+        String errMessage = NbBundle.getMessage(SVGPanel.class, "ERR_SVGDocument");
         int stringWidth = fm.stringWidth(errMessage);
 
         g.drawString(errMessage, (this.getWidth() - stringWidth) / 2, this.getHeight() / 2);

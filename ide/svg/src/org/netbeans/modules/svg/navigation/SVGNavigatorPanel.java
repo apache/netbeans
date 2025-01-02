@@ -45,6 +45,11 @@ import org.openide.util.*;
 })
 public class SVGNavigatorPanel implements NavigatorPanel {
 
+    static {
+        // JSVG loader/parser is logging with SEVERE level which would land in the NB exception reporter
+        Logger.getLogger("com.github.weisj.jsvg").setLevel(Level.OFF);
+    }
+
     private static final Logger LOG = Logger.getLogger(SVGViewerElement.class.getName());
 
     /**
@@ -147,10 +152,6 @@ public class SVGNavigatorPanel implements NavigatorPanel {
 
             SVGLoader svgLoader = new SVGLoader();
             SVGDocument svgDocument = svgLoader.load(fo.toURL());
-
-            if (svgDocument == null) {
-                return;
-            }
 
             SwingUtilities.invokeLater(() -> panelUI.setSVG(svgDocument));
         });

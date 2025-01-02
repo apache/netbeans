@@ -82,7 +82,6 @@ public class SVGPreviewPanel extends JPanel {
 
             int scaledWidth = (int) (originalWidth / ratio);
             int scaledHeight = (int) (originalHeight / ratio);
-
             Graphics2D g2d = (Graphics2D) g.create((this.getWidth() - scaledWidth) / 2, (this.getHeight() - scaledHeight) / 2, scaledWidth, scaledHeight);
 
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -96,17 +95,16 @@ public class SVGPreviewPanel extends JPanel {
             } catch (Exception ex) {
                 LOG.log(Level.INFO, ex.getMessage());
 
-                drawErrorMesage(g);
+                drawErrorMessage(g);
             } finally {
                 g2d.dispose();
             }
         } else {
-            drawErrorMesage(g);
+            drawErrorMessage(g);
         }
     }
 
-    // HINT: Not yet finished
-    private void drawErrorMesage(Graphics g) {
+    private void drawErrorMessage(Graphics g) {
         g.setColor(Color.RED);
 
         FontMetrics fm = this.getFontMetrics(g.getFont());
@@ -114,5 +112,6 @@ public class SVGPreviewPanel extends JPanel {
         int stringWidth = fm.stringWidth(errMessage);
 
         g.drawString(errMessage, (this.getWidth() - stringWidth) / 2, this.getHeight() / 2);
+        g.dispose();
     }
 }

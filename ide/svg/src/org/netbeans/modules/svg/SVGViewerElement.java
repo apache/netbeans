@@ -22,6 +22,7 @@ import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.geometry.size.FloatSize;
 import com.github.weisj.jsvg.parser.SVGLoader;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -29,10 +30,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -43,6 +45,7 @@ import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -62,6 +65,11 @@ import org.openide.windows.TopComponent;
 )
 @Messages("LBL_SVGViewer=Preview")
 public class SVGViewerElement implements MultiViewElement {
+
+    static {
+        // JSVG loader/parser is logging with SEVERE level which would land in the NB exception reporter
+        Logger.getLogger("com.github.weisj.jsvg").setLevel(Level.OFF);
+    }
 
     private static final Logger LOG = Logger.getLogger(SVGViewerElement.class.getName());
 
@@ -105,8 +113,8 @@ public class SVGViewerElement implements MultiViewElement {
     public SVGViewerElement(Lookup lookup) {
         this.dataObject = lookup.lookup(SVGDataObject.class);
         this.lookup = new ProxyLookup(
-                Lookups.proxy(() -> dataObject.getLookup()),
-                Lookups.singleton(this)
+            Lookups.proxy(() -> dataObject.getLookup()),
+            Lookups.singleton(this)
         );
     }
 
@@ -220,6 +228,17 @@ public class SVGViewerElement implements MultiViewElement {
         });
     }
 
+    private void showEmptyMessage(String message) {
+        JLabel label = new JLabel(message, SwingConstants.CENTER);
+        label.setForeground(Color.RED);
+
+        viewer.removeAll();
+        viewer.setLayout(new BorderLayout());
+        viewer.add(label, BorderLayout.CENTER);
+        viewer.revalidate();
+        viewer.repaint();
+    }
+
     private void updateView() {
         FileObject fo = dataObject.getPrimaryFile();
 
@@ -231,14 +250,11 @@ public class SVGViewerElement implements MultiViewElement {
             return;
         }
 
-        try {
-            svgDocument = svgLoader.load(fo.toURL());
-        } catch (Exception ex) {
-            // HINT: Just a test.
-            JOptionPane.showMessageDialog(null, ex.getMessage());
-        }
+        svgDocument = svgLoader.load(fo.toURL());
 
         if (svgDocument == null) {
+            showEmptyMessage(NbBundle.getMessage(SVGViewerElement.class, "ERR_SVGDocument"));
+
             return;
         }
 
@@ -257,17 +273,16 @@ public class SVGViewerElement implements MultiViewElement {
             return;
         }
 
-        viewer.setLayout(new BorderLayout());
-
         svgPanel.setPreferredSize(new Dimension(width, height));
         svgPanel.setSVGDocument(svgDocument);
 
         JScrollPane scrollPane = new JScrollPane(svgPanel);
 
-        viewer.add(scrollPane, BorderLayout.CENTER);
-
         addMouseWheelListenerToViewer(scrollPane);
 
+        viewer.removeAll();
+        viewer.setLayout(new BorderLayout());
+        viewer.add(scrollPane, BorderLayout.CENTER);
         viewer.revalidate();
         viewer.repaint();
     }

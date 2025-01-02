@@ -103,9 +103,8 @@ import org.openide.util.Utilities;
 public class DirectoryChooserUI extends BasicFileChooserUI {
     private static final String DIALOG_IS_CLOSING = "JFileChooserDialogIsClosingProperty";
 
-    private static final Dimension horizontalStrut1 = new Dimension(25, 1);
+    private static final Dimension horizontalStrut1 = new Dimension(10, 1);
     private static final Dimension verticalStrut1  = new Dimension(1, 4);
-    private static final Dimension verticalStrut2  = new Dimension(1, 6);
     private static final Dimension verticalStrut3  = new Dimension(1, 8);
     private static Dimension PREF_SIZE = new Dimension(425, 245);
     private static Dimension MIN_SIZE = new Dimension(425, 245);
@@ -476,9 +475,9 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         }
         approveButton.addActionListener(getApproveSelectionAction());
         approveButton.setToolTipText(getApproveButtonToolTipText(fc));
-        buttonPanel.add(Box.createRigidArea(verticalStrut1));
+        buttonPanel.add(Box.createRigidArea(verticalStrut3));
         buttonPanel.add(approveButton);
-        buttonPanel.add(Box.createRigidArea(verticalStrut2));
+        buttonPanel.add(Box.createRigidArea(verticalStrut3));
         
         cancelButton = new JButton(cancelButtonText) {
             @Override
@@ -650,7 +649,6 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         }
         
         topPanel.add(upFolderButton);
-        topPanel.add(Box.createRigidArea(new Dimension(2, 0)));
         
         // no home on Win platform
         if (!Utilities.isWindows()) {
@@ -710,11 +708,10 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         }
         
         topPanel.add(newFolderButton);
-        topPanel.add(Box.createRigidArea(new Dimension(2, 0)));
         
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(4, 9, 8, 0));
+        panel.setBorder(BorderFactory.createEmptyBorder(2, 9, 8, 0));
         panel.add(topPanel, BorderLayout.CENTER);
         
         return panel;

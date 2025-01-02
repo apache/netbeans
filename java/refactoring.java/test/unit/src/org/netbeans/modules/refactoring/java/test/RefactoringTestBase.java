@@ -21,6 +21,7 @@ package org.netbeans.modules.refactoring.java.test;
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
@@ -76,7 +78,7 @@ public class RefactoringTestBase extends NbTestCase {
 
     public RefactoringTestBase(String name) {
         super(name);
-        sourcelevel = "1.6";
+        sourcelevel = "1.6";//??
     }
 
     public RefactoringTestBase(String name, String sourcelevel) {
@@ -115,7 +117,7 @@ public class RefactoringTestBase extends NbTestCase {
                 todo.addAll(Arrays.asList(file.getChildren()));
             }
         }
-
+        Throwable exception = null;
         for (File f : files) {
             String fileContent = content.remove(f.filename);
 
@@ -123,19 +125,21 @@ public class RefactoringTestBase extends NbTestCase {
             assertNotNull(f.content);
             assertNotNull("Cannot find " + f.filename + " in map " + content, fileContent);
             try {
-            assertEquals(getName() ,f.content.replaceAll("[ \t\r\n\n]+", " "), fileContent.replaceAll("[ \t\r\n\n]+", " "));
+//                assertEquals(getName(), f.content.replaceAll("[ \t\r\n\n]+", " "), fileContent.replaceAll("[ \t\r\n\n]+", " "));
+                assertLinesEqual(f.content, fileContent);
             } catch (Throwable t) {
-                System.err.println("expected:");
-                System.err.println(f.content);
-                System.err.println("actual:");
-                System.err.println(fileContent);
-                throw t;
+                System.err.println("fail for file " + f.filename);
+                printNumbered(System.err, f.filename + " expected", f.content);
+                printNumbered(System.err, f.filename + " actual  ", fileContent);
+                exception = t;
             }
         }
-
-        assertTrue(content.toString(), content.isEmpty());
+        if (exception != null) {
+            fail("file contents does not match expectation, see stderr for more details.");
+        }
+        assertTrue("not all files processeed", content.isEmpty());
     }
-    
+
     /**
      * Returns a string which contains the contents of a file.
      *
@@ -143,7 +147,7 @@ public class RefactoringTestBase extends NbTestCase {
      * @return the contents of the file(s).
      */
     private static String copyFileToString(java.io.File f) throws java.io.IOException {
-        int s = (int) f.length();
+        int s = (int)f.length();
         byte[] data = new byte[s];
         int len = new FileInputStream(f).read(data);
         if (len != s) {
@@ -173,8 +177,8 @@ public class RefactoringTestBase extends NbTestCase {
         boolean goldenHasNext = g.hasNext();
         boolean realHasNext = r.hasNext();
 
-        assertFalse(goldenHasNext?"Expected: " + g.next().getMessage():"", goldenHasNext);
-        assertFalse(realHasNext?"Unexpected: " + r.next().getMessage():"", realHasNext);
+        assertFalse(goldenHasNext ? "Expected: " + g.next().getMessage() : "", goldenHasNext);
+        assertFalse(realHasNext ? "Unexpected: " + r.next().getMessage() : "", realHasNext);
     }
 
     static {
@@ -182,6 +186,7 @@ public class RefactoringTestBase extends NbTestCase {
     }
 
     protected static final class File {
+
         public final String filename;
         public final String content;
 
@@ -202,144 +207,147 @@ public class RefactoringTestBase extends NbTestCase {
         System.setProperty("org.netbeans.modules.java.source.usages.SourceAnalyser.fullIndex", "true");
         Logger.getLogger("").setLevel(Level.SEVERE); //turn off chatty logs
         MimeTypes.setAllMimeTypes(new HashSet<String>());
-        SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/openide/loaders/layer.xml",
-                    "org/netbeans/modules/java/source/resources/layer.xml",
-                    "org/netbeans/modules/java/editor/resources/layer.xml",
-            "org/netbeans/modules/refactoring/java/test/resources/layer.xml", "META-INF/generated-layer.xml"}, new Object[] {
-                    new ClassPathProvider() {
-                        @Override
-                        public ClassPath findClassPath(FileObject file, String type) {
-                    if (sourcePath != null && sourcePath.contains(file)){
-                                if (ClassPath.BOOT.equals(type)) {
-                                    return TestUtil.getBootClassPath();
-                                }
-                                if (JavaClassPathConstants.MODULE_BOOT_PATH.equals(type)) {
-                                    return BootClassPathUtil.getModuleBootPath();
-                                }
-                                if (ClassPath.COMPILE.equals(type)) {
-                                    return ClassPathSupport.createClassPath(new FileObject[0]);
-                                }
-                                if (ClassPath.SOURCE.equals(type)) {
-                                    return sourcePath;
-                                }
-                            }
+        SourceUtilsTestUtil.prepareTest(new String[]{"org/netbeans/modules/openide/loaders/layer.xml",
+            "org/netbeans/modules/java/source/resources/layer.xml",
+            "org/netbeans/modules/java/editor/resources/layer.xml",
+            "org/netbeans/modules/refactoring/java/test/resources/layer.xml", "META-INF/generated-layer.xml"}, new Object[]{
+            new ClassPathProvider() {
+                @Override
+                public ClassPath findClassPath(FileObject file, String type) {
+                    if (sourcePath != null && sourcePath.contains(file)) {
+                        if (ClassPath.BOOT.equals(type)) {
+                            return TestUtil.getBootClassPath();
+                        }
+                        if (JavaClassPathConstants.MODULE_BOOT_PATH.equals(type)) {
+                            return BootClassPathUtil.getModuleBootPath();
+                        }
+                        if (ClassPath.COMPILE.equals(type)) {
+                            return ClassPathSupport.createClassPath(new FileObject[0]);
+                        }
+                        if (ClassPath.SOURCE.equals(type)) {
+                            return sourcePath;
+                        }
+                    }
 
-                            return null;
-                        }
-                    },
-                    new ProjectFactory() {
-                        @Override
-                        public boolean isProject(FileObject projectDirectory) {
-                            return src != null && src.getParent() == projectDirectory;
-                        }
-                        @Override
-                        public Project loadProject(final FileObject projectDirectory, ProjectState state) throws IOException {
-                if (!isProject(projectDirectory)) {
                     return null;
                 }
-                            return new Project() {
+            },
+            new ProjectFactory() {
+                @Override
+                public boolean isProject(FileObject projectDirectory) {
+                    return src != null && src.getParent() == projectDirectory;
+                }
+
+                @Override
+                public Project loadProject(final FileObject projectDirectory, ProjectState state) throws IOException {
+                    if (!isProject(projectDirectory)) {
+                        return null;
+                    }
+                    return new Project() {
+                        @Override
+                        public FileObject getProjectDirectory() {
+                            return projectDirectory;
+                        }
+
+                        @Override
+                        public Lookup getLookup() {
+                            final Project p = this;
+                            return Lookups.singleton(new Sources() {
+
                                 @Override
-                                public FileObject getProjectDirectory() {
-                                    return projectDirectory;
+                                public SourceGroup[] getSourceGroups(String type) {
+                                    return new SourceGroup[]{GenericSources.group(p, src.getParent(), "source", "Java Sources", null, null),
+                                        GenericSources.group(p, test, "testsources", "Test Sources", null, null)};
                                 }
+
                                 @Override
-                                public Lookup getLookup() {
-                                    final Project p = this;
-                                    return Lookups.singleton(new Sources() {
-
-                                        @Override
-                                        public SourceGroup[] getSourceGroups(String type) {
-                                return new SourceGroup[] {GenericSources.group(p, src.getParent(), "source", "Java Sources", null, null),
-                                                        GenericSources.group(p, test, "testsources", "Test Sources", null, null)};
-                                        }
-
-                                        @Override
-                                        public void addChangeListener(ChangeListener listener) {
-                                        }
-
-                                        @Override
-                                        public void removeChangeListener(ChangeListener listener) {
-                                        }
-                                    });
+                                public void addChangeListener(ChangeListener listener) {
                                 }
-                            };
+
+                                @Override
+                                public void removeChangeListener(ChangeListener listener) {
+                                }
+                            });
                         }
-                        @Override
-            public void saveProject(Project project) throws IOException, ClassCastException {}
-                    },
-                    new TestLocator() {
+                    };
+                }
 
-                        @Override
-                        public boolean appliesTo(FileObject fo) {
-                            return true;
-                        }
+                @Override
+                public void saveProject(Project project) throws IOException, ClassCastException {
+                }
+            },
+            new TestLocator() {
 
-                        @Override
-                        public boolean asynchronous() {
-                            return false;
-                        }
+                @Override
+                public boolean appliesTo(FileObject fo) {
+                    return true;
+                }
 
-                        @Override
-                        public LocationResult findOpposite(FileObject fo, int caretOffset) {
-                            ClassPath srcCp;
+                @Override
+                public boolean asynchronous() {
+                    return false;
+                }
 
-                            if ((srcCp = ClassPath.getClassPath(fo, ClassPath.SOURCE)) == null) {
-                                return new LocationResult("File not found"); //NOI18N
-                            }
+                @Override
+                public LocationResult findOpposite(FileObject fo, int caretOffset) {
+                    ClassPath srcCp;
 
-                            String baseResName = srcCp.getResourceName(fo, '/', false);
-                            String testResName = getTestResName(baseResName, fo.getExt());
-                            assert testResName != null;
-                            FileObject fileObject = test.getFileObject(testResName);
-                if(fileObject != null) {
-                                return new LocationResult(fileObject, -1);
-                            }
+                    if ((srcCp = ClassPath.getClassPath(fo, ClassPath.SOURCE)) == null) {
+                        return new LocationResult("File not found"); //NOI18N
+                    }
 
-                            return new LocationResult("File not found"); //NOI18N
-                        }
+                    String baseResName = srcCp.getResourceName(fo, '/', false);
+                    String testResName = getTestResName(baseResName, fo.getExt());
+                    assert testResName != null;
+                    FileObject fileObject = test.getFileObject(testResName);
+                    if (fileObject != null) {
+                        return new LocationResult(fileObject, -1);
+                    }
 
-                        @Override
-                        public void findOpposite(FileObject fo, int caretOffset, LocationListener callback) {
-                            throw new UnsupportedOperationException("This should not be called on synchronous locators.");
-                        }
+                    return new LocationResult("File not found"); //NOI18N
+                }
 
-                        @Override
-                        public FileType getFileType(FileObject fo) {
-                if(FileUtil.isParentOf(test, fo)) {
-                                return FileType.TEST;
-                } else if(FileUtil.isParentOf(src, fo)) {
-                                return FileType.TESTED;
-                            }
-                            return FileType.NEITHER;
-                        }
+                @Override
+                public void findOpposite(FileObject fo, int caretOffset, LocationListener callback) {
+                    throw new UnsupportedOperationException("This should not be called on synchronous locators.");
+                }
 
-                        private String getTestResName(String baseResName, String ext) {
-                StringBuilder buf
-                        = new StringBuilder(baseResName.length() + ext.length() + 10);
-                            buf.append(baseResName).append("Test");                         //NOI18N
-                            if (ext.length() != 0) {
-                                buf.append('.').append(ext);
-                            }
-                            return buf.toString();
-                        }
-                    },
-                    new SourceLevelQueryImplementation() {
+                @Override
+                public FileType getFileType(FileObject fo) {
+                    if (FileUtil.isParentOf(test, fo)) {
+                        return FileType.TEST;
+                    } else if (FileUtil.isParentOf(src, fo)) {
+                        return FileType.TESTED;
+                    }
+                    return FileType.NEITHER;
+                }
 
-                        @Override
-                        public String getSourceLevel(FileObject javaFile) {
-                            return sourcelevel;
-                        }
-                    }});
+                private String getTestResName(String baseResName, String ext) {
+                    StringBuilder buf
+                            = new StringBuilder(baseResName.length() + ext.length() + 10);
+                    buf.append(baseResName).append("Test");                         //NOI18N
+                    if (ext.length() != 0) {
+                        buf.append('.').append(ext);
+                    }
+                    return buf.toString();
+                }
+            },
+            new SourceLevelQueryImplementation() {
+
+                @Override
+                public String getSourceLevel(FileObject javaFile) {
+                    return sourcelevel;
+                }
+            }});
         Main.initializeURLFactory();
         org.netbeans.api.project.ui.OpenProjects.getDefault().getOpenProjects();
-        
+
 //        org.netbeans.modules.java.source.TreeLoader.DISABLE_CONFINEMENT_TEST = true;
-        
         prepareTest();
-        org.netbeans.api.project.ui.OpenProjects.getDefault().open(new Project[] {prj = ProjectManager.getDefault().findProject(src.getParent())}, false);
+        org.netbeans.api.project.ui.OpenProjects.getDefault().open(new Project[]{prj = ProjectManager.getDefault().findProject(src.getParent())}, false);
         MimeTypes.setAllMimeTypes(Collections.singleton("text/x-java"));
         sourcePath = ClassPathSupport.createClassPath(src, test);
-        GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, new ClassPath[] {sourcePath});
+        GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, new ClassPath[]{sourcePath});
         RepositoryUpdater.getDefault().start(true);
         super.setUp();
         FileUtil.createData(FileUtil.getConfigRoot(), "Templates/Classes/Empty.java");
@@ -349,8 +357,8 @@ public class RefactoringTestBase extends NbTestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, new ClassPath[] {sourcePath});
-        org.netbeans.api.project.ui.OpenProjects.getDefault().close(new Project[] {prj});
+        GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, new ClassPath[]{sourcePath});
+        org.netbeans.api.project.ui.OpenProjects.getDefault().close(new Project[]{prj});
         CountDownLatch cdl = new CountDownLatch(1);
         RepositoryUpdater.getDefault().stop(() -> {
             cdl.countDown();
@@ -366,12 +374,12 @@ public class RefactoringTestBase extends NbTestCase {
         src = FileUtil.createFolder(projectFolder, "src");
         test = FileUtil.createFolder(projectFolder, "test");
 
-            FileObject cache = FileUtil.createFolder(workdir, "cache");
+        FileObject cache = FileUtil.createFolder(workdir, "cache");
 
-            CacheFolder.setCacheFolder(cache);
-        }
+        CacheFolder.setCacheFolder(cache);
+    }
 
-    @ServiceProvider(service=MimeDataProvider.class)
+    @ServiceProvider(service = MimeDataProvider.class)
     public static final class MimeDataProviderImpl implements MimeDataProvider {
 
         private static final Lookup L = Lookups.singleton(new JavaCustomIndexer.Factory());
@@ -384,7 +392,7 @@ public class RefactoringTestBase extends NbTestCase {
 
             return null;
         }
-        
+
     }
 
     protected static boolean problemIsFatal(List<Problem> problems) {
@@ -411,10 +419,42 @@ public class RefactoringTestBase extends NbTestCase {
                 super.runTest();
                 return;
             } catch (Throwable t) {
-                if (exc == null) exc = t;
+                if (exc == null) {
+                    exc = t;
+                }
             }
         }
         throw exc;
     }
 
+    void printNumbered(final PrintStream out, final String name, String source) {
+        AtomicInteger c = new AtomicInteger(1);
+        source.trim().lines().forEach(l -> out.println("%s [%4d] %s".formatted(name, c.getAndIncrement(), l)));
+    }
+
+    /**
+     * Compare string by splitting them into lines, and remove trailing whitespace.
+     * When the strings differ, both expectend and actual are printed.
+     * @param expected to compare
+     * @param actual to compare
+     */
+    public void assertLinesEqual(String expected, String actual){
+        String[] linesExpected= expected.lines().toArray(String[]::new);
+        String[] linesActual= actual.lines().toArray(String[]::new);
+        int limit= Math.max(linesExpected.length,linesActual.length);
+        StringBuilder sb = new StringBuilder();
+        boolean equals = true;
+        for (int i = 0; i < limit; i++) {
+            String e= (i < linesExpected.length? linesExpected[i]:"").trim(); 
+            String a= (i < linesActual.length? linesActual[i]:"").trim();
+            boolean same = e.equals(a);
+            String sep= same?"   ":" | ";
+            equals &= same;
+            sb.append(String.format("[%3d] %-80s%s%-80s%n",i,e,sep,a));
+        }
+        if (!equals){
+            System.err.println(sb.toString());
+            fail("lines differ, see stderr for more details.");
+        }
+    }
 }

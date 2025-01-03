@@ -53,6 +53,7 @@ import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
 import org.netbeans.modules.php.editor.model.IndexScope;
 import org.netbeans.modules.php.editor.model.MethodScope;
+import org.netbeans.modules.php.editor.model.Model;
 import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.NamespaceScope;
@@ -1288,7 +1289,7 @@ public final class VariousUtils {
     };
 
     @org.netbeans.api.annotations.common.SuppressWarnings({"SF_SWITCH_FALLTHROUGH"})
-    public static String getSemiType(TokenSequence<PHPTokenId> tokenSequence, State state, VariableScope varScope) {
+    public static String getSemiType(TokenSequence<PHPTokenId> tokenSequence, State state, VariableScope varScope, Model model) {
         int commasCount = 0;
         String possibleClassName = ""; //NOI18N
         int anchor = -1;
@@ -1478,6 +1479,16 @@ public final class VariousUtils {
                     //no-op
                 }
             } else {
+                if (token.id() == PHPTokenId.PHP_CURLY_CLOSE
+                        && (state == State.REFERENCE || state == State.STATIC_REFERENCE)) {
+                    // new class(){}->, new class(){}?->, new class(){}::
+                    ClassScope anonymousClass = getAnonymousClass(tokenSequence.offset() + tokenSequence.token().length(), model);
+                    if (anonymousClass != null) {
+                        state = State.STOP;
+                        metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.CONSTRUCTOR_TYPE_PREFIX + anonymousClass.getName());
+                        break;
+                    }
+                }
                 if (state.equals(State.VARBASE)) {
                     metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.VAR_TYPE_PREFIX);
                     state = State.STOP;
@@ -1516,6 +1527,18 @@ public final class VariousUtils {
             String retval = metaAll.toString();
             if (retval != null) {
                 return retval;
+            }
+        }
+        return null;
+    }
+
+    @CheckForNull
+    private static ClassScope getAnonymousClass(int anonymousClassEndOffset, Model model) {
+        Collection<? extends ClassScope> classScopes = ModelUtils.getDeclaredClasses(model.getFileScope());
+        for (ClassScope classScope : classScopes) {
+            if (classScope.isAnonymous()
+                    && classScope.getBlockRange().getEnd() == anonymousClassEndOffset) {
+                return classScope;
             }
         }
         return null;

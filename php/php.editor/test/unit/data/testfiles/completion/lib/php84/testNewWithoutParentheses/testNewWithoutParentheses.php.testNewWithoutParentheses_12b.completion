@@ -1,0 +1,4 @@
+Code completion result for source line:
+new Example()->publicFie|ld; // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int publicField                 [PUBLIC]   Example

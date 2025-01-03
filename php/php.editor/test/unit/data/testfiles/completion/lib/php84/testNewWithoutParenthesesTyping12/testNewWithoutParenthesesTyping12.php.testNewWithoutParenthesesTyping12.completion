@@ -1,0 +1,7 @@
+Code completion result for source line:
+$example = new Example()->test::public|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     publicStaticTestMethod()        [STATIC]   Test
+VARIABLE   string $publicStaticTestField   [STATIC]   Test
+CONSTANT   PUBLIC_TEST_CONST "public test  [PUBLIC]   Test

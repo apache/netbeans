@@ -1,0 +1,10 @@
+Code completion result for source line:
+localLong.comp|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     compare(long, long)             [STATIC,   int
+METHOD     compareTo(Character)                       int
+METHOD     compareTo(Long)                 [PUBLIC]   int
+METHOD     compareTo(Number)                          int
+METHOD     compareUnsigned(long, long)     [STATIC,   int
+METHOD     compress(long, long)            [STATIC,   long

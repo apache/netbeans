@@ -8,7 +8,7 @@ METHOD     getBytes()                                 byte[]
 METHOD     getBytes(Map)                              byte[]
 METHOD     getClass()                      [PUBLIC]   Class<?>
 METHOD     getContent()                    [PUBLIC]   Object
-METHOD     getContent(Class[])             [PUBLIC]   Object
+METHOD     getContent(Class<?>[])          [PUBLIC]   Object
 METHOD     getDefaultPort()                [PUBLIC]   int
 METHOD     getFile()                       [PUBLIC]   String
 METHOD     getHost()                       [PUBLIC]   String

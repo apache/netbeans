@@ -1,7 +1,0 @@
-Code completion result for source line:
-x?.b|
-(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-------------------------------------
-METHOD     bitwiseNegate()                            Pattern
-FIELD      blank                           [PUBLIC]   boolean
-FIELD      bytes                           [PUBLIC]   byte[]

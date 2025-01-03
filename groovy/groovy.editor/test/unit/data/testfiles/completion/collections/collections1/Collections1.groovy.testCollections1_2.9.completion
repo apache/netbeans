@@ -1,6 +1,0 @@
-Code completion result for source line:
-[1:"one", 2:"two"].ent|
-(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-------------------------------------
-METHOD     entry(K, V)                     [STATIC,   Entry<K, V>
-METHOD     entrySet()                      [PUBLIC]   Set<Entry<K, V>>

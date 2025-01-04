@@ -113,7 +113,7 @@ extends ActionsProviderSupport implements PropertyChangeListener {
      * @return set of actions supported by this ActionsProvider
      */
     @Override
-    public Set getActions () {
+    public Set<Object> getActions () {
         return ACTIONS;
     }
 

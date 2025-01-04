@@ -36,10 +36,9 @@ public final class DAPUtils {
     private DAPUtils() {
     }
 
-    static synchronized void markCurrent (final Object line) {
+    static synchronized void markCurrent (Annotatable[] annotatables) {
         unmarkCurrent ();
 
-        Annotatable[] annotatables = (Annotatable[]) line;
         int i = 0, k = annotatables.length;
 
         // first line with icon in gutter
@@ -70,7 +69,7 @@ public final class DAPUtils {
                 );
         currentLine = annotations;
 
-        showLine (line);
+        showLine(annotatables);
     }
 
     static synchronized void unmarkCurrent () {
@@ -85,8 +84,7 @@ public final class DAPUtils {
         }
     }
 
-    public static void showLine (final Object line) {
-        final Annotatable[] a = (Annotatable[]) line;
+    public static void showLine (Annotatable[] a) {
         SwingUtilities.invokeLater (new Runnable () {
             @Override
             public void run () {

@@ -241,7 +241,7 @@ public final class DAPDebugger implements IDebugProtocolClient {
         //TODO: could cache the convertors:
         for (BreakpointConvertor convertor : Lookup.getDefault().lookupAll(BreakpointConvertor.class)) {
             for (Breakpoint b : breakpoints) {
-                convertor.covert(b, consumer);
+                convertor.convert(b, consumer);
             }
         }
 

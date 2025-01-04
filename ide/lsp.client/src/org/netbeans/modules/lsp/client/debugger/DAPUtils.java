@@ -100,17 +100,6 @@ public final class DAPUtils {
         });
     }
 
-    static int getLineNumber (Object line) {
-        final Annotatable[] a = (Annotatable[]) line;
-        if (a [0] instanceof Line)
-            return ((Line) a [0]).getLineNumber ();
-        else
-        if (a [0] instanceof Line.Part)
-            return ((Line.Part) a [0]).getLine ().getLineNumber ();
-        else
-            throw new InternalError ();
-    }
-
     public static boolean contains (Object currentLine, Line line) {
         if (currentLine == null) return false;
         final Annotatable[] a = (Annotatable[]) currentLine;

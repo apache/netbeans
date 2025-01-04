@@ -69,7 +69,7 @@ public final class DAPActionsProvider extends ActionsProviderSupport implements 
     }
 
     @Override
-    public Set getActions () {
+    public Set<Object> getActions () {
         return ACTIONS;
     }
 
@@ -88,38 +88,11 @@ public final class DAPActionsProvider extends ActionsProviderSupport implements 
             debugger.stepOut();
         } else if (action == ActionsManager.ACTION_PAUSE) {
             debugger.pause();
-//        } else
-//        if (action == ActionsManager.ACTION_START) {
-//            return ;
-//        } else
-//        if ( action == ActionsManager.ACTION_STEP_INTO ||
-//             action == ActionsManager.ACTION_STEP_OUT ||
-//             action == ActionsManager.ACTION_STEP_OVER
-//        ) {
-//            debugger.doStep(action);
         }
     }
 
     @Override
     public void postAction(final Object action, final Runnable actionPerformedNotifier) {
-//        if (action == ActionsManager.ACTION_KILL) {
-//            synchronized (DAPDebugger.class) {
-//                if (killRequestProcessor == null) {
-//                    killRequestProcessor = new RequestProcessor("CPPLite debugger finish RP", 1);
-//                }
-//            }
-//            killRequestProcessor.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        doAction(action);
-//                    } finally {
-//                        actionPerformedNotifier.run();
-//                    }
-//                }
-//            });
-//            return ;
-//        }
         setDebugActionsEnabled(false);
         ACTIONS_WORKER.post(new Runnable() {
             @Override

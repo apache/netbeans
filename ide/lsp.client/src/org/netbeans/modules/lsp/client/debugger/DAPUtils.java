@@ -44,16 +44,17 @@ public final class DAPUtils {
 
         // first line with icon in gutter
         DebuggerAnnotation[] annotations = new DebuggerAnnotation [k];
-        if (annotatables [i] instanceof Line.Part)
+        if (annotatables [i] instanceof Line.Part) {
             annotations [i] = new DebuggerAnnotation (
                 DebuggerAnnotation.CURRENT_LINE_PART_ANNOTATION_TYPE,
                 annotatables [i]
             );
-        else
+        } else {
             annotations [i] = new DebuggerAnnotation (
                 DebuggerAnnotation.CURRENT_LINE_ANNOTATION_TYPE,
                 annotatables [i]
             );
+        }
 
         // other lines
         for (i = 1; i < k; i++)

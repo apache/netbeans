@@ -27,13 +27,13 @@ import org.openide.text.Line;
 import org.openide.text.Line.ShowOpenType;
 import org.openide.text.Line.ShowVisibilityType;
 
-public final class Utils {
+public final class DAPUtils {
 
-    private static final Logger logger = Logger.getLogger(Utils.class.getName());
+    private static final Logger logger = Logger.getLogger(DAPUtils.class.getName());
 
     private static Object currentLine;
 
-    private Utils() {
+    private DAPUtils() {
     }
 
     static synchronized void markCurrent (final Object line) {

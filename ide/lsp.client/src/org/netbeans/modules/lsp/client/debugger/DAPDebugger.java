@@ -262,7 +262,7 @@ public final class DAPDebugger implements IDebugProtocolClient {
         }
         currentThreadId = -1;
         cs.fireChange(); //TODO: in a different thread?
-        Utils.unmarkCurrent();
+        DAPUtils.unmarkCurrent();
     }
 
     @Override
@@ -293,7 +293,7 @@ public final class DAPDebugger implements IDebugProtocolClient {
         WORKER.post(() -> { //TODO: what if something else is running in WORKER? And OK to coalescence all the below?
             cs.fireChange(); //TODO: in a different thread?
             engineProvider.getDestructor().killEngine();
-            Utils.unmarkCurrent(); //TODO: can this be done cleaner?
+            DAPUtils.unmarkCurrent(); //TODO: can this be done cleaner?
             DebuggerManager.getDebuggerManager().removeDebuggerListener(DebuggerManager.PROP_BREAKPOINTS, updateBreakpointsListener);
             launched.cancel(true);
             try {

@@ -26,7 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.Action;
 import org.netbeans.modules.lsp.client.debugger.DAPFrame;
 import org.netbeans.modules.lsp.client.debugger.DAPThread;
-import org.netbeans.modules.lsp.client.debugger.Utils;
+import org.netbeans.modules.lsp.client.debugger.DAPUtils;
 
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
@@ -250,7 +250,7 @@ public class CallStackModel extends CurrentFrameTracker
         if (node instanceof DAPFrame) {
             Line line = ((DAPFrame) node).location();
             if (line != null) {
-                Utils.showLine(new Line[] {line});
+                DAPUtils.showLine(new Line[] {line});
             }
             ((DAPFrame) node).makeCurrent();
             return;

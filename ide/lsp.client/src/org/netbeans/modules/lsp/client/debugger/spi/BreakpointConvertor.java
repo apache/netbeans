@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.lsp.client.debugger.spi;
 
+import java.net.URI;
 import java.util.List;
 import org.netbeans.modules.lsp.client.debugger.LineBreakpointData;
 import org.netbeans.modules.lsp.client.debugger.SPIAccessor;
@@ -35,8 +36,8 @@ public interface BreakpointConvertor {
             this.lineBreakpoints = lineBreakpoints;
         }
 
-        public void lineBreakpoint(String url, int lineNumber, String condition) {
-            lineBreakpoints.add(new LineBreakpointData(url, lineNumber, condition));
+        public void lineBreakpoint(URI uri, int lineNumber, String condition) {
+            lineBreakpoints.add(new LineBreakpointData(uri, lineNumber, condition));
         }
 
         static {

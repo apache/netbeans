@@ -23,7 +23,7 @@ import javax.swing.Action;
 import org.netbeans.modules.lsp.client.debugger.DAPDebugger;
 import org.netbeans.modules.lsp.client.debugger.DAPFrame;
 import org.netbeans.modules.lsp.client.debugger.DAPThread;
-import org.netbeans.modules.lsp.client.debugger.DAPUtils;
+import org.netbeans.modules.lsp.client.debugger.DAPStackTraceAnnotationHolder;
 
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
@@ -208,7 +208,7 @@ public class DebuggingActionsProvider implements NodeActionsProvider {
     private static void goToSource(final DAPFrame frame) {
         Line currentLine = frame.location();
         if (currentLine != null) {
-            DAPUtils.showLine(new Line[] {currentLine});
+            DAPStackTraceAnnotationHolder.showLine(new Line[] {currentLine});
         }
     }
 

@@ -18,5 +18,7 @@
  */
 package org.netbeans.modules.lsp.client.debugger;
 
-public record LineBreakpointData(String url, int lineNumber, String condition) {
+import java.net.URI;
+
+public record LineBreakpointData(URI uri, int lineNumber, String condition) {
 }

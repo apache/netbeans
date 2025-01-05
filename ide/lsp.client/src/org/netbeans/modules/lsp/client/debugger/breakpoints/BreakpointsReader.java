@@ -46,25 +46,17 @@ public final class BreakpointsReader implements Properties.Reader {
         DAPLineBreakpoint b;
         int lineNumber = properties.getInt("lineNumber", 0) + 1;
         String url = properties.getString ("url", null);
-        if (url != null) {
-            FileObject fo;
-            try {
-                fo = URLMapper.findFileObject(new URL(url));
-            } catch (MalformedURLException ex) {
-                fo = null;
-            }
-            if (fo == null) {
-                // The user file is gone
-                return null;
-            }
-            b = DAPLineBreakpoint.create(fo, lineNumber);
-        } else {
-            String filePath = properties.getString ("filePath", null);
-            if (filePath == null) {
-                return null;
-            }
-            b = DAPLineBreakpoint.create(filePath, lineNumber);
+        FileObject fo;
+        try {
+            fo = URLMapper.findFileObject(new URL(url));
+        } catch (MalformedURLException ex) {
+            fo = null;
         }
+        if (fo == null) {
+            // The user file is gone
+            return null;
+        }
+        b = DAPLineBreakpoint.create(fo, lineNumber);
         b.setGroupName(
             properties.getString (Breakpoint.PROP_GROUP_NAME, "")
         );
@@ -92,10 +84,7 @@ public final class BreakpointsReader implements Properties.Reader {
     public void write (Object object, Properties properties) {
         DAPLineBreakpoint b = (DAPLineBreakpoint) object;
         FileObject fo = b.getFileObject();
-        if (fo != null) {
-            properties.setString("url", fo.toURL().toString());
-        }
-        properties.setString("filePath", b.getFilePath());
+        properties.setString("url", fo.toURL().toString());
         properties.setInt (
             "lineNumber",
             b.getLineNumber() - 1

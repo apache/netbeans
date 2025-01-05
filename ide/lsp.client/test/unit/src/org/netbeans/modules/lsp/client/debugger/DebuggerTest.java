@@ -92,7 +92,6 @@ public class DebuggerTest extends NbTestCase {
     private FileObject srcDir;
     private String srcDirURL;
     private FileObject testFile;
-    private String testFileURL;
 
     public DebuggerTest(String name) {
         super(name);
@@ -117,8 +116,8 @@ public class DebuggerTest extends NbTestCase {
 
         DebuggerManager manager = DebuggerManager.getDebuggerManager();
 
-        manager.addBreakpoint(DAPLineBreakpoint.create(testFileURL, 4));
-        DAPLineBreakpoint line6Breakpoint = DAPLineBreakpoint.create(testFileURL, 6);
+        manager.addBreakpoint(DAPLineBreakpoint.create(testFile, 4));
+        DAPLineBreakpoint line6Breakpoint = DAPLineBreakpoint.create(testFile, 6);
         manager.addBreakpoint(line6Breakpoint);
         int backendPort = startBackend();
         Socket socket = new Socket("localhost", backendPort);
@@ -154,7 +153,7 @@ public class DebuggerTest extends NbTestCase {
 
         //tweak breakpoints:
         manager.removeBreakpoint(line6Breakpoint);
-        manager.addBreakpoint(DAPLineBreakpoint.create(testFileURL, 7));
+        manager.addBreakpoint(DAPLineBreakpoint.create(testFile, 7));
         //continue to debugging - should finish at line 7, not 6:
         waitFor(true, () -> am.isEnabled(ActionsManager.ACTION_CONTINUE));
         am.postAction(ActionsManager.ACTION_CONTINUE);
@@ -189,7 +188,7 @@ public class DebuggerTest extends NbTestCase {
                       """);
 
         DebuggerManager manager = DebuggerManager.getDebuggerManager();
-        DAPLineBreakpoint breakpoint = DAPLineBreakpoint.create(testFileURL, 11);
+        DAPLineBreakpoint breakpoint = DAPLineBreakpoint.create(testFile, 11);
 
         breakpoint.setCondition("\"4\".equals(toPrint)");
         manager.addBreakpoint(breakpoint);
@@ -227,7 +226,6 @@ public class DebuggerTest extends NbTestCase {
              Writer w = new OutputStreamWriter(out)) {
             w.write(code);
         }
-        testFileURL = testFile.toURL().toString();
         try (OutputStream out = FileUtil.createData(project, "pom.xml").getOutputStream();
              Writer w = new OutputStreamWriter(out)) {
             w.write("""

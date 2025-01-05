@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.lsp.client.debugger;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -89,6 +90,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.netbeans.modules.lsp.client.debugger.spi.BreakpointConvertor.ConvertedBreakpointConsumer;
+import org.openide.util.Utilities;
 
 public final class DAPDebugger implements IDebugProtocolClient {
     public static final String ENGINE_TYPE_ID = "DAPDebuggerEngine";
@@ -109,7 +111,7 @@ public final class DAPDebugger implements IDebugProtocolClient {
     private final AtomicBoolean suspended = new AtomicBoolean();
     private final Map<Integer, DAPThread> id2Thread = new HashMap<>(); //TODO: concurrent/synchronization!!!
     private final AtomicReference<Runnable> runAfterConfigureDone = new AtomicReference<>();
-    private URLPathConvertor fileConvertor;
+    private URIPathConvertor fileConvertor;
     private InputStream in;
     private Future<Void> launched;
     private IDebugProtocolServer server;
@@ -130,13 +132,13 @@ public final class DAPDebugger implements IDebugProtocolClient {
                 updateAfterBreakpointChange(breakpoint);
             }
             private void updateAfterBreakpointChange(Breakpoint breakpoint) {
-                Set<String> modifiedURLs =
+                Set<URI> modifiedURLs =
                         convertBreakpoints(breakpoint).stream()
-                                                      .map(b -> b.url())
+                                                      .map(b -> b.uri())
                                                       .collect(Collectors.toSet());
 
                 try {
-                    setBreakpoints(d -> modifiedURLs.contains(d.url()));
+                    setBreakpoints(d -> modifiedURLs.contains(d.uri()));
                 } catch (InterruptedException | ExecutionException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -212,7 +214,7 @@ public final class DAPDebugger implements IDebugProtocolClient {
                 lb.setLine(data.lineNumber());
                 lb.setCondition(data.condition());
 
-                String path = fileConvertor.toPath(data.url());
+                String path = fileConvertor.toPath(data.uri());
 
                 if (path != null) {
                     url2Breakpoints.computeIfAbsent(path, x -> new ArrayList<>())
@@ -262,7 +264,7 @@ public final class DAPDebugger implements IDebugProtocolClient {
         }
         currentThreadId = -1;
         cs.fireChange(); //TODO: in a different thread?
-        DAPUtils.unmarkCurrent();
+        DAPStackTraceAnnotationHolder.unmarkCurrent();
     }
 
     @Override
@@ -293,7 +295,7 @@ public final class DAPDebugger implements IDebugProtocolClient {
         WORKER.post(() -> { //TODO: what if something else is running in WORKER? And OK to coalescence all the below?
             cs.fireChange(); //TODO: in a different thread?
             engineProvider.getDestructor().killEngine();
-            DAPUtils.unmarkCurrent(); //TODO: can this be done cleaner?
+            DAPStackTraceAnnotationHolder.unmarkCurrent(); //TODO: can this be done cleaner?
             DebuggerManager.getDebuggerManager().removeDebuggerListener(DebuggerManager.PROP_BREAKPOINTS, updateBreakpointsListener);
             launched.cancel(true);
             try {
@@ -554,24 +556,24 @@ public final class DAPDebugger implements IDebugProtocolClient {
 
     public enum Type {LAUNCH, ATTACH}
 
-    private static final URLPathConvertor DEFAULT_CONVERTOR = new URLPathConvertor() {
+    private static final URIPathConvertor DEFAULT_CONVERTOR = new URIPathConvertor() {
         @Override
-        public String toPath(String file) {
-            if (file.startsWith("file:")) {
-                return URI.create(file).getPath();
+        public String toPath(URI uri) {
+            if ("file".equals(uri.getScheme())) {
+                return uri.getPath();
             }
 
             return null;
         }
 
         @Override
-        public String toURL(String path) {
-            return "file:" + path;
+        public URI toURI(String path) {
+            return Utilities.toURI(new File(path));
         }
     };
 
-    public interface URLPathConvertor {
-        public String toPath(String url);
-        public String toURL(String path);
+    public interface URIPathConvertor {
+        public String toPath(URI uri);
+        public URI toURI(String path);
     }
 }

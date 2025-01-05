@@ -22,7 +22,6 @@ package org.netbeans.modules.lsp.client.debugger.breakpoints;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,6 @@ import org.openide.text.AnnotationProvider;
 import org.openide.text.Line;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakListeners;
 import org.openide.util.WeakSet;
 
 
@@ -54,7 +52,6 @@ public final class BreakpointAnnotationProvider extends DebuggerManagerAdapter i
 
     private final Map<DAPLineBreakpoint, Set<Annotation>> breakpointToAnnotations = new IdentityHashMap<>();
     private final Set<FileObject> annotatedFiles = new WeakSet<>();
-    private Set<PropertyChangeListener> dataObjectListeners;
     private volatile boolean breakpointsActive = true;
     private final RequestProcessor annotationProcessor = new RequestProcessor("CPP BP Annotation Refresh", 1);
 
@@ -84,14 +81,7 @@ public final class BreakpointAnnotationProvider extends DebuggerManagerAdapter i
                         }
                     }
                 };
-                dobj.addPropertyChangeListener(WeakListeners.propertyChange(pchl, dobj));
-                synchronized (this) {
-                    if (dataObjectListeners == null) {
-                        dataObjectListeners = new HashSet<>();
-                    }
-                    // Prevent from GC.
-                    dataObjectListeners.add(pchl);
-                }
+                dobj.addPropertyChangeListener(pchl);
             }
             annotate(fo);
         }

@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import org.eclipse.lsp4j.debug.StackFrame;
 
 import org.netbeans.api.annotations.common.CheckForNull;
-import org.netbeans.modules.lsp.client.debugger.DAPDebugger.URLPathConvertor;
+import org.netbeans.modules.lsp.client.debugger.DAPDebugger.URIPathConvertor;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
 
@@ -38,11 +38,11 @@ public final class DAPFrame implements DVFrame {
 
     private static final Logger LOGGER = Logger.getLogger(DAPFrame.class.getName());
 
-    private final URLPathConvertor fileConvertor;
+    private final URIPathConvertor fileConvertor;
     private final DAPThread thread;
     private final StackFrame frame;
 
-    public DAPFrame(URLPathConvertor fileConvertor, DAPThread thread, StackFrame frame) {
+    public DAPFrame(URIPathConvertor fileConvertor, DAPThread thread, StackFrame frame) {
         this.fileConvertor = fileConvertor;
         this.thread = thread;
         this.frame = frame;
@@ -71,15 +71,11 @@ public final class DAPFrame implements DVFrame {
 
     @Override
     public URI getSourceURI() {
-        try {
-            //XXX: frame.getSource().getPath() may not work(!)
-            if (frame.getSource() == null || frame.getSource().getPath() == null) {
-                return null;
-            }
-            return new URI(fileConvertor.toURL(frame.getSource().getPath()));
-        } catch (URISyntaxException ex) {
+        //XXX: frame.getSource().getPath() may not work(!)
+        if (frame.getSource() == null || frame.getSource().getPath() == null) {
             return null;
         }
+        return fileConvertor.toURI(frame.getSource().getPath());
     }
 
     @Override

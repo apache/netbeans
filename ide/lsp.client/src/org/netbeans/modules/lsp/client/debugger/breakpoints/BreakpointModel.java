@@ -25,7 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.modules.lsp.client.debugger.DAPDebugger;
-import org.netbeans.modules.lsp.client.debugger.DAPUtils;
+import org.netbeans.modules.lsp.client.debugger.DAPStackTraceAnnotationHolder;
 
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.viewmodel.ModelEvent;
@@ -64,12 +64,7 @@ public final class BreakpointModel implements NodeModel {
             DAPLineBreakpoint breakpoint = (DAPLineBreakpoint) node;
             String nameExt;
             FileObject fileObject = breakpoint.getFileObject();
-            if (fileObject != null) {
-                nameExt = fileObject.getNameExt();
-            } else {
-                File file = new File(breakpoint.getFilePath());
-                nameExt = file.getName();
-            }
+            nameExt = fileObject.getNameExt();
             return nameExt + ":" + breakpoint.getLineNumber();
         }
         throw new UnknownTypeException (node);
@@ -92,7 +87,7 @@ public final class BreakpointModel implements NodeModel {
                 return DISABLED_LINE_BREAKPOINT;
             DAPDebugger debugger = getDebugger ();
             if ( debugger != null &&
-                 DAPUtils.contains (
+                 DAPStackTraceAnnotationHolder.contains (
                      debugger.getCurrentLine (),
                      breakpoint.getLine ()
                  )
@@ -117,7 +112,7 @@ public final class BreakpointModel implements NodeModel {
     throws UnknownTypeException {
         if (node instanceof DAPLineBreakpoint) {
             DAPLineBreakpoint breakpoint = (DAPLineBreakpoint) node;
-            return breakpoint.getFilePath() + ":" + breakpoint.getLineNumber();
+            return breakpoint.getFileObject().getPath() + ":" + breakpoint.getLineNumber();
         }
         throw new UnknownTypeException (node);
     }

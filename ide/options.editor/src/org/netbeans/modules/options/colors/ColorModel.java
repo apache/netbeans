@@ -25,9 +25,9 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +38,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -134,14 +133,13 @@ public final class ColorModel {
             category.addAttribute(StyleConstants.NameAttribute, annotationType.getName());
             
             URL iconURL = annotationType.getGlyph ();
-            Image image = null;
-            if (iconURL.getProtocol ().equals ("nbresloc")) { // NOI18N
-                image = ImageUtilities.loadImage(iconURL.getPath().substring(1));
-            } else {
-                image = Toolkit.getDefaultToolkit ().getImage (iconURL);
-            }
-            if (image != null) {
-                category.addAttribute("icon", new ImageIcon(image)); //NOI18N
+            try {
+                Image image = ImageUtilities.loadImage(iconURL.toURI());
+                if (image != null) {
+                    category.addAttribute("icon", ImageUtilities.image2Icon(image)); //NOI18N
+                }
+            } catch (URISyntaxException e) {
+                LOG.log(Level.WARNING, "AnnotationType.getGlyph() returned invalid URI", e);
             }
             
             Color bgColor = annotationType.getHighlight();

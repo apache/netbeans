@@ -27,6 +27,20 @@
     <apidef name="actions">Actions API</apidef>
 </apidefs>
 <changes>
+    <change id="moreImageUtilsForHiDPI">
+      <api name="util"/>
+      <summary>Added methods to ImageUtilities, to aid migration from other icon loading methods.</summary>
+      <version major="9" minor="36"/>
+      <date day="5" month="1" year="2025"/>
+      <author login="ebakke"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="yes"/>
+      <description>
+            <p>Added new utility methods to ImageUtilities to ease migration from other image loading methods used throughout the NetBeans codebase.
+            Loading icons via ImageUtilities is preferred as it permits alternative SVG versions to be loaded automatically when available.</p>
+       </description>
+       <class package="org.openide.util" name="ImageUtilities"/>
+    </change>
+
     <change id="mouseKeyCodes">
       <api name="util"/>
       <summary>Added methods to query mouse event pseudo-keycodes</summary>

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.lsp.client.debugger;
 
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 import org.openide.text.Annotatable;
@@ -27,13 +26,11 @@ import org.openide.text.Line;
 import org.openide.text.Line.ShowOpenType;
 import org.openide.text.Line.ShowVisibilityType;
 
-public final class DAPUtils {
+public final class DAPStackTraceAnnotationHolder {
 
-    private static final Logger logger = Logger.getLogger(DAPUtils.class.getName());
+    private static DebuggerAnnotation[] currentAnnotations;
 
-    private static Object currentLine;
-
-    private DAPUtils() {
+    private DAPStackTraceAnnotationHolder() {
     }
 
     static synchronized void markCurrent (Annotatable[] annotatables) {
@@ -56,31 +53,32 @@ public final class DAPUtils {
         }
 
         // other lines
-        for (i = 1; i < k; i++)
-            if (annotatables [i] instanceof Line.Part)
+        for (i = 1; i < k; i++) {
+            if (annotatables [i] instanceof Line.Part) {
                 annotations [i] = new DebuggerAnnotation (
                     DebuggerAnnotation.CALL_STACK_FRAME_ANNOTATION_TYPE,
                     annotatables [i]
                 );
-            else
+            } else {
                 annotations [i] = new DebuggerAnnotation (
                     DebuggerAnnotation.CALL_STACK_FRAME_ANNOTATION_TYPE,
                     annotatables [i]
                 );
-        currentLine = annotations;
+            }
+        }
+
+        currentAnnotations = annotations;
 
         showLine(annotatables);
     }
 
     static synchronized void unmarkCurrent () {
-        if (currentLine != null) {
-
-//            ((DebuggerAnnotation) currentLine).detach ();
-            int i, k = ((DebuggerAnnotation[]) currentLine).length;
-            for (i = 0; i < k; i++) {
-                ((DebuggerAnnotation[]) currentLine) [i].detach ();
+        if (currentAnnotations != null) {
+            int k = currentAnnotations.length;
+            for (int i = 0; i < k; i++) {
+                currentAnnotations[i].detach();
             }
-            currentLine = null;
+            currentAnnotations = null;
         }
     }
 

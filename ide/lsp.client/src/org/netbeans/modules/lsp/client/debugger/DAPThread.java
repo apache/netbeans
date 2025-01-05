@@ -179,7 +179,7 @@ public final class DAPThread implements DVThread {
         DAPFrame[] frames = getStack();
 
         if (frames.length == 0) {
-            DAPUtils.unmarkCurrent();
+            DAPStackTraceAnnotationHolder.unmarkCurrent();
             return ;
         }
 
@@ -196,7 +196,7 @@ public final class DAPThread implements DVThread {
               .filter(l -> l != currentLine)
               .forEach(stack::add);
 
-        DAPUtils.markCurrent(stack.toArray(Line[]::new));
+        DAPStackTraceAnnotationHolder.markCurrent(stack.toArray(Line[]::new));
     }
 
 }

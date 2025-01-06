@@ -26,15 +26,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.FontColorSettings;
-import org.netbeans.lib.editor.util.swing.DocumentListenerPriority;
-import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.csl.core.Language;
 import org.netbeans.modules.csl.api.ColoringAttributes.Coloring;
 import org.netbeans.spi.editor.highlighting.HighlightsSequence;
@@ -49,10 +45,9 @@ import org.openide.util.WeakListeners;
  * 
  * @author Tor Norbye
  */
-public final class GsfSemanticLayer extends AbstractHighlightsContainer implements DocumentListener {
+public final class GsfSemanticLayer extends AbstractHighlightsContainer {
     
     private List<SequenceElement> colorings = List.of();
-    private List<Edit> edits;
     private final Map<Language,Map<Coloring, AttributeSet>> cache = new HashMap<>();
     private final Document doc;
 
@@ -81,12 +76,8 @@ public final class GsfSemanticLayer extends AbstractHighlightsContainer implemen
         doc.render(() -> {
             synchronized (GsfSemanticLayer.this) {
                 GsfSemanticLayer.this.colorings = List.copyOf(colorings);
-                GsfSemanticLayer.this.edits = new ArrayList<>();
 
                 fireHighlightsChange(0, doc.getLength()); //XXX: locking
-                
-                DocumentUtilities.removeDocumentListener(doc, GsfSemanticLayer.this, DocumentListenerPriority.LEXER);
-                DocumentUtilities.addDocumentListener(doc, GsfSemanticLayer.this, DocumentListenerPriority.LEXER);
             }
         });
     }
@@ -131,56 +122,7 @@ public final class GsfSemanticLayer extends AbstractHighlightsContainer implemen
         );
         coloringListeners.add(l);
     }
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        synchronized (GsfSemanticLayer.this) {
-            edits.add(new Edit(e.getOffset(), e.getLength(), true));
-        }
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        synchronized (GsfSemanticLayer.this) {
-            edits.add(new Edit(e.getOffset(), e.getLength(), false));
-        }
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-    }
-    
-    // Compute an adjusted offset
-    public int getShiftedPos(int pos) {
-        int ret = pos;
-
-        for (Edit edit: edits) {
-            if (ret > edit.offset()) {
-                if (edit.insert()) {
-                    ret += edit.len();
-                } else if (ret < edit.offset() + edit.len()) {
-                    ret = edit.offset();
-                } else {
-                    ret -= edit.len();
-                }
-            }
-        }
-        return ret;
-    }
-    
-    /**
-     * An Edit is a modification (insert/remove) we've been notified about from the document
-     * since the last time we updated our "colorings" object.
-     * The list of Edits lets me quickly compute the current position of an original
-     * position in the "colorings" object. This is typically going to involve only a couple
-     * of edits (since the colorings object is updated as soon as the user stops typing).
-     * This is probably going to be more efficient than updating all the colorings offsets
-     * every time the document is updated, since the colorings object can contain thousands
-     * of ranges (e.g. for every highlight in the whole document) whereas asking for the
-     * current positions is typically only done for the highlights visible on the screen.
-     */
-    private record Edit(int offset, int len, boolean insert) {}
-    
+ 
     /**
      * An implementation of a HighlightsSequence which can show OffsetRange
      * sections and keep them up to date during edits.
@@ -197,18 +139,27 @@ public final class GsfSemanticLayer extends AbstractHighlightsContainer implemen
 
         @Override
         public boolean moveNext() {
-            element = iterator.hasNext() ? iterator.next() : null;
-            return element != null;
+            while (iterator.hasNext()) {
+                SequenceElement i = iterator.next();
+                // Skip empty highlights, the editor can handle them, though not happy about it
+                // this could happen on deleting large portion of code
+                if (i.start().getOffset() != i.end().getOffset()) {
+                    element = i;
+                    return true;
+                }
+            }
+            element = null;
+            return false;
         }
 
         @Override
         public int getStartOffset() {
-            return getShiftedPos(element.range().getStart());
+            return element.start().getOffset();
         }
 
         @Override
         public int getEndOffset() {
-            return getShiftedPos(element.range().getEnd());
+            return element.end().getOffset();
         }
 
         @Override
@@ -226,21 +177,28 @@ public final class GsfSemanticLayer extends AbstractHighlightsContainer implemen
      * @param offset The offset in the document.
      * @return the index of the first SequenceElement that is left to the offset
      */
-    private static int firstSequenceElement(List<SequenceElement> l, int offset) {
+    static int firstSequenceElement(List<SequenceElement> l, int offset) {
         int low = 0;
         int high = l.size() - 1;
 
         while (low <= high) {
             int mid = (low + high) >>> 1;
             SequenceElement midVal = l.get(mid);
-            int cmp = midVal.range().getStart() - offset;
+            int cmp = midVal.start().getOffset() - offset;
 
-            if (cmp < 0)
-                low = mid + 1;
-            else if (cmp > 0)
-                high = mid - 1;
-            else
+            if (cmp == 0) {
                 return mid;
+            } else if (low == high) {
+                if (mid > 0 && cmp >= 0) {
+                    return mid - 1;
+                } else {
+                    return low;
+                }
+            } else if (cmp < 0) {
+                low = mid + 1;
+            } else if (cmp > 0) {
+                high = mid - 1;
+            }
         }
         return low;
     }

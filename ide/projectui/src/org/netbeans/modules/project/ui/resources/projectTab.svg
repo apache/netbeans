@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #eeba75;
+      }
+
+      .st1 {
+        fill: #fff;
+      }
+
+      .st2 {
+        opacity: .5;
+      }
+
+      .st3 {
+        opacity: .33;
+      }
+    </style>
+  </defs>
+  <polygon class="st0" points="0 11 11 11 11 2.2 9.429 0 1.571 0 0 2.2 0 11"/>
+  <g class="st2">
+    <polygon class="st1" points="11 2.2 9.429 0 1.571 0 0 2.2 .999 2.515 10.001 2.515 11 2.2"/>
+  </g>
+  <g class="st3">
+    <path d="M8.912.99l1.089,1.525v7.495H.999V2.515l1.089-1.525h6.824M9.429,0H1.571L0,2.2v8.8h11V2.2L9.429,0h0Z"/>
+  </g>
+  <polygon class="st0" points="5 15 16 15 16 6.2 14.429 4 6.571 4 5 6.2 5 15"/>
+  <g class="st2">
+    <polygon class="st1" points="16 6.2 14.429 4 6.571 4 5 6.2 5.999 6.515 15.001 6.515 16 6.2"/>
+  </g>
+  <g class="st3">
+    <path d="M13.912,4.99l1.089,1.525v7.495H5.999v-7.495l1.089-1.525h6.824M14.429,4h-7.857l-1.571,2.2v8.8h11V6.2l-1.571-2.2h0Z"/>
+  </g>
+</svg>

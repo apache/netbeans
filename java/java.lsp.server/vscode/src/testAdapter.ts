@@ -46,8 +46,10 @@ export class NbTestAdapter {
     }
 
     public registerRunInParallelProfile(projects: string[]) {
-        const runHandler = (request: TestRunRequest, cancellation: CancellationToken) => this.run(request, cancellation, true, projects);
-        this.parallelRunProfile = this.testController.createRunProfile("Run Tests In Parallel", TestRunProfileKind.Run, runHandler, true);
+        if (!this.parallelRunProfile) {
+            const runHandler = (request: TestRunRequest, cancellation: CancellationToken) => this.run(request, cancellation, true, projects);
+            this.parallelRunProfile = this.testController.createRunProfile("Run Tests In Parallel", TestRunProfileKind.Run, runHandler, true);
+        } 
         this.testController.items.replace([]);
         this.load();
     }
@@ -165,20 +167,36 @@ export class NbTestAdapter {
     
     dispatchTestEvent(state: SuiteState, testItem: TestItem): void {
         if (testItem.parent && testItem.children.size > 0) {
-            this.dispatchEvent({
-                name: testItem.id,
-                moduleName: testItem.parent.id,
-                modulePath: testItem.parent.uri?.path,
-                state,
-            });
+            if (testItem.id.includes(":") && testItem.parent.parent) {
+                // special case when parameterized test
+                const testEvent = this.getParametrizedTestEvent(state, testItem);
+                if (!testEvent) return;
+
+                this.dispatchEvent(testEvent);
+            } else {
+                this.dispatchEvent({
+                    name: testItem.id,
+                    moduleName: testItem.parent.id,
+                    modulePath: testItem.parent.uri?.path,
+                    state,
+                });
+            }
         } else if (testItem.children.size === 0) {
             const testSuite = testItem.parent;
+            const parentState = testSuite && this.suiteStates.get(testSuite) ? this.suiteStates.get(testSuite) : state;
             if (testSuite) {
+                let moduleName = testSuite.parent?.id;
+                let modulePath = testSuite.parent?.uri?.path;
+                if (testSuite.id.includes(":") && testSuite.parent?.parent) {
+                    // special case when parameterized test
+                    moduleName = testSuite.parent.parent.id;
+                    modulePath = testSuite.parent.parent.uri?.path;
+                }
                 const testSuiteEvent: any = {
                     name: testSuite.id,
-                    moduleName: testSuite.parent?.id,
-                    modulePath: testSuite.parent?.uri?.path,
-                    state,
+                    moduleName,
+                    modulePath,
+                    state: parentState,
                     tests: []
                 }
                 testSuite?.children.forEach(suite => {
@@ -196,6 +214,27 @@ export class NbTestAdapter {
                 })
                 this.dispatchEvent(testSuiteEvent);
             }
+        }
+    }
+
+    getParametrizedTestEvent(state: SuiteState, testItem: TestItem): any {
+        if (!testItem.parent || !testItem.parent.parent) {
+            return undefined;
+        }
+        let name = testItem.parent.id;
+        const idx = name.indexOf(':');
+        return {
+            name,
+            moduleName: testItem.parent.parent.id,
+            modulePath: testItem.parent.parent.uri?.path,
+            state,
+            tests: [
+                {
+                    id: name,
+                    name: name.slice(idx + 1),
+                    state
+                }
+            ]
         }
     }
 

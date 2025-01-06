@@ -19,9 +19,10 @@
 
 package org.netbeans.modules.csl.editor.semantic;
 
+import java.util.Comparator;
+import javax.swing.text.Position;
 import org.netbeans.modules.csl.core.Language;
 import org.netbeans.modules.csl.api.ColoringAttributes.Coloring;
-import org.netbeans.modules.csl.api.OffsetRange;
 
 /**
  * Each SequeneceElement represents a OffsetRange/Coloring/Language tuple that
@@ -30,24 +31,9 @@ import org.netbeans.modules.csl.api.OffsetRange;
  *
  * @author Tor Norbye
  */
-record SequenceElement(Language language, OffsetRange range, Coloring coloring) implements Comparable<SequenceElement> {
+record SequenceElement(Language language, Position start, Position end, Coloring coloring) {
 
-    @Override
-    public int compareTo(SequenceElement o) {
-        assert o.range() != null;
-        return range.compareTo(o.range());
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof SequenceElement other) {
-            return range.equals(other.range());
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return range.hashCode();
-    }
+    public static final Comparator<? super SequenceElement> POSITION_ORDER =
+            (e1, e2) -> e1.start.getOffset() != e2.start.getOffset() ? e1.start.getOffset() - e2.start.getOffset()
+                : e1.end.getOffset() - e2.end.getOffset();
 }

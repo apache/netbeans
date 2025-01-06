@@ -1826,7 +1826,9 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '17', '21' ]
+        exclude:
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
     steps:
 

@@ -44,7 +44,6 @@ public class HighlightsLayerFactoryImpl implements HighlightsLayerFactory {
         
         return new HighlightsLayer[] {
             HighlightsLayer.create(SemanticHighlighter.class.getName() + "-1", ZOrder.SYNTAX_RACK.forPosition(1000), false, semantic),
-//            HighlightsLayer.create(SemanticHighlighter.class.getName() + "-2", ZOrder.SYNTAX_RACK.forPosition(1500), false, SemanticHighlighter.getImportHighlightsBag(context.getDocument())),
             //the mark occurrences layer should be "above" current row and "below" the search layers:
             HighlightsLayer.create(MarkOccurrencesHighlighter.class.getName(), ZOrder.CARET_RACK.forPosition(50), false, occurrences),
             //"above" mark occurrences, "below" search layers:

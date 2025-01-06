@@ -19,63 +19,56 @@
     under the License.
 
 -->
-<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
   <defs>
     <style>
-      .cls-1 {
-        opacity: .45;
-      }
-
-      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6 {
-        stroke-width: 0px;
-      }
-
-      .cls-1, .cls-2, .cls-4 {
-        fill: #000;
-      }
-
-      .cls-7, .cls-4 {
-        opacity: .33;
-      }
-
-      .cls-3 {
-        fill: #cecece;
-      }
-
-      .cls-5 {
+      .st0 {
         fill: #b5b5b5;
       }
 
-      .cls-6 {
+      .st1 {
+        fill: #cecece;
+      }
+
+      .st2 {
         fill: #fff;
+      }
+
+      .st3 {
+        opacity: .45;
+      }
+
+      .st4 {
+        opacity: .33;
       }
     </style>
   </defs>
   <g>
-    <rect class="cls-3" y="7" width="16" height="7"/>
-    <g class="cls-7">
-      <path class="cls-2" d="M15,8v5H1v-5h14M16,7H0v7h16v-7h0Z"/>
+    <rect class="st1" y="7" width="16" height="7"/>
+    <g class="st4">
+      <path d="M15,8v5H1v-5h14M16,7H0v7h16v-7h0Z"/>
     </g>
   </g>
   <g>
-    <rect class="cls-5" x="2" y="4" width="12" height="4"/>
-    <g class="cls-7">
-      <path class="cls-2" d="M13,5v2H3v-2h10M14,4H2v4h12v-4h0Z"/>
+    <rect class="st0" x="2" y="4" width="12" height="4"/>
+    <g class="st4">
+      <path d="M13,5v2H3v-2h10M14,4H2v4h12v-4h0Z"/>
     </g>
   </g>
-  <polygon class="cls-6" points="13 7 7.5 7 3 7 3 0 13 0 13 7"/>
-  <polygon class="cls-1" points="4 7 4 1 12 1 12 7 13 7 13 0 3 0 3 7 4 7"/>
+  <polygon class="st2" points="13 7 7.5 7 3 7 3 0 13 0 13 7"/>
+  <polygon class="st3" points="4 7 4 1 12 1 12 7 13 7 13 0 3 0 3 7 4 7"/>
   <g>
-    <rect class="cls-3" x="1" y="13" width="4" height="3"/>
-    <g class="cls-7">
-      <path class="cls-2" d="M4,14v1h-2v-1h2M5,13H1v3h4v-3h0Z"/>
+    <rect class="st1" x="1" y="13" width="4" height="3"/>
+    <g class="st4">
+      <path d="M4,14v1h-2v-1h2M5,13H1v3h4v-3h0Z"/>
     </g>
   </g>
   <g>
-    <rect class="cls-3" x="11" y="13" width="4" height="3"/>
-    <g class="cls-7">
-      <path class="cls-2" d="M14,14v1h-2v-1h2M15,13h-4v3h4v-3h0Z"/>
+    <rect class="st1" x="11" y="13" width="4" height="3"/>
+    <g class="st4">
+      <path d="M14,14v1h-2v-1h2M15,13h-4v3h4v-3h0Z"/>
     </g>
   </g>
-  <rect class="cls-4" x="2" y="9" width="3" height="1"/>
+  <rect class="st4" x="2" y="9" width="3" height="1"/>
 </svg>

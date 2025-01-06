@@ -44,7 +44,7 @@ abstract class NexusTestBase extends NbTestCase {
     private MavenEmbedder embedder;
     private ArtifactInstaller artifactInstaller;
     protected RepositoryInfo info;
-    protected NexusRepositoryIndexerImpl nrii;
+    protected NexusRepositoryIndexManager nrii;
 
     @Override protected void setUp() throws Exception {
         clearWorkDir();
@@ -57,7 +57,7 @@ abstract class NexusTestBase extends NbTestCase {
         artifactInstaller = embedder.lookupComponent(ArtifactInstaller.class);
         info = new RepositoryInfo("test", "Test", repo.getAbsolutePath(), null);
         RepositoryPreferences.getInstance().addOrModifyRepositoryInfo(info);
-        nrii = Lookup.getDefault().lookup(NexusRepositoryIndexerImpl.class);
+        nrii = Lookup.getDefault().lookup(NexusRepositoryIndexManager.class);
     }
 
     @Override protected Level logLevel() {

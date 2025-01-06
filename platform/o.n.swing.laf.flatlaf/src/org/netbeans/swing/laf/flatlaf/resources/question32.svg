@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="32" height="32" version="1.1" viewBox="0 0 32 32">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #499ae7;
+        fill-rule: evenodd;
+      }
+
+      .st1 {
+        fill: #fff;
+      }
+
+      .st2 {
+        fill: #4c80c7;
+      }
+    </style>
+  </defs>
+  <g>
+    <path class="st0" d="M16,30.5c-7.995,0-14.5-6.505-14.5-14.5S8.005,1.5,16,1.5s14.5,6.505,14.5,14.5-6.505,14.5-14.5,14.5Z"/>
+    <path class="st2" d="M16,2c7.72,0,14,6.28,14,14s-6.28,14-14,14S2,23.72,2,16,8.28,2,16,2M16,1C7.716,1,1,7.716,1,16s6.716,15,15,15,15-6.716,15-15S24.284,1,16,1h0Z"/>
+  </g>
+  <path class="st1" d="M10.41,10.912c0-.742.238-1.494.715-2.256s1.172-1.393,2.086-1.893,1.98-.75,3.199-.75c1.133,0,2.133.209,3,.627s1.537.986,2.01,1.705.709,1.5.709,2.344c0,.664-.135,1.246-.404,1.746s-.59.932-.961,1.295-1.037.975-1.998,1.834c-.266.242-.479.455-.639.639s-.279.352-.357.504c-.078.152-.139.305-.182.457s-.107.42-.193.803c-.148.812-.613,1.219-1.395,1.219-.406,0-.748-.133-1.025-.398s-.416-.66-.416-1.184c0-.656.102-1.225.305-1.705s.473-.902.809-1.266.789-.795,1.359-1.295c.5-.438.861-.768,1.084-.99s.41-.471.562-.744.229-.57.229-.891c0-.625-.232-1.152-.697-1.582s-1.064-.645-1.799-.645c-.859,0-1.492.217-1.898.65s-.75,1.072-1.031,1.916c-.266.883-.77,1.324-1.512,1.324-.438,0-.807-.154-1.107-.463s-.451-.643-.451-1.002Z"/>
+  <path class="st1" d="M18,23.32c0,.549-.197,1.017-.591,1.404s-.864.581-1.409.581-1.015-.194-1.409-.581-.591-.855-.591-1.404.197-1.022.591-1.419.864-.596,1.409-.596,1.015.199,1.409.596.591.87.591,1.419Z"/>
+</svg>

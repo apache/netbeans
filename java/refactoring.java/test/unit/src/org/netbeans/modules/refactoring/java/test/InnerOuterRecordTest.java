@@ -132,7 +132,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
                         void useStudent() {
                             F s = new F(42,"Jan Klaassen", LocalDate.now().minusDays(1));
-                            System.out.println("student = " + s); System.out.println("student = " + s);
+                            System.out.println("student = " + s);
                         }
 
                         record F(int id, String name, LocalDate dob) {
@@ -164,22 +164,25 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
                     public class A {
 
-                        void useStudent(Student s) {
+                        void useStudent() {
+                            F s = new F(42,"Jan Klaassen", LocalDate.now().minusDays(1));
                             System.out.println("student = " + s);
                         }
                     }
                     """),
                 new File("t/F.java",
-                        """
+                    """
                     /*
                      * Refactoring License
                      */
-
                     package t;
 
                     import java.time.LocalDate;
                     import java.util.Objects;
-
+                    /**
+                      * 
+                      * @author junit
+                      */
                     record F(int id, String name, LocalDate dob) {
 
                         /**

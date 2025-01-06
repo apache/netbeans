@@ -148,7 +148,7 @@ public class RefactoringTestBase extends NbTestCase {
             assertNotNull(f.content);
             assertNotNull("Cannot find expected " + f.filename + " in map filled by sourceRoot " + content, fileContent);
             if (fullLineCompare) {
-                assertLinesEqual2(f.content, fileContent);
+                assertLinesEqual2(f.filename,f.content, fileContent);
             } else { // original tests.
                 assertLinesEqual1(f.content, fileContent);
             }
@@ -490,7 +490,7 @@ public class RefactoringTestBase extends NbTestCase {
      * @param expected to compare
      * @param actual to compare
      */
-    public void assertLinesEqual2(String expected, String actual) {
+    public void assertLinesEqual2(String name,String expected, String actual) {
         expected = expected.trim().replaceAll("([ \t\r\n])\\1+", "$1");
         actual = actual.trim().replaceAll("([ \t\r\n])\\1+", "$1");
         String[] linesExpected = expected.lines().toArray(String[]::new);
@@ -504,9 +504,10 @@ public class RefactoringTestBase extends NbTestCase {
             boolean same = e.equals(a);
             String sep = same ? "   " : " | ";
             equals &= same;
-            sb.append(String.format("[%3d] %-80s%s%-80s%n", i, e, sep, a));
+            sb.append(String.format(name+" [%3d] %-80s%s%-80s%n", i, e, sep, a));
         }
         if (!equals) {
+            System.err.println("test "+getName()+" failed");
             System.err.println(sb.toString());
             fail("lines differ, see stderr for more details.");
         }

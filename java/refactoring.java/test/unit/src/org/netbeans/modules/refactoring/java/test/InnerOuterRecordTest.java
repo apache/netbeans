@@ -22,12 +22,17 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Name;
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
@@ -37,6 +42,7 @@ import org.netbeans.modules.refactoring.api.RefactoringSession;
 import org.netbeans.modules.refactoring.java.api.InnerToOuterRefactoring;
 import static org.netbeans.modules.refactoring.java.test.RefactoringTestBase.addAllProblems;
 import static org.netbeans.modules.refactoring.java.test.RefactoringTestBase.writeFilesAndWaitForScan;
+import org.openide.util.Exceptions;
 
 /**
  * Test inner to outer refactoring for test.
@@ -47,11 +53,23 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
     public InnerOuterRecordTest(String name) {
         super(name);
-    }
+        //ensure we are running on at least 16.
+        try {
+            SourceVersion.valueOf("RELEASE_16"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+//        final JavaCompiler cmp = ToolProvider.getSystemJavaCompiler();
+//        for (SourceVersion sourceVersion : cmp.getSourceVersions()) {
+//            System.out.println("sourceVersion = " + sourceVersion);
+//        }
 
+    }
+    // for reference
     public void test259004() throws Exception {
         String source;
-        writeFilesAndWaitForScan(src,
+        writeFilesNoIndexing(src,
                 new File("t/A.java",
                         source = """
                         package t;
@@ -94,20 +112,16 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                          * @author junit
                          */
                         public final class F {
+
                         }
                         """));
     }
 
     public void testApacheNetbeans7044() throws Exception {
-        //ensure we are running on at least 17.
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_17, skip test
-            return;
-        }
+        debug = true;
         // initial outer has record with meaningful canonical constructor.
-        writeFilesAndWaitForScan(src, new File("t/A.java",
+        // note that Inner class should be in last member for assumptions in the test.
+        writeFilesNoIndexing(src, new File("t/A.java",
                 """
                     package t;
 
@@ -116,9 +130,17 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
                     public class A {
 
-                        record Student(int id, String name, LocalDate dob) {
+                        void useStudent() {
+                            F s = new F(42,"Jan Klaassen", LocalDate.now().minusDays(1));
+                            System.out.println("student = " + s); System.out.println("student = " + s);
+                        }
 
-                            public Student {
+                        record F(int id, String name, LocalDate dob) {
+
+                            /**
+                              * Validate stuff.
+                              */
+                            public F {
                                 Objects.requireNonNull(id);
                                 Objects.requireNonNull(name);
                                 Objects.requireNonNull(dob);
@@ -127,13 +149,10 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                             }
                         }
 
-                        void useStudent() {
-                            var s = new Student(42,"Jan Klaassen", LocalDate.now().minusDays(1));
-                            System.out.println("student = " + s); System.out.println("student = " + s);
-                        }
                     }
 
-                    """));
+                    """)
+        );
         performInnerToOuterTest2(null);
         verifyContent(src,
                 new File("t/A.java",
@@ -150,7 +169,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                         }
                     }
                     """),
-                new File("t/Student.java",
+                new File("t/F.java",
                         """
                     /*
                      * Refactoring License
@@ -161,9 +180,12 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     import java.time.LocalDate;
                     import java.util.Objects;
 
-                    record Student(int id, String name, LocalDate dob) {
+                    record F(int id, String name, LocalDate dob) {
 
-                        public Student {
+                        /**
+                         * Validate stuff.
+                         */
+                        public F {
                             Objects.requireNonNull(id);
                             Objects.requireNonNull(name);
                             Objects.requireNonNull(dob);
@@ -171,21 +193,14 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                             assert dob.isAfter(LocalDate.EPOCH);
                         }
                     }
-                    """
-                ));
+                    """)
+        );
 
     }
 
-    public void testApacheNetbeans7044a() throws Exception {
-        //ensure we are running on at least 17.
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_17, skip test
-            return;
-        }
+    public void testBasicClassExample() throws Exception {
         // initial outer has record with meaningful canonical constructor.
-        writeFilesAndWaitForScan(src,
+        writeFilesNoIndexing(src,
                 new File("t/A.java",
                         """
                 package t;
@@ -196,7 +211,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 public class A {
 
                     void useStudent() {
-                        var s = new Student(42, "Jan Klaassen", LocalDate.now().minusDays(1));
+                        Student s = new Student(42, "Jan Klaassen", LocalDate.now().minusDays(1));
                         System.out.println("student = " + s);
                     }
 
@@ -230,11 +245,11 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     public class A {
 
                         void useStudent() {
-                            var s = new Student(42, "Jan Klaassen", LocalDate.now().minusDays(1));
+                            Student s = new Student(42, "Jan Klaassen", LocalDate.now().minusDays(1));
                             System.out.println("student = " + s);
                         }
-                        
-                        
+
+
                     }
                     """),
                 new File("t/Student.java",
@@ -275,7 +290,58 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
     }
 
-    final boolean debug = false;
+    public void testBasicRecord1() throws Exception {
+        // initial outer has record with meaningful canonical constructor.
+        writeFilesAndWaitForScan(src,
+                new File("t/A.java",
+                        """
+                        package t;
+
+                        import java.time.LocalDate;
+
+                        record A(int id, String name, LocalDate dob) {
+
+                           F f;
+                           record F(int x, int y){}
+                        }
+                        """
+                ));
+        performInnerToOuterTest2(null);
+        verifyContent(src,
+                new File("t/A.java",
+                        """
+                        package t;
+
+                        import java.time.LocalDate;
+
+                        record A(int id, String name, LocalDate dob) {
+
+                            F f;
+                        
+                        }
+                        """),
+                new File("t/F.java",
+                        """
+                        /*
+                         * Refactoring License
+                         */
+
+                        package t;
+
+
+                        /**
+                         *
+                         * @author junit
+                         */
+                        record F(int x, int y){
+                        }
+
+                        """
+                ));
+
+    }
+
+    boolean debug = true;
 
     // variant for record inner to outer test
     private void performInnerToOuterTest2(String generateOuter, Problem... expectedProblems) throws Exception {
@@ -283,36 +349,49 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
         JavaSource.forFileObject(src.getFileObject("t/A.java")).runUserActionTask(new Task<CompilationController>() {
 
             @Override
-            public void run(CompilationController parameter) throws Exception {
-                parameter.toPhase(JavaSource.Phase.RESOLVED);
+            public void run(CompilationController parameter) {
+                try {
+                    parameter.toPhase(JavaSource.Phase.RESOLVED);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
                 CompilationUnitTree cut = parameter.getCompilationUnit();
-//                System.out.println("cut class = " + cut.getClass());
+                if (debug) {
+                    System.err.println("cut is of type " + cut.getClass().getCanonicalName());
+                }
                 ClassTree outer = (ClassTree)cut.getTypeDecls().get(0);
                 if (debug) {
-                    printNumbered(System.err, "outer", outer.toString());
+                    printNumbered(System.err, "start source " + outer.getKind().toString(), outer.toString());
                 }
                 List<? extends Tree> members = outer.getMembers();
                 int m = 0;
                 if (debug) {
                     for (Tree member : members) {
-                        printNumbered(System.err, "member " + (m++), member.toString());
-                    }
-                }
-                var tps = cut.getTypeDecls();
-                if (debug) {
-                    for (int i = 0; i < tps.size(); i++) {
-                        var type = tps.get(i);
-                        var kind = type.getKind();
-                        printNumbered(System.err, "decl " + i + " " + kind + " ", type.toString());
+                        printNumbered(System.err, "member %d %15s".formatted(m++, member.getKind()), member.toString());
+                        String toString = member.toString();
+                        if (member instanceof ClassTree ct) {
+                            int n = 0;
+                            Name simpleName = ct.getSimpleName();
+                            for (Tree ctm : ct.getMembers()) {
+                                printNumbered(System.err, "   ctm " + simpleName + " %d %15s".formatted(n++, ctm.getKind()), ctm.toString());
+                            }
+                        }
                     }
                 }
                 // selecting the last element assumes that the inner class is the last member in the outer class.
-                var inner = outer.getMembers().get(outer.getMembers().size() - 1);
+                Tree lastInnerClass = outer.getMembers().get(outer.getMembers().size() - 1);
                 if (debug) {
-                    printNumbered(System.err, "inner", inner.toString());
+                    String n = "lastInnerClass " + lastInnerClass.getKind().toString();
+                    printNumbered(System.err, n, lastInnerClass.toString());
                 }
-                TreePath tp = TreePath.getPath(cut, inner);
-                r[0] = new InnerToOuterRefactoring(TreePathHandle.create(tp, parameter));
+                TreePath tp = TreePath.getPath(cut, lastInnerClass);
+                try {
+                    r[0] = new InnerToOuterRefactoring(TreePathHandle.create(tp, parameter));
+                } catch (Throwable t) {
+                    System.err.println("InnerOuter refatoring failed with exception " + t);
+                    t.printStackTrace(System.out);
+                    throw t;
+                }
             }
         }, true);
 

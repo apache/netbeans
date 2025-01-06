@@ -60,11 +60,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
             //OK, no RELEASE_17, skip test
             return;
         }
-//        final JavaCompiler cmp = ToolProvider.getSystemJavaCompiler();
-//        for (SourceVersion sourceVersion : cmp.getSourceVersions()) {
-//            System.out.println("sourceVersion = " + sourceVersion);
-//        }
-
     }
     // for reference
     public void test259004() throws Exception {

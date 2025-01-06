@@ -86,6 +86,7 @@ public class RefactoringTestBase extends NbTestCase {
         this.sourcelevel = sourcelevel;
     }
 
+    static boolean debug=false;
     protected static void writeFilesAndWaitForScan(FileObject sourceRoot, File... files) throws Exception {
         long currentTimeMillis = System.currentTimeMillis();
         for (FileObject c : sourceRoot.getChildren()) {
@@ -99,7 +100,9 @@ public class RefactoringTestBase extends NbTestCase {
 
         IndexingManager.getDefault().refreshIndexAndWait(sourceRoot.toURL(), null, true);
         long currentTimeMillis1 = System.currentTimeMillis();
-        System.err.println("writeFilesAndWaitForScan took "+(currentTimeMillis1-currentTimeMillis)+" millis");
+        if (debug) {
+            System.err.println("writeFilesAndWaitForScan took " + (currentTimeMillis1 - currentTimeMillis) + " millis");
+        }
     }
 
     protected static void writeFilesNoIndexing(FileObject sourceRoot, File... files) throws Exception {

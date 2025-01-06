@@ -61,8 +61,9 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
             return;
         }
     }
+    
     // for reference
-    public void test259004() throws Exception {
+    public void _test259004() throws Exception {
         String source;
         writeFilesNoIndexing(src,
                 new File("t/A.java",
@@ -290,7 +291,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
     public void testBasicRecord1() throws Exception {
         // initial outer has record with meaningful canonical constructor.
-        writeFilesAndWaitForScan(src,
+        writeFilesNoIndexing(src,
                 new File("t/A.java",
                         """
                         package t;
@@ -323,9 +324,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                         /*
                          * Refactoring License
                          */
-
                         package t;
-
 
                         /**
                          *

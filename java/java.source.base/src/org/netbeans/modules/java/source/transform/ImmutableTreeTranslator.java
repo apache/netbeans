@@ -1385,7 +1385,7 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
     protected final ErroneousTree rewriteChildren(ErroneousTree tree) {
         List<? extends Tree> oldErrs = tree.getErrorTrees();
 	List<? extends Tree> newErrs = translate(oldErrs);
-	if (!newErrs.equals(oldErrs)) {
+	if (null !=newErrs && !newErrs.equals(oldErrs)) {
 	    ErroneousTree n = make.Erroneous(newErrs);
             model.setType(n, model.getType(tree));
 	    copyCommentTo(tree,n);

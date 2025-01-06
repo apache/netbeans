@@ -1,0 +1,142 @@
+Code completion result for source line:
+new URL("http://google.com").|getPr
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     addShutdownHook(Closure)                   void
+METHOD     any()                                      boolean
+METHOD     any(Closure)                               boolean
+METHOD     asBoolean()                                boolean
+METHOD     asType(Class)                              Object
+METHOD     collect()                                  Collection
+METHOD     collect(Closure)                           List
+METHOD     collect(Collection, Closure)               Collection
+METHOD     dump()                                     String
+METHOD     each(Closure)                              Object
+METHOD     eachByte(Closure)                          void
+METHOD     eachByte(int, Closure)                     void
+METHOD     eachLine(Closure)                          Object
+METHOD     eachLine(String,  int, Closure             Object
+METHOD     eachLine(String, Closure)                  Object
+METHOD     eachLine(int, Closure)                     Object
+METHOD     eachWithIndex(Closure)                     Object
+METHOD     equals(Object)                  [PUBLIC]   boolean
+METHOD     every()                                    boolean
+METHOD     every(Closure)                             boolean
+METHOD     filterLine(Closure)                        Writable
+METHOD     filterLine(String, Closure)                Writable
+METHOD     filterLine(Writer, Closure)                void
+METHOD     filterLine(Writer, String, Clo             void
+METHOD     find()                                     Object
+METHOD     find(Closure)                              Object
+METHOD     findAll()                                  List
+METHOD     findAll(Closure)                           List
+METHOD     findIndexOf(Closure)                       int
+METHOD     findIndexOf(int, Closure)                  int
+METHOD     findIndexValues(Closure)                   List
+METHOD     findIndexValues(Number, Closur             List
+METHOD     findLastIndexOf(Closure)                   int
+METHOD     findLastIndexOf(int, Closure)              int
+METHOD     findResult(Closure)                        Object
+METHOD     findResult(Object, Closure)                Object
+METHOD     getAt(String)                              Object
+METHOD     getAuthority()                  [PUBLIC]   String
+METHOD     getBytes()                                 byte[]
+METHOD     getBytes(Map)                              byte[]
+METHOD     getClass()                      [PUBLIC]   Class<?>
+METHOD     getContent()                    [PUBLIC]   Object
+METHOD     getContent(Class<?>[])          [PUBLIC]   Object
+METHOD     getDefaultPort()                [PUBLIC]   int
+METHOD     getFile()                       [PUBLIC]   String
+METHOD     getHost()                       [PUBLIC]   String
+METHOD     getMetaClass()                             MetaClass
+METHOD     getMetaPropertyValues()                    List
+METHOD     getPath()                       [PUBLIC]   String
+METHOD     getPort()                       [PUBLIC]   int
+METHOD     getProperties()                            Map
+METHOD     getProtocol()                   [PUBLIC]   String
+METHOD     getQuery()                      [PUBLIC]   String
+METHOD     getRef()                        [PUBLIC]   String
+METHOD     getText()                                  String
+METHOD     getText(Map)                               String
+METHOD     getText(Map, String)                       String
+METHOD     getText(String)                            String
+METHOD     getUserInfo()                   [PUBLIC]   String
+METHOD     grep()                                     Collection
+METHOD     grep(Object)                               Collection
+METHOD     hasProperty(String)                        MetaProperty
+METHOD     hashCode()                      [PUBLIC]   int
+METHOD     identity(Closure)                          Object
+METHOD     inject(Closure)                            Object
+METHOD     inject(Object, Closure)                    Object
+METHOD     inspect()                                  String
+METHOD     invokeMethod(String, Object)               Object
+METHOD     is(Object)                                 boolean
+METHOD     isCase(Object)                             boolean
+METHOD     iterator()                                 Iterator
+METHOD     metaClass(Closure)                         MetaClass
+METHOD     newInputStream()                           BufferedInputStream
+METHOD     newInputStream(Map)                        BufferedInputStream
+METHOD     newReader()                                BufferedReader
+METHOD     newReader(Map)                             BufferedReader
+METHOD     newReader(Map, String)                     BufferedReader
+METHOD     newReader(String)                          BufferedReader
+METHOD     notify()                        [PUBLIC]   void
+METHOD     notifyAll()                     [PUBLIC]   void
+METHOD     of(URI, URLStreamHandler)       [STATIC,   URL
+METHOD     openConnection()                [PUBLIC]   URLConnection
+METHOD     openConnection(Proxy)           [PUBLIC]   URLConnection
+METHOD     openStream()                    [PUBLIC]   InputStream
+METHOD     print(Object)                              void
+METHOD     print(PrintWriter)                         void
+METHOD     printf(String, Object)                     void
+METHOD     printf(String, Object)                     void
+METHOD     println()                                  void
+METHOD     println(Object)                            void
+METHOD     println(PrintWriter)                       void
+METHOD     putAt(String, Object)                      void
+METHOD     readLines()                                List
+METHOD     readLines(String)                          List
+METHOD     respondsTo(String)                         List
+METHOD     respondsTo(String, Object)                 List
+METHOD     sameFile(URL)                   [PUBLIC]   boolean
+METHOD     setMetaClass(MetaClass)                    void
+METHOD     setURLStreamHandlerFactory(URL  [STATIC,   void
+METHOD     sleep(long)                                void
+METHOD     sleep(long, Closure)                       void
+METHOD     split(Closure)                             Collection
+METHOD     splitEachLine(Pattern, Closure             Object
+METHOD     splitEachLine(Pattern, String,             Object
+METHOD     splitEachLine(String, Closure)             Object
+METHOD     splitEachLine(String, String,              Object
+METHOD     sprintf(String, Object)                    String
+METHOD     sprintf(String, Object)                    String
+METHOD     stream()                                   Stream
+METHOD     tap(Closure)                               Object
+METHOD     toExternalForm()                [PUBLIC]   String
+METHOD     toString()                      [PUBLIC]   String
+METHOD     toURI()                         [PUBLIC]   URI
+METHOD     use(Class, Closure)                        Object
+METHOD     use(List, Closure)                         Object
+METHOD     use(Object[])                              Object
+METHOD     wait()                          [PUBLIC]   void
+METHOD     wait(long)                      [PUBLIC]   void
+METHOD     wait(long, int)                 [PUBLIC]   void
+METHOD     with(Closure)                              Object
+METHOD     with(boolean, Closure)                     Object
+METHOD     withInputStream(Closure)                   Object
+METHOD     withReader(Closure)                        Object
+METHOD     withReader(String, Closure)                Object
+METHOD     withTraits(Class[])                        Object
+FIELD      URLStreamHandlerFactory         [STATIC,   URLStreamHandlerFactory
+FIELD      authority                       [PUBLIC]   String
+FIELD      class                           [PUBLIC]   Class
+FIELD      content                         [PUBLIC]   Object
+FIELD      defaultPort                     [PUBLIC]   int
+FIELD      file                            [PUBLIC]   String
+FIELD      host                            [PUBLIC]   String
+FIELD      path                            [PUBLIC]   String
+FIELD      port                            [PUBLIC]   int
+FIELD      protocol                        [PUBLIC]   String
+FIELD      query                           [PUBLIC]   String
+FIELD      ref                             [PUBLIC]   String
+FIELD      userInfo                        [PUBLIC]   String

@@ -1,2 +1,0 @@
-import static Calendar.getInstance as |>MARK_OCCURRENCES:now<|
-println |>MARK_OCCURRENCES:n^ow<|().time

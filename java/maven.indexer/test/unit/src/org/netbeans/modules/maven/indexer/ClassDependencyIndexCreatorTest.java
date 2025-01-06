@@ -30,6 +30,8 @@ import java.util.TreeMap;
 import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryQueries.ClassUsage;
+import org.netbeans.modules.maven.indexer.spi.ClassUsageQuery;
+import org.netbeans.modules.maven.indexer.spi.ClassesQuery;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.test.JarBuilder;
 import org.openide.util.test.TestFileUtils;
@@ -87,21 +89,22 @@ public class ClassDependencyIndexCreatorTest extends NexusTestBase {
         nrii.indexRepo(info);
         List<RepositoryInfo> repo = List.of(info);
 
-        List<ClassUsage> list = nrii.findClassUsages("mod1.API", repo).getResults();
+        ClassUsageQuery query = nrii.getClassUsageQuery();
+        List<ClassUsage> list = query.findClassUsages("mod1.API", repo).getResults();
         assertEquals("[test:mod2:0:test[mod2.Client, mod2.OtherClient], test:mod3:0:test[mod3.Client]]", list.toString());
 
-        list = nrii.findClassUsages("mod1.Util", repo).getResults();
+        list = query.findClassUsages("mod1.Util", repo).getResults();
         assertEquals("[test:mod4:0:test[mod4.Install]]", list.toString());
         assertEquals("jar", list.get(0).getArtifact().getType());
 
-        list = nrii.findClassUsages("mod1.Stuff", repo).getResults();
+        list = query.findClassUsages("mod1.Stuff", repo).getResults();
         assertEquals("[test:mod5:0:test[mod5.Install]]", list.toString());
         assertEquals("jar", list.get(0).getArtifact().getType());
 
-        assertEquals("[]", nrii.findClassUsages("java.lang.Object", repo).getResults().toString());
-        assertEquals("[test:mod2:0:test[mod2.Outer]]", nrii.findClassUsages("mod1.Outer", repo).getResults().toString());
-        assertEquals("[test:mod2:0:test[mod2.Outer]]", nrii.findClassUsages("mod1.Outer$Inner", repo).getResults().toString());
-        assertEquals("[]", nrii.findClassUsages("mod1.Outer$Unused", repo).getResults().toString());
+        assertEquals("[]", query.findClassUsages("java.lang.Object", repo).getResults().toString());
+        assertEquals("[test:mod2:0:test[mod2.Outer]]", query.findClassUsages("mod1.Outer", repo).getResults().toString());
+        assertEquals("[test:mod2:0:test[mod2.Outer]]", query.findClassUsages("mod1.Outer$Inner", repo).getResults().toString());
+        assertEquals("[]", query.findClassUsages("mod1.Outer$Unused", repo).getResults().toString());
         // XXX InnerClass attribute will produce spurious references to outer classes even when just an inner is used
     }
 
@@ -129,18 +132,19 @@ public class ClassDependencyIndexCreatorTest extends NexusTestBase {
         nrii.indexRepo(info);
         List<RepositoryInfo> repo = List.of(info);
 
+        ClassesQuery query = nrii.getClassesQuery();
         // single version
-        List<NBVersionInfo> list = nrii.findVersionsByClass("mod1.API", repo).getResults();
+        List<NBVersionInfo> list = query.findVersionsByClass("mod1.API", repo).getResults();
         assertEquals("[test:mod1:42:test]", list.toString());
 
-        list = nrii.findVersionsByClass("mod1.Util", repo).getResults();
+        list = query.findVersionsByClass("mod1.Util", repo).getResults();
         assertEquals("[test:mod1:42:test]", list.toString());
 
         // two versions
-        list = nrii.findVersionsByClass("mod2.API2", repo).getResults();
+        list = query.findVersionsByClass("mod2.API2", repo).getResults();
         assertEquals("[test:mod2:43:test, test:mod2:42:test]", list.toString());
 
-        list = nrii.findVersionsByClass("mod2.Util2", repo).getResults();
+        list = query.findVersionsByClass("mod2.Util2", repo).getResults();
         assertEquals("[test:mod2:43:test]", list.toString());
     }
 

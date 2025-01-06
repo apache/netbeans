@@ -34,8 +34,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.AttributeSet;
-import javax.swing.text.Document;
-import javax.swing.text.JTextComponent;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
@@ -64,10 +62,6 @@ import org.openide.util.NbBundle;
 public final class ColoringManager {
     private final String mimeType;
     private final Map<Set<ColoringAttributes>, String> type2Coloring;
-    
-    //private static final Font ITALIC = SettingsDefaults.defaultFont.deriveFont(Font.ITALIC);
-    //private static final Font BOLD = SettingsDefaults.defaultFont.deriveFont(Font.BOLD);
-
     
     public ColoringManager(String mimeType) {
         this.mimeType = mimeType;
@@ -159,11 +153,9 @@ public final class ColoringManager {
         es.addAll(colorings);
         
         if (colorings.contains(UNUSED)) {
-            attribs.add(AttributesUtilities.createImmutable(EditorStyleConstants.Tooltip, new UnusedTooltipResolver()));
+            attribs.add(AttributesUtilities.createImmutable(EditorStyleConstants.Tooltip, UNUSED_TOOLTIP_RESOLVER));
             attribs.add(AttributesUtilities.createImmutable("unused-browseable", Boolean.TRUE));
         }
-        
-        //colorings = colorings.size() > 0 ? EnumSet.copyOf(colorings) : EnumSet.noneOf(ColoringAttributes.class);
         
         for (Entry<Set<ColoringAttributes>, String> attribs2Colorings : type2Coloring.entrySet()) {
             if (es.containsAll(attribs2Colorings.getKey())) {
@@ -204,12 +196,8 @@ public final class ColoringManager {
         
         return AttributesUtilities.createImmutable(attrs.toArray());
     }
-    
-    private final class UnusedTooltipResolver implements HighlightAttributeValue<String> {
 
-        @Override
-        public String getValue(JTextComponent component, Document document, Object attributeKey, int startOffset, final int endOffset) {
-            return NbBundle.getMessage(ColoringManager.class, "LBL_UNUSED");
-        }
-    }
+    private static final HighlightAttributeValue<String> UNUSED_TOOLTIP_RESOLVER =
+            (component, document, attributeKey, startOffset, endOffset) -> NbBundle.getMessage(ColoringManager.class, "LBL_UNUSED");
+
 }

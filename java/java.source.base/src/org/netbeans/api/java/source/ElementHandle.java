@@ -107,7 +107,7 @@ public final class ElementHandle<T extends Element> {
      * Resolves an {@link Element} from the {@link ElementHandle}.
      * @param compilationInfo representing the {@link javax.tools.JavaCompiler.CompilationTask}
      * in which the {@link Element} should be resolved.
-     * @return resolved subclass of {@link Element} or null if the elment does not exist on
+     * @return resolved subclass of {@link Element} or null if the element does not exist on
      * the classpath/sourcepath of {@link javax.tools.JavaCompiler.CompilationTask}.
      */
     @SuppressWarnings ("unchecked")     // NOI18N
@@ -143,12 +143,12 @@ public final class ElementHandle<T extends Element> {
         if (log.isLoggable(Level.FINE))
             log.log(Level.FINE, "Resolving element kind: {0}", this.kind); // NOI18N       
         ElementKind simplifiedKind = this.kind;
-        if (simplifiedKind.name().equals("RECORD")) {
-            simplifiedKind = ElementKind.CLASS; //TODO: test
-        }
-        if (simplifiedKind.name().equals("RECORD_COMPONENT")) {
-            simplifiedKind = ElementKind.FIELD; //TODO: test
-        }
+//        if (simplifiedKind.name().equals("RECORD")) {
+//            simplifiedKind = ElementKind.CLASS; //TODO: test
+//        }
+//        if (simplifiedKind.name().equals("RECORD_COMPONENT")) {
+//            simplifiedKind = ElementKind.FIELD; //TODO: test
+//        }
         switch (simplifiedKind) {
             case PACKAGE:
                 assert signatures.length == 1;
@@ -156,6 +156,7 @@ public final class ElementHandle<T extends Element> {
             case CLASS:
             case INTERFACE:
             case ENUM:
+            case RECORD:
             case ANNOTATION_TYPE: {
                 assert signatures.length == 1;
                 final Element type = getTypeElementByBinaryName (module, signatures[0], jt);
@@ -213,6 +214,8 @@ public final class ElementHandle<T extends Element> {
             }
             case FIELD:
             case ENUM_CONSTANT:
+            case RECORD_COMPONENT:
+
             {
                 assert signatures.length == 3;
                 final Element type = getTypeElementByBinaryName (module, signatures[0], jt);

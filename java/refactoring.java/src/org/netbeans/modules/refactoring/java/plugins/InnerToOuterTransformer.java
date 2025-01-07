@@ -246,12 +246,12 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
         if (currentElement!=null && currentElement == outer) {
             Element outerouter = outer.getEnclosingElement();
             Tree superVisit = super.visitClass(classTree, element);
-            TreePath tp = workingCopy.getTrees().getPath(inner);
-            if (tp==null) {
+            TreePath innerTp = workingCopy.getTrees().getPath(inner);
+            if (innerTp==null) {
                 //#194346
                 return superVisit;
             }
-            ClassTree innerClass = (ClassTree) tp.getLeaf();
+            ClassTree innerClass = (ClassTree) innerTp.getLeaf();
 
             ClassTree newInnerClass = innerClass;
             newInnerClass = genUtils.importComments(newInnerClass, workingCopy.getCompilationUnit());
@@ -270,7 +270,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
                 if(outerPath != null) {
                     JavaRefactoringUtils.cacheTreePathInfo(outerPath, workingCopy);
                 }
-                CompilationUnitTree compilationUnit = tp.getCompilationUnit();
+                CompilationUnitTree compilationUnit = innerTp.getCompilationUnit();
                 String relativePath = RefactoringUtils.getPackageName(compilationUnit).replace('.', '/') + '/' + refactoring.getClassName() + ".java"; // NOI18N
                 CompilationUnitTree newCompilation = JavaPluginUtils.createCompilationUnit(sourceRoot, relativePath, newInnerClass, workingCopy, make);
                 rewrite(null, newCompilation);

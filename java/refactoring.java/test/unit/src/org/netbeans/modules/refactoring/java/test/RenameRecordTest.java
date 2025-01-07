@@ -344,7 +344,7 @@ public class RenameRecordTest extends RefactoringTestBase {
                           package test;
                           public record Te|st(int component) {
                               public Test {
-                                  component = "";
+                                  component = 42;
                               }
                           }
                           """;
@@ -367,7 +367,7 @@ public class RenameRecordTest extends RefactoringTestBase {
                                     package test;
                                     public record NewName(int component) {
                                         public NewName {
-                                            component = "";
+                                            component = 42;
                                         }
                                     }
                                     """),
@@ -377,6 +377,38 @@ public class RenameRecordTest extends RefactoringTestBase {
                                     public class Use {
                                         private NewName test() {
                                             return new NewName(0);
+                                        }
+                                    }
+                                    """));
+
+    }
+
+    public void testRenameInnerRecord() throws Exception {
+        String testCode = """
+                          package test;
+                          public record Test(Component component) {
+                              public Test {
+                                  assert component !=null;
+                              }
+                              record Comp|onent(int c){
+                                assert c >= 0;
+                              }
+                          }
+                          """;
+        TestInput splitCode = TestUtilities.splitCodeAndPos(testCode);
+        writeFilesAndWaitForScan(src,
+                                 new File("Test.java", splitCode.code()));
+        JavaRenameProperties props = new JavaRenameProperties();
+        performRename(src.getFileObject("Test.java"), splitCode.pos(), "Part", props, true);
+        verifyContent(src, new File("Test.java",
+                                    """
+                                    package test;
+                                    public record Test(Part component) {
+                                        public Test {
+                                            assert component !=null;
+                                        }
+                                        record Part(int c){
+                                          assert c >= 0;
                                         }
                                     }
                                     """));

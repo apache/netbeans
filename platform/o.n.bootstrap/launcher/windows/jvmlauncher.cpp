@@ -249,7 +249,7 @@ bool JvmLauncher::startInProcJvm(const char *mainClassName, const std::list<std:
             for (list<string>::const_iterator it = options.begin(); it != options.end(); ++it, ++i) {
                 const string &option = *it;
                 logMsg("\t%s", option.c_str());
-                if (option.find("-splash:") == 0 && hSplash > 0) {
+                if (option.find("-splash:") == 0 && hSplash != nullptr) {
                     const string splash = option.substr(8);
                     logMsg("splash at %s", splash.c_str());
                     

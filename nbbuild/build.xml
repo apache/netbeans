@@ -467,7 +467,7 @@ metabuild.hash=${metabuild.hash}</echo>
     </downloadbinaries>
 
     <mkdir dir="${netbeans.dest.dir}/bin" />
-    <unzip src="../nb/ide.launcher/external/launcher-external-binaries-1-94a19f0.zip" dest="${netbeans.dest.dir}/bin">
+    <unzip src="../nb/ide.launcher/external/launcher-external-binaries-2-6c17cc6.zip" dest="${netbeans.dest.dir}/bin">
         <patternset>
             <include name="netbeans*.exe"/>
         </patternset>

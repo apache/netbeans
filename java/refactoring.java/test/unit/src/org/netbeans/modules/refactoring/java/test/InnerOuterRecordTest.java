@@ -63,145 +63,59 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     }
 
     // for reference
-    public void _test259004() throws Exception {
-        String source;
-        writeFilesNoIndexing(src,
-                new File("t/A.java",
-                        source = """
-                        package t;
+    public void test259004() throws Exception {
+        String source
+                = """
+            package t;
 
-                        import java.util.function.Consumer;
+            import java.util.function.Consumer;
 
-                        public class A {
+            public class A {
 
-                            public static void main(String[] args) {
-                                Consumer<F> c = f -> {};
-                            }
+                public static void main(String[] args) {
+                    Consumer<F> c = f -> {};
+                }
 
-                            public static final class F {}
-                        }"""));
-        performInnerToOuterTest2(null);
-        verifyContent(src,
-                new File("t/A.java",
-                        source = """
-                        package t;
+                public static final class F {}
+            }""";
+        String newOuter
+                = """
+            package t;
 
-                        import java.util.function.Consumer;
+            import java.util.function.Consumer;
 
-                        public class A {
+            public class A {
 
-                        public static void main(String[] args) {
-                            Consumer<F> c = f -> {};
-                        }
+            public static void main(String[] args) {
+                Consumer<F> c = f -> {};
+            }
 
-                        }"""),
-                new File("t/F.java",
-                        """
-                        /*
-                         * Refactoring License
-                         */
+            }""";
+        String newInner
+                = """
+            /*
+            * Refactoring License
+            */
 
-                        package t;
+            package t;
 
-                        /**
-                         *
-                         * @author junit
-                         */
-                        public final class F {
+            /**
+             *
+             * @author junit
+             */
+            public final class F {
 
-                        }
-                        """));
+            }
+            """;
+        innerOuterSetupAndTest(source, newOuter, newInner);
+
     }
 
     public void testApacheNetbeans7044() throws Exception {
-        debug = true;
         // initial outer has record with meaningful canonical constructor.
         // note that Inner class should be in last member for assumptions in the test.
-        writeFilesNoIndexing(src, new File("t/A.java",
-                """
-                    package t;
-
-                    import java.time.LocalDate;
-                    import java.util.Objects;
-
-                    public class A {
-
-                        void useStudent() {
-                            F s = new F(42,"Jan Klaassen", LocalDate.now().minusDays(1));
-                            System.out.println("student = " + s);
-                        }
-
-                        record F(int id, String name, LocalDate dob) {
-
-                            /**
-                              * Validate stuff.
-                              */
-                            public F {
-                                Objects.requireNonNull(id);
-                                Objects.requireNonNull(name);
-                                Objects.requireNonNull(dob);
-                                assert !name.isEmpty() && !name.isBlank();
-                                assert dob.isAfter(LocalDate.EPOCH);
-                            }
-                        }
-
-                    }
-
-                    """)
-        );
-        performInnerToOuterTest2(null);
-        verifyContent(src,
-                new File("t/A.java",
-                        """
-                    package t;
-
-                    import java.time.LocalDate;
-                    import java.util.Objects;
-
-                    public class A {
-
-                        void useStudent() {
-                            F s = new F(42,"Jan Klaassen", LocalDate.now().minusDays(1));
-                            System.out.println("student = " + s);
-                        }
-                    }
-                    """),
-                new File("t/F.java",
-                    """
-                    /*
-                     * Refactoring License
-                     */
-                    package t;
-
-                    import java.time.LocalDate;
-                    import java.util.Objects;
-                    /**
-                      *
-                      * @author junit
-                      */
-                    record F(int id, String name, LocalDate dob) {
-
-                        /**
-                         * Validate stuff.
-                         */
-                        public F {
-                            Objects.requireNonNull(id);
-                            Objects.requireNonNull(name);
-                            Objects.requireNonNull(dob);
-                            assert !name.isEmpty() && !name.isBlank();
-                            assert dob.isAfter(LocalDate.EPOCH);
-                        }
-                    }
-                    """)
-        );
-
-    }
-
-    public void testBasicRecordInRecord() throws Exception {
-        // initial outer has record with meaningful canonical constructor.
-        writeFilesNoIndexing(src,
-                new File("t/A.java",
-                        """
+        String source
+                = """
                 package t;
 
                 import java.time.LocalDate;
@@ -210,136 +124,209 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 public class A {
 
                     void useStudent() {
-                        Student s = new Student(42, "Jan Klaassen", LocalDate.now().minusDays(1));
+                        F s = new F(42,"Jan Klaassen", LocalDate.now().minusDays(1));
                         System.out.println("student = " + s);
                     }
 
-                    public static class Student {
-                        int id;
-                        String name;
-                        LocalDate dob
-                        public Student(int id, String name, LocalDate dob) {
+                    record F(int id, String name, LocalDate dob) {
+
+                        /**
+                          * Validate stuff.
+                          */
+                        public F {
                             Objects.requireNonNull(id);
                             Objects.requireNonNull(name);
                             Objects.requireNonNull(dob);
                             assert !name.isEmpty() && !name.isBlank();
                             assert dob.isAfter(LocalDate.EPOCH);
-                            this.id=id;
-                            this.name=name;
-                            this.dob=dob;
                         }
                     }
 
                 }
-                """));
-        performInnerToOuterTest2(null);
-        verifyContent(src,
-                new File("t/A.java",
-                        """
-                    package t;
+                """;
+        String newOuter
+                = """
+                package t;
 
-                    import java.time.LocalDate;
-                    import java.util.Objects;
+                import java.time.LocalDate;
+                import java.util.Objects;
 
-                    public class A {
+                public class A {
 
-                        void useStudent() {
-                            Student s = new Student(42, "Jan Klaassen", LocalDate.now().minusDays(1));
-                            System.out.println("student = " + s);
-                        }
-
-
+                    void useStudent() {
+                        F s = new F(42,"Jan Klaassen", LocalDate.now().minusDays(1));
+                        System.out.println("student = " + s);
                     }
-                    """),
-                new File("t/Student.java",
-                        """
-                        /*
-                         * Refactoring License
-                         */
+                }
+                """;
+        String newInner
+                = """
+                /*
+                 * Refactoring License
+                 */
+                package t;
 
-                        package t;
+                import java.time.LocalDate;
+                import java.util.Objects;
+                /**
+                  *
+                  * @author junit
+                  */
+                record F(int id, String name, LocalDate dob) {
 
-                        import java.time.LocalDate;
-                        import java.util.Objects;
+                    /**
+                     * Validate stuff.
+                     */
+                    public F {
+                        Objects.requireNonNull(id);
+                        Objects.requireNonNull(name);
+                        Objects.requireNonNull(dob);
+                        assert !name.isEmpty() && !name.isBlank();
+                        assert dob.isAfter(LocalDate.EPOCH);
+                    }
+                }
+                """;
 
-                        /**
-                         *
-                         * @author junit
-                         */
-                        public class Student {
-
-                            int id;
-                            String name;
-                            LocalDate dob;
-
-                            public Student(int id, String name, LocalDate dob) {
-                                Objects.requireNonNull(id);
-                                Objects.requireNonNull(name);
-                                Objects.requireNonNull(dob);
-                                assert !name.isEmpty() && !name.isBlank();
-                                assert dob.isAfter(LocalDate.EPOCH);
-                                this.id = id;
-                                this.name = name;
-                                this.dob = dob;
-                            }
-
-                        }
-                        """
-                ));
-
+        innerOuterSetupAndTest(source, newOuter, newInner);
     }
 
-    public void testBasicRecord1() throws Exception {
-        writeFilesNoIndexing(src,
-                new File("t/A.java",
-                        """
-                        package t;
+    public void testBasicClassInClass() throws Exception {
+        // initial outer has record with meaningful canonical constructor.
+        String source
+                = """
+            package t;
 
-                        import java.time.LocalDate;
+            import java.time.LocalDate;
+            import java.util.Objects;
 
-                        record A(int id, String name, LocalDate dob) {
+            public class A {
 
-                           F f;
-                           record F(int x, int y){}
-                        }
-                        """
-                ));
-        performInnerToOuterTest2(null);
-        verifyContent(src,
-                new File("t/A.java",
-                        """
-                        package t;
+                void useStudent() {
+                    F s = new F(42, "Jan Klaassen", LocalDate.now().minusDays(1));
+                    System.out.println("student = " + s);
+                }
 
-                        import java.time.LocalDate;
+                public static class F {
+                    int id;
+                    String name;
+                    LocalDate dob
+                    public Student(int id, String name, LocalDate dob) {
+                        Objects.requireNonNull(id);
+                        Objects.requireNonNull(name);
+                        Objects.requireNonNull(dob);
+                        assert !name.isEmpty() && !name.isBlank();
+                        assert dob.isAfter(LocalDate.EPOCH);
+                        this.id=id;
+                        this.name=name;
+                        this.dob=dob;
+                    }
+                }
 
-                        record A(int id, String name, LocalDate dob) {
-
-                            F f;
-
-                        }
-                        """),
-                new File("t/F.java",
-                        """
-                        /*
-                         * Refactoring License
-                         */
-                        package t;
-
-                        /**
-                         *
-                         * @author junit
-                         */
-                        record F(int x, int y){
-                        }
-
-                        """
-                ));
-
-    }
-
-    public void testOuterWithCompact() throws Exception{
-        String source=
+            }
+            """;
+        String newOuter
+                = 
                 """
+                package t;
+
+                import java.time.LocalDate;
+                import java.util.Objects;
+
+                public class A {
+
+                    void useStudent() {
+                        F s = new F(42, "Jan Klaassen", LocalDate.now().minusDays(1));
+                        System.out.println("student = " + s);
+                    }
+
+
+                }
+                """;
+        String newInner =
+                """
+                /*
+                 * Refactoring License
+                 */
+
+                package t;
+
+                import java.time.LocalDate;
+                import java.util.Objects;
+
+                /**
+                 *
+                 * @author junit
+                 */
+                public class F {
+
+                    int id;
+                    String name;
+                    LocalDate dob;
+
+                    public F(int id, String name, LocalDate dob) {
+                        Objects.requireNonNull(id);
+                        Objects.requireNonNull(name);
+                        Objects.requireNonNull(dob);
+                        assert !name.isEmpty() && !name.isBlank();
+                        assert dob.isAfter(LocalDate.EPOCH);
+                        this.id = id;
+                        this.name = name;
+                        this.dob = dob;
+                    }
+
+                }
+                """;
+
+        innerOuterSetupAndTest(source, newOuter, newInner);
+    }
+
+    public void testBasicRecordInRecord() throws Exception {
+        String source = 
+                """
+                package t;
+
+                import java.time.LocalDate;
+
+                record A(int id, String name, LocalDate dob) {
+
+                   F f;
+                   record F(int x, int y){}
+                }
+                """;
+        String newOuter= 
+                """
+                package t;
+
+                import java.time.LocalDate;
+
+                record A(int id, String name, LocalDate dob) {
+
+                    F f;
+
+                }
+                """;
+        String newInner =
+                """
+                /*
+                 * Refactoring License
+                 */
+                package t;
+
+                /**
+                 *
+                 * @author junit
+                 */
+                record F(int x, int y){
+                }
+
+                """;
+
+        innerOuterSetupAndTest(source, newOuter, newInner);
+    }
+
+    public void testOuterWithCompact() throws Exception {
+        String source
+                = """
                 package t;
                 import java.time.LocalDate;
                 record A(F f){
@@ -350,8 +337,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                      record F(int id, String name, LocalDate dob){}
                 }
                 """;
-        String newOuter=
-                """
+        String newOuter
+                = """
                 package t;
                 import java.time.LocalDate;
                 record A(F f){
@@ -360,8 +347,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                      }
                 }
                 """;
-        String newInner=
-                """
+        String newInner
+                = """
                 /*
                  * Refactoring License
                  */
@@ -373,14 +360,12 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                  */
                 record F(int id, String name, LocalDate dob){}
                 """;
-        writeFilesNoIndexing(src,new File("t/A.java",source));
-        performInnerToOuterTest2(null);
-        verifyContent(src, new File("t/A.java",newOuter),new File("t/F.java",newInner));
+        innerOuterSetupAndTest(source, newOuter, newInner);
     }
 
-    public void testInnerWithCompact() throws Exception{
-        String source=
-                """
+    public void testInnerWithCompact() throws Exception {
+        String source
+                = """
                 package t;
                 
                 import java.time.LocalDate;
@@ -400,9 +385,9 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                         }
                     }
                 }
-                                """;
-        String newOuter=
-                """
+                """;
+        String newOuter
+                = """
                 package t;
                 import java.time.LocalDate;
                 record A(F f) {
@@ -411,8 +396,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newInner=
-                """
+        String newInner
+                = """
                 /*
                  * Refactoring License
                  */
@@ -431,13 +416,76 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        writeFilesNoIndexing(src,new File("t/A.java",source));
-        performInnerToOuterTest2(null);
-        verifyContent(src, new File("t/A.java",newOuter),new File("t/F.java",newInner));
+        innerOuterSetupAndTest(source, newOuter, newInner);
+    }
+    
+    // outer may have effect
+    public void testClassWithInnerRecord() throws Exception {
+        String source
+                = """
+                package t;
+                
+                import java.time.LocalDate;
+                
+                class A {
+                    final F f;
+                    public A(F f) {
+                        assert f != null;
+                        this.f=f;
+                    }
+                
+                    record F(int id, String name, LocalDate dob) {
+                
+                        public F   {
+                            if (dob.isBefore(LocalDate.EPOCH)) {
+                                throw new IllegalArgumentException("to old " + dob);
+                            }
+                        }
+                    }
+                }
+                """;
+        String newOuter
+                = """
+                package t;
+                import java.time.LocalDate;
+                class A {
+                    final F f;
+                    public A(F f) {
+                        assert f != null;
+                        this.f=f;
+                    }
+                }
+                """;
+        String newInner
+                = """
+                /*
+                 * Refactoring License
+                 */
+                package t;
+                import java.time.LocalDate;
+                /**
+                 *
+                 * @author junit
+                 */
+                record F(int id, String name, LocalDate dob) {
+
+                    public F {
+                        if (dob.isBefore(LocalDate.EPOCH)) {
+                            throw new IllegalArgumentException("to old " + dob);
+                        }
+                    }
+                }
+                """;
+        innerOuterSetupAndTest(source, newOuter, newInner);
     }
 
+    void innerOuterSetupAndTest(String source, String newOuter, String newInner) throws Exception {
+        writeFilesNoIndexing(src, new File("t/A.java", source));
+        performInnerToOuterTest2(null);
+        verifyContent(src, new File("t/A.java", newOuter), new File("t/F.java", newInner));
+    }
 
-    boolean debug = true;
+    boolean debug = false;
 
     // variant for record inner to outer test
     private void performInnerToOuterTest2(String generateOuter, Problem... expectedProblems) throws Exception {

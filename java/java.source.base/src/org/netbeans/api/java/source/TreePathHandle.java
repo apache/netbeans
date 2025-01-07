@@ -322,6 +322,7 @@ public final class TreePathHandle {
             case ENUM_CONSTANT:
             case RECORD:
                 //TODO: record component
+            case RECORD_COMPONENT:
                 return true;
             case PARAMETER:
                 //only method and constructor parameters supported (not lambda):
@@ -410,7 +411,7 @@ public final class TreePathHandle {
                         case ENUM: kind = Tree.Kind.ENUM; break;
                         case INTERFACE: kind = Tree.Kind.INTERFACE; break;
                         case RECORD: kind = Tree.Kind.RECORD; break;
-                        case ENUM_CONSTANT: case FIELD: kind = Tree.Kind.VARIABLE; break;
+                        case ENUM_CONSTANT: case FIELD: case RECORD_COMPONENT: kind = Tree.Kind.VARIABLE; break;
                         case METHOD: case CONSTRUCTOR: kind = Tree.Kind.METHOD; break;
                         default: kind = null; break;
                     }
@@ -714,6 +715,7 @@ public final class TreePathHandle {
                     
                 case ENUM:
                 case CLASS:
+                case RECORD:
                 case ANNOTATION_TYPE:
                 case INTERFACE:
                     return Kind.CLASS;
@@ -724,6 +726,7 @@ public final class TreePathHandle {
                 case LOCAL_VARIABLE:
                 case RESOURCE_VARIABLE:
                 case EXCEPTION_PARAMETER:
+                case RECORD_COMPONENT:
                     return Kind.VARIABLE;
                     
                 case METHOD:

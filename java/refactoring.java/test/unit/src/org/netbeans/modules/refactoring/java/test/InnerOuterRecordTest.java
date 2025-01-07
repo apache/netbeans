@@ -61,7 +61,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
             return;
         }
     }
-    
+
     // for reference
     public void _test259004() throws Exception {
         String source;
@@ -176,7 +176,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     import java.time.LocalDate;
                     import java.util.Objects;
                     /**
-                      * 
+                      *
                       * @author junit
                       */
                     record F(int id, String name, LocalDate dob) {
@@ -197,7 +197,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
     }
 
-    public void testBasicClassExample() throws Exception {
+    public void testBasicRecordInRecord() throws Exception {
         // initial outer has record with meaningful canonical constructor.
         writeFilesNoIndexing(src,
                 new File("t/A.java",
@@ -290,7 +290,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     }
 
     public void testBasicRecord1() throws Exception {
-        // initial outer has record with meaningful canonical constructor.
         writeFilesNoIndexing(src,
                 new File("t/A.java",
                         """
@@ -316,7 +315,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                         record A(int id, String name, LocalDate dob) {
 
                             F f;
-                        
+
                         }
                         """),
                 new File("t/F.java",
@@ -337,6 +336,106 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 ));
 
     }
+
+    public void testOuterWithCompact() throws Exception{
+        String source=
+                """
+                package t;
+                import java.time.LocalDate;
+                record A(F f){
+
+                     public A{
+                         assert f!=null;
+                     }
+                     record F(int id, String name, LocalDate dob){}
+                }
+                """;
+        String newOuter=
+                """
+                package t;
+                import java.time.LocalDate;
+                record A(F f){
+                public A{
+                         assert f!=null;
+                     }
+                }
+                """;
+        String newInner=
+                """
+                /*
+                 * Refactoring License
+                 */
+                package t;
+                import java.time.LocalDate;
+                /**
+                 *
+                 * @author junit
+                 */
+                record F(int id, String name, LocalDate dob){}
+                """;
+        writeFilesNoIndexing(src,new File("t/A.java",source));
+        performInnerToOuterTest2(null);
+        verifyContent(src, new File("t/A.java",newOuter),new File("t/F.java",newInner));
+    }
+
+    public void testInnerWithCompact() throws Exception{
+        String source=
+                """
+                package t;
+                
+                import java.time.LocalDate;
+                
+                record A(F f) {
+                
+                    public A {
+                        assert f != null;
+                    }
+                
+                    record F(int id, String name, LocalDate dob) {
+                
+                        public F   {
+                            if (dob.isBefore(LocalDate.EPOCH)) {
+                                throw new IllegalArgumentException("to old " + dob);
+                            }
+                        }
+                    }
+                }
+                                """;
+        String newOuter=
+                """
+                package t;
+                import java.time.LocalDate;
+                record A(F f) {
+                public A {
+                        assert f != null;
+                    }
+                }
+                """;
+        String newInner=
+                """
+                /*
+                 * Refactoring License
+                 */
+                package t;
+                import java.time.LocalDate;
+                /**
+                 *
+                 * @author junit
+                 */
+                record F(int id, String name, LocalDate dob) {
+
+                    public F {
+                        if (dob.isBefore(LocalDate.EPOCH)) {
+                            throw new IllegalArgumentException("to old " + dob);
+                        }
+                    }
+                }
+                """;
+        writeFilesNoIndexing(src,new File("t/A.java",source));
+        performInnerToOuterTest2(null);
+        verifyContent(src, new File("t/A.java",newOuter),new File("t/F.java",newInner));
+    }
+
 
     boolean debug = true;
 

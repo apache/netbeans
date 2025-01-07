@@ -114,7 +114,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     }
 
     public void testApacheNetbeans7044() throws Exception {
-        debug = true;
         // initial outer has record with meaningful canonical constructor.
         // note that Inner class should be in last member for assumptions in the test.
         writeFilesNoIndexing(src, new File("t/A.java",
@@ -437,7 +436,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     }
 
 
-    boolean debug = true;
+    boolean debug = false;
 
     // variant for record inner to outer test
     private void performInnerToOuterTest2(String generateOuter, Problem... expectedProblems) throws Exception {

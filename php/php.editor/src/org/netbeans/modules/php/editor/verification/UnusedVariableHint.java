@@ -671,11 +671,12 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
+            boolean forceVariableAsUsedHolder = forceVariableAsUsed;
             forceVariableAsUsed = true;
             scan(node.getClassName());
             scan(node.ctorParams());
             scan(node.getBody());
-            forceVariableAsUsed = false;
+            forceVariableAsUsed = forceVariableAsUsedHolder;
         }
 
         @Override

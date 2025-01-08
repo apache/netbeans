@@ -1,0 +1,2 @@
+    public function |>MARK_OCCURRENCES:public^Method<|(): self {} // anon8
+}->|>MARK_OCCURRENCES:publicMethod<|()::publicStaticMethod()::PUBLIC_CONSTANT;

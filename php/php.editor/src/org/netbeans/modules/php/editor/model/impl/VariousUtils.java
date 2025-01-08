@@ -53,6 +53,7 @@ import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
 import org.netbeans.modules.php.editor.model.IndexScope;
 import org.netbeans.modules.php.editor.model.MethodScope;
+import org.netbeans.modules.php.editor.model.Model;
 import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.NamespaceScope;
@@ -69,6 +70,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.AnonymousObjectVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.CloneExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
@@ -441,13 +443,18 @@ public final class VariousUtils {
         return extractVariableTypeFromExpression(expression, allAssignments);
     }
 
-    static String extractVariableTypeFromExpression(Expression expression, Map<String, AssignmentImpl> allAssignments) {
+    static String extractVariableTypeFromExpression(Expression expr, Map<String, AssignmentImpl> allAssignments) {
+        Expression expression = expr;
         if (expression instanceof Assignment) {
             // handle nested assignments, e.g. $l = $m = new ObjectName;
             return extractVariableTypeFromAssignment((Assignment) expression, allAssignments);
         } else if (expression instanceof Reference) {
             Reference ref = (Reference) expression;
             expression = ref.getExpression();
+        }
+        if (expression instanceof ClassInstanceCreationVariable) {
+            // e.g. new Example()::$staticField;
+            expression = ((ClassInstanceCreationVariable) expression).getName();
         }
         if (expression instanceof ClassInstanceCreation) {
             ClassInstanceCreation classInstanceCreation = (ClassInstanceCreation) expression;
@@ -1124,6 +1131,7 @@ public final class VariousUtils {
         }
     }
 
+    @CheckForNull
     private static String extractVariableTypeFromVariableBase(VariableBase varBase, Map<String, AssignmentImpl> allAssignments) {
         if (varBase instanceof AnonymousObjectVariable) {
             AnonymousObjectVariable aov = (AnonymousObjectVariable) varBase;
@@ -1137,9 +1145,13 @@ public final class VariousUtils {
                 }
             }
             if (clsName instanceof ClassInstanceCreation) {
-                ClassInstanceCreation cis = (ClassInstanceCreation) clsName;
-                String className = CodeUtils.extractClassName(cis.getClassName());
-                return PRE_OPERATION_TYPE_DELIMITER + CONSTRUCTOR_TYPE_PREFIX + className;
+                return getVariableType((ClassInstanceCreation) clsName);
+            }
+        } else if (varBase instanceof ClassInstanceCreationVariable) {
+            ClassInstanceCreationVariable classInstanceCreationVariable = (ClassInstanceCreationVariable) varBase;
+            Expression clsName = classInstanceCreationVariable.getName();
+            if (clsName instanceof ClassInstanceCreation) {
+                return getVariableType((ClassInstanceCreation) clsName);
             }
         } else if (varBase instanceof Variable) {
             String varName = CodeUtils.extractVariableName((Variable) varBase);
@@ -1208,6 +1220,11 @@ public final class VariousUtils {
         return null;
     }
 
+    private static String getVariableType(ClassInstanceCreation classInstanceCreation) {
+        String className = CodeUtils.extractClassName(classInstanceCreation.getClassName());
+        return PRE_OPERATION_TYPE_DELIMITER + CONSTRUCTOR_TYPE_PREFIX + className;
+    }
+
     public static String resolveFileName(Include include) {
         Expression e = include.getExpression();
 
@@ -1272,7 +1289,7 @@ public final class VariousUtils {
     };
 
     @org.netbeans.api.annotations.common.SuppressWarnings({"SF_SWITCH_FALLTHROUGH"})
-    public static String getSemiType(TokenSequence<PHPTokenId> tokenSequence, State state, VariableScope varScope) {
+    public static String getSemiType(TokenSequence<PHPTokenId> tokenSequence, State state, VariableScope varScope, Model model) {
         int commasCount = 0;
         String possibleClassName = ""; //NOI18N
         int anchor = -1;
@@ -1462,6 +1479,16 @@ public final class VariousUtils {
                     //no-op
                 }
             } else {
+                if (token.id() == PHPTokenId.PHP_CURLY_CLOSE
+                        && (state == State.REFERENCE || state == State.STATIC_REFERENCE)) {
+                    // new class(){}->, new class(){}?->, new class(){}::
+                    ClassScope anonymousClass = getAnonymousClass(tokenSequence.offset() + tokenSequence.token().length(), model);
+                    if (anonymousClass != null) {
+                        state = State.STOP;
+                        metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.CONSTRUCTOR_TYPE_PREFIX + anonymousClass.getName());
+                        break;
+                    }
+                }
                 if (state.equals(State.VARBASE)) {
                     metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.VAR_TYPE_PREFIX);
                     state = State.STOP;
@@ -1500,6 +1527,18 @@ public final class VariousUtils {
             String retval = metaAll.toString();
             if (retval != null) {
                 return retval;
+            }
+        }
+        return null;
+    }
+
+    @CheckForNull
+    private static ClassScope getAnonymousClass(int anonymousClassEndOffset, Model model) {
+        Collection<? extends ClassScope> classScopes = ModelUtils.getDeclaredClasses(model.getFileScope());
+        for (ClassScope classScope : classScopes) {
+            if (classScope.isAnonymous()
+                    && classScope.getBlockRange().getEnd() == anonymousClassEndOffset) {
+                return classScope;
             }
         }
         return null;

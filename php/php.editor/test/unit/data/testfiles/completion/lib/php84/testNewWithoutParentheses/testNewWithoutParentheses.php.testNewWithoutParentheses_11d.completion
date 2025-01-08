@@ -1,0 +1,4 @@
+Code completion result for source line:
+$example = new Example()->test::PUBLIC_TES|T_CONST;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   PUBLIC_TEST_CONST "public test  [PUBLIC]   Test

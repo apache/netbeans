@@ -572,7 +572,7 @@ public final class DAPDebugger implements IDebugProtocolClient {
         }
     };
 
-    public interface URIPathConvertor {
+    interface URIPathConvertor {
         public String toPath(URI uri);
         public URI toURI(String path);
     }

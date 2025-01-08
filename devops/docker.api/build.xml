@@ -20,7 +20,7 @@
 
 -->
 
-<project basedir="." default="build" name="ide/docker.ui">
-    <description>Builds, tests, and runs the project org.netbeans.modules.docker.ui</description>
+<project basedir="." default="build" name="devops/docker.api">
+    <description>Builds, tests, and runs the project org.netbeans.modules.docker.api</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

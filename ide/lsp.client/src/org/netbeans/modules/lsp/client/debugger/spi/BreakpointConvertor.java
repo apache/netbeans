@@ -20,15 +20,36 @@ package org.netbeans.modules.lsp.client.debugger.spi;
 
 import java.net.URI;
 import java.util.List;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.lsp.client.debugger.LineBreakpointData;
 import org.netbeans.modules.lsp.client.debugger.SPIAccessor;
 
-/**
+/**Convert language-specific breakpoints to format usable by the DAP debugger.
+ *
+ * Implementations should inspect the provided {@code Breakpoint}, and if they
+ * recognize it, and there's a corresponding method in the provided
+ * {@code ConvertedBreakpointConsumer} instance, the method should be called.
+ *
+ * The implementations should be registered in the global {@code Lookup}.
+ *
  * @since 1.29
  */
 public interface BreakpointConvertor {
+    /**
+     * Inspect the provided {@code Breakpoint}, and call an appropriate method
+     * on the provided {@code ConvertedBreakpointConsumer} if possible.
+     *
+     * @param b the breakpoint to inspect
+     * @param breakpointConsumer the consumer of which the appropriate method
+     *                           should be invoked
+     */
     public void convert(org.netbeans.api.debugger.Breakpoint b,
                        ConvertedBreakpointConsumer breakpointConsumer);
+
+    /**
+     * Set of callbacks for converted breakpoints.
+     */
     public static class ConvertedBreakpointConsumer {
         private final List<LineBreakpointData> lineBreakpoints;
 
@@ -36,7 +57,15 @@ public interface BreakpointConvertor {
             this.lineBreakpoints = lineBreakpoints;
         }
 
-        public void lineBreakpoint(URI uri, int lineNumber, String condition) {
+        /**Report a line-based breakpoint, with the given properties
+         *
+         * @param uri the location of the file where the breakpoint is set
+         * @param lineNumber the line number on which the breakpoint is set
+         * @param condition an optional condition expression - the the debugger
+         *                  will only stop if this evaluates to a language-specific
+         *                  {@code true} representation; may be {@code null}
+         */
+        public void lineBreakpoint(@NonNull URI uri, int lineNumber, @NullAllowed String condition) {
             lineBreakpoints.add(new LineBreakpointData(uri, lineNumber, condition));
         }
 

@@ -39,6 +39,7 @@ import static java.nio.file.attribute.AclEntryPermission.WRITE_ACL;
 import static java.nio.file.attribute.AclEntryPermission.WRITE_ATTRIBUTES;
 import static java.nio.file.attribute.AclEntryPermission.WRITE_DATA;
 import static java.nio.file.attribute.AclEntryPermission.WRITE_NAMED_ATTRS;
+import java.nio.file.attribute.AclEntryType;
 import java.nio.file.attribute.AclFileAttributeView;
 import java.nio.file.attribute.DosFileAttributeView;
 import java.nio.file.attribute.FileAttribute;
@@ -163,12 +164,16 @@ public class TempFileGenerator {
     private void setFileOwnerAcl(Path filePath, Set<AclEntryPermission> permissions) throws IOException {
         AclFileAttributeView acl = Files.getFileAttributeView(filePath, AclFileAttributeView.class);
         AclEntry ownerEntry = findFileOwner(acl);
+        AclEntry.Builder aclBuilder;
         
         if (ownerEntry == null) {
-            throw new IOException("Owner missing, file:" + filePath.toString()); // NOI18N
-        } 
+            LOG.info("Owner missing, file:" + filePath.toString()); // NOI18N
+            aclBuilder = AclEntry.newBuilder().setPrincipal(acl.getOwner()).setType(AclEntryType.ALLOW);
+        } else {
+            aclBuilder = AclEntry.newBuilder(ownerEntry);
+        }
 
-        AclEntry ownerAcl = AclEntry.newBuilder(ownerEntry).setPermissions(permissions).build();
+        AclEntry ownerAcl = aclBuilder.setPermissions(permissions).build();
         acl.setAcl(Collections.singletonList(ownerAcl));
     }
 

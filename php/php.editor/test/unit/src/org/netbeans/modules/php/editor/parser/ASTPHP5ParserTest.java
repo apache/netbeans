@@ -1543,6 +1543,53 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php83/typedClassConstants_01");
     }
 
+    // PHP 8.4
+    public void testNewWithoutParentheses_01() throws Exception {
+        performTest("parser/php84/newWithoutParentheses_01");
+    }
+
+    public void testNewWithoutParentheses_02() throws Exception {
+        performTest("parser/php84/newWithoutParentheses_02");
+    }
+
+    public void testNewWithoutParenthesesError_01() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_01");
+    }
+
+    public void testNewWithoutParenthesesError_02() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_02");
+    }
+
+    public void testNewWithoutParenthesesError_03() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_03");
+    }
+
+    public void testNewWithoutParenthesesError_04() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_04");
+    }
+
+//    public void testNewWithoutParenthesesError_05() throws Exception {
+//        // NPE occurs without sanitizing
+//        // see SanitizeSourceTest.testNewWithoutParenthesesError01()
+//        performTest("parser/php84/newWithoutParenthesesError_05");
+//    }
+
+    public void testNewWithoutParenthesesError_06() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_06");
+    }
+
+    public void testNewWithoutParenthesesError_07() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_07");
+    }
+
+    public void testNewWithoutParenthesesError_08() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_08");
+    }
+
+    public void testNewWithoutParenthesesError_09() throws Exception {
+        performTest("parser/php84/newWithoutParenthesesError_09");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

@@ -1,0 +1,4 @@
+Code completion result for source line:
+}::publicStaticMe|thod6();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticMethod6()           [STATIC]   {}

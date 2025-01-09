@@ -60,15 +60,15 @@ throw null ?? new Exception();
 throw (null ?? new Exception());
 
 throw $instance->createException();
-throw ( $instance->createException());
+throw ($instance->createException());
 
 throw static::createException();
 throw (static::createException());
 throw Ex::createException();
-throw ( Ex::createException() );
+throw (Ex::createException());
 
 throw $condition1 && $condition2 ? new Exception1() : new Exception2();
 throw ($condition1 && $condition2 ? new Exception1() : new Exception2());
 
 $condition1 || throw new Exception() && $condition2 || throw new Exception();
-$condition1 || ( throw new Exception() && $condition2 || (throw new Exception()) );
+$condition1 || (throw new Exception() && $condition2 || (throw new Exception()));

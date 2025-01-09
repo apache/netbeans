@@ -1,0 +1,4 @@
+Code completion result for source line:
+new Example()?->return|This()?->publicMethod(); // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     returnThis()                    [PUBLIC]   Example

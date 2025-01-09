@@ -280,6 +280,10 @@ parser code {:
         }
      }
 
+    void syntax_error() {
+        syntax_error(cur_token);
+    }
+
     /**
      * Report a fatal error.  This method takes a message string and an additional object
      * (to be used by specializations implemented in subclasses).
@@ -647,6 +651,8 @@ non terminal Expression static_class_constant_array_access;
 non terminal Expression class_constant_array_access;
 non terminal Expression static_array_creation;
 non terminal VariableBase base_variable_with_function_calls;
+non terminal Expression new_expr;
+non terminal ASTPHP5Parser.Access access_operator;
 
 non terminal Expression enum_backing_type;
 non terminal Statement enum_case;
@@ -4307,6 +4313,15 @@ parenthesis_expr:expr
     RESULT = anonymous;
 :}
 
+// PHP 8.4 new MyClass()->method() without parentheses
+// https://wiki.php.net/rfc/new_without_parentheses
+| new_expr:expr
+{:
+    // new Example()();
+    // new class(){}();
+    RESULT = new ClassInstanceCreationVariable(expr);
+:}
+
 | T_CONSTANT_ENCAPSED_STRING:scalar
 {:
     RESULT = new Scalar(scalarleft, scalarright, scalar, Scalar.Type.STRING);
@@ -5286,6 +5301,33 @@ base_variable_with_function_calls:var T_OBJECT_OPERATOR object_property:memberPr
     RESULT = new FieldAccess(classNameleft, varNameright, new StaticConstantAccess(classNameleft, constantright, className, constant),
             new Variable(varNameleft, varNameright, varName.getName()), true);
 :}
+
+// PHP 8.4 new MyClass()->method() without parentheses
+// https://wiki.php.net/rfc/new_without_parentheses
+| new_expr:expr access_operator:operator object_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
+{:
+    // new Example()->method()
+    // new Example()->method()::staticMethod();
+    // new class(){}->method();
+    // new class(){}->method()::staticMethod();
+    // new Example()?->method()
+    // new Example()?->method()::staticMethod();
+    // new class(){}?->method();
+    // new class(){}?->method()::staticMethod();
+    // new Example()::CONSTANT;
+    // new class(){}::CONSTANT;
+    RESULT = parser.createDispatch(operator, new ClassInstanceCreationVariable(expr), memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+:}
+
+| new_expr:expr access_operator:operator
+{:
+    // for code completion
+    // e.g. new class() {}::
+    // PHP Parse error:  syntax error, unexpected token ";", expecting identifier or variable or "{" or "$"
+    parser.syntax_error();
+    RESULT = parser.createDispatch(operator, new ClassInstanceCreationVariable(expr), new Identifier(operatorright, operatorright, ""), // NOI18N
+            operatorright, operatorright, null, operatorright, new LinkedList(), new LinkedList());
+:}
 ;
 
 variable ::=
@@ -5566,6 +5608,22 @@ T_OPEN_PARENTHESE:start variable:var T_CLOSE_PARENTHESE:end
     // e.g. ((string) $variable->something)[0];
     DereferencableVariable dereferencableVariable = new DereferencableVariable(peleft, peright, pe.getExpression());
     RESULT = new DereferencedArrayAccess(peleft, adright, dereferencableVariable, ad);
+:}
+
+| T_OPEN_PARENTHESE:start T_NEW:n class_name_reference:className ctor_arguments:ctor T_CLOSE_PARENTHESE:end array_dimension:ad
+{:
+    // (new Example())['key'];
+    ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(nleft, ctorright, className, ctor);
+    RESULT = new DereferencedArrayAccess(startleft, adright, new AnonymousObjectVariable(startleft, endright, classInstanceCreation), ad);
+:}
+
+// PHP 8.4 new MyClass()->method() without parentheses
+// https://wiki.php.net/rfc/new_without_parentheses
+| new_expr:expr array_dimension:ad
+{:
+    // new Example()['key'];
+    // new class(){}['key'];
+    RESULT = new DereferencedArrayAccess(exprleft, adright, new ClassInstanceCreationVariable(expr), ad);
 :}
 
 | dereferencable_variable:var array_dimension:ad
@@ -6044,5 +6102,34 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList T_CURLY_CLOSE:blockEn
     Block block = new Block(blockStartleft, blockEndright, statementList);
     ClassInstanceCreation classInstance = ClassInstanceCreation.anonymous(parser.getFileName(), counter, startleft, blockEndright, cleft, ctor, superClass, interfaces, block, attributes);
     RESULT = classInstance;
+:}
+;
+
+new_expr ::=
+T_NEW:n class_name_reference:className T_OPEN_PARENTHESE function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
+{:
+    RESULT = new ClassInstanceCreation(nleft, endright, className, paramsList);
+:}
+
+| anonymous_class:anon
+{:
+    RESULT = anon;
+:}
+;
+
+access_operator ::=
+T_OBJECT_OPERATOR
+{:
+    RESULT = ASTPHP5Parser.Access.NON_STATIC;
+:}
+
+| T_NULLSAFE_OBJECT_OPERATOR
+{:
+    RESULT = ASTPHP5Parser.Access.NULLSAFE;
+:}
+
+| T_PAAMAYIM_NEKUDOTAYIM
+{:
+    RESULT = ASTPHP5Parser.Access.STATIC;
 :}
 ;

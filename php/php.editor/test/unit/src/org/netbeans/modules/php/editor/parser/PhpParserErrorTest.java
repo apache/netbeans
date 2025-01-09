@@ -1460,4 +1460,49 @@ public class PhpParserErrorTest extends PHPTestBase {
     public void testTypedClassConstants_01() throws Exception {
         checkErrors("testfiles/parser/php83/typedClassConstants_01.php");
     }
+
+    // PHP 8.4
+    public void testNewWithoutParentheses_01() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParentheses_01.php");
+    }
+
+    public void testNewWithoutParentheses_02() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParentheses_02.php");
+    }
+
+    public void testNewWithoutParenthesesError_01() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_01.php");
+    }
+
+    public void testNewWithoutParenthesesError_02() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_02.php");
+    }
+
+    public void testNewWithoutParenthesesError_03() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_03.php");
+    }
+
+    public void testNewWithoutParenthesesError_04() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_04.php");
+    }
+
+    public void testNewWithoutParenthesesError_05() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_05.php");
+    }
+
+    public void testNewWithoutParenthesesError_06() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_06.php");
+    }
+
+    public void testNewWithoutParenthesesError_07() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_07.php");
+    }
+
+    public void testNewWithoutParenthesesError_08() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_08.php");
+    }
+
+    public void testNewWithoutParenthesesError_09() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_09.php");
+    }
 }

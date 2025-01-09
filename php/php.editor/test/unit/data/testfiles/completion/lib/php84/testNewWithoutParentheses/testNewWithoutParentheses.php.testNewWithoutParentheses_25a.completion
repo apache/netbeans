@@ -1,0 +1,8 @@
+Code completion result for source line:
+}::|publicStaticMethod6();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticMethod6()           [STATIC]   {}
+VARIABLE   string $publicStaticField6      [STATIC]   {}
+CONSTANT   IMPLICIT_PUBLIC_CONST6 "implic  [PUBLIC]   {}
+CONSTANT   PUBLIC_CONST6 "public const"    [PUBLIC]   {}
+CONSTANT   class \#anon#testNewWithoutPar  [PUBLIC]   Magic Constant

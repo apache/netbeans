@@ -46,7 +46,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -125,7 +124,6 @@ import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
-import org.netbeans.modules.java.lsp.server.progress.ModuleInfo;
 import org.netbeans.modules.java.lsp.server.project.LspProjectInfo;
 import org.netbeans.modules.java.lsp.server.singlesourcefile.SingleFileOptionsQueryImpl;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
@@ -152,7 +150,6 @@ import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
@@ -1412,32 +1409,18 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     void updateJavaFormatPreferences(FileObject fo, JsonObject configuration) {
         if (configuration != null && client.getNbCodeCapabilities().wantsJavaSupport()) {
-            NbPreferences.Provider provider = Lookup.getDefault().lookup(NbPreferences.Provider.class);
-            Preferences prefs = provider != null ? provider.preferencesRoot().node("de/funfried/netbeans/plugins/externalcodeformatter") : null;
-            JsonPrimitive formatterPrimitive = configuration.getAsJsonPrimitive("codeFormatter");
-            String formatter = formatterPrimitive != null ? formatterPrimitive.getAsString() : null;
-            JsonPrimitive pathPrimitive = configuration.getAsJsonPrimitive("settingsPath");
-            String path = pathPrimitive != null ? pathPrimitive.getAsString() : null;
-            if (formatter == null || "NetBeans".equals(formatter)) {
-                if (prefs != null) {
-                    prefs.put("enabledFormatter.JAVA", "netbeans-formatter");
+            JsonElement pathElement = configuration.get("settingsPath");
+            String path = pathElement != null && pathElement.isJsonPrimitive() ? pathElement.getAsString() : null;
+            Path p = path != null ? Paths.get(path) : null;
+            File file = p != null ? p.toFile() : null;
+            try {
+                if (file != null && file.exists() && file.canRead() && file.getName().endsWith(".zip")) {
+                    OptionsExportModel.get().doImport(file);
+                } else {
+                    OptionsExportModel.get().clean();
                 }
-                Path p = path != null ? Paths.get(path) : null;
-                File file = p != null ? p.toFile() : null;
-                try {
-                    if (file != null && file.exists() && file.canRead() && file.getName().endsWith(".zip")) {
-                        OptionsExportModel.get().doImport(file);
-                    } else {
-                        OptionsExportModel.get().clean();
-                    }
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            } else if (prefs != null) {
-                prefs.put("enabledFormatter.JAVA", formatter.toLowerCase(Locale.ENGLISH).concat("-java-formatter"));
-                if (path != null) {
-                    prefs.put(formatter.toLowerCase(Locale.ENGLISH).concat("FormatterLocation"), path);
-                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
         }
     }

@@ -159,4 +159,9 @@ public class NavigatorTest extends PhpNavigatorTestBase {
     public void testTypedClassConstants() throws Exception {
         performTest("structure/php83/typedClassConstants");
     }
+
+    // PHP 8.4
+    public void testNewWithoutParentheses() throws Exception {
+        performTest("structure/php84/newWithoutParentheses");
+    }
 }

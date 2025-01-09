@@ -1217,4 +1217,14 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/issueGH7524.php", options, false, true);
     }
 
+    // GH-8035 PHP 8.4 New without parentheses
+    public void testNewWithoutParentheses_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/newWithoutParentheses_01.php", options);
+    }
+
+    public void testNewWithoutParentheses_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/newWithoutParentheses_02.php", options);
+    }
 }

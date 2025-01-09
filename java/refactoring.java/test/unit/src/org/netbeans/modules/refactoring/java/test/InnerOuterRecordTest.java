@@ -288,7 +288,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 import java.time.LocalDate;
 
                 record A(int id, String name, LocalDate dob) {
-                             
                    static F f;
                    record F(int x, int y){}
                 }

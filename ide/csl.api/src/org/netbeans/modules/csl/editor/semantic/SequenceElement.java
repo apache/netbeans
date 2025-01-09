@@ -26,8 +26,7 @@ import org.netbeans.modules.csl.api.ColoringAttributes.Coloring;
 
 /**
  * Each SequeneceElement represents a OffsetRange/Coloring/Language tuple that
- * is managed for semantic highlighting purposes. They are comparable since they
- * are maintained in a TreeSet (sorted by the OffsetRanges).
+ * is managed for semantic highlighting purposes.
  *
  * @author Tor Norbye
  */

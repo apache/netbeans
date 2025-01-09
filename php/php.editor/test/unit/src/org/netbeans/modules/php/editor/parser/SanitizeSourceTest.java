@@ -259,6 +259,10 @@ public class SanitizeSourceTest extends ParserTestBase {
         performTest("sanitize/arbitraryStaticVariableInitializers01");
     }
 
+    public void testNewWithoutParenthesesError01() throws Exception {
+        performTest("sanitize/newWithoutParenthesesError01");
+    }
+
     protected String getTestResult(String filename) throws Exception {
         return getTestResult(filename, null);
     }

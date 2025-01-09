@@ -1,0 +1,4 @@
+Code completion result for source line:
+new Example()::$publicStatic|Field; // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   string $publicStaticField       [STATIC]   Example

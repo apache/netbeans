@@ -1,0 +1,5 @@
+Code completion result for source line:
+$example = new Example()?->test->publicTe|stMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicTestMethod()              [PUBLIC]   Test
+VARIABLE   int publicTestField             [PUBLIC]   Test

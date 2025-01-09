@@ -39,6 +39,7 @@ github:
     # no force push to master
     master: {}
   collaborators:
+    - petrovic-d
     - Achal1607
     - asbachb
     - troizet

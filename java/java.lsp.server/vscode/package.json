@@ -192,23 +192,6 @@
 					"default": 10000,
 					"description": "When code completion takes longer than this specified time (in milliseconds), there will be a warning produced (-1 to disable)"
 				},
-				"netbeans.format.codeFormatter": {
-					"type": "string",
-					"enum": [
-						"NetBeans",
-						"Eclipse",
-						"Google",
-						"Spring"
-					],
-					"enumDescriptions": [
-						"Internal NetBeans Code Formatter",
-						"Eclipse Code Formatter",
-						"Goolge Code Formatter",
-						"Spring Code Formatter"
-					],
-					"description": "Code formatter to use",
-					"default": "NetBeans"
-				},
 				"netbeans.format.settingsPath": {
 					"type": "string",
 					"description": "Path to the file containing exported formatter settings",

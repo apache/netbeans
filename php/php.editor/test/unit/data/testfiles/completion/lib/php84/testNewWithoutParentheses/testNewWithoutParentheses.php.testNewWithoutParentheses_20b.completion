@@ -1,0 +1,4 @@
+Code completion result for source line:
+}::PUBLIC_CONST|ANT;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   PUBLIC_CONST "public const"     [PUBLIC]   {}

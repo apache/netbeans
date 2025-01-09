@@ -115,7 +115,7 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
             }
 
             GsfSemanticLayer layer = GsfSemanticLayer.getLayer(MarkOccurrencesHighlighter.class, doc);
-            SortedSet seqs = new TreeSet<SequenceElement>();
+            SortedSet<SequenceElement> seqs = new TreeSet<>(SequenceElement.POSITION_ORDER);
 
             for (OffsetRange range : bag) {
                 if (range != OffsetRange.NONE) {

@@ -1,0 +1,6 @@
+Code completion result for source line:
+}::publicStaticMethod3()->publicMethod3()->publi|cField3;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicMethod3()                 [PUBLIC]   {}
+METHOD     publicStaticMethod3()           [STATIC]   {}
+VARIABLE   string publicField3             [PUBLIC]   {}

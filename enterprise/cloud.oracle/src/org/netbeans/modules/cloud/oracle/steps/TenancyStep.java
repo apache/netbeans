@@ -20,7 +20,6 @@ package org.netbeans.modules.cloud.oracle.steps;
 
 import com.oracle.bmc.identity.model.Tenancy;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +31,6 @@ import org.netbeans.modules.cloud.oracle.assets.AbstractStep;
 import org.netbeans.modules.cloud.oracle.assets.CloudAssets;
 import org.netbeans.modules.cloud.oracle.assets.Steps.Values;
 import org.netbeans.modules.cloud.oracle.items.IncompatibleTenancyItem;
-import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.items.TenancyItem;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
@@ -72,7 +70,7 @@ public final class TenancyStep extends AbstractStep<TenancyItem> {
         for (OCIProfile p : profiles) {
             Tenancy t = p.getTenancyData();
             if (t != null) {
-                items.add(new NotifyDescriptor.QuickPick.Item(p.getId(), Bundle.SelectProfile_Description(t.getName(), t.getHomeRegionKey())));
+                items.add(new NotifyDescriptor.QuickPick.Item(p.getId(), Bundle.SelectProfile_Description(t.getName(), p.getRegion().getRegionCode())));
             }
         }
         if (profiles.stream().filter(p -> p.getTenancy().isPresent()).count() == 0) {

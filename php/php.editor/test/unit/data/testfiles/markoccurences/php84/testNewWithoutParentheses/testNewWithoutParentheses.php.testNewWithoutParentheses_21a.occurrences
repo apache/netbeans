@@ -1,0 +1,4 @@
+        $example = new Example()::|>MARK_OCCURRENCES:publicSta^ticMethod<|();
+    public static function |>MARK_OCCURRENCES:publicStaticMethod<|(): string {
+new Example()::|>MARK_OCCURRENCES:publicStaticMethod<|(); // test
+new Example()->returnThis()::|>MARK_OCCURRENCES:publicStaticMethod<|(); // test

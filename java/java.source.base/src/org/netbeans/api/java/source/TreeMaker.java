@@ -1308,7 +1308,7 @@ public final class TreeMaker {
     
       /**
      * Creates a new Tree for a given VariableTree
-     * specication : 15.20.2
+     * specification : 15.20.2
      * @param vt the VariableTree of the pattern
      * @see com.sun.source.tree.BindingPatternTree
      * @return the newly created BindingPatternTree

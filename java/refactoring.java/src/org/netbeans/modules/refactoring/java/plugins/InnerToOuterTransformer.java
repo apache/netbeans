@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.refactoring.java.plugins;
 
 import com.sun.source.tree.*;
@@ -52,7 +51,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
     private InnerToOuterRefactoring refactoring;
     private boolean isInInnerClass = false;
     private Set<Element> referencedPrivateElement;
-    
+
     private Element getCurrentElement() {
         return workingCopy.getTrees().getElement(getCurrentPath());
     }
@@ -78,7 +77,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
             return null;
         }
         if (inner.equals(current)) {
-            Tree newTree = make.setLabel(node, refactoring.getClassName());        
+            Tree newTree = make.setLabel(node, refactoring.getClassName());
             rewrite(node, newTree);
         } else if (isThisReferenceToOuter() && isThisInInner()) {
             if (current.getModifiers().contains(Modifier.PRIVATE)) {
@@ -105,7 +104,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
                 TreePath elementPath = workingCopy.getTrees().getPath(current);
                 JavaFileObject sourceFile = elementPath != null ? elementPath.getCompilationUnit().getSourceFile() : null;
                 if (   (parent != null && parent.getKind() == Tree.Kind.CASE && ((CaseTree) parent).getExpression() == node && current.getKind() == ElementKind.ENUM_CONSTANT)
-                    || path.getCompilationUnit().getSourceFile() == sourceFile) {
+                        || path.getCompilationUnit().getSourceFile() == sourceFile) {
                     rewrite(node, make.Identifier(current.getSimpleName()));
                 } else {
                     rewrite(node, make.QualIdent(current));
@@ -141,7 +140,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
                 else {
                     thisString = "this"; // NOI18N
                 }
-            
+
             }
             if (thisString != null && currentElement instanceof ExecutableElement) {
                 ExecutableElement constr = (ExecutableElement) currentElement;
@@ -154,7 +153,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
                         removeEnclosingExpression = true;
                     }
                 }
-                
+
                 int index = constr.getParameters().size();
                 if (constr.isVarArgs()) {
                     index--;
@@ -209,7 +208,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
         }
         return super.visitNewClass(arg0, arg1);
     }
-    
+
     private TypeElement getOuter(TypeElement element) {
         while (element != null && !workingCopy.getTypes().isSubtype(element.asType(),outer.asType())) {
             element = workingCopy.getElementUtilities().enclosingTypeElement(element);
@@ -231,7 +230,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
                     rewrite(superCall, newSuperCall);
                 }
             }
-            
+
         }
         return super.visitMethod(constructor, element);
     }
@@ -242,7 +241,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
         if (currentElement == null) {
             return super.visitClass(classTree, element);
         }
-        GeneratorUtilities genUtils = GeneratorUtilities.get(workingCopy); // helper        
+        GeneratorUtilities genUtils = GeneratorUtilities.get(workingCopy); // helper
         if (currentElement!=null && currentElement == outer) {
             Element outerouter = outer.getEnclosingElement();
             Tree superVisit = super.visitClass(classTree, element);
@@ -257,11 +256,11 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
             newInnerClass = genUtils.importComments(newInnerClass, workingCopy.getCompilationUnit());
 
             newInnerClass = make.setLabel(newInnerClass, refactoring.getClassName());
-            
+
             newInnerClass = refactorInnerClass(newInnerClass);
-            
+
             TreePath outerPath = workingCopy.getTrees().getPath(outer);
-            
+
             if (outerouter.getKind() == ElementKind.PACKAGE) {
                 FileObject sourceRoot=ClassPath.getClassPath(workingCopy.getFileObject(), ClassPath.SOURCE).findOwnerRoot(workingCopy.getFileObject());
                 ClassTree outerTree = (ClassTree) workingCopy.getTrees().getTree(outer);
@@ -290,53 +289,53 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
                 rewrite(outerouterTree, newOuterOuter);
                 return newOuterOuter;
             }
-            
+
         } else if (refactoring.getReferenceName() != null && currentElement!=null && workingCopy.getTypes().isSubtype(currentElement.asType(), inner.asType()) && currentElement!=inner) {
-                VariableTree variable = make.Variable(make.Modifiers(Collections.<Modifier>emptySet()), refactoring.getReferenceName(), make.Type(outer.asType()), null);
+            VariableTree variable = make.Variable(make.Modifiers(Collections.<Modifier>emptySet()), refactoring.getReferenceName(), make.Type(outer.asType()), null);
                 for (Tree member:classTree.getMembers()) {
-                    if (member.getKind() == Tree.Kind.METHOD) {
-                        MethodTree m = (MethodTree) member;
+                if (member.getKind() == Tree.Kind.METHOD) {
+                    MethodTree m = (MethodTree) member;
                         if (m.getReturnType()==null) {
-                    
+
                             for( VariableTree var: m.getParameters() ) {
                                 if( var.getName().contentEquals(refactoring.getReferenceName()) ) {
-                                    problem = MoveTransformer.createProblem(problem, true, NbBundle.getMessage(InnerToOuterTransformer.class, "ERR_InnerToOuter_OuterNameClashSubtype", refactoring.getReferenceName(), refactoring.getClassName(), currentElement.getSimpleName()));
-                                }
+                                problem = MoveTransformer.createProblem(problem, true, NbBundle.getMessage(InnerToOuterTransformer.class, "ERR_InnerToOuter_OuterNameClashSubtype", refactoring.getReferenceName(), refactoring.getClassName(), currentElement.getSimpleName()));
                             }
-
-                            MethodInvocationTree superCall = (MethodInvocationTree) ((ExpressionStatementTree) m.getBody().getStatements().get(0)).getExpression();
-                            List<ExpressionTree> newArgs = new ArrayList<ExpressionTree>(superCall.getArguments());
-                            
-                            MethodTree newConstructor = null;
-                            ExpressionTree exprTree = (ExpressionTree)make.Identifier(variable.getName().toString());
-                            if (hasVarArgs(m)) {
-                                int index = m.getParameters().size() - 1;
-                                newArgs.add(index, exprTree);
-                                newConstructor = make.insertMethodParameter(m, index, variable);
-                            } else {
-                                newArgs.add(exprTree);
-                                newConstructor = make.addMethodParameter(m, variable);
-                            }
-                            MethodInvocationTree method = make.MethodInvocation(
-                                    Collections.<ExpressionTree>emptyList(), 
-                                    make.Identifier("super"), // NOI18N
-                                    newArgs);
-
-                            BlockTree block = make.insertBlockStatement(m.getBody(), 0, make.ExpressionStatement(method));
-                            block = make.removeBlockStatement(block, 1);
-                            
-                            newConstructor = make.Constructor(
-                                    make.Modifiers(newConstructor.getModifiers().getFlags(), newConstructor.getModifiers().getAnnotations()),
-                                    newConstructor.getTypeParameters(), 
-                                    newConstructor.getParameters(),
-                                    newConstructor.getThrows(),
-                                    block);
-
-                            rewrite(m, newConstructor);
                         }
+
+                        MethodInvocationTree superCall = (MethodInvocationTree) ((ExpressionStatementTree) m.getBody().getStatements().get(0)).getExpression();
+                        List<ExpressionTree> newArgs = new ArrayList<ExpressionTree>(superCall.getArguments());
+
+                        MethodTree newConstructor = null;
+                        ExpressionTree exprTree = (ExpressionTree) make.Identifier(variable.getName().toString());
+                        if (hasVarArgs(m)) {
+                            int index = m.getParameters().size() - 1;
+                            newArgs.add(index, exprTree);
+                            newConstructor = make.insertMethodParameter(m, index, variable);
+                        } else {
+                            newArgs.add(exprTree);
+                            newConstructor = make.addMethodParameter(m, variable);
+                        }
+                        MethodInvocationTree method = make.MethodInvocation(
+                                Collections.<ExpressionTree>emptyList(),
+                                make.Identifier("super"), // NOI18N
+                                newArgs);
+
+                        BlockTree block = make.insertBlockStatement(m.getBody(), 0, make.ExpressionStatement(method));
+                        block = make.removeBlockStatement(block, 1);
+
+                        newConstructor = make.Constructor(
+                                make.Modifiers(newConstructor.getModifiers().getFlags(), newConstructor.getModifiers().getAnnotations()),
+                                newConstructor.getTypeParameters(),
+                                newConstructor.getParameters(),
+                                newConstructor.getThrows(),
+                                block);
+
+                        rewrite(m, newConstructor);
                     }
-                }                
+                }
             }
+        }
 
         if (currentElement == inner) {
             try {
@@ -346,7 +345,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
                 isInInnerClass = false;
             }
         }
-        
+
         return super.visitClass(classTree, element);
     }
 
@@ -359,7 +358,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
         for (Element privEl : this.referencedPrivateElement) {
             problem = MoveTransformer.createProblem(problem, false, NbBundle.getMessage(InnerToOuterRefactoringPlugin.class, "WRN_InnerToOuterRefToPrivate", privEl));
         }
-        
+
         Trees trees = workingCopy.getTrees();
         CompilationUnitTree newNode = node;
         for (ImportTree imp : node.getImports()) {
@@ -376,7 +375,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
         }
         return result;
     }
-    
+
     private Problem problem;
 
     public Problem getProblem() {
@@ -391,7 +390,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
         }
         return false;
     }
-    
+
 
     @Override
     public Tree visitMemberSelect(MemberSelectTree memberSelect, Element element) {
@@ -456,9 +455,9 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
                     rewrite(variable.getModifiers(), make.removeModifiersModifier(variable.getModifiers(), Modifier.PRIVATE));
                 }
             }
-            
+
         }
-        
+
         return super.visitMemberSelect(memberSelect, element);
     }
 
@@ -495,7 +494,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
         TypeElement encl = workingCopy.getElementUtilities().enclosingTypeElement(cur);
         return encl!=null && workingCopy.getTypes().isSubtype(encl.asType(), inner.asType()) ;
     }
-    
+
     private boolean isThisReferenceToOuter() {
         Element cur = getCurrentElement();
         if (cur==null || cur.getKind() == ElementKind.PACKAGE) {
@@ -542,7 +541,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
         }
         return false;
     }
-    
+
     private boolean hasVarArgs(MethodTree mt) {
         List list = mt.getParameters();
         if (list.isEmpty()) {
@@ -551,8 +550,11 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
         VariableTree vt = (VariableTree)list.get(list.size() - 1);
         return vt.toString().indexOf("...") != -1; // [NOI18N] [TODO] temporal hack, will be rewritten
     }
-    
+
     private ClassTree refactorInnerClass(ClassTree innerClass) {
+        if (innerClass.getKind() == Tree.Kind.RECORD) {
+            return refactorInnerRecord(innerClass);
+        }
         ClassTree newInnerClass = innerClass;
         String referenceName = refactoring.getReferenceName();
         GeneratorUtilities genUtils = GeneratorUtilities.get(workingCopy);
@@ -568,11 +570,13 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
         } else {
             outerType = outer.asType();
         }
+        // for none static inner classes, add a member to point to the 'old' outer.
+        // because there has to be an explicit member after refactoring.
         if (referenceName != null) {
             VariableTree variable = make.Variable(make.Modifiers(EnumSet.of(Modifier.PRIVATE, Modifier.FINAL)), refactoring.getReferenceName(), make.Type(outerType), null);
             newInnerClass = genUtils.insertClassMember(newInnerClass, variable);
         }
-        
+
         ModifiersTree modifiersTree = newInnerClass.getModifiers();
         ModifiersTree newModifiersTree = make.removeModifiersModifier(modifiersTree, Modifier.PRIVATE);
         newModifiersTree = make.removeModifiersModifier(newModifiersTree, Modifier.STATIC);
@@ -582,16 +586,17 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
         }
         rewrite(modifiersTree, newModifiersTree);
 
+        // create constructor which refers with member to old outer.
         if (referenceName != null) {
             for (Tree member:newInnerClass.getMembers()) {
                 if (member.getKind() == Tree.Kind.METHOD) {
-                    MethodTree m = (MethodTree) member;
-                    if (m.getName().contentEquals("<init>") || m.getReturnType() == null) {
-                        VariableTree parameter = make.Variable(make.Modifiers(EnumSet.of(Modifier.FINAL)), refactoring.getReferenceName(), make.Type(outerType), null);
-                        MethodTree newConstructor = hasVarArgs(m) ?
-                            make.insertMethodParameter(m, m.getParameters().size() - 1, parameter) : 
-                            make.addMethodParameter(m, parameter);
-                        
+                    MethodTree ctor = (MethodTree) member;
+                    if (ctor.getName().contentEquals("<init>") || ctor.getReturnType() == null) {
+                        VariableTree parameter = make.Variable(make.Modifiers(EnumSet.of(Modifier.FINAL)), referenceName, make.Type(outerType), null);
+                        MethodTree newConstructor = hasVarArgs(ctor) ?
+                            make.insertMethodParameter(ctor, ctor.getParameters().size() - 1, parameter) :
+                            make.addMethodParameter(ctor, parameter);
+
                         AssignmentTree assign = make.Assignment(make.Identifier("this."+referenceName), make.Identifier(referenceName)); // NOI18N
                         BlockTree block = make.insertBlockStatement(newConstructor.getBody(), 1, make.ExpressionStatement(assign));
                         Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
@@ -599,25 +604,60 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
                         modifiers.remove(Modifier.PRIVATE);
                         newConstructor = make.Constructor(
                                 make.Modifiers(modifiers,newConstructor.getModifiers().getAnnotations()),
-                                newConstructor.getTypeParameters(), 
+                                newConstructor.getTypeParameters(),
                                 newConstructor.getParameters(),
                                 newConstructor.getThrows(),
                                 block);
 
-                        newInnerClass = make.removeClassMember(newInnerClass, m);
-                        genUtils.copyComments(m, newConstructor, true);
-                        genUtils.copyComments(m, newConstructor, false);
+                        newInnerClass = make.removeClassMember(newInnerClass, ctor);
+                        genUtils.copyComments(ctor, newConstructor, true);
+                        genUtils.copyComments(ctor, newConstructor, false);
                         newInnerClass = genUtils.insertClassMember(newInnerClass, newConstructor);
                     }
                 }
             }
         }
-        
+
         if(innerClass != newInnerClass) {
             genUtils.copyComments(innerClass, newInnerClass, true);
             genUtils.copyComments(innerClass, newInnerClass, false);
         }
         return newInnerClass;
+    }
+
+    private ClassTree refactorInnerRecord(ClassTree innerRecord) {
+        refactoring.setInnerIsRecord(true);
+        ClassTree newInnerRecord = innerRecord;
+        List<? extends Tree> members = newInnerRecord.getMembers();
+        int insertAt=0;
+        for (Tree member : members) {
+            Tree.Kind kind = member.getKind();
+//            System.out.println("member = " + kind + "" + member);
+            
+            switch (kind) {
+               // The fields, except the static, should loose private final modifiers
+               // so that they appear without these modifiers in the record header
+                case VARIABLE:
+                    VariableTree vt = (VariableTree) member;
+                    ModifiersTree mt = vt.getModifiers();
+                    if (mt.getFlags().contains(Modifier.STATIC)) {
+                        continue;
+                    }
+                    var mtype = vt.getType();
+                    var mName = vt.getName();
+                    var mods = make.Modifiers(EnumSet.noneOf(Modifier.class));
+                    var newMember = make.RecordComponent(mods, mName, mtype);
+                    newInnerRecord = make.removeClassMember(newInnerRecord, member);
+                    newInnerRecord = make.insertClassMember(newInnerRecord, insertAt, newMember);
+                    insertAt++;
+                    
+                    break;
+                default:
+            }
+
+//            if (member.getKind())
+        }
+        return newInnerRecord;
     }
 
     private boolean isThisInInner() {

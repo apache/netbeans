@@ -644,9 +644,12 @@ public final class JavaSource {
     }
 
 
-    /** Runs a task which permits for modifying the sources.
+    /** 
+     * Runs a task which permits for modifying the sources.
      * Call to this method will cancel processing of all the phase completion tasks until
      * this task does not finish.<BR>
+     * 
+     * ??? what does 'until this task does not finish mean'???
      * @see Task for information about implementation requirements
      * @param task The task which.
      */

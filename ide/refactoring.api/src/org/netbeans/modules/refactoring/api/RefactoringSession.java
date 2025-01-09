@@ -102,7 +102,7 @@ public final class RefactoringSession {
     private Problem reallyDoRefactoring(boolean saveAfterDone) {
         long time = System.currentTimeMillis();
         
-        Iterator it = internalList.iterator();
+        Iterator<RefactoringElementImplementation> it = internalList.iterator();
         ArrayList<Transaction> commits = SPIAccessor.DEFAULT.getCommits(bag);
         float progressStep = (float)COMMITSTEPS / internalList.size();
         float current = 0F;
@@ -115,7 +115,7 @@ public final class RefactoringSession {
         try {
             try {
                 while (it.hasNext()) {
-                    RefactoringElementImplementation element = (RefactoringElementImplementation) it.next();
+                    RefactoringElementImplementation element = it.next();
                     if (element.isEnabled() && !((element.getStatus() == RefactoringElement.GUARDED) || (element.getStatus() == RefactoringElement.READ_ONLY))) {
                         element.performChange();
                     }

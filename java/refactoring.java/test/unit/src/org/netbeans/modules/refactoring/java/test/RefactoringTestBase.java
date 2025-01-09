@@ -86,8 +86,37 @@ public class RefactoringTestBase extends NbTestCase {
         this.sourcelevel = sourcelevel;
     }
 
-    static boolean debug=false;
+    static boolean debug = false;
+//    static boolean skipIndexing = false;
+
+    /**
+     * Write given files to sourceRoot and fully re index.
+     *
+     * First the (file) children of sourceRoot are deleted. This method can take
+     * a substantial time of your patience, so use wisely. See the doc in
+     * {@link IndexManager#refreshIndexAndWait}
+     *
+     * @param sourceRoot sic
+     * @param files to save
+     * @throws Exception whenever
+     */
     protected static void writeFilesAndWaitForScan(FileObject sourceRoot, File... files) throws Exception {
+        writeFilesAndWaitForScan(true, sourceRoot, files);
+    }
+
+    /**
+     * Write given files to sourceRoot and possibly reindex.
+     *
+     * First the (file) children of sourceRoot are deleted. This method can take
+     * a substantial time of your patience, so use wisely. See the doc in
+     * {@link IndexManager#refreshIndexAndWait}
+     *
+     * @param fulleIndex fully reindex the type repo 
+     * @param sourceRoot sic
+     * @param files to save
+     * @throws Exception whenever
+     */
+    protected static void writeFilesAndWaitForScan(boolean fullIndex, FileObject sourceRoot, File... files) throws Exception {
         long currentTimeMillis = System.currentTimeMillis();
         for (FileObject c : sourceRoot.getChildren()) {
             c.delete();
@@ -97,28 +126,35 @@ public class RefactoringTestBase extends NbTestCase {
             FileObject fo = FileUtil.createData(sourceRoot, f.filename);
             TestUtilities.copyStringToFile(fo, f.content);
         }
-
-        IndexingManager.getDefault().refreshIndexAndWait(sourceRoot.toURL(), null, true);
-        long currentTimeMillis1 = System.currentTimeMillis();
-        if (debug) {
-            System.err.println("writeFilesAndWaitForScan took " + (currentTimeMillis1 - currentTimeMillis) + " millis");
-        }
-    }
-
-    protected static void writeFilesNoIndexing(FileObject sourceRoot, File... files) throws Exception {
-        for (FileObject c : sourceRoot.getChildren()) {
-            c.delete();
-        }
-
-        for (File f : files) {
-            FileObject fo = FileUtil.createData(sourceRoot, f.filename);
-            TestUtilities.copyStringToFile(fo, f.content);
+        
+        if (fullIndex) {
+            IndexingManager.getDefault().refreshIndexAndWait(sourceRoot.toURL(), null, true);
+            long currentTimeMillis1 = System.currentTimeMillis();
+            if (debug) {
+                System.err.println("writeFilesAndWaitForScan took " + (currentTimeMillis1 - currentTimeMillis) + " millis");
+            }
         }
     }
 
     /**
-     * Verify that the given file(names) are present in the sourceRoot and that the files
-     * in said sourceRoot are equal to the given files.
+     * Save file but do not reindex.
+     *
+     * Deletes the existing files under sourceRoot, then saves the given files.
+     *
+     * Makes tests run faster. In particular single tests.
+     *
+     * @param sourceRoot sic
+     * @param files to save
+     * @throws Exception whenever
+     */
+    protected static void writeFilesNoIndexing(FileObject sourceRoot, File... files) throws Exception {
+        writeFilesAndWaitForScan(false, sourceRoot, files);
+    }
+
+    /**
+     * Verify that the given file(names) are present in the sourceRoot and that
+     * the files in said sourceRoot are equal to the given files.
+     *
      * @param sourceRoot to contain generated (refactored) files
      * @param files expected files
      * @throws Exception well why not?
@@ -151,7 +187,7 @@ public class RefactoringTestBase extends NbTestCase {
             assertNotNull(f.content);
             assertNotNull("Cannot find expected " + f.filename + " in map filled by sourceRoot " + content, fileContent);
             if (fullLineCompare) {
-                assertLinesEqual2(f.filename,f.content, fileContent);
+                assertLinesEqual2(f.filename, f.content, fileContent);
             } else { // original tests.
                 assertLinesEqual1(f.content, fileContent);
             }
@@ -166,7 +202,7 @@ public class RefactoringTestBase extends NbTestCase {
      * @return the contents of the file(s).
      */
     private static String copyFileToString(java.io.File f) throws java.io.IOException {
-        int s = (int)f.length();
+        int s = (int) f.length();
         byte[] data = new byte[s];
         int len = new FileInputStream(f).read(data);
         if (len != s) {
@@ -448,21 +484,24 @@ public class RefactoringTestBase extends NbTestCase {
     }
 
     /**
-     * Prints a source by splitting on the line breaks and prefixing with name and line number.
-     * 
+     * Prints a source by splitting on the line breaks and prefixing with name
+     * and line number.
+     *
      * @param out the stream to print to
-     * @param name the name as prefix to each line 
+     * @param name the name as prefix to each line
      * @param source the source code to print to the out stream.
      */
-    public void printNumbered(final PrintStream out, final String name, String source) {
+    public static void printNumbered(final PrintStream out, final String name, String source) {
         AtomicInteger c = new AtomicInteger(1);
         source.trim().lines().forEach(l -> out.println("%s [%4d] %s".formatted(name, c.getAndIncrement(), l)));
     }
 
     /**
-     * Compare strings by replacing all multiples of whitrespace([ \t\n\r]) with a space.
-     * 
-     * The test programmer choose this to make it easier to write the input and the expected strings.
+     * Compare strings by replacing all multiples of whitrespace([ \t\n\r]) with
+     * a space.
+     *
+     * The test programmer chooses this to make it easier to write the input and
+     * the expected strings.
      *
      * @param expected to compare
      * @param actual to compare
@@ -480,37 +519,44 @@ public class RefactoringTestBase extends NbTestCase {
     }
 
     /**
-     * Compare strings by splitting them into lines, and remove trailing white
+     * Compare strings by splitting them into lines, remove empty lines, and trim white
      * space.
      *
      * Only when any of the lines differ, all lines are printed with the unequal
      * lines flagged.
      *
      * Before the lines are compared, they are trimmed and the white space is
-     * normalized by collapsing multiple whitespace characters into one. This
+     * normalized by collapsing multiple white space characters into one. This
      * should make the tests less brittle.
+     * 
+     * If any of the compared lines are unequal, this test fails and the 
+     * comparison result is shown on stderr in a simplified diff format.
      *
      * @param expected to compare
      * @param actual to compare
      */
-    public void assertLinesEqual2(String name,String expected, String actual) {
+    public void assertLinesEqual2(String name, String expected, String actual) {
         expected = expected.trim().replaceAll("([ \t\r\n])\\1+", "$1");
         actual = actual.trim().replaceAll("([ \t\r\n])\\1+", "$1");
-        String[] linesExpected = expected.lines().toArray(String[]::new);
-        String[] linesActual = actual.lines().toArray(String[]::new);
+        String[] linesExpected = expected.lines().filter(l-> !l.isEmpty()).toArray(String[]::new);
+        String[] linesActual = actual.lines().filter(l-> !l.isEmpty()).toArray(String[]::new);
         int limit = Math.max(linesExpected.length, linesActual.length);
         StringBuilder sb = new StringBuilder();
         boolean equals = true;
         for (int i = 0; i < limit; i++) {
             String e = (i < linesExpected.length ? linesExpected[i] : "").trim();
             String a = (i < linesActual.length ? linesActual[i] : "").trim();
+            // somehow my user is inserted, so avoid to test those lines.
+            if (e.contains("@author") && a.contains("@author")){
+                e=a="* @author goes here";
+            }
             boolean same = e.equals(a);
             String sep = same ? "   " : " | ";
             equals &= same;
-            sb.append(String.format(name+" [%3d] %-80s%s%-80s%n", i, e, sep, a));
+            sb.append(String.format(name + " [%3d] %-80s%s%-80s%n", i, e, sep, a));
         }
         if (!equals) {
-            System.err.println("test "+getName()+" failed");
+            System.err.println("test " + getName() + " failed");
             System.err.println(sb.toString());
             fail("lines differ, see stderr for more details.");
         }

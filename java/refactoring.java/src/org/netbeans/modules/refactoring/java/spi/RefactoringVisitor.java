@@ -183,6 +183,7 @@ public class RefactoringVisitor extends ErrorAwareTreePathScanner<Tree, Element>
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                 case VARIABLE:
                     TreePath path = new TreePath(currentPath, tree);
                     scanJavadoc(path, p);
@@ -456,6 +457,7 @@ public class RefactoringVisitor extends ErrorAwareTreePathScanner<Tree, Element>
         return docScanner.visitVersion(node, p, null);
     }
 
+    
     /**
      * @since 1.47
      */

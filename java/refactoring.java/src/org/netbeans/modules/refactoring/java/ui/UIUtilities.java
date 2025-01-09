@@ -65,7 +65,7 @@ public final class UIUtilities {
      */
     public static final EnumSet allowedElementKinds = EnumSet.of(ElementKind.PACKAGE, ElementKind.CLASS, ElementKind.INTERFACE, ElementKind.RECORD,
             ElementKind.ENUM, ElementKind.ANNOTATION_TYPE, ElementKind.METHOD, ElementKind.CONSTRUCTOR, ElementKind.INSTANCE_INIT,
-            ElementKind.STATIC_INIT, ElementKind.FIELD, ElementKind.ENUM_CONSTANT, ElementKind.TYPE_PARAMETER);
+            ElementKind.STATIC_INIT, ElementKind.FIELD, ElementKind.ENUM_CONSTANT, ElementKind.TYPE_PARAMETER, ElementKind.RECORD_COMPONENT);
 
     // not to be instantiated
     private UIUtilities() {

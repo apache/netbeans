@@ -111,7 +111,6 @@ public class CopyClassRefactoringPlugin extends JavaRefactoringPlugin {
 
     @Override
     public Problem preCheck() {
-        cancelRequest = false;
         cancelRequested.set(false);
         return null;
     }

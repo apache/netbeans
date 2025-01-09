@@ -199,7 +199,6 @@ public class SafeDeleteRefactoringPlugin extends JavaRefactoringPlugin {
     @Override
     @NbBundle.Messages({"# {0} - VariableName", "ERR_VarNotInBlockOrMethod=Variable \"{0}\" is not inside a block or method declaration."})
     public Problem preCheck() {
-        cancelRequest = false;
         cancelRequested.set(false);
         final Problem[] problem = new Problem[1];
         Collection<? extends TreePathHandle> handles = refactoring.getRefactoringSource().lookupAll(TreePathHandle.class);

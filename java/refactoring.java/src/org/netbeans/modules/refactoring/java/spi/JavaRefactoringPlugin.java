@@ -57,12 +57,6 @@ import org.openide.util.NbBundle;
 public abstract class JavaRefactoringPlugin extends ProgressProviderAdapter implements RefactoringPlugin {
 
     protected enum Phase {PRECHECK, FASTCHECKPARAMETERS, CHECKPARAMETERS, PREPARE};
-    /**
-     * Use cancelRequested
-     * @deprecated
-     */
-    @Deprecated
-    protected volatile boolean cancelRequest = false;
     
     /**
      * true if cancel was requested
@@ -112,7 +106,6 @@ public abstract class JavaRefactoringPlugin extends ProgressProviderAdapter impl
 
     @Override
     public Problem preCheck() {
-        cancelRequest = false;
         cancelRequested.set(false);
         return workingTask.run(Phase.PRECHECK);
     }
@@ -149,7 +142,6 @@ public abstract class JavaRefactoringPlugin extends ProgressProviderAdapter impl
     
     @Override
     public void cancelRequest() {
-        cancelRequest = true;
         cancelRequested.set(true);
         if (currentTask!=null) {
             currentTask.cancel();

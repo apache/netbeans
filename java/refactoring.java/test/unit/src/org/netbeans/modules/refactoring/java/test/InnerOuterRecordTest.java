@@ -23,16 +23,13 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.atomic.AtomicInteger;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Name;
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
@@ -41,29 +38,34 @@ import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
 import org.netbeans.modules.refactoring.java.api.InnerToOuterRefactoring;
 import static org.netbeans.modules.refactoring.java.test.RefactoringTestBase.addAllProblems;
-import static org.netbeans.modules.refactoring.java.test.RefactoringTestBase.writeFilesAndWaitForScan;
 import org.openide.util.Exceptions;
 
 /**
  * Test inner to outer refactoring for test.
+ * 
+ * In the input files, and the expected outcomes, the indentation
+ * does not really matter as far as the tests are concerned because
+ * the indentation is stripped away before the remaining source lines 
+ * are compared to the expected lines.
  *
  * @author homberghp {@code <pieter.van.den.hombergh@gmail.com)>}
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class InnerOuterRecordTest extends RefactoringTestBase {
-
+    
     public InnerOuterRecordTest(String name) {
         super(name);
         //ensure we are running on at least 16.
         try {
             SourceVersion.valueOf("RELEASE_16"); //NOI18N
         } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_17, skip test
-            return;
+            //OK, no RELEASE_16, skip test
+            throw new RuntimeException("need at least Java 16 for record");
         }
     }
 
     // for reference
-    public void test259004() throws Exception {
+    public void test0_259004() throws Exception {
         String source
                 = """
             package t;
@@ -108,10 +110,10 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
             }
             """;
         innerOuterSetupAndTest(source, newOuter, newInner);
-
+        
     }
-
-    public void testApacheNetbeans7044() throws Exception {
+    
+    public void test9ApacheNetbeans7044() throws Exception {
         // initial outer has record with meaningful canonical constructor.
         // note that Inner class should be in last member for assumptions in the test.
         String source
@@ -186,11 +188,11 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-
+        
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
-
-    public void testBasicClassInClass() throws Exception {
+    
+    public void test1BasicClassInClass() throws Exception {
         // initial outer has record with meaningful canonical constructor.
         String source
                 = """
@@ -225,8 +227,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
             }
             """;
         String newOuter
-                = 
-                """
+                = """
                 package t;
 
                 import java.time.LocalDate;
@@ -242,8 +243,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
                 }
                 """;
-        String newInner =
-                """
+        String newInner
+                = """
                 /*
                  * Refactoring License
                  */
@@ -276,24 +277,27 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
                 }
                 """;
-
+        
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
-
-    public void testBasicRecordInRecord() throws Exception {
-        String source = 
-                """
+    
+    public void test2BasicRecordInRecord() throws Exception {
+        String source
+                = """
                 package t;
 
                 import java.time.LocalDate;
 
                 record A(int id, String name, LocalDate dob) {
                    static F f;
-                   record F(int x, int y){}
+                   record F(int x, int y){
+                      /** I should be back. */
+                      static String code = "nix";
+                   }
                 }
                 """;
-        String newOuter= 
-                """
+        String newOuter
+                = """
                 package t;
 
                 import java.time.LocalDate;
@@ -304,8 +308,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
                 }
                 """;
-        String newInner =
-                """
+        String newInner
+                = """
                 /*
                  * Refactoring License
                  */
@@ -313,19 +317,29 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
                 /**
                  *
-                 * @author junit
+                 * @author hom
                  */
-                record F(int x, int y){}
+                record F(int x, int y) {
+                    /** I should be back. */
+                    static String code = "nix";
+                }
                 """;
-
+        
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
-
-    public void testOuterWithCompact() throws Exception {
+    
+    /**
+     * Test to verify what happens to the compact constructor in the outer
+     * record. It appears to survive the refactoring.
+     * 
+     * @throws Exception 
+     */
+    public void test3OuterWithCompact() throws Exception {
         String source
                 = """
                 package t;
                 import java.time.LocalDate;
+                /** Record with compact ctor. */
                 record A(F f){
 
                      public A{
@@ -338,10 +352,11 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 = """
                 package t;
                 import java.time.LocalDate;
+                /** Record with compact ctor. */
                 record A(F f){
-                public A{
+                    public A{
                          assert f!=null;
-                     }
+                    }
                 }
                 """;
         String newInner
@@ -355,12 +370,13 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                  *
                  * @author junit
                  */
-                record F(int id, String name, LocalDate dob){}
+                record F(int id, String name, LocalDate dob) {
+                }
                 """;
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
-
-    public void testInnerWithCompact() throws Exception {
+    
+    public void test4InnerWithCompact() throws Exception {
         String source
                 = """
                 package t;
@@ -375,7 +391,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 
                     record F(int id, String name, LocalDate dob) {
                 
-                        public F   {
+                        public F {
                             if (dob.isBefore(LocalDate.EPOCH)) {
                                 throw new IllegalArgumentException("to old " + dob);
                             }
@@ -415,9 +431,9 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 """;
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
-    
+
     // outer may have effect
-    public void testClassWithInnerRecord() throws Exception {
+    public void test5ClassWithInnerRecord() throws Exception {
         String source
                 = """
                 package t;
@@ -475,20 +491,20 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 """;
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
-
-    void innerOuterSetupAndTest(String source, String newOuter, String newInner) throws Exception {
+    
+    void innerOuterSetupAndTest(String source, String newOuterName, String newInnerName) throws Exception {
         writeFilesNoIndexing(src, new File("t/A.java", source));
         performInnerToOuterTest2(null);
-        verifyContent(src, new File("t/A.java", newOuter), new File("t/F.java", newInner));
+        verifyContent(src, new File("t/A.java", newOuterName), new File("t/F.java", newInnerName));
     }
-
+    
     boolean debug = false;
 
     // variant for record inner to outer test
-    private void performInnerToOuterTest2(String generateOuter, Problem... expectedProblems) throws Exception {
+    private void performInnerToOuterTest2(String newOuterName, Problem... expectedProblems) throws Exception {
         final InnerToOuterRefactoring[] r = new InnerToOuterRefactoring[1];
         JavaSource.forFileObject(src.getFileObject("t/A.java")).runUserActionTask(new Task<CompilationController>() {
-
+            
             @Override
             public void run(CompilationController parameter) {
                 try {
@@ -500,7 +516,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 if (debug) {
                     System.err.println("cut is of type " + cut.getClass().getCanonicalName());
                 }
-                ClassTree outer = (ClassTree)cut.getTypeDecls().get(0);
+                ClassTree outer = (ClassTree) cut.getTypeDecls().get(0);
                 if (debug) {
                     printNumbered(System.err, "start source " + outer.getKind().toString(), outer.toString());
                 }
@@ -535,21 +551,21 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 }
             }
         }, true);
-
+        
         r[0].setClassName("F");
         if (debug) {
             printNumbered(System.err, "result ", r[0].toString());
         }
-        r[0].setReferenceName(generateOuter);
-
+        r[0].setReferenceName(newOuterName);
+        
         RefactoringSession rs = RefactoringSession.create("Session");
         List<Problem> problems = new LinkedList<Problem>();
-
+        
         addAllProblems(problems, r[0].preCheck());
         addAllProblems(problems, r[0].prepare(rs));
         addAllProblems(problems, rs.doRefactoring(true));
-
+        
         assertProblems(Arrays.asList(expectedProblems), problems);
     }
-
+    
 }

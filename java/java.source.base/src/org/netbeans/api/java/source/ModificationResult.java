@@ -223,25 +223,25 @@ public final class ModificationResult {
         if (source != null && out == null) {
             final Document doc = source.getDocument(false);
             if (doc != null) {
-                final IOException[] exceptions = new IOException [1];
-                LineDocumentUtils.asRequired(doc, AtomicLockDocument.class).runAtomic(new Runnable () {
-                    public void run () {
+                final IOException[] exceptions = new IOException[1];
+                LineDocumentUtils.asRequired(doc, AtomicLockDocument.class).runAtomic(new Runnable() {
+                    public void run() {
                         try {
-                            commit2 (doc, differences, out);
+                            commit2(doc, differences, out);
                         } catch (IOException ex) {
-                            exceptions [0] = ex;
+                            exceptions[0] = ex;
                         }
                     }
                 });
-                if (exceptions [0] != null) {
+                if (exceptions[0] != null) {
                     LOG.log(Level.INFO, "Cannot commit changes into " + fo, exceptions[0]);
                     int s = lastCommitted.size();
                     for (Throwable t : lastCommitted) {
                         LOG.log(Level.INFO, "Previous commit number " + s--, t);
                     }
-                    throw exceptions [0];
+                    throw exceptions[0];
                 }
-            return;
+                return;
             }
         }
         Reader in = null;
@@ -468,11 +468,11 @@ public final class ModificationResult {
     }
     
     public static class Difference {
-              Kind kind;
+        Kind kind;
         final Position startPos;
         final Position endPos;
-              String oldText;
-              String newText;
+        String oldText;
+        String newText;
         final String description;
         private boolean excluded;
         private boolean ignoreGuards = false;

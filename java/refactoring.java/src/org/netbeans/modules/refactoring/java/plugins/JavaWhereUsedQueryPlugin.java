@@ -90,7 +90,6 @@ public class JavaWhereUsedQueryPlugin extends JavaRefactoringPlugin implements F
     
     @Override
     public Problem preCheck() {
-        cancelRequest = false;
         cancelRequested.set(false);
         TreePathHandle handle = refactoring.getRefactoringSource().lookup(TreePathHandle.class);
         if (!handle.getFileObject().isValid()) {

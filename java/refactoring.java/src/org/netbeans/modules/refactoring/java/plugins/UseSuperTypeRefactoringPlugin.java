@@ -100,7 +100,6 @@ public class UseSuperTypeRefactoringPlugin extends JavaRefactoringPlugin {
      */
     @Override
     public Problem preCheck() {
-        cancelRequest = false;
         cancelRequested.set(false);
         //        Element subType = refactoring.getTypeElement();
         //        if(!(subType instanceof JavaClass)){

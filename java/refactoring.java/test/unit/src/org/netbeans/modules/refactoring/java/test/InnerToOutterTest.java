@@ -657,7 +657,7 @@ public class InnerToOutterTest extends RefactoringTestBase {
                                            "} "));
     }
 
-    private void performInnerToOuterTest(String generateOuter, Problem... expectedProblems) throws Exception {
+    private void performInnerToOuterTest(String outerNameInInner, Problem... expectedProblems) throws Exception {
         final InnerToOuterRefactoring[] r = new InnerToOuterRefactoring[1];
 
         JavaSource.forFileObject(src.getFileObject("t/A.java")).runUserActionTask(new Task<CompilationController>() {
@@ -676,7 +676,7 @@ public class InnerToOutterTest extends RefactoringTestBase {
         }, true);
 
         r[0].setClassName("F");
-        r[0].setReferenceName(generateOuter);
+        r[0].setReferenceName(outerNameInInner);
 
         RefactoringSession rs = RefactoringSession.create("Session");
         List<Problem> problems = new LinkedList<Problem>();

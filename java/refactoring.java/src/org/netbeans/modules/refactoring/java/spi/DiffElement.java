@@ -34,7 +34,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.lookup.Lookups;
 
 /**
- * Implementatation of RefactoringElementImplementation specific to refactoring
+ * Implementation of RefactoringElementImplementation specific to refactoring
  * in java files.
  * 
  * @author Jan Becicka

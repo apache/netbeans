@@ -84,7 +84,8 @@ public class TempFileGenerator {
                 READ_ATTRIBUTES,
                 WRITE_ATTRIBUTES,
                 READ_ACL,
-                WRITE_ACL
+                WRITE_ACL,
+                SYNCHRONIZE
         );
     
     private final boolean readOnly;

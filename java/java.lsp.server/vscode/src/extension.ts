@@ -939,7 +939,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     };
 
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test.parallel', async (projects?) => {        
-        testAdapter?.runTestsWithParallelParallel(projects);
+        testAdapter?.runTestsWithParallelProfile(projects);
     }));
 
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test.parallel.createProfile', async (projects?) => {        

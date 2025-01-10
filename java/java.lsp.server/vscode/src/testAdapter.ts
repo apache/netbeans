@@ -58,7 +58,7 @@ export class NbTestAdapter {
         return this.parallelRunProfile ? true : false;
     }
 
-    public runTestsWithParallelParallel(projects?: string[]) {
+    public runTestsWithParallelProfile(projects?: string[]) {
         if (this.parallelRunProfile) {
             this.run(new TestRunRequest(undefined, undefined, this.parallelRunProfile), new CancellationTokenSource().token, true, projects);
         }
@@ -82,6 +82,7 @@ export class NbTestAdapter {
             }
             cancellation.onCancellationRequested(() => this.cancel());
             this.currentRun = this.testController.createTestRun(request);
+            this.currentRun.token.onCancellationRequested(() => this.cancel());
             this.itemsToRun = new Set();
             this.started = false;
             if (request.include) {
@@ -105,7 +106,12 @@ export class NbTestAdapter {
                             nestedClass = nestedClass.replace('$', '.');
                         }
                         if (!cancellation.isCancellationRequested) {
-                            await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.single' : COMMAND_PREFIX + '.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1), nestedClass);
+                            try {
+                                await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.single' : COMMAND_PREFIX + '.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1), nestedClass);
+                            } catch(err) {
+                                // test state will be handled in the code below
+                                console.log(err);
+                            }
                         }
                     }
                 }
@@ -113,10 +119,15 @@ export class NbTestAdapter {
                 this.testController.items.forEach(item => this.set(item, 'enqueued'));
                 for (let workspaceFolder of workspace.workspaceFolders || []) {
                     if (!cancellation.isCancellationRequested) {
-                        if (testInParallel) {
-                            await commands.executeCommand(COMMAND_PREFIX + '.run.test', workspaceFolder.uri.toString(), undefined, undefined, undefined, true, projects);
-                        } else {
-                            await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.test': COMMAND_PREFIX + '.run.test', workspaceFolder.uri.toString());
+                        try {
+                            if (testInParallel) {
+                                await commands.executeCommand(COMMAND_PREFIX + '.run.test', workspaceFolder.uri.toString(), undefined, undefined, undefined, true, projects);
+                            } else {
+                                await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.test': COMMAND_PREFIX + '.run.test', workspaceFolder.uri.toString());
+                            }
+                        } catch(err) {
+                            // test state will be handled in the code below
+                            console.log(err);
                         }
                     }
                 }

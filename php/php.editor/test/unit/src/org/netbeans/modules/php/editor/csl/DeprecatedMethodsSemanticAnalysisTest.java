@@ -49,6 +49,18 @@ public class DeprecatedMethodsSemanticAnalysisTest extends DeprecatedSemanticAna
         checkSemantic("testfiles/semantic/deprecatedMethods/deprecatedPrivateClassMethod.php");
     }
 
+    public void testDeprecatedAttributeInGlobal() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedMethods/deprecatedAttributeInGlobal.php");
+    }
+
+    public void testDeprecatedAttributeInNamespace() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedMethods/deprecatedAttributeInNamespace.php");
+    }
+
+    public void testDeprecatedAttributeInNamespaceWithUse() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedMethods/deprecatedAttributeInNamespaceWithUse.php");
+    }
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
         return Collections.singletonMap(

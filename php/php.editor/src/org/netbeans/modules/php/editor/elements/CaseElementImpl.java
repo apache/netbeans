@@ -125,7 +125,7 @@ public final class CaseElementImpl extends PhpElementImpl implements EnumCaseEle
                 info.getAccessModifiers().toFlags(),
                 fileQuery.getURL().toExternalForm(),
                 fileQuery,
-                VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node),
+                VariousUtils.isDeprecated(fileQuery.getResult().getModel().getFileScope(), fileQuery.getResult().getProgram(), node),
                 isBacked
         );
     }

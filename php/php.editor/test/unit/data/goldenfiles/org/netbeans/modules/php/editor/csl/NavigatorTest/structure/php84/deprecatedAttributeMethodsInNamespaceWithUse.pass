@@ -1,0 +1,85 @@
+|-DeprecatedMethods [825, 6952] : ESCAPED{DeprecatedMethods}
+|--Deprecated [849, 859] : ESCAPED{Deprecated}
+|--DeprecatedClassMethod [868, 2198] : ESCAPED{DeprecatedClassMethod}
+|---publicMethod [924, 946] : ESCAPED{publicMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateMethod [968, 991] : ESCAPED{privateMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedMethod [1015, 1040] : ESCAPED{protectedMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicStaticMethod [1068, 1096] : ESCAPED{publicStaticMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateStaticMethod [1125, 1154] : ESCAPED{privateStaticMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedStaticMethod [1185, 1216] : ESCAPED{protectedStaticMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedMethod [1255, 1287] : DEPRECATED{ESCAPED{publicDeprecatedMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedMethod [1327, 1360] : DEPRECATED{ESCAPED{privateDeprecatedMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedMethod [1402, 1437] : DEPRECATED{ESCAPED{protectedDeprecatedMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedStaticMethod [1483, 1521] : DEPRECATED{ESCAPED{publicDeprecatedStaticMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedStaticMethod [1568, 1607] : DEPRECATED{ESCAPED{privateDeprecatedStaticMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedStaticMethod [1656, 1697] : DEPRECATED{ESCAPED{protectedDeprecatedStaticMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedMethod02 [1737, 1771] : DEPRECATED{ESCAPED{publicDeprecatedMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedMethod02 [1812, 1847] : DEPRECATED{ESCAPED{privateDeprecatedMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedMethod02 [1890, 1927] : DEPRECATED{ESCAPED{protectedDeprecatedMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedStaticMethod02 [1974, 2014] : DEPRECATED{ESCAPED{publicDeprecatedStaticMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedStaticMethod02 [2062, 2103] : DEPRECATED{ESCAPED{privateDeprecatedStaticMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedStaticMethod02 [2153, 2196] : DEPRECATED{ESCAPED{protectedDeprecatedStaticMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--DeprecatedInterfaceMethod [2210, 2655] : ESCAPED{DeprecatedInterfaceMethod}
+|---publicMethod [2258, 2278] : ESCAPED{publicMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicStaticMethod [2319, 2345] : ESCAPED{publicStaticMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedMethod [2384, 2414] : DEPRECATED{ESCAPED{publicDeprecatedMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedStaticMethod [2460, 2496] : DEPRECATED{ESCAPED{publicDeprecatedStaticMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedMethod02 [2536, 2568] : DEPRECATED{ESCAPED{publicDeprecatedMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedStaticMethod02 [2615, 2653] : DEPRECATED{ESCAPED{publicDeprecatedStaticMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--DeprecatedTraitMethod [2663, 4205] : ESCAPED{DeprecatedTraitMethod}
+|---publicTraitMethod [2707, 2734] : ESCAPED{publicTraitMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateTraitMethod [2756, 2784] : ESCAPED{privateTraitMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedTraitMethod [2808, 2838] : ESCAPED{protectedTraitMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicStaticTraitMethod [2866, 2899] : ESCAPED{publicStaticTraitMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateStaticTraitMethod [2928, 2962] : ESCAPED{privateStaticTraitMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedStaticTraitMethod [2993, 3029] : ESCAPED{protectedStaticTraitMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedTraitMethod [3068, 3105] : DEPRECATED{ESCAPED{publicDeprecatedTraitMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedTraitMethod [3145, 3183] : DEPRECATED{ESCAPED{privateDeprecatedTraitMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedTraitMethod [3225, 3265] : DEPRECATED{ESCAPED{protectedDeprecatedTraitMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedStaticTraitMethod [3331, 3374] : DEPRECATED{ESCAPED{publicDeprecatedStaticTraitMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedStaticTraitMethod [3421, 3465] : DEPRECATED{ESCAPED{privateDeprecatedStaticTraitMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedStaticTraitMethod [3514, 3560] : DEPRECATED{ESCAPED{protectedDeprecatedStaticTraitMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedTraitMethod02 [3665, 3704] : DEPRECATED{ESCAPED{publicDeprecatedTraitMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedTraitMethod02 [3745, 3785] : DEPRECATED{ESCAPED{privateDeprecatedTraitMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedTraitMethod02 [3864, 3906] : DEPRECATED{ESCAPED{protectedDeprecatedTraitMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedStaticTraitMethod02 [3953, 3998] : DEPRECATED{ESCAPED{publicDeprecatedStaticTraitMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedStaticTraitMethod02 [4046, 4092] : DEPRECATED{ESCAPED{privateDeprecatedStaticTraitMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedStaticTraitMethod02 [4155, 4203] : DEPRECATED{ESCAPED{protectedDeprecatedStaticTraitMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--DeprecatedEnumMethod [4212, 5621] : ESCAPED{DeprecatedEnumMethod}
+|---publicEnumMethod [4255, 4281] : ESCAPED{publicEnumMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateEnumMethod [4303, 4330] : ESCAPED{privateEnumMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedEnumMethod [4354, 4383] : ESCAPED{protectedEnumMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicStaticEnumMethod [4411, 4443] : ESCAPED{publicStaticEnumMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateStaticEnumMethod [4472, 4505] : ESCAPED{privateStaticEnumMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedStaticEnumMethod [4536, 4571] : ESCAPED{protectedStaticEnumMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedEnumMethod [4617, 4653] : DEPRECATED{ESCAPED{publicDeprecatedEnumMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedEnumMethod [4706, 4743] : DEPRECATED{ESCAPED{privateDeprecatedEnumMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedEnumMethod [4785, 4824] : DEPRECATED{ESCAPED{protectedDeprecatedEnumMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedStaticEnumMethod [4870, 4912] : DEPRECATED{ESCAPED{publicDeprecatedStaticEnumMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedStaticEnumMethod [4959, 5002] : DEPRECATED{ESCAPED{privateDeprecatedStaticEnumMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedStaticEnumMethod [5051, 5096] : DEPRECATED{ESCAPED{protectedDeprecatedStaticEnumMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedEnumMethod02 [5136, 5174] : DEPRECATED{ESCAPED{publicDeprecatedEnumMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedEnumMethod02 [5215, 5254] : DEPRECATED{ESCAPED{privateDeprecatedEnumMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedEnumMethod02 [5297, 5338] : DEPRECATED{ESCAPED{protectedDeprecatedEnumMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedStaticEnumMethod02 [5385, 5429] : DEPRECATED{ESCAPED{publicDeprecatedStaticEnumMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedStaticEnumMethod02 [5477, 5522] : DEPRECATED{ESCAPED{privateDeprecatedStaticEnumMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedStaticEnumMethod02 [5572, 5619] : DEPRECATED{ESCAPED{protectedDeprecatedStaticEnumMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--#anon#deprecatedAttributeMethodsInNamespaceWithUse_php#1 [5635, 6951] : ESCAPED{{}}
+|---publicMethod [5677, 5699] : ESCAPED{publicMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateMethod [5721, 5744] : ESCAPED{privateMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedMethod [5768, 5793] : ESCAPED{protectedMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicStaticMethod [5821, 5849] : ESCAPED{publicStaticMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateStaticMethod [5878, 5907] : ESCAPED{privateStaticMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedStaticMethod [5938, 5969] : ESCAPED{protectedStaticMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedMethod [6008, 6040] : DEPRECATED{ESCAPED{publicDeprecatedMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedMethod [6080, 6113] : DEPRECATED{ESCAPED{privateDeprecatedMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedMethod [6155, 6190] : DEPRECATED{ESCAPED{protectedDeprecatedMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedStaticMethod [6236, 6274] : DEPRECATED{ESCAPED{publicDeprecatedStaticMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedStaticMethod [6321, 6360] : DEPRECATED{ESCAPED{privateDeprecatedStaticMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedStaticMethod [6409, 6450] : DEPRECATED{ESCAPED{protectedDeprecatedStaticMethod}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedMethod02 [6490, 6524] : DEPRECATED{ESCAPED{publicDeprecatedMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedMethod02 [6565, 6600] : DEPRECATED{ESCAPED{privateDeprecatedMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedMethod02 [6643, 6680] : DEPRECATED{ESCAPED{protectedDeprecatedMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---publicDeprecatedStaticMethod02 [6727, 6767] : DEPRECATED{ESCAPED{publicDeprecatedStaticMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---privateDeprecatedStaticMethod02 [6815, 6856] : DEPRECATED{ESCAPED{privateDeprecatedStaticMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---protectedDeprecatedStaticMethod02 [6906, 6949] : DEPRECATED{ESCAPED{protectedDeprecatedStaticMethod02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>

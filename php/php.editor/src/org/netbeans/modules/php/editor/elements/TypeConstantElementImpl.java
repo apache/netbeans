@@ -154,7 +154,7 @@ public final class TypeConstantElementImpl extends PhpElementImpl implements Typ
             retval.add(new TypeConstantElementImpl(
                     type, info.getDeclaredType(), info.getName(), info.getValue(), info.getRange().getStart(),
                     info.getAccessModifiers().toFlags(), fileQuery.getURL().toExternalForm(), fileQuery,
-                    VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node)));
+                    VariousUtils.isDeprecated(fileQuery.getResult().getModel().getFileScope(), fileQuery.getResult().getProgram(), node)));
         }
         return retval;
     }

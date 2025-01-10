@@ -103,6 +103,10 @@ public class ClassConstantDeclarationInfo extends ASTNodeInfo<Identifier> {
         return PhpModifiers.fromBitMask(constantDeclaration.getModifier());
     }
 
+    public ConstantDeclaration getConstantDeclaration() {
+        return constantDeclaration;
+    }
+
     @CheckForNull
     protected static String getConstantValue(Expression expr) {
         if (expr instanceof Scalar) {

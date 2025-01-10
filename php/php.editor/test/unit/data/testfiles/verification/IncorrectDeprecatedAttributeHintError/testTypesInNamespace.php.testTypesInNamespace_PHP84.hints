@@ -1,0 +1,15 @@
+#[\Deprecated, \Attr]
+  -----------
+HINT:Attribute "Deprecated" cannot target type.
+#[\Deprecated]
+  -----------
+HINT:Attribute "Deprecated" cannot target type.
+#[\Deprecated]
+  -----------
+HINT:Attribute "Deprecated" cannot target type.
+#[\Deprecated]
+  -----------
+HINT:Attribute "Deprecated" cannot target type.
+$anon = new #[\Deprecated] class() {
+              -----------
+HINT:Attribute "Deprecated" cannot target type.

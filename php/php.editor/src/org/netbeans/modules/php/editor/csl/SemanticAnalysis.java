@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +38,6 @@ import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.NameKind;
 import org.netbeans.modules.php.editor.api.QualifiedName;
-import org.netbeans.modules.php.editor.api.elements.ElementFilter;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.model.Model;
 import org.netbeans.modules.php.editor.model.VariableScope;
@@ -224,17 +224,12 @@ public class SemanticAnalysis extends SemanticAnalyzer {
         private final Map<UnusedIdentifier, ASTNodeColoring> privateUnusedMethods;
         // this is holder of blocks, which has to be scanned for usages in the class.
         private final Map<TypeInfo, List<Block>> needToScan = new HashMap<>();
-
         private final Snapshot snapshot;
-
         private final Model model;
         private final Program program;
-
-        private Set<TypeElement> deprecatedTypes;
-
+        private Set<QualifiedName> deprecatedTypes;
         // last visited type declaration
         private TypeInfo typeInfo;
-
 
         public SemanticHighlightVisitor(Map<OffsetRange, Set<ColoringAttributes>> highlights, Snapshot snapshot, Model model, Program program) {
             this.highlights = highlights;
@@ -246,14 +241,28 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             this.program = program;
         }
 
-        private Set<TypeElement> getDeprecatedTypes() {
+        private Set<QualifiedName> getDeprecatedTypes() {
             if (isCancelled()) {
                 return Collections.emptySet();
             }
             if (deprecatedTypes == null) {
-                deprecatedTypes = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getTypes(NameKind.empty()));
+                deprecatedTypes = getDeprecatedFQTypeNames();
             }
             return Collections.unmodifiableSet(deprecatedTypes);
+        }
+
+        private Set<QualifiedName> getDeprecatedFQTypeNames() {
+            if (isCancelled()) {
+                return Collections.emptySet();
+            }
+            Set<QualifiedName> names = new HashSet<>();
+            Set<TypeElement> types = model.getIndexScope().getIndex().getTypes(NameKind.empty());
+            for (TypeElement type : types) {
+                if (type.isDeprecated()) {
+                    names.add(type.getFullyQualifiedName());
+                }
+            }
+            return names;
         }
 
         private boolean isDeprecatedDeclaration(ASTNode node) {
@@ -801,12 +810,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (!isCancelled() && isResolveDeprecatedElements()) {
                 VariableScope variableScope = model.getVariableScope(offset);
                 QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(qualifiedName, offset, variableScope);
-                for (TypeElement typeElement : getDeprecatedTypes()) {
-                    if (typeElement.getFullyQualifiedName().equals(fullyQualifiedName)) {
-                        isDeprecated = true;
-                        break;
-                    }
-                }
+                isDeprecated = getDeprecatedTypes().contains(fullyQualifiedName);
             }
             return isDeprecated;
         }

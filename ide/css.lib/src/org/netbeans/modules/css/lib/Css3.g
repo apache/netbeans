@@ -104,7 +104,7 @@ package org.netbeans.modules.css.lib;
     private boolean tokenNameEquals(String tokenImage) {
         return tokenImage.equalsIgnoreCase(input.LT(1).getText());
     }
-    
+
     private boolean tokenNameEquals2(String tokenImage) {
         return tokenImage.equalsIgnoreCase(input.LT(2).getText());
     }
@@ -713,7 +713,7 @@ atRuleId
 	;
 
 generic_at_rule
-    : AT_IDENT ws ((LBRACE) => braceBlock2 | (componentValue) => componentValue) ((ws (LBRACE | (componentValue) => componentValue)) => (ws ((LBRACE) => braceBlock2 | (componentValue) => componentValue)))*;
+    : {! tokenNameEquals("@charset")}? AT_IDENT (( ~ (SEMI | LBRACE)) => componentValue )* ((LBRACE) => braceBlock2 | SEMI);
 
 moz_document
 	:

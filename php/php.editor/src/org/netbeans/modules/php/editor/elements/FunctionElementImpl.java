@@ -104,7 +104,7 @@ public final class FunctionElementImpl extends FullyQualifiedElementImpl impleme
                 fullyQualifiedName.append(info.getName()), info.getRange().getStart(),
                 fileQuery.getURL().toExternalForm(), fileQuery, BaseFunctionElementSupport.ParametersImpl.create(info.getParameters()),
                 BaseFunctionElementSupport.ReturnTypesImpl.create(TypeResolverImpl.parseTypes(VariousUtils.getReturnType(fileQuery.getResult().getProgram(), node)), node.getReturnType()),
-                VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node));
+                VariousUtils.isDeprecated(fileQuery.getResult().getModel().getFileScope(), fileQuery.getResult().getProgram(), node));
     }
 
     private static boolean matchesQuery(final NameKind query, FunctionSignatureParser signParser) {

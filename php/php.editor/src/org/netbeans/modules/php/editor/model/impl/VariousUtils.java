@@ -33,11 +33,14 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.PredefinedSymbols.Attributes;
+import static org.netbeans.modules.php.editor.PredefinedSymbols.Attributes.DEPRECATED;
 import org.netbeans.modules.php.editor.api.AliasedName;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
@@ -69,6 +72,9 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.AnonymousObjectVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
+import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
+import org.netbeans.modules.php.editor.parser.astnodes.AttributeDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.Attributed;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
@@ -356,6 +362,61 @@ public final class VariousUtils {
 
     public static boolean isDeprecatedFromPHPDoc(Program root, ASTNode node) {
         return getDeprecatedDescriptionFromPHPDoc(root, node) != null;
+    }
+
+    public static boolean isDeprecatedFromAttribute(FileScope fileScope, Program root, ASTNode node) {
+        if (node instanceof Attributed) {
+            List<Attribute> attributes = ((Attributed) node).getAttributes();
+            for (Attribute attribute : attributes) {
+                for (AttributeDeclaration attributeDeclaration : attribute.getAttributeDeclarations()) {
+                    String attributeName = CodeUtils.extractQualifiedName(attributeDeclaration.getAttributeName());
+                    if (isPredefinedAttributeName(DEPRECATED, attributeName, fileScope, attributeDeclaration.getStartOffset())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isDeprecated(FileScope fileScope, Program root, ASTNode node) {
+        if (isDeprecatedFromAttribute(fileScope, root, node)) {
+            return true;
+        }
+        return isDeprecatedFromPHPDoc(root, node);
+    }
+
+    public static boolean isPredefinedAttributeName(Attributes attribute, String attributeName, FileScope fileScope, int offset) {
+        if (attribute.getFqName().equals(attributeName)) {
+            return true;
+        }
+        if (attribute.getName().equals(attributeName)) {
+            List<? extends NamespaceScope> declaredNamespaces = new ArrayList<NamespaceScope>(fileScope.getDeclaredNamespaces());
+            Collections.sort(declaredNamespaces, (n1, n2) -> -Integer.compare(n1.getOffset(), n2.getOffset()));
+            NamespaceScope namespaceScope = null;
+            for (NamespaceScope declaredNamespace : declaredNamespaces) {
+                int namespaceOffset = declaredNamespace.getOffset();
+                if (namespaceOffset < offset) {
+                    namespaceScope = declaredNamespace;
+                    break;
+                }
+            }
+            // check FQ name because there may be `use \AttributeName;`
+            if (isPredefinedAttributeName(attribute, attributeName, namespaceScope, offset)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isPredefinedAttributeName(Attributes attribute, String attributeName, @NullAllowed NamespaceScope namespaceScope, int offset) {
+        if (namespaceScope != null) {
+            QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(QualifiedName.create(attributeName), offset, namespaceScope);
+            if (attribute.getFqName().equals(fullyQualifiedName.toString())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static Map<String, Pair<String, List<Pair<QualifiedName, Boolean>>>> getParamTypesFromPHPDoc(Program root, ASTNode node) {

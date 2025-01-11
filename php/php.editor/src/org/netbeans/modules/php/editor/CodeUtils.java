@@ -901,4 +901,9 @@ public final class CodeUtils {
         }
         return false;
     }
+
+    public static boolean isTypeDeclaration(ASTNode node) {
+        return node instanceof TypeDeclaration
+                || ((node instanceof ClassInstanceCreation) && ((ClassInstanceCreation) node).isAnonymous());
+    }
 }

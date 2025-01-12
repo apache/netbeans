@@ -142,7 +142,11 @@ public final class SemanticHighlighter extends IndexingAwareParserResultTask<Par
 
         ColoringManager manager = language.getColoringManager();
         SemanticAnalyzer task = language.getSemanticAnalyzer();
-        
+
+        if (task == null) {
+            return;
+        }
+
         // Allow language plugins to do their own analysis too
         try {
             task.run(result, null);

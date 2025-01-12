@@ -44,6 +44,7 @@ public class DriverListUtilTest extends TestCase {
     private static final String INSTANCE = "instancename";
     private static final String SID = "mysid";
     private static final String DSN = "mydsn";
+    private static final String FILE = "C:\\Users\\John\\foobar.db";
     private static final String TNSNAME = "mytns";
     
     private static final HashMap<String, String> ALLPROPS = new HashMap<>();
@@ -57,6 +58,7 @@ public class DriverListUtilTest extends TestCase {
         ALLPROPS.put(JdbcUrl.TOKEN_SERVERNAME, SERVERNAME);
         ALLPROPS.put(JdbcUrl.TOKEN_ADDITIONAL, ADDITIONAL);
         ALLPROPS.put(JdbcUrl.TOKEN_DSN, DSN);
+        ALLPROPS.put(JdbcUrl.TOKEN_FILE, FILE);
         ALLPROPS.put(JdbcUrl.TOKEN_SERVICENAME, SERVICENAME);
         ALLPROPS.put(JdbcUrl.TOKEN_SID, SID);
         ALLPROPS.put(JdbcUrl.TOKEN_TNSNAME, TNSNAME);
@@ -305,6 +307,31 @@ public class DriverListUtilTest extends TestCase {
 
         propValues.remove(JdbcUrl.TOKEN_HOST);
         testUrlString(url, propValues, "jdbc:redshift:iam:///" + DB);
+    }
+
+    public void testSQLite() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_FILE);
+        ArrayList<String> requiredProps = new ArrayList<>();
+        requiredProps.add(JdbcUrl.TOKEN_FILE);
+        JdbcUrl url = checkUrl("SQLite", null, "org.sqlite.JDBC",
+                "jdbc:sqlite:<FILE>",
+                supportedProps, requiredProps);
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+        testUrlString(url, propValues, "jdbc:sqlite:" + FILE);
+    }
+
+    public void testDuckDB() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_FILE);
+        ArrayList<String> requiredProps = new ArrayList<>();
+        JdbcUrl url = checkUrl("DuckDB", null, "org.duckdb.DuckDBDriver",
+                "jdbc:duckdb:[<FILE>]",
+                supportedProps, requiredProps);
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+        testUrlString(url, propValues, "jdbc:duckdb:" + FILE);
+        propValues.remove(JdbcUrl.TOKEN_FILE);
+        testUrlString(url, propValues, "jdbc:duckdb:");
     }
     
     enum DB2Types { DB2, IDS, CLOUDSCAPE };

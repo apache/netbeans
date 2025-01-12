@@ -59,6 +59,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import static org.openide.util.NbBundle.getMessage;
 
+@Deprecated
 public final class DeployOnSaveManager {
 
     public static enum DeploymentState {

@@ -46,7 +46,9 @@ public class MicroProjectHook extends ProjectHookImpl {
     @Override
     public void projectOpened() {
         if (MicroApplication.getInstance(project) != null) {
-            addDeployOnSaveManager(project);
+            if (!MicroApplication.isDevModeAvailable(project)) {
+                addDeployOnSaveManager(project);
+            }
             updateMicroIcon();
         }
     }
@@ -54,10 +56,12 @@ public class MicroProjectHook extends ProjectHookImpl {
     @Override
     public void projectClosed() {
         if (MicroApplication.getInstance(project) != null) {
-            removeDeployOnSaveManager(project);
+            if (!MicroApplication.isDevModeAvailable(project)) {
+                removeDeployOnSaveManager(project);
+            }
         }
     }
-
+    
     private void updateMicroIcon() {
         SpecialIcon specialIcon = project.getLookup().lookup(SpecialIcon.class);
         MicroIcon microIcon;

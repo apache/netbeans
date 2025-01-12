@@ -56,6 +56,7 @@
                               <Component id="instanceLabel" alignment="0" max="32767" attributes="1"/>
                               <Component id="serverNameLabel" alignment="0" max="32767" attributes="1"/>
                               <Component id="dsnLabel" alignment="0" max="32767" attributes="1"/>
+                              <Component id="fileLabel" alignment="0" max="32767" attributes="1"/>
                               <Component id="tnsLabel" alignment="0" max="32767" attributes="1"/>
                               <Component id="serviceLabel" alignment="0" max="32767" attributes="1"/>
                               <Component id="sidLabel" alignment="0" max="32767" attributes="1"/>
@@ -73,7 +74,7 @@
                               <Component id="bConnectionProperties" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="bTestConnection" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="100" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                           <Component id="userField" alignment="1" max="32767" attributes="2"/>
                           <Component id="sidField" alignment="0" max="32767" attributes="2"/>
@@ -96,6 +97,11 @@
                           <Group type="102" attributes="0">
                               <Component id="passwordCheckBox" min="-2" pref="256" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="fileField" max="32767" attributes="2"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="fileBrowseButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -147,6 +153,12 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="dsnLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="dsnField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="fileLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fileField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fileBrowseButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -399,6 +411,31 @@
           <ResourceString bundle="org/netbeans/modules/db/explorer/dlg/Bundle.properties" key="ACS_NewConnectionDSNA11yDesc" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="fileLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="fileField"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/db/explorer/dlg/Bundle.properties" key="NewConnectionFile" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="fileField">
+      <Properties>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/db/explorer/dlg/Bundle.properties" key="ACS_NewConnectionFileA11yDesc" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="fileBrowseButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&amp;Browse..."/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fileBrowseButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="urlField">
       <Properties>

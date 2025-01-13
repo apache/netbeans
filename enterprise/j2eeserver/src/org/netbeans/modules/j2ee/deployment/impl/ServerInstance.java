@@ -141,7 +141,7 @@ public class ServerInstance implements Node.Cookie, Comparable {
     private DatasourceManager ddsMgr;
     private MessageDestinationDeployment msgDestDeploymentConnected;
     private MessageDestinationDeployment msgDestDeploymentDisconnected;
-    private final Set targetsStartedByIde = new HashSet(); // valued by target name
+    private final Set<String> targetsStartedByIde = new HashSet<>(); // valued by target name
     private Map targets; // keyed by target name, valued by ServerTarget
     private boolean managerStartedByIde = false;
     private ServerTarget coTarget = null;

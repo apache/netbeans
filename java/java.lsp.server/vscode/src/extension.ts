@@ -458,11 +458,18 @@ class LineBufferingPseudoterminal implements vscode.Pseudoterminal {
                 name: this.name,
                 pty: this,
             });
+
+            // Listen for terminal close events
+            vscode.window.onDidCloseTerminal((closedTerminal) => {
+                if (closedTerminal === this.terminal) {
+                    this.terminal = undefined; // Clear the terminal reference
+                }
+            });
         }
         // Prevent 'stealing' of the focus when running tests in parallel 
-        if (!testAdapter?.testInParallelProfileExist()) {
+//        if (!testAdapter?.testInParallelProfileExist()) {
             this.terminal.show(true);
-        }
+//        }
     }
 
     /**

@@ -776,6 +776,18 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     return createFullSymbol(ASTPHP5Symbols.T_PUBLIC);
 }
 
+<ST_IN_SCRIPTING>"public(set)" {
+    return createFullSymbol(ASTPHP5Symbols.T_PUBLIC_SET);
+}
+
+<ST_IN_SCRIPTING>"protected(set)" {
+    return createFullSymbol(ASTPHP5Symbols.T_PROTECTED_SET);
+}
+
+<ST_IN_SCRIPTING>"private(set)" {
+    return createFullSymbol(ASTPHP5Symbols.T_PRIVATE_SET);
+}
+
 <ST_IN_SCRIPTING>"readonly" {
     return createFullSymbol(ASTPHP5Symbols.T_READONLY);
 }

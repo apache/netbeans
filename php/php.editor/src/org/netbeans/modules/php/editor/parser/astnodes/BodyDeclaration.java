@@ -125,6 +125,18 @@ public abstract class BodyDeclaration extends Statement implements Attributed {
          */
         public static final int READONLY = 0x00000040;
         /**
+         * The <code>int</code> value representing the <code>public(set)</code> modifier.
+         */
+        public static final int PUBLIC_SET = 0x00000080;
+        /**
+         * The <code>int</code> value representing the <code>private(set)</code> modifier.
+         */
+        public static final int PRIVATE_SET = 0x00000100;
+        /**
+         * The <code>int</code> value representing the <code>protected(set)</code> modifier.
+         */
+        public static final int PROTECTED_SET = 0x00000200;
+        /**
          * The <code>int</code> value representing the <code>abstract</code> modifier.
          */
         public static final int ABSTRACT = 0x00000400;
@@ -175,6 +187,42 @@ public abstract class BodyDeclaration extends Statement implements Attributed {
          */
         public static boolean isProtected(int mod) {
             return (mod & PROTECTED) != 0;
+        }
+
+        /**
+         * Return {@code true} if the integer argument includes the
+         * {@code public(set)} modifer, {@code false} otherwise.
+         *
+         * @param mod a set of modifers
+         * @return {@code true} if {@code mod} includes the {@code public(set)}
+         * modifier; {@code false} otherwise.
+         */
+        public static boolean isPublicSet(int mod) {
+            return (mod & PUBLIC_SET) != 0;
+        }
+
+        /**
+         * Return {@code true} if the integer argument includes the
+         * {@code private(set)} modifer, {@code false} otherwise.
+         *
+         * @param mod a set of modifers
+         * @return {@code true} if {@code mod} includes the {@code private(set)}
+         * modifier; {@code false} otherwise.
+         */
+        public static boolean isPrivateSet(int mod) {
+            return (mod & PRIVATE_SET) != 0;
+        }
+
+        /**
+         * Return {@code true} if the integer argument includes the
+         * {@code protected(set)} modifer, {@code false} otherwise.
+         *
+         * @param mod a set of modifers
+         * @return {@code true} if {@code mod} includes the
+         * {@code protected(set)} modifier; {@code false} otherwise.
+         */
+        public static boolean isProtectedSet(int mod) {
+            return (mod & PROTECTED_SET) != 0;
         }
 
         /**
@@ -239,6 +287,20 @@ public abstract class BodyDeclaration extends Statement implements Attributed {
                     || isPrivate(modifier);
         }
 
+        /**
+         * Check whether the modifier is a set visibility modifier(public(set),
+         * protected(set), or private(set)).
+         *
+         * @param modifier the modifier
+         * @return {@code true} it's a set visibility modifier, otherwise
+         * {@code false}
+         */
+        public static boolean isSetVisibilityModifier(int modifier) {
+            return isPublicSet(modifier)
+                    || isProtectedSet(modifier)
+                    || isPrivateSet(modifier);
+        }
+
         public static String toString(int mod) {
             StringBuilder sb = new StringBuilder();
 
@@ -250,6 +312,15 @@ public abstract class BodyDeclaration extends Statement implements Attributed {
             }
             if ((mod & PRIVATE) != 0) {
                 sb.append("private "); //$NON-NLS-1$
+            }
+            if ((mod & PUBLIC_SET) != 0) {
+                sb.append("public(set) "); // NOI18N
+            }
+            if ((mod & PROTECTED_SET) != 0) {
+                sb.append("protected(set) "); // NOI18N
+            }
+            if ((mod & PRIVATE_SET) != 0) {
+                sb.append("private(set) "); // NOI18N
             }
 
             if ((mod & READONLY) != 0) {

@@ -1,10 +1,1 @@
-[[47,54]-Syntax error
- unexpected:	private
- after:	public
- expected:	identifier, variable, function, const, array, callable, define, ?, &, static, abstract, final, (, readonly] 47-54:Syntax error
- unexpected:	private
- after:	public
- expected:	identifier, variable, function, const, array, callable, define, ?, &, static, abstract, final, (, readonly
-[[64,65]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	}] 64-65:POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	}
+

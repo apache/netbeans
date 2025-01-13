@@ -61,42 +61,63 @@ public class PhpParserErrorTest extends PHPTestBase {
     }
 
     public void testFieldModificators_01() throws Exception {
+        // no error: parser allows `public static final $field`
+        // final is available as of PHP 8.4
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/fieldModificators_01.php");
     }
 
     public void testFieldModificators_02() throws Exception {
+        // no error: parser allows `abstract $field`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/fieldModificators_02.php");
     }
 
     public void testFieldModificators_03() throws Exception {
+        // no error: parser allows `public private $field`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/fieldModificators_03.php");
     }
 
     public void testFieldModificators_04() throws Exception {
+        // no error: parser allows `public protected $field`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/fieldModificators_04.php");
     }
 
     public void testFieldModificators_05() throws Exception {
+        // no error: parser allows `protected private $field`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/fieldModificators_05.php");
     }
 
     public void testMethodModificators_01() throws Exception {
+        // no error: parser allows `public protected static function`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/methodModificators_01.php");
     }
 
     public void testMethodModificators_02() throws Exception {
+        // no error: parser allows `public private static function`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/methodModificators_02.php");
     }
 
     public void testMethodModificators_03() throws Exception {
+        // no error: parser allows `protected private static function`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/methodModificators_03.php");
     }
 
     public void testMethodModificators_04() throws Exception {
+        // no error: public final abstract function`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/methodModificators_04.php");
     }
 
     public void testMethodModificators_05() throws Exception {
+        // no error: parser allows `static final abstract function`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/methodModificators_05.php");
     }
 
@@ -1264,10 +1285,12 @@ public class PhpParserErrorTest extends PHPTestBase {
     }
 
     public void testReadonlyPropertiesWithConstError() throws Exception {
+        // no error: parser allows readonly const
         checkErrors("testfiles/parser/php81/readonlyPropertiesWithConstError.php");
     }
 
     public void testReadonlyPropertiesWithStaticError() throws Exception {
+        // no error: parser allows static readonly
         checkErrors("testfiles/parser/php81/readonlyPropertiesWithStaticError.php");
     }
 
@@ -1504,5 +1527,33 @@ public class PhpParserErrorTest extends PHPTestBase {
 
     public void testNewWithoutParenthesesError_09() throws Exception {
         checkErrors("testfiles/parser/php84/newWithoutParenthesesError_09.php");
+    }
+
+    public void testAsymmetricVisibilityClass() throws Exception {
+        checkErrors("testfiles/parser/php84/asymmetricVisibilityClass.php");
+    }
+
+    public void testAsymmetricVisibilityTrait() throws Exception {
+        checkErrors("testfiles/parser/php84/asymmetricVisibilityTrait.php");
+    }
+
+    public void testAsymmetricVisibilityAnonClass() throws Exception {
+        checkErrors("testfiles/parser/php84/asymmetricVisibilityAnonClass.php");
+    }
+
+    public void testAsymmetricVisibilityConstructorPropertyPromotion() throws Exception {
+        checkErrors("testfiles/parser/php84/asymmetricVisibilityConstructorPropertyPromotion.php");
+    }
+
+    public void testFinalFieldsClass() throws Exception {
+        checkErrors("testfiles/parser/php84/finalFieldsClass.php");
+    }
+
+    public void testFinalFieldsTrait() throws Exception {
+        checkErrors("testfiles/parser/php84/finalFieldsTrait.php");
+    }
+
+    public void testFinalFieldsAnonClass() throws Exception {
+        checkErrors("testfiles/parser/php84/finalFieldsAnonClass.php");
     }
 }

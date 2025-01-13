@@ -1337,10 +1337,12 @@ public class ASTPHP5ParserTest extends ParserTestBase {
     }
 
     public void testReadonlyPropertiesWithConstError() throws Exception {
+        // parser allows readonly
         performTest("parser/php81/readonlyPropertiesWithConstError");
     }
 
     public void testReadonlyPropertiesWithStaticError() throws Exception {
+        // parser allows readonly static
         performTest("parser/php81/readonlyPropertiesWithStaticError");
     }
 
@@ -1588,6 +1590,34 @@ public class ASTPHP5ParserTest extends ParserTestBase {
 
     public void testNewWithoutParenthesesError_09() throws Exception {
         performTest("parser/php84/newWithoutParenthesesError_09");
+    }
+
+    public void testAsymmetricVisibilityClass() throws Exception {
+        performTest("parser/php84/asymmetricVisibilityClass");
+    }
+
+    public void testAsymmetricVisibilityTrait() throws Exception {
+        performTest("parser/php84/asymmetricVisibilityTrait");
+    }
+
+    public void testAsymmetricVisibilityAnonClass() throws Exception {
+        performTest("parser/php84/asymmetricVisibilityAnonClass");
+    }
+
+    public void testAsymmetricVisibilityConstructorPropertyPromotion() throws Exception {
+        performTest("parser/php84/asymmetricVisibilityConstructorPropertyPromotion");
+    }
+
+    public void testFinalFieldsClass() throws Exception {
+        performTest("parser/php84/finalFieldsClass");
+    }
+
+    public void testFinalFieldsTrait() throws Exception {
+        performTest("parser/php84/finalFieldsTrait");
+    }
+
+    public void testFinalFieldsAnonClass() throws Exception {
+        performTest("parser/php84/finalFieldsAnonClass");
     }
 
     @Override

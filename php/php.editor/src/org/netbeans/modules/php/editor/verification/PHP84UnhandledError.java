@@ -29,11 +29,24 @@ import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable;
+import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
+import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
+/**
+ * Unhandled Error for PHP 8.4.
+ *
+ * @see <a href="https://wiki.php.net/rfc#php_84">PHP 8.4 RFC</a>
+ * @see <a href="https://wiki.php.net/rfc/deprecated_attribute">#[\Deprecated] Attribute</a>
+ * @see <a href="https://wiki.php.net/rfc/asymmetric-visibility-v2">Asymmetric visibility v2</a>
+ * @see <a href="https://www.php.net/manual/en/language.oop5.final.php">Final property</a>
+ */
 public final class PHP84UnhandledError extends UnhandledErrorRule {
 
     @NbBundle.Messages("PHP84UnhandledError.displayName=Language feature not compatible with PHP version indicated in project settings")
@@ -92,6 +105,58 @@ public final class PHP84UnhandledError extends UnhandledErrorRule {
             // new class() {}::staticMethod();
             createError(node);
             super.visit(node);
+        }
+
+        @Override
+        public void visit(FieldsDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            // Asymmetric Visibility
+            // e.g. public private(set) int $prop = 1;
+            checkSetVisibility(node);
+            // Final property
+            // e.g. final protected string $prop;
+            checkFinalProperty(node);
+            super.visit(node);
+        }
+
+        private void checkSetVisibility(FieldsDeclaration node) {
+            if (Modifier.isSetVisibilityModifier(node.getModifier())) {
+                createError(node);
+            }
+        }
+
+        private void checkFinalProperty(FieldsDeclaration node) {
+            if (Modifier.isFinal(node.getModifier())) {
+                createError(node);
+            }
+        }
+
+        @Override
+        public void visit(MethodDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            // Asymmetric Visibility
+            // e.g.
+            // __construct(public private(set) int $int) {}
+            checkSetVisibility(node);
+            super.visit(node);
+        }
+
+        private void checkSetVisibility(MethodDeclaration node) {
+            if (CodeUtils.isConstructor(node)) {
+                FunctionDeclaration function = node.getFunction();
+                for (FormalParameter formalParameter : function.getFormalParameters()) {
+                    if (CancelSupport.getDefault().isCancelled()) {
+                        return;
+                    }
+                    if (Modifier.isSetVisibilityModifier(formalParameter.getModifier())) {
+                        createError(formalParameter);
+                    }
+                }
+            }
         }
 
         private void createError(ASTNode node) {

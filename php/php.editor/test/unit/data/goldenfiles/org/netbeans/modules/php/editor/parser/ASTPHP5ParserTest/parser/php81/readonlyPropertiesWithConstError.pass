@@ -15,35 +15,52 @@
         <token id='T_CONST' start='856' end='861'>
             <text>const</text>
         </token>
-        <token id='T_VARIABLE' start='862' end='872'>
-            <text>$withConst</text>
+        <token id='T_STRING' start='862' end='876'>
+            <text>READONLY_CONST</text>
         </token>
-        <token id='T_SEMICOLON' start='872' end='873'>
+        <token id='T_EQUAL' start='877' end='878'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='879' end='889'>
+            <text>"constant"</text>
+        </token>
+        <token id='T_SEMICOLON' start='889' end='890'>
             <text>;</text>
         </token>
-        <token id='T_CURLY_CLOSE' start='884' end='885'>
+        <token id='T_CURLY_CLOSE' start='901' end='902'>
             <text>}</text>
         </token>
-        <token id='EOF' start='886' end='886'>
+        <token id='EOF' start='903' end='903'>
             <text></text>
         </token>
     </scanner>
-    <Program start='0' end='886'>
+    <Program start='0' end='903'>
         <Comments>
             <Comment start='6' end='813' commentType='multiLine'/>
-            <Comment start='874' end='883' commentType='singleLine'/>
+            <Comment start='891' end='900' commentType='singleLine'/>
             <Comment start='6' end='813' commentType='multiLine'/>
-            <Comment start='874' end='883' commentType='singleLine'/>
+            <Comment start='891' end='900' commentType='singleLine'/>
         </Comments>
         <Statements>
-            <ASTError start='815' end='855'/>
-            <ASTError start='856' end='861'/>
-            <ExpressionStatement start='862' end='873'>
-                <Variable start='862' end='872' isDollared='true'>
-                    <Identifier start='863' end='872' name='withConst'/>
-                </Variable>
-            </ExpressionStatement>
-            <ASTError start='0' end='873'/>
+            <ClassDeclaration start='815' end='902' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='839' name='ReadonlyProperties'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='840' end='902' isCurly='true'>
+                    <ClassConstantDeclaration start='847' end='890' modifier='readonly'>
+                        <Names>
+                            <Identifier start='862' end='876' name='READONLY_CONST'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='879' end='889' type='STRING' value='"constant"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </ClassDeclaration>
         </Statements>
     </Program>
 </testresult>

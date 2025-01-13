@@ -33,7 +33,7 @@ public final class NamedNodeMapImpl implements NamedNodeMap {
     private final Map peer;
 
     /** Read-only empty map. */
-    public static final NamedNodeMap EMPTY = new NamedNodeMapImpl(new HashMap(0));
+    public static final NamedNodeMap EMPTY = new NamedNodeMapImpl(new HashMap<>(0));
 
     /**
      * Creates new NamedNodeMapImpl

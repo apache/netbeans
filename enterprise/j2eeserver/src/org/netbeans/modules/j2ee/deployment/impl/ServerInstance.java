@@ -142,11 +142,11 @@ public class ServerInstance implements Node.Cookie, Comparable {
     private MessageDestinationDeployment msgDestDeploymentConnected;
     private MessageDestinationDeployment msgDestDeploymentDisconnected;
     private final Set targetsStartedByIde = new HashSet(); // valued by target name
-    private Map targets; // keyed by target name, valued by ServerTarget
+    private Map<String, ServerTarget> targets; // keyed by target name, valued by ServerTarget
     private boolean managerStartedByIde = false;
     private ServerTarget coTarget = null;
     private final DeletableInstanceProperties instanceProperties;
-    private final HashMap/*<Target, ServerDebugInfo>*/ debugInfo = new HashMap();
+    private final Map<Target, ServerDebugInfo> debugInfo = new HashMap<>();
     
     // last known server state, the initial value is stopped
     private volatile int serverState = STATE_STOPPED;
@@ -490,7 +490,7 @@ public class ServerInstance implements Node.Cookie, Comparable {
      * @return
      */
     public ServerTarget[] getTargets() {
-        Map targets = getTargetMap();
+        Map<String, ServerTarget> targets = getTargetMap();
         synchronized (this) {
             return (ServerTarget[]) targets.values().toArray(new ServerTarget[targets.size()]);
         }
@@ -504,8 +504,8 @@ public class ServerInstance implements Node.Cookie, Comparable {
     }
     
     // PENDING use targets final variable?
-    private Map getTargetMap() {
-        Map tmpTargets = null;
+    private Map<String, ServerTarget> getTargetMap() {
+        Map<String, ServerTarget> tmpTargets = null;
         synchronized (this) {
             tmpTargets = targets;
         }
@@ -549,7 +549,7 @@ public class ServerInstance implements Node.Cookie, Comparable {
                 targs = new Target[0];
             }
             
-            tmpTargets = new HashMap();
+            tmpTargets = new HashMap<>();
             for (int i = 0; i < targs.length; i++) {
                 tmpTargets.put(targs[i].getName(), new ServerTarget(this, targs[i]));
             }

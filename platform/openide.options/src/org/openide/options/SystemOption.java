@@ -92,7 +92,7 @@ public abstract class SystemOption extends SharedClassObject implements HelpCtx.
             Map originalValues = (Map) getProperty(PROP_ORIGINAL_VALUES);
 
             if (originalValues == null) {
-                originalValues = new HashMap();
+                originalValues = new HashMap<>();
                 putProperty(PROP_ORIGINAL_VALUES, originalValues);
             }
 

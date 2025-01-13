@@ -27,7 +27,9 @@ import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -115,16 +117,19 @@ public class AppClientProxy implements AppClient {
         return app==null?null:app.findBeanByName(beanName, propertyName, value);
     }
     
-    public java.util.Map getAllDescriptions() {
-        return app==null?new java.util.HashMap():app.getAllDescriptions();
+    @Override
+    public Map getAllDescriptions() {
+        return app == null ? new HashMap<>() : app.getAllDescriptions();
     }
     
-    public java.util.Map getAllDisplayNames() {
-        return app==null?new java.util.HashMap():app.getAllDisplayNames();
+    @Override
+    public Map<String, String> getAllDisplayNames() {
+        return app == null ? new HashMap<>() :app.getAllDisplayNames();
     }
     
-    public java.util.Map getAllIcons() {
-        return app==null?new java.util.HashMap():app.getAllIcons();
+    @Override
+    public Map<String, String[]>  getAllIcons() {
+        return app == null ? new HashMap<>() : app.getAllIcons();
     }
     
     public String getDefaultDescription() {

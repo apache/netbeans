@@ -21,6 +21,7 @@ package org.netbeans.modules.websvc.api.jaxws.client;
 
 import java.util.Iterator;
 import org.netbeans.modules.websvc.jaxws.client.JAXWSClientViewAccessor;
+import org.netbeans.modules.websvc.spi.client.WebServicesClientViewProvider;
 import org.netbeans.modules.websvc.spi.jaxws.client.JAXWSClientViewImpl;
 import org.netbeans.modules.websvc.spi.jaxws.client.JAXWSClientViewProvider;
 import org.openide.util.Lookup;
@@ -39,7 +40,7 @@ import org.netbeans.api.project.Project;
 public final class JAXWSClientView {
 
 	private JAXWSClientViewImpl impl;
-	private static final Lookup.Result implementations =
+	private static final Lookup.Result<JAXWSClientViewProvider> implementations =
 		Lookup.getDefault().lookupResult(JAXWSClientViewProvider.class);
 
 	static  {

@@ -96,7 +96,7 @@ is the proper place.
                     allow running tests in parallel.
                     <code><a href="@TOP@/org/netbeans/api/project/ContainedProjectFilter.html">ContainedProjectFilter</a></code> was added and
                     it can be used to pass list of projects the project action should apply to.
-                    <code><a href="@TOP@/org/netbeans/spi/project/NestedClass">NestedClass</a></code> was added in order to support
+                    <code><a href="@TOP@/org/netbeans/spi/project/NestedClass.html">NestedClass</a></code> was added in order to support
                     nested classes.
                 </p>
             </description>

@@ -43,8 +43,15 @@ class DBConfigurationProvider implements vscode.DebugConfigurationProvider {
 	}
 
 	resolveDebugConfigurationWithSubstitutedVariables?(_folder: vscode.WorkspaceFolder | undefined, config: vscode.DebugConfiguration, _token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
-        return new Promise<vscode.DebugConfiguration>(async resolve => {
-			let o: Object = await vscode.commands.executeCommand('nbls.db.connection');
+        return new Promise<vscode.DebugConfiguration>(async (resolve, reject) => {
+			let o: Object;
+			try {
+				o = await vscode.commands.executeCommand('nbls.db.connection');
+			} catch(err) {
+				console.log(err);
+				reject(err);
+				return;
+			}
 			if (config === undefined) {
 				config = {} as vscode.DebugConfiguration;
 			}

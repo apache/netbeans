@@ -19,49 +19,40 @@
     under the License.
 
 -->
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 16 16">
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
   <defs>
     <style>
-      .cls-1 {
+      .st0 {
         fill: #6d6d6d;
       }
 
-      .cls-2, .cls-3 {
-        fill: #fff;
-      }
-
-      .cls-4 {
+      .st1 {
         fill: #ff791f;
       }
 
-      .cls-3, .cls-5 {
+      .st2 {
+        fill: none;
         stroke: #ff791f;
         stroke-miterlimit: 10;
       }
 
-      .cls-5 {
-        fill: none;
+      .st3 {
+        fill: #8d8d8d;
       }
 
-      .cls-6 {
-        fill: #8d8d8d;
+      .st4 {
+        fill: #ececec;
       }
     </style>
   </defs>
-  <!-- Generator: Adobe Illustrator 28.7.2, SVG Export Plug-In . SVG Version: 1.2.0 Build 154)  -->
   <g>
-    <g id="New_Vector">
-      <g>
-        <g>
-          <polygon class="cls-2" points="1.5 14.5 1.5 .5 10.193 .5 13.5 3.807 13.5 14.5 1.5 14.5"/>
-          <path class="cls-1" d="M9.986,1l3.014,3.014v9.986H2V1h7.986M10.4,0H1v15h13V3.6l-3.6-3.6h0Z"/>
-        </g>
-        <polygon class="cls-6" points="13 5 13 4 10 4 10 1 9 1 9 5 13 5"/>
-      </g>
-      <line class="cls-5" x1="4.5" y1="5.5" x2="10" y2="11"/>
-      <rect class="cls-3" x="3.5" y="4.5" width="2" height="2"/>
-      <circle class="cls-4" cx="7.5" cy="8.5" r="1.5"/>
-      <rect class="cls-3" x="9.5" y="10.5" width="2" height="2"/>
-    </g>
+    <polygon class="st4" points="1.5 14.5 1.5 .5 10.193 .5 13.5 3.807 13.5 14.5 1.5 14.5"/>
+    <path class="st0" d="M9.986,1l3.014,3.014v9.986H2V1h7.986M10.4,0H1v15h13V3.6l-3.6-3.6h0Z"/>
   </g>
+  <polygon class="st3" points="13 5 13 4 10 4 10 1 9 1 9 5 13 5"/>
+  <line class="st2" x1="5.5" y1="6.5" x2="10" y2="11"/>
+  <rect class="st2" x="3.5" y="4.5" width="2" height="2"/>
+  <circle class="st1" cx="7.5" cy="8.5" r="1.5"/>
+  <rect class="st2" x="9.5" y="10.5" width="2" height="2"/>
 </svg>

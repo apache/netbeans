@@ -129,6 +129,18 @@ public class GlassFishVersionTest {
                 GlassFishVersion.GF_7_0_14_STR_NEXT);
         verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_15,
                 GlassFishVersion.GF_7_0_15_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_16,
+                GlassFishVersion.GF_7_0_16_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_17,
+                GlassFishVersion.GF_7_0_17_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_18,
+                GlassFishVersion.GF_7_0_18_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_19,
+                GlassFishVersion.GF_7_0_19_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_20,
+                GlassFishVersion.GF_7_0_20_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_21,
+                GlassFishVersion.GF_7_0_21_STR_NEXT);
         verifyToValueFromAdditionalArray(GlassFishVersion.GF_8_0_0,
                 GlassFishVersion.GF_8_0_0_STR_NEXT);
     }
@@ -160,6 +172,9 @@ public class GlassFishVersionTest {
             GlassFishVersion.GF_7_0_10, GlassFishVersion.GF_7_0_11,
             GlassFishVersion.GF_7_0_12, GlassFishVersion.GF_7_0_13,
             GlassFishVersion.GF_7_0_14, GlassFishVersion.GF_7_0_15,
+            GlassFishVersion.GF_7_0_16, GlassFishVersion.GF_7_0_17,
+            GlassFishVersion.GF_7_0_18, GlassFishVersion.GF_7_0_19,
+            GlassFishVersion.GF_7_0_20, GlassFishVersion.GF_7_0_21,
             GlassFishVersion.GF_8_0_0
         };
         String strings[] = {
@@ -173,7 +188,9 @@ public class GlassFishVersionTest {
             "7.0.2.0", "7.0.3.0", "7.0.4.0", "7.0.5.0",
             "7.0.6.0", "7.0.7.0", "7.0.8.0", "7.0.9.0",
             "7.0.10.0", "7.0.11.0", "7.0.12.0", "7.0.13.0",
-            "7.0.14.0", "7.0.15.0", "8.0.0.0"
+            "7.0.14.0", "7.0.15.0", "7.0.16.0", "7.0.17.0",
+            "7.0.18.0", "7.0.19.0", "7.0.20.0", "7.0.21.0",
+            "8.0.0.0"
         };
         for (int i = 0; i < versions.length; i++) {
             GlassFishVersion version = GlassFishVersion.toValue(strings[i]);

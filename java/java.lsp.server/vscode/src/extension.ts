@@ -467,9 +467,9 @@ class LineBufferingPseudoterminal implements vscode.Pseudoterminal {
             });
         }
         // Prevent 'stealing' of the focus when running tests in parallel 
-//        if (!testAdapter?.testInParallelProfileExist()) {
+       if (!testAdapter?.testInParallelProfileExist()) {
             this.terminal.show(true);
-//        }
+       }
     }
 
     /**

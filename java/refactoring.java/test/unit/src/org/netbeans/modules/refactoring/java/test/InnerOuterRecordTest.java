@@ -23,6 +23,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,17 +43,17 @@ import org.openide.util.Exceptions;
 
 /**
  * Test inner to outer refactoring for test.
- * 
- * In the input files, and the expected outcomes, the indentation
- * does not really matter as far as the tests are concerned because
- * the indentation is stripped away before the remaining source lines 
- * are compared to the expected lines.
+ *
+ * In the input files, and the expected outcomes, the indentation does not
+ * really matter as far as the tests are concerned because the indentation is
+ * stripped away before the remaining source lines are compared to the expected
+ * lines.
  *
  * @author homberghp {@code <pieter.van.den.hombergh@gmail.com)>}
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class InnerOuterRecordTest extends RefactoringTestBase {
-    
+
     public InnerOuterRecordTest(String name) {
         super(name);
         //ensure we are running on at least 16.
@@ -110,9 +111,9 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
             }
             """;
         innerOuterSetupAndTest(source, newOuter, newInner);
-        
+
     }
-    
+
     public void test9ApacheNetbeans7044() throws Exception {
         // initial outer has record with meaningful canonical constructor.
         // note that Inner class should be in last member for assumptions in the test.
@@ -188,10 +189,10 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        
+
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
-    
+
     public void test1BasicClassInClass() throws Exception {
         // initial outer has record with meaningful canonical constructor.
         String source
@@ -277,10 +278,10 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
                 }
                 """;
-        
+
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
-    
+
     public void test2BasicRecordInRecord() throws Exception {
         String source
                 = """
@@ -324,15 +325,15 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     static String code = "nix";
                 }
                 """;
-        
+
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
-    
+
     /**
      * Test to verify what happens to the compact constructor in the outer
      * record. It appears to survive the refactoring.
-     * 
-     * @throws Exception 
+     *
+     * @throws Exception
      */
     public void test3OuterWithCompact() throws Exception {
         String source
@@ -375,7 +376,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 """;
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
-    
+
     public void test4InnerWithCompact() throws Exception {
         String source
                 = """
@@ -492,19 +493,93 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
     
+    public void test6InnerWithCompactAndMethodAndExtraCtor() throws Exception {
+        String source
+                = """
+                package t;
+                
+                import java.time.LocalDate;
+                record A(F f) {
+
+                enum Suite {
+                    SPADE, CLUB, DIAMOND, HEART;
+                }
+                
+                    public A {
+                        assert f != null;
+                    }
+                
+                    record F(int id, String name, LocalDate dob) {
+                
+                        public F {
+                            if (dob.isBefore(LocalDate.EPOCH)) {
+                                throw new IllegalArgumentException("to old " + dob);
+                            }
+                        }
+                        public F(int id, String name){
+                            this(id,name,LocalDate.now());
+                        }
+                        boolean bornBefore(LocalDate someDate) {
+                            return dob.isBefore(someDate);
+                        } 
+                    }
+                }
+                """;
+        String newOuter
+                = """
+                package t;
+                import java.time.LocalDate;
+                record A(F f) {
+                    enum Suite { 
+                      SPADE, CLUB, DIAMOND, HEART;
+                    }
+                    public A {
+                        assert f != null;
+                    }
+                }
+                """;
+        String newInner
+                = """
+                /*
+                 * Refactoring License
+                 */
+                package t;
+                import java.time.LocalDate;
+                /**
+                 *
+                 * @author junit
+                 */
+                record F(int id, String name, LocalDate dob) {
+
+                    public F {
+                        if (dob.isBefore(LocalDate.EPOCH)) {
+                            throw new IllegalArgumentException("to old " + dob);
+                        }
+                    }
+                    public F(int id, String name) {
+                        this(id, name, LocalDate.now());
+                    }
+                    boolean bornBefore(LocalDate someDate) {
+                        return dob.isBefore(someDate);
+                    } 
+                }
+                """;
+        innerOuterSetupAndTest(source, newOuter, newInner);
+    }
+
     void innerOuterSetupAndTest(String source, String newOuterName, String newInnerName) throws Exception {
         writeFilesNoIndexing(src, new File("t/A.java", source));
         performInnerToOuterTest2(null);
         verifyContent(src, new File("t/A.java", newOuterName), new File("t/F.java", newInnerName));
     }
-    
+
     boolean debug = false;
 
     // variant for record inner to outer test
     private void performInnerToOuterTest2(String newOuterName, Problem... expectedProblems) throws Exception {
         final InnerToOuterRefactoring[] r = new InnerToOuterRefactoring[1];
         JavaSource.forFileObject(src.getFileObject("t/A.java")).runUserActionTask(new Task<CompilationController>() {
-            
+
             @Override
             public void run(CompilationController parameter) {
                 try {
@@ -523,25 +598,17 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 List<? extends Tree> members = outer.getMembers();
                 int m = 0;
                 if (debug) {
-                    for (Tree member : members) {
-                        printNumbered(System.err, "member %d %15s".formatted(m++, member.getKind()), member.toString());
-                        String toString = member.toString();
-                        if (member instanceof ClassTree ct) {
-                            int n = 0;
-                            Name simpleName = ct.getSimpleName();
-                            for (Tree ctm : ct.getMembers()) {
-                                printNumbered(System.err, "   ctm " + simpleName + " %d %15s".formatted(n++, ctm.getKind()), ctm.toString());
-                            }
-                        }
-                    }
+                    printMembers(members, m);
                 }
                 // selecting the last element assumes that the inner class is the last member in the outer class.
                 Tree lastInnerClass = outer.getMembers().get(outer.getMembers().size() - 1);
-                if (debug) {
-                    String n = "lastInnerClass " + lastInnerClass.getKind().toString();
-                    printNumbered(System.err, n, lastInnerClass.toString());
+                if (debug && lastInnerClass instanceof ClassTree lct) {
+//                    String n = "lastInnerClass " + lastInnerClass.getKind().toString();
+//                    printNumbered(System.err, n, lastInnerClass.toString());
+                    printClassTree(lct);
                 }
                 TreePath tp = TreePath.getPath(cut, lastInnerClass);
+
                 try {
                     r[0] = new InnerToOuterRefactoring(TreePathHandle.create(tp, parameter));
                 } catch (Throwable t) {
@@ -550,22 +617,48 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     throw t;
                 }
             }
+
         }, true);
-        
+
         r[0].setClassName("F");
         if (debug) {
             printNumbered(System.err, "result ", r[0].toString());
         }
         r[0].setReferenceName(newOuterName);
-        
+
         RefactoringSession rs = RefactoringSession.create("Session");
         List<Problem> problems = new LinkedList<Problem>();
-        
+
         addAllProblems(problems, r[0].preCheck());
         addAllProblems(problems, r[0].prepare(rs));
         addAllProblems(problems, rs.doRefactoring(true));
-        
+
         assertProblems(Arrays.asList(expectedProblems), problems);
     }
-    
+
+    // test helper
+    static void printMembers(List<? extends Tree> members, int m) {
+        printMembers(members, m, "");
+    }
+
+    // test helper
+    static void printMembers(List<? extends Tree> members, int m, String indent) {
+        for (Tree member : members) {
+            printNumbered(System.err, indent + "member %d %15s".formatted(m, member.getKind()), member.toString());
+            String toString = member.toString();
+            if (member instanceof ClassTree ct) {
+                int n = 0;
+                Name simpleName = ct.getSimpleName();
+                List<? extends Tree> members1 = ct.getMembers();
+                printMembers(members1, n, indent + "  " + m + " ");
+            }
+            m++;
+        }
+    }
+
+    // test helper
+    static void printClassTree(ClassTree ct) {
+        printMembers(ct.getMembers(), 0, "class " + ct.getSimpleName() + " type " + ct.getKind() + " ");
+    }
+
 }

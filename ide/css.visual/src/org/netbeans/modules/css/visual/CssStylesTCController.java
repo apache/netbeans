@@ -172,7 +172,7 @@ public class CssStylesTCController implements PropertyChangeListener, LookupList
     public final void resultChanged(LookupEvent ev) {
         PageInspector pageInspector = PageInspector.getDefault();
         if (pageInspector != null) {
-            Lookup.Result lookupResult = (Lookup.Result) ev.getSource();
+            Lookup.Result<?> lookupResult = (Lookup.Result<?>) ev.getSource();
             lookupResult.removeLookupListener(this);
             pageInspector.addPropertyChangeListener(this);
         }

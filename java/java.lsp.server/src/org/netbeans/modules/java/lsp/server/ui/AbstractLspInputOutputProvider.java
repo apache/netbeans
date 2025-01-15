@@ -85,7 +85,7 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
 
     @Override
     public final void resetIO(LspIO io) {
-        NbCodeLanguageClient client = LspServerUtils.findLspClient(Lookup.getDefault());
+        NbCodeLanguageClient client = io.getClient();
         if (client != null) {
             client.resetOutput(io.name);
         }
@@ -93,7 +93,7 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
 
     @Override
     public final void showIO(LspIO io, Set<ShowOperation> operations) {
-        NbCodeLanguageClient client = LspServerUtils.findLspClient(Lookup.getDefault());
+        NbCodeLanguageClient client = io.getClient();
         if (client != null) {
             client.showOutput(io.name);
         }
@@ -101,7 +101,7 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
 
     @Override
     public final void closeIO(LspIO io) {
-        NbCodeLanguageClient client = LspServerUtils.findLspClient(Lookup.getDefault());
+        NbCodeLanguageClient client = io.getClient();
         if (client != null) {
             client.closeOutput(io.name);
         }
@@ -180,9 +180,14 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
                 };
             }
             this.in = in;
-            client = LspServerUtils.findLspClient(Lookup.getDefault());
-            if (client != null) {
-                client.resetOutput(name);
+            // In case of Run, Debug and Test use IOContext for output. IOContext will end up in the Debug Console
+            if (!(name.startsWith("Run") || name.startsWith("Debug") || name.startsWith("Test"))) { //NOI18N
+                client = LspServerUtils.findLspClient(Lookup.getDefault());
+                if (client != null) {
+                    client.resetOutput(name);
+                }
+            } else {
+                client = null;
             }
         }
 
@@ -201,8 +206,16 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
             @Override
             public void write(char[] cbuf, int off, int len) throws IOException {
                 String chunk = new String(cbuf, off, len);
-                if (len > 0) {
-                    client.writeOutput(new OutputMessage(name, chunk, stdIO));
+                if (client != null) {
+                    if (len > 0) {
+                        client.writeOutput(new OutputMessage(name, chunk, stdIO));
+                    }
+                } else {
+                    if (stdIO) {
+                        ctx.stdOut(chunk);
+                    } else {
+                        ctx.stdErr(chunk);
+                    }
                 }
             }
 
@@ -215,6 +228,13 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
                 closed = true;
             }
         }
+        
+        protected NbCodeLanguageClient getClient() {
+            return client;
+        }
     }
     
+//    private static boolean namedOutput(String name) {
+//        return !(name.startsWith("Run") || name.startsWith("Debug"));
+//    }
 }

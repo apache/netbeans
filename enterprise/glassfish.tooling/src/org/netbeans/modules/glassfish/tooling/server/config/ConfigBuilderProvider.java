@@ -194,6 +194,36 @@ public class ConfigBuilderProvider {
             = new Config.Next(GlassFishVersion.GF_7_0_15,
                     ConfigBuilderProvider.class.getResource("GlassFishV7_0_9.xml"));
 
+    /** Library builder configuration since GlassFish 7.0.16. */
+    private static final Config.Next CONFIG_V7_0_16
+            = new Config.Next(GlassFishVersion.GF_7_0_16,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_9.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.17. */
+    private static final Config.Next CONFIG_V7_0_17
+            = new Config.Next(GlassFishVersion.GF_7_0_17,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_17.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.18. */
+    private static final Config.Next CONFIG_V7_0_18
+            = new Config.Next(GlassFishVersion.GF_7_0_18,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_17.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.19. */
+    private static final Config.Next CONFIG_V7_0_19
+            = new Config.Next(GlassFishVersion.GF_7_0_19,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_17.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.20. */
+    private static final Config.Next CONFIG_V7_0_20
+            = new Config.Next(GlassFishVersion.GF_7_0_20,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_17.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.21. */
+    private static final Config.Next CONFIG_V7_0_21
+            = new Config.Next(GlassFishVersion.GF_7_0_21,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_17.xml"));
+
     /** Library builder configuration since GlassFish 8.0.0. */
     private static final Config.Next CONFIG_V8_0_0
             = new Config.Next(GlassFishVersion.GF_8_0_0,
@@ -210,7 +240,9 @@ public class ConfigBuilderProvider {
                          CONFIG_V7_0_6, CONFIG_V7_0_7, CONFIG_V7_0_8,
                          CONFIG_V7_0_9, CONFIG_V7_0_10, CONFIG_V7_0_11,
                          CONFIG_V7_0_12, CONFIG_V7_0_13, CONFIG_V7_0_14,
-                         CONFIG_V7_0_15, CONFIG_V8_0_0);
+                         CONFIG_V7_0_15, CONFIG_V7_0_16, CONFIG_V7_0_17,
+                         CONFIG_V7_0_18, CONFIG_V7_0_19, CONFIG_V7_0_20,
+                         CONFIG_V7_0_21, CONFIG_V8_0_0);
 
     /** Builders array for each server instance. */
     private static final ConcurrentMap<GlassFishServer, ConfigBuilder> builders

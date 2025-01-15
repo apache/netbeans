@@ -47,7 +47,7 @@ final class DefaultEMLookup extends ProxyLookup implements LookupListener, Prope
     private LookupListener listener;
 
     /** Map of (Node -> node Lookup.Result) the above lookup listener is attached to */
-    private Map<Lookup, Lookup.Result> attachedTo;
+    private Map<Lookup, Lookup.Result<?>> attachedTo;
 
     /** action map for the top component */
     private Lookup actionMap;
@@ -78,7 +78,7 @@ final class DefaultEMLookup extends ProxyLookup implements LookupListener, Prope
 
         Lookup[] lookups = new Lookup[arr.length];
 
-        Map<Lookup, Lookup.Result> copy;
+        Map<Lookup, Lookup.Result<?>> copy;
 
         synchronized (this) {
             if (attachedTo == null) {
@@ -97,8 +97,8 @@ final class DefaultEMLookup extends ProxyLookup implements LookupListener, Prope
             }
         }
 
-        for (Iterator<Lookup.Result> it = copy.values().iterator(); it.hasNext();) {
-            Lookup.Result res = it.next();
+        for (Iterator<Lookup.Result<?>> it = copy.values().iterator(); it.hasNext();) {
+            Lookup.Result<?> res = it.next();
             res.removeLookupListener(listener);
         }
 
@@ -126,10 +126,10 @@ final class DefaultEMLookup extends ProxyLookup implements LookupListener, Prope
         if ((attachedTo == null) && isNodeQuery(t.getType())) {
             Lookup[] arr = getLookups();
 
-            attachedTo = new WeakHashMap<Lookup, Lookup.Result>(arr.length * 2);
+            attachedTo = new WeakHashMap<>(arr.length * 2);
 
             for (int i = 0; i < (arr.length - 2); i++) {
-                Lookup.Result res = arr[i].lookup(t);
+                Lookup.Result<?> res = arr[i].lookup(t);
                 res.addLookupListener(listener);
                 attachedTo.put(arr[i], res);
             }

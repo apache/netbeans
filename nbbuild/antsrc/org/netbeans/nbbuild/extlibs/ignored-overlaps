@@ -90,10 +90,10 @@ webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip webcommon/javascript
 webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2.sdoc/external/testfiles-jsdoc-1.zip
 
 # not part of the product:
-harness/apisupport.harness/external/launcher-external-binaries-1-94a19f0.zip platform/o.n.bootstrap/external/launcher-external-binaries-1-94a19f0.zip
-harness/apisupport.harness/external/launcher-external-binaries-1-94a19f0.zip nb/ide.launcher/external/launcher-external-binaries-1-94a19f0.zip
-nb/ide.launcher/external/launcher-external-binaries-1-94a19f0.zip platform/o.n.bootstrap/external/launcher-external-binaries-1-94a19f0.zip
-nb/ide.launcher/external/launcher-external-binaries-1-94a19f0.zip harness/apisupport.harness/external/launcher-external-binaries-1-94a19f0.zip
+harness/apisupport.harness/external/launcher-external-binaries-2-6c17cc6.zip platform/o.n.bootstrap/external/launcher-external-binaries-2-6c17cc6.zip
+harness/apisupport.harness/external/launcher-external-binaries-2-6c17cc6.zip nb/ide.launcher/external/launcher-external-binaries-2-6c17cc6.zip
+nb/ide.launcher/external/launcher-external-binaries-2-6c17cc6.zip platform/o.n.bootstrap/external/launcher-external-binaries-2-6c17cc6.zip
+nb/ide.launcher/external/launcher-external-binaries-2-6c17cc6.zip harness/apisupport.harness/external/launcher-external-binaries-2-6c17cc6.zip
 
 # only one is part of the product:
 java/libs.javacapi/external/nb-javac-jdk-24+29-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-24+29-api.jar

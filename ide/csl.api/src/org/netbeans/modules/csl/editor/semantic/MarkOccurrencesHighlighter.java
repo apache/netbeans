@@ -135,8 +135,10 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
     @NonNull
     List<OffsetRange> processImpl(ParserResult info, Document doc, int caretPosition) {
         OccurrencesFinder finder = language.getOccurrencesFinder();
-        assert finder != null;
-        
+        if(finder == null) {
+            return List.of();
+        }
+
         finder.setCaretPosition(caretPosition);
         try {
             finder.run(info, null);

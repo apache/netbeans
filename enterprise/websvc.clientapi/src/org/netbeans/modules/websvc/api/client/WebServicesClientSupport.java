@@ -38,6 +38,7 @@ import org.openide.util.Lookup;
 import org.netbeans.modules.websvc.spi.client.WebServicesClientSupportImpl;
 import org.netbeans.modules.websvc.spi.client.WebServicesClientSupportProvider;
 import org.netbeans.modules.websvc.client.WebServicesClientSupportAccessor;
+import org.netbeans.modules.websvc.spi.client.WebServicesClientViewProvider;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
@@ -56,7 +57,7 @@ public final class WebServicesClientSupport {
     public static final String WSCLIENTUPTODATE_CLASSPATH = "wsclientuptodate.classpath";
 
     private WebServicesClientSupportImpl impl;
-    private static final Lookup.Result implementations =
+    private static final Lookup.Result<WebServicesClientSupportProvider> implementations =
         Lookup.getDefault().lookupResult(WebServicesClientSupportProvider.class);
 
     static  {

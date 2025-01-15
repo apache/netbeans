@@ -458,11 +458,18 @@ class LineBufferingPseudoterminal implements vscode.Pseudoterminal {
                 name: this.name,
                 pty: this,
             });
+
+            // Listen for terminal close events
+            vscode.window.onDidCloseTerminal((closedTerminal) => {
+                if (closedTerminal === this.terminal) {
+                    this.terminal = undefined; // Clear the terminal reference
+                }
+            });
         }
         // Prevent 'stealing' of the focus when running tests in parallel 
-        if (!testAdapter?.testInParallelProfileExist()) {
+       if (!testAdapter?.testInParallelProfileExist()) {
             this.terminal.show(true);
-        }
+       }
     }
 
     /**
@@ -939,7 +946,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     };
 
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test.parallel', async (projects?) => {        
-        testAdapter?.runTestsWithParallelParallel(projects);
+        testAdapter?.runTestsWithParallelProfile(projects);
     }));
 
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test.parallel.createProfile', async (projects?) => {        
@@ -1103,29 +1110,21 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
  */
 let maintenance : Promise<void> | null;
 
-/**
- * Pending activation flag. Will be cleared when the process produces some message or fails.
- */
-let activationPending : boolean = false;
-
 function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean, 
     clientResolve? : (x : NbLanguageClient) => void, clientReject? : (x : any) => void): void {
-    if (activationPending) {
-        // do not activate more than once in parallel.
-        handleLog(log, "Server activation requested repeatedly, ignoring...");
-        return;
-    }
     let oldClient = client;
     let setClient : [(c : NbLanguageClient) => void, (err : any) => void];
     client = new Promise<NbLanguageClient>((clientOK, clientErr) => {
         setClient = [
             function (c : NbLanguageClient) {
                 clientRuntimeJDK = specifiedJDK;
+                handleLog(log, "Launch: client OK");
                 clientOK(c);
                 if (clientResolve) {
                     clientResolve(c);
                 }
             }, function (err) {
+                handleLog(log, `Launch: client failed: ${err}`);
                 clientErr(err);
                 if (clientReject) {
                     clientReject(err);
@@ -1135,20 +1134,21 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
         //setClient = [ clientOK, clientErr ];
     });
     const a : Promise<void> | null = maintenance;
-
+    const clientPromise = client;
     commands.executeCommand('setContext', 'nbJavaLSReady', false);
     commands.executeCommand('setContext', 'dbAddConnectionPresent', true);
-    activationPending = true;
     // chain the restart after termination of the former process.
     if (a != null) {
         handleLog(log, "Server activation initiated while in maintenance mode, scheduling after maintenance");
         a.then(() => stopClient(oldClient)).then(() => killNbProcess(notifyKill, log)).then(() => {
-            doActivateWithJDK(specifiedJDK, context, log, notifyKill, setClient);
+            doActivateWithJDK(clientPromise, specifiedJDK, context, log, notifyKill, setClient);
         });
     } else {
         handleLog(log, "Initiating server activation");
-        stopClient(oldClient).then(() => killNbProcess(notifyKill, log)).then(() => {
-            doActivateWithJDK(specifiedJDK, context, log, notifyKill, setClient);
+        stopClient(oldClient).catch(e => null).then(() => {
+            return killNbProcess(notifyKill, log)
+        }).then(() => {
+            doActivateWithJDK(clientPromise, specifiedJDK, context, log, notifyKill, setClient);
         });
     }
 }
@@ -1330,7 +1330,7 @@ function getProjectJDKHome() : string {
     return workspace.getConfiguration('netbeans')?.get('project.jdkhome') as string;
 }
 
-function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean,
+function doActivateWithJDK(promise: Promise<NbLanguageClient>, specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean,
     setClient : [(c : NbLanguageClient) => void, (err : any) => void]
 ): void {
     maintenance = null;
@@ -1418,9 +1418,6 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             }
             let stdOut : string | null = '';
             function logAndWaitForEnabled(text: string, isOut: boolean) {
-                if (p == nbProcess) {
-                    activationPending = false;
-                }
                 handleLogNoNL(log, text);
                 if (stdOut == null) {
                     return;
@@ -1456,8 +1453,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                         handleLog(log, "Cannot find org.netbeans.modules.java.lsp.server in the log!");
                     }
                     log.show(false);
-                    killNbProcess(false, log, p);
-                    reject("Apache NetBeans Language Server not enabled!");
+                    killNbProcess(false, log, p).catch(() => null).then(() => reject("Apache NetBeans Language Server not enabled!"));
                 } else {
                     handleLog(log, "LSP server " + p.pid + " terminated with " + code);
                     handleLog(log, "Exit code " + code);
@@ -1516,7 +1512,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             },
             closed : function(): CloseHandlerResult {
                 handleLog(log, "Connection to Apache NetBeans Language Server closed.");
-                if (!activationPending) {
+                // restart only if the _current_ client has been closed.
+                if (client === promise) {
                     restartWithJDKLater(10000, false);
                 }
                 return { action: CloseAction.DoNotRestart };
@@ -1533,12 +1530,19 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     );
     handleLog(log, 'Language Client: Starting');
     c.start().then(() => {
-        if (isJavaSupportEnabled()) {
+        if (enableJava) {
+            if (testAdapter) {
+                // we need to create it again anyway, so it load()s the content.
+                testAdapter.dispose();
+            }
             testAdapter = new NbTestAdapter();
             const testAdapterCreatedListeners = listeners.get(TEST_ADAPTER_CREATED_EVENT);
             testAdapterCreatedListeners?.forEach(listener => {
                 commands.executeCommand(listener);
-            })
+            });
+    } else if (testAdapter) {
+            testAdapter.dispose();
+            testAdapter = undefined;
         }
         c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
         c.onRequest(HtmlPageRequest.type, showHtmlPage);
@@ -1716,7 +1720,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }
         c.findTreeViewService().createView('cloud.assets', undefined, { canSelectMany : false, showCollapseAll: false , providerInitializer : (customizable) =>
             customizable.addItemDecorator(new CloudAssetsDecorator())});
-    }).catch(setClient[1]);
+    }).catch(err => setClient[1](err));
 
     class CloudAssetsDecorator implements TreeItemDecorator<Visualizer> {
         decorateChildren(element: Visualizer, children: Visualizer[]): Visualizer[] {
@@ -1809,21 +1813,26 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 
     async function createProjectView(ctx : ExtensionContext, client : NbLanguageClient) {
         const ts : TreeViewService = client.findTreeViewService();
-        let tv : vscode.TreeView<Visualizer> = await ts.createView('foundProjects', 'Projects', { canSelectMany : false });
+        let tv : vscode.TreeView<Visualizer>|undefined = await ts.createView('foundProjects', 'Projects', { canSelectMany : false });
+        if (!tv) {
+            return;
+        }
+
+        const view = tv;
 
         async function revealActiveEditor(ed? : vscode.TextEditor) {
             const uri = window.activeTextEditor?.document?.uri;
             if (!uri || uri.scheme.toLowerCase() !== 'file') {
                 return;
             }
-            if (!tv.visible) {
+            if (!view.visible) {
                 return;
             }
-            let vis : Visualizer | undefined = await ts.findPath(tv, uri.toString());
+            let vis : Visualizer | undefined = await ts.findPath(view, uri.toString());
             if (!vis) {
                 return;
             }
-            tv.reveal(vis, { select : true, focus : false, expand : false });
+            view.reveal(vis, { select : true, focus : false, expand : false });
         }
 
         ctx.subscriptions.push(window.onDidChangeActiveTextEditor(ed => {
@@ -1964,7 +1973,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     }
 }
 
-function stopClient(clientPromise: Promise<LanguageClient>): Thenable<void> {
+function stopClient(clientPromise: Promise<LanguageClient>): Promise<void> {
     if (testAdapter) {
         testAdapter.dispose();
         testAdapter = undefined;

@@ -610,7 +610,7 @@ public final class Language {
     /**
      * Return the occurrences finder for this language
      */
-    @NonNull
+    @CheckForNull
     public OccurrencesFinder getOccurrencesFinder() {
         if (occurrences == null) {
             if (occurrencesFile != null) {
@@ -653,7 +653,7 @@ public final class Language {
     /**
      * Return the semantic analyzer for this language
      */
-    @NonNull
+    @CheckForNull
     public SemanticAnalyzer getSemanticAnalyzer() {
         if (semantic == null) {
             if (semanticFile != null) {
@@ -679,7 +679,7 @@ public final class Language {
     /**
      * Return the semantic analyzer for this language
      */
-    @NonNull
+    @CheckForNull
     public IndexSearcher getIndexSearcher() {
         if (indexSearcher == null) {
             if (indexSearcherFile != null) {
@@ -735,7 +735,7 @@ public final class Language {
     /**
      * Return the overriding methods computer for this language
      */
-    @NonNull
+    @CheckForNull
     public OverridingMethods getOverridingMethods() {
         if (overridingMethods == null) {
             if (overridingMethodsFile != null) {

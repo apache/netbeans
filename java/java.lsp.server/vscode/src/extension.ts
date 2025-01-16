@@ -1333,6 +1333,10 @@ function getProjectJDKHome() : string {
 function doActivateWithJDK(promise: Promise<NbLanguageClient>, specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean,
     setClient : [(c : NbLanguageClient) => void, (err : any) => void]
 ): void {
+    // Records if the server successfully started before close/error.
+    let started : boolean = false;
+    // Error reported by server started from this function execution.
+    let startupError : string = '';
     maintenance = null;
     let restartWithJDKLater : ((time: number, n: boolean) => void) = function restartLater(time: number, n : boolean) {
         handleLog(log, `Restart of Apache Language Server requested in ${(time / 1000)} s.`);
@@ -1508,13 +1512,20 @@ function doActivateWithJDK(promise: Promise<NbLanguageClient>, specifiedJDK: str
         },
         errorHandler: {
             error : function(error: Error, _message: Message, count: number): ErrorHandlerResult {
-                return { action: ErrorAction.Continue, message: error.message };
+                startupError = error.message;
+                return { 
+                    action: started ? ErrorAction.Continue : ErrorAction.Shutdown, 
+                    message: error.message 
+                };
             },
             closed : function(): CloseHandlerResult {
                 handleLog(log, "Connection to Apache NetBeans Language Server closed.");
-                // restart only if the _current_ client has been closed.
-                if (client === promise) {
+                // restart only if the _current_ client has been closed AND the server at least booted.
+                if (started && client === promise) {
                     restartWithJDKLater(10000, false);
+                } else {
+                    // report a final failure upwards.
+                    setClient[1](startupError);
                 }
                 return { action: CloseAction.DoNotRestart };
             }
@@ -1530,6 +1541,7 @@ function doActivateWithJDK(promise: Promise<NbLanguageClient>, specifiedJDK: str
     );
     handleLog(log, 'Language Client: Starting');
     c.start().then(() => {
+        started = true;
         if (enableJava) {
             if (testAdapter) {
                 // we need to create it again anyway, so it load()s the content.

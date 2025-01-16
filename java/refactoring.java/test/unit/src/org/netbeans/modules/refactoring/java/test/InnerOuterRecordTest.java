@@ -567,6 +567,55 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
 
+    
+    public void test7Generic() throws Exception{
+    String source
+                = """
+                package t;
+                
+                record A(F f) {
+                    public A {
+                        assert f != null;
+                    }
+                    record F<P, Q>(P first, Q second) {
+                
+                        public F {
+                            assert null != first;
+                            assert null != second;
+                        }
+                    }
+                }
+                """;
+        String newOuter
+                = """
+                package t;
+                record A(F f) {
+                    public A {
+                        assert f != null;
+                    }
+                }
+                """;
+        String newInner
+                = """
+                /*
+                 * Refactoring License
+                 */
+                package t;
+                /**
+                 *
+                 * @author junit
+                 */
+                record F<P, Q>(P first, Q second) {
+                    public F {
+                        assert null != first;
+                        assert null != second;
+                    }
+                }
+                """;
+        innerOuterSetupAndTest(source, newOuter, newInner);
+
+    }
+    
     void innerOuterSetupAndTest(String source, String newOuterName, String newInnerName) throws Exception {
         writeFilesNoIndexing(src, new File("t/A.java", source));
         performInnerToOuterTest2(null);

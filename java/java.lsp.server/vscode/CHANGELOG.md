@@ -20,6 +20,22 @@
     under the License.
 
 -->
+## Version 24.9.9
+* Version 24.9.9 is VSNetBeans technology preview of upcoming VSNetBeans 25.0
+* New terminal is opened in VSCode Output panel for every LSP IO operation, like build...
+* Improvements in running Java tests in Maven and Gradle projects. 
+   * Tests in project modules can be run in parallel using build tool native feature
+   * Improvements in events handling for VSCode Testing activity
+* OCI Profile shows correct region code
+* Validation before adding items into CloudAssets
+* Fix race/error handling issues on LSP restart
+* Fix ACL for application launch configuration .properties file on Windows
+* Removed settings for External formatters
+* Various fixes and improvements
+
+## Version 24.0
+* Various fixes 
+
 ## Version 23.9.9
 * Version 23.9.9 is VSNetBeans technology preview of upcoming VSNetBeans 24.0
 * Warn if JDK appears invalid and offer JDK configuration wizard

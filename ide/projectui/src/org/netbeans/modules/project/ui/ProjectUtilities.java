@@ -25,12 +25,13 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.io.CharConversionException;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -112,7 +113,7 @@ public class ProjectUtilities {
         public Map<Project,Set<String>> close(final Project[] projects,
                                                     final boolean notifyUI) {
             final Wrapper wr = new Wrapper();
-            wr.urls4project = new HashMap<Project,Set<String>>();
+            wr.urls4project = new LinkedHashMap<>();
             doClose(projects, notifyUI, wr);
             return wr.urls4project;
         }
@@ -120,13 +121,13 @@ public class ProjectUtilities {
         private void doClose(Project[] projects, boolean notifyUI, Wrapper wr) {
             List<Project> listOfProjects = Arrays.asList(projects);
             for (Project p : listOfProjects) { //#232668 all projects need an entry in the map - to handle projects without files correctly
-                wr.urls4project.put(p, new LinkedHashSet<String>());
+                wr.urls4project.put(p, new LinkedHashSet<>());
             }
-            Set<DataObject> openFiles = new HashSet<DataObject>();
-            final Set<TopComponent> tc2close = new HashSet<TopComponent>();
-            
+            Set<DataObject> openFiles = new LinkedHashSet<>();
+            List<TopComponent> tc2close = new ArrayList<>();
+
             ERR.finer("Closing TCs");
-            final Set<TopComponent> openedTC = getOpenedTCs();
+            List<TopComponent> openedTC = getOpenedTCs();
             
             for (TopComponent tc : openedTC) {
                 DataObject dobj = tc.getLookup().lookup(DataObject.class);
@@ -193,28 +194,25 @@ public class ProjectUtilities {
             }
         }
 
-        private Set<TopComponent> getOpenedTCs() {
-            final Set<TopComponent> openedTC = new HashSet<TopComponent>();
-            Runnable r = new Runnable() {
-                public void run() {
-                    WindowManager wm = WindowManager.getDefault();
-                    for (Mode mode : wm.getModes()) {
-                        //#84546 - this condituon should allow us to close just editor related TCs that are in any imaginable mode.
-                        if (!wm.isEditorMode(mode)) {
-                            continue;
-                        }
-                        ERR.log(Level.FINER, "Closing TCs in mode {0}", mode.getName());
-                        openedTC.addAll(Arrays.asList(wm.getOpenedTopComponents(mode)));
+        private List<TopComponent> getOpenedTCs() {
+            List<TopComponent> openedTC = new ArrayList<>();
+            Runnable onEDT = () -> {
+                WindowManager wm = WindowManager.getDefault();
+                for (Mode mode : wm.getModes()) {
+                    //#84546 - this condituon should allow us to close just editor related TCs that are in any imaginable mode.
+                    if (!wm.isEditorMode(mode)) {
+                        continue;
                     }
+                    ERR.log(Level.FINER, "Closing TCs in mode {0}", mode.getName());
+                    openedTC.addAll(Arrays.asList(wm.getOpenedTopComponents(mode)));
                 }
             };
             if (SwingUtilities.isEventDispatchThread()) {
-                r.run();
+                onEDT.run();
             } else {
                 try {
-                    SwingUtilities.invokeAndWait(r);
-                }
-                catch (Exception ex) {
+                    SwingUtilities.invokeAndWait(onEDT);
+                } catch (InterruptedException | InvocationTargetException ex) {
                     Exceptions.printStackTrace(ex);
                 }
             }
@@ -483,35 +481,22 @@ public class ProjectUtilities {
             // store project's documents
             // loop all project being closed
             for (Map.Entry<Project,Set<String>> entry : urls4project.entrySet()) {
-                storeProjectOpenFiles(entry.getKey(), entry.getValue(), groupName);
+                storeProjectOpenFiles(entry.getKey(), new ArrayList<>(entry.getValue()), groupName);
             }
         }
         
         return urls4project != null;
     }
     
-    public static void storeProjectOpenFiles(Project p, Set<String> urls, String groupName) {
-        AuxiliaryConfiguration aux = ProjectUtils.getAuxiliaryConfiguration(p);
-        
-        Set<String> openFileUrls = getOpenFilesUrls(p, groupName);
-        if(urls.isEmpty() && openFileUrls.isEmpty()) {
-            // was empty, stays empty, leave
-            return;                
-        }        
-        if(urls.size() == openFileUrls.size()) {
-            boolean same = true;
-            for (String url : openFileUrls) {
-                if(!urls.contains(url)) {
-                    same = false;
-                    break;
-                }
-            }
-            if(same) {
-                // nothing changed, leave
-                return;
-            }
+    public static void storeProjectOpenFiles(Project p, List<String> urls, String groupName) {
+
+        List<String> openFileUrls = getOpenFilesUrls(p, groupName);
+        // check if file list changed, order matters
+        if (urls.equals(openFileUrls)) {
+            return;
         }
-        
+
+        AuxiliaryConfiguration aux = ProjectUtils.getAuxiliaryConfiguration(p);
         aux.removeConfigurationFragment (OPEN_FILES_ELEMENT, OPEN_FILES_NS, false);
 
         Element openFiles = aux.getConfigurationFragment(OPEN_FILES_ELEMENT, OPEN_FILES_NS2, false);
@@ -558,8 +543,8 @@ public class ProjectUtilities {
         String groupName = grp == null ? null : grp.getName();
         ERR.log(Level.FINE, "Trying to open files from {0}...", p);
         
-        Set<String> urls = getOpenFilesUrls(p, groupName);
-        Set<FileObject> toRet = new HashSet<FileObject>();
+        List<String> urls = getOpenFilesUrls(p, groupName);
+        Set<FileObject> toRet = new LinkedHashSet<>();
         for (String url : urls) {
             ERR.log(Level.FINE, "Will try to open {0}", url);
             FileObject fo;
@@ -598,12 +583,13 @@ public class ProjectUtilities {
         return toRet;
     }
     
-    private static Set<String> getOpenFilesUrls(Project p, String groupName) {
+    /// Returns an deduplicated list of opened file URLs in encounter order for this project and group.
+    private static List<String> getOpenFilesUrls(Project p, String groupName) {
         AuxiliaryConfiguration aux = ProjectUtils.getAuxiliaryConfiguration(p);
         
         Element openFiles = aux.getConfigurationFragment (OPEN_FILES_ELEMENT, OPEN_FILES_NS2, false);
         if (openFiles == null) {
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
 
         Element groupEl = null;
@@ -619,16 +605,16 @@ public class ProjectUtilities {
         }
         
         if (groupEl == null) {
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
         
         NodeList list = groupEl.getElementsByTagNameNS(OPEN_FILES_NS2, FILE_ELEMENT);
-        Set<String> toRet = new HashSet<String>();
+        Set<String> set = new LinkedHashSet<>();
         for (int i = 0; i < list.getLength (); i++) {
-            String url = list.item (i).getChildNodes ().item (0).getNodeValue ();
-            toRet.add(url);
+            String url = list.item(i).getChildNodes().item(0).getNodeValue();
+            set.add(url);
         }    
-        return toRet;
+        return new ArrayList<>(set);
     }
 
     // interface for handling project's documents stored in project private.xml

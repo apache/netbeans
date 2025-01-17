@@ -31,8 +31,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -326,7 +326,7 @@ public abstract class Group {
     public static void onShutdown(Set<Project> prjs) {
         Group active = getActiveGroup();
         String oldGroupName = active != null ? active.getName() : null;
-        Set<Project> stayOpened = new HashSet<Project>(prjs);
+        Set<Project> stayOpened = new LinkedHashSet<>(prjs);
         Map<Project, Set<DataObject>> documents = getOpenedDocuments(stayOpened, true);
         for (Project p : stayOpened) {
             Set<DataObject> oldDocuments = documents.get(p);
@@ -335,18 +335,18 @@ public abstract class Group {
     }
 
     private static void persistDocumentsInGroup(Project p, Set<DataObject> get, String oldGroupName) {
-        Set<String> urls = new HashSet<String>();
+        Set<String> urls = new LinkedHashSet<>();
         if (get != null) {
             for (DataObject dob : get) {
                 //same way of creating string as in ProjectUtilities
                 urls.add(dob.getPrimaryFile().toURL().toExternalForm());
             }
         }
-        ProjectUtilities.storeProjectOpenFiles(p, urls, oldGroupName);
+        ProjectUtilities.storeProjectOpenFiles(p, new ArrayList<>(urls), oldGroupName);
     }
 
     private static Map<Project, Set<DataObject>> getOpenedDocuments(final Set<Project> listOfProjects, boolean shutdown) {
-        final Map<Project, Set<DataObject>> toRet = new HashMap<Project, Set<DataObject>>();
+        Map<Project, Set<DataObject>> toRet = new LinkedHashMap<>();
         Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
@@ -364,11 +364,8 @@ public abstract class Group {
                                 Project owner = FileOwnerQuery.getOwner(fobj);
 
                                 if (listOfProjects.contains(owner)) {
-                                    if (!toRet.containsKey(owner)) {
-                                        // add project
-                                        toRet.put(owner, new LinkedHashSet<DataObject>());
-                                    }
-                                    toRet.get(owner).add(dobj);
+                                    toRet.computeIfAbsent(owner, k -> new LinkedHashSet<>())
+                                         .add(dobj); // add project
                                 }
                             }
                         }
@@ -379,9 +376,7 @@ public abstract class Group {
             assert !SwingUtilities.isEventDispatchThread();
             try {
                 SwingUtilities.invokeAndWait(runnable);
-            } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (InvocationTargetException ex) {
+            } catch (InterruptedException | InvocationTargetException ex) {
                 Exceptions.printStackTrace(ex);
             }
         } else {

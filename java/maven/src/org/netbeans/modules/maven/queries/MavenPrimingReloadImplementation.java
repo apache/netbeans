@@ -20,13 +20,20 @@ package org.netbeans.modules.maven.queries;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Parent;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -64,6 +71,8 @@ import org.openide.util.lookup.Lookups;
     
 })
 public class MavenPrimingReloadImplementation implements ProjectReloadImplementation {
+    private static final Logger LOG = Logger.getLogger(MavenPrimingReloadImplementation.class.getName());
+    
     /**
      * Names of artifacts that were injected by NbArtifactFixer. It's not productive to run a priming build to fix this known set of artifacts,
      * unless "force" is in effect - they are unlikely to be retrieved, since they already failed.
@@ -87,6 +96,28 @@ public class MavenPrimingReloadImplementation implements ProjectReloadImplementa
 
         public ModelHolder(MavenProject p) {
             this.p = p;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 3;
+            hash = 59 * hash + Objects.hashCode(this.p);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final ModelHolder other = (ModelHolder) obj;
+            return Objects.equals(this.p, other.p);
         }
     }
 
@@ -118,7 +149,7 @@ public class MavenPrimingReloadImplementation implements ProjectReloadImplementa
         ProjectStateData d;
         
         ProjectStateBuilder builder = ProjectStateData.builder(getProjectQuality(mp)).
-                timestamp(MavenProjectCache.getLoadTimestamp(mp));
+                timestamp(ProjectStateData.TIME_RECHECK_ON_CHANGE);
         builder.data(new ModelHolder(mp));
         builder.attachLookup(Lookups.fixed(mp));
         d = builder.build();
@@ -141,12 +172,56 @@ public class MavenPrimingReloadImplementation implements ProjectReloadImplementa
     }
 
     static String artifactGav(Artifact a) {
-        return String.format("%s:%s:%s:%s", a.getGroupId(), a.getArtifactId(), a.getVersion(), a.getClassifier());
+        if (a == null) {
+            return null;
+        }
+        // let's ignore version; no version may be specified in the raw model.
+        String gav = String.format("%s:%s", a.getGroupId(), a.getArtifactId());
+        if (a.getClassifier() != null && !a.getClassifier().isEmpty()) {
+            return gav + ":" + a.getClassifier();
+        } else {
+            return gav;
+        }
+    }
+    
+    private static String artifactList(Collection<String> gavs) {
+        List<String> sorted = new ArrayList<>(gavs);
+        Collections.sort(sorted);
+        
+        String s = String.join(", ", sorted.subList(0, Math.min(sorted.size(), 5)));
+        return sorted.size() > 5 ?  s + ", ..." : s;
+    }
+    
+    private CompletableFuture<ProjectStateData> reportMissingArtifacts(Project project, ProjectReload.StateRequest request, MavenProject p, Collection<String> gavs) {
+        String msg;
+        if (placeholderArtifactNames.containsAll(gavs)) {
+            msg = Bundle.ERR_IncompleteProjectRepeated(project, artifactList(gavs));
+        } else {
+            msg = Bundle.ERR_IncompleteProjectDownload(ProjectUtils.getInformation(project).getDisplayName(), artifactList(gavs));
+        }
+        PartialLoadException ex = new PartialLoadException(createStateData(p), msg, 
+            new ProjectOperationException(project, request.isOfflineOperation() ? ProjectOperationException.State.OFFLINE : ProjectOperationException.State.BROKEN, msg)
+        );
+        CompletableFuture<ProjectStateData> future = new CompletableFuture<>();
+        future.completeExceptionally(ex);
+        return future;
     }
 
     @NbBundle.Messages({
         "# {0} - project name",
-        "ERR_PrimingBuildFailed=Priming build of {0} failed."
+        "ERR_PrimingBuildFailed=Priming build of {0} failed.",
+        "# {0} - project name",
+        "# {1} - artifact names, up to 5",
+        "ERR_PrimingBuildInsufficient=Priming of {0} failed, artifact(s) {1} could not be still resolved.",
+        "# {0} - project name",
+        "# {1} - artifact names, up to 5",
+        "ERR_IncompleteProject=Project {0} is missing artifacts: {1}.",
+        "# {0} - project name",
+        "# {1} - artifact names, up to 5",
+        "ERR_IncompleteProjectDownload=Project {0} needs to download artifacts: {1}.",
+        "# {0} - project name",
+        "# {1} - artifact names, up to 5",
+        "ERR_IncompleteProjectRepeated=Project {0} was not able to resolve or acquire artifacts: {1}.",
     })
     @Override
     public CompletableFuture reload(Project project, ProjectReload.StateRequest request, LoadContext context) {
@@ -159,51 +234,65 @@ public class MavenPrimingReloadImplementation implements ProjectReloadImplementa
             synchronized (this) {
                 placeholderArtifactNames.clear();
             }
+            LOG.log(Level.FINE, "Project {0}: no missing artifacts", project);
             return CompletableFuture.completedFuture(null);
         } 
         
         ActionProvider ap = project.getLookup().lookup(ActionProvider.class);
-        if (!ap.isActionEnabled(ActionProvider.COMMAND_PRIME, Lookup.EMPTY)) {
-            return CompletableFuture.completedFuture(null);
-        }
-
         Collection<Artifact> placeholders = MavenProjectCache.getPlaceholderArtifacts(p);
         Set<String> gavs = new HashSet<>();
-        placeholders.forEach(a -> gavs.add(artifactGav(a)));
+        placeholders.forEach(a -> { if (a != null) { gavs.add(artifactGav(a)); }});
         String parentGav = artifactGav(p.getParentArtifact());
+
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Project {0}: missing artifacts reported: {1}", new Object[] {
+                project, gavs
+            });
+        }
         
         CompletableFuture<ProjectStateData> future = new CompletableFuture<>();
-        if (gavs.contains(parentGav)) {
-            if (request.getMinQuality().isWorseThan(ProjectReload.Quality.BROKEN)) {
-                future.complete(createStateData(p));
-            } else if (request.isOfflineOperation()) {
-                PartialLoadException ex = new PartialLoadException(createStateData(p),
-                     Bundle.ERR_ParentPomMissing(ProjectUtils.getInformation(project).getDisplayName(), parentGav), 
-                    new ProjectOperationException(project, ProjectOperationException.State.OFFLINE, 
-                    Bundle.ERR_UnprimedInOfflineMode(ProjectUtils.getInformation(project).getDisplayName()))
-                );
+        // special reports for parent artifact:
+        if (parentGav == null) {
+            // this will execute in BROKEN project, with unresolvable parent,
+            // but raw model can still contain the IDs.
+            Parent pp = p.getModel().getParent();
+            if (pp != null) {
+                parentGav = pp.getGroupId() + ":" + pp.getArtifactId();
+            }
+        }
+        if (gavs.contains(parentGav) || (parentGav != null && p.getParentArtifact() == null)) {
+            if (request.getTargetQuality().isWorseThan(ProjectReload.Quality.RESOLVED) || request.isOfflineOperation()) {
+                // covers both targetQuality > broken and minQuality > BROKEN, since "min" cannot be less than "target".
+                String msg;
+
+                if (placeholderArtifactNames.contains(parentGav)) {
+                    msg = Bundle.ERR_IncompleteProjectRepeated(project, Collections.singletonList(parentGav));
+                } else {
+                    msg = request.isOfflineOperation() ?
+                        Bundle.ERR_UnprimedInOfflineMode(ProjectUtils.getInformation(project).getDisplayName()):
+                        Bundle.ERR_ParentPomMissing(ProjectUtils.getInformation(project).getDisplayName(), parentGav);
+                }
+
+                ProjectOperationException pex = new ProjectOperationException(project, 
+                        request.isOfflineOperation() ? ProjectOperationException.State.OFFLINE : ProjectOperationException.State.BROKEN, msg);
+                PartialLoadException ex = new PartialLoadException(createStateData(p),msg, pex);
                 future.completeExceptionally(ex);
                 return future;
             }
         }
-        if (request.getMinQuality().isWorseThan(ProjectReload.Quality.RESOLVED)) {
+        
+        if (request.getTargetQuality().isWorseThan(ProjectReload.Quality.RESOLVED)) {
             future.complete(createStateData(p));
             return future;
-        } else if (request.isOfflineOperation()) {
-            PartialLoadException ex = new PartialLoadException(createStateData(p),
-                 Bundle.ERR_ParentPomMissing(ProjectUtils.getInformation(project).getDisplayName(), parentGav), 
-                new ProjectOperationException(project, ProjectOperationException.State.OFFLINE, 
-                    Bundle.ERR_UnprimedInOfflineMode(ProjectUtils.getInformation(project).getDisplayName()))
-            );
-            future.completeExceptionally(ex);
-            return future;
+        } 
+        if (request.getMinQuality().isWorseThan(ProjectReload.Quality.RESOLVED) || request.isOfflineOperation()) {
+            return reportMissingArtifacts(project, request, p, gavs);
         }
         
         synchronized (this) {
-            if (!lc.firstRun && placeholderArtifactNames.containsAll(gavs) && !request.isForceReload()) {
+            if (!gavs.isEmpty() && placeholderArtifactNames.containsAll(gavs) && !request.isForceReload()) {
                 // no point in running priming build again, when the artifacts are known to be broken.
-                future.complete(createStateData(p));
-                return future;
+                return reportMissingArtifacts(project, request, p, gavs);
             }
             placeholderArtifactNames = gavs;
         }

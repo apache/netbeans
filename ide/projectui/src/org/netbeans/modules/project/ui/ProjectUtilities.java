@@ -74,6 +74,8 @@ import org.w3c.dom.NodeList;
  */
 public class ProjectUtilities {
     
+    private static final Logger LOG = Logger.getLogger(ProjectUtilities.class.getName());
+    
     static final String OPEN_FILES_NS = "http://www.netbeans.org/ns/projectui-open-files/1"; // NOI18N
     static final String OPEN_FILES_NS2 = "http://www.netbeans.org/ns/projectui-open-files/2"; // NOI18N
     static final String OPEN_FILES_ELEMENT = "open-files"; // NOI18N
@@ -103,30 +105,23 @@ public class ProjectUtilities {
             } else if (o != null) {
                 o.open();
             } else {
-                ERR.log(Level.INFO, "No EditCookie nor OpenCookie nor Openable for {0}", dobj);
+                LOG.log(Level.INFO, "No EditCookie nor OpenCookie nor Openable for {0}", dobj);
                 return false;
             }
             return true;
         }
          
         @Override
-        public Map<Project,Set<String>> close(final Project[] projects,
-                                                    final boolean notifyUI) {
-            final Wrapper wr = new Wrapper();
-            wr.urls4project = new LinkedHashMap<>();
-            doClose(projects, notifyUI, wr);
-            return wr.urls4project;
-        }
-
-        private void doClose(Project[] projects, boolean notifyUI, Wrapper wr) {
+        public Map<Project, Set<String>> close(Project[] projects, boolean notifyUI) {
+            Map<Project, Set<String>> project2FilesMap = new LinkedHashMap<>();
             List<Project> listOfProjects = Arrays.asList(projects);
             for (Project p : listOfProjects) { //#232668 all projects need an entry in the map - to handle projects without files correctly
-                wr.urls4project.put(p, new LinkedHashSet<>());
+                project2FilesMap.put(p, new LinkedHashSet<>());
             }
             Set<DataObject> openFiles = new LinkedHashSet<>();
             List<TopComponent> tc2close = new ArrayList<>();
 
-            ERR.finer("Closing TCs");
+            LOG.finer("Closing TCs");
             List<TopComponent> openedTC = getOpenedTCs();
             
             for (TopComponent tc : openedTC) {
@@ -135,9 +130,10 @@ public class ProjectUtilities {
                 if (dobj != null) {
                     FileObject fobj = dobj.getPrimaryFile();
                     Project owner = ProjectConvertors.getNonConvertorOwner(fobj);
-                    ERR.log(Level.FINER, "Found {0} owned by {1} in {2} of {3}", new Object[] {fobj, owner, tc.getName(), tc.getClass()});
+                    LOG.log(Level.FINER, "Found {0} owned by {1} in {2} of {3}", new Object[] {fobj, owner, tc.getName(), tc.getClass()});
 
-                    if (listOfProjects.contains(owner)) {
+                    Set<String> files = project2FilesMap.get(owner);
+                    if (files != null) {
                         if (notifyUI) {
                             openFiles.add(dobj);
                             tc2close.add(tc);
@@ -145,18 +141,12 @@ public class ProjectUtilities {
                             // when not called from UI, only include TCs that arenot modified
                             tc2close.add(tc);
                         }
-                        //#235897 split a single line to detect NPE better
-                        final Set<String> pwnr = wr.urls4project.get(owner);
-                        assert pwnr != null : "Owner project for file:" + fobj + " prj:" + owner;
-                        final FileObject pf = fobj;
-                        assert pf != null;
-                        URL u = pf.toURL();
-                        assert u != null;
-                        String uex = u.toExternalForm();                        
-                        pwnr.add(uex);
+                        files.add(fobj.toURL().toExternalForm());
+                    } else if (owner != null) {
+                        LOG.log(Level.WARNING, "project association lost, project ({0}) might lose an opened file ({1}) on reopen", new Object[] {owner, fobj});
                     }
                 } else {
-                    ERR.log(Level.FINE, "#194243: no DataObject in lookup of {0} of {1}", new Object[] {tc.getName(), tc.getClass()});
+                    LOG.log(Level.FINE, "#194243: no DataObject in lookup of {0} of {1}", new Object[] {tc.getName(), tc.getClass()});
                 }
             }
             if (notifyUI) {
@@ -189,9 +179,10 @@ public class ProjectUtilities {
             } else {
                 // signal that close was vetoed
                 if (!openFiles.isEmpty()) {
-                    wr.urls4project = null;
+                    return null;
                 }
             }
+            return project2FilesMap;
         }
 
         private List<TopComponent> getOpenedTCs() {
@@ -203,7 +194,7 @@ public class ProjectUtilities {
                     if (!wm.isEditorMode(mode)) {
                         continue;
                     }
-                    ERR.log(Level.FINER, "Closing TCs in mode {0}", mode.getName());
+                    LOG.log(Level.FINER, "Closing TCs in mode {0}", mode.getName());
                     openedTC.addAll(Arrays.asList(wm.getOpenedTopComponents(mode)));
                 }
             };
@@ -220,12 +211,6 @@ public class ProjectUtilities {
         }
     };
 
-    private static class Wrapper {
-        Map<Project,Set<String>> urls4project;
-    }
-    
-    private static final Logger ERR = Logger.getLogger(ProjectUtilities.class.getName());
-    
     private ProjectUtilities() {}
     
     public static void selectAndExpandProject( final Project p ) {
@@ -541,12 +526,12 @@ public class ProjectUtilities {
     
     public static Set<FileObject> openProjectFiles (Project p, Group grp) {
         String groupName = grp == null ? null : grp.getName();
-        ERR.log(Level.FINE, "Trying to open files from {0}...", p);
+        LOG.log(Level.FINE, "Trying to open files from {0}...", p);
         
         List<String> urls = getOpenFilesUrls(p, groupName);
         Set<FileObject> toRet = new LinkedHashSet<>();
         for (String url : urls) {
-            ERR.log(Level.FINE, "Will try to open {0}", url);
+            LOG.log(Level.FINE, "Will try to open {0}", url);
             FileObject fo;
             try {
                 fo = URLMapper.findFileObject (new URL (url));
@@ -555,13 +540,13 @@ public class ProjectUtilities {
                 continue;
             }
             if (fo == null || !fo.isValid()) { //check for validity because of issue #238488
-                ERR.log(Level.FINE, "Could not find {0}", url);
+                LOG.log(Level.FINE, "Could not find {0}", url);
                 continue;
             }
             
             //#109676
             if (ProjectConvertors.getNonConvertorOwner(fo) != p) {
-                ERR.log(Level.FINE, "File {0} doesn''t belong to project at {1}", new Object[] {url, p.getProjectDirectory().getPath()});
+                LOG.log(Level.FINE, "File {0} doesn''t belong to project at {1}", new Object[] {url, p.getProjectDirectory().getPath()});
                 continue;
             }
             

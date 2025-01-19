@@ -1,0 +1,81 @@
+    public(set) $publicSetInvalid; // error1
+                 ----------------
+HINT:Asymmetric visibility property "$publicSetInvalid" must have type
+    protected public(set) int $protectedPublicSet; // error2
+                               ------------------
+HINT:Visibility(protected) of property "$protectedPublicSet" must not be weaker than set visibility(public(set))
+    private public(set) int $privatePublicSet; // error3
+                             ----------------
+HINT:Visibility(private) of property "$privatePublicSet" must not be weaker than set visibility(public(set))
+    private protected(set) int $privateProtectedSet; // error4
+                                -------------------
+HINT:Visibility(private) of property "$privateProtectedSet" must not be weaker than set visibility(protected(set))
+    public(set) protected int $publicSetProtected; // error5
+                               ------------------
+HINT:Visibility(protected) of property "$publicSetProtected" must not be weaker than set visibility(public(set))
+    public(set) private int $publicSetPrivate; // error6
+                             ----------------
+HINT:Visibility(private) of property "$publicSetPrivate" must not be weaker than set visibility(public(set))
+    protected(set) private int $protectedSetPrivate; // error7
+                                -------------------
+HINT:Visibility(private) of property "$protectedSetPrivate" must not be weaker than set visibility(protected(set))
+    public public(set) readonly $publicPublicSetReadonly; // error8
+                                 -----------------------
+HINT:Readonly property "$publicPublicSetReadonly" must have type
+    public protected(set) readonly int $publicProtectedSetReadonly2 = 1; // error9
+                                       ----------------------------
+HINT:Readonly property "$publicProtectedSetReadonly2" can't have default value
+    protected public(set) readonly int $protectedPublicSetReadonly; // error10
+                                        --------------------------
+HINT:Visibility(protected) of property "$protectedPublicSetReadonly" must not be weaker than set visibility(public(set))
+    protected readonly public(set) int $protectedReadonlyPublicSet; // error11
+                                        --------------------------
+HINT:Visibility(protected) of property "$protectedReadonlyPublicSet" must not be weaker than set visibility(public(set))
+    private public(set) readonly int $privatePublicSetReadonly; // error12
+                                      ------------------------
+HINT:Visibility(private) of property "$privatePublicSetReadonly" must not be weaker than set visibility(public(set))
+    private protected(set) readonly int $privateProtectedSetReadonly; // error13
+                                         ---------------------------
+HINT:Visibility(private) of property "$privateProtectedSetReadonly" must not be weaker than set visibility(protected(set))
+    private readonly public(set) int $privateReadonlyPublicSet; // error14
+                                      ------------------------
+HINT:Visibility(private) of property "$privateReadonlyPublicSet" must not be weaker than set visibility(public(set))
+    private readonly protected(set) int $privateReadonlyProtectedSet; // error15
+                                         ---------------------------
+HINT:Visibility(private) of property "$privateReadonlyProtectedSet" must not be weaker than set visibility(protected(set))
+    public(set) protected readonly string $publicSetProtectedReadonly; // error16
+                                           --------------------------
+HINT:Visibility(protected) of property "$publicSetProtectedReadonly" must not be weaker than set visibility(public(set))
+    public(set) private readonly string $publicSetPrivateReadonly; // error17
+                                         ------------------------
+HINT:Visibility(private) of property "$publicSetPrivateReadonly" must not be weaker than set visibility(public(set))
+    public(set) readonly protected string $publicSetReadonlyProtected; // error18
+                                           --------------------------
+HINT:Visibility(protected) of property "$publicSetReadonlyProtected" must not be weaker than set visibility(public(set))
+    public(set) readonly private string $publicSetReadonlyPrivate; // error19
+                                         ------------------------
+HINT:Visibility(private) of property "$publicSetReadonlyPrivate" must not be weaker than set visibility(public(set))
+    protected(set) private readonly string $protectedSetPrivateReadonly; // error20
+                                            ---------------------------
+HINT:Visibility(private) of property "$protectedSetPrivateReadonly" must not be weaker than set visibility(protected(set))
+    protected(set) readonly private string $protectedSetReadonlyPrivate; // error21
+                                            ---------------------------
+HINT:Visibility(private) of property "$protectedSetReadonlyPrivate" must not be weaker than set visibility(protected(set))
+    readonly protected public(set) string $readOnlyProtectedPublicSet; // error22
+                                           --------------------------
+HINT:Visibility(protected) of property "$readOnlyProtectedPublicSet" must not be weaker than set visibility(public(set))
+    readonly private public(set) string $readOnlyPrivatePublicSet; // error23
+                                         ------------------------
+HINT:Visibility(private) of property "$readOnlyPrivatePublicSet" must not be weaker than set visibility(public(set))
+    readonly private protected(set) string $readOnlyPrivateProtectedSet; // error24
+                                            ---------------------------
+HINT:Visibility(private) of property "$readOnlyPrivateProtectedSet" must not be weaker than set visibility(protected(set))
+    readonly public(set) protected string $readOnlyPublicSetProtected; // error25
+                                           --------------------------
+HINT:Visibility(protected) of property "$readOnlyPublicSetProtected" must not be weaker than set visibility(public(set))
+    readonly public(set) private string $readOnlyPublicSetPrivate; // error26
+                                         ------------------------
+HINT:Visibility(private) of property "$readOnlyPublicSetPrivate" must not be weaker than set visibility(public(set))
+    readonly protected(set) private string $readOnlyProtectedSetPrivate; // error27
+                                            ---------------------------
+HINT:Visibility(private) of property "$readOnlyProtectedSetPrivate" must not be weaker than set visibility(protected(set))

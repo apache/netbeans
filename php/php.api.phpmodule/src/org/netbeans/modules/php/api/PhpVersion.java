@@ -251,6 +251,17 @@ public enum PhpVersion {
     }
 
     /**
+     * Check whether this version supports final const. (as of PHP 8.1)
+     *
+     * @return {@code true} if this version supports final const, {@code false}
+     * otherwise
+     * @since 2.101
+     */
+    public boolean hasFinalConst() {
+        return this.compareTo(PhpVersion.PHP_81) >= 0;
+    }
+
+    /**
      * Check whether this version supports the null, false, and true types.
      *
      * @return {@code true} if this version supports null, false, and true
@@ -281,6 +292,48 @@ public enum PhpVersion {
      */
     public boolean hasOverrideAttribute() {
         return this.compareTo(PhpVersion.PHP_83) >= 0;
+    }
+
+    /**
+     * Check whether this version supports [#\Deprecated] attribute. (as of PHP
+     * 8.4)
+     *
+     * @return {@code true} if this version supports [#\Deprecated] attribute,
+     * {@code false} otherwise
+     * @since 2.101
+     */
+    public boolean hasDeprecatedAttribute() {
+        return this.compareTo(PhpVersion.PHP_84) >= 0;
+    }
+
+    /**
+     * Check whether this version supports final property(field). (as of PHP
+     * 8.4) e.g. `final public string $s;`
+     *
+     * @return {@code true} if this version supports final property,
+     * {@code false} otherwise
+     * @see
+     * <a href="https://www.php.net/manual/ja/language.oop5.final.php">Final
+     * Keyword</a>
+     * @since 2.101
+     */
+    public boolean hasFinalProperty() {
+        return this.compareTo(PhpVersion.PHP_84) >= 0;
+    }
+
+    /**
+     * Check whether this version supports Asymmetric Visibility. (as of PHP
+     * 8.4) e.g. `private(set)`, `protected(set)`
+     *
+     * @return {@code true} if this version supports Asymmetric Visibility,
+     * {@code false} otherwise
+     * @see
+     * <a href="https://wiki.php.net/rfc/asymmetric-visibility-v2">Asymmetric
+     * Visibility v2</a>
+     * @since 2.101
+     */
+    public boolean hasAsymmetricVisibility() {
+        return this.compareTo(PhpVersion.PHP_84) >= 0;
     }
 
     /**

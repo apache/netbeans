@@ -1236,7 +1236,7 @@ public final class OpenProjectList {
                 //a bit on magic here. We want to do the goup document persistence before notifyClosed in hope of the 
                 // ant projects saving their project data before being closed. (ant ptojects call saveProjct() in the openclose hook.
                 // the caller of this method calls saveAllProjectt() later. 
-                Group.onShutdown(new HashSet<Project>(INSTANCE.openProjects));
+                Group.onShutdown(new LinkedHashSet<>(INSTANCE.openProjects));
                 for (Project p : INSTANCE.openProjects) {                    
                     notifyClosed(p);                    
                 }

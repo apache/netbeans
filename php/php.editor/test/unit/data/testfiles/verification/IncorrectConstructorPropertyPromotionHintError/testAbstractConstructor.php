@@ -20,7 +20,7 @@
 
 abstract class AbstractClassExample1 {
 
-    abstract public function __construct(private ?int $incorrect1 = 1);
+    abstract public function __construct(private ?int $incorrect1 = 1); // error1
 
 }
 
@@ -28,17 +28,40 @@ abstract class AbstractClassExample2 {
 
     abstract public function __construct(
             $test,
-            private $incorrect1,
-            private ?int $incorrect2 = 1
+            private $incorrect1, // error2
+            private ?int $incorrect2 = 1 // error3
     );
 
 }
 
 interface InterfaceExample1 {
-    public function __construct(public int|string $incorrect1);
+    public function __construct(public int|string $incorrect1); // error4
 }
 
 interface InterfaceExample2 {
-    public function __construct(int $test, protected $incorrect1);
+    public function __construct(int $test, protected $incorrect1); // error5
 }
 
+abstract class AbstractClassSetVisibilityExample1 {
+
+    abstract public function __construct(private(set) ?int $incorrect1 = 1); // error6
+
+}
+
+abstract class AbstractClassSetVisibilityExample2 {
+
+    abstract public function __construct(
+            $test,
+            private(set) $incorrect1, // error7
+            private(set) ?int $incorrect2 = 1 // error8
+    );
+
+}
+
+interface InterfaceSetVisibilityExample1 {
+    public function __construct(public(set) int|string $incorrect1); // error9
+}
+
+interface InterfaceSetVisibilityExample2 {
+    public function __construct(int $test, protected(set) $incorrect1); // error10
+}

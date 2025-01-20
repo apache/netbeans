@@ -58,6 +58,8 @@ public class InstanceLocalPanel extends InstancePanel {
         super(instance);
         hostRemoteLabel.setVisible(false);
         hostRemoteField.setVisible(false);
+        instanceTypeLabel.setVisible(false);
+        instanceTypeComboBox.setVisible(false);
     }
 
     ////////////////////////////////////////////////////////////////////////////

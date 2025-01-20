@@ -29,7 +29,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.beans.Introspector;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -50,7 +49,6 @@ import javax.swing.UIManager;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.text.DefaultEditorKit;
-import org.netbeans.TopSecurityManager;
 import org.netbeans.core.ModuleActions;
 import org.netbeans.modules.progress.spi.Controller;
 import org.netbeans.modules.progress.spi.InternalHandle;
@@ -61,7 +59,6 @@ import org.openide.execution.ExecutorTask;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.ListView;
-import org.openide.modules.OnStart;
 import org.openide.modules.OnStop;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -77,27 +74,19 @@ import org.openide.util.NbBundle;
 import org.openide.util.actions.SystemAction;
 
 /**
- * Registers security manager for execution.
  * Also shows Pending Tasks dialog at shutdown time.
  * Also adds/removes specific beaninfo and property editor search paths.
  * @author Jesse Glick
  */
-@OnStart
-public class Install implements Runnable {
+public class Install {
     
     private static final Logger LOG = Logger.getLogger(Install.class.getName());
-    
-    public @Override void run() {
-        TopSecurityManager.register(SecMan.DEFAULT);
-    }
     
     @OnStop
     public static final class Down implements Runnable {
         
         public @Override void run() {
             showPendingTasks();
-
-            TopSecurityManager.unregister(SecMan.DEFAULT);
         }
     }
 

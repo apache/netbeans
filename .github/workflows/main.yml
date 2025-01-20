@@ -229,7 +229,7 @@ jobs:
         java: [ 17 ]
         include:
           - os: ubuntu-latest
-            java: 23
+            java: 24-ea
       fail-fast: false
     steps:
 
@@ -260,6 +260,7 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: platform/masterfs
+        if: ${{ matrix.java == '17' }}
         run: .github/retry.sh ant $OPTS -f platform/masterfs test
 
       - name: Commit Validation tests
@@ -836,7 +837,7 @@ jobs:
     timeout-minutes: 50
     strategy:
       matrix:
-        java: [ '17', '21', '23' ]
+        java: [ '17', '21', '24-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
@@ -1443,10 +1444,10 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '23' ]
+        java: [ '17', '24-ea' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '23' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '24-ea' }}
       fail-fast: false
     steps:
 
@@ -1496,7 +1497,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '21', '23' ]
+        java: [ '17', '21', '24-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false

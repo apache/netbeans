@@ -20,7 +20,6 @@
 package org.netbeans.core.startup;
 
 import java.lang.Thread.UncaughtExceptionHandler;
-import org.netbeans.TopSecurityManager;
 import org.openide.util.Exceptions;
 
 /** The ThreadGroup for catching uncaught exceptions in Corona.

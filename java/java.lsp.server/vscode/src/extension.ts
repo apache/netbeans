@@ -953,16 +953,16 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         testAdapter?.registerRunInParallelProfile(projects);
     }));
 
-    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test', async (uri, methodName?, nestedClass?, launchConfiguration?, testInParallel?, projects?) => {
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test', async (uri, methodName?, launchConfiguration?, nestedClass?, testInParallel?, projects?) => {
         await runDebug(true, true, uri, methodName, nestedClass, launchConfiguration, false, testInParallel, projects);
     }));
-    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.debug.test', async (uri, methodName?, nestedClass?, launchConfiguration?) => {
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.debug.test', async (uri, methodName?, launchConfiguration?, nestedClass?) => {
         await runDebug(false, true, uri, methodName, nestedClass, launchConfiguration);
     }));
-    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.single', async (uri, methodName?, nestedClass?, launchConfiguration?) => {
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.single', async (uri, methodName?, launchConfiguration?, nestedClass?) => {
         await runDebug(true, false, uri, methodName, nestedClass, launchConfiguration);
     }));
-    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.debug.single', async (uri, methodName?, nestedClass?, launchConfiguration?) => {
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.debug.single', async (uri, methodName?, launchConfiguration?, nestedClass?) => {
         await runDebug(false, false, uri, methodName, nestedClass, launchConfiguration);
     }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.project.run', async (node, launchConfiguration?) => {

@@ -107,7 +107,8 @@ export class NbTestAdapter {
                         }
                         if (!cancellation.isCancellationRequested) {
                             try {
-                                await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.single' : COMMAND_PREFIX + '.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1), nestedClass);
+                                await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.single' : COMMAND_PREFIX + '.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1), 
+                                    undefined /* configuration */, nestedClass);
                             } catch(err) {
                                 // test state will be handled in the code below
                                 console.log(err);

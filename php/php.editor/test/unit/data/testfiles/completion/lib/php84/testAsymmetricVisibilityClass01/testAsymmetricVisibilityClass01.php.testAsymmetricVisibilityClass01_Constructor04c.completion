@@ -1,0 +1,6 @@
+Code completion result for source line:
+public protect|ed(set) Bar $publicProtectedSet, // constructor
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    protected                                  null
+KEYWORD    protected(set)                             null

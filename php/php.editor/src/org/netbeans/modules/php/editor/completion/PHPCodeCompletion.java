@@ -123,6 +123,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
+import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TypeDeclaration;
@@ -168,6 +169,12 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         PHP_KEYWORDS.put("public", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("private", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("protected", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
+        PHP_KEYWORDS.put("public(set)", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
+        PHP_KEYWORDS.put("private(set)", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
+        PHP_KEYWORDS.put("protected(set)", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
+        PHP_KEYWORDS.put("public protected(set)", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
+        PHP_KEYWORDS.put("public private(set)", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
+        PHP_KEYWORDS.put("protected private(set)", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("abstract", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("readonly", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("clone", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
@@ -256,6 +263,16 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             "protected", // NOI18N
             "private" // NOI18N
     );
+    private static final List<String> PHP_SET_VISIBILITY_KEYWORDS = Arrays.asList(
+            "public(set)", // NOI18N
+            "protected(set)", // NOI18N
+            "private(set)" // NOI18N
+    );
+    private static final List<String> PHP_ASYMMETRIC_VISIBILITY_KEYWORDS = Arrays.asList(
+            "public private(set)", // NOI18N
+            "public protected(set)", // NOI18N
+            "protected private(set)" // NOI18N
+    );
     private static final Collection<Character> AUTOPOPUP_STOP_CHARS = new TreeSet<>(
             Arrays.asList('=', ';', '+', '-', '*', '/',
             '%', '(', ')', '[', ']', '{', '}', '?'));
@@ -265,9 +282,11 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             Arrays.asList(new String[]{"__construct", "__destruct", "__call", "__callStatic",
                 "__clone", "__get", "__invoke", "__isset", "__set", "__set_state",
                 "__sleep", "__toString", "__unset", "__wakeup"}); //NOI18N
-    private static final List<String> CLASS_CONTEXT_KEYWORD_PROPOSAL =
-            Arrays.asList(new String[]{"abstract", "const", "function", "private", "final",
-                "protected", "public", "static", "var", "readonly"}); //NOI18N
+    private static final List<String> CLASS_CONTEXT_KEYWORD_PROPOSAL = Arrays.asList(
+            "abstract", "const", "function", "final", // NOI18N
+            "private", "protected", "public", // NOI18N
+            "static", "var", "readonly" // NOI18N
+    );
     private static final List<String> INTERFACE_CONTEXT_KEYWORD_PROPOSAL =
             Arrays.asList(new String[]{"const", "function", "public", "static"}); //NOI18N
     private static final List<String> INHERITANCE_KEYWORDS =
@@ -557,6 +576,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 break;
             case VISIBILITY_MODIFIER_OR_TYPE_NAME: // no break
                 autoCompleteKeywords(completionResult, request, PHP_VISIBILITY_KEYWORDS);
+                autoCompleteKeywords(completionResult, request, PHP_SET_VISIBILITY_KEYWORDS);
                 autoCompleteKeywords(completionResult, request, Arrays.asList("readonly")); // NOI18N
             case TYPE_NAME:
                 autoCompleteNamespaces(completionResult, request);
@@ -1301,7 +1321,30 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         TokenSequence<PHPTokenId> tokenSequence = th.tokenSequence(PHPTokenId.language());
         assert tokenSequence != null;
 
+        boolean foundFunction = false;
+        boolean foundConst = false;
+        tokenSequence.move(caretOffset);
+        while (tokenSequence.moveNext()) {
+            Token<PHPTokenId> token = tokenSequence.token();
+            if (token.id() == PHPTokenId.PHP_LINE_COMMENT
+                    || TokenUtilities.indexOf(token.text(), '\n') != -1) {
+                break;
+            }
+            if (token.id() == PHPTokenId.PHP_FUNCTION) {
+                foundFunction = true;
+                break;
+            }
+            if (token.id() == PHPTokenId.PHP_CONST) {
+                foundConst = true;
+                break;
+            }
+        }
+
         autoCompleteKeywords(completionResult, request, CLASS_CONTEXT_KEYWORD_PROPOSAL);
+        if (!foundConst && !foundFunction) {
+            autoCompleteKeywords(completionResult, request, PHP_SET_VISIBILITY_KEYWORDS);
+            autoCompleteKeywords(completionResult, request, PHP_ASYMMETRIC_VISIBILITY_KEYWORDS);
+        }
         if (offerMagicAndInherited(tokenSequence, caretOffset, th)) {
             EnclosingClass enclosingClass = findEnclosingClass(info, lexerToASTOffset(info, caretOffset));
             if (enclosingClass != null) {
@@ -1387,15 +1430,24 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             TokenSequence<PHPTokenId> tokenSequence = th.tokenSequence(PHPTokenId.language());
             assert tokenSequence != null;
             tokenSequence.move(caretOffset);
+            boolean addFinalKeyword = false;
             boolean addStaticKeyword = false;
             boolean addReadonlyKeyword = false;
             boolean addVisibilityKeyword = false;
+            boolean addSetVisibilityKeyword = false;
             if (!(!tokenSequence.moveNext() && !tokenSequence.movePrevious())) {
                 Token<PHPTokenId> token = tokenSequence.token();
                 int tokenIdOffset = tokenSequence.token().offset(th);
+                addFinalKeyword = !CompletionContextFinder.lineContainsAny(token, caretOffset - tokenIdOffset, tokenSequence, Arrays.asList(
+                        PHPTokenId.PHP_FINAL,
+                        PHPTokenId.PHP_OPERATOR // "|"
+                ));
                 addStaticKeyword = !CompletionContextFinder.lineContainsAny(token, caretOffset - tokenIdOffset, tokenSequence, Arrays.asList(
                         PHPTokenId.PHP_STATIC,
-                        PHPTokenId.PHP_READONLY,
+                        PHPTokenId.PHP_READONLY, // cannot use with readonly
+                        PHPTokenId.PHP_PUBLIC_SET, // cannot use with set visibility
+                        PHPTokenId.PHP_PRIVATE_SET,
+                        PHPTokenId.PHP_PROTECTED_SET,
                         PHPTokenId.PHP_OPERATOR // "|"
                 ));
                 addReadonlyKeyword = !CompletionContextFinder.lineContainsAny(token, caretOffset - tokenIdOffset, tokenSequence, Arrays.asList(
@@ -1408,6 +1460,16 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         PHPTokenId.PHP_PROTECTED,
                         PHPTokenId.PHP_OPERATOR // "|"
                 ));
+                addSetVisibilityKeyword = !CompletionContextFinder.lineContainsAny(token, caretOffset - tokenIdOffset, tokenSequence, Arrays.asList(
+                        PHPTokenId.PHP_PUBLIC_SET,
+                        PHPTokenId.PHP_PRIVATE_SET,
+                        PHPTokenId.PHP_PROTECTED_SET,
+                        PHPTokenId.PHP_STATIC, // cannot use with static
+                        PHPTokenId.PHP_OPERATOR // "|"
+                ));
+            }
+            if (addFinalKeyword) {
+                keywords.add("final"); // NOI18N
             }
             if (addStaticKeyword) {
                 keywords.add("static"); // NOI18N
@@ -1417,6 +1479,12 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             }
             if (addVisibilityKeyword) {
                 keywords.addAll(PHP_VISIBILITY_KEYWORDS);
+            }
+            if (addSetVisibilityKeyword) {
+                keywords.addAll(PHP_SET_VISIBILITY_KEYWORDS);
+            }
+            if (addVisibilityKeyword && addSetVisibilityKeyword) {
+                keywords.addAll(PHP_ASYMMETRIC_VISIBILITY_KEYWORDS);
             }
         }
         if (isNullableType) {
@@ -1439,6 +1507,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 PHPTokenId.PHP_PRIVATE,
                 PHPTokenId.PHP_PUBLIC,
                 PHPTokenId.PHP_PROTECTED,
+                PHPTokenId.PHP_PRIVATE_SET,
+                PHPTokenId.PHP_PUBLIC_SET,
+                PHPTokenId.PHP_PROTECTED_SET,
+                PHPTokenId.PHP_FINAL,
                 PHPTokenId.PHP_ABSTRACT,
                 PHPTokenId.PHP_VAR,
                 PHPTokenId.PHP_STATIC,
@@ -2038,6 +2110,11 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         return findEnclosingType(request.info, lexerToASTOffset(request.result, request.anchor)) != null;
     }
 
+    private static boolean isInInterface(CompletionRequest request) {
+        EnclosingType enclosingType = findEnclosingType(request.info, lexerToASTOffset(request.result, request.anchor));
+        return enclosingType != null && enclosingType.isInterface();
+    }
+
     @CheckForNull
     private static NamespaceName findNamespaceName(ParserResult info, int offset) {
         List<ASTNode> nodes = NavUtils.underCaret(info, offset);
@@ -2182,6 +2259,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         autoCompleteNamespaces(completionResult, request);
         List<String> defaultKeywords = new ArrayList<>(PHP_KEYWORDS.keySet());
         defaultKeywords.remove("default =>"); // NOI18N
+        defaultKeywords.removeAll(PHP_ASYMMETRIC_VISIBILITY_KEYWORDS);
+        if (isInInterface(request)) {
+            defaultKeywords.removeAll(PHP_SET_VISIBILITY_KEYWORDS);
+        }
         autoCompleteExpression(completionResult, request, defaultKeywords);
     }
 
@@ -2801,6 +2882,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
 
         boolean isEnumDeclaration();
 
+        boolean isInterface();
+
         String extractTypeName();
 
         //~ Factories
@@ -2820,6 +2903,11 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 @Override
                 public boolean isEnumDeclaration() {
                     return typeDeclaration instanceof EnumDeclaration;
+                }
+
+                @Override
+                public boolean isInterface() {
+                    return typeDeclaration instanceof InterfaceDeclaration;
                 }
 
                 @Override
@@ -2847,6 +2935,11 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 }
 
                 @Override
+                public boolean isInterface() {
+                    return tokenId == PHPTokenId.PHP_INTERFACE;
+                }
+
+                @Override
                 public String extractTypeName() {
                     return typeName;
                 }
@@ -2868,6 +2961,11 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
 
                 @Override
                 public boolean isEnumDeclaration() {
+                    return false;
+                }
+
+                @Override
+                public boolean isInterface() {
                     return false;
                 }
 

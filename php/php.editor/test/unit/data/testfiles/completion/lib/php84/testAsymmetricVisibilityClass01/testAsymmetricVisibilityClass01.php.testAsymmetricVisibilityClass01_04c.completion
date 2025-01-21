@@ -1,0 +1,4 @@
+Code completion result for source line:
+public protected(set) Ba|r $publicProtectedSet; // prop
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Bar                             [PUBLIC]   testAsymmetricVisibilityClass01.php

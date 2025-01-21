@@ -1,0 +1,6 @@
+Code completion result for source line:
+protect|ed(set) string|int $protectedSet, // constructor
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    protected                                  null
+KEYWORD    protected(set)                             null

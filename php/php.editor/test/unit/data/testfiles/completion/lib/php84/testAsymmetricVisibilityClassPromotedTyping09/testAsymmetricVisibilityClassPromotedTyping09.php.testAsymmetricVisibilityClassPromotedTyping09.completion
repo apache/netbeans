@@ -1,0 +1,7 @@
+Code completion result for source line:
+public protected(set) readonly Test1|(Test2 &|)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      AsymmetricVisibility            [PUBLIC]   testAsymmetricVisibilityClassPromotedTyping09.php
+CLASS      Test1                           [PUBLIC]   testAsymmetricVisibilityClassPromotedTyping09.php
+CLASS      Test2                           [PUBLIC]   testAsymmetricVisibilityClassPromotedTyping09.php
+CLASS      Test3                           [PUBLIC]   testAsymmetricVisibilityClassPromotedTyping09.php

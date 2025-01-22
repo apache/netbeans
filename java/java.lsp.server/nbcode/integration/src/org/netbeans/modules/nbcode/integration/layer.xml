@@ -94,6 +94,9 @@
             <attr name="new.sourceGroup" stringvalue="java"/>
             <attr name="new.sourceHint" stringvalue="main"/>
         </folder>
+        <folder name="Licenses">
+            <file name="license-default.txt" url="license-default.txt"/>
+        </folder>
         <folder name="Project">
             <file name="AntJava_hidden"/>
             <file name="ClientSide_hidden"/>

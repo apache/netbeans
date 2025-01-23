@@ -738,7 +738,8 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            if (BodyDeclaration.Modifier.isVisibilityModifier(node.getModifier())) {
+            if (BodyDeclaration.Modifier.isVisibilityModifier(node.getModifier())
+                    || BodyDeclaration.Modifier.isSetVisibilityModifier(node.getModifier())) {
                 // [NETBEANS-4443] PHP 8.0 Construcotr Property Promotion
                 forceVariableAsUsed = true;
                 scan(node.getParameterName());

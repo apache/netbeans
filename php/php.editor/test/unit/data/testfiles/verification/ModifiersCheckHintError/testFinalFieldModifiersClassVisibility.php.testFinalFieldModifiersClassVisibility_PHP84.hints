@@ -1,0 +1,10 @@
+    final private string $finalPrivate = "final visibility"; // error1
+                          ------------
+HINT:Private field cannot be final.
+FIX:Remove modifier: final
+FIX:Remove modifier: private
+    private final string $privateFinal = "final visibility"; // error2
+                          ------------
+HINT:Private field cannot be final.
+FIX:Remove modifier: final
+FIX:Remove modifier: private

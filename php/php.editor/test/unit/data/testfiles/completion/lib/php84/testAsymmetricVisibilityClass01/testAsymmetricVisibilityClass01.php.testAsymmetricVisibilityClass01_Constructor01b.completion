@@ -1,0 +1,6 @@
+Code completion result for source line:
+publ|ic(set) Foo $publicSet, // constructor
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    public                                     null
+KEYWORD    public(set)                                null

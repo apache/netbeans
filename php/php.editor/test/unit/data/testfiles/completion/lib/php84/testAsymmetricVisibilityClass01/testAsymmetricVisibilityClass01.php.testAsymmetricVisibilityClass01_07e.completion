@@ -1,0 +1,5 @@
+Code completion result for source line:
+final public private(set) readonly str|ing $finalPublicPrivateSet; // prop
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    string                                     null

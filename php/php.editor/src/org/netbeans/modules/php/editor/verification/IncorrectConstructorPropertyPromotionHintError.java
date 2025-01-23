@@ -128,7 +128,8 @@ public class IncorrectConstructorPropertyPromotionHintError extends HintErrorRul
                     if (CancelSupport.getDefault().isCancelled()) {
                         return;
                     }
-                    if (BodyDeclaration.Modifier.isVisibilityModifier(parameter.getModifier())) {
+                    if (BodyDeclaration.Modifier.isVisibilityModifier(parameter.getModifier())
+                            || BodyDeclaration.Modifier.isSetVisibilityModifier(parameter.getModifier())) {
                         Block body = function.getBody();
                         if (body == null
                                 || (!body.isCurly() && body.getStatements().isEmpty())) {
@@ -184,7 +185,8 @@ public class IncorrectConstructorPropertyPromotionHintError extends HintErrorRul
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
                 }
-                if (BodyDeclaration.Modifier.isVisibilityModifier(parameter.getModifier())) {
+                if (BodyDeclaration.Modifier.isVisibilityModifier(parameter.getModifier())
+                        || BodyDeclaration.Modifier.isSetVisibilityModifier(parameter.getModifier())) {
                     // other than a constructor
                     // e.g.
                     // public function freeMethod(private $field) {}

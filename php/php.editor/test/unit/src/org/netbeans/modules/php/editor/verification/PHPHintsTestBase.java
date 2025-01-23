@@ -89,4 +89,12 @@ public class PHPHintsTestBase extends PHPTestBase {
         return TEST_DIRECTORY;
     }
 
+    protected String getTestName() {
+        String name = getName();
+        int indexOf = name.indexOf("_");
+        if (indexOf != -1) {
+            name = name.substring(0, indexOf);
+        }
+        return name;
+    }
 }

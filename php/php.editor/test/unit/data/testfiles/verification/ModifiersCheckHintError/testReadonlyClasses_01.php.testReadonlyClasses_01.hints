@@ -4,9 +4,11 @@ HINT:Readonly property "$field" must have type
     public static $staticField;
                    -----------
 HINT:Static property "$staticField" cannot be readonly
+FIX:Remove modifier: static
     public static int $staticIntField;
                        --------------
 HINT:Static property "$staticIntField" cannot be readonly
+FIX:Remove modifier: static
         private $field
                  -----
 HINT:Readonly property "$field" must have type

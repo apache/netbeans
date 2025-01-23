@@ -1,0 +1,3 @@
+    final public(set) $finalPublicSet3 = "final set visibility"; // error1
+                       ---------------
+HINT:Asymmetric visibility property "$finalPublicSet3" must have type

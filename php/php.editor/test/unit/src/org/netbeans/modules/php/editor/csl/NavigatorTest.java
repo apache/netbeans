@@ -228,4 +228,32 @@ public class NavigatorTest extends PhpNavigatorTestBase {
     public void testDeprecatedAttributeTypeConstantInNamespaceWithUse() throws Exception {
         performTest("structure/php84/deprecatedAttributeTypeConstantInNamespaceWithUse");
     }
+
+    public void testAsymmetricVisibilityClass() throws Exception {
+        performTest("structure/php84/asymmetricVisibilityClass");
+    }
+
+    public void testAsymmetricVisibilityTrait() throws Exception {
+        performTest("structure/php84/asymmetricVisibilityTrait");
+    }
+
+    public void testAsymmetricVisibilityAnonClass() throws Exception {
+        performTest("structure/php84/asymmetricVisibilityAnonClass");
+    }
+
+    public void testAsymmetricVisibilityConstructorPropertyPromotion() throws Exception {
+        performTest("structure/php84/asymmetricVisibilityConstructorPropertyPromotion");
+    }
+
+    public void testFinalFieldsClass() throws Exception {
+        performTest("structure/php84/finalFieldsClass");
+    }
+
+    public void testFinalFieldsTrait() throws Exception {
+        performTest("structure/php84/finalFieldsTrait");
+    }
+
+    public void testFinalFieldsAnonClass() throws Exception {
+        performTest("structure/php84/finalFieldsAnonClass");
+    }
 }

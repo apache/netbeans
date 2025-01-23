@@ -1227,4 +1227,75 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/php84/newWithoutParentheses_02.php", options);
     }
+
+    // GH-8035 PHP 8.4: Asymmetric Visibility
+    public void testAsymmetricVisibilityClass_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/asymmetricVisibilityClass_01.php", options);
+    }
+
+    public void testAsymmetricVisibilityClass_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/asymmetricVisibilityClass_02.php", options);
+    }
+
+    public void testAsymmetricVisibilityTrait_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/asymmetricVisibilityTrait_01.php", options);
+    }
+
+    public void testAsymmetricVisibilityTrait_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/asymmetricVisibilityTrait_02.php", options);
+    }
+
+    public void testAsymmetricVisibilityAnonClass_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/asymmetricVisibilityAnonClass_01.php", options);
+    }
+
+    public void testAsymmetricVisibilityAnonClass_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/asymmetricVisibilityAnonClass_02.php", options);
+    }
+
+    public void testAsymmetricVisibilityConstructorPropertyPromotion_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/asymmetricVisibilityConstructorPropertyPromotion_01.php", options);
+    }
+
+    public void testAsymmetricVisibilityConstructorPropertyPromotion_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/asymmetricVisibilityConstructorPropertyPromotion_02.php", options);
+    }
+
+    public void testFinalFieldsClass_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/finalFieldsClass_01.php", options);
+    }
+
+    public void testFinalFieldsClass_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/finalFieldsClass_02.php", options);
+    }
+
+    public void testFinalFieldsTrait_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/finalFieldsTrait_01.php", options);
+    }
+
+    public void testFinalFieldsTrait_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/finalFieldsTrait_02.php", options);
+    }
+
+    public void testFinalFieldsAnonClass_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/finalFieldsAnonClass_01.php", options);
+    }
+
+    public void testFinalFieldsAnonClass_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php84/finalFieldsAnonClass_02.php", options);
+    }
 }

@@ -1,0 +1,28 @@
+    abstract function abstractImplicitPublicEnumMethod(); // method error enum
+                      --------------------------------
+HINT:Enum cannot declare abstract methods
+    abstract public function abstractPublicEnumMethod(); // method error enum
+                             ------------------------
+HINT:Enum cannot declare abstract methods
+    abstract protected function abstractProtectedEnumMethod(); // method error enum
+                                ---------------------------
+HINT:Enum cannot declare abstract methods
+    abstract private function abstractPrivateEnumMethod(): void; // method error enum
+                              -------------------------
+HINT:Enum cannot declare abstract methods
+    abstract function abstractImplicitPublicBodyEnumMethod(): void {} // method error enum
+                      ------------------------------------
+HINT:Enum cannot declare abstract methods
+FIX:Remove modifier: abstract
+    abstract public function abstractPublicBodyEnumMethod(): void {} // method error enum
+                             ----------------------------
+HINT:Enum cannot declare abstract methods
+FIX:Remove modifier: abstract
+    abstract protected function abstractProtectedBodyEnumMethod(): void {} // method error enum
+                                -------------------------------
+HINT:Enum cannot declare abstract methods
+FIX:Remove modifier: abstract
+    abstract private function abstractPrivateBodyEnumMethod(): void {} // method error enum
+                              -----------------------------
+HINT:Enum cannot declare abstract methods
+FIX:Remove modifier: abstract

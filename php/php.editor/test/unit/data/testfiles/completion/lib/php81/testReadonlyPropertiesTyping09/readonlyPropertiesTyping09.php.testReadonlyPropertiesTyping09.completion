@@ -6,6 +6,7 @@ CLASS      ReadonlyProperties              [PUBLIC]   readonlyPropertiesTyping09
 KEYWORD    array                                      null
 KEYWORD    bool                                       null
 KEYWORD    false                                      null
+KEYWORD    final                                      null
 KEYWORD    float                                      null
 KEYWORD    int                                        null
 KEYWORD    iterable                                   null
@@ -13,6 +14,9 @@ KEYWORD    mixed                                      null
 KEYWORD    null                                       null
 KEYWORD    object                                     null
 KEYWORD    parent                                     null
+KEYWORD    private(set)                               null
+KEYWORD    protected(set)                             null
+KEYWORD    public(set)                                null
 KEYWORD    self                                       null
 KEYWORD    string                                     null
 KEYWORD    true                                       null

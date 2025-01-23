@@ -118,6 +118,11 @@ public class UnusedVariableHintTest extends PHPHintsTestBase {
         checkHints(new UnusedVariableHintStub(false), "testNewWithoutParentheses.php");
     }
 
+    // PHP 8.4
+    public void testAsymmetricVisibilityConstructorPropertyPromotion_NoError01() throws Exception {
+        checkHints(new UnusedVariableHintStub(true), "testAsymmetricVisibilityConstructorPropertyPromotion.php");
+    }
+
     private class UnusedVariableHintStub extends UnusedVariableHint {
         private final boolean unusedFormalParameters;
         private final boolean inheritedMethodParameters;

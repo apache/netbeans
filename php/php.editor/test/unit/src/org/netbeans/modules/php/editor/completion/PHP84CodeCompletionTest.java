@@ -481,4 +481,304 @@ public class PHP84CodeCompletionTest extends PHPCodeCompletionTestBase {
     // in the above case, the statement is broken (it has a syntax error)
     // so, the anonymous class is not parsed correctly i.e. we can't get members
     // we have to sanitize an error part
+
+    public void testAsymmetricVisibilityClass01_01a() throws Exception {
+        checkCompletion("    ^public(set) Foo $publicSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_01b() throws Exception {
+        checkCompletion("    publ^ic(set) Foo $publicSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_01c() throws Exception {
+        checkCompletion("    public(set) ^Foo $publicSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_01d() throws Exception {
+        checkCompletion("    public(set) Fo^o $publicSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_02a() throws Exception {
+        checkCompletion("    privat^e(set) string|int $privateSet = 1; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_02b() throws Exception {
+        checkCompletion("    private(set) ^string|int $privateSet = 1; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_02c() throws Exception {
+        checkCompletion("    private(set) string|^int $privateSet = 1; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_03a() throws Exception {
+        checkCompletion("    protect^ed(set) string|int $protectedSet1 = 1, $protectedSet2 = 1; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_03b() throws Exception {
+        checkCompletion("    protected(set) ^string|int $protectedSet1 = 1, $protectedSet2 = 1; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_03c() throws Exception {
+        checkCompletion("    protected(set) str^ing|int $protectedSet1 = 1, $protectedSet2 = 1; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_04a() throws Exception {
+        checkCompletion("    public ^protected(set) Bar $publicProtectedSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_04b() throws Exception {
+        checkCompletion("    public protected(set) ^Bar $publicProtectedSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_04c() throws Exception {
+        checkCompletion("    public protected(set) Ba^r $publicProtectedSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_05a() throws Exception {
+        checkCompletion("    protected priva^te(set) readonly int $protectedPrivateSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_05b() throws Exception {
+        checkCompletion("    protected private(set) ^readonly int $protectedPrivateSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_05c() throws Exception {
+        checkCompletion("    protected private(set) readon^ly int $protectedPrivateSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_05d() throws Exception {
+        checkCompletion("    protected private(set) readonly ^int $protectedPrivateSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_06a() throws Exception {
+        checkCompletion("    fin^al protected private(set) int $finalProtectedPrivateSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_06b() throws Exception {
+        checkCompletion("    final ^protected private(set) int $finalProtectedPrivateSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_06c() throws Exception {
+        checkCompletion("    final protected ^private(set) int $finalProtectedPrivateSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_06d() throws Exception {
+        checkCompletion("    final protected priva^te(set) int $finalProtectedPrivateSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_06e() throws Exception {
+        checkCompletion("    final protected private(set) ^int $finalProtectedPrivateSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_07a() throws Exception {
+        checkCompletion("    final ^public private(set) readonly string $finalPublicPrivateSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_07b() throws Exception {
+        checkCompletion("    final public pri^vate(set) readonly string $finalPublicPrivateSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_07c() throws Exception {
+        checkCompletion("    final public private(set) ^readonly string $finalPublicPrivateSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_07d() throws Exception {
+        checkCompletion("    final public private(set) readonly ^string $finalPublicPrivateSet; // prop");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor01a() throws Exception {
+        checkCompletion("        ^public(set) Foo $publicSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor01b() throws Exception {
+        checkCompletion("        publ^ic(set) Foo $publicSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor01c() throws Exception {
+        checkCompletion("        public(set) ^Foo $publicSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor02a() throws Exception {
+        checkCompletion("        priv^ate(set) string|int $privateSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor02b() throws Exception {
+        checkCompletion("        private(set) ^string|int $privateSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor02c() throws Exception {
+        checkCompletion("        private(set) string|^int $privateSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor03a() throws Exception {
+        checkCompletion("        protect^ed(set) string|int $protectedSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor03b() throws Exception {
+        checkCompletion("        protected(set) str^ing|int $protectedSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor03c() throws Exception {
+        checkCompletion("        protected(set) string|in^t $protectedSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor04a() throws Exception {
+        checkCompletion("        publ^ic protected(set) Bar $publicProtectedSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor04b() throws Exception {
+        checkCompletion("        public ^protected(set) Bar $publicProtectedSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor04c() throws Exception {
+        checkCompletion("        public protect^ed(set) Bar $publicProtectedSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor04d() throws Exception {
+        checkCompletion("        public protected(set) ^Bar $publicProtectedSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor05a() throws Exception {
+        checkCompletion("        ^protected private(set) readonly int $protectedPrivateSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor05b() throws Exception {
+        checkCompletion("        protected ^private(set) readonly int $protectedPrivateSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor05c() throws Exception {
+        checkCompletion("        protected priva^te(set) readonly int $protectedPrivateSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor05d() throws Exception {
+        checkCompletion("        protected private(set) ^readonly int $protectedPrivateSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass01_Constructor05e() throws Exception {
+        checkCompletion("        protected private(set) readonly ^int $protectedPrivateSet, // constructor");
+    }
+
+    public void testAsymmetricVisibilityClass02_01a() throws Exception {
+        checkCompletion("        $this->^privatePrivateSet; // test: all fields (parent class)");
+    }
+
+    public void testAsymmetricVisibilityClass02_01b() throws Exception {
+        checkCompletion("        $this->privatePriva^teSet; // test: all fields (parent class)");
+    }
+
+    public void testAsymmetricVisibilityClass02_02a() throws Exception {
+        checkCompletion("$parent->^finalPublicPrivateSetReadonly; // test: only public methods (parent class)");
+    }
+
+    public void testAsymmetricVisibilityClass02_02b() throws Exception {
+        checkCompletion("$parent->finalPublicPrivateSetR^eadonly; // test: only public methods (parent class)");
+    }
+
+    public void testAsymmetricVisibilityClass02_03a() throws Exception {
+        checkCompletion("        $this->^publicPrivateSet; // test: only public and protected (child class)");
+    }
+
+    public void testAsymmetricVisibilityClass02_03b() throws Exception {
+        checkCompletion("        $this->publicPrivateS^et; // test: only public and protected (child class)");
+    }
+
+    public void testAsymmetricVisibilityClass02_04a() throws Exception {
+        checkCompletion("        $this->^publicProtectedSet->publicBarMethod(); // test: only public Bar (child class)");
+    }
+
+    public void testAsymmetricVisibilityClass02_04b() throws Exception {
+        checkCompletion("        $this->publicProtec^tedSet->publicBarMethod(); // test: only public Bar (child class)");
+    }
+
+    public void testAsymmetricVisibilityClass02_04c() throws Exception {
+        checkCompletion("        $this->publicProtectedSet->^publicBarMethod(); // test: only public Bar (child class)");
+    }
+
+    public void testAsymmetricVisibilityClass02_05a() throws Exception {
+        checkCompletion("        $this->^iPublicPrivateSet; // test: all fields (promoted)");
+    }
+
+    public void testAsymmetricVisibilityClass02_05b() throws Exception {
+        checkCompletion("        $this->iPublic^PrivateSet; // test: all fields (promoted)");
+    }
+
+    public void testAsymmetricVisibilityClass02_06a() throws Exception {
+        checkCompletion("$promoted->^iPublicPrivateSet; // test: only public fields (promoted)");
+    }
+
+    public void testAsymmetricVisibilityClass02_06b() throws Exception {
+        checkCompletion("$promoted->iPubli^cPrivateSet; // test: only public fields (promoted)");
+    }
+
+    public void testAsymmetricVisibilityClassTyping01() throws Exception {
+        checkCompletion("^// test");
+    }
+
+    public void testAsymmetricVisibilityClassTyping02() throws Exception {
+        checkCompletion("fi^");
+    }
+
+    public void testAsymmetricVisibilityClassTyping03() throws Exception {
+        checkCompletion("public ^");
+    }
+
+    public void testAsymmetricVisibilityClassTyping04() throws Exception {
+        checkCompletion("public pri^");
+    }
+
+    public void testAsymmetricVisibilityClassTyping05() throws Exception {
+        checkCompletion("public private(set) ^");
+    }
+
+    public void testAsymmetricVisibilityClassTyping06() throws Exception {
+        checkCompletion("public private(set) readonly ^");
+    }
+
+    public void testAsymmetricVisibilityClassTyping07() throws Exception {
+        checkCompletion("public private(set) readonly final ^");
+    }
+
+    public void testAsymmetricVisibilityClassTyping08() throws Exception {
+        checkCompletion("public private(set) readonly final string|^");
+    }
+
+    public void testAsymmetricVisibilityClassTyping09() throws Exception {
+        checkCompletion("final public private(set) readonly string|A^");
+    }
+
+    public void testAsymmetricVisibilityClassPromotedTyping01() throws Exception {
+        checkCompletion("        ^// test");
+    }
+
+    public void testAsymmetricVisibilityClassPromotedTyping02() throws Exception {
+        checkCompletion("        p^// test");
+    }
+
+    public void testAsymmetricVisibilityClassPromotedTyping03() throws Exception {
+        checkCompletion("        public ^// test");
+    }
+
+    public void testAsymmetricVisibilityClassPromotedTyping04() throws Exception {
+        checkCompletion("        public pri^// test");
+    }
+
+    public void testAsymmetricVisibilityClassPromotedTyping05() throws Exception {
+        checkCompletion("        public private(set) ^// test");
+    }
+
+    public void testAsymmetricVisibilityClassPromotedTyping06() throws Exception {
+        checkCompletion("        private protected(set) read^");
+    }
+
+    public void testAsymmetricVisibilityClassPromotedTyping07() throws Exception {
+        checkCompletion("        public private(set) readonly T^// test");
+    }
+
+    public void testAsymmetricVisibilityClassPromotedTyping08() throws Exception {
+        checkCompletion("        public private(set) readonly Test|^");
+    }
+
+    public void testAsymmetricVisibilityClassPromotedTyping09() throws Exception {
+        checkCompletion("        public protected(set) readonly Test1|(Test2 &^)");
+    }
 }

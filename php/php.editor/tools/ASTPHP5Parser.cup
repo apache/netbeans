@@ -33,6 +33,9 @@ parser code {:
     protected final static Integer PUBLIC = Integer.valueOf(BodyDeclaration.Modifier.PUBLIC);
     protected final static Integer PRIVATE = Integer.valueOf(BodyDeclaration.Modifier.PRIVATE);
     protected final static Integer PROTECTED = Integer.valueOf(BodyDeclaration.Modifier.PROTECTED);
+    protected final static Integer PUBLIC_SET = Integer.valueOf(BodyDeclaration.Modifier.PUBLIC_SET);
+    protected final static Integer PRIVATE_SET = Integer.valueOf(BodyDeclaration.Modifier.PRIVATE_SET);
+    protected final static Integer PROTECTED_SET = Integer.valueOf(BodyDeclaration.Modifier.PROTECTED_SET);
     protected final static Integer ABSTRACT = Integer.valueOf(BodyDeclaration.Modifier.ABSTRACT);
     protected final static Integer FINAL = Integer.valueOf(BodyDeclaration.Modifier.FINAL);
     protected final static Integer STATIC = Integer.valueOf(BodyDeclaration.Modifier.STATIC);
@@ -441,6 +444,7 @@ terminal String T_ENUM; /* PHP 8.1 */
 terminal String T_NAME_RELATIVE; /* PHP 8.0 namespace\Foo */
 terminal String T_NAME_QUALIFIED; /* PHP 8.0 Foo\Bar */
 terminal String T_NAME_FULLY_QUALIFIED; /* PHP 8.0 \Foo\Bar */
+terminal String T_PUBLIC_SET, T_PROTECTED_SET, T_PRIVATE_SET; /* PHP 8.4 */
 
 /* Non terminals */
 
@@ -632,7 +636,10 @@ non terminal Integer final_modifier;
 non terminal Integer readonly_modifier;
 non terminal Integer static_modifier;
 non terminal Integer ppp_modifiers;
+non terminal Integer ppp_set_modifiers;
 non terminal Integer af_modifiers;
+non terminal Integer member_modifiers;
+non terminal Integer non_empty_member_modifiers;
 
 non terminal ClassName class_name_reference;
 non terminal StaticConstantAccess class_constant;
@@ -711,7 +718,7 @@ precedence nonassoc T_NEW, T_CLONE;
 precedence left T_ELSEIF;
 precedence left T_ELSE;
 precedence left T_ENDIF;
-precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC, T_READONLY;
+precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC, T_READONLY, T_PUBLIC_SET, T_PROTECTED_SET, T_PRIVATE_SET;
 
 thestart ::=
 top_statement_list:statementList
@@ -2469,6 +2476,11 @@ optional_property_modifiers ::=
     RESULT = pModifier;
 :}
 
+| ppp_set_modifiers:pModifier
+{:
+    RESULT = pModifier;
+:}
+
 | readonly_modifier:modifier
 {:
     /* e.g. readonly int $property = 1, */
@@ -2491,6 +2503,92 @@ optional_property_modifiers ::=
     int result = 0;
     result |= rModifier.intValue();
     result |= pModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| ppp_modifiers:pppModifier ppp_set_modifiers:pppSetModifier
+{:
+    int result = 0;
+    result |= pppModifier.intValue();
+    result |= pppSetModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| ppp_set_modifiers:pppSetModifier ppp_modifiers:pppModifier
+{:
+    int result = 0;
+    result |= pppSetModifier.intValue();
+    result |= pppModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| ppp_set_modifiers:pppSetModifier readonly_modifier:rModifier
+{:
+    int result = 0;
+    result |= pppSetModifier.intValue();
+    result |= rModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| readonly_modifier:rModifier ppp_set_modifiers:pppSetModifier
+{:
+    int result = 0;
+    result |= rModifier.intValue();
+    result |= pppSetModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| ppp_modifiers:pppModifier ppp_set_modifiers:pppSetModifier readonly_modifier:rModifier
+{:
+    int result = 0;
+    result |= pppModifier.intValue();
+    result |= pppSetModifier.intValue();
+    result |= rModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| ppp_modifiers:pppModifier readonly_modifier:rModifier ppp_set_modifiers:pppSetModifier
+{:
+    int result = 0;
+    result |= pppModifier.intValue();
+    result |= rModifier.intValue();
+    result |= pppSetModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| ppp_set_modifiers:pppSetModifier ppp_modifiers:pppModifier readonly_modifier:rModifier
+{:
+    int result = 0;
+    result |= pppSetModifier.intValue();
+    result |= pppModifier.intValue();
+    result |= rModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| ppp_set_modifiers:pppSetModifier readonly_modifier:rModifier ppp_modifiers:pppModifier
+{:
+    int result = 0;
+    result |= pppSetModifier.intValue();
+    result |= rModifier.intValue();
+    result |= pppModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| readonly_modifier:rModifier ppp_modifiers:pppModifier ppp_set_modifiers:pppSetModifier
+{:
+    int result = 0;
+    result |= rModifier.intValue();
+    result |= pppModifier.intValue();
+    result |= pppSetModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| readonly_modifier:rModifier ppp_set_modifiers:pppSetModifier ppp_modifiers:pppModifier
+{:
+    int result = 0;
+    result |= rModifier.intValue();
+    result |= pppSetModifier.intValue();
+    result |= pppModifier.intValue();
     RESULT = Integer.valueOf(result);
 :}
 ;
@@ -2935,6 +3033,12 @@ class_statement_list:list class_statement:classStatement
 attributed_class_statement ::=
 variable_modifiers:modifier optional_class_type_without_static:fieldType class_variable_declaration:decList T_SEMICOLON:end
 {:
+    if (!BodyDeclaration.Modifier.isVisibilityModifier(modifier.intValue())) {
+        // implicit public
+        int mod = modifier.intValue();
+        mod |= ASTPHP5Parser.IMPLICIT_PUBLIC.intValue();
+        modifier = Integer.valueOf(mod);
+    }
     FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, modifier.intValue(), fieldType, decList);
     RESULT = fieldsDeclaration;
 :}
@@ -3181,83 +3285,16 @@ constant_modifiers ::=
     RESULT = null;
 :}
 
-| ppp_modifiers:modifier
+| non_empty_member_modifiers:modifier
 {:
     RESULT = modifier;
-:}
-
-| final_modifier:modifier
-{:
-    RESULT = modifier;
-:}
-
-| final_modifier:fModifier ppp_modifiers:pModifier
-{:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= pModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| ppp_modifiers:pModifier final_modifier:fModifier
-{:
-    int result = 0;
-    result |= pModifier.intValue();
-    result |= fModifier.intValue();
-    RESULT = Integer.valueOf(result);
 :}
 ;
 
 variable_modifiers ::=
-ppp_modifiers:modifier
+non_empty_member_modifiers:modifier
 {:
     RESULT = modifier;
-:}
-
-| readonly_modifier:modifier
-{:
-    /* e.g. readonly int $property; */
-    int result = 0;
-    result |= ASTPHP5Parser.IMPLICIT_PUBLIC.intValue();
-    result |= modifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| static_modifier:modifier
-{:
-    RESULT = modifier;
-:}
-
-| static_modifier:fModifier ppp_modifiers:sModifier
-{:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= sModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| ppp_modifiers:fModifier static_modifier:sModifier
-{:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= sModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| readonly_modifier:rModifier ppp_modifiers:fModifier
-{:
-    int result = 0;
-    result |= rModifier.intValue();
-    result |= fModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| ppp_modifiers:fModifier readonly_modifier:rModifier
-{:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= rModifier.intValue();
-    RESULT = Integer.valueOf(result);
 :}
 
 | T_VAR
@@ -3272,7 +3309,19 @@ method_modifiers ::=
     RESULT = null;
 :}
 
-| af_modifiers:modifier
+| non_empty_member_modifiers:modifier
+{:
+    RESULT = modifier;
+:}
+;
+
+member_modifiers ::=
+ppp_modifiers:modifier
+{:
+    RESULT = modifier;
+:}
+
+| ppp_set_modifiers:modifier
 {:
     RESULT = modifier;
 :}
@@ -3282,127 +3331,32 @@ method_modifiers ::=
     RESULT = modifier;
 :}
 
-| ppp_modifiers:modifier
+| readonly_modifier:modifier
 {:
     RESULT = modifier;
 :}
 
-| static_modifier:fModifier ppp_modifiers:sModifier
+| final_modifier:modifier
 {:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= sModifier.intValue();
-    RESULT = Integer.valueOf(result);
+    RESULT = modifier;
 :}
 
-| static_modifier:fModifier af_modifiers:sModifier
+| abstract_modifier:modifier
 {:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= sModifier.intValue();
-    RESULT = Integer.valueOf(result);
+    RESULT = modifier;
+:}
+;
+
+non_empty_member_modifiers ::=
+member_modifiers:modifier
+{:
+    RESULT = modifier;
 :}
 
-| ppp_modifiers:fModifier static_modifier:sModifier
+| non_empty_member_modifiers:nonEmptyModifier member_modifiers:modifier
 {:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= sModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| ppp_modifiers:fModifier af_modifiers:sModifier
-{:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= sModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| af_modifiers:fModifier static_modifier:sModifier
-{:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= sModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| abstract_modifier:aModifier ppp_modifiers:sModifier
-{:
-    int result = 0;
-    result |= aModifier.intValue();
-    result |= sModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| final_modifier:fModifier ppp_modifiers:sModifier
-{:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= sModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| static_modifier:fModifier ppp_modifiers:sModifier af_modifiers:tModifier
-{:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= sModifier.intValue();
-    result |= tModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| static_modifier:fModifier af_modifiers:sModifier ppp_modifiers:tModifier
-{:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= sModifier.intValue();
-    result |= tModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| ppp_modifiers:fModifier static_modifier:sModifier af_modifiers:tModifier
-{:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= sModifier.intValue();
-    result |= tModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| ppp_modifiers:fModifier af_modifiers:sModifier static_modifier:tModifier
-{:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= sModifier.intValue();
-    result |= tModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| af_modifiers:fModifier static_modifier:sModifier ppp_modifiers:tModifier
-{:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= sModifier.intValue();
-    result |= tModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| abstract_modifier:aModifier ppp_modifiers:sModifier static_modifier:tModifier
-{:
-    int result = 0;
-    result |= aModifier.intValue();
-    result |= sModifier.intValue();
-    result |= tModifier.intValue();
-    RESULT = Integer.valueOf(result);
-:}
-
-| final_modifier:fModifier ppp_modifiers:sModifier static_modifier:tModifier
-{:
-    int result = 0;
-    result |= fModifier.intValue();
-    result |= sModifier.intValue();
-    result |= tModifier.intValue();
+    int result = nonEmptyModifier.intValue();
+    result |= modifier.intValue();
     RESULT = Integer.valueOf(result);
 :}
 ;
@@ -3442,6 +3396,23 @@ T_PUBLIC
 | T_PRIVATE
 {:
     RESULT = ASTPHP5Parser.PRIVATE;
+:}
+;
+
+ppp_set_modifiers ::=
+T_PUBLIC_SET
+{:
+    RESULT = ASTPHP5Parser.PUBLIC_SET;
+:}
+
+| T_PROTECTED_SET
+{:
+    RESULT = ASTPHP5Parser.PROTECTED_SET;
+:}
+
+| T_PRIVATE_SET
+{:
+    RESULT = ASTPHP5Parser.PRIVATE_SET;
 :}
 ;
 

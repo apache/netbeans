@@ -234,12 +234,9 @@ public final class OpenProjectList {
     }
 
     final Project unwrapProject(Project wrap) {
-        Project[] now = getOpenProjects();
-
         if (wrap instanceof LazyProject) {
-            LazyProject lp = (LazyProject)wrap;
-            for (Project p : now) {
-                if (lp.getProjectDirectory().equals(p.getProjectDirectory())) {
+            for (Project p : getOpenProjects()) {
+                if (wrap.getProjectDirectory().equals(p.getProjectDirectory())) {
                     return p;
                 }
             }
@@ -1379,6 +1376,7 @@ public final class OpenProjectList {
             public @Override Boolean run() {
             log(Level.FINER, "already opened: {0} ", openProjects);
             for (Project existing : openProjects) {
+                // TODO An old hack due to broken equals() contract; see https://bz.apache.org/netbeans/show_bug.cgi?id=156536
                 if (p.equals(existing) || existing.equals(p)) {
                     alreadyOpen.set(true);
                     return false;

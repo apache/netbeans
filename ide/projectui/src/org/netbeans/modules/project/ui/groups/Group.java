@@ -562,7 +562,19 @@ public abstract class Group {
             h.start(200);
             ProjectUtilities.WaitCursor.show();
             final OpenProjectList opl = OpenProjectList.getDefault();
-            Set<Project> oldOpen = new HashSet<Project>(Arrays.asList(opl.getOpenProjects()));
+            
+            Set<Project> oldOpen = new HashSet<>();
+            for (Project open : opl.getOpenProjects()) {
+                // TODO fix this properly, e.g investigate if:
+                //  - getOpenProjects() should only return unboxed projects 
+                //       risk: called by public API
+                //  - review/fix the broken hashcode/equals contracts
+                //       risk: code contains hacks which account for this already, e.g if (a.equals(b) || b.equals(a))
+                // for now: unbox potential fod.FeatureNonProject wrapper since it breaks Sets/Maps due to incompatible hashcode/equals impls
+                Project real = open.getLookup().lookup(Project.class);
+                oldOpen.add(real != null ? real : open);
+            }
+
             //TODO switching to no group always clears the opened project list.
             Set<Project> newOpen = g != null ? g.getProjects(h, 10, 100) : getProjectsByPreferences(noneGroupPref, h, 10, 100);
             final Set<Project> toClose = new HashSet<Project>(oldOpen);

@@ -780,8 +780,8 @@ public class JdbcUrl extends HashMap<String, String> {
                 "',className='" + className + // NOI18N
                 "',type='" + type + // NOI18N
                 "',urlTemplate='" + urlTemplate + // NOI18N
-                "',parseUrl,=" + parseUrl + // NOI18N
-                "',sampleUrl,=" + sampleUrl + "]"; // NOI18N
+                "',parseUrl=" + parseUrl + // NOI18N
+                "',sampleUrl=" + sampleUrl + "]"; // NOI18N
     }
 
     public String getSampleUser() {

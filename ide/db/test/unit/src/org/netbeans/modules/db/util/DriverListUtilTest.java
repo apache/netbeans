@@ -703,6 +703,7 @@ public class DriverListUtilTest extends TestCase {
         
         JdbcUrl other = new JdbcUrl(url.getName(), url.getName(), url.getClassName(),
                 url.getType(), url.getUrlTemplate(), url.isParseUrl());
+        other.setUsernamePasswordDisplayed(url.isUsernamePasswordDisplayed());
         
         assertEquals(url, other);
 

@@ -219,7 +219,7 @@ implements PropertyChangeListener, LookupListener {
                 String bundleName = basename + "/Bundle.properties";
                 URL layer = FeatureManager.class.getResource(layerName);
                 URL bundle = FeatureManager.class.getResource(bundleName);
-                if (layer != null && bundle != null) {
+                if (bundle != null) {
                     FeatureInfo info;
                     try {
                         info = FeatureInfo.create(clusterName, layer, bundle);

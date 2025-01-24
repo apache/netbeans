@@ -583,11 +583,11 @@ jobs:
       - name: ide/db.sql.editor
         run: ant $OPTS -f ide/db.sql.editor test
 
-      - name: ide/docker.api
-        run: ant $OPTS -f ide/docker.api test
+      - name: devops/docker.api
+        run: ant $OPTS -f devops/docker.api test
 
-      - name: ide/docker.ui
-        run: ant $OPTS -f ide/docker.ui test
+      - name: devops/docker.ui
+        run: ant $OPTS -f devops/docker.ui test
 
       - name: ide/editor.bookmarks
         run: ant $OPTS -f ide/editor.bookmarks test

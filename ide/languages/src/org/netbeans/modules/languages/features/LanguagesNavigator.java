@@ -272,14 +272,13 @@ public class LanguagesNavigator implements NavigatorPanel {
         private static Icon getCIcon (String resourceName) {
             if (resourceName == null) return null;
             if (!icons.containsKey (resourceName)) {
-                Image image = ImageUtilities.loadImage (resourceName);
-                if (image == null)
-                    image = ImageUtilities.loadImage (
-                        "org/netbeans/modules/languages/resources/node.gif"
-                    );
+                ImageIcon icon = ImageUtilities.loadImageIcon (resourceName, false);
+                if (icon == null)
+                    icon = ImageUtilities.loadImageIcon (
+                        "org/netbeans/modules/languages/resources/node.gif", false);
                 icons.put (
                     resourceName,
-                    new ImageIcon (image)
+                    icon
                 );
             }
             return icons.get (resourceName);

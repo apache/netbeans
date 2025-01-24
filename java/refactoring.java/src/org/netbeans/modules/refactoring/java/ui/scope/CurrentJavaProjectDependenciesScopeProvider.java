@@ -98,7 +98,7 @@ public final class CurrentJavaProjectDependenciesScopeProvider extends ScopeProv
         }
         scope = Scope.create(Arrays.asList(projectSources), null, null, true);
         detail = pi.getDisplayName();
-        icon = new ImageIcon(ImageUtilities.mergeImages(
+        icon = ImageUtilities.image2Icon(ImageUtilities.mergeImages(
                 ImageUtilities.icon2Image(pi.getIcon()),
                 ImageUtilities.loadImage("org/netbeans/modules/refactoring/java/resources/binary_badge.gif"),
                 10, 10));

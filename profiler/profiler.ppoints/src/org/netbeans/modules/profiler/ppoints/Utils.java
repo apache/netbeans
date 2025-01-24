@@ -152,7 +152,7 @@ public class Utils {
             }
             
             setText(""); // NOI18N
-            setIcon(isEnabled() ? icon : disabledIcon(icon));
+            setIcon(isEnabled() ? icon : ImageUtilities.createDisabledIcon(icon));
         }
         
         public String toString() {
@@ -160,10 +160,6 @@ public class Utils {
         }
     }
     
-    private static Icon disabledIcon(Icon icon) {
-        return new ImageIcon(GrayFilter.createDisabledImage(((ImageIcon)icon).getImage()));
-    }
-
     private static class ProjectPresenterListRenderer extends DefaultListCellRenderer {
         //~ Inner Classes --------------------------------------------------------------------------------------------------------
 
@@ -241,7 +237,7 @@ public class Utils {
                 Lookup.Provider project = (Lookup.Provider)value;
                 setText(ProjectUtilities.getDisplayName(project));
                 Icon icon = ProjectUtilities.getIcon(project);
-                setIcon(isEnabled() ? icon : disabledIcon(icon));
+                setIcon(isEnabled() ? icon : ImageUtilities.createDisabledIcon(icon));
                 setFont(Objects.equals(ProjectUtilities.getMainProject(), value) ? font.deriveFont(Font.BOLD) : font); // bold for main project
             }
         }

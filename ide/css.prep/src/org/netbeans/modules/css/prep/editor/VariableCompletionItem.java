@@ -33,7 +33,7 @@ import org.openide.util.ImageUtilities;
  */
 public class VariableCompletionItem extends CPCompletionItem {
 
-    private static final ImageIcon LOCAL_VAR_ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/css/prep/editor/resources/localVariable.gif")); //NOI18N
+    private static final ImageIcon LOCAL_VAR_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/css/prep/editor/resources/localVariable.gif", false); //NOI18N
 
     /**
      * 

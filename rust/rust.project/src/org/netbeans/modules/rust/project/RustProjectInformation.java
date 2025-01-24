@@ -22,7 +22,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.event.SwingPropertyChangeSupport;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
@@ -56,7 +55,7 @@ final class RustProjectInformation implements ProjectInformation, PropertyChange
 
     @Override
     public Icon getIcon() {
-        return new ImageIcon(ImageUtilities.loadImage(RustProjectAPI.ICON));
+        return ImageUtilities.loadIcon(RustProjectAPI.ICON);
     }
 
     @Override

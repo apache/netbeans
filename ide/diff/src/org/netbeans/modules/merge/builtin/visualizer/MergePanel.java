@@ -118,8 +118,6 @@ public class MergePanel extends javax.swing.JPanel implements java.awt.event.Act
         lastConflictButton.setVisible(false);
         prevConflictButton.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/diff/builtin/visualizer/prev.gif", true));
         nextConflictButton.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/diff/builtin/visualizer/next.gif", true));
-        //prevConflictButton.setIcon(new ImageIcon(getClass().getResource("/org/netbeans/modules/diff/builtin/visualizer/prev.gif")));
-        //nextConflictButton.setIcon(new ImageIcon(getClass().getResource("/org/netbeans/modules/diff/builtin/visualizer/next.gif")));
         //setTitle(org.openide.util.NbBundle.getBundle(DiffComponent.class).getString("DiffComponent.title"));
         //setName(org.openide.util.NbBundle.getMessage(MergePanel.class, "MergePanel.title"));
         //HelpCtx.setHelpIDString (getRootPane (), DiffComponent.class.getName ());

@@ -31,7 +31,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -580,7 +579,7 @@ public class ClassHierarchyPanel extends JPanel implements HelpCtx.Provider {
             if (value instanceof TypeNode) {
                 TypeNode n = (TypeNode) value;
                 stringValue = n.toStringAsHtml();
-                label.setIcon(new ImageIcon(n.getIcon()));
+                label.setIcon(ImageUtilities.image2Icon(n.getIcon()));
             }
             if (isSelected) {
                 label.setForeground(LIST_FOR_COLORS.getSelectionForeground());

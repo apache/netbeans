@@ -27,20 +27,17 @@ import java.beans.BeanInfo;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.AbstractButton;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import org.openide.awt.Mnemonics;
 import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
-import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUIUtils;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.actions.Presenter;
 
@@ -108,7 +105,7 @@ final class URLPresenter implements Presenter.Menu,
             } catch (FileStateInvalidException fsie) {
                 // OK, so we use the default icon
             }
-            presenter.setIcon(new ImageIcon(icon));
+            presenter.setIcon(ImageUtilities.image2Icon(icon));
         }
 
         /* set the presenter's text and ensure it is maintained up-to-date: */

@@ -83,7 +83,7 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     private List<DictionaryDescription> addedDictionaries = new ArrayList<DictionaryDescription>();
 
     private SpellcheckerOptionsPanelController c;
-    private static final Icon errorIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/spellchecker/resources/error.gif"));
+    private static final Icon errorIcon = ImageUtilities.loadIcon("org/netbeans/modules/spellchecker/resources/error.gif");
     
     /**
      * Creates new form SpellcheckerOptionsPanel

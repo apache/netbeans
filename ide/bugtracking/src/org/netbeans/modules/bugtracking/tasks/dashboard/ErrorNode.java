@@ -51,7 +51,7 @@ public class ErrorNode extends LeafNode {
         this.defaultAction = refreshAction;
         btnRefresh = new LinkButton(NbBundle.getMessage(ErrorNode.class, "LBL_Retry"), refreshAction); //NOI18N
         lblMessage = new TreeLabel(text);
-        lblMessage.setIcon(new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/bugtracking/tasks/resources/error.png"))); //NOI18N
+        lblMessage.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/bugtracking/tasks/resources/error.png", false)); //NOI18N
     }
 
     @Override

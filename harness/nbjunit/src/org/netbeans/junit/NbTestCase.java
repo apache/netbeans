@@ -58,6 +58,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
@@ -995,18 +996,41 @@ public abstract class NbTestCase extends TestCase implements NbTest {
     
     // private method for deleting a file/directory (and all its subdirectories/files)
     private static void deleteFile(File file) throws IOException {
-        Files.walkFileTree(file.toPath(), new SimpleFileVisitor<java.nio.file.Path>() {
-            @Override
-            public FileVisitResult visitFile(java.nio.file.Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
+        final int MAX_TRIES = 25; // => 5s retries
+        for (int i = 0; i < MAX_TRIES; i++) {
+            try {
+                Files.walkFileTree(file.toPath(), new SimpleFileVisitor<java.nio.file.Path>() {
+                    @Override
+                    public FileVisitResult visitFile(java.nio.file.Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult postVisitDirectory(java.nio.file.Path dir, IOException exc) throws IOException {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+                break;
+            } catch (IOException ex) {
+                // The recursive deletion can fail with an IOException, because
+                // new files are created, while the directory tree is traversed
+                // Observed where `archives.properties` and `segments` from
+                // parsing API. Both are saved delayed.
+                // Swallow the exception and retry. If last try is reached,
+                // throw.
+                if ((i + 1) == MAX_TRIES) {
+                    throw ex;
+                } else {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException ex2) {
+                        throw new IOException(ex2);
+                    }
+                }
             }
-            @Override
-            public FileVisitResult postVisitDirectory(java.nio.file.Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
-                return FileVisitResult.CONTINUE;
-            }
-        });
+        }
     }
     
     // private method for deleting every subfiles/subdirectories of a file object

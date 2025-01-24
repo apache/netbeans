@@ -25,19 +25,14 @@
 package org.netbeans.modules.db.sql.visualeditor.ui;
 
 import org.netbeans.modules.db.sql.visualeditor.Log;
-import java.awt.Image;
 import java.awt.event.ActionListener;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import org.openide.NotifyDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.DialogDescriptor;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.HelpCtx;
-import org.openide.util.Utilities;
 /**
  *  Shows the status of a connction in a dialog.
  *  This just presentss the results of a testConnection(), it
@@ -52,11 +47,9 @@ public class ConnectionStatusPanel extends javax.swing.JPanel {
 
     private JButton okButton = new JButton(NbBundle.getMessage(ConnectionStatusPanel.class, "OK")); // NOI18N
 
-    // private Image conGood = Utilities.loadImage("org/netbeans/modules/db/sql/visualeditor/resources/started.png");  // NOI18N
-    // private Image conFailed = Utilities.loadImage("org/netbeans/modules/db/sql/visualeditor/resources/disconnected.png");  // NOI18N
-    private Image conGood = ImageUtilities.loadImage("org/netbeans/modules/db/sql/visualeditor/resources/ok.gif");  // NOI18N
-    private Image conFailed = ImageUtilities.loadImage("org/netbeans/modules/db/sql/visualeditor/resources/error.gif");  // NOI18N
-    private Image conWarning = ImageUtilities.loadImage("org/netbeans/modules/db/sql/visualeditor/resources/warning.gif");  // NOI18N
+    private Icon conGood = ImageUtilities.loadIcon("org/netbeans/modules/db/sql/visualeditor/resources/ok.gif");  // NOI18N
+    private Icon conFailed = ImageUtilities.loadIcon("org/netbeans/modules/db/sql/visualeditor/resources/error.gif");  // NOI18N
+    private Icon conWarning = ImageUtilities.loadIcon("org/netbeans/modules/db/sql/visualeditor/resources/warning.gif");  // NOI18N
     /** Creates new form ConnectionStatusDialog */
     public ConnectionStatusPanel() {
         initComponents();
@@ -127,28 +120,28 @@ public class ConnectionStatusPanel extends javax.swing.JPanel {
         /* calculate the displayd values based on this method's input parameters.
          */
         if ( connected ) {
-            connectionStatusIcon.setIcon( new ImageIcon(conGood) ) ;
+            connectionStatusIcon.setIcon( conGood ) ;
             connectionStatusText.setText(getMsg("ConStat_succeeded_msg")) ; // NOI18N
             connectionStatusMessage.setVisible(false) ;
             validationInfo.setVisible(true) ;
             if ( sqlException == null ) {
                 valStatusText.setText(getMsg("ConStat_rows_selected_msg", tableName, Integer.valueOf(rows)) ) ; // NOI18N
-                valStatusIcon.setIcon( new ImageIcon(conGood) ) ;
+                valStatusIcon.setIcon( conGood ) ;
                 String valMsg ;
                 if (rows > 1 ) {
                     
                     valMsg = getMsg("ConStat_valtable_bad_msg") ;// NOI18N
-                    valStatusMessageIcon.setIcon( new ImageIcon(conWarning) ) ;
+                    valStatusMessageIcon.setIcon( conWarning ) ;
                 } else {
                     valMsg = getMsg("ConStat_valtable_good_msg") ;// NOI18N
-                    valStatusMessageIcon.setIcon( new ImageIcon(conGood) ) ;
+                    valStatusMessageIcon.setIcon( conGood ) ;
                 }
                 valMsg = valMsg + "\n" + getMsg("ConStat_validationTableInfo") ; // NOI18N
                 valStatusMessage.setText(valMsg) ;
                 
             } else if (tableName != null) {
                 // validation table test failed.
-                valStatusIcon.setIcon( new ImageIcon(conFailed) ) ;
+                valStatusIcon.setIcon( conFailed ) ;
 
                 // validation failed.
                 valStatusText.setText(getMsg("ConStat_failed_msg")) ;// NOI18N
@@ -168,7 +161,7 @@ public class ConnectionStatusPanel extends javax.swing.JPanel {
             }
         } else {
             // connection failed.
-            connectionStatusIcon.setIcon( new ImageIcon(conFailed) ) ;
+            connectionStatusIcon.setIcon( conFailed ) ;
             connectionStatusText.setText(getMsg("ConStat_failed_msg")) ;// NOI18N
             connectionStatusMessage.setText(sqlException) ;
             validationInfo.setVisible(false) ;

@@ -63,6 +63,7 @@
                     <goals>
                         <goal>mn:run</goal>
                     </goals>
+                    <reactor>am</reactor>
                     <properties>
                         <exec.vmArgs></exec.vmArgs>
                         <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
@@ -80,6 +81,7 @@
                     <goals>
                         <goal>mn:run</goal>
                     </goals>
+                    <reactor>am</reactor>
                     <properties>
                         <exec.vmArgs></exec.vmArgs>
                         <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>

@@ -22,7 +22,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.Reference;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,7 +64,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
-import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
 import org.openide.util.Utilities;
@@ -84,9 +82,7 @@ public class MultiSourceRootProvider implements ClassPathProvider {
     public static boolean DISABLE_MULTI_SOURCE_ROOT = Boolean.getBoolean("java.disable.multi.source.root");
     public static boolean SYNCHRONOUS_UPDATES = false;
 
-    private static final Set<String> MODULAR_DIRECTORY_OPTIONS = new HashSet<>(Arrays.asList(
-        "--module-path", "-p"
-    ));
+    private static final Set<String> MODULAR_DIRECTORY_OPTIONS = Set.of("--module-path", "-p");
 
     //TODO: the cache will probably be never cleared, as the ClassPath/value refers to the key(?)
     private Map<FileObject, ClassPath> file2SourceCP = new WeakHashMap<>();
@@ -108,10 +104,10 @@ public class MultiSourceRootProvider implements ClassPathProvider {
             return true;
         }
 
-        Set<FileObject> registeredRootsCopy;
+        List<FileObject> registeredRootsCopy;
 
         synchronized (registeredRoots) {
-            registeredRootsCopy = registeredRoots;
+            registeredRootsCopy = new ArrayList<>(registeredRoots);
         }
 
         for (FileObject existingRoot : registeredRootsCopy) {
@@ -125,6 +121,9 @@ public class MultiSourceRootProvider implements ClassPathProvider {
 
     @Override
     public ClassPath findClassPath(FileObject file, String type) {
+        if (SYNCHRONOUS_UPDATES) {
+            WORKER.post(() -> {}).waitFinished(); // flush tasks for tests (assumes threadpool size == 1)
+        }
         if (!isSupportedFile(file)) {
             return null;
         }

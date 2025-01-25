@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
@@ -40,6 +39,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import org.openide.util.ImageUtilities;
 
 
 public class TableSorter extends AbstractTableModel {
@@ -176,9 +176,9 @@ public class TableSorter extends AbstractTableModel {
             return null;
         }
         if (directive.direction == DESCENDING) {
-            return new ImageIcon(getClass().getResource("/org/netbeans/modules/editor/macros/storage/ui/columnsSortedDesc.png"));	// NOI18N
+            return ImageUtilities.loadIcon("org/netbeans/modules/editor/macros/storage/ui/columnsSortedDesc.png");	// NOI18N
         } else {
-            return new ImageIcon(getClass().getResource("/org/netbeans/modules/editor/macros/storage/ui/columnsSortedAsc.png"));	// NOI18N
+            return ImageUtilities.loadIcon("org/netbeans/modules/editor/macros/storage/ui/columnsSortedAsc.png");	// NOI18N
         }
     }
 

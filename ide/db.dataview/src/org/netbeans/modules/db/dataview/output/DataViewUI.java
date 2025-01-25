@@ -36,7 +36,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.URL;
 import java.util.Set;
 
 import javax.swing.AbstractButton;
@@ -61,6 +60,7 @@ import org.netbeans.modules.db.dataview.table.JXTableRowHeader;
 import org.netbeans.modules.db.dataview.table.MultiColPatternFilter;
 import org.netbeans.modules.db.dataview.table.ResultSetJXTable;
 import static org.netbeans.modules.db.dataview.table.SuperPatternFilter.MODE.LITERAL_FIND;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
 /**
@@ -72,7 +72,7 @@ import org.openide.util.NbBundle;
     "LBL_fetched_rows=Fetched Rows:"
 })
 class DataViewUI extends JPanel {
-    private static final String IMG_PREFIX = "/org/netbeans/modules/db/dataview/images/"; // NOI18N
+    private static final String IMG_PREFIX = "org/netbeans/modules/db/dataview/images/"; // NOI18N
     
     private final JButton[] editButtons = new JButton[5];
     private final DataViewTableUI dataPanel;
@@ -237,8 +237,7 @@ class DataViewUI extends JPanel {
         dataPanelScrollPane.setRowHeaderView(rowHeader);
         dataPanelScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, rowHeader.getTableHeader());
         
-        URL url = getClass().getResource(IMG_PREFIX + "preferences-desktop.png"); // NOI18N
-        ImageIcon icon = new ImageIcon(url);
+        ImageIcon icon = ImageUtilities.loadImageIcon(IMG_PREFIX + "preferences-desktop.png", false);  // NOI18N
         JButton cornerButton = new JButton() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -432,8 +431,7 @@ class DataViewUI extends JPanel {
         toolbar.addSeparator(new Dimension(10, 10));
 
         //add refresh button
-        URL url = getClass().getResource(IMG_PREFIX + "refresh.png"); // NOI18N
-        refreshButton = new JButton(new ImageIcon(url));
+        refreshButton = new JButton(ImageUtilities.loadIcon(IMG_PREFIX + "refresh.png")); // NOI18N
         refreshButton.setToolTipText(NbBundle.getMessage(DataViewUI.class, "TOOLTIP_refresh"));
         refreshButton.addActionListener(outputListener);
         processButton(refreshButton);
@@ -515,9 +513,7 @@ class DataViewUI extends JPanel {
     }
 
     private void initVerticalToolbar(ActionListener outputListener) {
-
-        URL url = getClass().getResource(IMG_PREFIX + "row_add.png"); // NOI18N
-        insert = new JButton(new ImageIcon(url));
+        insert = new JButton(ImageUtilities.loadIcon(IMG_PREFIX + "row_add.png")); // NOI18N
         insert.setToolTipText(NbBundle.getMessage(DataViewUI.class, "TOOLTIP_insert")+" (Alt+I)");
         insert.setMnemonic('I');
         insert.addActionListener(outputListener);
@@ -525,24 +521,21 @@ class DataViewUI extends JPanel {
         processButton(insert);
         editButtons[0] = insert;
 
-        url = getClass().getResource(IMG_PREFIX + "row_delete.png"); // NOI18N
-        deleteRow = new JButton(new ImageIcon(url));
+        deleteRow = new JButton(ImageUtilities.loadIcon(IMG_PREFIX + "row_delete.png")); // NOI18N
         deleteRow.setToolTipText(NbBundle.getMessage(DataViewUI.class, "TOOLTIP_deleterow"));
         deleteRow.addActionListener(outputListener);
         deleteRow.setEnabled(false);
         processButton(deleteRow);
         editButtons[1] = deleteRow;
 
-        url = getClass().getResource(IMG_PREFIX + "row_commit.png"); // NOI18N
-        commit = new JButton(new ImageIcon(url));
+        commit = new JButton(ImageUtilities.loadIcon(IMG_PREFIX + "row_commit.png")); // NOI18N
         commit.setToolTipText(NbBundle.getMessage(DataViewUI.class, "TOOLTIP_commit_all"));
         commit.addActionListener(outputListener);
         commit.setEnabled(false);
         processButton(commit);
         editButtons[2] = commit;
 
-        url = getClass().getResource(IMG_PREFIX + "cancel_edits.png"); // NOI18N
-        cancel = new JButton(new ImageIcon(url));
+        cancel = new JButton(ImageUtilities.loadIcon(IMG_PREFIX + "cancel_edits.png")); // NOI18N
         cancel.setToolTipText(NbBundle.getMessage(DataViewUI.class, "TOOLTIP_cancel_edits_all"));
         cancel.addActionListener(outputListener);
         cancel.setEnabled(false);
@@ -550,8 +543,7 @@ class DataViewUI extends JPanel {
         editButtons[3] = cancel;
 
         //add truncate button
-        url = getClass().getResource(IMG_PREFIX + "table_truncate.png"); // NOI18N
-        truncateButton = new JButton(new ImageIcon(url));
+        truncateButton = new JButton(ImageUtilities.loadIcon(IMG_PREFIX + "table_truncate.png")); // NOI18N
         truncateButton.setToolTipText(NbBundle.getMessage(DataViewUI.class, "TOOLTIP_truncate_table")+" (Alt+T)");
         truncateButton.setMnemonic('T');
         truncateButton.addActionListener(outputListener);

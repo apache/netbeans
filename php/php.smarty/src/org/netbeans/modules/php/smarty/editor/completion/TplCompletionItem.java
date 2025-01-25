@@ -34,6 +34,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
+import org.openide.util.ImageUtilities;
 
 /**
  * Code completion result item base class
@@ -208,7 +209,7 @@ public class TplCompletionItem implements CompletionItem {
     }
 
     protected ImageIcon getIcon() {
-        return new ImageIcon(getClass().getResource("/org/netbeans/modules/php/smarty/resources/tpl-cc-icon.png"));
+        return ImageUtilities.loadImageIcon("org/netbeans/modules/php/smarty/resources/tpl-cc-icon.png", false);
     }
 
     protected String getLeftHtmlText() {

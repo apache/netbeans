@@ -238,7 +238,8 @@ public abstract class FileReferenceCompletion<T> implements ValueCompletion<T> {
             return PACKAGE_ICON;
         } else {
             try {
-                return new ImageIcon(DataObject.find(fo).getNodeDelegate().getIcon(java.beans.BeanInfo.ICON_COLOR_16x16));
+                return ImageUtilities.icon2ImageIcon(ImageUtilities.image2Icon(
+                    DataObject.find(fo).getNodeDelegate().getIcon(java.beans.BeanInfo.ICON_COLOR_16x16)));
             } catch (DataObjectNotFoundException e) {
                 Logger.getLogger(FileReferenceCompletion.class.getName()).log(Level.INFO, "Cannot find icon for " + fo.getNameExt(), e);
             }

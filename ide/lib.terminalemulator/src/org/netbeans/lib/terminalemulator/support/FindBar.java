@@ -41,6 +41,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.openide.util.ImageUtilities;
 
 /**
  * A panel to facilitate text searches with the following elements:
@@ -84,7 +85,7 @@ public final class FindBar extends JPanel {
     private final class CloseAction extends AbstractAction {
 
         public CloseAction() {
-            super(Catalog.get("CTL_Close"), new ImageIcon(FindBar.class.getResource("find_close.png")));
+            super(Catalog.get("CTL_Close"), ImageUtilities.loadIcon("org/netbeans/lib/terminalemulator/support/find_close.png"));
         }
 
 	@Override
@@ -99,7 +100,7 @@ public final class FindBar extends JPanel {
     private final class NextAction extends AbstractAction {
 
         public NextAction() {
-            super(Catalog.get("CTL_Next"), new ImageIcon(FindBar.class.getResource("find_next.png")));	// NOI18N
+            super(Catalog.get("CTL_Next"), ImageUtilities.loadIcon("org/netbeans/lib/terminalemulator/support/find_next.png"));	// NOI18N
         }
 
 	@Override
@@ -114,7 +115,7 @@ public final class FindBar extends JPanel {
     private final class PrevAction extends AbstractAction {
 
         public PrevAction() {
-            super(Catalog.get("CTL_Previous"), new ImageIcon(FindBar.class.getResource("find_previous.png"))); // NOI18N
+            super(Catalog.get("CTL_Previous"), ImageUtilities.loadIcon("org/netbeans/lib/terminalemulator/support/find_previous.png")); // NOI18N
         }
 
 	@Override

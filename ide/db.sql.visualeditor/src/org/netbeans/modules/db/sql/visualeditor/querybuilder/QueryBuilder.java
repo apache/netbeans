@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.logging.Level;
+import java.awt.Image;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.modules.db.sql.visualeditor.QueryEditorUILogger;
 
@@ -77,6 +78,7 @@ import org.netbeans.modules.db.sql.visualeditor.Log;
 
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.sql.support.SQLIdentifiers;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Exceptions;
 
 /**
@@ -201,10 +203,9 @@ public class QueryBuilder extends TopComponent
 
         setLayout(new java.awt.BorderLayout());
 
-        ImageIcon imgIcon =
-                new ImageIcon(getClass().getResource("/org/netbeans/modules/db/sql/visualeditor/resources/query-editor-tab.png")); // NOI18N
-        if (imgIcon != null)
-            setIcon(imgIcon.getImage());
+        Image icon = ImageUtilities.loadImage("org/netbeans/modules/db/sql/visualeditor/resources/query-editor-tab.png"); // NOI18N
+        if (icon != null)
+            setIcon(icon);
 
         _queryBuilderPane = new QueryBuilderPane(this);
 

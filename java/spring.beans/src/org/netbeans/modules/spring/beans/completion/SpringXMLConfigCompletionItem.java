@@ -795,7 +795,7 @@ public abstract class SpringXMLConfigCompletionItem implements CompletionItem {
 
         @Override
         protected ImageIcon getIcon() {
-            return new ImageIcon(getTreeFolderIcon());
+            return ImageUtilities.icon2ImageIcon(ImageUtilities.image2Icon(getTreeFolderIcon()));
         }
 
         @Override

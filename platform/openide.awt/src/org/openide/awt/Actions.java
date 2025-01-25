@@ -103,15 +103,6 @@ public class Actions {
      */
     private static Icon nonNullIcon(Icon i) {
         return null;
-
-        /*if (i != null) {
-            return i;
-        } else {
-            if (BLANK_ICON == null) {
-                BLANK_ICON = new ImageIcon(Utilities.loadImage("org/openide/resources/actions/empty.gif", true)); // NOI18N
-            }
-            return BLANK_ICON;
-        }*/
     }
 
     /** Method that finds the keydescription assigned to this action.

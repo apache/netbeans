@@ -40,6 +40,8 @@ import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import java.awt.event.*;
+import javax.swing.ImageIcon;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
 
@@ -109,8 +111,8 @@ public class PackagePanel extends JPanel {
         list.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
         if (pkgLevel != -1) list.setSelectedIndex (pkgLevel);
         list.setCellRenderer (new ListCellRenderer () {
-            private Icon folderIcon = new ImageIcon (OpenFile.class.getResource ("folder.gif")); // NOI18N
-            private Icon rootFolderIcon = new ImageIcon (OpenFile.class.getResource ("rootFolder.gif")); // NOI18N
+            private Icon folderIcon = ImageUtilities.loadIcon("org/netbeans/modules/openfile/folder.gif"); // NOI18N
+            private Icon rootFolderIcon = ImageUtilities.loadIcon("org/netbeans/modules/openfile/rootFolder.gif"); // NOI18N
             private final JLabel lab = new JLabel();
             
             public Component getListCellRendererComponent (JList lst, Object value, int index, boolean isSelected, boolean cellHasFocus) {

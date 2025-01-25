@@ -169,17 +169,17 @@ public class ElementDescription {
     }
 
     public Icon getIcon() {
-        Image badge;
+        Icon badge;
 
         if (overriddenFlag) {
-            badge = ImageUtilities.loadImage("org/netbeans/modules/java/editor/resources/is-overridden-badge.png");
+            badge = ImageUtilities.loadIcon("org/netbeans/modules/java/editor/resources/is-overridden-badge.png");
         } else {
-            badge = ImageUtilities.loadImage("org/netbeans/modules/java/editor/resources/overrides-badge.png");
+            badge = ImageUtilities.loadIcon("org/netbeans/modules/java/editor/resources/overrides-badge.png");
         }
 
-        Image icon = ImageUtilities.icon2Image(ElementIcons.getElementIcon(imageKind, modifiers));
+        Icon icon = ElementIcons.getElementIcon(imageKind, modifiers);
 
-        return ImageUtilities.image2Icon(ImageUtilities.mergeImages(icon, badge, 16, 0));
+        return ImageUtilities.mergeIcons(icon, badge, 16, 0);
     }
 
     public boolean isOverridden() {

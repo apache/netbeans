@@ -27,6 +27,7 @@ import org.netbeans.lib.profiler.results.memory.PresoObjAllocCCTNode;
 import org.netbeans.lib.profiler.ui.UIUtils;
 import org.netbeans.modules.profiler.api.icons.Icons;
 import org.netbeans.modules.profiler.api.icons.ProfilerIcons;
+import org.openide.util.ImageUtilities;
 
 
 /**
@@ -71,11 +72,11 @@ public class MethodNameTreeCellRenderer extends EnhancedTreeCellRenderer {
                     return threadIcon;
                 }
             } else if (cct.isFiltered()) {
-                return UIManager.getLookAndFeel().getDisabledIcon(this, super.getClosedIcon(value));
+                return ImageUtilities.createDisabledIcon(super.getClosedIcon(value));
             }
         } else if (value instanceof PresoObjAllocCCTNode) {
             if (((PresoObjAllocCCTNode)value).isFiltered()) {
-                return UIManager.getLookAndFeel().getDisabledIcon(this, super.getClosedIcon(value));
+                return ImageUtilities.createDisabledIcon(super.getClosedIcon(value));
             }
         }
 
@@ -165,11 +166,11 @@ public class MethodNameTreeCellRenderer extends EnhancedTreeCellRenderer {
                     return threadIcon;
                 }
             } else if (cct.isFiltered()) {
-                return UIManager.getLookAndFeel().getDisabledIcon(this, super.getLeafIcon(value));
+                return ImageUtilities.createDisabledIcon(super.getLeafIcon(value));
             }
         } else if (value instanceof PresoObjAllocCCTNode) {
             if (((PresoObjAllocCCTNode)value).isFiltered()) {
-                return UIManager.getLookAndFeel().getDisabledIcon(this, super.getLeafIcon(value));
+                return ImageUtilities.createDisabledIcon(super.getLeafIcon(value));
             }
         }
 
@@ -188,11 +189,11 @@ public class MethodNameTreeCellRenderer extends EnhancedTreeCellRenderer {
                     return threadIcon;
                 }
             } else if (cct.isFiltered()) {
-                return UIManager.getLookAndFeel().getDisabledIcon(this, super.getOpenIcon(value));
+                return ImageUtilities.createDisabledIcon(super.getOpenIcon(value));
             }
         } else if (value instanceof PresoObjAllocCCTNode) {
             if (((PresoObjAllocCCTNode)value).isFiltered()) {
-                return UIManager.getLookAndFeel().getDisabledIcon(this, super.getOpenIcon(value));
+                return ImageUtilities.createDisabledIcon(super.getOpenIcon(value));
             }
         }
 

@@ -246,7 +246,7 @@ public class LSPBindings {
             description.failedCount++;
             if (description.failedCount == INVALID_START_MAX_COUNT) {
                 NotificationDisplayer.getDefault().notify(Bundle.TITLE_FailedToStart(mimeType),
-                                                          ImageUtilities.loadImageIcon("/org/netbeans/modules/lsp/client/resources/error_16.png", false),
+                                                          ImageUtilities.loadIcon("org/netbeans/modules/lsp/client/resources/error_16.png"),
                                                           Bundle.DETAIL_FailedToStart(),
                                                           null);
             }

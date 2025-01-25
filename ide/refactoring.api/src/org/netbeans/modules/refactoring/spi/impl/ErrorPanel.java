@@ -19,10 +19,11 @@
 package org.netbeans.modules.refactoring.spi.impl;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JPanel;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.spi.ui.RefactoringUI;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -30,7 +31,7 @@ import org.netbeans.modules.refactoring.spi.ui.RefactoringUI;
  */
 public class ErrorPanel extends javax.swing.JPanel {
 
-    private static ImageIcon fatalImage = null, nonFatalImage = null;
+    private static Icon fatalImage = null, nonFatalImage = null;
 
     private RefactoringUI ui;
     /** Creates new form ErrorPanel */
@@ -81,16 +82,16 @@ public class ErrorPanel extends javax.swing.JPanel {
         errors.add(jp, gridBagConstraints);
     }
     
-    static ImageIcon getFatalErrorIcon() {
+    static Icon getFatalErrorIcon() {
         if (fatalImage == null) {
-            fatalImage = new ImageIcon(ErrorPanel.class.getResource("/org/netbeans/modules/refactoring/api/resources/error.png")); //NOI18N
+            fatalImage = ImageUtilities.loadIcon("org/netbeans/modules/refactoring/api/resources/error.png"); //NOI18N
         }
         return fatalImage;
     }
     
-    static ImageIcon getNonfatalErrorIcon() {
+    static Icon getNonfatalErrorIcon() {
         if (nonFatalImage == null) {
-            nonFatalImage = new ImageIcon(ErrorPanel.class.getResource("/org/netbeans/modules/refactoring/api/resources/warning.png")); //NOI18N
+            nonFatalImage = ImageUtilities.loadIcon("org/netbeans/modules/refactoring/api/resources/warning.png"); //NOI18N
         }
         return nonFatalImage;
     }

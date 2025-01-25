@@ -26,12 +26,9 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
@@ -49,6 +46,7 @@ import org.openide.awt.Mnemonics;
 import org.openide.cookies.InstanceCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.ImageUtilities;
 import org.openide.util.actions.Presenter;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
@@ -163,11 +161,7 @@ public class AntActionInstance extends AbstractAction
                 return Actions.cutAmpersand(pname);
             }
         } else if (Action.SMALL_ICON.equals (key)) {
-            try {
-                return new ImageIcon(new URL("nbresloc:/org/apache/tools/ant/module/resources/AntIcon.gif"));
-            } catch (MalformedURLException e) {
-                throw new AssertionError(e);
-            }
+            return ImageUtilities.loadImageIcon("org/apache/tools/ant/module/resources/AntIcon.gif", false);
         } else if (Action.MNEMONIC_KEY.equals (key)) {
             Element el = proj.getProjectElement ();
             if (el != null) {

@@ -51,7 +51,7 @@ public class CreateBranch implements DocumentListener {
     private boolean revisionValid = false;
     private String msgInvalidName;
     private String branchName;
-    private final Icon ICON_ERROR = org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/info.png", false); //NOI18N
+    private final Icon ICON_ERROR = org.openide.util.ImageUtilities.loadIcon("org/netbeans/modules/git/resources/icons/info.png"); //NOI18N
     private final Map<String, GitBranch> existingBranches;
     private final Set<String> localBranchNames;
     private boolean internalChange;

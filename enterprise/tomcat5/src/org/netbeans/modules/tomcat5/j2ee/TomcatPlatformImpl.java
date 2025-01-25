@@ -556,11 +556,13 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
         if (manager.isTomEE()) {
             switch (manager.getTomEEVersion()) {
                 case TOMEE_100:
+                    versions = versionRange(17, 25);
+                    break;
                 case TOMEE_90:
-                    versions = versionRange(11, 24);
+                    versions = versionRange(11, 25);
                     break;
                 case TOMEE_80:
-                    versions = versionRange(8, 24);
+                    versions = versionRange(8, 25);
                     break;
                 case TOMEE_71:
                 case TOMEE_70:
@@ -577,20 +579,20 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
         } else {
             switch (manager.getTomcatVersion()) {
                 case TOMCAT_110:
-                    versions = versionRange(21, 24);
+                    versions = versionRange(17, 25);
                     break;
                 case TOMCAT_101:
-                    versions = versionRange(11, 24);
+                    versions = versionRange(11, 25);
                     break;
                 case TOMCAT_100:
                 case TOMCAT_90:
-                    versions = versionRange(8, 24);
+                    versions = versionRange(8, 25);
                     break;
                 case TOMCAT_80:
-                    versions = versionRange(7, 24);
+                    versions = versionRange(7, 25);
                     break;
                 case TOMCAT_70:
-                    versions = versionRange(6, 24);
+                    versions = versionRange(6, 25);
                     break;
                 case TOMCAT_60:
                     versions = versionRange(5, 8);

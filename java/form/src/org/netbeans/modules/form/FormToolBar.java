@@ -104,8 +104,7 @@ final class FormToolBar {
 
         // palette button
         paletteButton = new JToggleButton(
-            new ImageIcon(getClass().getResource(
-                          "/org/netbeans/modules/form/resources/beansButton.gif")), // NOI18N
+            ImageUtilities.loadIcon("org/netbeans/modules/form/resources/beansButton.gif"), // NOI18N
             false);
         paletteButton.addActionListener(listener);
         paletteButton.addMouseListener(listener);

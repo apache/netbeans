@@ -26,12 +26,12 @@ import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.netbeans.lib.profiler.results.memory.PresoObjAllocCCTNode;
 import org.netbeans.lib.profiler.ui.swing.renderer.JavaNameRenderer;
 import org.netbeans.modules.profiler.api.icons.Icons;
 import org.netbeans.modules.profiler.api.icons.ProfilerIcons;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -40,9 +40,9 @@ import org.netbeans.modules.profiler.api.icons.ProfilerIcons;
 final class JDBCJavaNameRenderer extends JavaNameRenderer {
     
     private static final Icon SQL_ICON = Icons.getIcon(ProfilerIcons.SQL_QUERY);
-    private static final Icon SQL_ICON_DISABLED = UIManager.getLookAndFeel().getDisabledIcon(null, SQL_ICON);
+    private static final Icon SQL_ICON_DISABLED = ImageUtilities.createDisabledIcon(SQL_ICON);
     private static final Icon LEAF_ICON = Icons.getIcon(ProfilerIcons.NODE_LEAF);
-    private static final Icon LEAF_ICON_DISABLED = UIManager.getLookAndFeel().getDisabledIcon(null, LEAF_ICON);
+    private static final Icon LEAF_ICON_DISABLED = ImageUtilities.createDisabledIcon(LEAF_ICON);
     
     private final Icon icon;
     private final Icon iconDisabled;
@@ -56,7 +56,7 @@ final class JDBCJavaNameRenderer extends JavaNameRenderer {
     
     public JDBCJavaNameRenderer(String iconKey) {
         this.icon = Icons.getIcon(iconKey);
-        this.iconDisabled = UIManager.getLookAndFeel().getDisabledIcon(null, icon);
+        this.iconDisabled = ImageUtilities.createDisabledIcon(icon);
     }
     
     public void setValue(Object value, int row) {

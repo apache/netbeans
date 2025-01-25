@@ -337,7 +337,7 @@ public class CommandCompletionProvider implements CompletionProvider{
                             n = f.getLookup().lookup(Node.class);
                         }
                         if (n != null) {
-                            return new ImageIcon(n.getIcon(BeanInfo.ICON_COLOR_16x16));
+                            return ImageUtilities.icon2ImageIcon(ImageUtilities.image2Icon(n.getIcon(BeanInfo.ICON_COLOR_16x16)));
                         }
                     }
                 }

@@ -194,6 +194,59 @@ public class RecordTest extends GeneratorTestMDRCompat {
         assertEquals(golden, res);
     }
 
+    /** 
+     * Is the compact constructor preserved?
+     * Added check for #7044
+     * 
+     */
+    public void testPreserveCompact() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+                """
+                package hierbas.del.litoral;
+                public record R(String first, String component) {
+                    public R {
+                        assert null != first;
+                    }
+                }
+                """);
+        String golden =
+                """
+                package hierbas.del.litoral;
+                public record R(String first) {
+                    public R {
+                        assert null != first;
+                    }
+                }
+                """;
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                CompilationUnitTree cut = workingCopy.getCompilationUnit();
+                TreeMaker make = workingCopy.getTreeMaker();
+
+                Tree recordDecl = cut.getTypeDecls().get(0);
+                assertEquals(Kind.RECORD, recordDecl.getKind());
+                ClassTree classTree = (ClassTree) recordDecl;
+                for (Tree m : classTree.getMembers()) {
+                    if (m.getKind() == Kind.VARIABLE &&
+                        ((VariableTree) m).getName().contentEquals("component")) {
+                        workingCopy.rewrite(classTree, make.removeClassMember(classTree, m));
+                        break;
+                    }
+                }
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+    
     public void testRemoveComponent() throws Exception {
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile,

@@ -143,12 +143,6 @@ public final class ElementHandle<T extends Element> {
         if (log.isLoggable(Level.FINE))
             log.log(Level.FINE, "Resolving element kind: {0}", this.kind); // NOI18N       
         ElementKind simplifiedKind = this.kind;
-//        if (simplifiedKind.name().equals("RECORD")) {
-//            simplifiedKind = ElementKind.CLASS; //TODO: test
-//        }
-//        if (simplifiedKind.name().equals("RECORD_COMPONENT")) {
-//            simplifiedKind = ElementKind.FIELD; //TODO: test
-//        }
         switch (simplifiedKind) {
             case PACKAGE:
                 assert signatures.length == 1;

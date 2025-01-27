@@ -68,18 +68,19 @@ public class TestMethodController {
         removed.keySet().removeAll(added);
         added.removeAll(annotations.keySet());
 
+        for (Entry<TestMethod, TestMethodAnnotation> e : removed.entrySet()) {
+            NbDocument.removeAnnotation(doc, e.getValue());
+            annotations.remove(e.getKey());
+            int line = NbDocument.findLineNumber(doc, e.getKey().preferred.getOffset());
+            annotationLines.remove(line);
+        }
+
         for (TestMethod method : added) {
             TestMethodAnnotation a = new TestMethodAnnotation(method);
             NbDocument.addAnnotation(doc, method.preferred, 0, a);
             annotations.put(method, a);
             int line = NbDocument.findLineNumber(doc, method.preferred.getOffset());
             annotationLines.put(line, method);
-        }
-        for (Entry<TestMethod, TestMethodAnnotation> e : removed.entrySet()) {
-            NbDocument.removeAnnotation(doc, e.getValue());
-            annotations.remove(e.getKey());
-            int line = NbDocument.findLineNumber(doc, e.getKey().preferred.getOffset());
-            annotationLines.remove(line);
         }
     }
 

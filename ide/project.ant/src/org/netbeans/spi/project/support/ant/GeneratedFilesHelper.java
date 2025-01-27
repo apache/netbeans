@@ -658,16 +658,24 @@ public final class GeneratedFilesHelper {
     
     // #50440 - cache CRC32's for various files to save time esp. during startup.
     
-    private static final Map<URL,String> crcCache = new HashMap<URL,String>();
-    private static final Map<URL,Long> crcCacheTimestampsXorSizes = new HashMap<URL,Long>();
+    private static final Map<URL, String> crcCache = new HashMap<>();
+    private static final Map<URL, TimeStampAndSize> fileFootprintCache = new HashMap<>();
+    private record TimeStampAndSize(long modified, long size) {
+        TimeStampAndSize(FileObject fo) {
+            this(fo.lastModified().getTime(), fo.getSize());
+        }
+        TimeStampAndSize(File f) {
+            this(f.lastModified(), f.length());
+        }
+    }
 
     /** Try to find a CRC in the cache according to location of file and last mod time xor size. */
-    private static synchronized String findCachedCrc32(URL u, long footprint) {
+    private static synchronized String findCachedCrc32(URL u, TimeStampAndSize footprint) {
         String crc = crcCache.get(u);
         if (crc != null) {
-            Long l = crcCacheTimestampsXorSizes.get(u);
-            assert l != null;
-            if (l == footprint) {
+            TimeStampAndSize fp = fileFootprintCache.get(u);
+            assert fp != null;
+            if (fp.equals(footprint)) {
                 // Cache hit.
                 return crc;
             }
@@ -677,16 +685,16 @@ public final class GeneratedFilesHelper {
     }
     
     /** Cache a known CRC for a file, using current last mod time xor size. */
-    private static synchronized void cacheCrc32(String crc, URL u, long footprint) {
+    private static synchronized void cacheCrc32(String crc, URL u, TimeStampAndSize footprint) {
         crcCache.put(u, crc);
-        crcCacheTimestampsXorSizes.put(u, footprint);
+        fileFootprintCache.put(u, footprint);
     }
     
     /** Find (maybe cached) CRC for a file, using a preexisting input stream (not closed by this method). */
     private static String getCrc32(InputStream is, FileObject fo) throws IOException {
         URL u = fo.toURL();
         fo.refresh(); // in case was written on disk and we did not notice yet...
-        long footprint = fo.lastModified().getTime() ^ fo.getSize();
+        TimeStampAndSize footprint = new TimeStampAndSize(fo);
         String crc = findCachedCrc32(u, footprint);
         if (crc == null) {
             crc = computeCrc32(is);
@@ -696,25 +704,21 @@ public final class GeneratedFilesHelper {
     }
 
     /** Find the time the file this URL represents was last modified xor its size, if possible. */
-    private static long checkFootprint(URL u) {
+    private static TimeStampAndSize checkFootprint(URL u) {
         File f = FileUtil.archiveOrDirForURL(u);
-        if (f != null) {
-            return f.lastModified() ^ f.length();
-        } else {
-            return 0L;
-        }
+        return f != null ? new TimeStampAndSize(f) : null;
     }
     
     /** Find (maybe cached) CRC for a URL, using a preexisting input stream (not closed by this method). */
     private static String getCrc32(InputStream is, URL u) throws IOException {
-        long footprint = checkFootprint(u);
+        TimeStampAndSize footprint = checkFootprint(u);
         String crc = null;
-        if (footprint != 0L) {
+        if (footprint != null) {
             crc = findCachedCrc32(u, footprint);
         }
         if (crc == null) {
             crc = computeCrc32(is);
-            if (footprint != 0L) {
+            if (footprint != null) {
                 cacheCrc32(crc, u, footprint);
             }
         }
@@ -725,7 +729,7 @@ public final class GeneratedFilesHelper {
     private static String getCrc32(FileObject fo) throws IOException {
         URL u = fo.toURL();
         fo.refresh();
-        long footprint = fo.lastModified().getTime() ^ fo.getSize();
+        TimeStampAndSize footprint = new TimeStampAndSize(fo);
         String crc = findCachedCrc32(u, footprint);
         if (crc == null) {
             InputStream is = fo.getInputStream();
@@ -741,16 +745,16 @@ public final class GeneratedFilesHelper {
     
     /** Find (maybe cached) CRC for a URL. Will open its own input stream. */
     private static String getCrc32(URL u) throws IOException {
-        long footprint = checkFootprint(u);
+        TimeStampAndSize footprint = checkFootprint(u);
         String crc = null;
-        if (footprint != 0L) {
+        if (footprint != null) {
             crc = findCachedCrc32(u, footprint);
         }
         if (crc == null) {
             InputStream is = u.openStream();
             try {
                 crc = computeCrc32(new BufferedInputStream(is));
-                if (footprint != 0L) {
+                if (footprint != null) {
                     cacheCrc32(crc, u, footprint);
                 }
             } finally {

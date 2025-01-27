@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+
+
+<!DOCTYPE bindings PUBLIC "-//NetBeans//DTD Editor KeyBindings settings 1.1//EN" "http://www.netbeans.org/dtds/EditorKeyBindings-1_1.dtd">
+<bindings>
+    <!-- Basic editing -->
+    <bind actionName="cut-to-clipboard" key="C-X"/>
+    <bind actionName="copy-to-clipboard" key="C-C"/>
+    <bind actionName="paste-from-clipboard" key="C-V"/>
+    <bind actionName="move-selection-else-line-down" key="A-DOWN"/>
+    <bind actionName="move-selection-else-line-up" key="A-UP"/>
+    <bind actionName="copy-selection-else-line-down" key="SA-DOWN"/>
+    <bind actionName="copy-selection-else-line-up" key="SA-UP"/>
+    <bind actionName="remove-line" key="CS-K"/>
+    <bind actionName="start-new-line" key="C-ENTER"/>
+    <bind actionName="insert-break-above" key="CS-ENTER"/>
+    <bind actionName="match-brace" key="CS-BACK_SLASH"/>
+    <bind actionName="indent" key="C-CLOSE_BRACKET"/>
+    <bind actionName="unindent" key="C-OPEN_BRACKET"/>
+    <bind actionName="caret-begin-line" key="HOME"/>
+    <bind actionName="caret-end-line" key="END"/>
+    <bind actionName="caret-begin" key="C-HOME"/>
+    <bind actionName="caret-end" key="C-END"/>
+    <bind actionName="scroll-up" key="C-UP"/>
+    <bind actionName="scroll-down" key="C-DOWN"/>
+    <bind actionName="page-up" key="A-PAGE_UP"/>
+    <bind actionName="page-down" key="A-PAGE_DOWN"/>
+    
+    <!-- Code folding -->
+    <bind actionName="collapse-fold" key="CS-OPEN_BRACKET"/>
+    <bind actionName="expand-fold" key="CS-CLOSE_BRACKET"/>
+    <bind actionName="collapse-all-folds" key="C-K C-OPEN_BRACKET"/>
+    <bind actionName="expand-all-folds" key="C-K C-CLOSE_BRACKET"/>
+    
+    <!-- Comments -->
+    <bind actionName="toggle-comment" key="C-SLASH"/>
+    <bind actionName="toggle-comment" key="C-K C-C"/>
+    <bind actionName="remove-comment" key="C-K C-U"/>
+    <bind actionName="toggle-block-comment" key="SA-A"/>
+    
+    <!-- Search and navigation -->
+    <bind actionName="find" key="C-F"/>
+    <bind actionName="replace" key="C-H"/>
+    <bind actionName="find-next" key="F3"/>
+    <bind actionName="find-previous" key="S-F3"/>
+    <bind actionName="find-selection" key="C-F3"/>
+    <bind actionName="goto" key="C-G"/>
+    <bind actionName="goto-declaration" key="F12"/>
+    <bind actionName="goto-source" key="A-F12"/>
+    <bind actionName="goto-implementation" key="C-F12"/>
+    
+    <!-- Multi-cursor and selection -->
+    <bind actionName="select-word" key="C-D"/>
+    <bind actionName="select-next-parameter" key="C-L"/>
+    <bind actionName="select-all" key="C-A"/>
+    <bind actionName="selection-grow" key="SA-RIGHT"/>
+    <bind actionName="selection-shrink" key="SA-LEFT"/>
+    
+    <!-- Editor management -->
+    <bind actionName="close" key="C-F4"/>
+    <bind actionName="close" key="C-W"/>
+    <bind actionName="split-editor" key="C-BACK_SLASH"/>
+    
+    <!-- Rich language features -->
+    <bind actionName="completion-show" key="C-SPACE"/>
+    <bind actionName="completion-show" key="C-I"/>
+    <bind actionName="parameter-hints-show" key="CS-SPACE"/>
+    <bind actionName="format" key="SA-F"/>
+    <bind actionName="fix-imports" key="C-DOT"/>
+    
+    <!-- Refactoring -->
+    <bind actionName="rename" key="F2"/>
+    <bind actionName="refactor-quickmenu" key="C-DOT"/>
+    
+    <!-- Debug -->
+    <bind actionName="toggle-breakpoint" key="F9"/>
+    <bind actionName="debug" key="F5"/>
+    <bind actionName="debug-step-over" key="F10"/>
+    <bind actionName="debug-step-into" key="F11"/>
+    <bind actionName="debug-step-out" key="S-F11"/>
+    
+    <!-- IDE features -->
+    <bind actionName="show-command-palette" key="CS-P"/>
+    <bind actionName="show-command-palette" key="F1"/>
+    <bind actionName="quick-open" key="C-P"/>
+    <bind actionName="preferences-show" key="C-COMMA"/>
+    
+    <!-- Terminal -->
+    <bind actionName="terminal-show" key="C-BACK_QUOTE"/>
+    <bind actionName="terminal-new" key="CS-BACK_QUOTE"/>
+</bindings>

@@ -46,7 +46,7 @@ import org.openide.util.actions.Presenter;
  * @author mkleint
  */
 class DynaMenuModel {
-    private static final Icon BLANK_ICON = new ImageIcon(ImageUtilities.loadImage("org/openide/loaders/empty.gif")); // NOI18N
+    private static final Icon BLANK_ICON = ImageUtilities.loadIcon("org/openide/loaders/empty.gif"); // NOI18N
     
     private List<JComponent> menuItems;
     private HashMap<DynamicMenuContent, JComponent[]> actionToMenuMap;

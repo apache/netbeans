@@ -197,9 +197,9 @@ public class BatchProblemNotifier {
             this.root = root;
             n = NotificationDisplayer.getDefault().notify(
                 build_title(root.getName()),
-                ImageUtilities.image2Icon(ImageUtilities.mergeImages(
-                    ImageUtilities.loadImage(IconResources.MAVEN_ICON, true),
-                    ImageUtilities.loadImage(IconResources.BROKEN_PROJECT_BADGE_ICON, true), 8, 0)),
+                ImageUtilities.mergeIcons(
+                    ImageUtilities.loadIcon(IconResources.MAVEN_ICON, true),
+                    ImageUtilities.loadIcon(IconResources.BROKEN_PROJECT_BADGE_ICON, true), 8, 0),
                 build_details(root), this);
             LOG.log(Level.FINE, "created for {0}", root);
         }

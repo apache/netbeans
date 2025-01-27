@@ -21,11 +21,11 @@ package org.netbeans.modules.rust.project;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.rust.project.api.RustIconFactory;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.ImageUtilities;
 
 /**
  * A RustSourceGroup represents a "folder" with sources, this is used for the
@@ -63,7 +63,7 @@ public final class RustSourceGroup implements SourceGroup {
 
     @Override
     public Icon getIcon(boolean opened) {
-        return new ImageIcon(RustIconFactory.getSourceFolderIcon(opened));
+        return ImageUtilities.image2Icon(RustIconFactory.getSourceFolderIcon(opened));
     }
 
     @Override

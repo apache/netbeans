@@ -20,7 +20,6 @@
 package org.netbeans.modules.websvc.design.view;
 
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -30,7 +29,7 @@ import java.util.EventObject;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
@@ -41,7 +40,6 @@ import javax.swing.event.EventListenerList;
 import org.netbeans.api.visual.widget.Scene;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 
 /**
  * Manages the zoom level for a particular Scene instance.
@@ -497,9 +495,9 @@ public class ZoomManager {
             this.manager = manager;
             String path = NbBundle.getMessage(FitDiagramAction.class,
                     "IMG_FitDiagramAction");
-            Image img = ImageUtilities.loadImage(path);
-            if (img != null) {
-                putValue(Action.SMALL_ICON, new ImageIcon(img));
+            Icon icon = ImageUtilities.loadIcon(path);
+            if (icon != null) {
+                putValue(Action.SMALL_ICON, icon);
             }
             String desc = NbBundle.getMessage(FitDiagramAction.class,
                     "LBL_FitDiagramAction");
@@ -543,9 +541,9 @@ public class ZoomManager {
             this.manager = manager;
             String path = NbBundle.getMessage(FitWidthAction.class,
                     "IMG_FitWidthAction");
-            Image img = ImageUtilities.loadImage(path);
-            if (img != null) {
-                putValue(Action.SMALL_ICON, new ImageIcon(img));
+            Icon icon = ImageUtilities.loadIcon(path);
+            if (icon != null) {
+                putValue(Action.SMALL_ICON, icon);
             }
             String desc = NbBundle.getMessage(FitWidthAction.class,
                     "LBL_FitWidthAction");
@@ -586,9 +584,9 @@ public class ZoomManager {
             this.manager = manager;
             String path = NbBundle.getMessage(ZoomDefaultAction.class,
                     "IMG_ZoomDefaultAction");
-            Image img = ImageUtilities.loadImage(path);
-            if (img != null) {
-                putValue(Action.SMALL_ICON, new ImageIcon(img));
+            Icon icon = ImageUtilities.loadIcon(path);
+            if (icon != null) {
+                putValue(Action.SMALL_ICON, icon);
             }
             String desc = NbBundle.getMessage(ZoomDefaultAction.class,
                     "LBL_ZoomDefaultAction");
@@ -618,9 +616,9 @@ public class ZoomManager {
             this.manager = manager;
             String path = NbBundle.getMessage(ZoomInAction.class,
                     "IMG_ZoomInAction");
-            Image img = ImageUtilities.loadImage(path);
-            if (img != null) {
-                putValue(Action.SMALL_ICON, new ImageIcon(img));
+            Icon icon = ImageUtilities.loadIcon(path);
+            if (icon != null) {
+                putValue(Action.SMALL_ICON, icon);
             }
             String desc = NbBundle.getMessage(ZoomInAction.class,
                     "LBL_ZoomInAction");
@@ -657,9 +655,9 @@ public class ZoomManager {
             this.manager = manager;
             String path = NbBundle.getMessage(ZoomOutAction.class,
                     "IMG_ZoomOutAction");
-            Image img = ImageUtilities.loadImage(path);
-            if (img != null) {
-                putValue(Action.SMALL_ICON, new ImageIcon(img));
+            Icon icon = ImageUtilities.loadIcon(path);
+            if (icon != null) {
+                putValue(Action.SMALL_ICON, icon);
             }
             String desc = NbBundle.getMessage(ZoomOutAction.class,
                     "LBL_ZoomOutAction");

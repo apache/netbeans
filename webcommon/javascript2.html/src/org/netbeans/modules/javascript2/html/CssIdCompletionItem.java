@@ -82,7 +82,7 @@ class CssIdCompletionItem implements CompletionProposal {
     @Override
     public ImageIcon getIcon() {
         if (cssIcon == null) {
-            cssIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/jquery/resources/style_sheet_16.png")); //NOI18N
+            cssIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/jquery/resources/style_sheet_16.png", false); //NOI18N
         }
         return cssIcon;
     }

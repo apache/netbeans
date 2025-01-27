@@ -115,8 +115,8 @@ public class RuleEditorPanel extends JPanel {
     
     static RequestProcessor RP = new RequestProcessor(CssCaretAwareSourceTask.class);
     
-    private static final Icon ERROR_ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/css/visual/resources/error-glyph.gif")); //NOI18N
-    private static final Icon APPLIED_ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/css/visual/resources/database.gif")); //NOI18N
+    private static final Icon ERROR_ICON = ImageUtilities.loadIcon("org/netbeans/modules/css/visual/resources/error-glyph.gif"); //NOI18N
+    private static final Icon APPLIED_ICON = ImageUtilities.loadIcon("org/netbeans/modules/css/visual/resources/database.gif"); //NOI18N
     
     private final JLabel errorLabel, appliedLabel;
 

@@ -176,7 +176,7 @@ public abstract class JQueryCompletionItem implements CompletionProposal {
         @Override
         public ImageIcon getIcon() {
             if (cssIcon == null) {
-                cssIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/jquery/resources/style_sheet_16.png")); //NOI18N
+                cssIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/jquery/resources/style_sheet_16.png", false); //NOI18N
             }
             return cssIcon;
         }
@@ -227,7 +227,7 @@ public abstract class JQueryCompletionItem implements CompletionProposal {
         @Override
         public ImageIcon getIcon() {
             if (jQIcon == null) {
-                jQIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/jquery/resources/jquery_16_2.png")); //NOI18N
+                jQIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/jquery/resources/jquery_16_2.png", false); //NOI18N
             }
             return jQIcon;
         }

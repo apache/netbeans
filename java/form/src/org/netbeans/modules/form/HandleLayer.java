@@ -3410,7 +3410,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
                 } else {
                     icon = node.getIcon(java.beans.BeanInfo.ICON_COLOR_16x16);
                 }
-                showingComponents[0] = new JLabel(new ImageIcon(icon));
+                showingComponents[0] = new JLabel(ImageUtilities.image2Icon(icon));
                 Dimension dim = showingComponents[0].getPreferredSize();
                 hotSpot = new Point(dim.width/2, dim.height/2);
                 if (hotSpot.x < 0) {

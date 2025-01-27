@@ -475,20 +475,34 @@ implements LookupListener, FlavorListener, AWTEventListener
         @Override
         public void run() {
             try {
-                systemClipboard.setContents(cnts, ownr);
-            } catch (IllegalStateException e) {
-                //#139616
-                if(log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, "systemClipboard not available", e); // NOI18N
-                } else {
-                    log.log(Level.INFO, "systemClipboard#setContents threw IllegalStateException"); // NOI18N
+            /* The loop will actually stop before getting to 10 iterations, per the delay
+                formula and conditional throw. But keep the MAX_TRIES just as a fail-safe. */
+                final int MAX_TRIES = 10;
+                final long start = System.currentTimeMillis();
+                int delay = 20;
+                for (int i = 0; i < MAX_TRIES; i++) {
+                    try {
+                        systemClipboard.setContents(cnts, ownr);
+                    } catch (IllegalStateException ex) {
+                        if (i == (MAX_TRIES - 1) || (System.currentTimeMillis() + delay - start) > 1000L) {
+                            throw ex;
+                        } else {
+                            log.log(Level.INFO, "systemClipboard#getContents ISE, attempt {0}", i + 1); // NOI18N
+                        }
+                        Thread.sleep(delay); // Give system time to settle
+                        delay *= 2;
+                    }
                 }
-                scheduleSetContents(cnts, ownr, 100);
-                return;
+                if (log.isLoggable(Level.FINE)) {
+                    log.log(Level.FINE, "systemClipboard updated:"); // NOI18N
+                    logFlavors(cnts, Level.FINE, log.isLoggable(Level.FINEST));
+                }
             }
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "systemClipboard updated:"); // NOI18N
-                logFlavors(cnts, Level.FINE, log.isLoggable(Level.FINEST));
+            catch (ThreadDeath ex) {
+                throw ex;
+            }
+            catch (InterruptedException | RuntimeException ex) {
+                log.log(Level.INFO, "systemClipboard not available", ex); // NOI18N
             }
         }
     }

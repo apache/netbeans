@@ -32,7 +32,6 @@ import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -48,6 +47,7 @@ import org.openide.awt.Mnemonics;
 import org.openide.util.ChangeSupport;
 import org.openide.util.NbBundle;
 import static javax.swing.LayoutStyle.ComponentPlacement.RELATED;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -92,7 +92,7 @@ public abstract class VCSCommitParameters {
     
     public static JLabel createRecentMessagesLink(final JTextArea text, final Preferences preferences) {
         final JLabel recentLink = new JLabel();
-        recentLink.setIcon(new ImageIcon(VCSCommitParameters.class.getResource("/org/netbeans/modules/versioning/util/resources/recent_messages.png"))); // NOI18N
+        recentLink.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/versioning/util/resources/recent_messages.png")); // NOI18N
         recentLink.setToolTipText(getMessage("CTL_CommitForm_RecentMessages")); // NOI18N            
 
         recentLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -121,7 +121,7 @@ public abstract class VCSCommitParameters {
     
     protected static JLabel createMessagesTemplateLink(final JTextArea text, final Preferences preferences, final String helpCtxId) {
         final JLabel templateLink = new JLabel();
-        templateLink.setIcon(new ImageIcon(VCSCommitParameters.class.getResource("/org/netbeans/modules/versioning/util/resources/load_template.png"))); // NOI18N
+        templateLink.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/versioning/util/resources/load_template.png")); // NOI18N
         templateLink.setToolTipText(getMessage("CTL_CommitForm_LoadTemplate")); // NOI18N            
 
         templateLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

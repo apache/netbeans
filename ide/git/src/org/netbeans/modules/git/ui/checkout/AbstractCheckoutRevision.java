@@ -55,7 +55,7 @@ public abstract class AbstractCheckoutRevision implements DocumentListener, Acti
     private boolean branchNameRecommended = true;
     private String branchName;
     private final Map<String, GitBranch> branches;
-    private final Icon ICON_ERROR = org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/info.png", false); //NOI18N
+    private final Icon ICON_ERROR = org.openide.util.ImageUtilities.loadIcon("org/netbeans/modules/git/resources/icons/info.png"); //NOI18N
     private boolean autoSelectedCreateBranch = true;
 
     protected AbstractCheckoutRevision (RepositoryInfo info, RevisionDialogController revisionPicker) {

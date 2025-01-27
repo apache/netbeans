@@ -20,6 +20,7 @@ package org.netbeans.modules.jshell.editor;
 
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
 /**
@@ -77,7 +78,7 @@ final class ExecutingGlassPanel extends javax.swing.JPanel {
         ));
         org.openide.awt.Mnemonics.setLocalizedText(msgLabel, org.openide.util.NbBundle.getMessage(ExecutingGlassPanel.class, "ExecutingGlassPanel.msgLabel.text")); // NOI18N
 
-        stopButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/netbeans/modules/jshell/resources/stop.png"))); // NOI18N
+        stopButton.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/jshell/resources/stop.png"));
         org.openide.awt.Mnemonics.setLocalizedText(stopButton, org.openide.util.NbBundle.getMessage(ExecutingGlassPanel.class, "ExecutingGlassPanel.stopButton.text")); // NOI18N
         stopButton.setBorder(null);
         stopButton.setBorderPainted(false);

@@ -523,8 +523,11 @@ public final class JavaPluginUtils {
     public static CompilationUnitTree createCompilationUnit(FileObject sourceRoot, String relativePath, Tree typeDecl, WorkingCopy workingCopy, TreeMaker make) {
         GeneratorUtilities genUtils = GeneratorUtilities.get(workingCopy);
         CompilationUnitTree newCompilation;
+        ElementKind clzOrRecord = ElementKind.CLASS;
+        if (typeDecl.getKind()== Kind.RECORD)
+            clzOrRecord=ElementKind.RECORD;
         try {
-            newCompilation = genUtils.createFromTemplate(sourceRoot, relativePath, ElementKind.CLASS);
+            newCompilation = genUtils.createFromTemplate(sourceRoot, relativePath, clzOrRecord);//ElementKind.CLASS);
             List<? extends Tree> typeDecls = newCompilation.getTypeDecls();
             if (typeDecls.isEmpty()) {
                 newCompilation = make.addCompUnitTypeDecl(newCompilation, typeDecl);

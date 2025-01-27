@@ -322,6 +322,7 @@ public final class TreePathHandle {
             case ENUM_CONSTANT:
             case RECORD:
                 //TODO: record component
+            case RECORD_COMPONENT:
                 return true;
             case PARAMETER:
                 //only method and constructor parameters supported (not lambda):

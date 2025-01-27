@@ -173,17 +173,7 @@ public class ComputeTestMethodAnnotations implements DocumentListener, PropertyC
     public void run() {
         List<TestMethod> testMethods = getTestMethods(handledDocument);
 
-        /*
-         * Apparently, this method should update the list of annotations at each call of this method,
-         * when the passed collection of methods changes.
-         * Вut I didn't manage to achieve correct work in this case.
-         * So I made the method call first with the empty collection, to clear the annotation list,
-         * then already with the method collection.
-         */
-        TestMethodController.setTestMethods(handledDocument, Collections.emptyList());
-        if (!testMethods.isEmpty()) {
-            TestMethodController.setTestMethods(handledDocument, testMethods);
-        }
+        TestMethodController.setTestMethods(handledDocument, testMethods);
     }
 
     /**

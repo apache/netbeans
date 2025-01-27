@@ -134,7 +134,6 @@ public final class InnerToOuterRefactoring extends AbstractRefactoring {
      * @param innerIsRecord use when inner class needs the special handling of 
      * an inner record.
      */
-
     public void setInnerIsRecord(boolean innerIsRecord) {
         this.innerIsRecord = innerIsRecord;
     }

@@ -209,7 +209,6 @@ public final class ElementHandle<T extends Element> {
             case FIELD:
             case ENUM_CONSTANT:
             case RECORD_COMPONENT:
-
             {
                 assert signatures.length == 3;
                 final Element type = getTypeElementByBinaryName (module, signatures[0], jt);

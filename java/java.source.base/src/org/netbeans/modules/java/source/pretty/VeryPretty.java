@@ -644,9 +644,6 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         boolean isRecord = enclClass.getKind()== Kind.RECORD;
         // return type null makes this method a constructor
         boolean isCandidateCompactCtor = isRecord && null == t.getReturnType();
-        if (isCandidateCompactCtor) {
-            System.err.println("spotted compact "+ t.toString());
-        }
         if (!isCandidateCompactCtor) {
             print('(');
             wrapTrees(tree.params, WrapStyle.WRAP_NEVER, out.col);

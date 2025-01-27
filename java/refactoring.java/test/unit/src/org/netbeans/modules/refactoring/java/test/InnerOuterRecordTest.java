@@ -55,7 +55,7 @@ import org.openide.util.Exceptions;
 public class InnerOuterRecordTest extends RefactoringTestBase {
 
     public InnerOuterRecordTest(String name) {
-        super(name);
+        super(name, "16");
         //ensure we are running on at least 16.
         try {
             SourceVersion.valueOf("RELEASE_16"); //NOI18N
@@ -67,72 +67,55 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
     // for reference
     public void test0_259004() throws Exception {
-        String source
-                = """
+        String source =
+                """
             package t;
-
             import java.util.function.Consumer;
-
             public class A {
-
                 public static void main(String[] args) {
                     Consumer<F> c = f -> {};
                 }
-
                 public static final class F {}
             }""";
-        String newOuter
-                = """
+        String newOuter =
+                """
             package t;
-
             import java.util.function.Consumer;
-
             public class A {
-
             public static void main(String[] args) {
                 Consumer<F> c = f -> {};
             }
-
             }""";
-        String newInner
-                = """
+        String newInner =
+                """
             /*
             * Refactoring License
             */
-
             package t;
-
             /**
              *
              * @author junit
              */
             public final class F {
-
             }
             """;
         innerOuterSetupAndTest(source, newOuter, newInner);
-
     }
 
     public void test9ApacheNetbeans7044() throws Exception {
         // initial outer has record with meaningful canonical constructor.
         // note that Inner class should be in last member for assumptions in the test.
-        String source
-                = """
+        String source =
+                """
                 package t;
-
                 import java.time.LocalDate;
                 import java.util.Objects;
-
                 public class A {
-
                     void useStudent() {
                         F s = new F(42,"Jan Klaassen", LocalDate.now().minusDays(1));
                         System.out.println("student = " + s);
                     }
-
                     record F(int id, String name, LocalDate dob) {
-
                         /**
                           * Validate stuff.
                           */
@@ -144,31 +127,26 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                             assert dob.isAfter(LocalDate.EPOCH);
                         }
                     }
-
                 }
                 """;
-        String newOuter
-                = """
+        String newOuter =
+                """
                 package t;
-
                 import java.time.LocalDate;
                 import java.util.Objects;
-
                 public class A {
-
                     void useStudent() {
                         F s = new F(42,"Jan Klaassen", LocalDate.now().minusDays(1));
                         System.out.println("student = " + s);
                     }
                 }
                 """;
-        String newInner
-                = """
+        String newInner =
+                """
                 /*
                  * Refactoring License
                  */
                 package t;
-
                 import java.time.LocalDate;
                 import java.util.Objects;
                 /**
@@ -176,7 +154,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                   * @author junit
                   */
                 record F(int id, String name, LocalDate dob) {
-
                     /**
                      * Validate stuff.
                      */
@@ -189,26 +166,21 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
 
     public void test1BasicClassInClass() throws Exception {
         // initial outer has record with meaningful canonical constructor.
-        String source
-                = """
+        String source =
+            """
             package t;
-
             import java.time.LocalDate;
             import java.util.Objects;
-
             public class A {
-
                 void useStudent() {
                     F s = new F(42, "Jan Klaassen", LocalDate.now().minusDays(1));
                     System.out.println("student = " + s);
                 }
-
                 public static class F {
                     int id;
                     String name;
@@ -224,47 +196,36 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                         this.dob=dob;
                     }
                 }
-
             }
             """;
-        String newOuter
-                = """
+        String newOuter =
+                """
                 package t;
-
                 import java.time.LocalDate;
                 import java.util.Objects;
-
                 public class A {
-
                     void useStudent() {
                         F s = new F(42, "Jan Klaassen", LocalDate.now().minusDays(1));
                         System.out.println("student = " + s);
                     }
-
-
                 }
                 """;
-        String newInner
-                = """
+        String newInner =
+                """
                 /*
                  * Refactoring License
                  */
-
                 package t;
-
                 import java.time.LocalDate;
                 import java.util.Objects;
-
                 /**
                  *
                  * @author junit
                  */
                 public class F {
-
                     int id;
                     String name;
                     LocalDate dob;
-
                     public F(int id, String name, LocalDate dob) {
                         Objects.requireNonNull(id);
                         Objects.requireNonNull(name);
@@ -275,20 +236,16 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                         this.name = name;
                         this.dob = dob;
                     }
-
                 }
                 """;
-
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
 
     public void test2BasicRecordInRecord() throws Exception {
-        String source
-                = """
+        String source =
+                """
                 package t;
-
                 import java.time.LocalDate;
-
                 record A(int id, String name, LocalDate dob) {
                    static F f;
                    record F(int x, int y){
@@ -297,25 +254,20 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                    }
                 }
                 """;
-        String newOuter
-                = """
+        String newOuter =
+                """
                 package t;
-
                 import java.time.LocalDate;
-
                 record A(int id, String name, LocalDate dob) {
-
                     static F f;
-
                 }
                 """;
-        String newInner
-                = """
+        String newInner =
+                """
                 /*
                  * Refactoring License
                  */
                 package t;
-
                 /**
                  *
                  * @author hom
@@ -325,7 +277,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     static String code = "nix";
                 }
                 """;
-
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
 
@@ -336,21 +287,20 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
      * @throws Exception
      */
     public void test3OuterWithCompact() throws Exception {
-        String source
-                = """
+        String source =
+                """
                 package t;
                 import java.time.LocalDate;
                 /** Record with compact ctor. */
                 record A(F f){
-
                      public A{
                          assert f!=null;
                      }
                      record F(int id, String name, LocalDate dob){}
                 }
                 """;
-        String newOuter
-                = """
+        String newOuter =
+                """
                 package t;
                 import java.time.LocalDate;
                 /** Record with compact ctor. */
@@ -360,8 +310,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newInner
-                = """
+        String newInner =
+                """
                 /*
                  * Refactoring License
                  */
@@ -378,20 +328,15 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     }
 
     public void test4InnerWithCompact() throws Exception {
-        String source
-                = """
+        String source =
+                """
                 package t;
-                
                 import java.time.LocalDate;
-                
                 record A(F f) {
-                
                     public A {
                         assert f != null;
                     }
-                
                     record F(int id, String name, LocalDate dob) {
-                
                         public F {
                             if (dob.isBefore(LocalDate.EPOCH)) {
                                 throw new IllegalArgumentException("to old " + dob);
@@ -400,8 +345,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newOuter
-                = """
+        String newOuter =
+                """
                 package t;
                 import java.time.LocalDate;
                 record A(F f) {
@@ -410,8 +355,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newInner
-                = """
+        String newInner =
+                """
                 /*
                  * Refactoring License
                  */
@@ -422,7 +367,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                  * @author junit
                  */
                 record F(int id, String name, LocalDate dob) {
-
                     public F {
                         if (dob.isBefore(LocalDate.EPOCH)) {
                             throw new IllegalArgumentException("to old " + dob);
@@ -435,21 +379,17 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
     // outer may have effect
     public void test5ClassWithInnerRecord() throws Exception {
-        String source
-                = """
+        String source =
+                """
                 package t;
-                
                 import java.time.LocalDate;
-                
                 class A {
                     final F f;
                     public A(F f) {
                         assert f != null;
                         this.f=f;
                     }
-                
                     record F(int id, String name, LocalDate dob) {
-                
                         public F   {
                             if (dob.isBefore(LocalDate.EPOCH)) {
                                 throw new IllegalArgumentException("to old " + dob);
@@ -458,8 +398,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newOuter
-                = """
+        String newOuter =
+                """
                 package t;
                 import java.time.LocalDate;
                 class A {
@@ -470,8 +410,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newInner
-                = """
+        String newInner =
+                """
                 /*
                  * Refactoring License
                  */
@@ -482,7 +422,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                  * @author junit
                  */
                 record F(int id, String name, LocalDate dob) {
-
                     public F {
                         if (dob.isBefore(LocalDate.EPOCH)) {
                             throw new IllegalArgumentException("to old " + dob);
@@ -492,25 +431,20 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 """;
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
-    
+
     public void test6InnerWithCompactAndMethodAndExtraCtor() throws Exception {
-        String source
-                = """
+        String source =
+                """
                 package t;
-                
                 import java.time.LocalDate;
                 record A(F f) {
-
                 enum Suite {
                     SPADE, CLUB, DIAMOND, HEART;
                 }
-                
                     public A {
                         assert f != null;
                     }
-                
                     record F(int id, String name, LocalDate dob) {
-                
                         public F {
                             if (dob.isBefore(LocalDate.EPOCH)) {
                                 throw new IllegalArgumentException("to old " + dob);
@@ -521,16 +455,16 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                         }
                         boolean bornBefore(LocalDate someDate) {
                             return dob.isBefore(someDate);
-                        } 
+                        }
                     }
                 }
                 """;
-        String newOuter
-                = """
+        String newOuter =
+                """
                 package t;
                 import java.time.LocalDate;
                 record A(F f) {
-                    enum Suite { 
+                    enum Suite {
                       SPADE, CLUB, DIAMOND, HEART;
                     }
                     public A {
@@ -538,8 +472,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newInner
-                = """
+        String newInner =
+                """
                 /*
                  * Refactoring License
                  */
@@ -550,7 +484,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                  * @author junit
                  */
                 record F(int id, String name, LocalDate dob) {
-
                     public F {
                         if (dob.isBefore(LocalDate.EPOCH)) {
                             throw new IllegalArgumentException("to old " + dob);
@@ -561,24 +494,21 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                     boolean bornBefore(LocalDate someDate) {
                         return dob.isBefore(someDate);
-                    } 
+                    }
                 }
                 """;
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
 
-    
-    public void test7Generic() throws Exception{
-    String source
-                = """
+    public void test7Generic() throws Exception {
+        String source =
+                """
                 package t;
-                
                 record A(F f) {
                     public A {
                         assert f != null;
                     }
                     record F<P, Q>(P first, Q second) {
-                
                         public F {
                             assert null != first;
                             assert null != second;
@@ -586,8 +516,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newOuter
-                = """
+        String newOuter =
+                """
                 package t;
                 record A(F f) {
                     public A {
@@ -595,8 +525,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newInner
-                = """
+        String newInner =
+                """
                 /*
                  * Refactoring License
                  */
@@ -613,22 +543,19 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 }
                 """;
         innerOuterSetupAndTest(source, newOuter, newInner);
-
     }
-    
+
     void innerOuterSetupAndTest(String source, String newOuterName, String newInnerName) throws Exception {
         writeFilesNoIndexing(src, new File("t/A.java", source));
         performInnerToOuterTest2(null);
         verifyContent(src, new File("t/A.java", newOuterName), new File("t/F.java", newInnerName));
     }
-
     boolean debug = false;
 
     // variant for record inner to outer test
     private void performInnerToOuterTest2(String newOuterName, Problem... expectedProblems) throws Exception {
         final InnerToOuterRefactoring[] r = new InnerToOuterRefactoring[1];
         JavaSource.forFileObject(src.getFileObject("t/A.java")).runUserActionTask(new Task<CompilationController>() {
-
             @Override
             public void run(CompilationController parameter) {
                 try {
@@ -650,38 +577,34 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     printMembers(members, m);
                 }
                 // selecting the last element assumes that the inner class is the last member in the outer class.
-                Tree lastInnerClass = outer.getMembers().get(outer.getMembers().size() - 1);
+                Tree lastInnerClass =
+                        outer.getMembers().get(outer.getMembers().size() - 1);
                 if (debug && lastInnerClass instanceof ClassTree lct) {
 //                    String n = "lastInnerClass " + lastInnerClass.getKind().toString();
 //                    printNumbered(System.err, n, lastInnerClass.toString());
                     printClassTree(lct);
                 }
                 TreePath tp = TreePath.getPath(cut, lastInnerClass);
-
                 try {
-                    r[0] = new InnerToOuterRefactoring(TreePathHandle.create(tp, parameter));
+                    r[0] =
+                            new InnerToOuterRefactoring(TreePathHandle.create(tp, parameter));
                 } catch (Throwable t) {
                     System.err.println("InnerOuter refatoring failed with exception " + t);
                     t.printStackTrace(System.out);
                     throw t;
                 }
             }
-
         }, true);
-
         r[0].setClassName("F");
         if (debug) {
             printNumbered(System.err, "result ", r[0].toString());
         }
         r[0].setReferenceName(newOuterName);
-
         RefactoringSession rs = RefactoringSession.create("Session");
         List<Problem> problems = new LinkedList<Problem>();
-
         addAllProblems(problems, r[0].preCheck());
         addAllProblems(problems, r[0].prepare(rs));
         addAllProblems(problems, rs.doRefactoring(true));
-
         assertProblems(Arrays.asList(expectedProblems), problems);
     }
 
@@ -709,5 +632,4 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     static void printClassTree(ClassTree ct) {
         printMembers(ct.getMembers(), 0, "class " + ct.getSimpleName() + " type " + ct.getKind() + " ");
     }
-
 }

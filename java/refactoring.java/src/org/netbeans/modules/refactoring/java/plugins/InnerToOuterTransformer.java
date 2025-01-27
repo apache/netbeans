@@ -643,14 +643,13 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
                     if (mt.getFlags().contains(Modifier.STATIC)) {
                         continue;
                     }
-                    var mtype = vt.getType();
-                    var mName = vt.getName();
-                    var mods = make.Modifiers(EnumSet.noneOf(Modifier.class));
-                    var newMember = make.RecordComponent(mods, mName, mtype);
+                    Tree mtype = vt.getType();
+                    Name mName = vt.getName();
+                    ModifiersTree mods = make.Modifiers(EnumSet.noneOf(Modifier.class));
+                    VariableTree newMember = make.RecordComponent(mods, mName, mtype);
                     newInnerRecord = make.removeClassMember(newInnerRecord, member);
                     newInnerRecord = make.insertClassMember(newInnerRecord, insertAt, newMember);
                     insertAt++;
-                    
                     break;
                 default:
             }

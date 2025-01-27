@@ -78,7 +78,7 @@ public class RefactoringTestBase extends NbTestCase {
 
     public RefactoringTestBase(String name) {
         super(name);
-        sourcelevel = "17";//"1.6";//??
+        sourcelevel = "1.6";
     }
 
     public RefactoringTestBase(String name, String sourcelevel) {
@@ -173,7 +173,7 @@ public class RefactoringTestBase extends NbTestCase {
 
             if (file.isData()) { // normal file
                 content.put(FileUtil.getRelativePath(sourceRoot, file), copyFileToString(FileUtil.toFile(file)));
-            } else { //folder?
+            } else { // it is a folder
                 todo.addAll(Arrays.asList(file.getChildren()));
             }
         }
@@ -463,8 +463,7 @@ public class RefactoringTestBase extends NbTestCase {
         return false;
     }
 
-//    private static final int RETRIES = 3;
-    private static final int RETRIES = 1;
+    private static final int RETRIES = 3;
 
     @Override
     protected void runTest() throws Throwable {

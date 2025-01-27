@@ -67,6 +67,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -244,6 +245,8 @@ import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.modules.editor.indent.api.Reformat;
 import org.netbeans.modules.java.lsp.server.URITranslator;
+import org.netbeans.modules.java.lsp.server.protocol.PriorityQueueRun.CancelCheck;
+import org.netbeans.modules.java.lsp.server.protocol.PriorityQueueRun.Priority;
 import org.netbeans.modules.java.lsp.server.ui.AbstractJavaPlatformProviderOverride;
 import org.netbeans.modules.parsing.impl.SourceAccessor;
 import org.netbeans.modules.sampler.Sampler;
@@ -306,7 +309,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     /**
      * Documents actually opened by the client.
      */
-    private final Map<String, RequestProcessor.Task> diagnosticTasks = new HashMap<>();
+    private final Map<String, Runnable> pendingDiagnostics = new HashMap<>();
     private final LspServerState server;
     private NbCodeLanguageClient client;
 
@@ -350,7 +353,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     private final AtomicInteger javadocTimeout = new AtomicInteger(-1);
-    private List<Completion> lastCompletions = null;
+    private List<Completion> lastCompletions = null; //TODO: asynchronous access - clock!
 
     private static final int INITIAL_COMPLETION_SAMPLING_DELAY = 1000;
     private static final int DEFAULT_COMPLETION_WARNING_LENGTH = 10_000;
@@ -363,7 +366,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         "# {1} - path to the saved sampler file",
         "INFO_LongCodeCompletion=Analyze completions taking longer than {0}. A sampler snapshot has been saved to: {1}"
     })
-    public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
+    public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams p) {
         AtomicBoolean done = new AtomicBoolean();
         AtomicReference<Sampler> samplerRef = new AtomicReference<>();
         AtomicLong samplingStart = new AtomicLong();
@@ -387,7 +390,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         }, INITIAL_COMPLETION_SAMPLING_DELAY);
 
-        lastCompletions = new ArrayList<>();
+        List<Completion> currentCompletions = Collections.synchronizedList(new ArrayList<>());
+
+        lastCompletions = currentCompletions;
+
         AtomicInteger index = new AtomicInteger(0);
         final CompletionList completionList = new CompletionList();
         // shortcut: if the projects are not yet initialized, return empty:
@@ -395,7 +401,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             return CompletableFuture.completedFuture(Either.forRight(completionList));
         }
         try {
-            String uri = params.getTextDocument().getUri();
+            String uri = p.getTextDocument().getUri();
             FileObject file = fromURI(uri);
             if (file == null) {
                 return CompletableFuture.completedFuture(Either.forRight(completionList));
@@ -412,131 +418,133 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             ConfigurationItem completionWarningLength = new ConfigurationItem();
             completionWarningLength.setScopeUri(uri);
             completionWarningLength.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_COMPLETION_WARNING_TIME);
-            return client.configuration(new ConfigurationParams(Arrays.asList(conf, completionWarningLength))).thenApply(c -> {
-                if (c != null && !c.isEmpty()) {
-                    if (c.get(0) instanceof JsonPrimitive) {
-                        JsonPrimitive javadocTimeSetting = (JsonPrimitive) c.get(0);
+            return client.configuration(new ConfigurationParams(Arrays.asList(conf, completionWarningLength))).thenCompose(c ->
+                PriorityQueueRun.getInstance()
+                                .runTask(Priority.HIGHER, (params, cancel) -> {
+                    if (c != null && !c.isEmpty()) {
+                        if (c.get(0) instanceof JsonPrimitive) {
+                            JsonPrimitive javadocTimeSetting = (JsonPrimitive) c.get(0);
 
-                        javadocTimeout.set(javadocTimeSetting.getAsInt());
-                    }
-                    if (c.get(1) instanceof JsonPrimitive) {
-                        JsonPrimitive samplingWarningsLengthSetting = (JsonPrimitive) c.get(1);
+                            javadocTimeout.set(javadocTimeSetting.getAsInt());
+                        }
+                        if (c.get(1) instanceof JsonPrimitive) {
+                            JsonPrimitive samplingWarningsLengthSetting = (JsonPrimitive) c.get(1);
 
-                        samplingWarningLength.set(samplingWarningsLengthSetting.getAsLong());
+                            samplingWarningLength.set(samplingWarningsLengthSetting.getAsLong());
+                        }
                     }
-                }
-                final int caret = Utils.getOffset(doc, params.getPosition());
-                List<CompletionItem> items = new ArrayList<>();
-                Completion.Context context = params.getContext() != null
-                        ? new Completion.Context(Completion.TriggerKind.valueOf(params.getContext().getTriggerKind().name()),
-                                params.getContext().getTriggerCharacter() == null || params.getContext().getTriggerCharacter().isEmpty() ? null : params.getContext().getTriggerCharacter().charAt(0))
-                        : null;
-                Preferences prefs = CodeStylePreferences.get(doc, "text/x-java").getPreferences();
-                String point = prefs.get("classMemberInsertionPoint", null);
-                try {
-                    prefs.put("classMemberInsertionPoint", CodeStyle.InsertionPoint.CARET_LOCATION.name());
-                    boolean isComplete = Completion.collect(doc, caret, context, completion -> {
-                        CompletionItem item = new CompletionItem(completion.getLabel());
-                        if (completion.getLabelDetail() != null || completion.getLabelDescription() != null) {
-                            CompletionItemLabelDetails labelDetails = new CompletionItemLabelDetails();
-                            labelDetails.setDetail(completion.getLabelDetail());
-                            labelDetails.setDescription(completion.getLabelDescription());
-                            item.setLabelDetails(labelDetails);
-                        }
-                        if (completion.getKind() != null) {
-                            item.setKind(CompletionItemKind.valueOf(completion.getKind().name()));
-                        }
-                        if (completion.getTags() != null) {
-                            item.setTags(completion.getTags().stream().map(tag -> CompletionItemTag.valueOf(tag.name())).collect(Collectors.toList()));
-                        }
-                        if (completion.getDetail() != null && completion.getDetail().isDone()) {
-                            item.setDetail(completion.getDetail().getNow(null));
-                        }
-                        if (completion.getDocumentation() != null && completion.getDocumentation().isDone()) {
-                            String documentation = completion.getDocumentation().getNow(null);
-                            if (documentation != null) {
-                                MarkupContent markup = new MarkupContent();
-                                markup.setKind("markdown");
-                                markup.setValue(html2MD(documentation));
-                                item.setDocumentation(markup);
+                    final int caret = Utils.getOffset(doc, params.getPosition());
+                    List<CompletionItem> items = new ArrayList<>();
+                    Completion.Context context = params.getContext() != null
+                            ? new Completion.Context(Completion.TriggerKind.valueOf(params.getContext().getTriggerKind().name()),
+                                    params.getContext().getTriggerCharacter() == null || params.getContext().getTriggerCharacter().isEmpty() ? null : params.getContext().getTriggerCharacter().charAt(0))
+                            : null;
+                    Preferences prefs = CodeStylePreferences.get(doc, "text/x-java").getPreferences();
+                    String point = prefs.get("classMemberInsertionPoint", null);
+                    try {
+                        prefs.put("classMemberInsertionPoint", CodeStyle.InsertionPoint.CARET_LOCATION.name());
+                        boolean isComplete = Completion.collect(doc, caret, context, completion -> {
+                            CompletionItem item = new CompletionItem(completion.getLabel());
+                            if (completion.getLabelDetail() != null || completion.getLabelDescription() != null) {
+                                CompletionItemLabelDetails labelDetails = new CompletionItemLabelDetails();
+                                labelDetails.setDetail(completion.getLabelDetail());
+                                labelDetails.setDescription(completion.getLabelDescription());
+                                item.setLabelDetails(labelDetails);
                             }
-                        }
-                        if (completion.isPreselect()) {
-                            item.setPreselect(true);
-                        }
-                        item.setSortText(completion.getSortText());
-                        item.setFilterText(completion.getFilterText());
-                        item.setInsertText(completion.getInsertText());
-                        if (completion.getInsertTextFormat() != null) {
-                            item.setInsertTextFormat(InsertTextFormat.valueOf(completion.getInsertTextFormat().name()));
-                        }
-                        org.netbeans.api.lsp.TextEdit edit = completion.getTextEdit();
-                        if (edit != null) {
-                            item.setTextEdit(Either.forLeft(new TextEdit(new Range(Utils.createPosition(file, edit.getStartOffset()), Utils.createPosition(file, edit.getEndOffset())), edit.getNewText())));
-                        }
-                        org.netbeans.api.lsp.Command command = completion.getCommand();
-                        if (command != null) {
-                            item.setCommand(new Command(command.getTitle(), Utils.encodeCommand(command.getCommand(), client.getNbCodeCapabilities()), command.getArguments()));
-                        }
-                        if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
-                            List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
-                            if (additionalTextEdits != null && !additionalTextEdits.isEmpty()) {
-                                item.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
-                                    return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
-                                }).collect(Collectors.toList()));
+                            if (completion.getKind() != null) {
+                                item.setKind(CompletionItemKind.valueOf(completion.getKind().name()));
                             }
+                            if (completion.getTags() != null) {
+                                item.setTags(completion.getTags().stream().map(tag -> CompletionItemTag.valueOf(tag.name())).collect(Collectors.toList()));
+                            }
+                            if (completion.getDetail() != null && completion.getDetail().isDone()) {
+                                item.setDetail(completion.getDetail().getNow(null));
+                            }
+                            if (completion.getDocumentation() != null && completion.getDocumentation().isDone()) {
+                                String documentation = completion.getDocumentation().getNow(null);
+                                if (documentation != null) {
+                                    MarkupContent markup = new MarkupContent();
+                                    markup.setKind("markdown");
+                                    markup.setValue(html2MD(documentation));
+                                    item.setDocumentation(markup);
+                                }
+                            }
+                            if (completion.isPreselect()) {
+                                item.setPreselect(true);
+                            }
+                            item.setSortText(completion.getSortText());
+                            item.setFilterText(completion.getFilterText());
+                            item.setInsertText(completion.getInsertText());
+                            if (completion.getInsertTextFormat() != null) {
+                                item.setInsertTextFormat(InsertTextFormat.valueOf(completion.getInsertTextFormat().name()));
+                            }
+                            org.netbeans.api.lsp.TextEdit edit = completion.getTextEdit();
+                            if (edit != null) {
+                                item.setTextEdit(Either.forLeft(new TextEdit(new Range(Utils.createPosition(file, edit.getStartOffset()), Utils.createPosition(file, edit.getEndOffset())), edit.getNewText())));
+                            }
+                            org.netbeans.api.lsp.Command command = completion.getCommand();
+                            if (command != null) {
+                                item.setCommand(new Command(command.getTitle(), Utils.encodeCommand(command.getCommand(), client.getNbCodeCapabilities()), command.getArguments()));
+                            }
+                            if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
+                                List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
+                                if (additionalTextEdits != null && !additionalTextEdits.isEmpty()) {
+                                    item.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
+                                        return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
+                                    }).collect(Collectors.toList()));
+                                }
+                            }
+                            if (completion.getCommitCharacters() != null) {
+                                item.setCommitCharacters(completion.getCommitCharacters().stream().map(ch -> ch.toString()).collect(Collectors.toList()));
+                            }
+                            currentCompletions.add(completion);
+                            item.setData(new CompletionData(uri, index.getAndIncrement()));
+                            items.add(item);
+                        });
+                        if (!isComplete) {
+                            completionList.setIsIncomplete(true);
                         }
-                        if (completion.getCommitCharacters() != null) {
-                            item.setCommitCharacters(completion.getCommitCharacters().stream().map(ch -> ch.toString()).collect(Collectors.toList()));
+                    } finally {
+                        if (point != null) {
+                            prefs.put("classMemberInsertionPoint", point);
+                        } else {
+                            prefs.remove("classMemberInsertionPoint");
                         }
-                        lastCompletions.add(completion);
-                        item.setData(new CompletionData(uri, index.getAndIncrement()));
-                        items.add(item);
-                    });
-                    if (!isComplete) {
-                        completionList.setIsIncomplete(true);
-                    }
-                } finally {
-                    if (point != null) {
-                        prefs.put("classMemberInsertionPoint", point);
-                    } else {
-                        prefs.remove("classMemberInsertionPoint");
-                    }
 
-                    done.set(true);
-                    Sampler sampler = samplerRef.get();
-                    RUNNING_SAMPLER.compareAndExchange(sampler, null);
-                    if (sampler != null) {
-                        long samplingTime = (System.currentTimeMillis() - completionStart);
-                        long minSamplingTime = Math.min(1_000, samplingWarningLength.get());
-                        if (samplingTime >= minSamplingTime &&
-                            samplingTime >= samplingWarningLength.get() &&
-                            samplingWarningLength.get() >= 0) {
-                            Lookup lookup = Lookup.getDefault();
-                            new Thread(() -> {
-                                Lookups.executeWith(lookup, () -> {
-                                    Path logDir = Places.getUserDirectory().toPath().resolve("var/log");
-                                    try {
-                                        Path target = Files.createTempFile(logDir, "completion-sampler", ".npss");
-                                        try (OutputStream out = Files.newOutputStream(target);
-                                             DataOutputStream dos = new DataOutputStream(out)) {
-                                            sampler.stopAndWriteTo(dos);
+                        done.set(true);
+                        Sampler sampler = samplerRef.get();
+                        RUNNING_SAMPLER.compareAndExchange(sampler, null);
+                        if (sampler != null) {
+                            long samplingTime = (System.currentTimeMillis() - completionStart);
+                            long minSamplingTime = Math.min(1_000, samplingWarningLength.get());
+                            if (samplingTime >= minSamplingTime &&
+                                samplingTime >= samplingWarningLength.get() &&
+                                samplingWarningLength.get() >= 0) {
+                                Lookup lookup = Lookup.getDefault();
+                                new Thread(() -> {
+                                    Lookups.executeWith(lookup, () -> {
+                                        Path logDir = Places.getUserDirectory().toPath().resolve("var/log");
+                                        try {
+                                            Path target = Files.createTempFile(logDir, "completion-sampler", ".npss");
+                                            try (OutputStream out = Files.newOutputStream(target);
+                                                 DataOutputStream dos = new DataOutputStream(out)) {
+                                                sampler.stopAndWriteTo(dos);
 
-                                            NotifyDescriptor notifyUser = new Message(Bundle.INFO_LongCodeCompletion(samplingWarningLength.get(), target.toAbsolutePath().toString()));
+                                                NotifyDescriptor notifyUser = new Message(Bundle.INFO_LongCodeCompletion(samplingWarningLength.get(), target.toAbsolutePath().toString()));
 
-                                            DialogDisplayer.getDefault().notifyLater(notifyUser);
+                                                DialogDisplayer.getDefault().notifyLater(notifyUser);
+                                            }
+                                        } catch (IOException ex) {
+                                            Exceptions.printStackTrace(ex);
                                         }
-                                    } catch (IOException ex) {
-                                        Exceptions.printStackTrace(ex);
-                                    }
-                                });
-                            }).start();
+                                    });
+                                }).start();
+                            }
                         }
                     }
-                }
-                completionList.setItems(items);
-                return Either.forRight(completionList);
-            });
+                    completionList.setItems(items);
+                    return Either.forRight(completionList);
+                }, p));
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
@@ -1089,7 +1097,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
             ArrayList<Diagnostic> diagnostics = new ArrayList<>(params.getContext().getDiagnostics());
             if (diagnostics.isEmpty()) {
-                diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc), null));
+                diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc), null, null)); //TODO: cancel
             }
 
             Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
@@ -2097,29 +2105,49 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         // sync needed - this can be called also from reporterControl, from other that LSP request thread. The factory function just cretaes a stopped
         // Task that is executed later.
-        synchronized (diagnosticTasks) {
-            diagnosticTasks.computeIfAbsent(uri, u -> {
-                return BACKGROUND_TASKS.create(() -> {
-                    Document originalDoc = server.getOpenedDocuments().getDocument(uri);
-                    long originalVersion = documentVersion(originalDoc);
-                    AtomicReference<Document> docHolder = new AtomicReference<>(originalDoc);
-                    List<Diagnostic> errorDiags = computeDiags(u, -1, ErrorProvider.Kind.ERRORS, originalVersion, docHolder);
-                    if (documentVersion(originalDoc) == originalVersion) {
-                        publishDiagnostics(uri, errorDiags);
-                        BACKGROUND_TASKS.create(() -> {
-                            List<Diagnostic> hintDiags = computeDiags(u, -1, ErrorProvider.Kind.HINTS, originalVersion, docHolder);
-                            Document doc = server.getOpenedDocuments().getDocument(uri);
-                            if (documentVersion(doc) == originalVersion) {
-                                publishDiagnostics(uri, hintDiags);
-                            }
-                        }).schedule(DELAY);
-                    }
-                });
-            }).schedule(DELAY);
+        synchronized (pendingDiagnostics) {
+            Runnable currentlyRunning = pendingDiagnostics.remove(uri);
+            if (currentlyRunning != null) {
+                //todo: the cancelling does not seem to work????
+                currentlyRunning.run();
+            }
+
+            Document originalDoc = server.getOpenedDocuments().getDocument(uri);
+            long originalVersion = documentVersion(originalDoc);
+            AtomicReference<Document> docHolder = new AtomicReference<>(originalDoc);
+
+            CompletableFuture<Void> errorFuture =
+                    PriorityQueueRun.getInstance()
+                                    .runTask(Priority.LOW,
+                                            //todo: check document versions:
+                                             (__, cancel) -> computeDiags(uri, -1, ErrorProvider.Kind.ERRORS, originalVersion, docHolder, cancel),
+                                             null,
+                                             DELAY)
+                                    .thenAccept(errorDiags -> {
+                                        if (documentVersion(originalDoc) == originalVersion) {
+                                            publishDiagnostics(uri, errorDiags);
+                                        }
+                                     });
+            CompletableFuture<Void> hintsFuture =
+                    PriorityQueueRun.getInstance()
+                                    .runTask(Priority.BELOW_LOW,
+                                             (__, cancel) -> computeDiags(uri, -1, ErrorProvider.Kind.HINTS, originalVersion, docHolder, cancel),
+                                             null,
+                                             DELAY)
+                                    .thenAccept(errorDiags -> {
+                                        if (documentVersion(originalDoc) == originalVersion) {
+                                            publishDiagnostics(uri, errorDiags);
+                                        }
+                                     });
+            pendingDiagnostics.put(uri, () -> {
+                errorFuture.cancel(true);
+                hintsFuture.cancel(true);
+            });
         }
     }
     
     CompletableFuture<List<Diagnostic>> computeDiagnostics(String uri, EnumSet<ErrorProvider.Kind> types) {
+        //TODO: rewrite to PriorityQueueRun
         CompletableFuture<List<Diagnostic>> r = new CompletableFuture<>();
         BACKGROUND_TASKS.post(() -> {
             try {
@@ -2128,10 +2156,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 AtomicReference<Document> docHolder = new AtomicReference<>(originalDoc);
                 List<Diagnostic> result = Collections.emptyList();
                 if (types.contains(ErrorProvider.Kind.ERRORS)) {
-                    result = computeDiags(uri, -1, ErrorProvider.Kind.ERRORS, originalVersion, docHolder);
+                    result = computeDiags(uri, -1, ErrorProvider.Kind.ERRORS, originalVersion, docHolder, null);
                 }
                 if (types.contains(ErrorProvider.Kind.HINTS)) {
-                    result = computeDiags(uri, -1, ErrorProvider.Kind.HINTS, originalVersion, docHolder);
+                    result = computeDiags(uri, -1, ErrorProvider.Kind.HINTS, originalVersion, docHolder, null);
                 }
                 r.complete(result);
             } catch (ThreadDeath td) {
@@ -2158,7 +2186,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
      * @param orgV version of the document. or -1 to obtain the current version.
      * @return complete list of diagnostics for the file.
      */
-    private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long orgV, AtomicReference<Document> docHolder) {
+    private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long orgV, AtomicReference<Document> docHolder, CancelCheck cancelCheck) {
         List<Diagnostic> result = new ArrayList<>();
         FileObject file = fromURI(uri);
         if (file == null) {
@@ -2183,6 +2211,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             List<? extends org.netbeans.api.lsp.Diagnostic> errors;
             if (!errorProviders.isEmpty()) {
                 ErrorProvider.Context context = new ErrorProvider.Context(file, offset, errorKind, hintsPrefsFile);
+                if (cancelCheck != null) {
+                    cancelCheck.registerCancel(context::cancel);
+                }
                 class CancelListener implements DocumentListener {
                     @Override
                     public void insertUpdate(DocumentEvent e) {
@@ -2527,79 +2558,85 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }};
 
     @Override
-    public CompletableFuture<SemanticTokens> semanticTokensFull(SemanticTokensParams params) {
-        JavaSource js = getJavaSource(params.getTextDocument().getUri());
-        List<Integer> result = new ArrayList<>();
-        if (js != null) {
-            try {
-                js.runUserActionTask(cc -> {
-                    cc.toPhase(JavaSource.Phase.RESOLVED);
-                    Document doc = cc.getSnapshot().getSource().getDocument(true);
-                    new SemanticHighlighterBase() {
-                        @Override
-                        protected boolean process(CompilationInfo info, Document doc) {
-                            process(info, doc, new ErrorDescriptionSetter() {
-                                @Override
-                                public void setHighlights(Document doc, Collection<Pair<int[], ColoringAttributes.Coloring>> highlights, Map<int[], String> preText) {
-                                    //...nothing
-                                }
+    public CompletableFuture<SemanticTokens> semanticTokensFull(SemanticTokensParams p) {
+        return PriorityQueueRun.getInstance()
+                               .runTask(Priority.NORMAL,
+                                        (params, cancel) -> {
+            JavaSource js = getJavaSource(params.getTextDocument().getUri());
+            List<Integer> result = new ArrayList<>();
+            if (js != null) {
+                try {
+                    js.runUserActionTask(cc -> {
+                        cc.toPhase(JavaSource.Phase.RESOLVED);
+                        Document doc = cc.getSnapshot().getSource().getDocument(true);
+                        class SemanticHighlighterImpl extends SemanticHighlighterBase {
+                            @Override
+                            protected boolean process(CompilationInfo info, Document doc) {
+                                process(info, doc, new ErrorDescriptionSetter() {
+                                    @Override
+                                    public void setHighlights(Document doc, Collection<Pair<int[], ColoringAttributes.Coloring>> highlights, Map<int[], String> preText) {
+                                        //...nothing
+                                    }
 
-                                @Override
-                                public void setColorings(Document doc, Map<Token, ColoringAttributes.Coloring> colorings) {
-                                    int line = 0;
-                                    long column = 0;
-                                    int lastLine = 0;
-                                    long currentLineStart = 0;
-                                    long nextLineStart = getStartPosition(line + 2);
-                                    Map<Token, ColoringAttributes.Coloring> ordered = new TreeMap<>((t1, t2) -> t1.offset(null) - t2.offset(null));
-                                    ordered.putAll(colorings);
-                                    for (Entry<Token, ColoringAttributes.Coloring> e : ordered.entrySet()) {
-                                        int currentOffset = e.getKey().offset(null);
-                                        while (nextLineStart < currentOffset) {
-                                            line++;
-                                            currentLineStart = nextLineStart;
-                                            nextLineStart = getStartPosition(line + 2);
-                                            column = 0;
-                                        }
-                                        Optional<Integer> tokenType = e.getValue().stream().map(c -> coloring2TokenType[c.ordinal()]).collect(Collectors.maxBy((v1, v2) -> v1.intValue() - v2.intValue()));
-                                        int modifiers = 0;
-                                        for (ColoringAttributes c : e.getValue()) {
-                                            int mod = coloring2TokenModifier[c.ordinal()];
-                                            if (mod != (-1)) {
-                                                modifiers |= mod;
+                                    @Override
+                                    public void setColorings(Document doc, Map<Token, ColoringAttributes.Coloring> colorings) {
+                                        int line = 0;
+                                        long column = 0;
+                                        int lastLine = 0;
+                                        long currentLineStart = 0;
+                                        long nextLineStart = getStartPosition(line + 2);
+                                        Map<Token, ColoringAttributes.Coloring> ordered = new TreeMap<>((t1, t2) -> t1.offset(null) - t2.offset(null));
+                                        ordered.putAll(colorings);
+                                        for (Entry<Token, ColoringAttributes.Coloring> e : ordered.entrySet()) {
+                                            int currentOffset = e.getKey().offset(null);
+                                            while (nextLineStart < currentOffset) {
+                                                line++;
+                                                currentLineStart = nextLineStart;
+                                                nextLineStart = getStartPosition(line + 2);
+                                                column = 0;
+                                            }
+                                            Optional<Integer> tokenType = e.getValue().stream().map(c -> coloring2TokenType[c.ordinal()]).collect(Collectors.maxBy((v1, v2) -> v1.intValue() - v2.intValue()));
+                                            int modifiers = 0;
+                                            for (ColoringAttributes c : e.getValue()) {
+                                                int mod = coloring2TokenModifier[c.ordinal()];
+                                                if (mod != (-1)) {
+                                                    modifiers |= mod;
+                                                }
+                                            }
+                                            if (tokenType.isPresent() && tokenType.get() >= 0) {
+                                                result.add(line - lastLine);
+                                                result.add((int) (currentOffset - currentLineStart - column));
+                                                result.add(e.getKey().length());
+                                                result.add(tokenType.get());
+                                                result.add(modifiers);
+                                                lastLine = line;
+                                                column = currentOffset - currentLineStart;
                                             }
                                         }
-                                        if (tokenType.isPresent() && tokenType.get() >= 0) {
-                                            result.add(line - lastLine);
-                                            result.add((int) (currentOffset - currentLineStart - column));
-                                            result.add(e.getKey().length());
-                                            result.add(tokenType.get());
-                                            result.add(modifiers);
-                                            lastLine = line;
-                                            column = currentOffset - currentLineStart;
+                                    }
+
+                                    private long getStartPosition(int line) {
+                                        try {
+                                            return line < 0 ? -1 : info.getCompilationUnit().getLineMap().getStartPosition(line);
+                                        } catch (Exception e) {
+                                            return info.getText().length();
                                         }
                                     }
-                                }
-
-                                private long getStartPosition(int line) {
-                                    try {
-                                        return line < 0 ? -1 : info.getCompilationUnit().getLineMap().getStartPosition(line);
-                                    } catch (Exception e) {
-                                        return info.getText().length();
-                                    }
-                                }
-                            });
-                            return true;
-                        }
-                    }.process(cc, doc);
-                }, true);
-            } catch (IOException ex) {
-                //TODO: include stack trace:
-                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                                });
+                                return true;
+                            }
+                        };
+                        SemanticHighlighterImpl highlighter = new SemanticHighlighterImpl();
+                        highlighter.process(cc, doc);
+                        cancel.registerCancel(highlighter::cancel);
+                    }, true);
+                } catch (IOException ex) {
+                    //TODO: include stack trace:
+                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                }
             }
-        }
-        SemanticTokens tokens = new SemanticTokens(result);
-        return CompletableFuture.completedFuture(tokens);
+            return new SemanticTokens(result);
+        }, p);
     }
 
     @Override

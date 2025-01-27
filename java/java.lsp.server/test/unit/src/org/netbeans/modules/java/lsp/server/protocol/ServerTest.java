@@ -55,6 +55,7 @@ import java.util.TreeSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -67,6 +68,7 @@ import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
+import junit.framework.Test;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertNull;
@@ -165,6 +167,7 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery.Result;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery.Trigger;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -175,6 +178,7 @@ import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.sendopts.CommandLine;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.java.hints.infrastructure.JavaErrorProvider;
 import static org.netbeans.modules.java.lsp.server.LspTestUtils.tripleSlashUri;
 import org.netbeans.modules.java.lsp.server.TestCodeLanguageClient;
@@ -284,6 +288,16 @@ public class ServerTest extends NbTestCase {
         SourceUtilsTestUtil2.disableMultiFileSourceRoots();
         super.setUp();
         clearWorkDir();
+        //the test cases run consequentivelly, but in the same global state.
+        //Project(s) from the previous test cases may be open, and may cause
+        //subsequent test failures, if they are closed, trigger scan, and cause
+        //additional/duplicated diagnostic publish.
+        //rather close the projects, and wait for scan finished:
+        Future<Project[]> openProjects = OpenProjects.getDefault().openProjects();
+        if (openProjects.isDone()) {
+            OpenProjects.getDefault().close(openProjects.get());
+            SourceUtils.waitScanFinished();
+        }
         ServerSocket srv = new ServerSocket(0, 1, InetAddress.getLoopbackAddress());
         serverThread = new Thread(() -> {
             try {
@@ -326,13 +340,13 @@ public class ServerTest extends NbTestCase {
         OpenProjects.getDefault().close(OpenProjects.getDefault().getOpenProjects());
     }
     
-    final List<Diagnostic>[] diags = new List[1];
+    final List<List<Diagnostic>> diags = new ArrayList<>();
     Set<String> diagnosticURIs = Collections.synchronizedSet(new HashSet<>());
     
     void clearDiagnostics() {
         synchronized (diags) {
             diagnosticURIs.clear();
-            diags[0] = null;
+            diags.clear();
         }
     }
     
@@ -344,7 +358,16 @@ public class ServerTest extends NbTestCase {
     }
     
     class LspClient implements LanguageClient {
+        private final String uri2CatchDiags;
         List<MessageParams> loggedMessages = new ArrayList<>();
+
+        public LspClient() {
+            this(null);
+        }
+
+        public LspClient(String uri2CatchDiags) {
+            this.uri2CatchDiags = uri2CatchDiags;
+        }
 
         @Override
         public CompletableFuture<Void> createProgress(WorkDoneProgressCreateParams params) {
@@ -364,8 +387,11 @@ public class ServerTest extends NbTestCase {
         public void publishDiagnostics(PublishDiagnosticsParams params) {
             synchronized (diags) {
                 diagnosticURIs.add(params.getUri());
-                diags[0] = params.getDiagnostics();
-                diags.notifyAll();
+
+                if (uri2CatchDiags == null || uri2CatchDiags.equals(params.getUri())) {
+                    diags.add(params.getDiagnostics());
+                    diags.notifyAll();
+                }
             }
         }
 
@@ -476,7 +502,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient(), client.getInputStream(), client.getOutputStream());
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient(src.toURI().toString()), client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
@@ -695,7 +721,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        List<Diagnostic>[] diags = new List[1];
+        List<List<Diagnostic>> diags = new ArrayList<>();
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
@@ -704,7 +730,7 @@ public class ServerTest extends NbTestCase {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
-                    diags[0] = params.getDiagnostics();
+                    diags.add(params.getDiagnostics());
                     diags.notifyAll();
                 }
             }
@@ -750,13 +776,13 @@ public class ServerTest extends NbTestCase {
         assertEquals("", edit.getNewText());
     }
 
-    private List<Diagnostic> assertDiags(List<Diagnostic>[] diags, String... expected) {
+    private List<Diagnostic> assertDiags(List<List<Diagnostic>> diags, String... expected) {
         return assertDiags(diags, new AtomicBoolean(false), expected);
     }
     
-    private List<Diagnostic> assertDiags(List<Diagnostic>[] diags, AtomicBoolean cancel, String... expected) {
+    private List<Diagnostic> assertDiags(List<List<Diagnostic>> diags, AtomicBoolean cancel, String... expected) {
         synchronized (diags) {
-            while (diags[0] == null) {
+            while (diags.isEmpty()) {
                 try {
                     diags.wait();
                 } catch (InterruptedException ex) {
@@ -766,22 +792,28 @@ public class ServerTest extends NbTestCase {
                     fail("Diagnostics not received");
                 }
             }
-            Set<String> actualDiags = diags[0].stream()
-                                               .map(d -> d.getSeverity() + ":" +
-                                                         d.getRange().getStart().getLine() + ":" + d.getRange().getStart().getCharacter() + "-" +
-                                                         d.getRange().getEnd().getLine() + ":" + d.getRange().getEnd().getCharacter())
-                                               .collect(Collectors.toSet());
-            String diagsMessage = diags[0].stream()
-                                          .map(d -> d.getSeverity() + ":" +
-                                                    d.getRange().getStart().getLine() + ":" + d.getRange().getStart().getCharacter() + "-" +
-                                                    d.getRange().getEnd().getLine() + ":" + d.getRange().getEnd().getCharacter() + ": " +
-                                                    d.getMessage())
-                                               .collect(Collectors.joining("\n"));
+
+            Function<Diagnostic, String> diag2DebugString =
+                    d -> d.getSeverity() + ":" +
+                         d.getRange().getStart().getLine() + ":" + d.getRange().getStart().getCharacter() + "-" +
+                         d.getRange().getEnd().getLine() + ":" + d.getRange().getEnd().getCharacter() + ": " +
+                         d.getMessage();
+
+            String diagsMessage = diags.stream()
+                                       .map(result -> result.stream()
+                                                            .map(diag2DebugString)
+                                                            .collect(Collectors.joining(", ", "[", "]")))
+                                       .collect(Collectors.joining("\n"));
+
+            List<Diagnostic> result = diags.remove(0);
+
+            Set<String> actualDiags = result.stream()
+                                            .map(d -> d.getSeverity() + ":" +
+                                                      d.getRange().getStart().getLine() + ":" + d.getRange().getStart().getCharacter() + "-" +
+                                                      d.getRange().getEnd().getLine() + ":" + d.getRange().getEnd().getCharacter())
+                                            .collect(Collectors.toSet());
+
             assertEquals(diagsMessage, new HashSet<>(Arrays.asList(expected)), actualDiags);
-
-            List<Diagnostic> result = diags[0];
-
-            diags[0] = null;
 
             return result;
         }
@@ -1256,7 +1288,7 @@ public class ServerTest extends NbTestCase {
             w.write("module java.compiler { }");
         }
 
-        List<Diagnostic>[] diags = new List[1];
+        List<List<Diagnostic>> diags = new ArrayList<>();
         boolean[] indexingComplete = new boolean[1];
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
@@ -1266,7 +1298,7 @@ public class ServerTest extends NbTestCase {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
-                    diags[0] = params.getDiagnostics();
+                    diags.add(params.getDiagnostics());
                     diags.notifyAll();
                 }
             }
@@ -1733,7 +1765,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        List<Diagnostic>[] diags = new List[1];
+        List<List<Diagnostic>> diags = new ArrayList<>();
         CountDownLatch indexingComplete = new CountDownLatch(1);
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
@@ -1746,7 +1778,7 @@ public class ServerTest extends NbTestCase {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
-                    diags[0] = params.getDiagnostics();
+                    diags.add(params.getDiagnostics());
                     diags.notifyAll();
                 }
             }
@@ -5766,14 +5798,14 @@ public class ServerTest extends NbTestCase {
         synchronized (diags) {
             long timeout = 1000;
             long start = System.currentTimeMillis();
-            while (diags[0] == null && (System.currentTimeMillis() - start) < timeout) {
+            while (diags.isEmpty() && (System.currentTimeMillis() - start) < timeout) {
                 try {
                     diags.wait(timeout / 10);
                 } catch (InterruptedException ex) {
                     //ignore
                 }
             }
-            assertNull(diags[0]);
+            assertTrue(diags.isEmpty());
         }
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 1), new Position(2, 1)), 0, "    \n    "))));
         assertDiags(diags, "Warning:4:15-4:16");//errors

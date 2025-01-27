@@ -82,12 +82,20 @@ public class TomlKeystrokeTest extends TomlTestBase {
         insertChar("foo= ^bar", '\'', "foo= 'bar'^", "bar");
     }
 
-    public void  testStepSingleQuote() throws Exception {
+    public void testStepSingleQuote() throws Exception {
         insertChar("foo= '^'", '\'', "foo= ''^");
     }
 
     public void testDeleteSingle2() throws Exception {
         deleteChar("foo= ''^", "foo= '^");
+    }
+
+    public void testDeleteLastBrace() throws Exception {
+        deleteChar("[plugins]\n"
+                + "jooq-codegen = { id = \"org.jooq.jooq-codegen-gradle\", version.ref=\"jooq\" }^",
+                "[plugins]\n"
+                + "jooq-codegen = { id = \"org.jooq.jooq-codegen-gradle\", version.ref=\"jooq\" ^"
+        );
     }
 
 }

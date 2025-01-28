@@ -55,20 +55,18 @@ public abstract class CacheIndex {
             return new File[0];
         }
 
-        synchronized(this) {
-            Set<File> ret = index.get(key);
-            if(ret == null) {
-                LOG.log(Level.FINE, " get({0}) returns no files", new Object[]{key});
-                return new File[0];
-            }
-
-            LOG.log(Level.FINE, " get({0}) returns {1}", new Object[]{key, ret.size()});
-            if(LOG.isLoggable(Level.FINER)) {
-                LOG.finer("   " + ret);
-            }
-
-            return ret.toArray(File[]::new);
+        Set<File> ret = index.get(key);
+        if(ret == null) {
+            LOG.log(Level.FINE, " get({0}) returns no files", new Object[]{key});
+            return new File[0];
         }
+
+        LOG.log(Level.FINE, " get({0}) returns {1}", new Object[]{key, ret.size()});
+        if(LOG.isLoggable(Level.FINER)) {
+            LOG.finer("   " + ret);
+        }
+
+        return ret.toArray(File[]::new);
     }
 
     public File[] getAllValues() {

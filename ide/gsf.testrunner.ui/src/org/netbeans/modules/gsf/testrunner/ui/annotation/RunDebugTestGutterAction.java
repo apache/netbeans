@@ -36,6 +36,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
 import org.netbeans.editor.AnnotationDesc;
 import org.netbeans.editor.BaseDocument;
@@ -89,8 +90,8 @@ public class RunDebugTestGutterAction extends AbstractAction {
         "DN_debug.single.method=Debug {0} method",
         "CAP_SelectAction=Select Action",
     })
-    public void actionPerformed(ActionEvent e) {
-        Object source = e.getSource();
+    public void actionPerformed(ActionEvent evt) {
+        Object source = evt.getSource();
 
         if (!(source instanceof JTextComponent)) {
             StatusDisplayer.getDefault().setStatusText(Bundle.ERR_NoTestMethod());
@@ -104,8 +105,11 @@ public class RunDebugTestGutterAction extends AbstractAction {
         AnnotationDesc activeAnnotation = ((BaseDocument) doc).getAnnotations().getActiveAnnotation(line);
 
         if (activeAnnotation != null && fixableAnnotations.contains(activeAnnotation.getAnnotationType())) {
-            Map<Integer, TestMethod> annotationLines = (Map<Integer, TestMethod>) doc.getProperty(TestMethodAnnotation.DOCUMENT_ANNOTATION_LINES_KEY);
-            TestMethod testMethod = annotationLines.get(line);
+            Map<Position, TestMethod> annotationLines = (Map<Position, TestMethod>) doc.getProperty(TestMethodAnnotation.DOCUMENT_ANNOTATION_LINES_KEY);
+            int lineStartOffset = NbDocument.findLineOffset((StyledDocument) doc, line);
+            int nextLineStartOffset = NbDocument.findLineOffset((StyledDocument) doc, line + 1);
+            TestMethod testMethod = annotationLines.entrySet().stream().filter(e -> lineStartOffset <= e.getKey().getOffset() && e.getKey().getOffset() < nextLineStartOffset).map(e -> e.getValue()).findAny().orElse(null);
+
             if (testMethod != null) {
                 SingleMethod singleMethod = testMethod.method();
 
@@ -163,7 +167,7 @@ public class RunDebugTestGutterAction extends AbstractAction {
         if (actions.length > nextAction) {
             Action a = actions[nextAction];
             if (a != null && a.isEnabled()){
-                a.actionPerformed(e);
+                a.actionPerformed(evt);
             }
         }
     }

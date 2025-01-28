@@ -164,7 +164,7 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
 
     private final NexusRepositoryQueries queries;
     
-    static final int MAX_RESULT_COUNT = 1024;
+    static final int MAX_RESULT_COUNT = 4096;
     static final int NO_CAP_RESULT_COUNT = AbstractSearchRequest.UNDEFINED;
 
     @SuppressWarnings("this-escape")

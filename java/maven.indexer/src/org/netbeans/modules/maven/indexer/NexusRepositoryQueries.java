@@ -248,7 +248,10 @@ final class NexusRepositoryQueries implements
                 .add(new BooleanClause(setBooleanRewrite(new PrefixQuery(new Term(ArtifactInfo.UINFO, id))), BooleanClause.Occur.MUST))
                 .build();
         iterate(repos, (RepositoryInfo repo, IndexingContext context) -> {
-            IteratorSearchResponse response = repeatedPagedSearch(bq, context, NexusRepositoryIndexManager.MAX_RESULT_COUNT);
+            // Some projects generated quite a lot of artifacts by now.
+            // Since this query is sometimes used by code which wants to find the top x most recent artifacts,
+            // we have to use a relatively high results limit - this doesn't seem to be a performance problem (other queries set no limit)
+            IteratorSearchResponse response = repeatedPagedSearch(bq, context, 10_000);
             if (response != null) {
                 try {
                     for (ArtifactInfo ai : response) {

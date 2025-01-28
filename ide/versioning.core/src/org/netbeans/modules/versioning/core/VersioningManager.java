@@ -38,6 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.versioning.core.spi.VCSContext;
 import org.netbeans.modules.versioning.core.api.VCSFileProxy;
@@ -198,6 +199,16 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
                 }
                 // do not fire events under lock but asynchronously
                 refreshVersioningSystems(true);
+                // versioning annotations need refreshing on project re-open
+                OpenProjects.getDefault().addPropertyChangeListener(evt -> {
+                    if ("openProjects".equals(evt.getPropertyName())) {
+                        if (    evt.getOldValue() instanceof Project[] oldV
+                             && evt.getNewValue() instanceof Project[] newV
+                             && oldV.length < newV.length) {
+                            refreshAllAnnotations(); // impl handles debouncing
+                        }
+                    }
+                });
             }
             VersioningSupport.getPreferences().addPreferenceChangeListener(this);
         } finally {

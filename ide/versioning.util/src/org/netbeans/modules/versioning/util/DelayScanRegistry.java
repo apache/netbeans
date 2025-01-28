@@ -35,9 +35,10 @@ import org.openide.util.RequestProcessor.Task;
 public final class DelayScanRegistry {
     private final WeakHashMap<RequestProcessor.Task, DelayedScan> registry;
     private static DelayScanRegistry instance;
-    private static int MAX_WAITING_TIME = 180000; // wait max 3 mins
-    private static int WAITING_PERIOD = 10000;
+    private static final int MAX_WAITING_TIME = 180000; // wait max 3 mins
+    private static final int WAITING_PERIOD = 10000;
     private static final boolean BLOCK_INDEFINITELY = "true".equals(System.getProperty("versioning.delayscan.nolimit", "false")); //NOI18N
+    private static final boolean NO_DELAY = "true".equals(System.getProperty("versioning.delayscan.disable", "false")); //NOI18N
 
     public static synchronized DelayScanRegistry getInstance() {
         if (instance == null) {
@@ -47,7 +48,7 @@ public final class DelayScanRegistry {
     }
 
     private DelayScanRegistry () {
-        registry = new WeakHashMap<Task, DelayedScan>(5);
+        registry = new WeakHashMap<>(5);
     }
 
     /**
@@ -69,7 +70,7 @@ public final class DelayScanRegistry {
                 // not interested
             }
         }
-        if (IndexingBridge.getInstance().isIndexingInProgress()
+        if (!NO_DELAY && IndexingBridge.getInstance().isIndexingInProgress()
                 && (BLOCK_INDEFINITELY || scan.waitingLoops * WAITING_PERIOD < MAX_WAITING_TIME)) {
             // do not steal disk from openning projects and indexing tasks
             Level level = ++scan.waitingLoops < 10 ? Level.FINE : Level.INFO;
@@ -84,11 +85,7 @@ public final class DelayScanRegistry {
 
     private DelayedScan getRegisteredScan(Task task) {
         synchronized (registry) {
-            DelayedScan scan = registry.get(task);
-            if (scan == null) {
-                registry.put(task, scan = new DelayedScan());
-            }
-            return scan;
+            return registry.computeIfAbsent(task, k -> new DelayedScan());
         }
     }
 

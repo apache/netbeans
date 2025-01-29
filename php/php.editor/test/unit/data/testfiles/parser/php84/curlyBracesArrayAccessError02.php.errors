@@ -1,0 +1,8 @@
+[[171,172]-Syntax error
+ unexpected:	{
+ expected:	instanceof, as, ->, ?->, =>, }, ::, ',', OR, XOR, &&, =, +=, -=, *=, /=, .=, %=, &=, |=, ^=, <<=, >>=, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ++, --, [, ], (, ), :, **, **=, ??, ??=, &] 171-172:Syntax error
+ unexpected:	{
+ expected:	instanceof, as, ->, ?->, =>, }, ::, ',', OR, XOR, &&, =, +=, -=, *=, /=, .=, %=, &=, |=, ^=, <<=, >>=, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ++, --, [, ], (, ), :, **, **=, ??, ??=, &
+[[173,174]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 173-174:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}

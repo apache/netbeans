@@ -822,6 +822,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     @Override
     public void visit(SingleFieldDeclaration node) {
         scan(node.getValue());
+        scan(node.getPropertyHooks());
     }
 
     @Override

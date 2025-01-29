@@ -221,25 +221,34 @@ public class JavaCompletionCollector implements CompletionCollector {
         }
     }
 
-    public static Supplier<List<TextEdit>> addImport(Document doc, int offset, ElementHandle<?> handle) {
+    public static Supplier<List<TextEdit>> addImportAndInjectPackageIfNeeded(Document doc, int offset, ElementHandle<?> handle) {
         return () -> {
-            AtomicReference<String> pkg = new AtomicReference<>();
-            List<TextEdit> textEdits = modify2TextEdits(JavaSource.forDocument(doc), copy -> {
-                copy.toPhase(JavaSource.Phase.RESOLVED);
-                String fqn = SourceUtils.resolveImport(copy, copy.getTreeUtilities().pathFor(offset), handle.getQualifiedName());
-                if (fqn != null) {
-                    int idx = fqn.lastIndexOf('.');
-                    if (idx >= 0) {
-                        pkg.set(fqn.substring(0, idx + 1));
-                    }
-                }
-            });
-            if (textEdits.isEmpty() && pkg.get() != null) {
-                textEdits.add(new TextEdit(offset, offset, pkg.get()));
+            ResolvedImport resolved = addImport(doc, offset, handle);
+            List<TextEdit> edits;
+            String insertName = resolved.insertName();
+            int dotIdx = insertName.lastIndexOf('.');
+            if (dotIdx >= 0) {
+                edits = new ArrayList<>(resolved.importEdits().size() + 1);
+                edits.addAll(resolved.importEdits());
+                edits.add(new TextEdit(offset, offset, insertName.substring(0, dotIdx + 1)));
+            } else {
+                edits = resolved.importEdits();
             }
-            return textEdits;
+            return edits;
         };
     }
+
+    public static ResolvedImport addImport(Document doc, int offset, ElementHandle<?> handle) {
+        AtomicReference<String> insertName = new AtomicReference<>();
+        List<TextEdit> textEdits = modify2TextEdits(JavaSource.forDocument(doc), copy -> {
+            copy.toPhase(JavaSource.Phase.RESOLVED);
+            insertName.set(SourceUtils.resolveImport(copy, copy.getTreeUtilities().pathFor(offset), handle.getQualifiedName()));
+        });
+
+        return new ResolvedImport(textEdits, insertName.get());
+    }
+
+    public record ResolvedImport(List<TextEdit> importEdits, String insertName) {}
 
     public static boolean isOfKind(Element e, EnumSet<ElementKind> kinds) {
         if (kinds.contains(e.getKind())) {
@@ -666,24 +675,19 @@ public class JavaCompletionCollector implements CompletionCollector {
 
         @Override
         public Completion createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon, boolean smartType) {
-            //TODO: prefer static imports (but would be much slower?)
-            //TODO: should be resolveImport instead of addImports:
-            Map<Element, TextEdit> imports = (Map<Element, TextEdit>) info.getCachedValue(KEY_IMPORT_TEXT_EDITS);
+            Map<Element, ResolvedImport> imports = (Map<Element, ResolvedImport>) info.getCachedValue(KEY_IMPORT_TEXT_EDITS);
             if (imports == null) {
                 info.putCachedValue(KEY_IMPORT_TEXT_EDITS, imports = new HashMap<>(), CompilationInfo.CacheClearPolicy.ON_TASK_END);
             }
-            TextEdit currentClassImport = imports.computeIfAbsent(type.asElement(), toImport -> {
-                List<TextEdit> textEdits = modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
-                    wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                    wc.rewrite(info.getCompilationUnit(), GeneratorUtilities.get(wc).addImports(wc.getCompilationUnit(), new HashSet<>(Arrays.asList(toImport))));
-                });
-                return textEdits.isEmpty() ? null : textEdits.get(0);
+            ResolvedImport currentClassImport = imports.computeIfAbsent(type.asElement(), toImport -> {
+                return addImport(doc, offset, ElementHandle.create(toImport));
             });
             String label = type.asElement().getSimpleName() + "." + memberElem.getSimpleName();
             String sortText = memberElem.getSimpleName().toString();
             String memberTypeName;
             StringBuilder labelDetail = new StringBuilder();
-            StringBuilder insertText = new StringBuilder(label);
+            StringBuilder insertText = new StringBuilder();
+            insertText.append(currentClassImport.insertName()).append(".").append(memberElem.getSimpleName());
             boolean asTemplate = false;
             if (memberElem.getKind().isField()) {
                 memberTypeName = Utilities.getTypeName(info, memberType, false).toString();
@@ -740,12 +744,12 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .labelDescription(memberTypeName)
                     .insertText(insertText.toString())
                     .insertTextFormat(asTemplate ? Completion.TextFormat.Snippet : Completion.TextFormat.PlainText)
-                    .sortText(String.format("%04d%s", (memberElem.getKind().isField() ? 720 : 750) + (smartType ? 1000 : 0), sortText));
+                    .sortText(String.format("%04d%s", (memberElem.getKind().isField() ? 720 : 750) + (smartType ? 0: 1000), sortText));
             if (labelDetail.length() > 0) {
                 builder.labelDetail(labelDetail.toString());
             }
-            if (currentClassImport != null) {
-                builder.additionalTextEdits(Collections.singletonList(currentClassImport));
+            if (!currentClassImport.importEdits().isEmpty()) {
+                builder.additionalTextEdits(currentClassImport.importEdits());
             }
             ElementHandle<Element> handle = SUPPORTED_ELEMENT_KINDS.contains(memberElem.getKind().name()) ? ElementHandle.create(memberElem) : null;
             if (handle != null) {
@@ -1041,7 +1045,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             if (handle != null) {
                 builder.documentation(getDocumentation(doc, off, handle));
                 if (!addSimpleName && !inImport) {
-                    builder.additionalTextEdits(addImport(doc, off, handle));
+                    builder.additionalTextEdits(addImportAndInjectPackageIfNeeded(doc, off, handle));
                 }
             }
             if (isDeprecated) {

@@ -86,7 +86,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
         assert element instanceof TypeScope || element instanceof VariableName
                 || element instanceof MethodScope || element instanceof FieldElement
                 || element instanceof CaseElement // allowed by parser although class can't have cases
-                || element instanceof ClassConstantElement : element.getPhpElementKind();
+                || element instanceof ClassConstantElement : element.getPhpElementKind() + " " + this.toString();
         if (element instanceof TypeScope) {
             Scope inScope = getInScope();
             if (inScope instanceof ScopeImpl) {

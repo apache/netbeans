@@ -1,10 +1,10 @@
 [[847,850]-Syntax error
  unexpected:	new
  after:	=
- expected:	integer, double, identifier, String, String, array, __CLASS__, __TRAIT__, __METHOD__, __FUNCTION__, __LINE__, __FILE__, <<<"...", __NAMESPACE__, __DIR__, define, +, -, !, ~, [, static, (, <<<'...'] 847-850:Syntax error
+ expected:	integer, double, identifier, String, String, array, __CLASS__, __TRAIT__, __METHOD__, __FUNCTION__, __LINE__, __FILE__, <<<"...", __NAMESPACE__, __DIR__, define, +, -, !, ~, [, static, (, <<<'...', namespace\..., ...\..., \...(\...), __PROPERTY__] 847-850:Syntax error
  unexpected:	new
  after:	=
- expected:	integer, double, identifier, String, String, array, __CLASS__, __TRAIT__, __METHOD__, __FUNCTION__, __LINE__, __FILE__, <<<"...", __NAMESPACE__, __DIR__, define, +, -, !, ~, [, static, (, <<<'...'
+ expected:	integer, double, identifier, String, String, array, __CLASS__, __TRAIT__, __METHOD__, __FUNCTION__, __LINE__, __FILE__, <<<"...", __NAMESPACE__, __DIR__, define, +, -, !, ~, [, static, (, <<<'...', namespace\..., ...\..., \...(\...), __PROPERTY__
 [[861,862]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}] 861-862:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}

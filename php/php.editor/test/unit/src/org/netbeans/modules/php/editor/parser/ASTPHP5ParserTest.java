@@ -1620,6 +1620,47 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php84/finalFieldsAnonClass");
     }
 
+    public void testCurlyBracesArrayAccessError01() throws Exception {
+        performTest("parser/php84/curlyBracesArrayAccessError01");
+    }
+
+    public void testCurlyBracesArrayAccessError02() throws Exception {
+        performTest("parser/php84/curlyBracesArrayAccessError02");
+    }
+
+    public void testCurlyBracesArrayAccessError03() throws Exception {
+        performTest("parser/php84/curlyBracesArrayAccessError03");
+    }
+
+    public void testCurlyBracesArrayAccessError04() throws Exception {
+        performTest("parser/php84/curlyBracesArrayAccessError04");
+    }
+
+    public void testPropertyHooks() throws Exception {
+        performTest("parser/php84/propertyHooks");
+    }
+
+    public void testPropertyHooksAbstract() throws Exception {
+        performTest("parser/php84/propertyHooksAbstract");
+    }
+
+    public void testPropertyHooksCPP() throws Exception {
+        // Constructor Property Promotion
+        performTest("parser/php84/propertyHooksCPP");
+    }
+
+    public void testPropertyHooksInterface() throws Exception {
+        performTest("parser/php84/propertyHooksInterface");
+    }
+
+    public void testPropertyHooksInterfaceError_01() throws Exception {
+        performTest("parser/php84/propertyHooksInterfaceError_01");
+    }
+
+    public void testPropertyHooksTrait() throws Exception {
+        performTest("parser/php84/propertyHooksTrait");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

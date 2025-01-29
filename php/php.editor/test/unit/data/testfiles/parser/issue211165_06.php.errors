@@ -1,13 +1,13 @@
-[[132,140]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	function] 132-140:POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	function
-[[187,188]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	}] 187-188:POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	}
+[[157,158]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	{] 157-158:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	{
 [[71,80]-Syntax error
  unexpected:	identifier 'xmlParser'
  after:	{
- expected:	case, function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public, readonly] 71-80:Syntax error
+ expected:	case, function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public, #[, readonly, public(set), protected(set), private(set)] 71-80:Syntax error
  unexpected:	identifier 'xmlParser'
  after:	{
- expected:	case, function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public, readonly
+ expected:	case, function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public, #[, readonly, public(set), protected(set), private(set)
+[[83,84]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	{] 83-84:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	{

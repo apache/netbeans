@@ -402,6 +402,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_PRIVATE_SET:
                 name = "T_PRIVATE_SET"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_PROPERTY_C:
+                name = "T_PROPERTY_C"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_PROTECTED:
                 name = "T_PROTECTED"; //NOI18N
                 break;

@@ -232,6 +232,8 @@ public interface Visitor {
     //public void endVisit(PrefixExpression prefixExpression);
     public void visit(Program program);
 
+    public void visit(PropertyHookDeclaration propertyHook);
+
     //public void endVisit(Program program);
     public void visit(Quote quote);
 

@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.php.editor.model.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -55,7 +54,7 @@ import org.openide.util.Union2;
  */
 class FieldElementImpl extends ScopeImpl implements FieldElement {
 
-    String defaultType;
+    private String defaultType;
     private String defaultFQType;
     private String className;
     private final boolean isAnnotation;

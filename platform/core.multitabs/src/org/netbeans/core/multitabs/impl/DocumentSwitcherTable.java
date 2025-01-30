@@ -68,8 +68,6 @@ class DocumentSwitcherTable extends SwitcherTable {
     private final ItemBorder ITEM_BORDER = new ItemBorder();
     private final Border SEPARATOR_BORDER = BorderFactory.createEmptyBorder( 2, 2, 0, 5 );
 
-    private String itemText;
-
     public DocumentSwitcherTable( Controller controller, SwitcherTableItem[] items, int y ) {
         super( items, y );
         this.controller = controller;
@@ -113,9 +111,14 @@ class DocumentSwitcherTable extends SwitcherTable {
             } else {
                 if(null != folderNameDecorator && null != item) {
                     TabData tab = item.getTabData();
-                    if(null != tab) {
-                        itemText = folderNameDecorator.getText(tab) + (item.isActive() ? " ←" : ""); //NOI18N
-                        lbl.setText(itemText);
+                    if (null != tab) {
+                        String decorated = folderNameDecorator.getText(tab);
+                        if (decorated != null) {
+                            if (item.isActive()) {
+                                decorated +=  " ←"; //NOI18N
+                            }
+                            lbl.setText(decorated);
+                        }
                     }
                 }
                 lbl.setBorder( ITEM_BORDER );

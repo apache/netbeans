@@ -93,6 +93,10 @@ public class TempFileGenerator {
     private final String filePrefix;
     private final String fileSufix;
     private final String configPath;
+    
+    public TempFileGenerator(String filePrefix, String fileSufix, String configPath) {
+        this(filePrefix, fileSufix, configPath, true);
+    }
 
     public TempFileGenerator(String filePrefix, String fileSufix, String configPath, boolean readOnly) {
         this.readOnly = readOnly;

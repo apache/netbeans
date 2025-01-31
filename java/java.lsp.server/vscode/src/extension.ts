@@ -1212,9 +1212,16 @@ async function runDockerSSH(username: string, host: string, dockerImage: string,
     let sshCommand = "";
     let mountVolume = "";
     let micronautConfigFilesEnv = "";
+
+    // remove old files before coping new ones
+    if (applicationProperties || bootstrapProperties || isRepositoryPrivate) {
+        const rmFilesCommand = `rm -f ${bootstrapPropertiesRemotePath} ${applicationPropertiesRemotePath} ${bearerTokenRemotePath}`;
+        sshCommand += `ssh ${username}@${host} "${rmFilesCommand}" && `;
+    }
+
     if (isRepositoryPrivate) {
         const bearerTokenFile = await commands.executeCommand(COMMAND_PREFIX + '.cloud.assets.createBearerToken', ocirServer);
-        sshCommand = `scp "${bearerTokenFile}" ${username}@${host}:${bearerTokenRemotePath} && `;
+        sshCommand += `scp "${bearerTokenFile}" ${username}@${host}:${bearerTokenRemotePath} && `;
     }
 
     if (bootstrapProperties) {

@@ -364,8 +364,36 @@ public final class TreeMaker {
               Tree extendsClause,
               List<? extends Tree> implementsClauses,
               List<? extends Tree> memberDecls) {
-        return delegate.Class(modifiers, simpleName, typeParameters, extendsClause, implementsClauses, memberDecls);
+        return Class(modifiers, simpleName, typeParameters, extendsClause, implementsClauses, List.of(), memberDecls);
     }
+
+    /**
+     * Creates a new ClassTree.
+     *
+     * @param modifiers the modifiers declaration
+     * @param simpleName        the name of the class without its package, such
+     *                          as "String" for the class "java.lang.String".
+     * @param typeParameters    the list of type parameters, or an empty list.
+     * @param extendsClause     the name of the class this class extends, or null.
+     * @param implementsClauses the list of the interfaces this class
+     *                          implements, or an empty list.
+     * @param permitsClauses    the list of the subtype this class
+     *                          permits, or an empty list.
+     * @param memberDecls       the list of fields defined by this class, or an
+     *                          empty list.
+     * @see com.sun.source.tree.ClassTree
+     * @since 2.75
+     */
+    public ClassTree Class(ModifiersTree modifiers,
+              CharSequence simpleName,
+              List<? extends TypeParameterTree> typeParameters,
+              Tree extendsClause,
+              List<? extends Tree> implementsClauses,
+              List<? extends Tree> permitsClauses,
+              List<? extends Tree> memberDecls) {
+        return delegate.Class(modifiers, simpleName, typeParameters, extendsClause, implementsClauses, permitsClauses, memberDecls);
+    }
+
     /**
      * Creates a new ClassTree representing interface.
      * 
@@ -384,7 +412,32 @@ public final class TreeMaker {
              List<? extends TypeParameterTree> typeParameters,
              List<? extends Tree> extendsClauses,
              List<? extends Tree> memberDecls) {
-        return delegate.Interface(modifiers, simpleName, typeParameters, extendsClauses, memberDecls);
+        return Interface(modifiers, simpleName, typeParameters, extendsClauses, List.of(), memberDecls);
+    }
+
+    /**
+     * Creates a new ClassTree representing interface.
+     * 
+     * @param modifiers the modifiers declaration
+     * @param simpleName        the name of the class without its package, such
+     *                          as "String" for the class "java.lang.String".
+     * @param typeParameters    the list of type parameters, or an empty list.
+     * @param extendsClauses    the list of the interfaces this class
+     *                          extends, or an empty list.
+     * @param permitsClauses    the list of the subtype this class
+     *                          permits, or an empty list.
+     * @param memberDecls       the list of fields defined by this class, or an
+     *                          empty list.
+     * @see com.sun.source.tree.ClassTree
+     * @since 2.75
+     */
+    public ClassTree Interface(ModifiersTree modifiers, 
+             CharSequence simpleName,
+             List<? extends TypeParameterTree> typeParameters,
+             List<? extends Tree> extendsClauses,
+              List<? extends Tree> permitsClauses,
+             List<? extends Tree> memberDecls) {
+        return delegate.Interface(modifiers, simpleName, typeParameters, extendsClauses, permitsClauses, memberDecls);
     }
     
     /**
@@ -3024,6 +3077,7 @@ public final class TreeMaker {
                         t.getTypeParameters(),
                         t.getExtendsClause(),
                         (List<ExpressionTree>) t.getImplementsClause(),
+                        t.getPermitsClause(),
                         membersCopy);
                 return clone;
             }
@@ -3151,6 +3205,7 @@ public final class TreeMaker {
                 node.getTypeParameters(),
                 extendz,
                 (List<ExpressionTree>) node.getImplementsClause(), // bug
+                node.getPermitsClause(),
                 node.getMembers()
         );
         return result;

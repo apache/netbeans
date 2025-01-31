@@ -150,6 +150,17 @@ public class CodeGeneratorTest extends ClassIndexTestCase {
                              "}");
     }
 
+    public void testPermittedSubclasses() throws Exception {
+        performTest("""
+                    package test;
+                    public sealed interface Test {
+                        public static final class Impl implements Test {}
+                    }
+                    """,
+                    """
+                    """);
+    }
+
     private void performTest(String test, final String golden) throws Exception {
         clearWorkDir();
         beginTx();

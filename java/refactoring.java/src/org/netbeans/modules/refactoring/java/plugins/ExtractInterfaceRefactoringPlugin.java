@@ -356,6 +356,7 @@ public final class ExtractInterfaceRefactoringPlugin extends JavaRefactoringPlug
                         classTree.getSimpleName(),
                         classTree.getTypeParameters(),
                         classTree.getExtendsClause(),
+                        classTree.getPermitsClause(),
                         impls2Add,
                         members2Add);
             } else if (clazz.getKind() == ElementKind.INTERFACE) {
@@ -363,6 +364,7 @@ public final class ExtractInterfaceRefactoringPlugin extends JavaRefactoringPlug
                         classTree.getModifiers(),
                         classTree.getSimpleName(),
                         classTree.getTypeParameters(),
+                        classTree.getPermitsClause(),
                         impls2Add,
                         members2Add);
             } else if (clazz.getKind() == ElementKind.ENUM) {
@@ -544,6 +546,7 @@ public final class ExtractInterfaceRefactoringPlugin extends JavaRefactoringPlug
                     refactoring.getInterfaceName(),
                     newTypeParams,
                     extendsList,
+                    Collections.emptyList(),
                     Collections.<Tree>emptyList());
             
             newInterfaceTree = genUtils.insertClassMembers(newInterfaceTree, members);

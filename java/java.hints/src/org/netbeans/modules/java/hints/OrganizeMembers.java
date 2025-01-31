@@ -122,7 +122,7 @@ public class OrganizeMembers {
         ClassTree clazz = (ClassTree) path.getLeaf();
         clazz = gu.importComments(clazz, copy.getCompilationUnit());
         TreeMaker maker = copy.getTreeMaker();
-        ClassTree nue = maker.Class(clazz.getModifiers(), clazz.getSimpleName(), clazz.getTypeParameters(), clazz.getExtendsClause(), clazz.getImplementsClause(), Collections.<Tree>emptyList());
+        ClassTree nue = maker.Class(clazz.getModifiers(), clazz.getSimpleName(), clazz.getTypeParameters(), clazz.getExtendsClause(), clazz.getImplementsClause(), clazz.getPermitsClause(), Collections.<Tree>emptyList());
         List<Tree> members = new ArrayList<>(clazz.getMembers().size());
         Map<Tree, Tree> memberMap = new HashMap<>(clazz.getMembers().size());
         
@@ -170,7 +170,7 @@ public class OrganizeMembers {
             nue = GeneratorUtilities.get(copy).insertClassMembers(nue, members);
         }
         // now create a new class, based on the original one - retain the order decided by GeneratorUtilities.
-        ClassTree changed = maker.Class(clazz.getModifiers(), clazz.getSimpleName(), clazz.getTypeParameters(), clazz.getExtendsClause(), clazz.getImplementsClause(), Collections.<Tree>emptyList());
+        ClassTree changed = maker.Class(clazz.getModifiers(), clazz.getSimpleName(), clazz.getTypeParameters(), clazz.getExtendsClause(), clazz.getImplementsClause(), clazz.getPermitsClause(), Collections.<Tree>emptyList());
         int index = 0;
         for (Tree t : nue.getMembers()) {
             Tree orig = memberMap.get(t);

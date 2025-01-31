@@ -400,8 +400,14 @@ public class DriverListUtil {
         /* I think H2 can sometimes use a password with the database, even though it's a file-based
         database. So keep the username/password displayed in this case.  */
         // url.setUsernamePasswordDisplayed(false);
+
+        /* There is also a driver class com.snowflake.client.jdbc.SnowflakeDriver, which is
+        deprecated. The one below (starting "net") is the currently recommended one. See
+        https://docs.snowflake.com/en/developer-guide/jdbc/jdbc-configure */
+        url = add("Snowflake", null, "net.snowflake.client.jdbc.SnowflakeDriver", "jdbc:snowflake://<HOST>/[?<ADDITIONAL>]", true);
+        url.setSampleUrl("jdbc:snowflake://my-account-id.snowflakecomputing.com/?warehouse=COMPUTE_WH");
     }
-    
+
     public static Set<String> getDrivers() {
         TreeSet<String> drivers = new TreeSet<>();
         for (JdbcUrl url : templateUrls) {

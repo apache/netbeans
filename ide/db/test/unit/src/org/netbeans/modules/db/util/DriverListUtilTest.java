@@ -333,6 +333,21 @@ public class DriverListUtilTest extends TestCase {
         propValues.remove(JdbcUrl.TOKEN_FILE);
         testUrlString(url, propValues, "jdbc:duckdb:");
     }
+
+    public void testSnowflake() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_HOST);
+        supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
+        ArrayList<String> requiredProps = new ArrayList<>();
+        requiredProps.add(JdbcUrl.TOKEN_HOST);
+        JdbcUrl url = checkUrl("Snowflake", null, "net.snowflake.client.jdbc.SnowflakeDriver",
+                "jdbc:snowflake://<HOST>/[?<ADDITIONAL>]",
+                supportedProps, requiredProps);
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+        testUrlString(url, propValues, "jdbc:snowflake://" + HOST + "/?" + ADDITIONAL);
+        propValues = buildPropValues(requiredProps);
+        testUrlString(url, propValues, "jdbc:snowflake://" + HOST + "/");
+    }
     
     enum DB2Types { DB2, IDS, CLOUDSCAPE };
     

@@ -530,6 +530,8 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                             Shape pViewAlloc = pViewDesc.getAllocation();
                             Rectangle pViewRect = pViewAlloc.getBounds();
                             pViewRect.width = repaintWidth;
+                            pViewRect.y += pViewDesc.getShadowHeight();
+                            pViewRect.height -= pViewDesc.getShadowHeight();
                             if (pViewRect.y >= endRepaintY) {
                                 if (LOG.isLoggable(Level.FINE)) {
                                     LOG.fine("GlyphGutter: pViewRect.y=" + pViewRect.y + " >= endRepaintY=" + // NOI18N

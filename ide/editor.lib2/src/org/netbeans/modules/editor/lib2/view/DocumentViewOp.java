@@ -257,6 +257,7 @@ public final class DocumentViewOp
     private int defaultRowHeightInt;
 
     private int defaultAscentInt;
+    private float defaultDescent;
 
     private float defaultCharWidth;
 
@@ -1091,6 +1092,7 @@ public final class DocumentViewOp
                         ": defaultAscentInt from " + defaultAscentInt + " to " + fontInfo.ascentInt + "\n"); // NOI18N
             }
             defaultAscentInt = fontInfo.ascentInt;
+            defaultDescent = fontInfo.descent;
         }
         if (force || defaultRowHeightInt < fontInfo.rowHeightInt) {
             if (LOG.isLoggable(Level.FINE)) {
@@ -1282,6 +1284,11 @@ public final class DocumentViewOp
     public float getDefaultAscent() {
         checkSettingsInfo();
         return defaultAscentInt;
+    }
+
+    public float getDefaultDescent() {
+        checkSettingsInfo();
+        return defaultDescent;
     }
 
     /**

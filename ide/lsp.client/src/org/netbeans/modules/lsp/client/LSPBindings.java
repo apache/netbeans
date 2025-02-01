@@ -306,15 +306,15 @@ public class LSPBindings {
                 foundServer = true;
                 try {
                     LanguageClientImpl lci = new LanguageClientImpl();
-                    LanguageServer server = LanguageServerProviderAccessor.getINSTANCE().getServer(desc);
+                    EnhancedLanguageServer server = LanguageServerProviderAccessor.getINSTANCE().getServer(desc);
                     Process process;
                     if (server == null) {
                         InputStream in = LanguageServerProviderAccessor.getINSTANCE().getInputStream(desc);
                         OutputStream out = LanguageServerProviderAccessor.getINSTANCE().getOutputStream(desc);
                         process = LanguageServerProviderAccessor.getINSTANCE().getProcess(desc);
-                        Launcher.Builder<LanguageServer> launcherBuilder = new LSPLauncher.Builder<LanguageServer>()
+                        Launcher.Builder<EnhancedLanguageServer> launcherBuilder = new LSPLauncher.Builder<EnhancedLanguageServer>()
                                 .setLocalService(lci)
-                                .setRemoteInterface(LanguageServer.class)
+                                .setRemoteInterface(EnhancedLanguageServer.class)
                                 .setInput(in)
                                 .setOutput(out)
                                 .configureGson(gson -> {
@@ -354,7 +354,7 @@ public class LSPBindings {
                             });
                             launcherBuilder.traceMessages(pw);
                         }
-                        Launcher<LanguageServer> launcher = launcherBuilder.create();
+                        Launcher<EnhancedLanguageServer> launcher = launcherBuilder.create();
                         launcher.startListening();
                         server = launcher.getRemoteProxy();
                     } else {
@@ -390,16 +390,23 @@ public class LSPBindings {
                 LanguageClientImpl lc = new LanguageClientImpl();
                 InputStream in = s.getInputStream();
                 OutputStream out = s.getOutputStream();
-                Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(lc, in, new OutputStream() {
+                final OutputStream wrappedOut = new OutputStream() {
                     @Override
                     public void write(int w) throws IOException {
                         out.write(w);
                         if (w == '\n')
                             out.flush();
                     }
-                });
+                };
+//                Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(lc, in, wrappedOut);
+                Launcher<EnhancedLanguageServer> launcher = new Launcher.Builder<EnhancedLanguageServer>()
+                        .setLocalService(lc)
+                        .setRemoteInterface(EnhancedLanguageServer.class)
+                        .setInput(in)
+                        .setOutput(out)
+                        .create();
                 launcher.startListening();
-                LanguageServer server = launcher.getRemoteProxy();
+                EnhancedLanguageServer server = launcher.getRemoteProxy();
                 InitializeResult result = initServer(null, server, root);
                 server.initialized(new InitializedParams());
                 LSPBindings bindings = new LSPBindings(server, result, null);
@@ -482,18 +489,18 @@ public class LSPBindings {
         return allBindings;
     }
 
-    private final LanguageServer server;
+    private final EnhancedLanguageServer server;
     private final InitializeResult initResult;
     private final Process process;
 
-    private LSPBindings(LanguageServer server, InitializeResult initResult, Process process) {
+    private LSPBindings(EnhancedLanguageServer server, InitializeResult initResult, Process process) {
         this.server = server;
         this.initResult = initResult;
         this.process = process;
     }
 
-    public TextDocumentService getTextDocumentService() {
-        return server.getTextDocumentService();
+    public EnhancedTextDocumentService getTextDocumentService() {
+        return server.getEnhancedTextDocumentService();
     }
 
     public WorkspaceService getWorkspaceService() {

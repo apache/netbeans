@@ -392,6 +392,7 @@ public class DefaultVisitor implements Visitor {
         scan(node.getParameterType());
         scan(node.getParameterName());
         scan(node.getDefaultValue());
+        scan(node.getPropertyHooks());
     }
 
     @Override

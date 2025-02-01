@@ -844,6 +844,14 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                 fields.addAll(FieldElementImpl.fromSignature(typeElement, fieldQuery, this, indexResult));
             }
         }
+        // PHP 8.4: interface can have hooked properties
+        final Collection<? extends IndexResult> interfaceResults = results(InterfaceElementImpl.IDX_FIELD, classQuery,
+                new String[]{InterfaceElementImpl.IDX_FIELD, FieldElementImpl.IDX_FIELD});
+        for (final IndexResult indexResult : interfaceResults) {
+            for (final TypeElement typeElement : InterfaceElementImpl.fromSignature(classQuery, this, indexResult)) {
+                fields.addAll(FieldElementImpl.fromSignature(typeElement, fieldQuery, this, indexResult));
+            }
+        }
         final Collection<? extends IndexResult> traitResults = results(TraitElementImpl.IDX_FIELD, classQuery,
                 new String[]{TraitElementImpl.IDX_FIELD, FieldElementImpl.IDX_FIELD});
         for (final IndexResult indexResult : traitResults) {
@@ -1255,6 +1263,10 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                             ifaceTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(getTypeConstantsImpl(NameKind.exact(iface), NameKind.empty(),
                                     EnumSet.of(PhpElementKind.IFACE))));
                             break;
+                        case FIELD:
+                            // PHP 8.4 interface can have hooked properties
+                            ifaceTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(getFields(NameKind.exact(iface), NameKind.empty())));
+                            break;
                         default:
                             //no-op
                     }
@@ -1399,7 +1411,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         final Set<TypeMemberElement> typeMembers =
                 getInheritedTypeMembers(typeElement, new LinkedHashSet<>(),
                 new LinkedHashSet<>(getDeclaredFields(typeElement)),
-                EnumSet.of(PhpElementKind.CLASS, PhpElementKind.TRAIT),
+                EnumSet.of(PhpElementKind.CLASS, PhpElementKind.TRAIT, PhpElementKind.IFACE),
                 EnumSet.of(PhpElementKind.FIELD));
         final Set<FieldElement> retval = new HashSet<>();
         for (TypeMemberElement member : typeMembers) {

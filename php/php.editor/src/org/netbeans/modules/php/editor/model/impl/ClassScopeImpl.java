@@ -21,10 +21,12 @@ package org.netbeans.modules.php.editor.model.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
@@ -71,7 +73,7 @@ import org.openide.util.Union2;
  *
  * @author Radek Matous
  */
-class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFactory {
+class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFactory, TypeScope.FieldDeclarable {
     private final Collection<QualifiedName> possibleFQSuperClassNames;
     // @GuardedBy("this")
     private final Collection<QualifiedName> mixinClassNames = new LinkedHashSet<>();
@@ -89,8 +91,8 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
                 || element instanceof ClassConstantElement : element.getPhpElementKind() + " " + this.toString();
         if (element instanceof TypeScope) {
             Scope inScope = getInScope();
-            if (inScope instanceof ScopeImpl) {
-                ((ScopeImpl) inScope).addElement(element);
+            if (inScope instanceof ScopeImpl scope) {
+                scope.addElement(element);
             }
         } else {
             super.addElement(element);
@@ -264,15 +266,11 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
     public String asString(PrintAs as) {
         StringBuilder retval = new StringBuilder();
         switch (as) {
-            case NameAndSuperTypes:
+            case NameAndSuperTypes -> {
                 retval.append(getName());
                 printAsSuperTypes(retval);
-                break;
-            case SuperTypes:
-                printAsSuperTypes(retval);
-                break;
-            default:
-                assert false : as;
+            }
+            case SuperTypes -> printAsSuperTypes(retval);
         }
         return retval.toString();
     }
@@ -309,12 +307,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
             IndexScope indexScopeImpl =  ModelUtils.getIndexScope(this);
             return indexScopeImpl.findFields(this);
         }
-        return filter(getElements(), new ElementFilter() {
-            @Override
-            public boolean isAccepted(ModelElement element) {
-                return element.getPhpElementKind().equals(PhpElementKind.FIELD);
-            }
-        });
+        return filter(getElements(), (ModelElement element) -> element.getPhpElementKind().equals(PhpElementKind.FIELD));
     }
 
     @Override
@@ -379,30 +372,143 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
     @Override
     public Collection<? extends FieldElement> getInheritedFields() {
         Set<FieldElement> allFields = new HashSet<>();
-        IndexScope indexScope = ModelUtils.getIndexScope(this);
-        ElementQuery.Index index = indexScope.getIndex();
-        org.netbeans.modules.php.editor.api.elements.ElementFilter filterForPrivate = org.netbeans.modules.php.editor.api.elements.ElementFilter.forPrivateModifiers(false);
+        Map<String, FieldElement> fieldNames = new HashMap<>();
         Set<ClassScope> superClasses = new HashSet<>(getSuperClasses());
         for (ClassScope classScope : superClasses) {
-            Set<org.netbeans.modules.php.editor.api.elements.FieldElement> indexedFields = filterForPrivate.filter(index.getAlllFields(classScope));
-            for (org.netbeans.modules.php.editor.api.elements.FieldElement field : indexedFields) {
-                allFields.add(new FieldElementImpl(classScope, field));
+            Collection<? extends TypeScope> allInheritedTypes = getAllInheritedTypes(classScope);
+            Collection<? extends FieldElement> declaredFields = classScope.getDeclaredFields();
+            for (FieldElement declaredField : declaredFields) {
+                if (!declaredField.getPhpModifiers().isPrivate()) {
+                    addField(declaredField, allFields, fieldNames);
+                }
+            }
+            for (TypeScope inheritedType : allInheritedTypes) {
+                if (inheritedType instanceof TypeScope.FieldDeclarable inheritedScope) {
+                    for (FieldElement declaredField : inheritedScope.getDeclaredFields()) {
+                        if (!canAddInheritdField(inheritedScope, declaredField)) {
+                            continue;
+                        }
+                        addField(declaredField, allFields, fieldNames);
+                    }
+                }
+            }
+        }
+        for (InterfaceScope interfaceScope : getAllSuperInterfaceScopes(getSuperInterfaceScopes())) {
+            // interface may have fields as of PHP 8.4
+            if (interfaceScope instanceof TypeScope.FieldDeclarable ifaceScope) {
+                for (FieldElement declaredField : ifaceScope.getDeclaredFields()) {
+                    addField(declaredField, allFields, fieldNames);
+                }
             }
         }
         for (TraitScope traitScope : new HashSet<>(getTraits())) {
-            Set<org.netbeans.modules.php.editor.api.elements.FieldElement> indexedFields = index.getAlllFields(traitScope);
-            for (org.netbeans.modules.php.editor.api.elements.FieldElement field : indexedFields) {
-                allFields.add(new FieldElementImpl(traitScope, field));
+            Collection<? extends TypeScope> allInheritedTypes = getAllInheritedTypes(traitScope);
+            Collection<? extends FieldElement> declaredFields = traitScope.getDeclaredFields();
+            for (FieldElement declaredField : declaredFields) {
+                addField(declaredField, allFields, fieldNames);
+            }
+            for (TypeScope inheritedType : allInheritedTypes) {
+                assert inheritedType instanceof TraitScope;
+                TraitScope inheritedScope = (TraitScope) inheritedType;
+                for (FieldElement declaredField : inheritedScope.getDeclaredFields()) {
+                    addField(declaredField, allFields, fieldNames);
+                }
             }
         }
         // GH-4683 get fields of mixin
+        IndexScope indexScope = ModelUtils.getIndexScope(this);
+        ElementQuery.Index index = indexScope.getIndex();
         Set<TypeMemberElement> mixinTypeMembers = index.getAccessibleMixinTypeMembers(this, this);
         for (TypeMemberElement mixinTypeMember : mixinTypeMembers) {
-            if (mixinTypeMember instanceof org.netbeans.modules.php.editor.api.elements.FieldElement) {
-                allFields.add((new FieldElementImpl(this, (org.netbeans.modules.php.editor.api.elements.FieldElement) mixinTypeMember)));
+            if (mixinTypeMember instanceof org.netbeans.modules.php.editor.api.elements.FieldElement fieldElement) {
+                if (getName().equals(fieldElement.getIn())) {
+                    continue;
+                }
+                allFields.add((new FieldElementImpl(this, fieldElement)));
             }
         }
         return allFields;
+    }
+
+    private boolean canAddInheritdField(TypeScope.FieldDeclarable inheritedType, FieldElement inheritedField) {
+        if (inheritedType.isClass()) {
+            return !inheritedField.getPhpModifiers().isPrivate();
+        } else if (inheritedType.isInterface()) {
+            return inheritedField.getPhpModifiers().isPublic();
+        } else if (inheritedType.isTrait()) {
+            return true;
+        } else {
+            assert false : "Unexpected type: " + inheritedType; // NOI18N
+        }
+        return false;
+    }
+
+    private void addField(FieldElement declaredField, Set<FieldElement> allFields, Map<String, FieldElement> fieldNames) {
+        // check duplicate fields
+        FieldElement field = fieldNames.get(declaredField.getName());
+        if (field != null && !field.equals(declaredField)) {
+            TypeScope inScope = (TypeScope) field.getInScope();
+            TypeScope declaredInScope = (TypeScope) declaredField.getInScope();
+            Collection<? extends TypeScope> allInheritedTypes = getAllInheritedTypes(inScope);
+            if (allInheritedTypes.contains(declaredInScope)) {
+                return;
+            }
+            allFields.remove(field);
+        }
+        if(allFields.add(declaredField)) {
+            fieldNames.put(declaredField.getName(), declaredField);
+        }
+    }
+
+    private Collection<? extends TypeScope> getAllInheritedTypes(TypeScope typeScope) {
+        Collection<TypeScope> typeScopes = new HashSet<>();
+        if (typeScope instanceof ClassScope classScope) {
+            Collection<? extends ClassScope> allSuperClasses = getAllSuperClasses(classScope.getSuperClasses());
+            typeScopes.addAll(allSuperClasses);
+            for (ClassScope superClazz : allSuperClasses) {
+                typeScopes.addAll(getAllSuperClasses(superClazz.getSuperClasses()));
+                typeScopes.addAll(getAllSuperInterfaceScopes(superClazz.getSuperInterfaceScopes()));
+            }
+            Collection<? extends InterfaceScope> allSuperInterfaceScopes = getAllSuperInterfaceScopes(classScope.getSuperInterfaceScopes());
+            typeScopes.addAll(allSuperInterfaceScopes);
+            for (InterfaceScope interfaceScope : allSuperInterfaceScopes) {
+                typeScopes.addAll(getAllSuperInterfaceScopes(interfaceScope.getSuperInterfaceScopes()));
+            }
+            Collection<? extends TraitScope> allTraits = getAllTraits(classScope.getTraits());
+            typeScopes.addAll(allTraits);
+            for (TraitScope trait : allTraits) {
+                typeScopes.addAll(getAllTraits(trait.getTraits()));
+            }
+        } else if (typeScope instanceof TraitScope traitScope) {
+            typeScopes.addAll(getAllTraits(traitScope.getTraits()));
+        } else if (typeScope instanceof InterfaceScope interfaceScope) {
+            typeScopes.addAll(getAllSuperInterfaceScopes(interfaceScope.getSuperInterfaceScopes()));
+        }
+        return typeScopes;
+    }
+
+    private Collection<? extends ClassScope> getAllSuperClasses(Collection<? extends ClassScope> declaredSuperClasses) {
+        Set<ClassScope> classes = new HashSet<>(declaredSuperClasses);
+        for (ClassScope declaredClass : declaredSuperClasses) {
+            classes.addAll(getAllSuperClasses(declaredClass.getSuperClasses()));
+        }
+        return classes;
+    }
+
+    private Collection<? extends TraitScope> getAllTraits(Collection<? extends TraitScope> declaredTraits) {
+        Set<TraitScope> traits = new HashSet<>(declaredTraits);
+        for (TraitScope declaredTrait : declaredTraits) {
+            traits.addAll(getAllTraits(declaredTrait.getTraits()));
+        }
+        return traits;
+    }
+
+    private Collection<? extends InterfaceScope> getAllSuperInterfaceScopes(Collection<? extends InterfaceScope> declaredInterfaces) {
+        Set<InterfaceScope> interfaces = new HashSet<>(declaredInterfaces);
+        for (InterfaceScope declaredInterface : declaredInterfaces) {
+            interfaces.addAll(getAllSuperInterfaceScopes(declaredInterface.getSuperInterfaceScopes()));
+        }
+        return interfaces;
     }
 
     @Override
@@ -459,8 +565,6 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
     public String getNormalizedName() {
         return super.getNormalizedName() + (getSuperClassName() != null ? getSuperClassName() : ""); //NOI18N
     }
-
-
 
     @CheckForNull
     @Override
@@ -677,18 +781,15 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
 
     @Override
     public Collection<? extends VariableName> getDeclaredVariables() {
-        return filter(getElements(), new ElementFilter() {
-            @Override
-            public boolean isAccepted(ModelElement element) {
-                if (element instanceof MethodScope && ((MethodScope) element).isInitiator()
-                        && element instanceof LazyBuild) {
-                    LazyBuild scope = (LazyBuild) element;
-                    if (!scope.isScanned()) {
-                        scope.scan();
-                    }
+        return filter(getElements(), (ModelElement element) -> {
+            if (element instanceof MethodScope && ((MethodScope) element).isInitiator()
+                    && element instanceof LazyBuild) {
+                LazyBuild scope = (LazyBuild) element;
+                if (!scope.isScanned()) {
+                    scope.scan();
                 }
-                return element.getPhpElementKind().equals(PhpElementKind.VARIABLE);
             }
+            return element.getPhpElementKind().equals(PhpElementKind.VARIABLE);
         });
     }
 

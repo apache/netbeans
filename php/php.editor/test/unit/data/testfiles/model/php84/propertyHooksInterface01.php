@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,12 +17,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.model;
 
-import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
-
-/**
- * @author Radek Matous
- */
-public interface InterfaceScope extends TypeScope, VariableScope, InterfaceElement {
+interface PropertyHookInterface {
+    public string $get {
+        get;
+    }
+    public int $set {
+        set;
+    }
+    public $getset {
+        get;
+        set;
+    }
+    public $ref { &get; }
 }

@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,12 +17,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.model;
+abstract class AbstractClass {
+    // valid properties
+    public abstract $valid01 { // OK
+        get;
+        set;
+    }
+    public abstract $valid02 { // OK
+        get;
+        set {
+            echo __METHOD__ . PHP_EOL;
+        }
+    }
+    public abstract $valid03 { // OK
+        get {
+            echo __METHOD__ . PHP_EOL;
+        }
+        set;
+    }
+    protected abstract int $valid04 { get; set; } // OK
 
-import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
-
-/**
- * @author Radek Matous
- */
-public interface InterfaceScope extends TypeScope, VariableScope, InterfaceElement {
+    // invalid properties
+    public abstract $invalid01 { // error
+        get{}
+        set{}
+    }
+    private abstract int $invalid02 { get; set; } // error
+    abstract public $invalid03; // error
 }

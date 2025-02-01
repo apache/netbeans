@@ -3,8 +3,8 @@
 Document 0
 Searchable Keys:
   clz : #anon#testphp80constructorpropertypromotion_php#1;#anon#testPHP80ConstructorPropertyPromotion_php#1;2166;;;;1;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;;0;
-  field : x;x;2231;1;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : y;y;2254;1;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
+  field : x;x;2231;1;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : y;y;2254;1;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
   method : __construct;__construct;2198;$x:int:1::1:0:0:0:1:0:int:,$y:int:1:0:0:0:0:0:1:0:int:;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;
   top : #anon#testphp80constructorpropertypromotion_php#1
 
@@ -15,13 +15,13 @@ Not Searchable Keys:
 Document 1
 Searchable Keys:
   clz : constructorpropertypromotion;ConstructorPropertyPromotion;822;;;;1;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;;0;
-  field : param1;param1;903;1;;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param2;param2;934;4;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param3;param3;970;2;int|string;int|string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param4;param4;1002;2;float;float;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param5;param5;1039;2;?string;?string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param6;param6;1077;1;string;string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param7;param7;1130;1;string|int;string|int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
+  field : param1;param1;903;1;;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param2;param2;934;4;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param3;param3;970;2;int|string;int|string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param4;param4;1002;2;float;float;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param5;param5;1039;2;?string;?string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param6;param6;1077;1;string;string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param7;param7;1130;1;string|int;string|int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
   method : __construct;__construct;874;$param1::0::1:0:0:0:1:0::,$param2:int:1::1:0:0:0:4:0:int:,$param3:int|string:1::1:0:0:1:2:0:int|string:,$param4:float:1:1:0:1:0:0:2:0:float:,$param5:?string:1:null:0:0:0:0:2:0:?string:,$param6:string:1:"default value":0:0:0:0:1:0:string:,$param7:string|int:1:"default value":0:0:0:1:1:0:string|int:;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;
   top : constructorpropertypromotion
 
@@ -32,8 +32,8 @@ Not Searchable Keys:
 Document 2
 Searchable Keys:
   clz : constructorpropertypromotionclass2;ConstructorPropertyPromotionClass2;1929;;;;1;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;;0;
-  field : param2;param2;2037;1;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param4;param4;2110;1;string;string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
+  field : param2;param2;2037;1;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param4;param4;2110;1;string;string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
   method : __construct;__construct;1987;$param1::0::1:0:0:0:0:0::,$param2:int:1::1:0:0:0:1:0:int:,$param3:string:1:"default value":0:0:0:0:0:0:string:,$param4:string:1:"default value":0:0:0:0:1:0:string:;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;
   top : constructorpropertypromotionclass2
 
@@ -44,13 +44,13 @@ Not Searchable Keys:
 Document 3
 Searchable Keys:
   clz : legacysyntax;LegacySyntax;1218;;;;1;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;;0;
-  field : param1;param1;1245;1;;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param2;param2;1272;4;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param3;param3;1304;2;int|string;int|string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param4;param4;1331;2;float;float;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param5;param5;1360;2;?string;?string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param6;param6;1387;1;string;string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param7;param7;1418;1;string|int;string|int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
+  field : param1;param1;1245;1;;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param2;param2;1272;4;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param3;param3;1304;2;int|string;int|string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param4;param4;1331;2;float;float;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param5;param5;1360;2;?string;?string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param6;param6;1387;1;string;string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param7;param7;1418;1;string|int;string|int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
   method : __construct;__construct;1447;$param1::0::1:0:0:0:0:0::,$param2:int:1::1:0:0:0:0:0:int:,$param3:int|string:1::1:0:0:1:0:0:int|string:,$param4:float:1:1:0:1:0:0:0:0:float:,$param5:?string:1:null:0:0:0:0:0:0:?string:,$param6:string:1:"default value":0:0:0:0:0:0:string:,$param7:string|int:1:"default value":0:0:0:1:0:0:string|int:;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;
   top : legacysyntax
 
@@ -60,13 +60,13 @@ Not Searchable Keys:
 
 Document 4
 Searchable Keys:
-  field : param1;param1;2371;1;;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param2;param2;2402;4;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param3;param3;2438;2;int|string;int|string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param4;param4;2470;2;float;float;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param5;param5;2507;2;?string;?string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param6;param6;2545;1;string;string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
-  field : param7;param7;2598;1;string|int;string|int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
+  field : param1;param1;2371;1;;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param2;param2;2402;4;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param3;param3;2438;2;int|string;int|string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param4;param4;2470;2;float;float;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param5;param5;2507;2;?string;?string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param6;param6;2545;1;string;string;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
+  field : param7;param7;2598;1;string|int;string|int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;[];
   method : __construct;__construct;2342;$param1::0::1:0:0:0:1:0::,$param2:int:1::1:0:0:0:4:0:int:,$param3:int|string:1::1:0:0:1:2:0:int|string:,$param4:float:1:1:0:1:0:0:2:0:float:,$param5:?string:1:null:0:0:0:0:2:0:?string:,$param6:string:1:"default value":0:0:0:0:1:0:string:,$param7:string|int:1:"default value":0:0:0:1:1:0:string|int:;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;
   top : constructorpropertypromotiontrait
   trait : constructorpropertypromotiontrait;ConstructorPropertyPromotionTrait;2285;;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;

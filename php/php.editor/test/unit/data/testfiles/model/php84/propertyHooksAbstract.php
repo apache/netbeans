@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,12 +17,40 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.model;
+interface Iface {
+    public int $i01 {get; set;}
+    public string $i02 {set;}
+    public int|string $i03 {get;}
+}
 
-import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
+abstract class AbstractClass implements Iface {
+    public abstract $a01 { // OK
+        get;
+        set;
+    }
+    public abstract $a02 { // OK
+        get;
+        set {
+            echo __METHOD__ . PHP_EOL;
+        }
+    }
+    public abstract $a03 { // OK
+        get {
+            echo __METHOD__ . PHP_EOL;
+        }
+        set;
+    }
+    protected abstract int $a04 { #[Attr] &get; set; } // OK
+    public string $a05 { // OK
+        get {
+            echo __METHOD__ . PHP_EOL;
+        }
+        set {
+            echo __METHOD__ . PHP_EOL;
+        }
+    }
+}
 
-/**
- * @author Radek Matous
- */
-public interface InterfaceScope extends TypeScope, VariableScope, InterfaceElement {
+class Impl extends AbstractClass {
+    public int $impl01 = 1;
 }

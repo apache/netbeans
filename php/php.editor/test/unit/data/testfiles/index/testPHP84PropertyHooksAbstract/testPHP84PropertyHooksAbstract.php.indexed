@@ -1,0 +1,51 @@
+
+
+Document 0
+Searchable Keys:
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  clz : abstractclass;AbstractClass;829;;;;1025;;0;<TESTURL>/testPHP84PropertyHooksAbstract.php;;0;
+  field : invalid01;invalid01;1280;1025;;;0;<TESTURL>/testPHP84PropertyHooksAbstract.php;0;[{"name":"get","start":1309,"end":1312,"mod":1,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""},{"name":"set","start":1323,"end":1326,"mod":1,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : invalid02;invalid02;1361;1026;int;int;0;<TESTURL>/testPHP84PropertyHooksAbstract.php;0;[{"name":"get","start":1373,"end":1376,"mod":1,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""},{"name":"set","start":1378,"end":1381,"mod":1,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : invalid03;invalid03;1415;1025;;;0;<TESTURL>/testPHP84PropertyHooksAbstract.php;0;[];
+  field : valid01;valid01;890;1025;;;0;<TESTURL>/testPHP84PropertyHooksAbstract.php;0;[{"name":"get","start":914,"end":917,"mod":1,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""},{"name":"set","start":927,"end":930,"mod":1,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : valid02;valid02;959;1025;;;0;<TESTURL>/testPHP84PropertyHooksAbstract.php;0;[{"name":"get","start":983,"end":986,"mod":1,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""},{"name":"set","start":996,"end":999,"mod":1,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : valid03;valid03;1078;1025;;;0;<TESTURL>/testPHP84PropertyHooksAbstract.php;0;[{"name":"get","start":1102,"end":1105,"mod":1,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""},{"name":"set","start":1165,"end":1168,"mod":1,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : valid04;valid04;1204;1028;int;int;0;<TESTURL>/testPHP84PropertyHooksAbstract.php;0;[{"name":"get","start":1214,"end":1217,"mod":1,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""},{"name":"set","start":1219,"end":1222,"mod":1,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  top : abstractclass
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  identifier_used : abstractclass;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : invalid01;
+  identifier_used : invalid02;
+  identifier_used : invalid03;
+  identifier_used : php_eol;
+  identifier_used : php_eol;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : valid01;
+  identifier_used : valid02;
+  identifier_used : valid03;
+  identifier_used : valid04;
+
+Not Searchable Keys:

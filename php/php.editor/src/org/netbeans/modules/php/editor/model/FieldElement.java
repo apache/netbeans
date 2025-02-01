@@ -27,8 +27,40 @@ import java.util.Collection;
 public interface FieldElement extends ClassMemberElement, TypeAssignments {
 
     Collection<? extends String> getDefaultTypeNames();
+
     String getDefaultType();
 
     boolean isAnnotation();
 
+    /**
+     * Check whether the element is hooked property(field).
+     *
+     * @param fieldElement
+     * @return {@code true} the element is hooked property, {@code false}
+     * otherwise
+     * @since 2.46.0
+     */
+    public static boolean isHooked(FieldElement fieldElement) {
+        return (fieldElement instanceof HookedFieldElement)
+                && ((HookedFieldElement) fieldElement).isHooked();
+    }
+
+    public interface HookedFieldElement extends FieldElement {
+
+        /**
+         * Get property(filed) hooks.
+         *
+         * @return property hooks
+         * @since 2.46.0
+         */
+        Collection<? extends PropertyHookScope> getPropertyHooks();
+
+        /**
+         * Check whether this element is a hooked property.
+         *
+         * @return {@code true} if a property has hooks, {@code false} otherwise
+         * @since 2.46.0
+         */
+        boolean isHooked();
+    }
 }

@@ -29,12 +29,12 @@
 |--privateStaticParentClassMethod [2369, 2442] : DEPRECATED{ESCAPED{privateStaticParentClassMethod}}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
 |--protectedStaticParentClassMethod [2497, 2572] : DEPRECATED{ESCAPED{protectedStaticParentClassMethod}}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
 |-ChildClass [2583, 2655] : ESCAPED{ChildClass}<font color="#999999">::ESCAPED{DeprecatedParentClass}</font><font color="#999999">#ESCAPED{DeprecatedFooTrait}</font>
-|--(Inherited) $publicFooTraitField [74, 94] : DEPRECATED{<font color="#7D694A">ESCAPED{$publicFooTraitField}</font>}<font color="#999999">:ESCAPED{int}</font>
-|--(Inherited) $privateFooTraitField [135, 156] : DEPRECATED{<font color="#7D694A">ESCAPED{$privateFooTraitField}</font>}<font color="#999999">:ESCAPED{int}</font>
-|--(Inherited) $protectedFooTraitField [199, 222] : DEPRECATED{<font color="#7D694A">ESCAPED{$protectedFooTraitField}</font>}<font color="#999999">:ESCAPED{int}</font>
-|--(Inherited) $publicStaticFooTraitField [270, 296] : DEPRECATED{<font color="#7D694A">ESCAPED{$publicStaticFooTraitField}</font>}<font color="#999999">:ESCAPED{int}</font>
-|--(Inherited) $privateStaticFooTraitField [344, 371] : DEPRECATED{<font color="#7D694A">ESCAPED{$privateStaticFooTraitField}</font>}<font color="#999999">:ESCAPED{int}</font>
-|--(Inherited) $protectedStaticFooTraitField [421, 450] : DEPRECATED{<font color="#7D694A">ESCAPED{$protectedStaticFooTraitField}</font>}<font color="#999999">:ESCAPED{int}</font>
+|--(Inherited) $publicFooTraitField [74, 93] : DEPRECATED{<font color="#7D694A">ESCAPED{$publicFooTraitField}</font>}<font color="#999999">:ESCAPED{int}</font>
+|--(Inherited) $privateFooTraitField [135, 155] : DEPRECATED{<font color="#7D694A">ESCAPED{$privateFooTraitField}</font>}<font color="#999999">:ESCAPED{int}</font>
+|--(Inherited) $protectedFooTraitField [199, 221] : DEPRECATED{<font color="#7D694A">ESCAPED{$protectedFooTraitField}</font>}<font color="#999999">:ESCAPED{int}</font>
+|--(Inherited) $publicStaticFooTraitField [270, 295] : DEPRECATED{<font color="#7D694A">ESCAPED{$publicStaticFooTraitField}</font>}<font color="#999999">:ESCAPED{int}</font>
+|--(Inherited) $privateStaticFooTraitField [344, 370] : DEPRECATED{<font color="#7D694A">ESCAPED{$privateStaticFooTraitField}</font>}<font color="#999999">:ESCAPED{int}</font>
+|--(Inherited) $protectedStaticFooTraitField [421, 449] : DEPRECATED{<font color="#7D694A">ESCAPED{$protectedStaticFooTraitField}</font>}<font color="#999999">:ESCAPED{int}</font>
 |--(Inherited) publicFooTraitMethod [495, 515] : <font color="#7D694A">DEPRECATED{ESCAPED{publicFooTraitMethod}}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
 |--(Inherited) privateFooTraitMethod [587, 608] : <font color="#7D694A">DEPRECATED{ESCAPED{privateFooTraitMethod}}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
 |--(Inherited) protectedFooTraitMethod [699, 722] : <font color="#7D694A">DEPRECATED{ESCAPED{protectedFooTraitMethod}}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
@@ -44,10 +44,10 @@
 |--(Inherited) IMPLICIT_PUBLIC_PARENT_CONST [1186, 1214] : DEPRECATED{<font color="#7D694A">ESCAPED{IMPLICIT_PUBLIC_PARENT_CONST}</font>}ESCAPED{ }<font color="#999999">ESCAPED{"parent"}</font>
 |--(Inherited) PUBLIC_PARENT_CONST [1267, 1286] : DEPRECATED{<font color="#7D694A">ESCAPED{PUBLIC_PARENT_CONST}</font>}ESCAPED{ }<font color="#999999">ESCAPED{"parent"}</font>
 |--(Inherited) PROTECTED_PARENT_CONST [1416, 1438] : DEPRECATED{<font color="#7D694A">ESCAPED{PROTECTED_PARENT_CONST}</font>}ESCAPED{ }<font color="#999999">ESCAPED{"parent"}</font>
-|--(Inherited) $publicParentClassField [1491, 1514] : DEPRECATED{<font color="#7D694A">ESCAPED{$publicParentClassField}</font>}<font color="#999999">:ESCAPED{int}</font>
-|--(Inherited) $protectedParentClassField [1622, 1648] : DEPRECATED{<font color="#7D694A">ESCAPED{$protectedParentClassField}</font>}<font color="#999999">:ESCAPED{int}</font>
-|--(Inherited) $publicStaticParentClassField [1696, 1725] : DEPRECATED{<font color="#7D694A">ESCAPED{$publicStaticParentClassField}</font>}<font color="#999999">:ESCAPED{int}</font>
-|--(Inherited) $protectedStaticParentClassField [1853, 1885] : DEPRECATED{<font color="#7D694A">ESCAPED{$protectedStaticParentClassField}</font>}<font color="#999999">:ESCAPED{int}</font>
+|--(Inherited) $publicParentClassField [1491, 1513] : DEPRECATED{<font color="#7D694A">ESCAPED{$publicParentClassField}</font>}<font color="#999999">:ESCAPED{int}</font>
+|--(Inherited) $protectedParentClassField [1622, 1647] : DEPRECATED{<font color="#7D694A">ESCAPED{$protectedParentClassField}</font>}<font color="#999999">:ESCAPED{int}</font>
+|--(Inherited) $publicStaticParentClassField [1696, 1724] : DEPRECATED{<font color="#7D694A">ESCAPED{$publicStaticParentClassField}</font>}<font color="#999999">:ESCAPED{int}</font>
+|--(Inherited) $protectedStaticParentClassField [1853, 1884] : DEPRECATED{<font color="#7D694A">ESCAPED{$protectedStaticParentClassField}</font>}<font color="#999999">:ESCAPED{int}</font>
 |--(Inherited) publicParentClassMethod [1930, 1953] : <font color="#7D694A">DEPRECATED{ESCAPED{publicParentClassMethod}}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
 |--(Inherited) protectedParentClassMethod [2140, 2166] : <font color="#7D694A">DEPRECATED{ESCAPED{protectedParentClassMethod}}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
 |--(Inherited) publicStaticParentClassMethod [2261, 2290] : <font color="#7D694A">DEPRECATED{ESCAPED{publicStaticParentClassMethod}}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>

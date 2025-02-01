@@ -325,7 +325,7 @@ public final class AppClientProjectProperties {
         Profile profile = Profile.fromPropertiesString(evaluator.getProperty(J2EE_PLATFORM));
         switch (profile) {
             case JAKARTA_EE_11_FULL:
-                minimalSourceLevel = new SpecificationVersion("21");
+                minimalSourceLevel = new SpecificationVersion("17");
                 break;
             case JAKARTA_EE_9_1_FULL:
             case JAKARTA_EE_10_FULL:

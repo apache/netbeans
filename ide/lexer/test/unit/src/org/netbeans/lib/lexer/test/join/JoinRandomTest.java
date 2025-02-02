@@ -56,7 +56,8 @@ public class JoinRandomTest extends NbTestCase {
 
     public void testRandom() throws Exception {
         test(1214497020179L);
-//        test(1212495582649L);
+        test(1212495582649L);
+        test(1740600568165L);
 //        test(0L);
     }
     

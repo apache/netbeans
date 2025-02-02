@@ -126,4 +126,8 @@ public final class JoinToken<T extends TokenId> extends PropertyToken<T> {
         return "JoiT"; // NOI18N
     }
 
+    @Override
+    public String toString() {
+        return "JoinToken{" + "joinedParts=" + joinedParts + ", completeLength=" + completeLength + ", extraTokenListSpanCount=" + extraTokenListSpanCount + '}';
+    }
 }

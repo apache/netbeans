@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2008, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0 which is available at
@@ -11,20 +11,19 @@
     SPDX-License-Identifier: EPL-2.0 OR BSD-3-Clause
 
 -->
-
 <!-- persistence.xml schema -->
 <xsd:schema targetNamespace="https://jakarta.ee/xml/ns/persistence" 
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns:persistence="https://jakarta.ee/xml/ns/persistence"
-  elementFormDefault="qualified" 
-  attributeFormDefault="unqualified" 
-  version="3.2">
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+            xmlns:persistence="https://jakarta.ee/xml/ns/persistence" 
+            elementFormDefault="qualified" 
+            attributeFormDefault="unqualified" 
+            version="3.2">
 
    <xsd:annotation>
      <xsd:documentation><![CDATA[
 
      This is the XML Schema for the persistence configuration file.
-     The file must be named "META-INF/persistence.xml" in the 
+     The file must be named "META-INF/persistence.xml" in the
      persistence archive.
 
      Persistence configuration files must indicate
@@ -38,8 +37,8 @@
       <persistence xmlns="https://jakarta.ee/xml/ns/persistence"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
-          https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
-        version="3.0">
+          https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
+        version="3.2">
           ...
       </persistence>
 
@@ -60,8 +59,7 @@
 
         <!-- **************************************************** -->
 
-        <xsd:element name="persistence-unit" 
-                     minOccurs="1" maxOccurs="unbounded">
+        <xsd:element name="persistence-unit" minOccurs="1" maxOccurs="unbounded">
           <xsd:complexType>
             <xsd:annotation>
               <xsd:documentation>
@@ -74,8 +72,7 @@
 
             <!-- **************************************************** -->
 
-              <xsd:element name="description" type="xsd:string" 
-                           minOccurs="0">
+              <xsd:element name="description" type="xsd:string" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -87,12 +84,11 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="provider" type="xsd:string" 
-                           minOccurs="0">
+              <xsd:element name="provider" type="xsd:string" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
-                    Provider class that supplies EntityManagers for this 
+                    Provider class that supplies EntityManagers for this
                     persistence unit.
 
                   </xsd:documentation>
@@ -101,8 +97,31 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="jta-data-source" type="xsd:string" 
-                           minOccurs="0">
+              <xsd:element name="qualifier" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                  <xsd:documentation>
+
+                    Qualifier annotation class used for dependency injection.
+
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+
+              <!-- **************************************************** -->
+
+              <xsd:element name="scope" type="xsd:string" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+
+                    Scope annotation class used for dependency injection.
+
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+
+              <!-- **************************************************** -->
+
+              <xsd:element name="jta-data-source" type="xsd:string" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -114,8 +133,7 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="non-jta-data-source" type="xsd:string" 
-                           minOccurs="0">
+              <xsd:element name="non-jta-data-source" type="xsd:string" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -127,12 +145,11 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="mapping-file" type="xsd:string" 
-                           minOccurs="0" maxOccurs="unbounded">
+              <xsd:element name="mapping-file" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                   <xsd:documentation>
 
-                    File containing mapping information. Loaded as a resource 
+                    File containing mapping information. Loaded as a resource
                     by the persistence provider.
 
                   </xsd:documentation>
@@ -141,12 +158,11 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="jar-file" type="xsd:string" 
-                           minOccurs="0" maxOccurs="unbounded">
+              <xsd:element name="jar-file" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                   <xsd:documentation>
 
-                    Jar file that is to be scanned for managed classes. 
+                    Jar file that is to be scanned for managed classes.
 
                   </xsd:documentation>
                 </xsd:annotation>
@@ -154,13 +170,12 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="class" type="xsd:string" 
-                           minOccurs="0" maxOccurs="unbounded">
+              <xsd:element name="class" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                   <xsd:documentation>
 
                     Managed class to be included in the persistence unit and
-                    to scan for annotations.  It should be annotated 
+                    to scan for annotations.  It should be annotated
                     with either @Entity, @Embeddable or @MappedSuperclass.
 
                   </xsd:documentation>
@@ -169,14 +184,13 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="exclude-unlisted-classes" type="xsd:boolean" 
-                           default="true" minOccurs="0">
+              <xsd:element name="exclude-unlisted-classes" type="xsd:boolean" default="true" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
-                    When set to true then only listed classes and jars will 
-                    be scanned for persistent classes, otherwise the 
-                    enclosing jar or directory will also be scanned. 
+                    When set to true then only listed classes and jars will
+                    be scanned for persistent classes, otherwise the
+                    enclosing jar or directory will also be scanned.
                     Not applicable to Java SE persistence units.
 
                   </xsd:documentation>
@@ -185,15 +199,13 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="shared-cache-mode" 
-                           type="persistence:persistence-unit-caching-type" 
-                           minOccurs="0">
+              <xsd:element name="shared-cache-mode" type="persistence:persistence-unit-caching-type" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
-                    Defines whether caching is enabled for the 
+                    Defines whether caching is enabled for the
                     persistence unit if caching is supported by the
-                    persistence provider. When set to ALL, all entities 
+                    persistence provider. When set to ALL, all entities
                     will be cached. When set to NONE, no entities will
                     be cached. When set to ENABLE_SELECTIVE, only entities
                     specified as cacheable will be cached. When set to
@@ -207,9 +219,7 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="validation-mode" 
-                           type="persistence:persistence-unit-validation-mode-type" 
-                           minOccurs="0">
+              <xsd:element name="validation-mode" type="persistence:persistence-unit-validation-mode-type" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -226,31 +236,42 @@
                 <xsd:annotation>
                   <xsd:documentation>
 
-                    A list of standard and vendor-specific properties 
+                    A list of standard and vendor-specific properties
                     and hints.
 
                   </xsd:documentation>
                 </xsd:annotation>
                 <xsd:complexType>
                   <xsd:sequence>
-                    <xsd:element name="property" 
-                                 minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="property" minOccurs="0" maxOccurs="unbounded">
                       <xsd:annotation>
                         <xsd:documentation>
                           A name-value pair.
                         </xsd:documentation>
                       </xsd:annotation>
                       <xsd:complexType>
-                        <xsd:attribute name="name" type="xsd:string" 
-                                       use="required"/>
-                        <xsd:attribute name="value" type="xsd:string" 
-                                       use="required"/>
+                        <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        <xsd:attribute name="value" type="xsd:string" use="required"/>
                       </xsd:complexType>
                     </xsd:element>
                   </xsd:sequence>
                 </xsd:complexType>
               </xsd:element>
 
+              <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    An extension point for integration related configuration, e.g. cdi:
+                    <!--
+                    <persistence-unit name="my-unit" xmlns:cdi="https://jakarta.ee/xml/ns/persistence-cdi">
+                      ...
+                      <cdi:scope>com.example.jpa.ACustomScope</cdi:scope>
+                      <cdi:qualifier>com.example.jpa.CustomQualifier</cdi:qualifier>
+                    </persistence-unit>
+                    -->
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:any>
             </xsd:sequence>
 
             <!-- **************************************************** -->
@@ -267,12 +288,11 @@
 
             <!-- **************************************************** -->
 
-            <xsd:attribute name="transaction-type" 
-                           type="persistence:persistence-unit-transaction-type">
+            <xsd:attribute name="transaction-type" type="persistence:persistence-unit-transaction-type">
               <xsd:annotation>
                 <xsd:documentation>
 
-                  Type of transactions used by EntityManagers from this 
+                  Type of transactions used by EntityManagers from this
                   persistence unit.
 
                 </xsd:documentation>
@@ -282,8 +302,7 @@
           </xsd:complexType>
         </xsd:element>
       </xsd:sequence>
-      <xsd:attribute name="version" type="persistence:versionType" 
-                     fixed="3.0" use="required"/>
+      <xsd:attribute name="version" type="persistence:versionType" fixed="3.2" use="required"/>
     </xsd:complexType>
   </xsd:element>
 

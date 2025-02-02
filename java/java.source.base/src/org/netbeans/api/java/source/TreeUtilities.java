@@ -153,7 +153,15 @@ public final class TreeUtilities {
     public boolean isEnumConstant(VariableTree tree) {
         return (((JCTree.JCModifiers) tree.getModifiers()).flags & Flags.ENUM) != 0;
     }
-    
+
+    /**
+     * Checks whether given variable tree represents a record component.
+     * @since 2.79.0
+     */
+    public boolean isRecordComponent(VariableTree tree) {
+        return (((JCTree.JCModifiers) tree.getModifiers()).flags & Flags.RECORD) != 0;
+    }
+
     /**Checks whether the given tree represents an annotation.
      * @deprecated since 0.67, <code>Tree.getKind() == Kind.ANNOTATION_TYPE</code> should be used instead.
      */

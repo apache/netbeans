@@ -44,7 +44,7 @@ public class OCIPropertiesProvider implements CommandProvider {
     private final TempFileGenerator configFileGenerator;
 
     public OCIPropertiesProvider() {
-        this.configFileGenerator = new TempFileGenerator("db-", ".properties", GET_DB_CONNECTION); // NOI18N
+        this.configFileGenerator = new TempFileGenerator("db-", ".properties"); // NOI18N
     }
 
     @Override

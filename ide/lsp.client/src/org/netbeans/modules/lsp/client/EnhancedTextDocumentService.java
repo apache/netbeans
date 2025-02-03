@@ -33,16 +33,14 @@ public interface EnhancedTextDocumentService extends TextDocumentService {
     public static class InlineCompletionParams {
         private TextDocumentIdentifier textDocument;
         private Position position;
-        private String text; //TODO: remove text
         private InlineCompletionContext context;
 
         public InlineCompletionParams() {
         }
 
-        public InlineCompletionParams(TextDocumentIdentifier textDocument, Position position, String text, InlineCompletionContext context) {
+        public InlineCompletionParams(TextDocumentIdentifier textDocument, Position position, InlineCompletionContext context) {
             this.textDocument = textDocument;
             this.position = position;
-            this.text = text;
             this.context = context;
         }
 
@@ -60,14 +58,6 @@ public interface EnhancedTextDocumentService extends TextDocumentService {
 
         public void setPosition(Position position) {
             this.position = position;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public void setText(String text) {
-            this.text = text;
         }
 
         public InlineCompletionContext getContext() {

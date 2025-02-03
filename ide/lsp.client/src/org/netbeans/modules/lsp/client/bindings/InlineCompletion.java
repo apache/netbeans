@@ -151,7 +151,7 @@ public class InlineCompletion {
                         try {
                             handle.start();
                             //TODO: cancel
-                            CompletableFuture<EnhancedTextDocumentService.InlineCompletionItem[]> futureProposals = bindings.getTextDocumentService().inlineCompletion(new EnhancedTextDocumentService.InlineCompletionParams(new TextDocumentIdentifier(Utils.toURI(file)), Utils.createPosition(doc, caretPos), doc.getText(0, doc.getLength()), null));
+                            CompletableFuture<EnhancedTextDocumentService.InlineCompletionItem[]> futureProposals = bindings.getTextDocumentService().inlineCompletion(new EnhancedTextDocumentService.InlineCompletionParams(new TextDocumentIdentifier(Utils.toURI(file)), Utils.createPosition(doc, caretPos), null));
                             EnhancedTextDocumentService.InlineCompletionItem[] proposals = futureProposals.get();
                             if (proposals != null && proposals.length > 0 && thisVersion == DocumentUtilities.getDocumentVersion(doc)) {
                                 //TODO: more proper re-indent possible?
@@ -208,7 +208,6 @@ public class InlineCompletion {
             if (i != null) {
                 i.clearShadowText(doc);
                 doc.removeDocumentListener(i);
-    //            i.agent.server.autocomplete_clearLastCandidate(null);
             }
         }
 

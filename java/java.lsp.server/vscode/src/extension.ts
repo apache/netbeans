@@ -66,6 +66,8 @@ import { validateJDKCompatibility } from './jdk/validation/validation';
 import * as sshGuide from './panels/SshGuidePanel';
 import * as runImageGuide from './panels/RunImageGuidePanel';
 import { shouldHideGuideFor } from './panels/guidesUtil';
+import { promisify } from 'util';
+import * as Handlebars from "handlebars";
 
 const API_VERSION : string = "1.0";
 export const COMMAND_PREFIX : string = "nbls";
@@ -1080,7 +1082,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 });
             }
 
-            runDockerSSH("opc", publicIp, imageUrl, isRepositoryPrivate);
+            runDockerSSH(context, "opc", publicIp, imageUrl, isRepositoryPrivate);
         }
     ));
 
@@ -1198,7 +1200,7 @@ interface ConfigFiles {
     bootstrapProperties: string | null;
 }
 
-async function runDockerSSH(username: string, host: string, dockerImage: string, isRepositoryPrivate: boolean) {
+async function runDockerSSH(context: ExtensionContext, username: string, host: string, dockerImage: string, isRepositoryPrivate: boolean) {
     const configFiles: ConfigFiles = await vscode.commands.executeCommand('nbls.config.file.path') as ConfigFiles;
     const { applicationProperties, bootstrapProperties } = configFiles;
     let bearerTokenFile: string | undefined;
@@ -1215,59 +1217,43 @@ async function runDockerSSH(username: string, host: string, dockerImage: string,
     let mountVolume = "";
     let micronautConfigFilesEnv = "";
     let filesToCopy = "";
-    let renameCommand = "";
-
-    // remove old files before coping new ones
-    if (applicationProperties || bootstrapProperties || isRepositoryPrivate) {
-        const rmFilesCommand = `rm -f ${bootstrapPropertiesRemotePath} ${applicationPropertiesRemotePath} ${bearerTokenRemotePath}`;
-        sshCommand += `ssh ${username}@${host} "${rmFilesCommand}" && `;
-    }
+    let renameFilesCommand = "";
 
     if (isRepositoryPrivate) {
         bearerTokenFile = await commands.executeCommand(COMMAND_PREFIX + '.cloud.assets.createBearerToken', ocirServer);
-        filesToCopy = `${bearerTokenFile}`;
-        renameCommand = `mv ${remotePathToCopyTo}${path.basename(bearerTokenFile || "")} ${bearerTokenRemotePath}\n`;
+        if (bearerTokenFile) {
+            filesToCopy = bearerTokenFile;
+            renameFilesCommand = `mv ${remotePathToCopyTo}${path.basename(bearerTokenFile)} ${bearerTokenRemotePath}\n`;
+        }
     }
 
     if (bootstrapProperties) {
         filesToCopy = `${filesToCopy} ${bootstrapProperties}`;
-        renameCommand += `mv ${remotePathToCopyTo}${path.basename(bootstrapProperties)} ${bootstrapPropertiesRemotePath}\n`;
+        renameFilesCommand += `mv ${remotePathToCopyTo}${path.basename(bootstrapProperties)} ${bootstrapPropertiesRemotePath}\n`;
         mountVolume = `-v ${bootstrapPropertiesRemotePath}:${bootstrapPropertiesContainerPath}:Z `;
         micronautConfigFilesEnv = `${bootstrapPropertiesContainerPath}`;
     }
 
     if (applicationProperties) {
         filesToCopy = `${filesToCopy} ${applicationProperties}`;
-        renameCommand += `mv ${remotePathToCopyTo}${path.basename(applicationProperties)} ${applicationPropertiesRemotePath}\n`;
+        renameFilesCommand += `mv ${remotePathToCopyTo}${path.basename(applicationProperties)} ${applicationPropertiesRemotePath}\n`;
         mountVolume += ` -v ${applicationPropertiesRemotePath}:${applicationPropertiesContainerPath}:Z`;
         micronautConfigFilesEnv += `${bootstrapProperties ? "," : ""}${applicationPropertiesContainerPath}`;
     }
 
-    let script = `#!/bin/sh\n`;
-    script += `set -e\n`;
-    script += `CONTAINER_ID_FILE="/home/${username}/.vscode.container.id"\n`;
-    script += `rm -f ${bootstrapPropertiesRemotePath} ${applicationPropertiesRemotePath} ${bearerTokenRemotePath}\n`; // remove old files
-    script += renameCommand;
-    script += `if [ -f "$CONTAINER_ID_FILE" ]; then\n`;
-    script += `  CONTAINER_ID=$(cat "$CONTAINER_ID_FILE")\n`;
-    script += `  if [ ! -z "$CONTAINER_ID" ] && docker ps -q --filter "id=$CONTAINER_ID" | grep -q .; then\n`;
-    script += `    echo "Stopping existing container with ID $CONTAINER_ID..."\n`;
-    script += `    docker stop "$CONTAINER_ID"\n`;
-    script += `  fi\n`;
-    script += `  rm -f "$CONTAINER_ID_FILE"\n`;
-    script += `fi\n`;
-
-    if (isRepositoryPrivate) {
-        script += `cat ${bearerTokenRemotePath} | docker login --username=BEARER_TOKEN --password-stdin ${ocirServer} \n`;
-    }
-    script += `docker pull ${dockerImage} \n`;
-
-    script += `NEW_CONTAINER_ID=$(docker run -p 8080:8080 ${mountVolume} -e MICRONAUT_CONFIG_FILES=${micronautConfigFilesEnv} -d ${dockerImage})\n`;
-
-    script += `if [ -n "$NEW_CONTAINER_ID" ]; then\n`
-    script += `  echo $NEW_CONTAINER_ID > $CONTAINER_ID_FILE\n`
-    script += `fi\n`
-    script += `docker logs -f "$NEW_CONTAINER_ID"\n`
+    let templateFilePath = path.join(context.extensionPath, "templates", "run-container.sh.handlebars");
+    const template = await getTemplateFromPath(templateFilePath);
+    const script = template({
+        username,
+        filesToRemove: `${bootstrapPropertiesRemotePath} ${applicationPropertiesRemotePath} ${bearerTokenRemotePath}`,
+        renameFilesCommand,
+        isRepositoryPrivate,
+        bearerTokenRemotePath,
+        ocirServer,
+        dockerImage,
+        mountVolume,
+        micronautConfigFilesEnv
+    });
 
     const tempDir = process.env.TEMP || process.env.TMP || '/tmp';
     const scriptName = `run-container-${Date.now()}.sh`;
@@ -1278,6 +1264,13 @@ async function runDockerSSH(username: string, host: string, dockerImage: string,
     sshCommand += `ssh ${username}@${host} "mv -f ${scriptName} run-container.sh && chmod +x run-container.sh && ./run-container.sh" `
 
     runCommandInTerminal(sshCommand, `Container: ${username}@${host}`)
+}
+
+const readFile = promisify(fs.readFile);
+
+async function getTemplateFromPath(path: string): Promise<HandlebarsTemplateDelegate<any>> {
+    const templateFile = await readFile(path, "utf-8");
+    return Handlebars.compile(templateFile);
 }
 
 function killNbProcess(notifyKill : boolean, log : vscode.OutputChannel, specProcess?: ChildProcess) : Promise<void> {

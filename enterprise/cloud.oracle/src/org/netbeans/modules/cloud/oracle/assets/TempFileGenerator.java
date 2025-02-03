@@ -64,7 +64,7 @@ public class TempFileGenerator {
 
     private static final boolean POSIX = FileSystems.getDefault().supportedFileAttributeViews().contains("posix");  // NOI18N
     private static final Path TEMP_DIR = Path.of(System.getProperty("java.io.tmpdir")); // NOI18N
-    private static final String TEMP_FOLDER_NAME = "nbls.tmp.files."; // NOI18N
+    private static final String TEMP_FOLDER_NAME_PREFIX = "nbls.tmp.files."; // NOI18N
     private static final EnumSet<PosixFilePermission> readWritePosix = EnumSet.of(OWNER_READ, OWNER_WRITE);
     private static final EnumSet<PosixFilePermission> readPosix = EnumSet.of(OWNER_READ);
 
@@ -155,7 +155,7 @@ public class TempFileGenerator {
     }
     
     private static Path createTempDirectory() throws IOException {
-        Path newTempDir = Files.createTempDirectory(TEMP_DIR, TEMP_FOLDER_NAME);
+        Path newTempDir = Files.createTempDirectory(TEMP_DIR, TEMP_FOLDER_NAME_PREFIX);
         newTempDir.toFile().deleteOnExit();
         return newTempDir;
     }

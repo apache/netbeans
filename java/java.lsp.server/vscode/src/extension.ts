@@ -1201,6 +1201,7 @@ interface ConfigFiles {
 async function runDockerSSH(username: string, host: string, dockerImage: string, isRepositoryPrivate: boolean) {
     const configFiles: ConfigFiles = await vscode.commands.executeCommand('nbls.config.file.path') as ConfigFiles;
     const { applicationProperties, bootstrapProperties } = configFiles;
+    let bearerTokenFile: string | undefined;
 
     const applicationPropertiesRemotePath = `/home/${username}/application.properties`;
     const bootstrapPropertiesRemotePath = `/home/${username}/bootstrap.properties`;
@@ -1208,10 +1209,13 @@ async function runDockerSSH(username: string, host: string, dockerImage: string,
     const applicationPropertiesContainerPath = "/home/app/application.properties";
     const bootstrapPropertiesContainerPath = "/home/app/bootstrap.properties";
     const ocirServer = dockerImage.split('/')[0];
+    const remotePathToCopyTo = `/home/${username}/`;
 
     let sshCommand = "";
     let mountVolume = "";
     let micronautConfigFilesEnv = "";
+    let filesToCopy = "";
+    let renameCommand = "";
 
     // remove old files before coping new ones
     if (applicationProperties || bootstrapProperties || isRepositoryPrivate) {
@@ -1220,25 +1224,30 @@ async function runDockerSSH(username: string, host: string, dockerImage: string,
     }
 
     if (isRepositoryPrivate) {
-        const bearerTokenFile = await commands.executeCommand(COMMAND_PREFIX + '.cloud.assets.createBearerToken', ocirServer);
-        sshCommand += `scp "${bearerTokenFile}" ${username}@${host}:${bearerTokenRemotePath} && `;
+        bearerTokenFile = await commands.executeCommand(COMMAND_PREFIX + '.cloud.assets.createBearerToken', ocirServer);
+        filesToCopy = `${bearerTokenFile}`;
+        renameCommand = `mv ${remotePathToCopyTo}${path.basename(bearerTokenFile || "")} ${bearerTokenRemotePath}\n`;
     }
 
     if (bootstrapProperties) {
-        sshCommand += `scp "${bootstrapProperties}" ${username}@${host}:${bootstrapPropertiesRemotePath} && `;
+        filesToCopy = `${filesToCopy} ${bootstrapProperties}`;
+        renameCommand += `mv ${remotePathToCopyTo}${path.basename(bootstrapProperties)} ${bootstrapPropertiesRemotePath}\n`;
         mountVolume = `-v ${bootstrapPropertiesRemotePath}:${bootstrapPropertiesContainerPath}:Z `;
         micronautConfigFilesEnv = `${bootstrapPropertiesContainerPath}`;
     }
 
     if (applicationProperties) {
-        sshCommand += `scp "${applicationProperties}" ${username}@${host}:${applicationPropertiesRemotePath} && `;
+        filesToCopy = `${filesToCopy} ${applicationProperties}`;
+        renameCommand += `mv ${remotePathToCopyTo}${path.basename(applicationProperties)} ${applicationPropertiesRemotePath}\n`;
         mountVolume += ` -v ${applicationPropertiesRemotePath}:${applicationPropertiesContainerPath}:Z`;
         micronautConfigFilesEnv += `${bootstrapProperties ? "," : ""}${applicationPropertiesContainerPath}`;
-    } 
+    }
 
     let script = `#!/bin/sh\n`;
     script += `set -e\n`;
     script += `CONTAINER_ID_FILE="/home/${username}/.vscode.container.id"\n`;
+    script += `rm -f ${bootstrapPropertiesRemotePath} ${applicationPropertiesRemotePath} ${bearerTokenRemotePath}\n`; // remove old files
+    script += renameCommand;
     script += `if [ -f "$CONTAINER_ID_FILE" ]; then\n`;
     script += `  CONTAINER_ID=$(cat "$CONTAINER_ID_FILE")\n`;
     script += `  if [ ! -z "$CONTAINER_ID" ] && docker ps -q --filter "id=$CONTAINER_ID" | grep -q .; then\n`;
@@ -1261,12 +1270,12 @@ async function runDockerSSH(username: string, host: string, dockerImage: string,
     script += `docker logs -f "$NEW_CONTAINER_ID"\n`
 
     const tempDir = process.env.TEMP || process.env.TMP || '/tmp';
-    const runContainerScript = path.join(tempDir, `run-container-${Date.now()}.sh`);
+    const scriptName = `run-container-${Date.now()}.sh`;
+    const runContainerScript = path.join(tempDir, scriptName);
     fs.writeFileSync(runContainerScript, script);
 
-    sshCommand += `scp "${runContainerScript}" ${username}@${host}:run-container.sh && `
-    
-    sshCommand += `ssh ${username}@${host} "chmod +x run-container.sh && ./run-container.sh" `
+    sshCommand = `scp ${filesToCopy} ${runContainerScript} ${username}@${host}:${remotePathToCopyTo} && `    
+    sshCommand += `ssh ${username}@${host} "mv -f ${scriptName} run-container.sh && chmod +x run-container.sh && ./run-container.sh" `
 
     runCommandInTerminal(sshCommand, `Container: ${username}@${host}`)
 }

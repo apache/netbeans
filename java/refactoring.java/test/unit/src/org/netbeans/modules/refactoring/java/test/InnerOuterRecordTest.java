@@ -23,7 +23,6 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -65,42 +64,6 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
         }
     }
 
-    // for reference
-    public void test0_259004() throws Exception {
-        String source =
-                """
-            package t;
-            import java.util.function.Consumer;
-            public class A {
-                public static void main(String[] args) {
-                    Consumer<F> c = f -> {};
-                }
-                public static final class F {}
-            }""";
-        String newOuter =
-                """
-            package t;
-            import java.util.function.Consumer;
-            public class A {
-            public static void main(String[] args) {
-                Consumer<F> c = f -> {};
-            }
-            }""";
-        String newInner =
-                """
-            /*
-            * Refactoring License
-            */
-            package t;
-            /**
-             *
-             * @author junit
-             */
-            public final class F {
-            }
-            """;
-        innerOuterSetupAndTest(source, newOuter, newInner);
-    }
 
     public void test9ApacheNetbeans7044() throws Exception {
         // initial outer has record with meaningful canonical constructor.

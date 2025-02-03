@@ -653,8 +653,6 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
                     break;
                 default:
             }
-
-//            if (member.getKind())
         }
         return newInnerRecord;
     }

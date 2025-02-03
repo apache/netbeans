@@ -75,10 +75,11 @@ public class DeleteFile extends SimpleRefactoringElementImplementation {
     public void performChange() {
         try {
             FileObject fo = URLMapper.findFileObject(res);
-            if (fo != null) {
-                id = BackupFacility.getDefault().backup(fo);
-                DataObject.find(fo).delete();
+            if (fo == null) {
+                throw new IOException(res.toString());
             }
+            id = BackupFacility.getDefault().backup(fo);
+            DataObject.find(fo).delete();
         } catch (DataObjectNotFoundException ex) {
             Exceptions.printStackTrace(ex);
         } catch (IOException ex) {

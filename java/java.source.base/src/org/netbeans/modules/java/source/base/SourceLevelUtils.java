@@ -34,13 +34,6 @@ public class SourceLevelUtils {
     public static final Source JDK1_9 = Source.lookup("9");
     public static final Source JDK14 = Source.lookup("14");
     public static final Source JDK15 = Source.lookup("15");
-    public static final Source JDK16 = Source.lookup("16");
-    public static final Source JDK17 = Source.lookup("17");
-    // for next release:
-//    public static final Source JDK18 = Source.lookup("18");
-//    public static final Source JDK19 = Source.lookup("19");
-//    public static final Source JDK20 = Source.lookup("20");
-//    public static final Source JDK21 = Source.lookup("21");
 
     public static boolean allowDefaultMethods(Source in) {
         return in.compareTo(JDK1_8) >= 0;

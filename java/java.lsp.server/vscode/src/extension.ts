@@ -66,8 +66,7 @@ import { validateJDKCompatibility } from './jdk/validation/validation';
 import * as sshGuide from './panels/SshGuidePanel';
 import * as runImageGuide from './panels/RunImageGuidePanel';
 import { shouldHideGuideFor } from './panels/guidesUtil';
-import { promisify } from 'util';
-import * as Handlebars from "handlebars";
+import { SSHSession } from './ssh/ssh';
 
 const API_VERSION : string = "1.0";
 export const COMMAND_PREFIX : string = "nbls";
@@ -1060,8 +1059,8 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                     ocid
                 });
             }
-
-            openSSHSession("opc", publicIp, node.label);
+            const sshSession = new SSHSession("opc", publicIp);
+            sshSession.open(node.label);
         }
     ));
 
@@ -1082,7 +1081,8 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 });
             }
 
-            runDockerSSH(context, "opc", publicIp, imageUrl, isRepositoryPrivate);
+            const sshSession = new SSHSession("opc", publicIp);
+            sshSession.runDocker(context, imageUrl, isRepositoryPrivate);
         }
     ));
 
@@ -1153,124 +1153,6 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
             doActivateWithJDK(clientPromise, specifiedJDK, context, log, notifyKill, setClient);
         });
     }
-}
-
-function runCommandInTerminal(command: string, name: string) {
-    const isWindows = process.platform === 'win32';
-
-    const shell = process.env.SHELL || '/bin/bash';
-    const shellName = shell.split('/').pop();
-    const isZsh = shellName === 'zsh';
-
-    const defaultShell = isWindows
-      ? process.env.ComSpec || 'cmd.exe'
-      : shell;
-
-    const pauseCommand = isWindows
-      ? 'pause'
-      : 'echo "Press any key to close..."; ' + (isZsh
-        ? 'read -rs -k1'
-        : 'read -rsn1');
-
-    const commandWithPause = `${command} && ${pauseCommand}`;
-
-    const terminal = vscode.window.createTerminal({
-      name: name,
-      shellPath: defaultShell,
-      shellArgs: isWindows ? ['/c', commandWithPause] : ['-c', commandWithPause],
-    });
-    terminal.show();
-}
-
-function openSSHSession(username: string, host: string, name?: string) {
-    let sessionName;
-    if (name === undefined) {
-        sessionName =`${username}@${host}`;
-    } else {
-        sessionName = name;
-    }
-
-    const sshCommand = `ssh ${username}@${host}`;
-
-    runCommandInTerminal(sshCommand, `SSH: ${username}@${host}`);
-}
-
-interface ConfigFiles {
-    applicationProperties : string | null;
-    bootstrapProperties: string | null;
-}
-
-async function runDockerSSH(context: ExtensionContext, username: string, host: string, dockerImage: string, isRepositoryPrivate: boolean) {
-    const configFiles: ConfigFiles = await vscode.commands.executeCommand('nbls.config.file.path') as ConfigFiles;
-    const { applicationProperties, bootstrapProperties } = configFiles;
-    let bearerTokenFile: string | undefined;
-
-    const applicationPropertiesRemotePath = `/home/${username}/application.properties`;
-    const bootstrapPropertiesRemotePath = `/home/${username}/bootstrap.properties`;
-    const bearerTokenRemotePath = `/home/${username}/token.txt`;
-    const applicationPropertiesContainerPath = "/home/app/application.properties";
-    const bootstrapPropertiesContainerPath = "/home/app/bootstrap.properties";
-    const ocirServer = dockerImage.split('/')[0];
-    const remotePathToCopyTo = `/home/${username}/`;
-
-    let sshCommand = "";
-    let mountVolume = "";
-    let micronautConfigFilesEnv = "";
-    let filesToCopy = "";
-    let renameFilesCommand = "";
-
-    if (isRepositoryPrivate) {
-        bearerTokenFile = await commands.executeCommand(COMMAND_PREFIX + '.cloud.assets.createBearerToken', ocirServer);
-        if (bearerTokenFile) {
-            filesToCopy = bearerTokenFile;
-            renameFilesCommand = `mv ${remotePathToCopyTo}${path.basename(bearerTokenFile)} ${bearerTokenRemotePath}\n`;
-        }
-    }
-
-    if (bootstrapProperties) {
-        filesToCopy = `${filesToCopy} ${bootstrapProperties}`;
-        renameFilesCommand += `mv ${remotePathToCopyTo}${path.basename(bootstrapProperties)} ${bootstrapPropertiesRemotePath}\n`;
-        mountVolume = `-v ${bootstrapPropertiesRemotePath}:${bootstrapPropertiesContainerPath}:Z `;
-        micronautConfigFilesEnv = `${bootstrapPropertiesContainerPath}`;
-    }
-
-    if (applicationProperties) {
-        filesToCopy = `${filesToCopy} ${applicationProperties}`;
-        renameFilesCommand += `mv ${remotePathToCopyTo}${path.basename(applicationProperties)} ${applicationPropertiesRemotePath}\n`;
-        mountVolume += ` -v ${applicationPropertiesRemotePath}:${applicationPropertiesContainerPath}:Z`;
-        micronautConfigFilesEnv += `${bootstrapProperties ? "," : ""}${applicationPropertiesContainerPath}`;
-    }
-
-    let templateFilePath = path.join(context.extensionPath, "templates", "run-container.sh.handlebars");
-    const template = await getTemplateFromPath(templateFilePath);
-    const script = template({
-        username,
-        filesToRemove: `${bootstrapPropertiesRemotePath} ${applicationPropertiesRemotePath} ${bearerTokenRemotePath}`,
-        renameFilesCommand,
-        isRepositoryPrivate,
-        bearerTokenRemotePath,
-        ocirServer,
-        dockerImage,
-        mountVolume,
-        micronautConfigFilesEnv
-    });
-
-    const tempDir = process.env.TEMP || process.env.TMP || '/tmp';
-    const scriptName = `run-container-${Date.now()}.sh`;
-    const runContainerScript = path.join(tempDir, scriptName);
-    fs.writeFileSync(runContainerScript, script);
-
-    sshCommand = `scp ${filesToCopy} ${runContainerScript} ${username}@${host}:${remotePathToCopyTo} && `    
-    sshCommand += `ssh ${username}@${host} "mv -f ${scriptName} run-container.sh && chmod +x run-container.sh && ./run-container.sh" `
-
-    runCommandInTerminal(sshCommand, `Container: ${username}@${host}`)
-}
-
-const readFile = promisify(fs.readFile);
-
-async function getTemplateFromPath(path: string): Promise<HandlebarsTemplateDelegate<any>> {
-    const templateFile = await readFile(path, "utf-8");
-    return Handlebars.compile(templateFile);
 }
 
 function killNbProcess(notifyKill : boolean, log : vscode.OutputChannel, specProcess?: ChildProcess) : Promise<void> {

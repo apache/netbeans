@@ -18,8 +18,6 @@ under the License. --}}
 #!/bin/sh
 set -e
 CONTAINER_ID_FILE="/home/{{username}}/.vscode.container.id"
-rm -f {{filesToRemove}}
-{{renameFilesCommand}}
 if [ -f "$CONTAINER_ID_FILE" ]; then
   CONTAINER_ID=$(cat "$CONTAINER_ID_FILE")
   if [ ! -z "$CONTAINER_ID" ] && docker ps -q --filter "id=$CONTAINER_ID" | grep -q .; then

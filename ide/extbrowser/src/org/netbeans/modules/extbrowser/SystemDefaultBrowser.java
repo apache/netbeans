@@ -130,11 +130,12 @@ public class SystemDefaultBrowser extends ExtWebBrowser {
             String[] args = Utilities.parseParameters(b);
 
             if (args == null || args.length == 0) {
-                throw new NbBrowserException();
+                throw new NbBrowserException("No arguments detected for browser executable");
             }
             b = args[0];
             params += " {" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
         } catch (NbBrowserException e) {
+            ExtWebBrowser.getEM().log(Level.FINE, "Failed to load open command", e);   // NOI18N
             b = ""; // NOI18N
         } catch (UnsatisfiedLinkError e) {
             // someone is customizing this on non-Win platform

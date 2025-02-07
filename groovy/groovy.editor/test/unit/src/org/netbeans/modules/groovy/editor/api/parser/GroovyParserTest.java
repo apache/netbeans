@@ -67,7 +67,8 @@ public class GroovyParserTest extends GroovyTestBase {
         Logger.getLogger(org.netbeans.modules.groovy.editor.api.parser.GroovyParser.class.getName())
                 .setLevel(Level.FINEST);
     }
-    
+
+    @Override
     protected void tearDown() throws Exception {
         // remove the static stuff
         parserUnit = null;
@@ -76,7 +77,10 @@ public class GroovyParserTest extends GroovyTestBase {
         enabledForUnit = null;
         GroovyTestTransformer.parserCompUnit = null;
         
-        clearWorkDir();
+        // TODO cancel indexing?
+        // don't clear since indexer might be still active; setUp() clears on reruns
+//        clearWorkDir();
+
         URL u = URLMapper.findURL(FileUtil.getConfigRoot(), URLMapper.EXTERNAL);
         if (u != null) {
             Path p = Paths.get(u.toURI());

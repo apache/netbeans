@@ -21,6 +21,7 @@ package org.netbeans.core.multitabs.impl;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.io.CharConversionException;
 import java.io.File;
 import javax.swing.Icon;
 import javax.swing.UIManager;
@@ -32,6 +33,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.TopComponent;
+import org.openide.xml.XMLUtil;
 
 import static java.util.Objects.requireNonNullElse;
 
@@ -123,8 +125,18 @@ public class FolderNameTabDecorator extends TabDecorator {
             res.append( prefix );
             res.append( baseText.substring( 6 ) );
         } else {
-            res.append( prefix );
-            res.append( baseText );
+            if (prefix.startsWith("<font")) { //NOI18N
+                res.append("<html>"); //NOI18N
+                res.append(prefix);
+                try {
+                    res.append(XMLUtil.toElementContent(baseText));
+                } catch (CharConversionException ex) {
+                    res.append(baseText);
+                }
+            } else {
+                res.append(prefix);
+                res.append(baseText);
+            }
         }
 
         return res.toString();

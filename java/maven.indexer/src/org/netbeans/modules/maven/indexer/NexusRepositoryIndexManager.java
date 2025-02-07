@@ -164,7 +164,7 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
 
     private final NexusRepositoryQueries queries;
     
-    static final int MAX_RESULT_COUNT = 1024;
+    static final int MAX_RESULT_COUNT = 4096;
     static final int NO_CAP_RESULT_COUNT = AbstractSearchRequest.UNDEFINED;
 
     @SuppressWarnings("this-escape")
@@ -400,17 +400,18 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
     private void tryMoveRemoteIndexFromOldCache(RepositoryInfo info) {
 
         String buildnumber = System.getProperty("netbeans.buildnumber");
-        if (buildnumber == null) {
+        if (buildnumber == null || buildnumber.isBlank() || !buildnumber.contains("-")) {
             return; // tests
         }
+        // see org.netbeans.modules.janitor.Janitor for '.lastUsedVersion' format
         int ourVersion;
         try {
             String debugRelease = System.getProperty("maven.indexing.diag.release");
             ourVersion = debugRelease != null
                     ? Integer.parseInt(debugRelease)
-                    : Integer.parseInt(buildnumber.split("-")[0]);
+                    : Integer.parseInt(buildnumber.substring(0, buildnumber.lastIndexOf("-")));
         } catch (NumberFormatException ignore) {
-            return;
+            return; // rc or other dev build
         }
 
         Path cacheParent = Places.getCacheDirectory().toPath().getParent();
@@ -443,7 +444,7 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
                     }
                 }
             } catch (Exception ex) {
-                LOGGER.log(Level.WARNING, "index import failed: {0}", ex.getMessage());
+                LOGGER.log(Level.WARNING, "index import failed: {0}: {1}", new Object[] {ex.getClass().getName(), ex.getMessage()});
             }
         }
     }

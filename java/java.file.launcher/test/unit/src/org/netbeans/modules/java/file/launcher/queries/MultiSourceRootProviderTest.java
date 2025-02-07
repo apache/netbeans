@@ -19,7 +19,6 @@
 package org.netbeans.modules.java.file.launcher.queries;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
@@ -34,15 +33,12 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation.Result;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.NbBundle;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 

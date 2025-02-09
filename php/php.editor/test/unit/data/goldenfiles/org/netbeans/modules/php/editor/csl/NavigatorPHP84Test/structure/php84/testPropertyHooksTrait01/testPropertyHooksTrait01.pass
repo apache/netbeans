@@ -1,0 +1,240 @@
+|-Trait00 [821, 918] : ESCAPED{Trait00}
+|--$t0_01_public [843, 855] : ESCAPED{$t0_01_public}
+|--$t0_02_private [870, 883] : ESCAPED{$t0_02_private}
+|--$t0_03_protected [900, 915] : ESCAPED{$t0_03_protected}
+|-Trait01 [926, 1488] : ESCAPED{Trait01}
+|--$t1_01_public [948, 1086] : ESCAPED{$t1_01_public}
+|---get [971, 1019] : ESCAPED{get}ESCAPED{ {}}
+|---set [1028, 1080] : ESCAPED{set}ESCAPED{ {}}
+|--$t1_02_private [1104, 1243] : ESCAPED{$t1_02_private}<font color="#999999">:ESCAPED{int}</font>
+|---get [1128, 1176] : ESCAPED{get}ESCAPED{ {}}
+|---set [1185, 1237] : ESCAPED{set}ESCAPED{ {}}
+|--$t1_03_protected [1270, 1323] : ESCAPED{$t1_03_protected}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [1296, 1302] : ESCAPED{get}ESCAPED{ {}}
+|---set [1311, 1317] : ESCAPED{set}ESCAPED{ {}}
+|--$t1_04_public_abstract [1345, 1400] : ESCAPED{$t1_04_public_abstract}
+|---get [1377, 1380] : ESCAPED{get}ESCAPED{;}
+|---set [1390, 1393] : ESCAPED{set}ESCAPED{;}
+|--$t1_05_public [1413, 1425] : ESCAPED{$t1_05_public}
+|--$t1_06_private [1440, 1453] : ESCAPED{$t1_06_private}
+|--$t1_07_protected [1470, 1485] : ESCAPED{$t1_07_protected}
+|-Trait02 [1496, 1852] : ESCAPED{Trait02}
+|--$t2_01_public [1518, 1553] : ESCAPED{$t2_01_public}
+|---get [1541, 1547] : ESCAPED{get}ESCAPED{ {}}
+|--$t2_02_private [1571, 1607] : ESCAPED{$t2_02_private}<font color="#999999">:ESCAPED{int}</font>
+|---set [1595, 1601] : ESCAPED{set}ESCAPED{ {}}
+|--$t2_03_protected [1634, 1687] : ESCAPED{$t2_03_protected}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [1660, 1666] : ESCAPED{get}ESCAPED{ {}}
+|---set [1675, 1681] : ESCAPED{set}ESCAPED{ {}}
+|--$t2_04_public_abstract [1709, 1764] : ESCAPED{$t2_04_public_abstract}
+|---get [1741, 1744] : ESCAPED{get}ESCAPED{;}
+|---set [1754, 1757] : ESCAPED{set}ESCAPED{;}
+|--$t2_05_public [1777, 1789] : ESCAPED{$t2_05_public}
+|--$t2_06_private [1804, 1817] : ESCAPED{$t2_06_private}
+|--$t2_07_protected [1834, 1849] : ESCAPED{$t2_07_protected}
+|-Trait03 [1860, 2216] : ESCAPED{Trait03}
+|--$t3_01_public [1882, 1917] : ESCAPED{$t3_01_public}
+|---get [1905, 1911] : ESCAPED{get}ESCAPED{ {}}
+|--$t3_02_private [1935, 1971] : ESCAPED{$t3_02_private}<font color="#999999">:ESCAPED{int}</font>
+|---set [1959, 1965] : ESCAPED{set}ESCAPED{ {}}
+|--$t3_03_protected [1998, 2051] : ESCAPED{$t3_03_protected}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [2024, 2030] : ESCAPED{get}ESCAPED{ {}}
+|---set [2039, 2045] : ESCAPED{set}ESCAPED{ {}}
+|--$t3_04_public_abstract [2073, 2128] : ESCAPED{$t3_04_public_abstract}
+|---get [2105, 2108] : ESCAPED{get}ESCAPED{;}
+|---set [2118, 2121] : ESCAPED{set}ESCAPED{;}
+|--$t3_05_public [2141, 2153] : ESCAPED{$t3_05_public}
+|--$t3_06_private [2168, 2181] : ESCAPED{$t3_06_private}
+|--$t3_07_protected [2198, 2213] : ESCAPED{$t3_07_protected}
+|-Trait04 [2224, 2549] : ESCAPED{Trait04}<font color="#999999">#ESCAPED{Trait03}</font>
+|--(Inherited) $t3_01_public [1882, 1917] : <font color="#7D694A">ESCAPED{$t3_01_public}</font>
+|---get [1905, 1911] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $t3_02_private [1935, 1971] : <font color="#7D694A">ESCAPED{$t3_02_private}</font><font color="#999999">:ESCAPED{int}</font>
+|---set [1959, 1965] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t3_03_protected [1998, 2051] : <font color="#7D694A">ESCAPED{$t3_03_protected}</font><font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [2024, 2030] : ESCAPED{get}ESCAPED{ {}}
+|---set [2039, 2045] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t3_04_public_abstract [2073, 2128] : <font color="#7D694A">ESCAPED{$t3_04_public_abstract}</font>
+|---get [2105, 2108] : ESCAPED{get}ESCAPED{;}
+|---set [2118, 2121] : ESCAPED{set}ESCAPED{;}
+|--(Inherited) $t3_06_private [2168, 2181] : <font color="#7D694A">ESCAPED{$t3_06_private}</font>
+|--(Inherited) $t3_07_protected [2198, 2213] : <font color="#7D694A">ESCAPED{$t3_07_protected}</font>
+|--$t4_01_public [2263, 2284] : ESCAPED{$t4_01_public}
+|---get [2277, 2283] : ESCAPED{get}ESCAPED{ {}}
+|--$t4_02_private [2302, 2324] : ESCAPED{$t4_02_private}<font color="#999999">:ESCAPED{int}</font>
+|---set [2317, 2323] : ESCAPED{set}ESCAPED{ {}}
+|--$t4_03_protected [2351, 2381] : ESCAPED{$t4_03_protected}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [2368, 2374] : ESCAPED{get}ESCAPED{ {}}
+|---set [2374, 2380] : ESCAPED{set}ESCAPED{ {}}
+|--$t4_04_public_abstract [2403, 2435] : ESCAPED{$t4_04_public_abstract}
+|---get [2426, 2429] : ESCAPED{get}ESCAPED{;}
+|---set [2430, 2433] : ESCAPED{set}ESCAPED{;}
+|--$t4_05_public [2448, 2460] : ESCAPED{$t4_05_public}
+|--$t4_06_private [2475, 2488] : ESCAPED{$t4_06_private}
+|--$t4_07_protected [2505, 2520] : ESCAPED{$t4_07_protected}
+|--$t3_05_public [2534, 2546] : ESCAPED{$t3_05_public}
+|-Trait05 [2557, 2895] : ESCAPED{Trait05}<font color="#999999">#ESCAPED{Trait02}ESCAPED{, }ESCAPED{Trait04}</font>
+|--(Inherited) $t2_01_public [1518, 1553] : <font color="#7D694A">ESCAPED{$t2_01_public}</font>
+|---get [1541, 1547] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $t2_02_private [1571, 1607] : <font color="#7D694A">ESCAPED{$t2_02_private}</font><font color="#999999">:ESCAPED{int}</font>
+|---set [1595, 1601] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t2_03_protected [1634, 1687] : <font color="#7D694A">ESCAPED{$t2_03_protected}</font><font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [1660, 1666] : ESCAPED{get}ESCAPED{ {}}
+|---set [1675, 1681] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t2_04_public_abstract [1709, 1764] : <font color="#7D694A">ESCAPED{$t2_04_public_abstract}</font>
+|---get [1741, 1744] : ESCAPED{get}ESCAPED{;}
+|---set [1754, 1757] : ESCAPED{set}ESCAPED{;}
+|--(Inherited) $t2_05_public [1777, 1789] : <font color="#7D694A">ESCAPED{$t2_05_public}</font>
+|--(Inherited) $t2_06_private [1804, 1817] : <font color="#7D694A">ESCAPED{$t2_06_private}</font>
+|--(Inherited) $t2_07_protected [1834, 1849] : <font color="#7D694A">ESCAPED{$t2_07_protected}</font>
+|--(Inherited) $t3_01_public [1882, 1917] : <font color="#7D694A">ESCAPED{$t3_01_public}</font>
+|---get [1905, 1911] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $t3_02_private [1935, 1971] : <font color="#7D694A">ESCAPED{$t3_02_private}</font><font color="#999999">:ESCAPED{int}</font>
+|---set [1959, 1965] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t3_03_protected [1998, 2051] : <font color="#7D694A">ESCAPED{$t3_03_protected}</font><font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [2024, 2030] : ESCAPED{get}ESCAPED{ {}}
+|---set [2039, 2045] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t3_04_public_abstract [2073, 2128] : <font color="#7D694A">ESCAPED{$t3_04_public_abstract}</font>
+|---get [2105, 2108] : ESCAPED{get}ESCAPED{;}
+|---set [2118, 2121] : ESCAPED{set}ESCAPED{;}
+|--(Inherited) $t3_06_private [2168, 2181] : <font color="#7D694A">ESCAPED{$t3_06_private}</font>
+|--(Inherited) $t3_07_protected [2198, 2213] : <font color="#7D694A">ESCAPED{$t3_07_protected}</font>
+|--(Inherited) $t4_01_public [2263, 2284] : <font color="#7D694A">ESCAPED{$t4_01_public}</font>
+|---get [2277, 2283] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $t4_02_private [2302, 2324] : <font color="#7D694A">ESCAPED{$t4_02_private}</font><font color="#999999">:ESCAPED{int}</font>
+|---set [2317, 2323] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t4_03_protected [2351, 2381] : <font color="#7D694A">ESCAPED{$t4_03_protected}</font><font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [2368, 2374] : ESCAPED{get}ESCAPED{ {}}
+|---set [2374, 2380] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t4_04_public_abstract [2403, 2435] : <font color="#7D694A">ESCAPED{$t4_04_public_abstract}</font>
+|---get [2426, 2429] : ESCAPED{get}ESCAPED{;}
+|---set [2430, 2433] : ESCAPED{set}ESCAPED{;}
+|--(Inherited) $t4_06_private [2475, 2488] : <font color="#7D694A">ESCAPED{$t4_06_private}</font>
+|--(Inherited) $t4_07_protected [2505, 2520] : <font color="#7D694A">ESCAPED{$t4_07_protected}</font>
+|--(Inherited) $t3_05_public [2534, 2546] : <font color="#7D694A">ESCAPED{$t3_05_public}</font>
+|--$t5_01_public [2605, 2626] : ESCAPED{$t5_01_public}
+|---get [2619, 2625] : ESCAPED{get}ESCAPED{ {}}
+|--$t5_02_private [2644, 2666] : ESCAPED{$t5_02_private}<font color="#999999">:ESCAPED{int}</font>
+|---set [2659, 2665] : ESCAPED{set}ESCAPED{ {}}
+|--$t5_03_protected [2693, 2727] : ESCAPED{$t5_03_protected}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [2714, 2720] : ESCAPED{get}ESCAPED{ {}}
+|---set [2720, 2726] : ESCAPED{set}ESCAPED{ {}}
+|--$t5_04_public_abstract [2749, 2781] : ESCAPED{$t5_04_public_abstract}
+|---get [2772, 2775] : ESCAPED{get}ESCAPED{;}
+|---set [2776, 2779] : ESCAPED{set}ESCAPED{;}
+|--$t5_05_public [2794, 2806] : ESCAPED{$t5_05_public}
+|--$t5_06_private [2821, 2834] : ESCAPED{$t5_06_private}
+|--$t5_07_protected [2851, 2866] : ESCAPED{$t5_07_protected}
+|--$t4_05_public [2880, 2892] : ESCAPED{$t4_05_public}
+|-TestClass [2912, 2968] : ESCAPED{TestClass}<font color="#999999">#ESCAPED{Trait05}</font>
+|--(Inherited) $t2_01_public [1518, 1553] : <font color="#7D694A">ESCAPED{$t2_01_public}</font>
+|---get [1541, 1547] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $t2_02_private [1571, 1607] : <font color="#7D694A">ESCAPED{$t2_02_private}</font><font color="#999999">:ESCAPED{int}</font>
+|---set [1595, 1601] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t2_03_protected [1634, 1687] : <font color="#7D694A">ESCAPED{$t2_03_protected}</font><font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [1660, 1666] : ESCAPED{get}ESCAPED{ {}}
+|---set [1675, 1681] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t2_04_public_abstract [1709, 1764] : <font color="#7D694A">ESCAPED{$t2_04_public_abstract}</font>
+|---get [1741, 1744] : ESCAPED{get}ESCAPED{;}
+|---set [1754, 1757] : ESCAPED{set}ESCAPED{;}
+|--(Inherited) $t2_05_public [1777, 1789] : <font color="#7D694A">ESCAPED{$t2_05_public}</font>
+|--(Inherited) $t2_06_private [1804, 1817] : <font color="#7D694A">ESCAPED{$t2_06_private}</font>
+|--(Inherited) $t2_07_protected [1834, 1849] : <font color="#7D694A">ESCAPED{$t2_07_protected}</font>
+|--(Inherited) $t3_01_public [1882, 1917] : <font color="#7D694A">ESCAPED{$t3_01_public}</font>
+|---get [1905, 1911] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $t3_02_private [1935, 1971] : <font color="#7D694A">ESCAPED{$t3_02_private}</font><font color="#999999">:ESCAPED{int}</font>
+|---set [1959, 1965] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t3_03_protected [1998, 2051] : <font color="#7D694A">ESCAPED{$t3_03_protected}</font><font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [2024, 2030] : ESCAPED{get}ESCAPED{ {}}
+|---set [2039, 2045] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t3_04_public_abstract [2073, 2128] : <font color="#7D694A">ESCAPED{$t3_04_public_abstract}</font>
+|---get [2105, 2108] : ESCAPED{get}ESCAPED{;}
+|---set [2118, 2121] : ESCAPED{set}ESCAPED{;}
+|--(Inherited) $t3_06_private [2168, 2181] : <font color="#7D694A">ESCAPED{$t3_06_private}</font>
+|--(Inherited) $t3_07_protected [2198, 2213] : <font color="#7D694A">ESCAPED{$t3_07_protected}</font>
+|--(Inherited) $t4_01_public [2263, 2284] : <font color="#7D694A">ESCAPED{$t4_01_public}</font>
+|---get [2277, 2283] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $t4_02_private [2302, 2324] : <font color="#7D694A">ESCAPED{$t4_02_private}</font><font color="#999999">:ESCAPED{int}</font>
+|---set [2317, 2323] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t4_03_protected [2351, 2381] : <font color="#7D694A">ESCAPED{$t4_03_protected}</font><font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [2368, 2374] : ESCAPED{get}ESCAPED{ {}}
+|---set [2374, 2380] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t4_04_public_abstract [2403, 2435] : <font color="#7D694A">ESCAPED{$t4_04_public_abstract}</font>
+|---get [2426, 2429] : ESCAPED{get}ESCAPED{;}
+|---set [2430, 2433] : ESCAPED{set}ESCAPED{;}
+|--(Inherited) $t4_06_private [2475, 2488] : <font color="#7D694A">ESCAPED{$t4_06_private}</font>
+|--(Inherited) $t4_07_protected [2505, 2520] : <font color="#7D694A">ESCAPED{$t4_07_protected}</font>
+|--(Inherited) $t3_05_public [2534, 2546] : <font color="#7D694A">ESCAPED{$t3_05_public}</font>
+|--(Inherited) $t5_01_public [2605, 2626] : <font color="#7D694A">ESCAPED{$t5_01_public}</font>
+|---get [2619, 2625] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $t5_02_private [2644, 2666] : <font color="#7D694A">ESCAPED{$t5_02_private}</font><font color="#999999">:ESCAPED{int}</font>
+|---set [2659, 2665] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t5_03_protected [2693, 2727] : <font color="#7D694A">ESCAPED{$t5_03_protected}</font><font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [2714, 2720] : ESCAPED{get}ESCAPED{ {}}
+|---set [2720, 2726] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t5_04_public_abstract [2749, 2781] : <font color="#7D694A">ESCAPED{$t5_04_public_abstract}</font>
+|---get [2772, 2775] : ESCAPED{get}ESCAPED{;}
+|---set [2776, 2779] : ESCAPED{set}ESCAPED{;}
+|--(Inherited) $t5_05_public [2794, 2806] : <font color="#7D694A">ESCAPED{$t5_05_public}</font>
+|--(Inherited) $t5_06_private [2821, 2834] : <font color="#7D694A">ESCAPED{$t5_06_private}</font>
+|--(Inherited) $t5_07_protected [2851, 2866] : <font color="#7D694A">ESCAPED{$t5_07_protected}</font>
+|--$t4_05_public [2953, 2965] : ESCAPED{$t4_05_public}
+|-Child [2976, 3533] : ESCAPED{Child}<font color="#999999">::ESCAPED{TestClass}</font><font color="#999999">#ESCAPED{Trait00}</font>
+|--(Inherited) $t0_02_private [870, 883] : <font color="#7D694A">ESCAPED{$t0_02_private}</font>
+|--(Inherited) $t0_03_protected [900, 915] : <font color="#7D694A">ESCAPED{$t0_03_protected}</font>
+|--(Inherited) $t2_01_public [1518, 1553] : <font color="#7D694A">ESCAPED{$t2_01_public}</font>
+|---get [1541, 1547] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $t2_02_private [1571, 1607] : <font color="#7D694A">ESCAPED{$t2_02_private}</font><font color="#999999">:ESCAPED{int}</font>
+|---set [1595, 1601] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t2_03_protected [1634, 1687] : <font color="#7D694A">ESCAPED{$t2_03_protected}</font><font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [1660, 1666] : ESCAPED{get}ESCAPED{ {}}
+|---set [1675, 1681] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t2_05_public [1777, 1789] : <font color="#7D694A">ESCAPED{$t2_05_public}</font>
+|--(Inherited) $t2_06_private [1804, 1817] : <font color="#7D694A">ESCAPED{$t2_06_private}</font>
+|--(Inherited) $t2_07_protected [1834, 1849] : <font color="#7D694A">ESCAPED{$t2_07_protected}</font>
+|--(Inherited) $t3_01_public [1882, 1917] : <font color="#7D694A">ESCAPED{$t3_01_public}</font>
+|---get [1905, 1911] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $t3_02_private [1935, 1971] : <font color="#7D694A">ESCAPED{$t3_02_private}</font><font color="#999999">:ESCAPED{int}</font>
+|---set [1959, 1965] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t3_03_protected [1998, 2051] : <font color="#7D694A">ESCAPED{$t3_03_protected}</font><font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [2024, 2030] : ESCAPED{get}ESCAPED{ {}}
+|---set [2039, 2045] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t3_06_private [2168, 2181] : <font color="#7D694A">ESCAPED{$t3_06_private}</font>
+|--(Inherited) $t3_07_protected [2198, 2213] : <font color="#7D694A">ESCAPED{$t3_07_protected}</font>
+|--(Inherited) $t4_01_public [2263, 2284] : <font color="#7D694A">ESCAPED{$t4_01_public}</font>
+|---get [2277, 2283] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $t4_02_private [2302, 2324] : <font color="#7D694A">ESCAPED{$t4_02_private}</font><font color="#999999">:ESCAPED{int}</font>
+|---set [2317, 2323] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t4_03_protected [2351, 2381] : <font color="#7D694A">ESCAPED{$t4_03_protected}</font><font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [2368, 2374] : ESCAPED{get}ESCAPED{ {}}
+|---set [2374, 2380] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t4_06_private [2475, 2488] : <font color="#7D694A">ESCAPED{$t4_06_private}</font>
+|--(Inherited) $t5_01_public [2605, 2626] : <font color="#7D694A">ESCAPED{$t5_01_public}</font>
+|---get [2619, 2625] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $t5_02_private [2644, 2666] : <font color="#7D694A">ESCAPED{$t5_02_private}</font><font color="#999999">:ESCAPED{int}</font>
+|---set [2659, 2665] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t5_03_protected [2693, 2727] : <font color="#7D694A">ESCAPED{$t5_03_protected}</font><font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|---get [2714, 2720] : ESCAPED{get}ESCAPED{ {}}
+|---set [2720, 2726] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $t5_05_public [2794, 2806] : <font color="#7D694A">ESCAPED{$t5_05_public}</font>
+|--(Inherited) $t5_07_protected [2851, 2866] : <font color="#7D694A">ESCAPED{$t5_07_protected}</font>
+|--$t1_04_public_abstract [3031, 3093] : ESCAPED{$t1_04_public_abstract}
+|---get [3063, 3072] : ESCAPED{get}ESCAPED{ {}}
+|---set [3081, 3087] : ESCAPED{set}ESCAPED{ {}}
+|--$t2_04_public_abstract [3106, 3168] : ESCAPED{$t2_04_public_abstract}
+|---get [3138, 3147] : ESCAPED{get}ESCAPED{ {}}
+|---set [3156, 3162] : ESCAPED{set}ESCAPED{ {}}
+|--$t3_04_public_abstract [3181, 3243] : ESCAPED{$t3_04_public_abstract}
+|---get [3213, 3222] : ESCAPED{get}ESCAPED{ {}}
+|---set [3231, 3237] : ESCAPED{set}ESCAPED{ {}}
+|--$t4_04_public_abstract [3256, 3318] : ESCAPED{$t4_04_public_abstract}
+|---get [3288, 3297] : ESCAPED{get}ESCAPED{ {}}
+|---set [3306, 3312] : ESCAPED{set}ESCAPED{ {}}
+|--$t5_04_public_abstract [3331, 3393] : ESCAPED{$t5_04_public_abstract}
+|---get [3363, 3372] : ESCAPED{get}ESCAPED{ {}}
+|---set [3381, 3387] : ESCAPED{set}ESCAPED{ {}}
+|--$t0_01_public [3406, 3418] : ESCAPED{$t0_01_public}
+|--$t3_05_public [3432, 3444] : ESCAPED{$t3_05_public}
+|--$t4_05_public [3458, 3470] : ESCAPED{$t4_05_public}
+|--$t4_07_protected [3487, 3502] : ESCAPED{$t4_07_protected}
+|--$t5_06_private [3517, 3530] : ESCAPED{$t5_06_private}

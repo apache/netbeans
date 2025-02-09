@@ -21,9 +21,9 @@ package org.netbeans.modules.php.editor.csl;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -112,16 +112,11 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
 
     private Collection<OffsetRange> compute(final ParserResult parameter, final int offset) {
         final PHPParseResult parseResult = (PHPParseResult) parameter;
-        Set<OffsetRange> result = new TreeSet<>(new Comparator<OffsetRange>() {
-            @Override
-            public int compare(OffsetRange o1, OffsetRange o2) {
-                return o1.compareTo(o2);
-            }
-        });
+        Set<OffsetRange> result = new TreeSet<>((OffsetRange o1, OffsetRange o2) -> o1.compareTo(o2));
         final TokenHierarchy<?> tokenHierarchy = parseResult.getSnapshot().getTokenHierarchy();
         TokenSequence<PHPTokenId> tokenSequence = tokenHierarchy != null ? LexUtilities.getPHPTokenSequence(tokenHierarchy, offset) : null;
         if (cancelled) {
-            return Collections.EMPTY_LIST;
+            return List.of();
         }
         OffsetRange referenceSpan = tokenSequence != null ? DeclarationFinderImpl.getReferenceSpan(tokenSequence, offset, parseResult.getModel()) : OffsetRange.NONE;
         if (!referenceSpan.equals(OffsetRange.NONE)) {
@@ -141,11 +136,11 @@ public class OccurrencesFinderImpl extends OccurrencesFinder {
         Collection<OffsetRange> result = new TreeSet<>();
         OccurencesSupport occurencesSupport = model.getOccurencesSupport(referenceSpan);
         if (cancelled) {
-            return Collections.EMPTY_LIST;
+            return List.of();
         }
         Occurence caretOccurence = occurencesSupport.getOccurence();
         if (cancelled) {
-            return Collections.EMPTY_LIST;
+            return List.of();
         }
         if (caretOccurence != null) {
             final EnumSet<Accuracy> handledAccuracyFlags = EnumSet.<Occurence.Accuracy>of(

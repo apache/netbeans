@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
@@ -59,6 +58,7 @@ import org.netbeans.modules.php.editor.model.Model;
 import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.NamespaceScope;
+import org.netbeans.modules.php.editor.model.PropertyHookScope;
 import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
@@ -76,10 +76,11 @@ public final class NavigatorScanner {
     private static final String FONT_GRAY_COLOR = "<font color=\"#999999\">"; //NOI18N
     private static final String FONT_INHERITED_COLOR = "<font color=\"#7D694A\">"; //NOI18N
     private static final String CLOSE_FONT = "</font>"; //NOI18N
-    private static ImageIcon interfaceIcon = null;
-    private static ImageIcon traitIcon = null;
-    private static ImageIcon enumIcon = null;
-    private static ImageIcon enumCaseIcon = null;
+    private static final ImageIcon INTERFACE_ICON = IconsUtils.loadInterfaceIcon();
+    private static final ImageIcon TRAIT_ICON = IconsUtils.loadTraitIcon();
+    private static final ImageIcon ENUM_ICON = IconsUtils.loadEnumIcon();
+    private static final ImageIcon ENUM_CASE_ICON = IconsUtils.loadEnumCaseIcon();
+    private static final ImageIcon HOOK_ICON = IconsUtils.loadPropertyHookIcon();
     private static boolean isLogged = false;
     private final FileScope fileScope;
     private final Set<TypeElement> deprecatedTypes;
@@ -139,14 +140,14 @@ public final class NavigatorScanner {
     private void processTypes(List<StructureItem> items, List<StructureItem> namespaceChildren, Collection<? extends TypeScope> declaredTypes) {
         for (TypeScope type : declaredTypes) {
             List<StructureItem> children = new ArrayList<>();
-            if (type instanceof ClassScope) {
-                namespaceChildren.add(new PHPClassStructureItem((ClassScope) type, children));
-            } else if (type instanceof InterfaceScope) {
-                namespaceChildren.add(new PHPInterfaceStructureItem((InterfaceScope) type, children));
-            } else if (type instanceof TraitScope) {
-                namespaceChildren.add(new PHPTraitStructureItem((TraitScope) type, children));
-            } else if (type instanceof EnumScope) {
-                namespaceChildren.add(new PHPEnumStructureItem((EnumScope) type, children));
+            if (type instanceof ClassScope classScope) {
+                namespaceChildren.add(new PHPClassStructureItem(classScope, children));
+            } else if (type instanceof InterfaceScope interfaceScope) {
+                namespaceChildren.add(new PHPInterfaceStructureItem(interfaceScope, children));
+            } else if (type instanceof TraitScope traitScope) {
+                namespaceChildren.add(new PHPTraitStructureItem(traitScope, children));
+            } else if (type instanceof EnumScope enumScope) {
+                namespaceChildren.add(new PHPEnumStructureItem(enumScope, children));
             }
 
             // methods
@@ -192,37 +193,40 @@ public final class NavigatorScanner {
                 }
             }
 
-            if (type instanceof ClassScope) {
-                ClassScope cls = (ClassScope) type;
-                // fields
-                Set<String> declaredFieldNames = new HashSet<>();
-                Collection<? extends FieldElement> declaredFields = cls.getDeclaredFields();
-                for (FieldElement field : declaredFields) {
-                    children.add(new PHPFieldStructureItem(field));
-                    declaredFieldNames.add(field.getName());
-                }
-                // inherited fields
-                for (FieldElement inheritedField : cls.getInheritedFields()) {
-                    if (!declaredFieldNames.contains(inheritedField.getName())) {
-                        children.add(new PHPFieldStructureItem(inheritedField, true));
-                    }
-                }
+            processFields(type, children);
+
+            if (type instanceof EnumScope enumScope) {
+                processEnumCases(enumScope, children, declClsConstantNames);
             }
-            if (type instanceof TraitScope) {
-                TraitScope trait = (TraitScope) type;
-                Collection<? extends FieldElement> declaredFields = trait.getDeclaredFields();
-                for (FieldElement field : declaredFields) {
-                    children.add(new PHPFieldStructureItem(field));
-                }
+        }
+    }
+
+    private void processFields(TypeScope typeScope, List<StructureItem> children) {
+        if (typeScope instanceof TypeScope.FieldDeclarable fieldDeclarable) {
+            processFields(fieldDeclarable, children);
+        }
+    }
+
+    private void processFields(TypeScope.FieldDeclarable typeScope, List<StructureItem> children) {
+        Set<String> declaredFieldNames = new HashSet<>();
+        Collection<? extends FieldElement> declaredFields = typeScope.getDeclaredFields();
+        for (FieldElement field : declaredFields) {
+            children.add(new PHPFieldStructureItem(field));
+            declaredFieldNames.add(field.getName());
+        }
+        // inherited fields
+        for (FieldElement inheritedField : typeScope.getInheritedFields()) {
+            if (!declaredFieldNames.contains(inheritedField.getName())) {
+                children.add(new PHPFieldStructureItem(inheritedField, true));
             }
-            if (type instanceof EnumScope) {
-                EnumScope enumScope = (EnumScope) type;
-                Collection<? extends CaseElement> declaredEnumCases = enumScope.getDeclaredEnumCases();
-                for (CaseElement enumCase : declaredEnumCases) {
-                    children.add(new PHPEnumCaseStructureItem(enumCase, "ecase")); // NOI18N
-                    declClsConstantNames.add(enumCase.getName());
-                }
-            }
+        }
+    }
+
+    private void processEnumCases(EnumScope enumScope, List<StructureItem> children, Set<String> declClsConstantNames) {
+        Collection<? extends CaseElement> declaredEnumCases = enumScope.getDeclaredEnumCases();
+        for (CaseElement enumCase : declaredEnumCases) {
+            children.add(new PHPEnumCaseStructureItem(enumCase, "ecase")); // NOI18N
+            declClsConstantNames.add(enumCase.getName());
         }
     }
 
@@ -258,8 +262,7 @@ public final class NavigatorScanner {
         @Override
         public boolean equals(Object obj) {
             boolean thesame = false;
-            if (obj instanceof PHPStructureItem) {
-                PHPStructureItem item = (PHPStructureItem) obj;
+            if (obj instanceof PHPStructureItem item) {
                 if (item.getName() != null && this.getName() != null) {
                     thesame = item.modelElement.getName().equals(modelElement.getName()) && item.modelElement.getOffset() == modelElement.getOffset();
                 }
@@ -324,10 +327,14 @@ public final class NavigatorScanner {
 
         @Override
         public long getEndPosition() {
-            if (modelElement instanceof Scope) {
-                final OffsetRange blockRange = ((Scope) modelElement).getBlockRange();
+            if (modelElement instanceof Scope scope) {
+                final OffsetRange blockRange = scope.getBlockRange();
                 if (blockRange != null) {
                     return blockRange.getEnd();
+                }
+                // e.g. set(string $value);
+                if (modelElement instanceof PropertyHookScope propertyHook) {
+                    return propertyHook.getOffsetRange().getEnd();
                 }
             }
             return modelElement.getNameRange().getEnd();
@@ -384,8 +391,7 @@ public final class NavigatorScanner {
             if (constant.isDeprecated()) {
                 formatter.deprecated(false);
             }
-            if (constant instanceof ClassConstantElement) {
-                ClassConstantElement classConstant = (ClassConstantElement) constant;
+            if (constant instanceof ClassConstantElement classConstant) {
                 if (StringUtils.hasText(classConstant.getDeclaredType())) {
                     processDeclaredType(classConstant, formatter, classConstant.getDeclaredType(), false);
                 }
@@ -436,7 +442,7 @@ public final class NavigatorScanner {
             }
         }
 
-        private void processParameters(FunctionScope function, HtmlFormatter formatter, List<? extends ParameterElement> parameters) {
+        protected void processParameters(ModelElement element, HtmlFormatter formatter, List<? extends ParameterElement> parameters) {
             boolean first = true;
             for (ParameterElement formalParameter : parameters) {
                 String name = formalParameter.getName();
@@ -446,11 +452,11 @@ public final class NavigatorScanner {
                         formatter.appendText(", "); //NOI18N
                     }
                     if (formalParameter.hasDeclaredType()) {
-                        processDeclaredType(function, formatter, formalParameter.getDeclaredType(), false);
+                        processDeclaredType(element, formatter, formalParameter.getDeclaredType(), false);
                     } else if (formalParameter.getPhpdocType() != null) {
-                        processDeclaredType(function, formatter, formalParameter.getPhpdocType(), false);
+                        processDeclaredType(element, formatter, formalParameter.getPhpdocType(), false);
                     } else {
-                        assert types.isEmpty() : function.getName() + " has " + types.size() + " parameter(s)"; // NOI18N
+                        assert types.isEmpty() : element.getName() + " has " + types.size() + " parameter(s)"; // NOI18N
                     }
                     formatter.appendText(name);
                     first = false;
@@ -499,19 +505,13 @@ public final class NavigatorScanner {
             for (int i = 0; i < declaredType.length(); i++) {
                 char c = declaredType.charAt(i);
                 switch (c) {
-                    case '(': // no break
-                    case '?':
+                    case '(', '?' ->
                         formatter.appendText(String.valueOf(c));
-                        break;
-                    case ')': // no break
-                    case '|': // no break
-                    case '&':
+                    case ')', '|', '&' -> {
                         processTypeName(sb, modelElement, formatter);
                         formatter.appendText(String.valueOf(c));
-                        break;
-                    default:
-                        sb.append(c);
-                        break;
+                    }
+                    default -> sb.append(c);
                 }
             }
             if (sb.length() > 0) {
@@ -561,6 +561,19 @@ public final class NavigatorScanner {
         }
     }
 
+    private List<PHPPropertyHookStructureItem> getPropertyHookStructureItems(FieldElement field) {
+        if (field instanceof FieldElement.HookedFieldElement hookedField) {
+            if (hookedField.isHooked()) {
+                List<PHPPropertyHookStructureItem> propertyHookItems = new ArrayList<>();
+                Collection<? extends PropertyHookScope> propertyHookScopes = hookedField.getPropertyHooks();
+                for (PropertyHookScope propertyHookScope : propertyHookScopes) {
+                    propertyHookItems.add(new PHPPropertyHookStructureItem(propertyHookScope));
+                }
+                return propertyHookItems;
+            }
+        }
+        return List.of();
+    }
 
     private abstract class PHPStructureInheritedItem extends PHPStructureItem implements StructureItem.InheritedItem {
 
@@ -582,7 +595,7 @@ public final class NavigatorScanner {
         }
     }
 
-    private class PHPFieldStructureItem extends PHPSimpleStructureItem implements StructureItem.InheritedItem {
+    private class PHPFieldStructureItem extends PHPStructureItem implements StructureItem.InheritedItem, StructureItem.CollapsedDefault {
 
         private final boolean isInherited;
 
@@ -591,7 +604,7 @@ public final class NavigatorScanner {
         }
 
         public PHPFieldStructureItem(FieldElement elementHandle, boolean isInherited) {
-            super(elementHandle, "field"); //NOI18N
+            super(elementHandle, getPropertyHookStructureItems(elementHandle), "field"); // NOI18N
             this.isInherited = isInherited;
         }
 
@@ -622,6 +635,13 @@ public final class NavigatorScanner {
         }
 
         @Override
+        public boolean isCollapsedByDefault() {
+            // CSL has a bug
+            // if "Show inherited members" filter button is clicked, all nodes are expanded...
+            return true;
+        }
+
+        @Override
         public boolean isInherited() {
             return isInherited;
         }
@@ -629,6 +649,47 @@ public final class NavigatorScanner {
         @Override
         public ElementHandle getDeclaringElement() {
             return getField().getInScope();
+        }
+    }
+
+    private class PHPPropertyHookStructureItem extends PHPSimpleStructureItem {
+
+        public PHPPropertyHookStructureItem(PropertyHookScope elementHandle) {
+            super(elementHandle, "hook"); // NOI18N
+        }
+
+        public PropertyHookScope getPropertyHook() {
+            return (PropertyHookScope) getElementHandle();
+        }
+
+        @Override
+        public ImageIcon getCustomIcon() {
+            return HOOK_ICON;
+        }
+
+        @Override
+        public String getHtml(HtmlFormatter formatter) {
+            PropertyHookScope hook = getPropertyHook();
+            // reference
+            if (hook.isReference()) {
+                formatter.appendText("&"); // NOI18N
+            }
+            // hook name
+            formatter.appendText(hook.getName());
+            // parameters
+            List<? extends ParameterElement> parameters = hook.getParameters();
+            if (parameters != null && !parameters.isEmpty()) {
+                formatter.appendText("(");   // NOI18N
+                processParameters(hook, formatter, parameters);
+                formatter.appendText(")");   // NOI18N
+            }
+            // body
+            if (hook.hasBody()) {
+                formatter.appendText(" {}"); // NOI18N
+            } else {
+                formatter.appendText(";"); // NOI18N
+            }
+            return formatter.getText();
         }
     }
 
@@ -646,7 +707,6 @@ public final class NavigatorScanner {
             formatter.appendText(simpleText);
             return formatter.getText();
         }
-
     }
 
     private class PHPNamespaceStructureItem extends PHPStructureItem {
@@ -708,7 +768,6 @@ public final class NavigatorScanner {
         public ElementKind getKind() {
             return ElementKind.RULE;
         }
-
     }
 
     private class PHPClassStructureItem extends PHPStructureItem {
@@ -736,19 +795,18 @@ public final class NavigatorScanner {
                 formatter.appendText(superClassName);
                 formatter.appendHtml(CLOSE_FONT);
             }
-            if (interfaces != null && interfaces.size() > 0) {
+            if (interfaces != null && !interfaces.isEmpty()) {
                 formatter.appendHtml(FONT_GRAY_COLOR + ":"); //NOI18N
                 appendInterfaces(interfaces, formatter);
                 formatter.appendHtml(CLOSE_FONT);
             }
-            if (usedTraits != null && usedTraits.size() > 0) {
+            if (usedTraits != null && !usedTraits.isEmpty()) {
                 formatter.appendHtml(FONT_GRAY_COLOR + "#"); //NOI18N
                 appendUsedTraits(usedTraits, formatter);
                 formatter.appendHtml(CLOSE_FONT);
             }
             return formatter.getText();
         }
-
     }
 
     private class PHPConstantStructureItem extends PHPStructureItem {
@@ -846,8 +904,6 @@ public final class NavigatorScanner {
 
     private class PHPInterfaceStructureItem extends PHPStructureItem {
 
-        @StaticResource
-        private static final String PHP_INTERFACE_ICON = "org/netbeans/modules/php/editor/resources/interface.png"; //NOI18N
         private final Collection<? extends InterfaceScope> interfaces;
 
         public PHPInterfaceStructureItem(InterfaceScope elementHandle, List<? extends StructureItem> children) {
@@ -857,10 +913,7 @@ public final class NavigatorScanner {
 
         @Override
         public ImageIcon getCustomIcon() {
-            if (interfaceIcon == null) {
-                interfaceIcon = IconsUtils.loadInterfaceIcon();
-            }
-            return interfaceIcon;
+            return INTERFACE_ICON;
         }
 
         private InterfaceScope getInterfaceScope() {
@@ -871,7 +924,7 @@ public final class NavigatorScanner {
         public String getHtml(HtmlFormatter formatter) {
             formatter.reset();
             appendName(getInterfaceScope(), formatter);
-            if (interfaces != null && interfaces.size() > 0) {
+            if (interfaces != null && !interfaces.isEmpty()) {
                 formatter.appendHtml(FONT_GRAY_COLOR + "::"); //NOI18N
                 appendInterfaces(interfaces, formatter);
                 formatter.appendHtml(CLOSE_FONT);
@@ -892,10 +945,7 @@ public final class NavigatorScanner {
 
         @Override
         public ImageIcon getCustomIcon() {
-            if (traitIcon == null) {
-                traitIcon = IconsUtils.loadTraitIcon();
-            }
-            return traitIcon;
+            return TRAIT_ICON;
         }
 
         private TraitScope getTraitScope() {
@@ -906,7 +956,7 @@ public final class NavigatorScanner {
         public String getHtml(HtmlFormatter formatter) {
             formatter.reset();
             appendName(getTraitScope(), formatter);
-            if (usedTraits != null && usedTraits.size() > 0) {
+            if (usedTraits != null && !usedTraits.isEmpty()) {
                 formatter.appendHtml(FONT_GRAY_COLOR + "#"); //NOI18N
                 appendUsedTraits(usedTraits, formatter);
                 formatter.appendHtml(CLOSE_FONT);
@@ -931,10 +981,7 @@ public final class NavigatorScanner {
 
         @Override
         public ImageIcon getCustomIcon() {
-            if (enumIcon == null) {
-                enumIcon = IconsUtils.loadEnumIcon();
-            }
-            return enumIcon;
+            return ENUM_ICON;
         }
 
         private EnumScope getEnumScope() {
@@ -988,7 +1035,7 @@ public final class NavigatorScanner {
             String value = enumCase.getValue();
             if (value != null) {
                 formatter.appendText(" "); //NOI18N
-                formatter.appendHtml(FONT_GRAY_COLOR); //NOI18N
+                formatter.appendHtml(FONT_GRAY_COLOR);
                 formatter.appendText(value);
                 formatter.appendHtml(CLOSE_FONT);
             }
@@ -997,10 +1044,7 @@ public final class NavigatorScanner {
 
         @Override
         public ImageIcon getCustomIcon() {
-            if (enumCaseIcon == null) {
-                enumCaseIcon = IconsUtils.loadEnumCaseIcon();
-            }
-            return enumCaseIcon;
+            return ENUM_CASE_ICON;
         }
     }
 

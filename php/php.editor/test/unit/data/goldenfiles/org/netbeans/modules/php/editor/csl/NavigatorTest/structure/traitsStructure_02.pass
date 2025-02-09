@@ -2,5 +2,6 @@
 |--$traitField [35, 45] : ESCAPED{$traitField}
 |--traitFoo [72, 85] : ESCAPED{traitFoo}ESCAPED{(}ESCAPED{)}
 |-TraitedTrait [95, 193] : ESCAPED{TraitedTrait}<font color="#999999">#ESCAPED{MyTrait}</font>
+|--(Inherited) $traitField [35, 45] : <font color="#7D694A">ESCAPED{$traitField}</font>
 |--$secondFiled [139, 150] : ESCAPED{$secondFiled}
 |--secondFoo [177, 191] : ESCAPED{secondFoo}ESCAPED{(}ESCAPED{)}

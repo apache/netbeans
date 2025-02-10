@@ -114,14 +114,19 @@ import org.openide.util.RequestProcessor;
 public class JaxWsServiceCreator implements ServiceCreator {
     private static final String SOAP_BINDING_TYPE = "javax.xml.ws.soap.SOAPBinding";  //NOI18N
     private static final String BINDING_TYPE_ANNOTATION = "javax.xml.ws.BindingType"; //NOI18N
+    private static final String JAKARTAEE_SOAP_BINDING_TYPE = "jakarta.xml.ws.soap.SOAPBinding";  //NOI18N
+    private static final String JAKARTAEE_BINDING_TYPE_ANNOTATION = "jakarta.xml.ws.BindingType"; //NOI18N
     private static final String SOAP12_HTTP_BINDING = "SOAP12HTTP_BINDING"; //NOI18N
     
     private Project project;
     private WizardDescriptor wiz;
-    private boolean addJaxWsLib;
+    private final boolean addJaxWsLib;
+    private final boolean isWeb;
+    private final boolean isEJB;
+    private final boolean isJakartaEENameSpace;
     private int serviceType;
     
-    private static final Logger LOG = Logger.getLogger( JaxWsServiceCreator.class.getCanonicalName());
+    private static final Logger LOG = Logger.getLogger(JaxWsServiceCreator.class.getCanonicalName());
 
     /**
      * Creates a new instance of WebServiceClientCreator
@@ -130,6 +135,9 @@ public class JaxWsServiceCreator implements ServiceCreator {
         this.project = project;
         this.wiz = wiz;
         this.addJaxWsLib = addJaxWsLib;
+        this.isWeb = WSUtils.isWeb(project);
+        this.isEJB = WSUtils.isEJB(project);
+        this.isJakartaEENameSpace = WSUtils.isJakartaEENameSpace(project);
     }
 
     @Override
@@ -201,11 +209,11 @@ public class JaxWsServiceCreator implements ServiceCreator {
 
         if (serviceType == WizardProperties.FROM_SCRATCH) {
             handle.progress(NbBundle.getMessage(JaxWsServiceCreator.class, "MSG_GEN_WS"), 50); //NOI18N
-            //add the JAXWS 2.0 library, if not already added
+            //add the JAX-WS library, if not already added
             if (addJaxWsLib) {
                 MavenModelUtils.addMetroLibrary(project);
             }
-            generateJaxWSImplFromTemplate(pkg, WSUtils.isEJB(project), false, false);
+            generateJaxWSImplFromTemplate(pkg, isEJB, false, false);
             handle.finish();
         } else if (serviceType == WizardProperties.ENCAPSULATE_SESSION_BEAN) {
             String wsName = Templates.getTargetName(wiz);
@@ -279,7 +287,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
                         handle.finish();
                     }
                 } else {
-                    final boolean isJaxWsLibrary = MavenModelUtils.hasJaxWsAPI(project);
+                    final boolean isJaxWsLibrary = MavenModelUtils.hasJaxWsAPI(project, isJakartaEENameSpace);
                     final String relativePath = FileUtil.getRelativePath(localWsdlFolder, wsdlFo);
                     final String serviceName = wsdlFo.getName();
 
@@ -304,12 +312,12 @@ public class JaxWsServiceCreator implements ServiceCreator {
                         @Override
                         public void performOperation(POMModel model) {
                             org.netbeans.modules.maven.model.pom.Plugin plugin =
-                                    WSUtils.isEJB(project) ?
+                                    isEJB ?
                                         MavenModelUtils.addJaxWSPlugin(model, "2.0") : //NOI18N
                                         MavenModelUtils.addJaxWSPlugin(model);
                             MavenModelUtils.addWsimportExecution(plugin, 
                                     serviceName, relativePath,null );
-                            if (WSUtils.isWeb(project)) { // expecting web project
+                            if (isWeb) { // expecting web project
                                 MavenModelUtils.addWarPlugin(model, false);
                             } else { // J2SE Project
                                 MavenModelUtils.addWsdlResources(model);
@@ -340,8 +348,8 @@ public class JaxWsServiceCreator implements ServiceCreator {
                     }
 
                     try {
-                        String wsdlLocationPrefix = WSUtils.isWeb(project) ? "WEB-INF/wsdl/" : "META-INF/wsdl/"; //NOI18N
-                        generateJaxWsImplClass(targetFile, wsdlService, wsdlPort, wsdlLocationPrefix+relativePath, useProvider); //NOI18N
+                        String wsdlLocationPrefix = isWeb ? "WEB-INF/wsdl/" : "META-INF/wsdl/"; //NOI18N
+                        generateJaxWsImplClass(targetFile, wsdlService, wsdlPort, wsdlLocationPrefix+relativePath, useProvider);
                         DataObject targetDo = DataObject.find(targetFile);
                         if (targetDo != null) {
                             SaveCookie save = targetDo.getCookie(SaveCookie.class);
@@ -421,7 +429,9 @@ public class JaxWsServiceCreator implements ServiceCreator {
         }
     }
 
-    private void generateJaxWsImplClass(FileObject targetFile, final WsdlService service, final WsdlPort port, final String wsdlLocation, final boolean useProvider) throws IOException {
+    private void generateJaxWsImplClass(FileObject targetFile, 
+            final WsdlService service, final WsdlPort port, 
+            final String wsdlLocation, final boolean useProvider) throws IOException {
 
         final JavaSource targetSource = JavaSource.forFileObject(targetFile);
         final boolean[] isIncomplete = new boolean[1];
@@ -436,7 +446,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
                     GenerationUtils genUtils = GenerationUtils.newInstance(workingCopy);
 
                     //add @WebService annotation
-                    List<ExpressionTree> attrs = new ArrayList<ExpressionTree>();
+                    List<ExpressionTree> attrs = new ArrayList<>();
                     attrs.add(
                             make.Assignment(make.Identifier("serviceName"), 
                                     make.Literal(service.getName()))); //NOI18N
@@ -456,23 +466,39 @@ public class JaxWsServiceCreator implements ServiceCreator {
                             make.Assignment(make.Identifier("wsdlLocation"), 
                                     make.Literal(wsdlLocation))); //NOI18N
 
+                    final String wspClazz = isJakartaEENameSpace ?
+                            "jakarta.xml.ws.WebServiceProvider" : "javax.xml.ws.WebServiceProvider"; //NOI18N
+                    final String wsClazz = isJakartaEENameSpace ?
+                            "jakarta.jws.WebService" : "javax.jws.WebService"; //NOI18N
                     AnnotationTree WSAnnotation = make.Annotation(
                             useProvider ? 
-                                make.QualIdent("javax.xml.ws.WebServiceProvider") : make.QualIdent("javax.jws.WebService"),      //NOI18N
-                            attrs);
+                                make.QualIdent(wspClazz) : make.QualIdent(wsClazz), attrs);
+                    
                     ClassTree  modifiedClass = genUtils.addAnnotation(javaClass, 
                             WSAnnotation);
 
                     if (WsdlPort.SOAP_VERSION_12.equals(port.getSOAPVersion())) {
                         //if SOAP 1.2 binding, add BindingType annotation
-                        TypeElement bindingElement = workingCopy.getElements().
-                            getTypeElement(BINDING_TYPE_ANNOTATION);
+                        TypeElement bindingElement;
+                        if (isJakartaEENameSpace) {
+                            bindingElement = workingCopy.getElements().
+                                getTypeElement(JAKARTAEE_BINDING_TYPE_ANNOTATION);
+                        } else {
+                            bindingElement = workingCopy.getElements().
+                                getTypeElement(BINDING_TYPE_ANNOTATION);
+                        }
                         if (bindingElement == null) {
                             isIncomplete[0] = true;
                         }
                         else {
-                            TypeElement soapBindingElement = workingCopy.
-                                getElements().getTypeElement(SOAP_BINDING_TYPE);
+                            TypeElement soapBindingElement;
+                            if (isJakartaEENameSpace) {
+                                soapBindingElement = workingCopy.
+                                    getElements().getTypeElement(JAKARTAEE_SOAP_BINDING_TYPE);
+                            } else {
+                                soapBindingElement = workingCopy.
+                                    getElements().getTypeElement(SOAP_BINDING_TYPE);
+                            }
                             ExpressionTree exp = make.MemberSelect(
                                     make.QualIdent(soapBindingElement), SOAP12_HTTP_BINDING);
 
@@ -487,9 +513,11 @@ public class JaxWsServiceCreator implements ServiceCreator {
 
                     if (!useProvider) {
                         // add @Stateless annotation
-                        if (WSUtils.isEJB(project)) {
+                        if (isEJB) {
+                            final String statelessClazz = isJakartaEENameSpace ?
+                                    "jakarta.ejb.Stateless" : "javax.ejb.Stateless"; //NOI18N
                             TypeElement statelessAn = workingCopy.getElements().
-                                getTypeElement("javax.ejb.Stateless"); //NOI18N
+                                    getTypeElement(statelessClazz);
                             if (statelessAn != null) {
                                 AnnotationTree StatelessAnnotation = make.Annotation(
                                         make.QualIdent(statelessAn),
@@ -510,7 +538,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
 
                             // create parameters
                             List<WsdlParameter> parameters = operation.getParameters();
-                            List<VariableTree> params = new ArrayList<VariableTree>();
+                            List<VariableTree> params = new ArrayList<>();
                             for (WsdlParameter parameter : parameters) {
                                 // create parameter:
                                 // final ObjectOutput arg0
@@ -526,7 +554,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
 
                             // create exceptions
                             Iterator<String> exceptions = operation.getExceptions();
-                            List<ExpressionTree> exc = new ArrayList<ExpressionTree>();
+                            List<ExpressionTree> exc = new ArrayList<>();
                             while (exceptions.hasNext()) {
                                 String exception = exceptions.next();
                                 TypeElement excEl = workingCopy.getElements().getTypeElement(exception);
@@ -631,7 +659,9 @@ public class JaxWsServiceCreator implements ServiceCreator {
 
                 ClassPath classPath = getClassPathForFile(project, createdFile);
                 if (classPath != null) {
-                    if (classPath.findResource("javax/ejb/EJB.class") == null) { //NOI19\8N
+                    final String ejbClazz = isJakartaEENameSpace ?
+                            "jakarta/ejb/EJB.class" : "javax/ejb/EJB.class"; //NOI18N
+                    if (classPath.findResource(ejbClazz) == null) {
                         // ad EJB API on classpath
                         ContainerClassPathModifier modifier = project.getLookup().lookup(ContainerClassPathModifier.class);
                         if (modifier != null) {
@@ -732,8 +762,9 @@ public class JaxWsServiceCreator implements ServiceCreator {
     }
     private VariableTree generateEjbInjection(WorkingCopy workingCopy, TreeMaker make, String beanInterface, boolean[] onClassPath) {
 
-        TypeElement ejbAnElement = workingCopy.getElements().getTypeElement("javax.ejb.EJB"); //NOI18N
-        TypeElement interfaceElement = workingCopy.getElements().getTypeElement(beanInterface); //NOI18N
+        final String ejbClazz = isJakartaEENameSpace ? "jakarta.ejb.EJB" : "javax.ejb.EJB"; //NOI18N
+        TypeElement ejbAnElement = workingCopy.getElements().getTypeElement(ejbClazz);
+        TypeElement interfaceElement = workingCopy.getElements().getTypeElement(beanInterface);
 
         AnnotationTree ejbAnnotation = make.Annotation(
                 make.QualIdent(ejbAnElement),
@@ -761,13 +792,14 @@ public class JaxWsServiceCreator implements ServiceCreator {
         GeneratorUtilities utils = GeneratorUtilities.get(workingCopy);
 
         List<? extends Element> interfaceElements = beanInterface.getEnclosedElements();
-        TypeElement webMethodEl = workingCopy.getElements().getTypeElement("javax.jws.WebMethod"); //NOI18N
+        final String webMethodClazz = isJakartaEENameSpace ? "jakarta.jws.WebMethod" : "javax.jws.WebMethod"; //NOI18N
+        TypeElement webMethodEl = workingCopy.getElements().getTypeElement(webMethodClazz);
         assert (webMethodEl != null);
         if (webMethodEl == null) {
             return modifiedClass;
         }
 
-        Set<String> operationNames = new HashSet<String>();
+        Set<String> operationNames = new HashSet<>();
         for (Element el : interfaceElements) {
             if (el.getKind() == ElementKind.METHOD) {
                 ExecutableElement methodEl = (ExecutableElement) el;
@@ -791,8 +823,12 @@ public class JaxWsServiceCreator implements ServiceCreator {
 
                 // generate @RequestWrapper and @RequestResponse annotations
                 if (!methodName.contentEquals(operationName)) {
-                    TypeElement requestWrapperEl = workingCopy.getElements().getTypeElement("javax.xml.ws.RequestWrapper"); //NOI18N
-                    TypeElement responseWrapperEl = workingCopy.getElements().getTypeElement("javax.xml.ws.ResponseWrapper"); //NOI18N
+                    final String reqWrapperClazz = isJakartaEENameSpace ?
+                            "jakarta.xml.ws.RequestWrapper" : "javax.xml.ws.RequestWrapper"; //NOI18N
+                    final String resWrapperClazz = isJakartaEENameSpace ?
+                            "jakarta.xml.ws.ResponseWrapper" : "javax.xml.ws.ResponseWrapper"; //NOI18N
+                    TypeElement requestWrapperEl = workingCopy.getElements().getTypeElement(reqWrapperClazz);
+                    TypeElement responseWrapperEl = workingCopy.getElements().getTypeElement(resWrapperClazz);
                     AssignmentTree className = make.Assignment(make.Identifier("className"), make.Literal(operationName)); //NOI18N
                     AnnotationTree requestWrapperAn = make.Annotation(
                             make.QualIdent(requestWrapperEl),
@@ -810,7 +846,9 @@ public class JaxWsServiceCreator implements ServiceCreator {
 
                 // generate @Oneway annotation
                 if (isVoid && method.getThrows().isEmpty()) {
-                    TypeElement onewayEl = workingCopy.getElements().getTypeElement("javax.jws.Oneway"); //NOI18N
+                    final String oneWayClazz = isJakartaEENameSpace ?
+                            "jakarta.jws.Oneway" : "javax.jws.Oneway"; //NOI18N
+                    TypeElement onewayEl = workingCopy.getElements().getTypeElement(oneWayClazz);
                     AnnotationTree onewayAn = make.Annotation(
                             make.QualIdent(onewayEl),
                             Collections.<ExpressionTree>emptyList());
@@ -818,9 +856,11 @@ public class JaxWsServiceCreator implements ServiceCreator {
                 }
                 // parameters
                 List<? extends VariableTree> params = method.getParameters();
-                List<VariableTree> newParams = new ArrayList<VariableTree>();
+                List<VariableTree> newParams = new ArrayList<>();
                 if (params.size() > 0) {
-                    TypeElement paramEl = workingCopy.getElements().getTypeElement("javax.jws.WebParam"); //NOI18N
+                    final String webParamClazz = isJakartaEENameSpace ?
+                            "jakarta.jws.WebParam" : "javax.jws.WebParam"; //NOI18N
+                    TypeElement paramEl = workingCopy.getElements().getTypeElement(webParamClazz);
                     for (VariableTree param: params) {
                         String paramName = param.getName().toString();
                         AssignmentTree nameAttr = make.Assignment(make.Identifier("name"), make.Literal(paramName)); //NOI18N
@@ -833,7 +873,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
                 }
 
                 // method body
-                List<ExpressionTree> arguments = new ArrayList<ExpressionTree>();
+                List<ExpressionTree> arguments = new ArrayList<>();
                 for (VariableElement ve : methodEl.getParameters()) {
                     arguments.add(make.Identifier(ve.getSimpleName()));
                 }

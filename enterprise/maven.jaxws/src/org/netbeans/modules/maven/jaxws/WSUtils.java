@@ -39,11 +39,13 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.modules.j2ee.api.ejbjar.EjbJar;
 import org.netbeans.modules.j2ee.common.dd.DDHelper;
 import org.netbeans.modules.j2ee.dd.api.common.NameAlreadyUsedException;
 import org.netbeans.modules.j2ee.dd.api.web.DDProvider;
@@ -93,7 +95,8 @@ public class WSUtils {
     /** downloads XML resources from source URI to target folder
      * (USAGE : this method can download a wsdl file and all wsdl/XML schemas,
      * that are recursively imported by this wsdl)
-     * @param targetFolder A folder inside a NB project (ONLY) to which the retrieved resource will be copied to. All retrieved imported/included resources will be copied relative to this directory.
+     * @param targetFolder A folder inside a NB project (ONLY) to which the retrieved resource will be copied to. 
+     * All retrieved imported/included resources will be copied relative to this directory.
      * @param source URI of the XML resource that will be retrieved into the project
      * @return FileObject of the retrieved resource in the local file system
      */
@@ -137,24 +140,10 @@ public class WSUtils {
             @Override
             public void run() throws IOException {
                 FileObject sunJaxwsFo = FileUtil.createData(targetDir, "sun-jaxws.xml");//NOI18N
-                FileLock lock = sunJaxwsFo.lock();
-                BufferedWriter bw = null;
-                OutputStream os = null;
-                OutputStreamWriter osw = null;
-                try {
-                    os = sunJaxwsFo.getOutputStream(lock);
-                    osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
-                    bw = new BufferedWriter(osw);
+                try (FileLock lock = sunJaxwsFo.lock(); OutputStream os = sunJaxwsFo.getOutputStream(lock);
+                        OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
+                        BufferedWriter bw = new BufferedWriter(osw)) {
                     bw.write(sunJaxwsContent);
-                } finally {
-                    if(bw != null)
-                        bw.close();
-                    if(os != null)
-                        os.close();
-                    if(osw != null)
-                        osw.close();
-                    if(lock != null)
-                        lock.releaseLock();
                 }
             }
         });
@@ -168,14 +157,14 @@ public class WSUtils {
         // read the config from resource first
         StringBuffer sb = new StringBuffer();
         String lineSep = System.getProperty("line.separator");//NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-        String line = br.readLine();
-        while (line != null) {
-            sb.append(line);
-            sb.append(lineSep);
-            line = br.readLine();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+            String line = br.readLine();
+            while (line != null) {
+                sb.append(line);
+                sb.append(lineSep);
+                line = br.readLine();
+            }
         }
-        br.close();
         return sb.toString();
     }
     
@@ -206,24 +195,22 @@ public class WSUtils {
     }
     
     private static void deleteFile(FileObject f) {
-        FileLock lock = null;
         try {
             DataObject dObj = DataObject.find(f);
             if (dObj != null) {
                 SaveCookie save = dObj.getCookie(SaveCookie.class);
-                if (save!=null) save.save();
+                if (save!=null) {
+                    save.save();
+                }
             }
-            lock = f.lock();
-            f.delete(lock);
+            try (FileLock lock = f.lock()) {
+                f.delete(lock);
+            }
         } catch(java.io.IOException e) {
             NotifyDescriptor ndd =
                     new NotifyDescriptor.Message(NbBundle.getMessage(WSUtils.class, "MSG_Unable_Delete_File", f.getNameExt()),
                     NotifyDescriptor.ERROR_MESSAGE);
             DialogDisplayer.getDefault().notify(ndd);
-        } finally {
-            if(lock != null) {
-                lock.releaseLock();
-            }
         }
     }
     
@@ -257,8 +244,8 @@ public class WSUtils {
         }
         StringTokenizer tokens = new StringTokenizer(base,"/"); //NOI18N
         if (tokens.countTokens() > 0) {
-            List<String> packageParts = new ArrayList<String>();
-            List<String> nsParts = new ArrayList<String>();
+            List<String> packageParts = new ArrayList<>();
+            List<String> nsParts = new ArrayList<>();
             while (tokens.hasMoreTokens()) {
                 String part = tokens.nextToken();
                 if (part.length() >= 0) {
@@ -269,7 +256,7 @@ public class WSUtils {
                 StringTokenizer tokens1 = new StringTokenizer(nsParts.get(0),"."); //NOI18N
                 int countTokens = tokens1.countTokens();
                 if (countTokens > 0) {
-                    List<String> list = new ArrayList<String>();
+                    List<String> list = new ArrayList<>();
                     while(tokens1.hasMoreTokens()) {
                         list.add(tokens1.nextToken());
                     }
@@ -308,7 +295,6 @@ public class WSUtils {
         }
     }
 
-
     public static boolean isEJB(Project project) {
         J2eeModuleProvider j2eeModuleProvider = project.getLookup().lookup(J2eeModuleProvider.class);
         if (j2eeModuleProvider != null) {
@@ -326,6 +312,32 @@ public class WSUtils {
             J2eeModule.Type moduleType = j2eeModuleProvider.getJ2eeModule().getType();
             if (J2eeModule.Type.WAR.equals(moduleType)) {
                 return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Check if this project is at least Jakarta EE 9 and will use the 
+     * {@code jakarta.*} namespace.
+     * @param project 
+     * @return True if this project use jakarta namespace {@code false} otherwise
+     */
+    public static boolean isJakartaEENameSpace(Project project) {
+        J2eeModuleProvider j2eeModuleProvider = project.getLookup().lookup(J2eeModuleProvider.class);
+        if (j2eeModuleProvider != null) {
+            J2eeModule.Type moduleType = j2eeModuleProvider.getJ2eeModule().getType();
+            FileObject projectDirectory = project.getProjectDirectory();
+            if (J2eeModule.Type.WAR.equals(moduleType)) {
+                WebModule wm = WebModule.getWebModule(projectDirectory);
+                Profile profile = wm.getJ2eeProfile();
+                boolean isJakarta = profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
+                return isJakarta;
+            } else if (J2eeModule.Type.WAR.equals(moduleType)) {
+                EjbJar ejbm = EjbJar.getEjbJar(projectDirectory);
+                Profile profile = ejbm.getJ2eeProfile();
+                boolean isJakarta = profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
+                return isJakarta;
             }
         }
         return false;
@@ -370,8 +382,8 @@ public class WSUtils {
     
     private static void doUpdateClients(Project prj, JAXWSLightSupport jaxWsSupport) {
         // get old clients
-        List<JaxWsService> oldClients = new ArrayList<JaxWsService>();
-        Set<String> oldNames = new HashSet<String>();
+        List<JaxWsService> oldClients = new ArrayList<>();
+        Set<String> oldNames = new HashSet<>();
         for (JaxWsService s : jaxWsSupport.getServices()) {
             if (!s.isServiceProvider()) {
                 oldClients.add(s);
@@ -381,7 +393,7 @@ public class WSUtils {
         FileObject wsdlFolder = jaxWsSupport.getWsdlFolder(false);
         if (wsdlFolder != null) {
             List<JaxWsService> newClients = getJaxWsClients(prj);
-            Set<String> commonNames = new HashSet<String>();
+            Set<String> commonNames = new HashSet<>();
             for (JaxWsService client : newClients) {
                 String id = client.getId();
                 if (oldNames.contains(id)) {
@@ -412,7 +424,7 @@ public class WSUtils {
 
     private static List<JaxWsService> getJaxWsClients(Project prj) {
         List<WsimportPomInfo> candidates = MavenModelUtils.getWsdlFiles(prj);
-        List<JaxWsService> clients = new ArrayList<JaxWsService>();
+        List<JaxWsService> clients = new ArrayList<>();
         for (WsimportPomInfo candidate : candidates) {           
             if (isClient(prj, candidate)) {
                 String wsdlPath = candidate.getWsdlPath();
@@ -532,19 +544,10 @@ public class WSUtils {
                 endpoints.findEndpointByImplementation(service.getImplementationClass());
         if (oldEndpoint == null) {
             Endpoint newEndpoint = addService(endpoints, service);
-            FileLock lock = null;
-            OutputStream os = null;
             synchronized (sunjaxwsFile) {
-                try {
-                    lock = sunjaxwsFile.lock();
-                    os = sunjaxwsFile.getOutputStream(lock);
+                try (FileLock lock = sunjaxwsFile.lock(); 
+                        OutputStream os = sunjaxwsFile.getOutputStream(lock);) {
                     endpoints.write(os);
-                } finally{
-                    if (lock != null)
-                        lock.releaseLock();
-
-                    if(os != null)
-                        os.close();
                 }
             }
             return newEndpoint;
@@ -564,19 +567,10 @@ public class WSUtils {
                 addService(endpoints, service);
             }
         }
-        FileLock lock = null;
-        OutputStream os = null;
         synchronized (sunjaxwsFile) {
-            try {
-                lock = sunjaxwsFile.lock();
-                os = sunjaxwsFile.getOutputStream(lock);
+            try (FileLock lock = sunjaxwsFile.lock();
+                    OutputStream os = sunjaxwsFile.getOutputStream(lock)) {
                 endpoints.write(os);
-            } finally{
-                if (lock != null)
-                    lock.releaseLock();
-
-                if(os != null)
-                    os.close();
             }
         }
     }
@@ -598,20 +592,10 @@ public class WSUtils {
             Endpoint endpoint = endpoints.findEndpointByName(service.getServiceName());
             if (endpoint != null) {
                 endpoints.removeEndpoint(endpoint);
-                FileLock lock = null;
-                OutputStream os = null;
                 synchronized (sunjaxwsFile) {
-                    try {
-                        lock = sunjaxwsFile.lock();
-                        os = sunjaxwsFile.getOutputStream(lock);
+                    try (FileLock lock = sunjaxwsFile.lock();
+                            OutputStream os = sunjaxwsFile.getOutputStream(lock)) {
                         endpoints.write(os);
-                    } finally {
-                        if (lock != null) {
-                            lock.releaseLock();
-                        }
-                        if (os != null) {
-                            os.close();
-                        }
                     }
                 }
             }
@@ -636,20 +620,10 @@ public class WSUtils {
             if (endpoint != null) {
                 endpoint.setEndpointName(newServiceName);
                 endpoint.setUrlPattern("/" + newServiceName);
-                FileLock lock = null;
-                OutputStream os = null;
                 synchronized (sunjaxwsFile) {
-                    try {
-                        lock = sunjaxwsFile.lock();
-                        os = sunjaxwsFile.getOutputStream(lock);
+                    try (FileLock lock = sunjaxwsFile.lock();
+                            OutputStream os = sunjaxwsFile.getOutputStream(lock)) {
                         endpoints.write(os);
-                    } finally {
-                        if (lock != null) {
-                            lock.releaseLock();
-                        }
-                        if (os != null) {
-                            os.close();
-                        }
                     }
                 }
             }
@@ -1041,7 +1015,7 @@ public class WSUtils {
 
     public static String getUniqueId(String id, List<JaxWsService> services) {
         String result = id;
-        Set<String> serviceIdSet = new HashSet<String>();
+        Set<String> serviceIdSet = new HashSet<>();
         for (JaxWsService s : services) {
             String serviceId = s.getId();
             if (serviceId != null) {

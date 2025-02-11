@@ -428,10 +428,10 @@ public class EditorSettingsImpl extends EditorSettings {
             // imported from previous version some colorings can be missing.
             // See #119709
             Map<String, AttributeSet> m = new HashMap<>();
-            if (defaultProfileColorings != null) {
-                m.putAll(defaultProfileColorings);
-            }
             if (profileColorings != null) {
+                if (defaultProfileColorings != null) {
+                    m.putAll(defaultProfileColorings);
+                }
                 m.putAll(profileColorings);
             }
 
@@ -442,7 +442,7 @@ public class EditorSettingsImpl extends EditorSettings {
         }
 
         Map<String, AttributeSet> h = annotations.get(profile);
-        return h == null ? Collections.<String, AttributeSet>emptyMap() : h;
+        return h == null ? Collections.emptyMap() : h;
     }
 
     @Override
@@ -452,7 +452,7 @@ public class EditorSettingsImpl extends EditorSettings {
             return annotationsStorage.load(MimePath.EMPTY, profile, true);
         } catch (IOException ioe) {
             LOG.log(Level.WARNING, null, ioe);
-            return Collections.<String, AttributeSet>emptyMap();
+            return Collections.emptyMap();
         }
     }
 

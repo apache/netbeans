@@ -146,30 +146,24 @@ public final class SettingsProvider implements MimeDataProvider {
             synchronized (this) {
                 boolean fcsChanged = false;
                 boolean kbsChanged = false;
-
-//                if (mimePath.getPath().contains("xml")) {
-//                    System.out.println("@@@ propertyChange: mimePath = " + mimePath.getPath() + " profile = " + fcsProfile + " property = " + evt.getPropertyName() + " oldValue = " + (evt.getOldValue() instanceof MimePath ? ((MimePath) evt.getOldValue()).getPath() : evt.getOldValue()) + " newValue = " + evt.getNewValue());
-//                }
                 
                 // Determine what has changed
+                String prop = evt.getPropertyName();
                 if (this.kbsi == evt.getSource()) {
                     kbsChanged = true;
-                    
-                } else if (evt.getPropertyName() == null) {
+                } else if (prop == null) {
                     // reset all
                     if (!specialFcsProfile) {
                         String currentProfile = EditorSettings.getDefault().getCurrentFontColorProfile();
                         fcsProfile = FontColorSettingsImpl.get(mimePath).getInternalFontColorProfile(currentProfile);
                     }
                     fcsChanged = true;
-                    
-                } else if (evt.getPropertyName().equals(EditorSettingsImpl.PROP_HIGHLIGHT_COLORINGS)) {
+                } else if (prop.equals(EditorSettingsImpl.PROP_HIGHLIGHT_COLORINGS) || prop.equals(EditorSettingsImpl.PROP_ANNOTATION_COLORINGS)) {
                     String changedProfile = (String) evt.getNewValue();
                     if (changedProfile.equals(fcsProfile)) {
                         fcsChanged = true;
                     }
-                    
-                } else if (evt.getPropertyName().equals(EditorSettingsImpl.PROP_TOKEN_COLORINGS)) {
+                } else if (prop.equals(EditorSettingsImpl.PROP_TOKEN_COLORINGS)) {
                     String changedProfile = (String) evt.getNewValue();
                     if (changedProfile.equals(fcsProfile)) {
                         MimePath changedMimePath = (MimePath) evt.getOldValue();
@@ -177,8 +171,7 @@ public final class SettingsProvider implements MimeDataProvider {
                             fcsChanged = true;
                         }
                     }
-                    
-                } else if (evt.getPropertyName().equals(EditorSettingsImpl.PROP_CURRENT_FONT_COLOR_PROFILE)) {
+                } else if (prop.equals(EditorSettingsImpl.PROP_CURRENT_FONT_COLOR_PROFILE)) {
                     if (!specialFcsProfile) {
                         String newProfile = (String) evt.getNewValue();
                         fcsProfile = FontColorSettingsImpl.get(mimePath).getInternalFontColorProfile(newProfile);

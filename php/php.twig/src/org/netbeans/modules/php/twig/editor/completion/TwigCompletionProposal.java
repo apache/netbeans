@@ -123,7 +123,7 @@ public abstract class TwigCompletionProposal implements CompletionProposal {
 
     static class FilterCompletionProposal extends TwigCompletionProposal {
 
-        private static final ImageIcon ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/php/twig/resources/filter.png")); //NOI18N
+        private static final ImageIcon ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/php/twig/resources/filter.png", false); //NOI18N
 
         public FilterCompletionProposal(TwigElement element, CompletionRequest request) {
             super(element, request);
@@ -197,7 +197,7 @@ public abstract class TwigCompletionProposal implements CompletionProposal {
 
     static class OperatorCompletionProposal extends TwigCompletionProposal {
 
-        private static final ImageIcon ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/php/twig/resources/twig-logo.png")); //NOI18N
+        private static final ImageIcon ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/php/twig/resources/twig-logo.png", false); //NOI18N
 
         public OperatorCompletionProposal(TwigElement element, CompletionRequest request) {
             super(element, request);

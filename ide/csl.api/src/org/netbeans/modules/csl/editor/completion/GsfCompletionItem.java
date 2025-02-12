@@ -41,7 +41,6 @@ import org.netbeans.lib.editor.codetemplates.api.CodeTemplateManager;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.spi.DefaultCompletionProposal;
-import org.netbeans.modules.csl.spi.DefaultCompletionResult;
 import org.netbeans.spi.editor.completion.CompletionDocumentation;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
@@ -390,7 +389,7 @@ public abstract class GsfCompletionItem implements CompletionItem {
         }
         @Override
         protected ImageIcon getIcon() {
-            return new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/csl/editor/completion/warning.png")); // NOI18N
+            return ImageUtilities.loadImageIcon("org/netbeans/modules/csl/editor/completion/warning.png", false); // NOI18N
         }
 
         public int getSortPriority() {

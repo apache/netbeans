@@ -192,12 +192,12 @@ final class Call implements CallDescriptor {
 
         if (isCallerGraph) {
             if (parent != null) {
-                c.icon = ImageUtilities.image2Icon(ImageUtilities.mergeImages(ImageUtilities.icon2Image(i), ImageUtilities.loadImage("org/netbeans/modules/refactoring/java/resources/up.png"), 0, 0));
+                c.icon = ImageUtilities.mergeIcons(i, ImageUtilities.loadIcon("org/netbeans/modules/refactoring/java/resources/up.png"), 0, 0);
             } else {
                 c.icon = i;
             }
         } else {
-            c.icon = ImageUtilities.image2Icon(ImageUtilities.mergeImages(ImageUtilities.icon2Image(i), ImageUtilities.loadImage("org/netbeans/modules/refactoring/java/resources/down.png"), 0, 0));
+            c.icon = ImageUtilities.mergeIcons(i, ImageUtilities.loadIcon("org/netbeans/modules/refactoring/java/resources/down.png"), 0, 0);
         }
 
         c.selection = TreePathHandle.create(selection, javac);

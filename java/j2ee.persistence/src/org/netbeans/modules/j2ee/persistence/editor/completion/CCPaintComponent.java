@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
@@ -317,7 +316,7 @@ public class CCPaintComponent extends JPanel {
         
         @Override
         protected void draw(Graphics g){
-            drawIcon(g, new ImageIcon(ImageUtilities.loadImage(COLUMN_ICON)));
+            drawIcon(g, ImageUtilities.loadIcon(COLUMN_ICON));
             drawString(g, tableName+".", Color.BLACK);
             drawString(g, columnName, Color.BLACK, getDrawFont().deriveFont(Font.BOLD), false);
         }
@@ -334,7 +333,7 @@ public class CCPaintComponent extends JPanel {
         
         @Override
         protected void draw(Graphics g){
-            drawIcon(g, new ImageIcon(ImageUtilities.loadImage(TABLE_ICON)));
+            drawIcon(g, ImageUtilities.loadIcon(TABLE_ICON));
             drawString(g, tableName, Color.BLACK, getDrawFont().deriveFont(Font.BOLD), false);
         }
         
@@ -350,7 +349,7 @@ public class CCPaintComponent extends JPanel {
         
         @Override
         protected void draw(Graphics g){
-            drawIcon(g, new ImageIcon(ImageUtilities.loadImage(PU_ICON)));
+            drawIcon(g, ImageUtilities.loadIcon(PU_ICON));
             drawString(g, puName, Color.BLACK, getDrawFont().deriveFont(Font.BOLD), false);
         }
         
@@ -365,7 +364,7 @@ public class CCPaintComponent extends JPanel {
         
         @Override
         protected void draw(Graphics g){
-            drawIcon(g, new ImageIcon(ImageUtilities.loadImage(PU_ICON)));
+            drawIcon(g, ImageUtilities.loadIcon(PU_ICON));
             drawString(g, puName, Color.BLACK, getDrawFont().deriveFont(Font.BOLD), false);
         }
         
@@ -381,7 +380,7 @@ public class CCPaintComponent extends JPanel {
         
         @Override
         protected void draw(Graphics g){
-            drawIcon(g, new ImageIcon(ImageUtilities.loadImage(PU_ICON)));
+            drawIcon(g, ImageUtilities.loadIcon(PU_ICON));
             drawString(g, elName, Color.BLACK, getDrawFont().deriveFont(Font.BOLD), false);
         }
         
@@ -391,7 +390,7 @@ public class CCPaintComponent extends JPanel {
         
         @Override
         protected void draw(Graphics g){
-            drawIcon(g, new ImageIcon(ImageUtilities.loadImage(NOCONNECTION_ICON)));
+            drawIcon(g, ImageUtilities.loadIcon(NOCONNECTION_ICON));
             drawString(g, NbBundle.getMessage(CCPaintComponent.class, "LBL_ConnectToDatabase"), Color.RED, getDrawFont().deriveFont(Font.BOLD), false);
         }
 
@@ -400,7 +399,7 @@ public class CCPaintComponent extends JPanel {
         
         @Override
         protected void draw(Graphics g){
-            drawIcon(g, new ImageIcon(ImageUtilities.loadImage(CONNECTION_ICON)));
+            drawIcon(g, ImageUtilities.loadIcon(CONNECTION_ICON));
             drawString(g, NbBundle.getMessage(CCPaintComponent.class, "LBL_AddConnection"), Color.BLACK, getDrawFont().deriveFont(Font.BOLD), false);
         }
 

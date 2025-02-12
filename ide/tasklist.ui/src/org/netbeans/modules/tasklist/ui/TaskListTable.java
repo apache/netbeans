@@ -334,7 +334,7 @@ class TaskListTable extends JTable {
     private static final Icon openedIcon = (Icon)UIManager.get("Tree.expandedIcon"); // NOI18N
     private static final Icon closedIcon = (Icon)UIManager.get("Tree.collapsedIcon"); // NOI18N
     
-    private static Map<Image, ImageIcon> iconCache = new HashMap<Image, ImageIcon>(10);
+    private static Map<Image, Icon> iconCache = new HashMap<Image, Icon>(10);
     
     private class TaskGroupRenderer extends DefaultTableCellRenderer {
         
@@ -347,9 +347,9 @@ class TaskListTable extends JTable {
                     TaskGroup tg = (TaskGroup)value;
                     JLabel renderer = (JLabel)res;
                     renderer.setText( null );
-                    ImageIcon icon = iconCache.get( tg.getIcon() );
+                    Icon icon = iconCache.get( tg.getIcon() );
                     if( null == icon ) {
-                        icon = new ImageIcon( tg.getIcon() );
+                        icon = ImageUtilities.image2Icon( tg.getIcon() );
                         iconCache.put( tg.getIcon(), icon );
                     }
                     renderer.setIcon( icon );

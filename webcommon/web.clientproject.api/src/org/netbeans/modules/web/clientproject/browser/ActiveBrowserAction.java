@@ -380,9 +380,9 @@ public class ActiveBrowserAction extends CallableSystemAction implements LookupL
     private Icon badgeWithArrowIcon(Image im) {
         // #235642
         assert im != null : "Image must be provided";
-        return ImageUtilities.image2Icon(ImageUtilities.mergeImages(im,
-            ImageUtilities.icon2Image(DropDownButtonFactory.getArrowIcon(false)),
-            isSmallToolbarIcon() ? 20 : 28, isSmallToolbarIcon() ? 6 : 10)); // NOI18N
+        return ImageUtilities.mergeIcons(ImageUtilities.image2Icon(im),
+            DropDownButtonFactory.getArrowIcon(false),
+            isSmallToolbarIcon() ? 20 : 28, isSmallToolbarIcon() ? 6 : 10); // NOI18N
     }
 
     private void showBrowserPickerPopup( JButton invoker ) {

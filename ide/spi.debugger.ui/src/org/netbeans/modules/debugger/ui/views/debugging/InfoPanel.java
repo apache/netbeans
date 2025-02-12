@@ -31,13 +31,11 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
@@ -51,7 +49,6 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import org.netbeans.api.debugger.Breakpoint;
-import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.Session;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVSupport;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
@@ -60,7 +57,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.Utilities;
 
 /**
  *
@@ -213,7 +209,7 @@ public class InfoPanel extends javax.swing.JPanel {
     private JMenuItem createMenuItem(final DVSupport dvs, final DVThread thread) {
         String displayName = dvs.getDisplayName(thread);
         Image image = dvs.getIcon(thread);
-        Icon icon = image != null ? new ImageIcon(image) : null;
+        Icon icon = image != null ? ImageUtilities.image2Icon(image) : null;
         JMenuItem item = new JMenuItem(displayName, icon);
         item.addActionListener(new ActionListener() {
 

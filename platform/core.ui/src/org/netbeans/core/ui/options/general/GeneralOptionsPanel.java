@@ -23,7 +23,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.EventQueue;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
@@ -32,7 +31,6 @@ import java.util.prefs.Preferences;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -82,8 +80,8 @@ public class GeneralOptionsPanel extends JPanel implements ActionListener {
             nbErrorForeground = new Color(255, 0, 0);
         }
         errorLabel.setForeground(nbErrorForeground);
-        Image img = ImageUtilities.loadImage("org/netbeans/core/ui/resources/error.gif"); //NOI18N
-        errorLabel.setIcon(new ImageIcon(img));
+        Icon icon = ImageUtilities.loadIcon("org/netbeans/core/ui/resources/error.gif"); //NOI18N
+        errorLabel.setIcon(icon);
         errorLabel.setVisible(false);
         
         loc (lWebBrowser, "Web_Browser");

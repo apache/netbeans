@@ -26,8 +26,7 @@
 package org.netbeans.modules.bugtracking.commons;
 
 import java.awt.Color;
-import java.awt.Image;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
@@ -61,8 +60,8 @@ public class SaveQueryPanel extends javax.swing.JPanel implements DocumentListen
         queryNameTextField.getDocument().addDocumentListener(this);
 
         saveErrorLabel.setForeground(ERROR_COLOR);
-        Image img = ImageUtilities.loadImage("org/netbeans/modules/bugtracking/ui/resources/error.gif"); //NOI18N
-        saveErrorLabel.setIcon( new ImageIcon(img) );
+        Icon icon = ImageUtilities.loadIcon("org/netbeans/modules/bugtracking/ui/resources/error.gif"); //NOI18N
+        saveErrorLabel.setIcon( icon );
         saveErrorLabel.setVisible(false);
     }
 

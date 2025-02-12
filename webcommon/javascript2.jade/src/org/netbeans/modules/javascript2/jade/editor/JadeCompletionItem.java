@@ -193,7 +193,7 @@ public class JadeCompletionItem implements CompletionProposal {
         @Override
         public ImageIcon getIcon() {
             if (keywordIcon == null) {
-                keywordIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/jade/resources/jade16.png")); //NOI18N
+                keywordIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/jade/resources/jade16.png", false); //NOI18N
             }
             return keywordIcon;
         }

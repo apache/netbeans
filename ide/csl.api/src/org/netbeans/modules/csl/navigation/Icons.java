@@ -18,9 +18,9 @@
  */
 package org.netbeans.modules.csl.navigation;
 
-import java.awt.Image;
 import java.util.Collection;
 import java.util.Collections;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.Modifier;
@@ -47,121 +47,66 @@ public final class Icons {
     private Icons() {
     }
 
-//    public static Icon getBusyIcon() {
-//        Image img = Utilities.loadImage(WAIT);
-//
-//        if (img == null) {
-//            return null;
-//        } else {
-//            return new ImageIcon(img);
-//        }
-//    }
-//
-//    public static Icon getMethodIcon() {
-//        // TODO - consider modifiers
-//        Image img =
-//            Utilities.loadImage(ICON_BASE + "method" + "Public" + PNG_EXTENSION);
-//
-//        if (img == null) {
-//            return null;
-//        } else {
-//            return new ImageIcon(img);
-//        }
-//    }
-//
-//    public static Icon getFieldIcon() {
-//        // TODO - consider modifiers
-//        Image img =
-//            Utilities.loadImage(ICON_BASE + "field" + "Public" + PNG_EXTENSION);
-//
-//        if (img == null) {
-//            return null;
-//        } else {
-//            return new ImageIcon(img);
-//        }
-//    }
-//
-//    public static Icon getClassIcon() {
-//        Image img = Utilities.loadImage(ICON_BASE + "class" + PNG_EXTENSION);
-//
-//        if (img == null) {
-//            return null;
-//        } else {
-//            return new ImageIcon(img);
-//        }
-//    }
-//
-//    public static Icon getModuleIcon() {
-//        Image img =
-//            Utilities.loadImage(ICON_BASE + "package"  + GIF_EXTENSION);
-//
-//        if (img == null) {
-//            return null;
-//        } else {
-//            return new ImageIcon(img);
-//        }
-//    }
-
     public static ImageIcon getElementIcon( ElementKind elementKind, Collection<Modifier> modifiers ) {
     
         if ( modifiers == null ) {
             modifiers = Collections.<Modifier>emptyList();
         }
     
-        Image img = null;
+        Icon icon = null;
     
         switch( elementKind ) {
         case FILE:
-            img = ImageUtilities.loadImage( ICON_BASE + "emptyfile-icon" + PNG_EXTENSION );
+            icon = ImageUtilities.loadIcon( ICON_BASE + "emptyfile-icon" + PNG_EXTENSION );
             break;
         case ERROR:
-            img = ImageUtilities.loadImage( ICON_BASE + "error-glyph" + GIF_EXTENSION );
+            icon = ImageUtilities.loadIcon( ICON_BASE + "error-glyph" + GIF_EXTENSION );
             break;
         case PACKAGE:
         case MODULE:
-            img = ImageUtilities.loadImage( ICON_BASE + "package" + GIF_EXTENSION );
+            icon = ImageUtilities.loadIcon( ICON_BASE + "package" + GIF_EXTENSION );
             break;
         case TEST:
-            img = ImageUtilities.loadImage( ICON_BASE + "test" + PNG_EXTENSION );
+            icon = ImageUtilities.loadIcon( ICON_BASE + "test" + PNG_EXTENSION );
             break;
         case CLASS:
         case INTERFACE:
-            img = ImageUtilities.loadImage( ICON_BASE + "class" + PNG_EXTENSION );
+            icon = ImageUtilities.loadIcon( ICON_BASE + "class" + PNG_EXTENSION );
             break;
         case TAG:
-            img = ImageUtilities.loadImage( ICON_BASE + "html_element" + PNG_EXTENSION );
+            icon = ImageUtilities.loadIcon( ICON_BASE + "html_element" + PNG_EXTENSION );
             break;
         case RULE:
-            img = ImageUtilities.loadImage( ICON_BASE + "rule" + PNG_EXTENSION );
+            icon = ImageUtilities.loadIcon( ICON_BASE + "rule" + PNG_EXTENSION );
             break;
         case VARIABLE:
         case PROPERTY:
         case GLOBAL:
         case ATTRIBUTE:
         case FIELD:
-            img = ImageUtilities.loadImage( getIconName( ICON_BASE + "field", PNG_EXTENSION, modifiers ) );
+            icon = ImageUtilities.loadIcon( getIconName( ICON_BASE + "field", PNG_EXTENSION, modifiers ) );
             break;
         case PARAMETER:
         case CONSTANT:
-            img = ImageUtilities.loadImage(getIconName(ICON_BASE + "constant", PNG_EXTENSION, modifiers)); // NOI18N
-            if (img == null) {
-                img = ImageUtilities.loadImage(ICON_BASE + "constantPublic" + PNG_EXTENSION); // NOI18N
+            icon = ImageUtilities.loadIcon(getIconName(ICON_BASE + "constant", PNG_EXTENSION, modifiers)); // NOI18N
+            if (icon == null) {
+                icon = ImageUtilities.loadIcon(ICON_BASE + "constantPublic" + PNG_EXTENSION); // NOI18N
             }
             break;
         case CONSTRUCTOR:
-            img = ImageUtilities.loadImage( getIconName( ICON_BASE + "constructor", PNG_EXTENSION, modifiers ) );
+            icon = ImageUtilities.loadIcon( getIconName( ICON_BASE + "constructor", PNG_EXTENSION, modifiers ) );
             break;
         case METHOD:
-            img = ImageUtilities.loadImage( getIconName( ICON_BASE + "method", PNG_EXTENSION, modifiers ) );
+            icon = ImageUtilities.loadIcon( getIconName( ICON_BASE + "method", PNG_EXTENSION, modifiers ) );
             break;
         case DB:
-            img = ImageUtilities.loadImage(ICON_BASE + "database" + GIF_EXTENSION);
+            icon = ImageUtilities.loadIcon(ICON_BASE + "database" + GIF_EXTENSION);
             break;
         default:   
-                img = null;
+                icon = null;
         }
     
-        return img == null ? null : new ImageIcon (img);
+        return icon == null ? null : ImageUtilities.icon2ImageIcon (icon);
     }
         
     // Private Methods ---------------------------------------------------------

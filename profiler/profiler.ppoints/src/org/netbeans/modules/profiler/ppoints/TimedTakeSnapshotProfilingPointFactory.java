@@ -23,13 +23,11 @@ import org.netbeans.modules.profiler.ppoints.ui.TimedTakeSnapshotCustomizer;
 import org.openide.ErrorManager;
 import org.openide.util.NbBundle;
 import java.util.Properties;
-import javax.swing.GrayFilter;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.UIManager;
 import org.netbeans.modules.profiler.api.ProjectUtilities;
 import org.netbeans.modules.profiler.api.icons.Icons;
 import org.netbeans.modules.profiler.ppoints.ui.ProfilingPointsIcons;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 
 
@@ -61,12 +59,7 @@ public class TimedTakeSnapshotProfilingPointFactory extends CodeProfilingPointFa
     }
     
     public Icon getDisabledIcon() {
-        Icon icon = UIManager.getLookAndFeel().getDisabledIcon(null, 
-                Icons.getIcon(ProfilingPointsIcons.TAKE_SNAPSHOT_TIMED));
-        if (icon == null)
-            icon = new ImageIcon(GrayFilter.createDisabledImage(
-                    Icons.getImage(ProfilingPointsIcons.TAKE_SNAPSHOT_TIMED)));
-        return icon;
+        return ImageUtilities.createDisabledIcon(getIcon());
     }
 
     public int getScope() {

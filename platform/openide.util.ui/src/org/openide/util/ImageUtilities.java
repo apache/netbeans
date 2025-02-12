@@ -211,8 +211,9 @@ public final class ImageUtilities {
     }
 
     /**
-     * Load an image from a URI/URL. If the URI uses the {@code nbresloc} protocol, it is loaded
-     * using the resource loading mechanism provided by {@link #loadImage(java.lang.String)}. This
+     * Load an image from a URI/URL. If the URI uses the {@code nbresloc} or {@code nbres}
+     * protocols, it is loaded using the resource loading mechanism provided by
+     * {@link #loadImage(String,boolean)}, with and without localization, respectively. This
      * includes handling of SVG icons and dark mode variations.
      *
      * <p>This method is intended for use only when a URL or URI must be used instead of a resource
@@ -220,7 +221,7 @@ public final class ImageUtilities {
      * avoided, as they may be disallowed in the future. Do not use this method for new code; prefer
      * image loading by resource paths instead (e.g. {@link #loadImage(String)}).
      *
-     * @param uri the URI of the image, possibly with the nbresloc protocol
+     * @param uri the URI of the image, possibly with the nbresloc or nbres protocol
      * @return the loaded image, or either null or an uninitialized image if the image was not
      *         available
      * @since 7.36
@@ -230,6 +231,9 @@ public final class ImageUtilities {
         String scheme = uri.getScheme();
         if (scheme.equals("nbresloc")) { // NOI18N
             // Apply our dedicated handling logic. Omit the initial slash of the path.
+            return loadImage(uri.getPath().substring(1), true);
+        } else if (scheme.equals("nbres")) { // NOI18N
+            // Same except with localized = false.
             return loadImage(uri.getPath().substring(1), false);
         } else {
             if (!(scheme.equals("file") ||

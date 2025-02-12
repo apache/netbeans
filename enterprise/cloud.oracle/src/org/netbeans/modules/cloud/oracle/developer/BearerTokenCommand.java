@@ -131,7 +131,7 @@ public class BearerTokenCommand implements CommandProvider {
         }
         JsonObject jsonObject = JsonParser.parseString(jsonBody.toString()).getAsJsonObject();
         String token = jsonObject.get("token").getAsString(); //NOI18N
-        TempFileGenerator gen = new TempFileGenerator("token-", ".txt", COMMAND_CREATE_BEARER_TOKEN, false); //NOI18N
+        TempFileGenerator gen = new TempFileGenerator("token-", ".txt"); //NOI18N
         Path tempFilePath = gen.writeTextFile(token);
         return tempFilePath.toAbsolutePath().toString();
     }

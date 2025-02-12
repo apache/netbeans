@@ -38,7 +38,6 @@ public class ChromeBrowser extends ExtWebBrowser implements PropertyChangeListen
     /** Creates new ExtWebBrowser */
     public ChromeBrowser() {
         super(PrivateBrowserFamilyId.CHROME);
-        ddeServer = ExtWebBrowser.CHROME;
     }
     
     public static Boolean isHidden () {
@@ -111,7 +110,6 @@ public class ChromeBrowser extends ExtWebBrowser implements PropertyChangeListen
             params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";  // NOI18N
             File file = getLocalAppPath();
             if ( file.exists() && file.canExecute() ){
-                setDDEServer(ExtWebBrowser.CHROME);
                 return new NbProcessDescriptor (file.getPath(), params);
             }
             /*
@@ -125,7 +123,6 @@ public class ChromeBrowser extends ExtWebBrowser implements PropertyChangeListen
                 try {
                     b = NbDdeBrowserImpl.getBrowserPath("chrome"); // NOI18N
                     if ((b != null) && (b.trim().length() > 0)) {
-                        setDDEServer(ExtWebBrowser.CHROME);
                         return new NbProcessDescriptor(b, params);
                     }
                 } catch (NbBrowserException e) {
@@ -136,9 +133,7 @@ public class ChromeBrowser extends ExtWebBrowser implements PropertyChangeListen
                     if (!chrome.isFile()) {
                         chrome = new File("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"); // NOI18N
                     }
-                    if (chrome.isFile()
-                            && chrome.canExecute()) {
-                        setDDEServer(ExtWebBrowser.CHROME);
+                    if (chrome.isFile() && chrome.canExecute()) {
                         return new NbProcessDescriptor(chrome.getPath(), params);
                     }
                 }

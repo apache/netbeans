@@ -34,7 +34,6 @@ public class FirefoxBrowser extends ExtWebBrowser {
 
     public FirefoxBrowser() {
         super(PrivateBrowserFamilyId.FIREFOX);
-        ddeServer = ExtWebBrowser.FIREFOX;
     }
 
     /** Determines whether the browser should be visible or not
@@ -106,7 +105,7 @@ public class FirefoxBrowser extends ExtWebBrowser {
         if (Utilities.isWindows()) {
             params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
             try {
-                prg = NbDdeBrowserImpl.getBrowserPath(getDDEServer());
+                prg = NbDdeBrowserImpl.getBrowserPath(ExtWebBrowser.FIREFOX);
                 return new NbProcessDescriptor (prg, params);
             } catch (NbBrowserException e) {
                     prg = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";     // NOI18N

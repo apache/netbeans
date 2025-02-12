@@ -35,7 +35,6 @@ public class MozillaBrowser extends ExtWebBrowser {
     /** Creates new ExtWebBrowser */
     public MozillaBrowser() {
         super(PrivateBrowserFamilyId.MOZILLA);
-        ddeServer = ExtWebBrowser.MOZILLA;
     }
 
     /** Determines whether the browser should be visible or not
@@ -105,7 +104,7 @@ public class MozillaBrowser extends ExtWebBrowser {
         if (Utilities.isWindows()) {
             params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
             try {
-                prg = NbDdeBrowserImpl.getBrowserPath(getDDEServer());
+                prg = NbDdeBrowserImpl.getBrowserPath(ExtWebBrowser.MOZILLA);
                 return new NbProcessDescriptor (prg, params);
             } catch (NbBrowserException e) {
                     prg = "C:\\Program Files\\Mozilla.org\\Mozilla\\mozilla.exe";     // NOI18N

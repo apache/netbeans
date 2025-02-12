@@ -36,16 +36,13 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
     private static final long serialVersionUID = -3021027901671504127L;
 
     public static final String PROP_NAME = "name"; // NOI18N
-    
+
     /** Browser executable property name */
     public static final String PROP_BROWSER_EXECUTABLE = "browserExecutable"; // NOI18N
-    
-    /** DDE server property name */
-    public static final String PROP_DDESERVER = "dDEServer";   // NOI18N
-    
+
     /** DDE activate timeout property name */
     public static final String PROP_DDE_ACTIVATE_TIMEOUT = "activateTimeout";   // NOI18N
-    
+
     /** DDE openURL timeout property name */
     public static final String PROP_DDE_OPENURL_TIMEOUT = "openurlTimeout";     // NOI18N
 
@@ -63,16 +60,13 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
     public static final String MOZILLA  = "MOZILLA";    // NOI18N
     /** Name of DDE server corresponding to Firefox */
     public static final String FIREFOX  = "FIREFOX";    // NOI18N
-    
+
     /** Default for DDE activate timeout property */
     protected static final int DEFAULT_ACTIVATE_TIMEOUT = 2000;
 
     /** Default for DDE openURL timeout property */
     protected static final int DEFAULT_OPENURL_TIMEOUT = 3000;
-    
-    /** storage for DDE server property */
-    protected String ddeServer;
-    
+
     /** storage for DDE activate timeout property */
     protected int activateTimeout = DEFAULT_ACTIVATE_TIMEOUT;
 
@@ -81,7 +75,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
 
     /** Logger for extbrowser module. */
     private static final Logger err = Logger.getLogger("org.netbeans.modules.extbrowser");   // NOI18N
-    
+
     protected String name;
 
     private PrivateBrowserFamilyId family;
@@ -89,17 +83,21 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
     public static Logger getEM() {
         return err;
     }
-        
+
     /** Holds value of property browserExecutable. */
     protected NbProcessDescriptor browserExecutable;
-    
+
     protected transient PropertyChangeSupport pcs;
 
     public ExtWebBrowser () {
         this(PrivateBrowserFamilyId.UNKNOWN);
     }
 
-    /** Creates new Browser */
+    /**
+     * Creates new Browser
+     *
+     * @param family
+     */
     public ExtWebBrowser (PrivateBrowserFamilyId family) {
         this.family = family;
         init();
@@ -108,7 +106,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
     /** initialize object */
     private void init () {
         if (err.isLoggable(Level.FINE)) {
-            err.log(Level.FINE, getClass().getName() + " " + System.currentTimeMillis() + "> init");
+            err.log(Level.FINE, "{0} {1}> init", new Object[]{getClass().getName(), System.currentTimeMillis()});
         }
         pcs = new PropertyChangeSupport(this);
         if (Utilities.isWindows()) {
@@ -120,34 +118,13 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
 
     /**
      * This method allows browser factory to delegate its browser executable
-     * to some other browser factory. For example "Chrome with NB integration"
+     * to some other browser factory.For example "Chrome with NB integration"
      * should be executed just like regular "Chrome" browser.
+     *
+     * @param otherBrowser
      */
     public void useBrowserExecutableDelegate(ExtWebBrowser otherBrowser) {
         this.browserExecutableDelegate = otherBrowser;
-    }
-
-
-    /**
-     * Gets DDE server name
-     * @return server name of DDEserver.
-     *         <CODE>null</CODE> when no server is selected (means default web browser).
-     */
-    public String getDDEServer () {
-        return ddeServer;
-    }
-    
-    /**
-     * Sets DDE server name
-     * @param ddeServer name of DDE server or <CODE>null</CODE>
-     */
-    public void setDDEServer (String ddeServer) {
-        if ((ddeServer != null) && !ddeServer.equals(this.ddeServer)) {
-            String old = this.ddeServer;
-            this.ddeServer = ddeServer;
-            pcs.firePropertyChange (PROP_DDESERVER, old, ddeServer);
-            err.log(Level.INFO, "DDEServer changed to: " + ddeServer);                  // NOI18N
-        }
     }
 
     /** Getter for property openurlTimeout.
@@ -157,7 +134,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
     public int getOpenurlTimeout() {
         return openurlTimeout;
     }
-    
+
     /** Setter for property openurlTimeout.
      * @param openurlTimeout New value of property openurlTimeout.
      *
@@ -169,7 +146,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
             pcs.firePropertyChange(PROP_DDE_OPENURL_TIMEOUT, oldVal, openurlTimeout);
         }
     }
-    
+
     /** Getter for property activeTimeout.
      * @return Value of property activeTimeout.
      *
@@ -177,7 +154,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
     public int getActivateTimeout() {
         return activateTimeout;
     }
-    
+
     /** Setter for property activeTimeout.
      * @param activateTimeout New value of property activeTimeout.
      */
@@ -193,7 +170,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
     public String getName() {
         return name;
     }
-    
+
     /** Setter for browser name
      * @param name browser name
      */
@@ -204,7 +181,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
             pcs.firePropertyChange(PROP_NAME, oldVal, name);
         }
     }
-    
+
     /** Getter for property browserExecutable.
      * @return Value of property browserExecutable.
      */
@@ -217,12 +194,11 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
             result = defaultBrowserExecutable();
         }
         if (err.isLoggable(Level.FINE)) {
-            err.log(Level.FINE, "" + System.currentTimeMillis() + " getBrowserExecutable: " + // NOI18N
-                   (result == null ? "null" : result.getProcessName() + " " + result.getArguments())); // NOI18N
+            err.log(Level.FINE, "{0} getBrowserExecutable: {1} {2}", new Object[]{System.currentTimeMillis(), result.getProcessName(), result.getArguments()}); // NOI18N
         }
         return result;
     }
-    
+
     /** Setter for property browserExecutable.
      * @param browserExecutable New value of property browserExecutable.
      */
@@ -246,20 +222,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
             if (np instanceof NbProcessDescriptor) {
                 String processName = ((NbProcessDescriptor)np).getProcessName();
                 if (err.isLoggable(Level.FINE)) {
-                    err.log(Level.FINE, "" + System.currentTimeMillis() + "> propertychange: " + processName);
-                }
-                if ((processName != null) && (processName.trim().length() > 0)) {
-                    if (processName.toUpperCase().indexOf("IEXPLORE.EXE") > -1) {       // NOI18N
-                        setDDEServer(IEXPLORE);
-                    } else if (processName.toUpperCase().indexOf("MOZILLA.EXE") > -1) { // NOI18N
-                        setDDEServer(MOZILLA);
-                    } else if (processName.toUpperCase().indexOf("FIREFOX.EXE") > -1) { // NOI18N
-                        setDDEServer(FIREFOX);
-                    } else if (processName.toUpperCase().indexOf("CHROME.EXE") > -1) { // NOI18N
-                        setDDEServer(CHROME);
-                    } else {
-                        setDDEServer(null);
-                    }
+                    err.log(Level.FINE, "{0}> propertychange: {1}", new Object[]{System.currentTimeMillis(), processName});
                 }
             }
         }
@@ -273,7 +236,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
     protected NbProcessDescriptor defaultBrowserExecutable () {
         String b = "mozilla";  // NOI18N
         if (err.isLoggable(Level.FINE)) {
-            err.log(Level.FINE, "" + System.currentTimeMillis() + "> ExtBrowser: defaultBrowserExecutable: ");
+            err.log(Level.FINE, "{0}> ExtBrowser: defaultBrowserExecutable: ", System.currentTimeMillis());
         }
         if (Utilities.isWindows()) {
             String params = "";                                         // NOI18N
@@ -287,51 +250,42 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
                     throw new NbBrowserException ();
                 }
                 b = args[0];
-                if (args[0].toUpperCase().indexOf("IEXPLORE.EXE") > -1) {       // NOI18N
-                    setDDEServer(IEXPLORE);
+                if (args[0].toUpperCase().contains("IEXPLORE.EXE")) {       // NOI18N
                     params = "-nohome ";                                         // NOI18N
-                } else if (args[0].toUpperCase().indexOf("MOZILLA.EXE") > -1) { // NOI18N
-                    setDDEServer(MOZILLA);
-                } else if (args[0].toUpperCase().indexOf("FIREFOX.EXE") > -1) { // NOI18N
-                    setDDEServer(FIREFOX);
-                } else if (args[0].toUpperCase().indexOf("CHROME.EXE") > -1) { // NOI18N
-                    setDDEServer(CHROME);
+                } else if (args[0].toUpperCase().contains("MOZILLA.EXE")) { // NOI18N
+                } else if (args[0].toUpperCase().contains("FIREFOX.EXE")) { // NOI18N
+                } else if (args[0].toUpperCase().contains("CHROME.EXE")) { // NOI18N
                 }
                 params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
                 return new NbProcessDescriptor(b, params);
-                
+
             } catch (NbBrowserException e) {
                 try {
                     b = NbDdeBrowserImpl.getBrowserPath("IEXPLORE"); // NOI18N
                     if ((b != null) && (b.trim().length() > 0)) {
-                        setDDEServer(IEXPLORE);
                         params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
                         return new NbProcessDescriptor(b, params);
                     }
 
                     b = NbDdeBrowserImpl.getBrowserPath("MOZILLA"); // NOI18N
                     if ((b != null) && (b.trim().length() > 0)) {
-                        setDDEServer(MOZILLA);
                         params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
                         return new NbProcessDescriptor(b, params);
                     }
 
                     b = NbDdeBrowserImpl.getBrowserPath("FIREFOX"); // NOI18N
                     if ((b != null) && (b.trim().length() > 0)) {
-                        setDDEServer(FIREFOX);
                         params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
                         return new NbProcessDescriptor(b, params);
                     }
 
                     b = NbDdeBrowserImpl.getBrowserPath("chrome"); // NOI18N
                     if ((b != null) && (b.trim().length() > 0)) {
-                        setDDEServer(CHROME);
                         params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
                         return new NbProcessDescriptor(b, params);
                     }
                 } catch (NbBrowserException e2) {
-                    setDDEServer(IEXPLORE);
-                    b = "C:\\Program Files\\Internet Explorer\\iexplore.exe";     // NOI18N            
+                    b = "C:\\Program Files\\Internet Explorer\\iexplore.exe";     // NOI18N
                 }
             } catch (UnsatisfiedLinkError e) {
                 // someone is customizing this on non-Win platform
@@ -342,7 +296,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
 
         // Unix but not MacOSX
         } else if (Utilities.isUnix() && !Utilities.isMac()) {
-            
+
             // Linux -> Mozilla should be default
             if (Utilities.getOperatingSystem() == Utilities.OS_LINUX) {
                 b = "mozilla";                                                    // NOI18N
@@ -368,7 +322,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
                 "-remote \"openURL({" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "})\"", // NOI18N
                 ExtWebBrowser.UnixBrowserFormat.getHint()
             );
-            
+
         // OS/2
         } else if (Utilities.getOperatingSystem () == Utilities.OS_OS2) {
             return new NbProcessDescriptor(
@@ -377,7 +331,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
                 " {" + UnixBrowserFormat.TAG_URL + "}", // NOI18N
                 ExtWebBrowser.UnixBrowserFormat.getHint()
             );
-            
+
         // Mac OS
         } else if (Utilities.isMac()) {
             return new NbProcessDescriptor(
@@ -386,7 +340,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
                 " {" + UnixBrowserFormat.TAG_URL + "}", // NOI18N
                 ExtWebBrowser.UnixBrowserFormat.getHint()
             );
-            
+
         // Other
         } else {
             return new NbProcessDescriptor(
@@ -408,23 +362,23 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
     }
 
     /**
-     * @param l new PropertyChangeListener */    
+     * @param l new PropertyChangeListener */
     public void addPropertyChangeListener (PropertyChangeListener l) {
         if (pcs == null) {
             pcs = new PropertyChangeSupport(this);
         }
         pcs.addPropertyChangeListener (l);
     }
-    
+
     /**
-     * @param l PropertyChangeListener to be removed */    
+     * @param l PropertyChangeListener to be removed */
     public void removePropertyChangeListener (PropertyChangeListener l) {
         if (pcs != null) {
             pcs.removePropertyChangeListener (l);
         }
     }
-    
-    private void readObject (java.io.ObjectInputStream ois) 
+
+    private void readObject (java.io.ObjectInputStream ois)
     throws java.io.IOException, ClassNotFoundException {
         ois.defaultReadObject ();
         if (browserExecutable != null && browserExecutable.getArguments() != null) {
@@ -474,14 +428,14 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
     }
 
 
-    /** Default format that can format tags related to execution. 
+    /** Default format that can format tags related to execution.
      * Currently this is only the URL.
      */
     public static class UnixBrowserFormat extends org.openide.util.MapFormat {
-        
+
         /** SVUID for serialization. */
         private static final long serialVersionUID = -699340388834127437L;
-        
+
         /** Tag used to pass URL */
         public static final String TAG_URL = "URL"; // NOI18N
 
@@ -490,14 +444,14 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
          */
         public UnixBrowserFormat (String url) {
             super(new java.util.HashMap ());
-            java.util.Map map = getMap ();        
+            java.util.Map map = getMap ();
             map.put (TAG_URL, url);
         }
-        
+
         public static String getHint() {
             return NbBundle.getMessage(ExtWebBrowser.class, "MSG_BrowserExecutorHint"); // NOI18N
         }
 
     }
-    
+
 }

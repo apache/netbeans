@@ -46,7 +46,6 @@ public class IExplorerBrowser extends ExtWebBrowser {
     /** Creates new ExtWebBrowser */
     public IExplorerBrowser() {
         super(PrivateBrowserFamilyId.IE);
-        ddeServer = ExtWebBrowser.IEXPLORE;
     }
 
     /** Getter for browser name
@@ -90,7 +89,7 @@ public class IExplorerBrowser extends ExtWebBrowser {
 
         params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
         try {
-            b = NbDdeBrowserImpl.getBrowserPath(getDDEServer ());
+            b = NbDdeBrowserImpl.getBrowserPath(ExtWebBrowser.IEXPLORE);
         } catch (NbBrowserException e) {
             b = "C:\\Program Files\\Internet Explorer\\iexplore.exe";     // NOI18N
         } catch (UnsatisfiedLinkError e) {

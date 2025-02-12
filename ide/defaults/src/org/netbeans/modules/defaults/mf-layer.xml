@@ -160,8 +160,8 @@
                 <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunSingle.instance"/>
             </file>
             <file name="D-F4.shadow">
-        	    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseWindowAction.instance"/>
-        	</file>
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseWindowAction.instance"/>
+            </file>
             <file name="F8.shadow">
                 <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOverAction.instance"/>
             </file>
@@ -199,8 +199,8 @@
                 <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PopupAction.instance"/>
             </file>
             <file name="S-F10.shadow">
-        	    <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PopupAction.instance"/>
-        	</file>
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PopupAction.instance"/>
+            </file>
             <file name="SO-8.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/Debug/org-netbeans-modules-debugger-ui-actions-SourcesViewAction.instance"/>
             </file>
@@ -487,8 +487,8 @@
                 <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseWindowAction.instance"/>
             </file>
             <file name="D-F4.shadow">
-        	    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseWindowAction.instance"/>
-        	</file>
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseWindowAction.instance"/>
+            </file>
             <file name="F8.shadow">
                 <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOverAction.instance"/>
             </file>
@@ -739,11 +739,11 @@
                 <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunSingle.instance"/>
             </file>
             <file name="D-F4.shadow">
-        	    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseWindowAction.instance"/>
-        	</file>
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseWindowAction.instance"/>
+            </file>
             <file name="D-W.shadow">
-        	    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseWindowAction.instance"/>
-        	</file>
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseWindowAction.instance"/>
+            </file>
             <file name="F8.shadow">
                 <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOverAction.instance"/>
             </file>
@@ -1096,93 +1096,181 @@
                 <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-UndoAction.instance"/>
             </file>
         </folder>
+        <folder name="VSCode">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.vscode.defaults.Bundle"/>
+    
+            <!-- General -->
+            <file name="CS-P.shadow">
+                <attr name="originalFile" stringvalue="Actions/Command/org-vscode-core-actions-ShowCommandPalette.instance"/>
+            </file>
+            <file name="C-P.shadow">
+                <attr name="originalFile" stringvalue="Actions/QuickOpen/org-vscode-core-actions-QuickOpen.instance"/>
+            </file>
+            <file name="CS-N.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-vscode-core-actions-NewWindow.instance"/>
+            </file>
+    
+            <!-- Basic Editing -->
+            <file name="C-X.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-vscode-core-actions-CutLine.instance"/>
+            </file>
+            <file name="C-C.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-vscode-core-actions-CopyLine.instance"/>
+            </file>
+            <file name="A-DOWN.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-vscode-core-actions-MoveLine-Down.instance"/>
+            </file>
+            <file name="A-UP.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-vscode-core-actions-MoveLine-Up.instance"/>
+            </file>
+    
+            <!-- Search and Navigation -->
+            <file name="C-F.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-vscode-core-actions-Find.instance"/>
+            </file>
+            <file name="C-H.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-vscode-core-actions-Replace.instance"/>
+            </file>
+            <file name="C-G.shadow">
+                <attr name="originalFile" stringvalue="Actions/Navigation/org-vscode-core-actions-GoToLine.instance"/>
+            </file>
+    
+            <!-- Multi-cursor -->
+            <file name="A-CLICK.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-vscode-core-actions-InsertCursor.instance"/>
+            </file>
+            <file name="CA-UP.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-vscode-core-actions-InsertCursorAbove.instance"/>
+            </file>
+            <file name="CA-DOWN.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-vscode-core-actions-InsertCursorBelow.instance"/>
+            </file>
+    
+            <!-- Rich Languages Editing -->
+            <file name="C-SPACE.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-vscode-core-actions-TriggerSuggestion.instance"/>
+            </file>
+            <file name="CS-SPACE.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-vscode-core-actions-TriggerParameterHints.instance"/>
+            </file>
+            <file name="F12.shadow">
+                <attr name="originalFile" stringvalue="Actions/Navigation/org-vscode-core-actions-GoToDefinition.instance"/>
+            </file>
+    
+            <!-- Debug -->
+            <file name="F5.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-vscode-core-actions-StartDebug.instance"/>
+            </file>
+            <file name="F9.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-vscode-core-actions-ToggleBreakpoint.instance"/>
+            </file>
+            <file name="F10.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-vscode-core-actions-StepOver.instance"/>
+            </file>
+    
+            <!-- Integrated Terminal -->
+            <file name="C-BACKQUOTE.shadow">
+                <attr name="originalFile" stringvalue="Actions/Terminal/org-vscode-core-actions-ToggleTerminal.instance"/>
+            </file>
+            <file name="CS-BACKQUOTE.shadow">
+                <attr name="originalFile" stringvalue="Actions/Terminal/org-vscode-core-actions-NewTerminal.instance"/>
+            </file>
         </folder>
-        <folder name="Editors">
+    </folder>
+    <folder name="Editors">
 
-            <folder name="FontsColors">
-                <folder name="NetBeans55">
-                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
-                    <folder name="Defaults">
-                        <file name="org-netbeans-modules-defaults-token-colorings.xml" url="NetBeans55-fontsColorsDefaults.xml">
-                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
-                        </file>
-                        <file name="org-netbeans-modules-defaults-highlight-colorings.xml" url="NetBeans55-editor.xml">
-                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
-                            <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
-                        </file>
-                    </folder>
+        <folder name="FontsColors">
+            <folder name="NetBeans55">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
+                <folder name="Defaults">
+                    <file name="org-netbeans-modules-defaults-token-colorings.xml" url="NetBeans55-fontsColorsDefaults.xml">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
+                    </file>
+                    <file name="org-netbeans-modules-defaults-highlight-colorings.xml" url="NetBeans55-editor.xml">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
+                        <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
+                    </file>
                 </folder>
-            
-                <folder name="NetBeansEarth">
-                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
-                    <folder name="Defaults">
-                        <file name="org-netbeans-modules-defaults-token-colorings.xml" url="NetBeansEarth-fontsColorsDefaults.xml">
-                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
-                        </file>
-                        <file name="org-netbeans-modules-defaults-highlight-colorings.xml" url="NetBeansEarth-editor.xml">
-                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
-                            <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
-                        </file>
-                    </folder>
-                </folder>
-            
-            
-                <folder name="CityLights">
-                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
-                    <folder name="Defaults">
-                        <file name="org-netbeans-modules-defaults-token-colorings.xml" url="CityLights-fontsColorsDefaults.xml">
-                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
-                        </file>
-                        <file name="org-netbeans-modules-defaults-highlight-colorings.xml" url="CityLights-editor.xml">
-                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
-                            <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
-                        </file>
-                    </folder>
-                </folder>
-            
-                <folder name="BlueTheme">
-                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
-                    <folder name="Defaults">
-                        <file name="org-netbeans-modules-defaults-token-colorings.xml" url="BlueTheme-fontsColorsDefaults.xml">
-                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
-                        </file>
-                        <file name="org-netbeans-modules-defaults-highlight-colorings.xml" url="BlueTheme-editor.xml">
-                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
-                            <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
-                        </file>
-                        <file name="org-netbeans-modules-editor-annotations-colorings.xml" url="BlueTheme-annotations.xml">
-                            <attr name="nbeditor-settings-ColoringType" stringvalue="annotation"/>
-                        </file>
-                    </folder>
-                </folder>
-            
             </folder>
+            
+            <folder name="NetBeansEarth">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
+                <folder name="Defaults">
+                    <file name="org-netbeans-modules-defaults-token-colorings.xml" url="NetBeansEarth-fontsColorsDefaults.xml">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
+                    </file>
+                    <file name="org-netbeans-modules-defaults-highlight-colorings.xml" url="NetBeansEarth-editor.xml">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
+                        <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
+                    </file>
+                </folder>
+            </folder>
+            
+            
+            <folder name="CityLights">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
+                <folder name="Defaults">
+                    <file name="org-netbeans-modules-defaults-token-colorings.xml" url="CityLights-fontsColorsDefaults.xml">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
+                    </file>
+                    <file name="org-netbeans-modules-defaults-highlight-colorings.xml" url="CityLights-editor.xml">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
+                        <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
+                    </file>
+                </folder>
+            </folder>
+            
+            <folder name="BlueTheme">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
+                <folder name="Defaults">
+                    <file name="org-netbeans-modules-defaults-token-colorings.xml" url="BlueTheme-fontsColorsDefaults.xml">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
+                    </file>
+                    <file name="org-netbeans-modules-defaults-highlight-colorings.xml" url="BlueTheme-editor.xml">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
+                        <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
+                    </file>
+                    <file name="org-netbeans-modules-editor-annotations-colorings.xml" url="BlueTheme-annotations.xml">
+                        <attr name="nbeditor-settings-ColoringType" stringvalue="annotation"/>
+                    </file>
+                </folder>
+            </folder>
+            
+        </folder>
         
-            <folder name="Keybindings">
-                <folder name="Eclipse">
-                    <folder name="Defaults">
-                        <file name="org-netbeans-modules-defaults-keybindings.xml" url="Eclipse-keybindings.xml"/>
-                        <file name="org-netbeans-modules-editor-keybindings-mac.xml" url="Eclipse-keybindings-mac.xml">
-                            <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
-                        </file>
-                    </folder>
+        <folder name="Keybindings">
+            <folder name="Eclipse">
+                <folder name="Defaults">
+                    <file name="org-netbeans-modules-defaults-keybindings.xml" url="Eclipse-keybindings.xml"/>
+                    <file name="org-netbeans-modules-editor-keybindings-mac.xml" url="Eclipse-keybindings-mac.xml">
+                        <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
+                    </file>
                 </folder>
-                <folder name="Emacs">
-                    <folder name="Defaults">
-                        <file name="org-netbeans-modules-defaults-keybindings.xml" url="Emacs-keybindings.xml"/>
-                        <file name="org-netbeans-modules-editor-keybindings-mac.xml" url="Emacs-keybindings-mac.xml">
-                            <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
-                        </file>
-                    </folder>
+            </folder>
+            <folder name="Emacs">
+                <folder name="Defaults">
+                    <file name="org-netbeans-modules-defaults-keybindings.xml" url="Emacs-keybindings.xml"/>
+                    <file name="org-netbeans-modules-editor-keybindings-mac.xml" url="Emacs-keybindings-mac.xml">
+                        <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
+                    </file>
                 </folder>
-                <folder name="Idea">
-                    <folder name="Defaults">
-                        <file name="org-netbeans-modules-defaults-keybindings.xml" url="Idea-keybindings.xml"/>
-                        <file name="org-netbeans-modules-editor-keybindings-mac.xml" url="Idea-keybindings-mac.xml">
-                            <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
-                        </file>
-                    </folder>
+            </folder>
+            <folder name="Idea">
+                <folder name="Defaults">
+                    <file name="org-netbeans-modules-defaults-keybindings.xml" url="Idea-keybindings.xml"/>
+                    <file name="org-netbeans-modules-editor-keybindings-mac.xml" url="Idea-keybindings-mac.xml">
+                        <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
+                    </file>
                 </folder>
+            </folder>
+            <folder name="VSCode">
+                <folder name="Defaults">
+                    <file name="org-netbeans-modules-defaults-keybindings.xml" url="VSCode-keybindings.xml"/>
+                    <file name="org-netbeans-modules-editor-keybindings-mac.xml" url="VSCode-keybindings-mac.xml">
+                        <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
+                    </file>
+                </folder>
+            </folder>
             <folder name="NetBeans55">
                 <folder name="Defaults">
                     <file name="org-netbeans-modules-defaults-keybindings.xml" url="NetBeans55-keybindings.xml"/>

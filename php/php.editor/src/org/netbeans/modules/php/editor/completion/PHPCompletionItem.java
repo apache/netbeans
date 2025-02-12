@@ -2133,7 +2133,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
         private static ImageIcon icon() {
             if (interfaceIcon == null) {
-                interfaceIcon = new ImageIcon(ImageUtilities.loadImage(PHP_INTERFACE_ICON));
+                interfaceIcon = ImageUtilities.loadImageIcon(PHP_INTERFACE_ICON, false);
             }
             return interfaceIcon;
         }

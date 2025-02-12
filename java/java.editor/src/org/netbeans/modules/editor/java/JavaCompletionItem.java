@@ -87,6 +87,7 @@ import org.openide.xml.XMLUtil;
 import org.netbeans.swing.plaf.LFCustoms;
 
 import static javax.lang.model.type.TypeKind.VOID;
+import javax.swing.Icon;
 
 /**
  *
@@ -618,7 +619,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
     abstract static class WhiteListJavaCompletionItem<T extends Element> extends JavaCompletionItem {
 
         private static final String WARNING = "org/netbeans/modules/java/editor/resources/warning_badge.gif";   //NOI18N
-        private static ImageIcon warningIcon;
+        private static Icon warningIcon;
         private final WhiteListQuery.WhiteList whiteList;
         private final List<ElementHandle<? extends Element>> handles;
         private Boolean isBlackListed;
@@ -683,10 +684,10 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 return base;
             }
             if (warningIcon == null) {
-                warningIcon = ImageUtilities.loadImageIcon(WARNING, false);
+                warningIcon = ImageUtilities.loadIcon(WARNING);
             }
             assert warningIcon != null;
-            return new ImageIcon(ImageUtilities.mergeImages(base.getImage(), warningIcon.getImage(), 8, 8));
+            return ImageUtilities.icon2ImageIcon(ImageUtilities.mergeIcons(base, warningIcon, 8, 8));
         }
 
         protected ImageIcon getBaseIcon() {
@@ -2214,9 +2215,9 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 return merged;
             }
             ImageIcon superIcon = super.getBaseIcon();
-            merged = new ImageIcon( ImageUtilities.mergeImages(
-                superIcon.getImage(),
-                implement ? implementBadge.getImage() : overrideBadge.getImage(),
+            merged = ImageUtilities.icon2ImageIcon(ImageUtilities.mergeIcons(
+                superIcon,
+                implement ? implementBadge : overrideBadge,
                 16 - 8,
                 16 - 8) );
 
@@ -2298,7 +2299,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private static final String SETTER_BADGE_PATH = "org/netbeans/modules/java/editor/resources/setter_badge.png"; //NOI18N
         private static final String PARAMETER_NAME_COLOR = Utilities.getHTMLColor(224, 160, 65);
 
-        private static ImageIcon superIcon;
+        private static Icon superIcon;
         private static ImageIcon[] merged_icons = new ImageIcon[2];
 
         protected ElementHandle<VariableElement> elementHandle;
@@ -2394,16 +2395,16 @@ public abstract class JavaCompletionItem implements CompletionItem {
         protected ImageIcon getIcon() {
             if (merged_icons[setter ? 1 : 0] == null) {
                 if (superIcon == null) {
-                    superIcon = ImageUtilities.loadImageIcon(METHOD_PUBLIC, false);
+                    superIcon = ImageUtilities.loadIcon(METHOD_PUBLIC);
                 }
                 if (setter) {
-                    ImageIcon setterBadge = ImageUtilities.loadImageIcon(SETTER_BADGE_PATH, false);
-                    merged_icons[1] = new ImageIcon(ImageUtilities.mergeImages(superIcon.getImage(),
-                            setterBadge.getImage(), 16 - 8, 16 - 8));
+                    Icon setterBadge = ImageUtilities.loadIcon(SETTER_BADGE_PATH);
+                    merged_icons[1] = ImageUtilities.icon2ImageIcon(ImageUtilities.mergeIcons(superIcon,
+                            setterBadge, 16 - 8, 16 - 8));
                 } else {
-                    ImageIcon getterBadge = ImageUtilities.loadImageIcon(GETTER_BADGE_PATH, false);
-                    merged_icons[0] = new ImageIcon(ImageUtilities.mergeImages(superIcon.getImage(),
-                            getterBadge.getImage(), 16 - 8, 16 - 8));
+                    Icon getterBadge = ImageUtilities.loadIcon(GETTER_BADGE_PATH);
+                    merged_icons[0] = ImageUtilities.icon2ImageIcon(ImageUtilities.mergeIcons(superIcon,
+                            getterBadge, 16 - 8, 16 - 8));
                 }
             }
             return merged_icons[setter ? 1 : 0];

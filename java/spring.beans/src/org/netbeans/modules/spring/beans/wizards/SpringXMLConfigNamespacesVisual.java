@@ -140,7 +140,7 @@ public final class SpringXMLConfigNamespacesVisual extends JPanel {
             }
         });
 
-        springNotOnClassPathLabel.setIcon(new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/spring/beans/resources/warning.gif"))   );
+        springNotOnClassPathLabel.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/spring/beans/resources/warning.gif"));
         org.openide.awt.Mnemonics.setLocalizedText(springNotOnClassPathLabel, org.openide.util.NbBundle.getMessage(SpringXMLConfigNamespacesVisual.class, "LBL_SpringNotOnClassPath")); // NOI18N
 
         cbSpringVersion.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No Library found" }));

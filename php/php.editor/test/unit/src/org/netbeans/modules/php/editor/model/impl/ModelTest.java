@@ -19,8 +19,11 @@
 package org.netbeans.modules.php.editor.model.impl;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import org.netbeans.modules.php.editor.model.*;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
+import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.model.FileScope;
 
 /**
@@ -383,6 +386,518 @@ public class ModelTest extends ModelTestBase {
         assertTrue(fieldElement.getDefaultTypeNames().size() == 2);
         assertTrue(fieldElement.getDefaultTypeNames().contains("string"));
         assertTrue(fieldElement.getDefaultTypeNames().contains("int"));
+    }
+
+    public void testPropertyHooks() throws Exception {
+        Model model = getModel(getTestSource("testfiles/model/php84/propertyHooks.php"), false);
+        FileScope topScope = model.getFileScope();
+        IndexScope indexScope = topScope.getIndexScope();
+        ClassScope classScope = ModelUtils.getFirst(ModelUtils.filter(ModelUtils.getDeclaredClasses(topScope), "PropertyHooksClass"));
+        assertNotNull(classScope);
+
+        // field
+        Collection<? extends FieldElement> declaredFields = classScope.getDeclaredFields();
+        assertEquals(20, declaredFields.size());
+        for (FieldElement declaredField : declaredFields) {
+            assertTrue(FieldElement.isHooked(declaredField));
+        }
+
+        // property hooks
+        FieldElement fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$valid01"));
+        assertNotNull(fieldElement);
+        FieldElement.HookedFieldElement hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        Collection<? extends PropertyHookScope> propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(2, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertTrue(Set.of("set", "get").contains(propertyHook.getName()));
+            assertTrue(propertyHook.getParameters().isEmpty());
+            assertTrue(propertyHook.hasBody());
+
+            assertFalse(propertyHook.isReference());
+            assertFalse(propertyHook.isAttributed());
+        }
+
+        fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$valid02"));
+        assertNotNull(fieldElement);
+        hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(2, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertTrue(Set.of("set", "get").contains(propertyHook.getName()));
+            if (propertyHook.getName().equals("get")) {
+                assertTrue(propertyHook.getParameters().isEmpty());
+            } else if (propertyHook.getName().equals("set")) {
+                assertFalse(propertyHook.getParameters().isEmpty());
+            }
+            assertTrue(propertyHook.hasBody());
+
+            assertFalse(propertyHook.isReference());
+            assertFalse(propertyHook.isAttributed());
+        }
+
+        fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$valid05"));
+        assertNotNull(fieldElement);
+        hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        assertTrue(hookedField instanceof Scope);
+        assertNotNull(((Scope) hookedField).getBlockRange());
+        propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(2, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertTrue(Set.of("set", "get").contains(propertyHook.getName()));
+            assertTrue(propertyHook.getParameters().isEmpty());
+            assertTrue(propertyHook.hasBody());
+
+            assertFalse(propertyHook.isReference());
+            assertFalse(propertyHook.isAttributed());
+        }
+
+        fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$valid08"));
+        assertNotNull(fieldElement);
+        hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(1, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertEquals("set", propertyHook.getName());
+            assertTrue(propertyHook.hasBody());
+
+            assertFalse(propertyHook.getParameters().isEmpty());
+            assertFalse(propertyHook.isReference());
+            assertFalse(propertyHook.isAttributed());
+        }
+
+        fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$valid09"));
+        assertNotNull(fieldElement);
+        hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(2, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertTrue(Set.of("get", "set").contains(propertyHook.getName()));
+            assertTrue(propertyHook.getParameters().isEmpty());
+            assertTrue(propertyHook.isAttributed());
+            assertTrue(propertyHook.hasBody());
+
+            assertFalse(propertyHook.isReference());
+        }
+
+        fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$valid13"));
+        assertNotNull(fieldElement);
+        hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        assertTrue(hookedField instanceof Scope);
+        assertNotNull(((Scope) hookedField).getBlockRange());
+        propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(1, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertEquals("get", propertyHook.getName());
+            assertTrue(propertyHook.getParameters().isEmpty());
+            assertTrue(propertyHook.getPhpModifiers().isFinal());
+            assertTrue(propertyHook.hasBody());
+
+            assertFalse(propertyHook.isReference());
+            assertFalse(propertyHook.isAttributed());
+        }
+
+        fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$valid15"));
+        assertNotNull(fieldElement);
+        hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        assertTrue(hookedField instanceof Scope);
+        assertNotNull(((Scope) hookedField).getBlockRange());
+        propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(1, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertEquals("get", propertyHook.getName());
+            assertTrue(propertyHook.getParameters().isEmpty());
+            assertTrue(propertyHook.isReference());
+            assertTrue(propertyHook.hasBody());
+
+            assertFalse(propertyHook.isAttributed());
+        }
+    }
+
+    public void testPropertyHooksAbstract() throws Exception {
+        Model model = getModel(getTestSource("testfiles/model/php84/propertyHooksAbstract.php"), true);
+        FileScope fileScope = model.getFileScope();
+        ClassScope classScope = ModelUtils.getFirst(ModelUtils.filter(ModelUtils.getDeclaredClasses(fileScope), "AbstractClass"));
+        assertNotNull(classScope);
+
+        // field
+        Collection<? extends FieldElement> declaredFields = classScope.getDeclaredFields();
+        assertEquals(5, declaredFields.size());
+        for (FieldElement declaredField : declaredFields) {
+            assertTrue(FieldElement.isHooked(declaredField));
+        }
+
+        // property hooks
+        FieldElement fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$a03"));
+        assertNotNull(fieldElement);
+        FieldElement.HookedFieldElement hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        Collection<? extends PropertyHookScope> propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(2, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertTrue(Set.of("get", "set").contains(propertyHook.getName()));
+            assertTrue(propertyHook.getParameters().isEmpty());
+            if ("get".equals(propertyHook.getName())) {
+                assertTrue(propertyHook.hasBody());
+            } else if ("set".equals(propertyHook.getName())) {
+                assertFalse(propertyHook.hasBody());
+            }
+            assertFalse(propertyHook.isReference());
+            assertFalse(propertyHook.isAttributed());
+        }
+        ClassScope abstractClass = classScope;
+        classScope = ModelUtils.getFirst(ModelUtils.filter(ModelUtils.getDeclaredClasses(fileScope), "Impl"));
+        assertNotNull(classScope);
+
+        // field
+        declaredFields = classScope.getDeclaredFields();
+        assertEquals(1, declaredFields.size());
+        for (FieldElement declaredField : declaredFields) {
+            assertFalse(FieldElement.isHooked(declaredField));
+        }
+
+        // inherited fileds
+        IndexScope idxScope = fileScope.getIndexScope();
+        assertTrue(idxScope instanceof IndexScope.PHP84IndexScope);
+        IndexScope.PHP84IndexScope indexScope = (IndexScope.PHP84IndexScope) idxScope;
+
+        Collection<? extends FieldElement> inheritedFields = classScope.getInheritedFields();
+        assertEquals(8, inheritedFields.size());
+
+        List<? extends FieldElement> fields;
+        fields = indexScope.findFields(classScope);
+        assertEquals(1, fields.size());
+        fields = indexScope.findFields(classScope, "$impl01");
+        assertEquals(1, fields.size());
+        assertEquals(1, classScope.getDeclaredFields().size());
+
+        for (FieldElement inheritedField : inheritedFields) {
+            assertTrue(Set.of("$a01", "$a02", "$a03", "$a04", "$a05", "$i01", "$i02", "$i03").contains(inheritedField.getName()));
+            assertTrue(FieldElement.isHooked(inheritedField));
+            hookedField = (FieldElement.HookedFieldElement) inheritedField;
+            propertyHooks = hookedField.getPropertyHooks();
+            for (PropertyHookScope propertyHook : propertyHooks) {
+                assertTrue(Set.of("get", "set").contains(propertyHook.getName()));
+                assertTrue(propertyHook.getParameters().isEmpty());
+                if (Set.of("$i01", "$i02", "$i03").contains(inheritedField.getName())) {
+                    assertFalse(propertyHook.hasBody());
+                    assertFalse(propertyHook.isReference());
+                    assertFalse(propertyHook.isAttributed());
+                    continue;
+                }
+                switch (inheritedField.getName()) {
+                    case "$a01" -> {
+                        switch (propertyHook.getName()) {
+                            case "get" -> {
+                                assertFalse(propertyHook.hasBody());
+                                assertFalse(propertyHook.isReference());
+                                assertFalse(propertyHook.isAttributed());
+                            }
+                            case "set" -> {
+                                assertFalse(propertyHook.hasBody());
+                                assertFalse(propertyHook.isReference());
+                                assertFalse(propertyHook.isAttributed());
+                            }
+                        }
+                    }
+                    case "$a02" -> {
+                        switch (propertyHook.getName()) {
+                            case "get" -> {
+                                assertFalse(propertyHook.hasBody());
+                                assertFalse(propertyHook.isReference());
+                                assertFalse(propertyHook.isAttributed());
+                            }
+                            case "set" -> {
+                                assertTrue(propertyHook.hasBody());
+                                assertFalse(propertyHook.isReference());
+                                assertFalse(propertyHook.isAttributed());
+                            }
+                        }
+                    }
+                    case "$a03" -> {
+                        switch (propertyHook.getName()) {
+                            case "get" -> {
+                                assertTrue(propertyHook.hasBody());
+                                assertFalse(propertyHook.isReference());
+                                assertFalse(propertyHook.isAttributed());
+                            }
+                            case "set" -> {
+                                assertFalse(propertyHook.hasBody());
+                                assertFalse(propertyHook.isReference());
+                                assertFalse(propertyHook.isAttributed());
+                            }
+                        }
+                    }
+                    case "$a04" -> {
+                        switch (propertyHook.getName()) {
+                            case "get" -> {
+                                assertFalse(propertyHook.hasBody());
+                                assertTrue(propertyHook.isReference());
+                                assertTrue(propertyHook.isAttributed());
+                            }
+                            case "set" -> {
+                                assertFalse(propertyHook.hasBody());
+                                assertFalse(propertyHook.isReference());
+                                assertFalse(propertyHook.isAttributed());
+                            }
+                        }
+                    }
+                    case "$a05" -> {
+                        switch (propertyHook.getName()) {
+                            case "get" -> {
+                                assertTrue(propertyHook.hasBody());
+                                assertFalse(propertyHook.isReference());
+                                assertFalse(propertyHook.isAttributed());
+                            }
+                            case "set" -> {
+                                assertTrue(propertyHook.hasBody());
+                                assertFalse(propertyHook.isReference());
+                                assertFalse(propertyHook.isAttributed());
+                            }
+                        }
+                    }
+                    default -> throw new AssertionError();
+                }
+            }
+        }
+        // invoke getInheritedFields() again
+        classScope.getInheritedFields();
+        List<? extends ModelElement> elements = classScope.getElements();
+        int elementSize = elements.size();
+        classScope.getInheritedFields();
+        // confirm that new elements are not added to the class scope
+        assertEquals(elementSize, classScope.getElements().size());
+        assertEquals(5, abstractClass.getDeclaredFields().size());
+    }
+
+    public void testPropertyHooksInterface01() throws Exception {
+        Model model = getModel(getTestSource("testfiles/model/php84/propertyHooksInterface01.php"), false);
+        FileScope fileScope = model.getFileScope();
+        InterfaceScope interfaceScope = ModelUtils.getFirst(ModelUtils.filter(ModelUtils.getDeclaredInterfaces(fileScope), "PropertyHookInterface"));
+        assertNotNull(interfaceScope);
+
+        // field
+        assertTrue(interfaceScope instanceof TypeScope.FieldDeclarable);
+        TypeScope.FieldDeclarable fieldDeclarableInterface = (TypeScope.FieldDeclarable) interfaceScope;
+        Collection<? extends FieldElement> declaredFields = fieldDeclarableInterface.getDeclaredFields();
+        assertEquals(4, declaredFields.size());
+        for (FieldElement declaredField : declaredFields) {
+            assertTrue(FieldElement.isHooked(declaredField));
+        }
+
+        // property hooks
+        FieldElement fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$get"));
+        assertNotNull(fieldElement);
+        FieldElement.HookedFieldElement hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        Collection<? extends PropertyHookScope> propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(1, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertEquals("get", propertyHook.getName());
+            assertTrue(propertyHook.getParameters().isEmpty());
+
+            assertFalse(propertyHook.hasBody());
+            assertFalse(propertyHook.isReference());
+            assertFalse(propertyHook.isAttributed());
+        }
+
+        fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$ref"));
+        assertNotNull(fieldElement);
+        hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(1, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertEquals("get", propertyHook.getName());
+            assertTrue(propertyHook.getParameters().isEmpty());
+            assertTrue(propertyHook.isReference());
+
+            assertFalse(propertyHook.hasBody());
+            assertFalse(propertyHook.isAttributed());
+        }
+    }
+
+    public void testPropertyHooksInterface02() throws Exception {
+        Model model = getModel(getTestSource("testfiles/model/php84/propertyHooksInterface02.php"), false);
+        FileScope fileScope = model.getFileScope();
+        InterfaceScope interfaceScope = ModelUtils.getFirst(ModelUtils.filter(ModelUtils.getDeclaredInterfaces(fileScope), "InterfaceZ"));
+        assertNotNull(interfaceScope);
+
+        // field
+        assertTrue(interfaceScope instanceof TypeScope.FieldDeclarable);
+        TypeScope.FieldDeclarable fieldDeclarableInterface = (TypeScope.FieldDeclarable) interfaceScope;
+        Collection<? extends FieldElement> declaredFields = fieldDeclarableInterface.getDeclaredFields();
+        assertEquals(3, declaredFields.size());
+        for (FieldElement declaredField : declaredFields) {
+            assertTrue(FieldElement.isHooked(declaredField));
+        }
+
+        // property hooks
+        FieldElement fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$z1"));
+        assertNotNull(fieldElement);
+        FieldElement.HookedFieldElement hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        Collection<? extends PropertyHookScope> propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(1, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertEquals("get", propertyHook.getName());
+            assertTrue(propertyHook.getParameters().isEmpty());
+
+            assertFalse(propertyHook.hasBody());
+            assertFalse(propertyHook.isReference());
+            assertFalse(propertyHook.isAttributed());
+        }
+
+        fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$z3"));
+        assertNotNull(fieldElement);
+        hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(2, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertTrue(Set.of("get", "set").contains(propertyHook.getName()));
+            assertTrue(propertyHook.getParameters().isEmpty());
+
+            assertFalse(propertyHook.hasBody());
+            assertFalse(propertyHook.isReference());
+            assertFalse(propertyHook.isAttributed());
+        }
+    }
+
+    public void testPropertyHooksInterface02_findFields() throws Exception {
+        Model model = getModel(getTestSource("testfiles/model/php84/propertyHooksInterface02.php"), true);
+        FileScope fileScope = model.getFileScope();
+        IndexScope idxScope = fileScope.getIndexScope();
+        assertTrue(idxScope instanceof IndexScope.PHP84IndexScope);
+
+        InterfaceScope interfaceScope = ModelUtils.getFirst(ModelUtils.filter(ModelUtils.getDeclaredInterfaces(fileScope), "InterfaceZ"));
+        assertNotNull(interfaceScope);
+        IndexScope.PHP84IndexScope indexScope = (IndexScope.PHP84IndexScope) idxScope;
+        List<? extends FieldElement> fields = indexScope.findFields(interfaceScope);
+        assertEquals(3, fields.size());
+        fields = indexScope.findFields(interfaceScope, "$z3");
+        assertEquals(1, fields.size());
+
+        assertTrue(interfaceScope instanceof TypeScope.FieldDeclarable);
+        TypeScope.FieldDeclarable fieldDeclarableInterface = (TypeScope.FieldDeclarable) interfaceScope;
+        Collection<? extends FieldElement> inheritedFields = fieldDeclarableInterface.getInheritedFields();
+        assertEquals(12, inheritedFields.size());
+        for (FieldElement inheritedField : inheritedFields) {
+            assertTrue(Set.of("$a1", "$a2", "$a3", "$b1", "$b2", "$b3", "$x1", "$x2", "$x3", "$y1", "$y2", "$y3").contains(inheritedField.getName()));
+            assertTrue(FieldElement.isHooked(inheritedField));
+            FieldElement.HookedFieldElement hookedField = (FieldElement.HookedFieldElement) inheritedField;
+            for (PropertyHookScope propertyHook : hookedField.getPropertyHooks()) {
+                assertTrue(Set.of("get", "set").contains(propertyHook.getName()));
+                assertTrue(propertyHook.getParameters().isEmpty());
+
+                assertFalse(propertyHook.hasBody());
+                assertFalse(propertyHook.isReference());
+                assertFalse(propertyHook.isAttributed());
+            }
+        }
+    }
+
+    public void testPropertyHooksInterface03() throws Exception {
+        Model model = getModel(getTestSource("testfiles/model/php84/propertyHooksInterface03.php"), false);
+        FileScope fileScope = model.getFileScope();
+        InterfaceScope interfaceScope = ModelUtils.getFirst(ModelUtils.filter(ModelUtils.getDeclaredInterfaces(fileScope), "InterfaceEx"));
+        assertNotNull(interfaceScope);
+
+        // field
+        assertTrue(interfaceScope instanceof TypeScope.FieldDeclarable);
+        TypeScope.FieldDeclarable fieldDeclarableInterface = (TypeScope.FieldDeclarable) interfaceScope;
+        Collection<? extends FieldElement> declaredFields = fieldDeclarableInterface.getDeclaredFields();
+        assertEquals(5, declaredFields.size());
+        for (FieldElement declaredField : declaredFields) {
+            assertTrue(FieldElement.isHooked(declaredField));
+        }
+
+        // property hooks
+        FieldElement fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$iex_01"));
+        assertNotNull(fieldElement);
+        FieldElement.HookedFieldElement hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        Collection<? extends PropertyHookScope> propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(2, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertTrue(Set.of("get", "set").contains(propertyHook.getName()));
+            assertTrue(propertyHook.getParameters().isEmpty());
+            assertEquals(PhpModifiers.PUBLIC, propertyHook.getPhpModifiers().toFlags());
+
+            assertFalse(propertyHook.hasBody());
+            assertFalse(propertyHook.isReference());
+            assertFalse(propertyHook.isAttributed());
+        }
+
+        fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$i2_01"));
+        assertNotNull(fieldElement);
+        hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(2, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertTrue(Set.of("get", "set").contains(propertyHook.getName()));
+            assertTrue(propertyHook.getParameters().isEmpty());
+            assertEquals(PhpModifiers.PUBLIC, propertyHook.getPhpModifiers().toFlags());
+
+            assertFalse(propertyHook.hasBody());
+            assertFalse(propertyHook.isReference());
+            assertFalse(propertyHook.isAttributed());
+        }
+        Collection<? extends FieldElement> inheritedFields = fieldDeclarableInterface.getInheritedFields();
+        assertEquals(15, inheritedFields.size());
+        declaredFields = fieldDeclarableInterface.getDeclaredFields();
+        assertEquals(5, declaredFields.size());
+    }
+
+    public void testPropertyHooksTrait01() throws Exception {
+        Model model = getModel(getTestSource("testfiles/model/php84/propertyHooksTrait01.php"), true);
+        FileScope fileScope = model.getFileScope();
+        IndexScope idxScope = fileScope.getIndexScope();
+        assertTrue(idxScope instanceof IndexScope.PHP84IndexScope);
+
+        TraitScope traitScope = ModelUtils.getFirst(ModelUtils.filter(ModelUtils.getDeclaredTraits(fileScope), "Trait05"));
+        assertNotNull(traitScope);
+        // field
+        assertTrue(traitScope instanceof TypeScope.FieldDeclarable);
+        TypeScope.FieldDeclarable fieldDeclarableInterface = (TypeScope.FieldDeclarable) traitScope;
+        Collection<? extends FieldElement> declaredFields = fieldDeclarableInterface.getDeclaredFields();
+        assertEquals(8, declaredFields.size());
+        for (FieldElement declaredField : declaredFields) {
+            Set<String> hookedProperties = Set.of("$t5_01_public", "$t5_02_private", "$t5_03_protected", "$t5_04_public_abstract");
+            if (hookedProperties.contains(declaredField.getName())) {
+                assertTrue(FieldElement.isHooked(declaredField));
+            } else {
+                assertFalse(FieldElement.isHooked(declaredField));
+            }
+        }
+
+        // property hooks
+        FieldElement fieldElement = ModelUtils.getFirst(ModelUtils.filter(declaredFields, "$t5_03_protected"));
+        assertNotNull(fieldElement);
+        FieldElement.HookedFieldElement hookedField = (FieldElement.HookedFieldElement) fieldElement;
+        Collection<? extends PropertyHookScope> propertyHooks = hookedField.getPropertyHooks();
+        assertEquals(2, propertyHooks.size());
+        for (PropertyHookScope propertyHook : propertyHooks) {
+            assertTrue(Set.of("get", "set").contains(propertyHook.getName()));
+            assertTrue(propertyHook.getParameters().isEmpty());
+            assertTrue(propertyHook.hasBody());
+            if ("get".equals(propertyHook.getName())) {
+                assertTrue(propertyHook.isAttributed());
+            }
+
+            if ("set".equals(propertyHook.getName())) {
+                assertFalse(propertyHook.isAttributed());
+            }
+            assertFalse(propertyHook.isReference());
+        }
+
+        Collection<? extends FieldElement> declaredTraitFields = traitScope.getDeclaredFields();
+        assertEquals(8, declaredTraitFields.size());
+        Collection<? extends FieldElement> inheritedFields = ((TypeScope.FieldDeclarable) traitScope).getInheritedFields();
+        assertEquals(21, inheritedFields.size());
+        // again
+        declaredTraitFields = traitScope.getDeclaredFields();
+        assertEquals(8, declaredTraitFields.size());
+
+        ClassScope classScope = ModelUtils.getFirst(ModelUtils.filter(ModelUtils.getDeclaredClasses(fileScope), "Child"));
+        assertNotNull(classScope);
+        declaredFields = classScope.getDeclaredFields();
+        assertEquals(10, declaredFields.size());
+        inheritedFields = classScope.getInheritedFields();
+        assertEquals(31, inheritedFields.size());
     }
 
     private void varContainerTestForGlobal2(VariableScope topScope) {

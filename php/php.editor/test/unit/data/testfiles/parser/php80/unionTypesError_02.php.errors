@@ -1,8 +1,8 @@
 [[863,864]-Syntax error
  unexpected:	|
- expected:	variable, &] 863-864:Syntax error
+ expected:	variable, &, ..., &] 863-864:Syntax error
  unexpected:	|
- expected:	variable, &
+ expected:	variable, &, ..., &
 [[870,876]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	variable '$param'] 870-876:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	variable '$param'

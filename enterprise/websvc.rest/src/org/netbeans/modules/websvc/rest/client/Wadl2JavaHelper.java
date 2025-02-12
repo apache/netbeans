@@ -512,6 +512,7 @@ class Wadl2JavaHelper {
                     Collections.<TypeParameterTree>emptyList(),
                     extendsTree,
                     Collections.<Tree>emptyList(),
+                    Collections.<Tree>emptyList(),
                     Collections.<Tree>emptyList());
 
             ClassTree modifiedInnerClass = innerClass;

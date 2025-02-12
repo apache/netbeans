@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import org.netbeans.modules.parsing.impl.indexing.errors.TaskCache;
 import org.openide.filesystems.FileObject;
 
@@ -74,12 +75,46 @@ public class ErrorsCache {
         return Collections.unmodifiableCollection(TaskCache.getDefault().getAllFilesWithRecord(root));
     }
 
-    /**Getter for properties of the given error description.
+    /**Return all errors or warnings for the given file
+     *
+     * @param file file for which the errors are being retrieved
+     * @param convertor constructor of {@code T} instances from error description properties
+     * @return errors or warnings
+     * @since 9.40
+     */
+    public static <T> List<T> getErrors(FileObject file, ReverseConvertor<T> convertor) throws IOException {
+        return Collections.unmodifiableList(TaskCache.getDefault().getErrors(file, convertor));
+    }
+
+    /**Position in a text expressed as 1-based line and character offset.
+     * @since 9.40
+     */
+    public record Position(int line, int column) {}
+
+    /**Range in a text expressed as (1-based) start and end positions.
+     * @since 9.40
+     */
+    public record Range(Position start, Position end) {}
+
+    /**Getter for properties of the given error description including the range.
      */
     public static interface Convertor<T> {
         public ErrorKind getKind(T t);
         public int       getLineNumber(T t);
         public String    getMessage(T t);
+        /**
+         * @since 9.40
+         */
+        public default Range getRange(T t) {
+            return null;
+        }
+    }
+
+    /**Constructor of error description from the properties.
+     * @since 9.40
+     */
+    public static interface ReverseConvertor<T> {
+        public T get(ErrorKind kind, Range range, String message);
     }
 
     public static enum ErrorKind {

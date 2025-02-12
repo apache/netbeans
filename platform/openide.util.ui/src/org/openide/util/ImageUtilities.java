@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamException;
+import java.io.Serial;
 import java.lang.ref.SoftReference;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -94,23 +95,21 @@ public final class ImageUtilities {
     /** separator for individual parts of tool tip text */
     static final String TOOLTIP_SEPAR = "<br>"; // NOI18N
     /** a value that indicates that the icon does not exists */
-    private static final ActiveRef<String> NO_ICON = new ActiveRef<String>(null, null, null);
+    private static final ActiveRef<String> NO_ICON = new ActiveRef<>(null, null, null);
 
-    private static final Map<String,ActiveRef<String>> cache = new HashMap<String,ActiveRef<String>>(128);
-    private static final Map<String,ActiveRef<String>> localizedCache = new HashMap<String,ActiveRef<String>>(128);
-    private static final Map<CompositeImageKey,ActiveRef<CompositeImageKey>> compositeCache = new HashMap<CompositeImageKey,ActiveRef<CompositeImageKey>>(128);
-    private static final Map<ToolTipImageKey, ActiveRef<ToolTipImageKey>> imageToolTipCache = new HashMap<ToolTipImageKey, ActiveRef<ToolTipImageKey>>(128);
+    private static final Map<String, ActiveRef<String>> cache = new HashMap<>(128);
+    private static final Map<String, ActiveRef<String>> localizedCache = new HashMap<>(128);
+    private static final Map<CompositeImageKey, ActiveRef<CompositeImageKey>> compositeCache = new HashMap<>(128);
+    private static final Map<ToolTipImageKey, ActiveRef<ToolTipImageKey>> imageToolTipCache = new HashMap<>(128);
 
     private static RGBImageFilter imageIconFilter = null;
 
     /** Resource paths for which we have had to strip initial slash.
      * @see "#20072"
      */
-    private static final Set<String> extraInitialSlashes = new HashSet<String>();
-    private static final CachedLookupLoader<ClassLoader> classLoaderLoader =
-            new CachedLookupLoader<ClassLoader>(ClassLoader.class);
-    private static final CachedLookupLoader<SVGLoader> svgLoaderLoader =
-            new CachedLookupLoader<SVGLoader>(SVGLoader.class);
+    private static final Set<String> extraInitialSlashes = new HashSet<>();
+    private static final CachedLookupLoader<ClassLoader> classLoaderLoader = new CachedLookupLoader<>(ClassLoader.class);
+    private static final CachedLookupLoader<SVGLoader> svgLoaderLoader = new CachedLookupLoader<>(SVGLoader.class);
     private static final Component component = new Component() {
     };
 
@@ -118,8 +117,6 @@ public final class ImageUtilities {
     private static int mediaTrackerID;
     
     private static ImageReader PNG_READER;
-    
-    private static final Logger ERR = Logger.getLogger(ImageUtilities.class.getName());
     
     private static final String DARK_LAF_SUFFIX = "_dark"; //NOI18N
 
@@ -274,15 +271,15 @@ public final class ImageUtilities {
                     new NullPointerException());
             return null;
         }
-        if (icon instanceof ImageIcon) {
-            return (ImageIcon) icon;
-        } else if (icon instanceof ToolTipImage) {
-            return ((ToolTipImage) icon).asImageIcon();
+        if (icon instanceof ImageIcon imageIcon) {
+            return imageIcon;
+        } else if (icon instanceof ToolTipImage tti) {
+            return tti.asImageIcon();
         } else {
             Image image = icon2Image(icon);
-            ToolTipImage tti = (image instanceof ToolTipImage)
-                ? (ToolTipImage) image : assignToolTipToImageInternal(image, "");
-            return tti.asImageIcon();
+            return image instanceof ToolTipImage tti
+                    ? tti.asImageIcon()
+                    : assignToolTipToImageInternal(image, "").asImageIcon();
         }
     }
 
@@ -381,8 +378,8 @@ public final class ImageUtilities {
     private static RGBImageFilter getImageIconFilter() {
         if( null == imageIconFilter ) {
             Object obj = UIManager.get( "nb.imageicon.filter"); //NOI18N
-            if( obj instanceof RGBImageFilter ) {
-                imageIconFilter = ( RGBImageFilter ) obj;
+            if (obj instanceof RGBImageFilter filter) {
+                imageIconFilter = filter;
             }
         }
         return imageIconFilter;
@@ -419,7 +416,7 @@ public final class ImageUtilities {
                 }
             }
             cached = doMergeImages(image1, image2, x, y);
-            compositeCache.put(k, new ActiveRef<CompositeImageKey>(cached, compositeCache, k));
+            compositeCache.put(k, new ActiveRef<>(cached, compositeCache, k));
             return cached;
         }
     }
@@ -456,8 +453,7 @@ public final class ImageUtilities {
      * @return icon corresponding icon
      */    
     public static final Icon image2Icon(Image image) {
-        ToolTipImage ret = (image instanceof ToolTipImage)
-                ? (ToolTipImage) image : assignToolTipToImageInternal(image, "");
+        ToolTipImage ret = image instanceof ToolTipImage tti ? tti : assignToolTipToImageInternal(image, "");
         return ret.asImageIconIfRequiredForRetina();
     }
     
@@ -474,12 +470,12 @@ public final class ImageUtilities {
             LOGGER.log(Level.WARNING, null, new NullPointerException());
             return loadImage("org/openide/nodes/defaultNode.png", true);
         }
-        if (icon instanceof ToolTipImage) {
-            return (ToolTipImage) icon;
-        } else if (icon instanceof IconImageIcon) {
-            return icon2Image(((IconImageIcon) icon).getDelegateIcon());
-        } else if (icon instanceof ImageIcon) {
-            Image ret = ((ImageIcon) icon).getImage();
+        if (icon instanceof ToolTipImage tti) {
+            return tti;
+        } else if (icon instanceof IconImageIcon iconImageIcon) {
+            return icon2Image(iconImageIcon.getDelegateIcon());
+        } else if (icon instanceof ImageIcon imageIcon) {
+            Image ret = imageIcon.getImage();
             if (ret != null)
                 return ret;
         }
@@ -491,8 +487,8 @@ public final class ImageUtilities {
      */
     private static ToolTipImage icon2ToolTipImage(Icon icon, URL url) {
         Parameters.notNull("icon", icon);
-        if (icon instanceof ToolTipImage) {
-            return (ToolTipImage) icon;
+        if (icon instanceof ToolTipImage tti) {
+            return tti;
         }
         ToolTipImage image = new ToolTipImage(icon, "", url, BufferedImage.TYPE_INT_ARGB);
         Graphics g = image.getGraphics();
@@ -541,7 +537,7 @@ public final class ImageUtilities {
                 }
             }
             cached = ToolTipImage.createNew(text, image, null);
-            imageToolTipCache.put(key, new ActiveRef<ToolTipImageKey>(cached, imageToolTipCache, key));
+            imageToolTipCache.put(key, new ActiveRef<>(cached, imageToolTipCache, key));
             return cached;
         }
     }
@@ -552,11 +548,7 @@ public final class ImageUtilities {
      * @return String containing attached tool tip text
      */
     public static final String getImageToolTip(Image image) {
-        if (image instanceof ToolTipImage) {
-            return ((ToolTipImage) image).toolTipText;
-        } else {
-            return "";
-        }
+        return image instanceof ToolTipImage toolTipImage ? toolTipImage.toolTipText : "";
     }
 
     /**
@@ -566,8 +558,7 @@ public final class ImageUtilities {
      * @return Image with attached tool tip
      */
     public static final Image addToolTipToImage(Image image, String text) {
-        if (image instanceof ToolTipImage) {
-            ToolTipImage tti = (ToolTipImage) image;
+        if (image instanceof ToolTipImage tti) {
             StringBuilder str = new StringBuilder(tti.toolTipText);
             if (str.length() > 0 && text.length() > 0) {
                 str.append(TOOLTIP_SEPAR);
@@ -619,8 +610,7 @@ public final class ImageUtilities {
      * @since 9.24
      */
     public static URL findImageBaseURL(Image image) {
-      Object o = image.getProperty(PROPERTY_URL, null);
-      return o instanceof URL ? (URL)o : null;
+      return image.getProperty(PROPERTY_URL, null) instanceof URL url ? url : null;
     }
     
     /**
@@ -689,7 +679,7 @@ public final class ImageUtilities {
                         new LookupListener() {
                             @Override
                             public void resultChanged(LookupEvent ev) {
-                                ERR.log(Level.FINE, "Loader for {0} cleared", clazz); // NOI18N
+                                LOGGER.log(Level.FINE, "Loader for {0} cleared", clazz); // NOI18N
                                 /* Clear any existing cached result, and indicate to ongoing lookup
                                 operations in other threads that their results are outdated and
                                 should not be cahced. */
@@ -708,12 +698,12 @@ public final class ImageUtilities {
             toReturn = Optional.ofNullable(it.hasNext() ? it.next() : null);
             if (!toReturn.isPresent()) {
                 if (!noLoaderWarned.getAndSet(true)) {
-                    ERR.log(Level.WARNING, "No {0} instance found in {1}", // NOI18N
+                    LOGGER.log(Level.WARNING, "No {0} instance found in {1}", // NOI18N
                             new Object[]{ clazz, Lookup.getDefault() });
                 }
-            } else if (ERR.isLoggable(Level.FINE)) {
+            } else if (LOGGER.isLoggable(Level.FINE)) {
                 // Log message must start with "Loader computed", per ImageUtilitiesGetLoaderTest.
-                ERR.log(Level.FINE, "Loader computed for {0}: {1}", // NOI18N
+                LOGGER.log(Level.FINE, "Loader computed for {0}: {1}", // NOI18N
                         new Object[]{ clazz, toReturn.orElse(null) });
             }
             synchronized (this) {
@@ -780,14 +770,14 @@ public final class ImageUtilities {
                     String suffix = it.next();
                     ToolTipImage i;
 
-                    if (suffix.length() == 0) {
+                    if (suffix.isEmpty()) {
                         i = getIcon(resource, loader, false);
                     } else {
                         i = getIcon(base + suffix + ext, loader, true);
                     }
 
                     if (i != null) {
-                        localizedCache.put(resource, new ActiveRef<String>(i, localizedCache, resource));
+                        localizedCache.put(resource, new ActiveRef<>(i, localizedCache, resource));
                         return i;
                     }
                 }
@@ -871,7 +861,7 @@ public final class ImageUtilities {
                     if (svgLoader != null) {
                         url = svgURL;
                     } else {
-                        ERR.log(Level.INFO, "No SVG loader available for loading {0}", svgURL);
+                        LOGGER.log(Level.INFO, "No SVG loader available for loading {0}", svgURL);
                     }
                 }
             }
@@ -879,55 +869,48 @@ public final class ImageUtilities {
                 url = useClassLoader.getResource(n);
             }
 
-//            img = (url == null) ? null : Toolkit.getDefaultToolkit().createImage(url);
             Image result = null;
-            try {
-                if (url != null) {
-                    if (svgLoader != null) {
-                        try {
-                            result = icon2ToolTipImage(svgLoader.loadIcon(url), url);
-                        } catch (IOException e) {
-                            ERR.log(Level.INFO, "Failed to load SVG image " + url, e);
-                        }
-                    } else if (name.endsWith(".png")) {
-                        ImageInputStream stream = ImageIO.createImageInputStream(url.openStream());
+            if (url != null) {
+                if (svgLoader != null) {
+                    try {
+                        result = icon2ToolTipImage(svgLoader.loadIcon(url), url);
+                    } catch (IOException ioe) {
+                        LOGGER.log(Level.INFO, "Failed to load SVG image " + url, ioe);
+                    }
+                } else if (name.endsWith(".png")) {
+                    try (ImageInputStream stream = ImageIO.createImageInputStream(url.openStream())) {
                         ImageReadParam param = PNG_READER.getDefaultReadParam();
-                        try {
-                            PNG_READER.setInput(stream, true, true);
-                            result = PNG_READER.read(0, param);
-                        }
-                        catch (IOException ioe1) {
-                            ERR.log(Level.INFO, "Image "+name+" is not PNG", ioe1);
-                        }
-                        stream.close();
-                    } 
-
-                    if (result == null) {
-                        result = ImageIO.read(url);
+                        PNG_READER.setInput(stream, true, true);
+                        result = PNG_READER.read(0, param);
+                    } catch (IOException ioe) {
+                        LOGGER.log(Level.INFO, "Image "+name+" is not PNG", ioe);
                     }
                 }
-            } catch (IOException ioe) {
-                ERR.log(Level.WARNING, "Cannot load " + name + " image", ioe);
+                if (result == null) {
+                    try {
+                        result = ImageIO.read(url);
+                    } catch (IOException ioe) {
+                        LOGGER.log(Level.WARNING, "Cannot load " + name + " image", ioe);
+                    }
+                }
             }
 
             if (result != null) {
                 if (warn && extraInitialSlashes.add(name)) {
-                    ERR.warning(
+                    LOGGER.warning(
                         "Initial slashes in Utilities.loadImage deprecated (cf. #20072): " +
                         name
                     ); // NOI18N
                 }
 
-//                Image img2 = toBufferedImage(result);
-
-                if (ERR.isLoggable(Level.FINE)) {
-                    ERR.log(Level.FINE, "loading icon {0} = {1}", new Object[] {n, result});
+                if (LOGGER.isLoggable(Level.FINE)) {
+                    LOGGER.log(Level.FINE, "loading icon {0} = {1}", new Object[] {n, result});
                 }
                 name = new String(name).intern(); // NOPMD
-                ToolTipImage toolTipImage = (result instanceof ToolTipImage)
-                        ? (ToolTipImage) result
+                ToolTipImage toolTipImage = result instanceof ToolTipImage tti
+                        ? tti
                         : ToolTipImage.createNew("", result, url);
-                cache.put(name, new ActiveRef<String>(toolTipImage, cache, name));
+                cache.put(name, new ActiveRef<>(toolTipImage, cache, name));
                 return toolTipImage;
             } else { // no icon found
                 if (!localizedQuery) {
@@ -936,26 +919,6 @@ public final class ImageUtilities {
                 return null;
             }
         }
-    }
-
-    // Note: No longer in use.
-    /** The method creates a BufferedImage which represents the same Image as the
-     * parameter but consumes less memory.
-     */
-    private static final Image toBufferedImage(Image img) {
-        // load the image
-        new javax.swing.ImageIcon(img, "");
-
-        if (img.getHeight(null)*img.getWidth(null) > 24*24) {
-            return img;
-        }
-        java.awt.image.BufferedImage rep = createBufferedImage(img.getWidth(null), img.getHeight(null));
-        java.awt.Graphics g = rep.createGraphics();
-        g.drawImage(img, 0, 0, null);
-        g.dispose();
-        img.flush();
-
-        return rep;
     }
 
     private static void ensureLoaded(Image image) {
@@ -988,12 +951,12 @@ public final class ImageUtilities {
 
         int w = Math.max(1, Math.max(image1.getWidth(null), x + image2.getWidth(null)));
         int h = Math.max(1, Math.max(image1.getHeight(null), y + image2.getHeight(null)));
-        boolean bitmask = (image1 instanceof Transparency) && ((Transparency)image1).getTransparency() != Transparency.TRANSLUCENT
-                && (image2 instanceof Transparency) && ((Transparency)image2).getTransparency() != Transparency.TRANSLUCENT;
+        boolean bitmask = image1 instanceof Transparency trans1 && trans1.getTransparency() != Transparency.TRANSLUCENT
+                       && image2 instanceof Transparency trans2 && trans2.getTransparency() != Transparency.TRANSLUCENT;
 
         StringBuilder str = new StringBuilder(image1 instanceof ToolTipImage ? ((ToolTipImage)image1).toolTipText : "");
-        if (image2 instanceof ToolTipImage) {
-            String toolTip = ((ToolTipImage)image2).toolTipText;
+        if (image2 instanceof ToolTipImage toolTipImage) {
+            String toolTip = toolTipImage.toolTipText;
             if (str.length() > 0 && toolTip.length() > 0) {
                 str.append(TOOLTIP_SEPAR);
             }
@@ -1086,36 +1049,19 @@ public final class ImageUtilities {
     /**
      * Key used for composite images -- it holds image identities
      */
-    private static class CompositeImageKey {
-        Image baseImage;
-        Image overlayImage;
-        int x;
-        int y;
-
-        CompositeImageKey(Image base, Image overlay, int x, int y) {
-            this.x = x;
-            this.y = y;
-            this.baseImage = base;
-            this.overlayImage = overlay;
-        }
+    private record CompositeImageKey(Image baseImage, Image overlayImage, int x, int y) {
 
         @Override
         public boolean equals(Object other) {
-            if (!(other instanceof CompositeImageKey)) {
-                return false;
-            }
-
-            CompositeImageKey k = (CompositeImageKey) other;
-
-            return (x == k.x) && (y == k.y) && (baseImage == k.baseImage) && (overlayImage == k.overlayImage);
+            return other instanceof CompositeImageKey key
+                    ? x == key.x && y == key.y && baseImage == key.baseImage && overlayImage == key.overlayImage
+                    : false;
         }
 
         @Override
         public int hashCode() {
             int hash = ((x << 3) ^ y) << 4;
-            hash = hash ^ System.identityHashCode(baseImage) ^ System.identityHashCode(overlayImage);
-
-            return hash;
+            return hash ^ System.identityHashCode(baseImage) ^ System.identityHashCode(overlayImage);
         }
 
         @Override
@@ -1127,22 +1073,13 @@ public final class ImageUtilities {
     /**
      * Key used for ToolTippedImage
      */
-    private static class ToolTipImageKey {
-        Image image;
-        String str;
-
-        ToolTipImageKey(Image image, String str) {
-            this.image = image;
-            this.str = str;
-        }
+    private record ToolTipImageKey(Image image, String str) {
 
         @Override
         public boolean equals(Object other) {
-            if (!(other instanceof ToolTipImageKey)) {
-                return false;
-            }
-            ToolTipImageKey k = (ToolTipImageKey) other;
-            return (str.equals(k.str)) && (image == k.image);
+            return other instanceof ToolTipImageKey key
+                    ? str.equals(key.str) && image == key.image
+                    : false;
         }
 
         @Override
@@ -1167,6 +1104,7 @@ public final class ImageUtilities {
             this.key = key;
         }
 
+        @Override
         public void run() {
             synchronized (holder) {
                 holder.remove(key);
@@ -1205,14 +1143,17 @@ public final class ImageUtilities {
         ObjectOutputStream.writeObject gets recursively called on the delegate. Implement a custom
         serialization mechanism based on ImageIcon instead. */
 
+        @Serial
         private void writeObject(ObjectOutputStream out) throws IOException {
             out.writeObject(new ImageIcon(getImage()));
         }
 
+        @Serial
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
             this.delegate = (ImageIcon) in.readObject();
         }
 
+        @Serial
         private void readObjectNoData() throws ObjectStreamException {
             this.delegate = new ImageIcon(new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR));
         }
@@ -1240,13 +1181,13 @@ public final class ImageUtilities {
 
         public static ToolTipImage createNew(String toolTipText, Image image, URL url) {
             ImageUtilities.ensureLoaded(image);
-            boolean bitmask = (image instanceof Transparency) && ((Transparency) image).getTransparency() != Transparency.TRANSLUCENT;
+            boolean bitmask = image instanceof Transparency trans && trans.getTransparency() != Transparency.TRANSLUCENT;
             ColorModel model = colorModel(bitmask ? Transparency.BITMASK : Transparency.TRANSLUCENT);
             int w = Math.max(1, image.getWidth(null));
             int h = Math.max(1, image.getHeight(null));
             if (url == null) {
                 Object value = image.getProperty(PROPERTY_URL, null);
-                url = (value instanceof URL) ? (URL) value : null;
+                url = value instanceof URL u ? u : null;
             }
             Icon icon = (image instanceof ToolTipImage)
                    ? ((ToolTipImage) image).getDelegateIcon() : null;
@@ -1308,14 +1249,17 @@ public final class ImageUtilities {
             return delegateIcon;
         }
 
+        @Override
         public int getIconHeight() {
             return super.getHeight();
         }
 
+        @Override
         public int getIconWidth() {
             return super.getWidth();
         }
 
+        @Override
         public void paintIcon(Component c, Graphics g, int x, int y) {
             if (delegateIcon != null) {
                 delegateIcon.paintIcon(c, g, x, y);

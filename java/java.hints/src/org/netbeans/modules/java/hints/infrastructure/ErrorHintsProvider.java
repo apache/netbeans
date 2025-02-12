@@ -108,7 +108,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
         errorKind2Severity.put(Diagnostic.Kind.ERROR, Severity.ERROR);
         errorKind2Severity.put(Diagnostic.Kind.MANDATORY_WARNING, Severity.WARNING);
         errorKind2Severity.put(Diagnostic.Kind.WARNING, Severity.WARNING);
-        errorKind2Severity.put(Diagnostic.Kind.NOTE, Severity.WARNING);
+        errorKind2Severity.put(Diagnostic.Kind.NOTE, Severity.HINT);
         errorKind2Severity.put(Diagnostic.Kind.OTHER, Severity.WARNING);
     }
 

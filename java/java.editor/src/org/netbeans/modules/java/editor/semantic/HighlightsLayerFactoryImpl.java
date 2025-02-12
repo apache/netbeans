@@ -23,6 +23,7 @@ import org.netbeans.spi.editor.highlighting.HighlightsLayer;
 import org.netbeans.spi.editor.highlighting.HighlightsLayerFactory;
 import org.netbeans.spi.editor.highlighting.HighlightsLayerFactory.Context;
 import org.netbeans.spi.editor.highlighting.ZOrder;
+import org.netbeans.spi.editor.highlighting.support.HighlightsContainers;
 
 /**
  *
@@ -38,7 +39,7 @@ public class HighlightsLayerFactoryImpl implements HighlightsLayerFactory {
         return new HighlightsLayer[] {
             HighlightsLayer.create(SemanticHighlighter.class.getName() + "-1", ZOrder.SYNTAX_RACK.forPosition(1000), false,semantic),
             HighlightsLayer.create(SemanticHighlighter.class.getName() + "-2", ZOrder.SYNTAX_RACK.forPosition(1500), false, SemanticHighlighter.getImportHighlightsBag(context.getDocument())),
-            HighlightsLayer.create(SemanticHighlighter.class.getName() + "-3", ZOrder.SYNTAX_RACK.forPosition(1600), false, SemanticHighlighter.getPreTextBag(context.getDocument())),
+            HighlightsLayer.create(SemanticHighlighter.class.getName() + "-3", ZOrder.SYNTAX_RACK.forPosition(1600), false, HighlightsContainers.inlineHintsSettingAwareContainer(context.getDocument(), SemanticHighlighter.getPreTextBag(context.getDocument()))),
             //the mark occurrences layer should be "above" current row and "below" the search layers:
             HighlightsLayer.create(MarkOccurrencesHighlighter.class.getName(), ZOrder.SHOW_OFF_RACK.forPosition(20), true, MarkOccurrencesHighlighter.getHighlightsBag(context.getDocument())),
             //"above" mark occurrences, "below" search layers:

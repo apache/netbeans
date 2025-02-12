@@ -19,8 +19,6 @@
 
 package org.netbeans.modules.csl.core;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.spi.tasklist.PushTaskScanner;
 import org.netbeans.spi.tasklist.TaskScanningScope;
@@ -37,8 +35,8 @@ import static org.netbeans.modules.csl.core.Bundle.*;
  * @author sdedic
  */
 @NbBundle.Messages({
-    "DN_tlIndexerName=Hints-based tasks",
-    "DESC_tlIndexerName=Tasks provided by language hints"
+    "DN_tlIndexerName=CSL Hints-based tasks",
+    "DESC_tlIndexerName=Common-Scripting-Language Tasks provided by language hints"
 })
 class TasklistStateBackdoor extends PushTaskScanner {
     private static final TasklistStateBackdoor INSTANCE = new TasklistStateBackdoor();

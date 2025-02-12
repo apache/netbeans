@@ -191,12 +191,12 @@ public abstract class JavaCompletionItem implements CompletionItem {
         return new VariableItem(info, null, varName, substitutionOffset, newVarName, smartType, -1);
     }
 
-    public static JavaCompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, WhiteListQuery.WhiteList whiteList) {
+    public static JavaCompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef, WhiteListQuery.WhiteList whiteList) {
         switch (elem.getKind()) {
             case METHOD:
                 return new MethodItem(info, elem, type, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, smartType, assignToVarOffset, memberRef, whiteList);
             case CONSTRUCTOR:
-                return new ConstructorItem(info, elem, type, substitutionOffset, isDeprecated, smartType, null, whiteList);
+                return new ConstructorItem(info, elem, type, substitutionOffset, isDeprecated, afterConstructorTypeParams, smartType, null, whiteList);
             default:
                 throw new IllegalArgumentException("kind=" + elem.getKind());
         }
@@ -204,7 +204,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
 
     public static JavaCompletionItem createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name, WhiteListQuery.WhiteList whiteList) {
         if (elem.getKind() == ElementKind.CONSTRUCTOR) {
-            return new ConstructorItem(info, elem, type, substitutionOffset, isDeprecated, false, name, whiteList);
+            return new ConstructorItem(info, elem, type, substitutionOffset, isDeprecated, false, false, name, whiteList);
         }
         throw new IllegalArgumentException("kind=" + elem.getKind());
     }
@@ -2489,6 +2489,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private boolean isDeprecated;
         private boolean smartType;
         private String simpleName;
+        private String insertPrefix;
         protected Set<Modifier> modifiers;
         private List<ParamDesc> params;
         private boolean isAbstract;
@@ -2497,11 +2498,12 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private String sortText;
         private String leftText;
 
-        private ConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, boolean smartType, String name, WhiteListQuery.WhiteList whiteList) {
+        private ConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, boolean afterConstructorTypeParams, boolean smartType, String name, WhiteListQuery.WhiteList whiteList) {
             super(substitutionOffset, ElementHandle.create(elem), whiteList);
             this.isDeprecated = isDeprecated;
             this.smartType = smartType;
             this.simpleName = name != null ? name : elem.getEnclosingElement().getSimpleName().toString();
+            this.insertPrefix = !afterConstructorTypeParams ? simpleName : "";
             this.insertName = name != null;
             this.modifiers = elem.getModifiers();
             this.params = new ArrayList<ParamDesc>();
@@ -2551,7 +2553,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
 
         @Override
         public CharSequence getInsertPrefix() {
-            return simpleName;
+            return insertPrefix;
         }
 
         @Override

@@ -91,6 +91,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
         T createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef);
 
+        default T createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef) {
+            return createExecutableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, smartType, assignToVarOffset, memberRef);
+        }
+
         T createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name);
 
         T createOverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement);
@@ -1866,7 +1870,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                 String typeName = controller.getElementUtilities().getElementName(el, true) + "." + prefix; //NOI18N
                                 TypeMirror tm = controller.getTreeUtilities().parseType(typeName, env.getScope().getEnclosingClass());
                                 if (tm != null && tm.getKind() == TypeKind.DECLARED) {
-                                    addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, inImport, insideNew, false, switchItemAdder);
+                                    addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, inImport, insideNew, false, false, switchItemAdder);
                                 }
                             }
                         }
@@ -1901,7 +1905,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                     }
                                 }
                             }
-                            addMembers(env, type, el, kinds, baseType, inImport, insideNew, false, switchItemAdder);
+                            addMembers(env, type, el, kinds, baseType, inImport, insideNew, false, false, switchItemAdder);
                         }
                         break;
                     default:
@@ -1914,7 +1918,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                 String typeName = controller.getElementUtilities().getElementName(el, true) + "." + prefix; //NOI18N
                                 TypeMirror tm = controller.getTreeUtilities().parseType(typeName, env.getScope().getEnclosingClass());
                                 if (tm != null && tm.getKind() == TypeKind.DECLARED) {
-                                    addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, inImport, insideNew, false, switchItemAdder);
+                                    addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, inImport, insideNew, false, false, switchItemAdder);
                                 }
                             }
                             if (exs != null && !exs.isEmpty()) {
@@ -1939,7 +1943,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                     for (ElementHandle<TypeElement> teHandle : ci.getDeclaredTypes(el.getSimpleName().toString(), ClassIndex.NameKind.SIMPLE_NAME, EnumSet.allOf(ClassIndex.SearchScope.class))) {
                                         TypeElement te = teHandle.resolve(controller);
                                         if (te != null && trees.isAccessible(scope, te)) {
-                                            addMembers(env, te.asType(), te, kinds, baseType, inImport, insideNew, true, switchItemAdder);
+                                            addMembers(env, te.asType(), te, kinds, baseType, inImport, insideNew, true, false, switchItemAdder);
                                         }
                                     }
                                 }
@@ -2215,7 +2219,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case GTGTGT:
                     controller = env.getController();
                     TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(path, nc.getIdentifier()));
-                    addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, false, false, false);
+                    addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, false, false, false, true, addSwitchItemDefault);
                     break;
             }
         }
@@ -4073,10 +4077,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
     }
 
     private void addMembers(final Env env, final TypeMirror type, final Element elem, final EnumSet<ElementKind> kinds, final DeclaredType baseType, final boolean inImport, final boolean insideNew, final boolean autoImport) throws IOException {
-        addMembers(env, type, elem, kinds, baseType, inImport, insideNew, autoImport, addSwitchItemDefault);
+        addMembers(env, type, elem, kinds, baseType, inImport, insideNew, autoImport, false, addSwitchItemDefault);
     }
 
-    private void addMembers(final Env env, final TypeMirror type, final Element elem, final EnumSet<ElementKind> kinds, final DeclaredType baseType, final boolean inImport, final boolean insideNew, final boolean autoImport, AddSwitchRelatedItem addSwitchItem) throws IOException {
+    private void addMembers(final Env env, final TypeMirror type, final Element elem, final EnumSet<ElementKind> kinds, final DeclaredType baseType, final boolean inImport, final boolean insideNew, final boolean autoImport, final boolean afterConstructorTypeParams, AddSwitchRelatedItem addSwitchItem) throws IOException {
         Set<? extends TypeMirror> smartTypes = getSmartTypes(env);
         final TreePath path = env.getPath();
         TypeMirror actualType = type;
@@ -4220,7 +4224,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     break;
                 case CONSTRUCTOR:
                     ExecutableType et = (ExecutableType) asMemberOf(e, actualType, types);
-                    results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, false, isOfSmartType(env, actualType, smartTypes), env.assignToVarPos(), false));
+                    results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, false, afterConstructorTypeParams, isOfSmartType(env, actualType, smartTypes), env.assignToVarPos(), false));
                     break;
                 case METHOD:
                     et = (ExecutableType) asMemberOf(e, actualType, types);

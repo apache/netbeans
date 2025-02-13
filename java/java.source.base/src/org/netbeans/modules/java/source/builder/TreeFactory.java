@@ -1811,15 +1811,17 @@ public class TreeFactory {
     }
     
     public DocCommentTree DocComment(List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
-        DCDocComment temp = docMake.at(NOPOS).newDocCommentTree(fullBody, tags);
-        return DocComment(temp.getFirstSentence(), temp.getBody(), temp.getBlockTags());
+        return DocComment(HTML_JAVADOC_COMMENT, fullBody, tags);
     }
 
     public DocCommentTree MarkdownDocComment(List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
-        DCDocComment temp = docMake.at(NOPOS).newDocCommentTree(fullBody, tags);
-        return MarkdownDocComment(temp.getFirstSentence(), temp.getBody(), temp.getBlockTags());
+        return DocComment(MARKDOWN_JAVADOC_COMMENT, fullBody, tags);
     }
     
+    private DocCommentTree DocComment(Comment comment, List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
+        return docMake.at(NOPOS).newDocCommentTree(comment, fullBody, tags, Collections.emptyList(), Collections.emptyList());
+    }
+
     public DocTree Snippet(List<? extends DocTree> attributes, TextTree text){
         try {
             return (DocTree) docMake.getClass().getMethod("newSnippetTree", List.class, TextTree.class).invoke(docMake.at(NOPOS), attributes, text);

@@ -95,6 +95,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.ParenthesisExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
+import org.netbeans.modules.php.editor.parser.astnodes.PropertyHookDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ReflectionVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
@@ -582,8 +583,11 @@ public class FormatVisitor extends DefaultVisitor {
                 formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_ANONYMOUS_CLASS_LEFT_BRACE, ts.offset()));
             } else if (parent instanceof FunctionDeclaration || parent instanceof MethodDeclaration) {
                 formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_FUNCTION_LEFT_BRACE, ts.offset()));
-            } else if (parent instanceof IfStatement) {
-                IfStatement ifStatement = (IfStatement) parent;
+            } else if (parent instanceof SingleFieldDeclaration || parent instanceof FormalParameter) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_FIELD_LEFT_BRACE, ts.offset()));
+            } else if (parent instanceof PropertyHookDeclaration) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_PROPERTY_HOOK_LEFT_BRACE, ts.offset()));
+            } else if (parent instanceof IfStatement ifStatement) {
                 if (ifStatement.getFalseStatement() != null
                         && ifStatement.getFalseStatement().getStartOffset() <= node.getStartOffset()) {
                     formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_ELSE_LEFT_BRACE, ts.offset()));
@@ -629,6 +633,8 @@ public class FormatVisitor extends DefaultVisitor {
                 formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_CLASS_LEFT_BRACE, ts.offset()));
             } else if (isAnonymousClass(parent)) {
                 formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_ANONYMOUS_CLASS_LEFT_BRACE, ts.offset()));
+            } else if (parent instanceof SingleFieldDeclaration || parent instanceof FormalParameter) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_FIELD_LEFT_BRACE, ts.offset()));
             } else {
                 formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_OTHER_LEFT_BRACE, ts.offset()));
             }
@@ -674,6 +680,8 @@ public class FormatVisitor extends DefaultVisitor {
                             // GH-6716 for PER
                             // https://www.php-fig.org/per/coding-style/#44-methods-and-functions
                             formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_FUNCTION_OPEN_CLOSE_BRACES, ts.offset()));
+                        } else if (parent instanceof PropertyHookDeclaration) {
+                            formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_PROPERTY_HOOK_OPEN_CLOSE_BRACES, ts.offset()));
                         } else {
                             formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_OPEN_CLOSE_BRACES, ts.offset()));
                         }
@@ -695,6 +703,12 @@ public class FormatVisitor extends DefaultVisitor {
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_FUNCTION_RIGHT_BRACE, ts.offset()));
                         addFormatToken(formatTokens);
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_FUNCTION, ts.offset() + ts.token().length()));
+                    } else if (parent instanceof SingleFieldDeclaration || parent instanceof FormalParameter) {
+                        formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_FIELD_RIGHT_BRACE, ts.offset()));
+                        addFormatToken(formatTokens);
+                    } else if (parent instanceof PropertyHookDeclaration) {
+                        formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_PROPERTY_HOOK_RIGHT_BRACE, ts.offset()));
+                        addFormatToken(formatTokens);
                     } else if (parent instanceof IfStatement) {
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_IF_RIGHT_BRACE, ts.offset()));
                         addFormatToken(formatTokens);
@@ -1340,6 +1354,28 @@ public class FormatVisitor extends DefaultVisitor {
     }
 
     @Override
+    public void visit(PropertyHookDeclaration node) {
+        Block block = (Block) path.get(1);
+        int index = 0;
+        List<Statement> statements = block.getStatements();
+        while (index < statements.size() && statements.get(index).getStartOffset() < node.getStartOffset()) {
+            index++;
+        }
+        addAllUntilOffset(node.getStartOffset());
+        if (includeWSBeforePHPDoc && index < statements.size()
+                && index > 0 && statements.get(index - 1) instanceof PropertyHookDeclaration) {
+            formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BETWEEN_PROPERTY_HOOKS, node.getStartOffset()));
+        } else {
+            if (includeWSBeforePHPDoc) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_PROPERTY_HOOKS, node.getStartOffset()));
+            } else {
+                includeWSBeforePHPDoc = true;
+            }
+        }
+        super.visit(node);
+    }
+
+    @Override
     public void visit(ForEachStatement node) {
         int expressionStart = node.getExpression().getStartOffset();
         addAllUntilOffset(expressionStart);
@@ -1782,6 +1818,7 @@ public class FormatVisitor extends DefaultVisitor {
         }
         scan(node.getParameterName());
         scan(node.getDefaultValue());
+        scan(node.getPropertyHooks());
     }
 
     @Override
@@ -2300,6 +2337,10 @@ public class FormatVisitor extends DefaultVisitor {
                 scan(node.getValue());
                 formatTokens.add(new FormatToken.IndentToken(ts.offset() + ts.token().length(), -1 * options.continualIndentSize));
             }
+        }
+        Block propertyHooks = node.getPropertyHooks();
+        if (propertyHooks != null) {
+            scan(propertyHooks);
         }
     }
 

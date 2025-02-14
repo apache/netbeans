@@ -33,6 +33,7 @@ import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.php.editor.lexer.utils.LexerUtils;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
@@ -504,22 +505,19 @@ public final class LexUtilities {
         int start = -1;
         int origOffset = ts.offset();
 
-        Token token;
+        Token<? extends PHPTokenId> token;
         int balance = 0;
         int curlyBalance = 0;
         boolean isInQuotes = false; // GH-6731 for checking a variable in string
         do {
             token = ts.token();
-            if (token.id() == PHPTokenId.PHP_TOKEN) {
+            if (token.id() == PHPTokenId.PHP_TOKEN && !LexerUtils.isDollarCurlyOpen(token)) {
                 switch (token.text().charAt(0)) {
-                    case ')':
-                        balance--;
-                        break;
-                    case '(':
-                        balance++;
-                        break;
-                    default:
+                    case ')' -> balance--;
+                    case '(' -> balance++;
+                    default -> {
                         //no-op
+                    }
                 }
             } else if (token.id() == PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING) {
                 // GH-6731 for checking a variable in string
@@ -607,11 +605,11 @@ public final class LexUtilities {
                     }
                     break;
                 }
-            } else if (token.id() == PHPTokenId.PHP_CURLY_OPEN) {
+            } else if (LexerUtils.hasCurlyOpen(token)) {
                 curlyBalance++;
                 if (!isInQuotes && curlyBalance == 1 && ts.moveNext()) {
                     // we are at the begining of a blog
-                    LexUtilities.findNext(ts, Arrays.asList(
+                    LexUtilities.findNext(ts, List.of(
                             PHPTokenId.WHITESPACE,
                             PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END, PHPTokenId.PHPDOC_COMMENT_START,
                             PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,
@@ -632,7 +630,7 @@ public final class LexUtilities {
 
         if (!ts.movePrevious()) {
             // we are at the first php line
-            LexUtilities.findNext(ts, Arrays.asList(
+            LexUtilities.findNext(ts, List.of(
                     PHPTokenId.WHITESPACE,
                     PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END, PHPTokenId.PHPDOC_COMMENT_START,
                     PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,

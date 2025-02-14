@@ -21,6 +21,7 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.netbeans.modules.php.editor.CodeUtils;
 
 /**
  * Represents a function formal parameter.
@@ -181,9 +182,10 @@ public class FormalParameter extends ASTNode implements Attributed {
         }
         return sbAttributes.toString()
                 + modifierString
-                + (getParameterType() == null ? "" : getParameterType() + " ") // NOI18N
+                + (getParameterType() == null ? CodeUtils.EMPTY_STRING : getParameterType() + " ") // NOI18N
                 + getParameterName()
-                + (isMandatory() ? "" : " = " + getDefaultValue()); // NOI18N
+                + (isMandatory() ? CodeUtils.EMPTY_STRING : " = " + getDefaultValue()) // NOI18N
+                + (getPropertyHooks() == null ? CodeUtils.EMPTY_STRING : getPropertyHooks());
     }
 
     //~ Inner class

@@ -1298,4 +1298,52 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/php84/finalFieldsAnonClass_02.php", options);
     }
+
+    public void testFieldDeclarationBP_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.FIELD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/php84/propertyHooks_01.php", options, false, true);
+    }
+
+    public void testFieldDeclarationBP_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.FIELD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/php84/propertyHooks_01.php", options, false, true);
+    }
+
+    public void testFieldDeclarationBP_01c() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.FIELD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE_INDENTED);
+        reformatFileContents("testfiles/formatting/php84/propertyHooks_01.php", options, false, true);
+    }
+
+    public void testFieldDeclarationBP_01d() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.FIELD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.PRESERVE_EXISTING);
+        reformatFileContents("testfiles/formatting/php84/propertyHooks_01.php", options, false, true);
+    }
+
+    public void testPropertyHookDeclarationBP_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.PROPERTY_HOOK_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/php84/propertyHooks_01.php", options, false, true);
+    }
+
+    public void testPropertyHookDeclarationBP_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.PROPERTY_HOOK_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/php84/propertyHooks_01.php", options, false, true);
+    }
+
+    public void testPropertyHookDeclarationBP_01c() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.PROPERTY_HOOK_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE_INDENTED);
+        reformatFileContents("testfiles/formatting/php84/propertyHooks_01.php", options, false, true);
+    }
+
+    public void testPropertyHookDeclarationBP_01d() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.PROPERTY_HOOK_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.PRESERVE_EXISTING);
+        reformatFileContents("testfiles/formatting/php84/propertyHooks_01.php", options, false, true);
+    }
 }

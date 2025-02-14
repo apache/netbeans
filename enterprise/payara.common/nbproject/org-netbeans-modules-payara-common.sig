@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.21
+#Version 2.22
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1354,6 +1354,7 @@ meth public void setAdminPort(int)
 meth public void setAdminPort(java.lang.String)
 meth public void setAdminUser(java.lang.String)
 meth public void setContainerPath(java.lang.String)
+meth public void setDocker(boolean)
 meth public void setHost(java.lang.String)
 meth public void setHostPath(java.lang.String)
 meth public void setHttpPort(int)
@@ -1361,6 +1362,7 @@ meth public void setHttpPort(java.lang.String)
 meth public void setJavaHome(java.lang.String)
 meth public void setProcess(java.lang.Process)
 meth public void setProperties(org.netbeans.modules.payara.common.PayaraInstance$Props)
+meth public void setWSL(boolean)
 supr java.lang.Object
 hfds INSTANCE_FO_ATTR,KEYRING_IDENT_SEPARATOR,KEYRING_NAME_SEPARATOR,KEYRING_NAME_SPACE,LOGGER,LOWEST_USER_PORT,commonInstance,commonSupport,currentFactories,domainXMLListener,full,fullNode,ic,instanceProvider,localLookup,lookupResult,platformVersion,process,properties,removable,version
 
@@ -1765,6 +1767,7 @@ fld protected javax.swing.JCheckBox jdbcDriverDeployment
 fld protected javax.swing.JCheckBox localIpCB
 fld protected javax.swing.JCheckBox preserveSessions
 fld protected javax.swing.JComboBox hostLocalField
+fld protected javax.swing.JComboBox<java.lang.String> instanceTypeComboBox
 fld protected javax.swing.JLabel containerPathLabel
 fld protected javax.swing.JLabel dasPortLabel
 fld protected javax.swing.JLabel domainLabel
@@ -1774,6 +1777,7 @@ fld protected javax.swing.JLabel hostPathLabel
 fld protected javax.swing.JLabel hostRemoteLabel
 fld protected javax.swing.JLabel httpPortLabel
 fld protected javax.swing.JLabel installationLocationLabel
+fld protected javax.swing.JLabel instanceTypeLabel
 fld protected javax.swing.JLabel passwordLabel
 fld protected javax.swing.JLabel targetLabel
 fld protected javax.swing.JLabel userNameLabel
@@ -1798,22 +1802,22 @@ meth protected void enableFields()
 meth protected void initCheckBoxes()
 meth protected void initCredentials()
 meth protected void initDirectoriesFields()
-meth protected void initInstanceType()
 meth protected void initDomainAndTarget()
 meth protected void initFlagsFromProperties(org.netbeans.modules.payara.common.ui.InstancePanel$CheckBoxProperties)
 meth protected void initFormFields()
+meth protected void initInstanceType()
 meth protected void storeCheckBoxes()
 meth protected void storeCredentials()
-meth protected void storeInstanceType()
 meth protected void storeFormFields()
 meth protected void storeHost()
+meth protected void storeInstanceType()
 meth protected void storePorts()
 meth protected void storeTarget()
 meth protected void updatePasswordVisibility()
 meth public void addNotify()
 meth public void removeNotify()
 supr javax.swing.JPanel
-hfds LOGGER,MAX_PORT_VALUE
+hfds DEFAULT_INSTANCE,DOCKER_INSTANCE,LOGGER,MAX_PORT_VALUE,WSL_INSTANCE
 
 CLSS protected static org.netbeans.modules.payara.common.ui.InstancePanel$CheckBoxProperties
  outer org.netbeans.modules.payara.common.ui.InstancePanel

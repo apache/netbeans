@@ -23,7 +23,6 @@ import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Advapi32;
-import com.sun.jna.platform.win32.Advapi32Util;
 import com.sun.jna.platform.win32.Kernel32Util;
 import com.sun.jna.platform.win32.W32Errors;
 import com.sun.jna.platform.win32.Win32Exception;
@@ -33,11 +32,12 @@ import com.sun.jna.platform.win32.WinReg.HKEY;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.W32APITypeMapper;
 import java.awt.EventQueue;
-import java.net.*;
-
-import org.openide.execution.NbProcessDescriptor;
 import java.io.IOException;
+import java.net.*;
 import java.util.logging.Level;
+import org.netbeans.modules.extbrowser.impl.Shlwapi;
+import org.netbeans.modules.extbrowser.impl.ShlwapiUtil;
+import org.openide.execution.NbProcessDescriptor;
 
 
 /**
@@ -96,30 +96,12 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
      * @throws org.netbeans.modules.extbrowser.NbBrowserException
      */
     public static String getDefaultOpenCommand() throws NbBrowserException {
-        String sBrowser;
         try {
-            sBrowser = Advapi32Util.registryGetStringValue(WinReg.HKEY_CLASSES_ROOT, ".html", null);
+            String path = ShlwapiUtil.AssocQueryString(0, Shlwapi.ASSOCSTR_COMMAND, ".html", null);
+            return path;
         } catch (Win32Exception ex) {
-            throw new NbBrowserException("Failed to read registry entry for .html", ex);
+            throw new NbBrowserException("Failed to determine default open command", ex);
         }
-        if(sBrowser.isEmpty()) {
-            throw new NbBrowserException("Browser not found.");
-        }
-
-        sBrowser += "\\shell\\open\\command";
-
-        String path;
-        try {
-            path = getKeyValueExpanded(WinReg.HKEY_CLASSES_ROOT, sBrowser, null);
-        } catch (Win32Exception ex) {
-            throw new NbBrowserException("Failed to read registry entry for " + sBrowser, ex);
-        }
-
-        if(path == null || path.isEmpty()) {
-            throw new NbBrowserException("Error when retrieving path to browser.");
-        }
-
-        return path;
     }
 
     private static String getKeyValueExpanded(HKEY root, String key, String value) throws Win32Exception, NbBrowserException {

@@ -34,10 +34,12 @@ public class SurroundWithTryCatchLog extends javax.swing.JPanel {
         initComponents();
         this.p = p;
         exceptions.setSelected(ErrorFixesFakeHint.isUseExceptions(p));
+        systemLogger.setSelected(ErrorFixesFakeHint.isUseSystemLogger(p));
         logger.setSelected(ErrorFixesFakeHint.isUseLogger(p));
         printStackTrace.setSelected(ErrorFixesFakeHint.isPrintStackTrace(p));
         rethrowRuntime.setSelected(ErrorFixesFakeHint.isRethrowAsRuntimeException(p));
         rethrow.setSelected(ErrorFixesFakeHint.isRethrow(p));
+        existing.setSelected(ErrorFixesFakeHint.isUseExistingLogger(p));
     }
 
     /** This method is called from within the constructor to
@@ -47,7 +49,8 @@ public class SurroundWithTryCatchLog extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
 
         jLabel1 = new javax.swing.JLabel();
         exceptions = new javax.swing.JCheckBox();
@@ -55,44 +58,79 @@ public class SurroundWithTryCatchLog extends javax.swing.JPanel {
         printStackTrace = new javax.swing.JCheckBox();
         rethrowRuntime = new javax.swing.JCheckBox();
         rethrow = new javax.swing.JCheckBox();
+        systemLogger = new javax.swing.JCheckBox();
+        jLabel2 = new javax.swing.JLabel();
+        existing = new javax.swing.JCheckBox();
 
         jLabel1.setText(org.openide.util.NbBundle.getBundle(SurroundWithTryCatchLog.class).getString("SurroundWithTryCatchLog.jLabel1.text")); // NOI18N
 
         exceptions.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(exceptions, org.openide.util.NbBundle.getBundle(SurroundWithTryCatchLog.class).getString("SurroundWithTryCatchLog.exceptions.text")); // NOI18N
-        exceptions.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        exceptions.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 exceptionsActionPerformed(evt);
             }
         });
 
         logger.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(logger, org.openide.util.NbBundle.getBundle(SurroundWithTryCatchLog.class).getString("SurroundWithTryCatchLog.logger.text")); // NOI18N
-        logger.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        logger.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 loggerActionPerformed(evt);
             }
         });
 
         printStackTrace.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(printStackTrace, org.openide.util.NbBundle.getBundle(SurroundWithTryCatchLog.class).getString("SurroundWithTryCatchLog.printStackTrace.text")); // NOI18N
-        printStackTrace.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        printStackTrace.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 printStackTraceActionPerformed(evt);
             }
         });
 
         rethrowRuntime.setText(org.openide.util.NbBundle.getMessage(SurroundWithTryCatchLog.class, "SurroundWithTryCatchLog.rethrowRuntime.text")); // NOI18N
-        rethrowRuntime.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        rethrowRuntime.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 rethrowRuntimeActionPerformed(evt);
             }
         });
 
         rethrow.setText(org.openide.util.NbBundle.getMessage(SurroundWithTryCatchLog.class, "SurroundWithTryCatchLog.rethrow.text")); // NOI18N
-        rethrow.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        rethrow.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 rethrowActionPerformed(evt);
+            }
+        });
+
+        systemLogger.setSelected(true);
+        systemLogger.setText(org.openide.util.NbBundle.getMessage(SurroundWithTryCatchLog.class, "SurroundWithTryCatchLog.systemLogger.text")); // NOI18N
+        systemLogger.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                systemLoggerActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText(org.openide.util.NbBundle.getMessage(SurroundWithTryCatchLog.class, "SurroundWithTryCatchLog.jLabel2.text")); // NOI18N
+
+        existing.setSelected(true);
+        existing.setText(org.openide.util.NbBundle.getMessage(SurroundWithTryCatchLog.class, "SurroundWithTryCatchLog.existing.text")); // NOI18N
+        existing.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                existingActionPerformed(evt);
             }
         });
 
@@ -100,18 +138,21 @@ public class SurroundWithTryCatchLog extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(existing)
                             .addComponent(logger)
                             .addComponent(exceptions)
                             .addComponent(printStackTrace)
                             .addComponent(rethrowRuntime)
-                            .addComponent(rethrow))))
+                            .addComponent(rethrow)
+                            .addComponent(systemLogger))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -121,14 +162,20 @@ public class SurroundWithTryCatchLog extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(exceptions)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(systemLogger)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(logger)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(printStackTrace)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rethrowRuntime)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rethrow)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(existing)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -153,14 +200,27 @@ private void rethrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         ErrorFixesFakeHint.setPrintStackTrace(p, printStackTrace.isSelected());
     }//GEN-LAST:event_printStackTraceActionPerformed
 
+    private void systemLoggerActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_systemLoggerActionPerformed
+    {//GEN-HEADEREND:event_systemLoggerActionPerformed
+        ErrorFixesFakeHint.setUseSystemLogger(p, systemLogger.isSelected());
+    }//GEN-LAST:event_systemLoggerActionPerformed
+
+    private void existingActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_existingActionPerformed
+    {//GEN-HEADEREND:event_existingActionPerformed
+        ErrorFixesFakeHint.setUseExistingLogger(p, existing.isSelected());
+    }//GEN-LAST:event_existingActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox exceptions;
+    private javax.swing.JCheckBox existing;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JCheckBox logger;
     private javax.swing.JCheckBox printStackTrace;
     private javax.swing.JCheckBox rethrow;
     private javax.swing.JCheckBox rethrowRuntime;
+    private javax.swing.JCheckBox systemLogger;
     // End of variables declaration//GEN-END:variables
 
 }

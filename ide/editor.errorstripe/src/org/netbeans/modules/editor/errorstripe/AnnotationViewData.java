@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.editor.errorstripe;
 
+import java.util.Map;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.editor.errorstripe.privatespi.Mark;
 import org.netbeans.modules.editor.errorstripe.privatespi.Status;
@@ -42,8 +43,9 @@ interface AnnotationViewData {
     
     UpToDateStatus computeTotalStatusType();
     
-    int[] computeErrorsAndWarnings();
+    Stats computeAnnotationStatistics();
 
     void clear();
     
+    record Stats(Map<String, Integer> err_histogram, int errors, Map<String, Integer> war_histogram, int warnings) {}
 }

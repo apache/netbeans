@@ -72,6 +72,7 @@ public class TodoTaskScanner extends FileTaskScanner implements PropertyChangeLi
                 NbBundle.getBundle( TodoTaskScanner.class ).getString( "HINT_todotask" ) ); //NOI18N
     }
 
+    @Override
     public List<? extends Task> scan( FileObject resource ) {
         if( !isSupported( resource ) )
             return null;
@@ -277,7 +278,7 @@ public class TodoTaskScanner extends FileTaskScanner implements PropertyChangeLi
     Pattern getScanRegexp() {
         // Create regexp from tags
         if (regexp == null) {
-            StringBuffer sb = new StringBuffer(200);
+            StringBuilder sb = new StringBuilder(200);
             Collection<String> patterns = Settings.getDefault().getPatterns();
             boolean needSeparator = false;
             for( String s : patterns ) {
@@ -344,7 +345,7 @@ public class TodoTaskScanner extends FileTaskScanner implements PropertyChangeLi
         if( null == input )
             return "";
         char[] buf = new char[1024*64];
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         Charset charset = FileEncodingQuery.getEncoding( fileObject );
         Reader r = new BufferedReader( new InputStreamReader( input, charset ) );
         int len;
@@ -369,6 +370,7 @@ public class TodoTaskScanner extends FileTaskScanner implements PropertyChangeLi
         return res;
     }
 
+    @Override
     public void attach( Callback callback ) {
         if( null == callback && null != this.callback ) {
             regexp = null;
@@ -379,6 +381,7 @@ public class TodoTaskScanner extends FileTaskScanner implements PropertyChangeLi
         this.callback = callback;
     }
 
+    @Override
     public void propertyChange( PropertyChangeEvent e ) {
         if( Settings.PROP_PATTERN_LIST.equals( e.getPropertyName() )
          || Settings.PROP_SCAN_COMMENTS_ONLY.equals( e.getPropertyName() )

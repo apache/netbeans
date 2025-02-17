@@ -60,7 +60,6 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.lang.model.SourceVersion;
-
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
@@ -69,11 +68,9 @@ import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.CheckForNull;
-
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
-//import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery;
@@ -96,7 +93,6 @@ import org.netbeans.modules.java.source.parsing.PrefetchableJavaFileObject;
 import org.netbeans.modules.java.source.parsing.SourceFileManager;
 import org.netbeans.modules.java.source.tasklist.TasklistSettings;
 import org.netbeans.modules.java.source.usages.*;
-import org.netbeans.modules.java.source.util.Iterators;
 import org.netbeans.modules.java.ui.UIProvider;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.impl.indexing.IndexableImpl;
@@ -110,13 +106,10 @@ import org.netbeans.modules.parsing.spi.indexing.ErrorsCache.Convertor;
 import org.netbeans.modules.parsing.spi.indexing.ErrorsCache.ErrorKind;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-//import org.openide.awt.HtmlBrowser;
-//import org.openide.awt.NotificationDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
-//import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import org.openide.util.Parameters;
 import org.openide.util.TopologicalSortException;
@@ -804,7 +797,9 @@ public class JavaCustomIndexer extends CustomIndexer {
 
     public static void setErrors(Context context, CompileTuple active, DiagnosticListenerImpl errors) {
         if (!active.virtual) {
-            Iterable<Diagnostic<? extends JavaFileObject>> filteredErrorsList = Iterators.filter(errors.getDiagnostics(active.jfo), new FilterOutJDK7AndLaterWarnings());
+            List<Diagnostic<? extends JavaFileObject>> filteredErrorsList = errors.getDiagnostics(active.jfo).stream()
+                    .filter(d -> !lessImportantWarnings.contains(d.getCode()))
+                    .collect(Collectors.toList());
             ErrorsCache.setErrors(context.getRootURI(), active.indexable, filteredErrorsList, active.aptGenerated ? ERROR_CONVERTOR_NO_BADGE : ERROR_CONVERTOR);
         }
     }
@@ -1348,10 +1343,13 @@ public class JavaCustomIndexer extends CustomIndexer {
         return JavaIndex.ensureAttributeValue(root.toURL(), SOURCE_PATH, srcPathStr);
     }
 
-    private static final Set<String> JDK7AndLaterWarnings = new HashSet<String>(Arrays.asList(
+    // filter for action items window
+    private static final Set<String> lessImportantWarnings = new HashSet<>(Arrays.asList(
             "compiler.warn.diamond.redundant.args", 
             "compiler.warn.diamond.redundant.args.1",
-            "compiler.note.potential.lambda.found"));
+            "compiler.warn.local.redundant.type",
+            "compiler.warn.potential.lambda.found"
+    ));
 
     @CheckForNull
     private static File dumpHeap(@NonNull final String path) {
@@ -1395,12 +1393,6 @@ public class JavaCustomIndexer extends CustomIndexer {
 
     private static String computeJavacVersion() {
         return SourceVersion.latest().toString();
-    }
-
-    private static class FilterOutJDK7AndLaterWarnings implements Comparable<Diagnostic<? extends JavaFileObject>> {
-        @Override public int compareTo(Diagnostic<? extends JavaFileObject> o) {
-            return JDK7AndLaterWarnings.contains(o.getCode()) ? 0 : -1;
-        }
     }
     
     private static final class AptGeneratedIndexable implements IndexableImpl {

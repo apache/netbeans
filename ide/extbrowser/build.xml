@@ -23,43 +23,4 @@
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <target name="jnlp" depends="netbeans,-jnlp-init">
-        <property name="dir" location="${jnlp.dest.dir}/${code.name.base.dashes}"/>
-        <mkdir dir="${dir}"/>
-        <copy file="${cluster}/${module.jar}" todir="${dir}"/>
-        <nb-ext-jar jarfile="${dir}/windows.jar">
-            <fileset dir="${cluster}/modules/lib">
-                <include name="extbrowser*.dll"/>
-            </fileset>
-        </nb-ext-jar>
-        <!-- XXX ought to only do this in case jnlp.sign.jars=true -->
-        <signjar alias="${jnlp.signjar.alias}" storepass="${jnlp.signjar.password}" keystore="${jnlp.signjar.keystore}">
-            <fileset dir="${dir}">
-                <include name="*.jar"/>
-            </fileset>
-        </signjar>
-        <property file="${manifest.mf}"/>
-        <property file="${src.dir}/${OpenIDE-Module-Localizing-Bundle}"/>
-        <echo file="${jnlp.dest.dir}/${code.name.base.dashes}.jnlp"><![CDATA[<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE jnlp PUBLIC "-//Sun Microsystems, Inc//DTD JNLP Descriptor 6.0//EN" "http://java.sun.com/dtd/JNLP-6.0.dtd">
-<jnlp spec='1.0+' codebase='${jnlp.codebase}'>
-  <information>
-   <title>${OpenIDE-Module-Name}</title>
-   <vendor>NetBeans</vendor>
-   <description kind='one-line'>${OpenIDE-Module-Short-Description}</description>
-   <description kind='short'>${OpenIDE-Module-Long-Description}</description>
-  </information>
-  <security><all-permissions/></security>
-  <resources>
-    <jar href='${code.name.base.dashes}/${code.name.base.dashes}.jar'/>
-  </resources>
-  <resources os="Windows">
-    <nativelib href='${code.name.base.dashes}/windows.jar'/>
-  </resources>
-  <component-desc/>
-</jnlp>
-            ]]>
-        </echo>
-    </target>
-
 </project>

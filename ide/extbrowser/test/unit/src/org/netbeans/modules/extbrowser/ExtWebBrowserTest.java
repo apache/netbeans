@@ -92,16 +92,6 @@ public class ExtWebBrowserTest extends NbTestCase {
         });
     }
     
-    /** Test of getDDEServer method, of class org.netbeans.modules.extbrowser.ExtWebBrowser. */
-    public void testGetDDEServer () {
-        testObject.getDDEServer ();
-    }
-    
-    /** Test of setDDEServer method, of class org.netbeans.modules.extbrowser.ExtWebBrowser. */
-    public void testSetDDEServer () {
-        testObject.setDDEServer ("NETSCAPE");
-    }
-    
     protected ExtWebBrowser testObject;
     
     protected void setUp () {

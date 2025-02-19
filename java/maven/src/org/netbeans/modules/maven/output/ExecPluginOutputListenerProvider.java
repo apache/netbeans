@@ -27,7 +27,7 @@ import org.netbeans.modules.maven.NbMavenProjectImpl;
  * 
  * @deprecated use JavaStacktraceOutputListenerProvider instead
  */
-@Deprecated
+@Deprecated(forRemoval = true)
 public class ExecPluginOutputListenerProvider extends JavaStacktraceOutputProcessor {
 
     private static final String[] EXECGOALS = new String[] {

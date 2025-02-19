@@ -26,7 +26,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -194,14 +193,14 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         this.io = io;
     }
 
+    /**
+     * not to be called directly.. use execute();
+     */
     @NbBundle.Messages({
         "# {0} - original message",
         "ERR_CannotOverrideProxy=Could not override the proxy: {0}",
         "ERR_BuildCancelled=Build cancelled by the user"
     })
-    /**
-     * not to be called directly.. use execute();
-     */
     @Override
     public void run() {
         synchronized (SEMAPHORE) {
@@ -302,17 +301,16 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
 //        final Properties originalProperties = clonedConfig.getProperties();
         handle.start();
         processInitialMessage();
-        boolean isMaven3 = !isMaven2();
         boolean singlethreaded = !isMultiThreaded(clonedConfig);
         boolean eventSpyCompatible = isEventSpyCompatible(clonedConfig);
-        if (isMaven3 && singlethreaded && eventSpyCompatible) {
+        if (singlethreaded && eventSpyCompatible) {
             injectEventSpy( clonedConfig );
             if (clonedConfig.getPreExecution() != null) {
                 injectEventSpy( (BeanRunConfig) clonedConfig.getPreExecution());
             }
         }
 
-        CommandLineOutputHandler out = new CommandLineOutputHandler(ioput, clonedConfig.getProject(), handle, clonedConfig, isMaven3 && singlethreaded);
+        CommandLineOutputHandler out = new CommandLineOutputHandler(ioput, clonedConfig.getProject(), handle, clonedConfig, singlethreaded);
         try {
             BuildExecutionSupport.registerRunningItem(item);
             if (MavenSettings.getDefault().isAlwaysShowOutput()) {
@@ -573,15 +571,12 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         for (Object profile : config.getActivatedProfiles()) {
             profiles = profiles + "," + profile;//NOI18N
         }
-        if (profiles.length() > 0) {
+        if (!profiles.isEmpty()) {
             profiles = profiles.substring(1);
             toRet.add("-P" + profiles);//NOI18N
         }
 
-        for (String goal : config.getGoals()) {
-            toRet.add(goal);
-        }
-
+        toRet.addAll(config.getGoals());
         return toRet;
     }
    
@@ -774,7 +769,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             //very hacky here.. have a way to remove
             List<String> command = new ArrayList<>(builder.command());
             command.removeIf(s -> s.startsWith("-D" + CosChecker.MAVENEXTCLASSPATH + "="));
-            display.append(Utilities.escapeParameters(command.toArray(new String[0])));
+            display.append(Utilities.escapeParameters(command.toArray(String[]::new)));
         }
 
         printGray(ioput, display.toString());
@@ -807,10 +802,6 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             try {
                 ioput.getErr().println("  See issue http://www.netbeans.org/issues/show_bug.cgi?id=153101 for details.", new OutputListener() {                    //NOI18N - in maven output
                     @Override
-                    public void outputLineSelected(OutputEvent ev) {}
-                    @Override
-                    public void outputLineCleared(OutputEvent ev) {}
-                    @Override
                     public void outputLineAction(OutputEvent ev) {
                         try {
                             HtmlBrowser.URLDisplayer.getDefault().showURL(new URL("http://www.netbeans.org/issues/show_bug.cgi?id=153101")); //NOI18N - in maven output
@@ -836,10 +827,6 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     private void printCoSWarning(BeanRunConfig clonedConfig, InputOutput ioput) {
         if (clonedConfig.getProperties().containsKey(CosChecker.ENV_NETBEANS_PROJECT_MAPPINGS)) {
             printGray(ioput, "Running NetBeans Compile On Save execution. Phase execution is skipped and output directories of dependency projects (with Compile on Save turned on) will be used instead of their jar artifacts.");
-            if (isMaven2()) {
-                printGray(ioput, "WARNING: Using Maven 2.x for execution, NetBeans cannot establish links between current project and output directories of dependency projects with Compile on Save turned on. Only works with Maven 3.0+.");
-            }
-
         }
         if (clonedConfig.getProperties().containsKey(ModelRunConfig.EXEC_MERGED)) {
             printGray(ioput, "\nDefault '" + clonedConfig.getActionName() + "' action exec.args merged with maven-exec-plugin arguments declared in pom.xml.");
@@ -847,15 +834,9 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
 
     }
 
-    boolean isMaven2() {
-        File mvnHome = EmbedderFactory.getEffectiveMavenHome();
-        String version = MavenSettings.getCommandLineMavenVersion(mvnHome);
-        return version != null && version.startsWith("2");
-    }
-
     private boolean isMavenDaemon() {
         File mvnHome = EmbedderFactory.getEffectiveMavenHome();
-        return MavenSettings.isMavenDaemon(Paths.get(mvnHome.getPath()));
+        return MavenSettings.isMavenDaemon(Path.of(mvnHome.getPath()));
     }
 
     private void injectEventSpy(final BeanRunConfig clonedConfig) {
@@ -950,7 +931,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             if (!relative.toString().contains(" ")) { // NOI18N
                 if (relative.getNameCount() == 1) {
                     // prevent searching on PATH
-                    return Paths.get(".").resolve(relative).toFile();  // NOI18N
+                    return Path.of(".").resolve(relative).toFile();  // NOI18N
                 } else {
                     return relative.toFile();
                 }

@@ -28,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
@@ -78,43 +77,21 @@ public final class OutputUtils {
         return sa != null ? new ClassPathStacktraceOutputListener(classPath, sa) : null;
     }
     
-    /**
-     * 
-     * @param line
-     * @param project
-     * @return 
-     */
     public static OutputListener matchStackTraceLine(String line, Project project) {
         StacktraceAttributes sa = matchStackTraceLine(line);
         if(sa != null) {
             synchronized(projectStacktraceListeners) {
-                StacktraceOutputListener list = projectStacktraceListeners.get(project);
-                if(list == null) {
-                    list = new ProjectStacktraceOutputListener(project);
-                    projectStacktraceListeners.put(project, list);
-                }
-                return list;
+                return projectStacktraceListeners.computeIfAbsent(project, k -> new ProjectStacktraceOutputListener(project));
             }
         }
         return null;
     }
     
-    /**
-     * 
-     * @param line
-     * @param fileObject
-     * @return 
-     */
     public static OutputListener matchStackTraceLine(String line, FileObject fileObject) {
         StacktraceAttributes sa = matchStackTraceLine(line);
         if(sa != null) {
             synchronized(fileStacktraceListeners) {
-                StacktraceOutputListener list = fileStacktraceListeners.get(fileObject);
-                if(list == null) {
-                    list = new FileObjectStacktraceOutputListener(fileObject);
-                    fileStacktraceListeners.put(fileObject, list);
-                }
-                return list;
+                return fileStacktraceListeners.computeIfAbsent(fileObject, k -> new FileObjectStacktraceOutputListener(fileObject));
             }
         }
         return null;
@@ -154,11 +131,6 @@ public final class OutputUtils {
         
         protected StacktraceAttributes getStacktraceAttributes(String line) {
             return matchStackTraceLine(line);
-        }
-
-        @Override
-        public void outputLineSelected(OutputEvent ev) {
-    //            cookie.getLineSet().getCurrent(line).show(Line.SHOW_SHOW);
         }
 
         /** Called when some sort of action is performed on a line.
@@ -237,18 +209,10 @@ public final class OutputUtils {
                 StatusDisplayer.getDefault().setStatusText(Bundle.NotFound(sa.file));
             }
         }
-
-        /** Called when a line is cleared from the buffer of known lines.
-         * @param ev the event describing the line
-         */
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
-        }
     }
 
     private static ClassPath createProxyClassPath(Stream<ClassPath> paths) {
-        List<ClassPath> cp = paths.collect(Collectors.toList());
-        return ClassPathSupport.createProxyClassPath(cp.toArray(new ClassPath[0]));
+        return ClassPathSupport.createProxyClassPath(paths.toArray(ClassPath[]::new));
     }
     
     private static class ProjectStacktraceOutputListener extends StacktraceOutputListener {

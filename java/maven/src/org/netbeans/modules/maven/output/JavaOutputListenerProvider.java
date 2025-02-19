@@ -122,11 +122,10 @@ public class JavaOutputListenerProvider implements OutputProcessor {
                     }
                 }
                 line = line.replace(clazz, newclazz); //NOI18N
-                boolean isImportant = text.indexOf("[deprecation]") < 0; // NOI18N
+                boolean isImportant = !text.contains("[deprecation]"); // NOI18N
                 if(COMPILER_PROBLEM.matcher(line).matches() && !isJDK9CompilerVersion()) {
                     visitor.setLine(line + "\n" + TXT_ModulesNotSupported());
                     visitor.setOutputListener(new OutputListener() {
-                        @Override public void outputLineSelected(OutputEvent ev) {}
                         @Override public void outputLineAction(OutputEvent ev) {
                             FileObject pomFO = FileUtil.toFileObject(config.getMavenProject().getFile());                                                                
                             ModelSource modelSource = Utilities.createModelSource(pomFO);                                    
@@ -159,7 +158,6 @@ public class JavaOutputListenerProvider implements OutputProcessor {
                                 Logger.getLogger(JavaOutputListenerProvider.class.getName()).log(Level.INFO, null, x);
                             }
                         }
-                        @Override public void outputLineCleared(OutputEvent ev) {}
                     }
                     , false );
                 } else {

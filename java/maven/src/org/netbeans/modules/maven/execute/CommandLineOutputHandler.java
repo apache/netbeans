@@ -52,10 +52,6 @@ import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.output.OutputUtils;
 import org.netbeans.modules.maven.api.output.OutputVisitor;
 import org.netbeans.modules.maven.execute.AbstractMavenExecutor.ResumeFromFinder;
-
-import static org.netbeans.modules.maven.execute.AbstractOutputHandler.PRJ_EXECUTE;
-import static org.netbeans.modules.maven.execute.AbstractOutputHandler.SESSION_EXECUTE;
-
 import org.netbeans.modules.maven.execute.cmd.ExecMojo;
 import org.netbeans.modules.maven.execute.cmd.ExecProject;
 import org.netbeans.modules.maven.execute.cmd.ExecSession;
@@ -68,16 +64,18 @@ import org.openide.windows.IOPosition;
 import org.openide.windows.InputOutput;
 import org.openide.windows.OutputWriter;
 
+import static org.netbeans.modules.maven.execute.AbstractOutputHandler.PRJ_EXECUTE;
+import static org.netbeans.modules.maven.execute.AbstractOutputHandler.SESSION_EXECUTE;
+
 /**
  * handling of output coming from maven commandline builds
  * @author Milos Kleint
  */
 public class CommandLineOutputHandler extends AbstractOutputHandler {
 
-    //32 means 16 paralel builds, one for input, one for output. #229904
+    //32 means 16 parallel builds, one for input, one for output. #229904
     private static final RequestProcessor PROCESSOR = new RequestProcessor("Maven ComandLine Output Redirection", Integer.getInteger("maven.concurrent.builds", 16) * 2); //NOI18N
     private static final Logger LOG = Logger.getLogger(CommandLineOutputHandler.class.getName());
-    private InputOutput inputOutput;
 
     /*
      * example: '[WARN] [stderr] Exception in thread "main" java.lang.UnsupportedOperationException'
@@ -85,24 +83,35 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
      */
     private static final Pattern linePattern = Pattern.compile("(\\[(DEBUG|TRACE|INFO|WARN|WARNING|ERROR|FATAL)\\]\\s)?(?:\\[(?:stderr|stdout)\\]\\s)?(.*)"); // NOI18N
 
+    /**
+     * @deprecated m2 relict; No longer used.
+     */
+    @Deprecated(forRemoval = true)
     public static final Pattern startPatternM2 = Pattern.compile("\\[INFO\\] \\[([\\w]*):([\\w]*)[ ]?.*\\]"); // NOI18N
-    public static final Pattern startPatternM3 = Pattern.compile("\\[INFO\\] --- (\\S+):\\S+:(\\S+)(?: [(]\\S+[)])? @ \\S+ ---"); // ExecutionEventLogger.mojoStarted NOI18N
+    
+    /** 
+     * see org.apache.maven.cling.event.ExecutionEventLogger#mojoStarted
+     */
+    public static final Pattern startPatternM3 = Pattern.compile("\\[INFO\\] --- (\\S+):\\S+:(\\S+)(?: [(]\\S+[)])? @ \\S+ ---"); // NOI18N
 
     private static final Pattern mavenSomethingPlugin = Pattern.compile("maven-(.+)-plugin"); // NOI18N
     private static final Pattern somethingMavenPlugin = Pattern.compile("(.+)-maven-plugin"); // NOI18N
 
-    /** @see org.apache.maven.cli.ExecutionEventLogger#logReactorSummary */
+    /** 
+     * see org.apache.maven.cling.event.ExecutionEventLogger#logReactorSummary
+     */
     static final Pattern reactorFailure = Pattern.compile("\\[INFO\\] (.+) [.]* FAILURE \\[.+\\]"); // NOI18N
     public static final Pattern reactorSummaryLine = Pattern.compile("(.+) [.]* (FAILURE|SUCCESS) (\\[.+\\])?"); // NOI18N
 
     private static final Pattern stackTraceElement = OutputUtils.linePattern;
 
-    private OutputWriter stdOut;
+    private final InputOutput inputOutput;
+    private final OutputWriter stdOut;
     private String currentProject;
     private String currentTag;
     Task outTask;
     private Input inp;
-    private ProgressHandle handle;
+    private final ProgressHandle handle;
     /** {@link MavenProject#getName} of first project in reactor to fail, if any */
     String firstFailure;
     private final JSONParser parser;
@@ -196,12 +205,10 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                 List<URL> newones = new ArrayList<>(urls.length + coreurls.length);
                 newones.addAll(Arrays.asList(urls));
                 newones.addAll(Arrays.asList(coreurls));
-                exec.setClasspathURLs(newones.toArray(new URL[0]));
+                exec.setClasspathURLs(newones.toArray(URL[]::new));
             }
         }
     }
-
-
 
 
     private class Output implements Runnable {
@@ -294,13 +301,6 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                         nextLine = line.substring(execEventIdx);
                         line = line.substring(0, execEventIdx);
                     }                   
-                    if (line.startsWith("[INFO] Final Memory:")) { //NOI18N
-                        // previous value [INFO] --------------- is too early, the compilation errors don't get processed in this case.
-                        //heuristics..
-                        if (contextImpl == null) { //only in m2
-                            closeCurrentTag();
-                        }
-                    }
                     
                     String tag = null;
                     if (contextImpl == null) {
@@ -309,11 +309,6 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                             String mojoArtifact = match.group(1);
                             mojoArtifact = goalPrefixFromArtifactId(mojoArtifact);
                             tag = mojoArtifact + ':' + match.group(2);
-                        } else {
-                            match = startPatternM2.matcher(line);
-                            if (match.matches()) {
-                                tag = match.group(1) + ':' + match.group(2);
-                            }
                         }
                     }
                     if (tag != null) { //only in m2
@@ -323,7 +318,7 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                         checkSleepiness();
                     }
                     
-                    if(line.length() > 0 && line.charAt(line.length() - 1) == '\r') {
+                    if(!line.isEmpty() && line.charAt(line.length() - 1) == '\r') {
                         line = line.substring(0, line.length() - 1);
                     }
                     Matcher lineMatcher = linePattern.matcher(line);
@@ -336,9 +331,6 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                             processLine(level_group + msg, stdOut, level);
                         } else {
                             processLine(msg, stdOut, level);
-                        }
-                        if (level == Level.INFO && contextImpl == null) { //only perform for maven 2.x now
-                            checkProgress(msg);
                         }
                     } else {
                         // shouldn't happen since linePattern should match everything
@@ -404,8 +396,7 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
             try {
                 Object o = parser.parse(jsonContent);
 //                System.out.println("o=" + o);
-                if (o instanceof JSONObject) {
-                    JSONObject json = (JSONObject) o;
+                if (o instanceof JSONObject json) {
                     return ExecutionEventObject.create(json);
                 }
             } catch (ParseException ex) {
@@ -427,7 +418,7 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
                 if (!currentTreeNode.hasInnerOutputFold()) {
                     currentTreeNode.startInnerOutputFold(inputOutput);
                 }
-            } else  if (inStackTrace) {
+            } else if (inStackTrace) {
                 currentTreeNode.finishInnerOutputFold();
                 inStackTrace = false;
             }
@@ -615,14 +606,11 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
     // typically happens when user stops the build or some other cases described in issue 229877
     private ExecutionEventObject createEndForStart(ExecutionEventObject start) {
         ExecutionEventObject toRet;
-        if (start instanceof ExecMojo) {
-            ExecMojo startEx = (ExecMojo) start;
+        if (start instanceof ExecMojo startEx) {
             toRet = new ExecMojo(startEx.goal, startEx.plugin, startEx.phase, startEx.executionId, ExecutionEvent.Type.MojoFailed);
-        } else if (start instanceof ExecProject) {
-            ExecProject startPrj = (ExecProject) start;
+        } else if (start instanceof ExecProject startPrj) {
             toRet = new ExecProject(startPrj.gav, startPrj.currentProjectLocation, ExecutionEvent.Type.ProjectFailed);
-        } else if (start instanceof ExecSession) {
-            ExecSession ss = (ExecSession) start;
+        } else if (start instanceof ExecSession ss) {
             toRet = new ExecSession(ss.projectCount, ExecutionEvent.Type.SessionEnded);
         } else {
             ExecutionEvent.Type endType;
@@ -784,68 +772,6 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
         }
     }
 
-    /**
-     * #192200: try to indicate progress esp. in a reactor build.
-     * @see org.apache.maven.cli.ExecutionEventLogger
-     */
-    //only done for maven 2.x now.
-    private void checkProgress(String text) {
-        switch (state) {
-        case INITIAL:
-            if (text.equals("Reactor Build Order:")) { // NOI18N
-                state = ProgressState.GOT_REACTOR_BUILD_ORDER;
-            }
-            break;
-        case GOT_REACTOR_BUILD_ORDER:
-            if (text.trim().isEmpty()) {
-                state = ProgressState.GETTING_REACTOR_PROJECTS;
-            } else {
-                state = ProgressState.INITIAL; // ???
-            }
-            break;
-        case GETTING_REACTOR_PROJECTS:
-            if (text.trim().isEmpty()) {
-                state = ProgressState.NORMAL;
-                reactorSize++; // so we do not show 100% completion while building last project
-                handle.switchToDeterminate(reactorSize);
-                LOG.log(java.util.logging.Level.FINE, "reactor size: {0}", reactorSize);
-            } else {
-                reactorSize++;
-            }
-            break;
-        case NORMAL:
-            if (forkCount == 0 && text.matches("-+")) { // NOI18N
-                state = ProgressState.GOT_DASHES;
-            } else if (text.startsWith(">>> ")) { // NOI18N
-                forkCount++;
-                LOG.log(java.util.logging.Level.FINE, "fork count up to {0}", forkCount);
-            } else if (forkCount > 0 && text.startsWith("<<< ")) { // NOI18N
-                forkCount--;
-                LOG.log(java.util.logging.Level.FINE, "fork count down to {0}", forkCount);
-            }
-            break;
-        case GOT_DASHES:
-            if (text.startsWith("Building ") && !text.startsWith("Building in ") || text.startsWith("Skipping ")) { // NOI18N
-                currentProject = text.substring(9);
-                closeCurrentTag();
-                handle.progress(currentProject, Math.min(++projectCount, reactorSize));
-                LOG.log(java.util.logging.Level.FINE, "got project #{0}: {1}", new Object[] {projectCount, currentProject});
-            }
-            state = ProgressState.NORMAL;
-            break;
-        default:
-            assert false : state;
-        }
-    }
-    enum ProgressState {
-        INITIAL,
-        GOT_REACTOR_BUILD_ORDER,
-        GETTING_REACTOR_PROJECTS,
-        NORMAL,
-        GOT_DASHES,
-    }
-    private ProgressState state = ProgressState.INITIAL;
-    private int forkCount;
     private int reactorSize;
     private int projectCount;
     

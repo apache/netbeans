@@ -28,15 +28,15 @@ public interface OutputListener extends java.util.EventListener {
     /** Called when a line is selected.
     * @param ev the event describing the line
     */
-    public void outputLineSelected (OutputEvent ev);
+    public default void outputLineSelected(OutputEvent ev) {}
 
     /** Called when some sort of action is performed on a line.
     * @param ev the event describing the line
     */
-    public void outputLineAction (OutputEvent ev);
+    public default void outputLineAction(OutputEvent ev) {}
 
     /** Called when a line is cleared from the buffer of known lines.
     * @param ev the event describing the line
     */
-    public void outputLineCleared (OutputEvent ev);
+    public default void outputLineCleared(OutputEvent ev) {}
 }

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.maven.output;
 
-import java.util.HashSet;
 import java.util.Set;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -32,24 +31,28 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=OutputProcessorFactory.class)
 public class DefaultOutputProcessorFactory implements ContextOutputProcessorFactory {
     
-    @Override public Set<OutputProcessor> createProcessorsSet(Project project) {
-        Set<OutputProcessor> toReturn = new HashSet<>();
+    @Override
+    public Set<OutputProcessor> createProcessorsSet(Project project) {
         if (project != null) {
-            toReturn.add(new JavadocOutputProcessor());
-            toReturn.add(new TestOutputListenerProvider());
-            toReturn.add(new SiteOutputProcessor(project));
             NbMavenProjectImpl nbprj = project.getLookup().lookup(NbMavenProjectImpl.class);
-            toReturn.add(new JavaStacktraceOutputProcessor(nbprj));
-            toReturn.add(new DependencyAnalyzeOutputProcessor(nbprj));
+            return Set.of(
+//                new JavadocOutputProcessor(),  // TODO update processor
+                new TestOutputListenerProvider(),
+                new SiteOutputProcessor(project),
+                new JavaStacktraceOutputProcessor(nbprj),
+                new DependencyAnalyzeOutputProcessor(nbprj)
+            );
+        } else {
+            return Set.of();
         }
-        return toReturn;
     }
 
-    @Override public Set<? extends OutputProcessor> createProcessorsSet(Project project, RunConfig config) {
-        Set<OutputProcessor> toReturn = new HashSet<>(); 
-        toReturn.add(new JavaOutputListenerProvider(config));
-        toReturn.add(new GlobalOutputProcessor(config));
-        return toReturn;
+    @Override
+    public Set<? extends OutputProcessor> createProcessorsSet(Project project, RunConfig config) {
+        return Set.of(
+            new JavaOutputListenerProvider(config), 
+            new GlobalOutputProcessor(config)
+        );
     }
     
 }

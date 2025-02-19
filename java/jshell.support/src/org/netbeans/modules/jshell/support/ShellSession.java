@@ -1041,40 +1041,11 @@ public class ShellSession  {
     
     private String createClasspathString() {
         String sep = System.getProperty("path.separator");
-        boolean modular = ShellProjectUtils.isModularJDK(platform);
-        String agentJar = 
-                modular ?
-                    "modules/ext/nb-mod-jshell-probe.jar" :
-                    "modules/ext/nb-custom-jshell-probe.jar";
-        
+        String agentJar = "modules/ext/nb-custom-jshell-probe.jar";
                 
         File remoteProbeJar = InstalledFileLocator.getDefault().locate(agentJar, 
                 "org.netbeans.lib.jshell.agent", false);
         StringBuilder sb = new StringBuilder(remoteProbeJar.getAbsolutePath());
-        
-        if (!modular) {
-//            File replJar = 
-//                    InstalledFileLocator.getDefault().locate(
-//                            "modules/ext/nb-jshell.jar", 
-//                            "org.netbeans.libs.jshell", false);
-//            sb.append(sep).append(replJar.getAbsolutePath());
-
-            File toolsJar = null;
-            for (FileObject jdkInstallDir : platform.getInstallFolders()) {
-                FileObject toolsJarFO = jdkInstallDir.getFileObject("lib/tools.jar");
-
-                if (toolsJarFO == null) {
-                    toolsJarFO = jdkInstallDir.getFileObject("../lib/tools.jar");
-                }
-                if (toolsJarFO != null) {
-                    toolsJar = FileUtil.toFile(toolsJarFO);
-                    break;
-                }
-            }
-            if (toolsJar != null) {
-                sb.append(sep).append(toolsJar);
-            }
-        }
         
         // classpath construction
         

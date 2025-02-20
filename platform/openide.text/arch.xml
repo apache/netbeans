@@ -77,7 +77,7 @@ Yes.
         </question>
 -->
 <answer id="compat-standards">
-The module uses <a href="@JDK@/javax/swing/text/package-summary.html">Swing text package</a>.
+The module uses <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/package-summary.html">Swing text package</a>.
 It extends it in <a href="@org-openide-text@/org/openide/text/NbDocument.html">NbDocument</a> class which adds
 support for:
 <ul>
@@ -210,7 +210,7 @@ Module uses following API's:
         </question>
 -->
 <answer id="dep-non-nb">
-Apart from <a href="@JDK@/javax/swing/text/package-summary.html">javax.swing.text</a> none.
+Apart from <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/package-summary.html">javax.swing.text</a> none.
 </answer>
 
 
@@ -780,12 +780,12 @@ No.
         </question>
 -->
 <answer id="exec-introspection">
-The Editor module operate with plain Swing <a href="@JDK@/javax/swing/text/Document.html">Document</a> in 
+The Editor module operate with plain Swing <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html">Document</a> in 
 its APIs and checks whether the document does not implement some of the Netbeans extensions defined in
 <a href="@org-openide-text@/org/openide/text/NbDocument.html">NbDocument</a>.
 It also tries to retype <a href="@org-openide-windows@/org/openide/windows/CloneableTopComponent.Ref.html#getComponents--">CloneableTopComponent.Ref.getComponents()</a>
 to its <a href="@org-openide-text@/org/openide/text/CloneableEditor.html">CloneableEditor</a>. If some document does not implement 
-<a href="@JDK@/javax/swing/text/StyledDocument.html">StyledDocument</a>,
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/StyledDocument.html">StyledDocument</a>,
 it is wrapped into <a href="@org-openide-text@/org/openide/text/FilterDocument.html">FilterDocument</a> which implements limited StyledDocument functionality.
 </answer>
 

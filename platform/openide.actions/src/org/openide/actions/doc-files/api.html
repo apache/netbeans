@@ -128,7 +128,7 @@ In the editor, this searches text, but in the Explorer it searches files, and so
 <p>
 To make this possible, <code>FindAction</code> is a public API; modules providing implementations
 affect its behavior by setting its <i>action delegate</i> into <a
-href="@JDK@/javax/swing/ActionMap.html"><code>ActionMap</code></a>.
+href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/ActionMap.html"><code>ActionMap</code></a>.
 <p>
 The typical usage pattern for these is along the lines of:
 <pre>
@@ -436,7 +436,7 @@ Typical installation of an action into a menu looks like this:
 
 You could also, if you wished, provide an object whose
 instance was of type
-<a href="@JDK@/javax/swing/JMenu.html"><code>JMenu</code></a>,
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JMenu.html"><code>JMenu</code></a>,
 as an item in the top-level <code>Menu</code> folder if you had very
 special requirements that demanded complete control over the menu at all
 times.
@@ -451,7 +451,7 @@ names the action class required, i.e. <code>com-foo-mymodule-MyAction.instance</
 
 <li>An actual
 
-<a href="@JDK@/javax/swing/JMenuItem.html"><code>JMenuItem</code></a>,
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JMenuItem.html"><code>JMenuItem</code></a>,
 
 which will be inserted as-is; you are responsible for its
 appearance and behavior.  This uses the same syntax as above, the only difference
@@ -468,7 +468,7 @@ module provide a cookie implementing this interface and so are useful things
 to place in menus.</li>
 
 <li>An instance of
-<a href="@JDK@/javax/swing/JSeparator.html"><code>JSeparator</code></a>, 
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JSeparator.html"><code>JSeparator</code></a>, 
 to separate items in the menu.</li>
 
 </ol>

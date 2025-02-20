@@ -44,7 +44,7 @@
               into
               <a href="@org-netbeans-api-scripting@/org/netbeans/api/scripting/Scripting.html">Scripting.createManager()</a>
               to obtain enhanced version of
-              <a href="@JDK@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>.
+              <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>.
           </description>
       </change>
   </changes>

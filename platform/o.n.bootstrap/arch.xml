@@ -1493,10 +1493,10 @@ $ rm -r /tmp/nb/
          the VM, one can register its own
          <code>Agent-Class</code> and then be called whenever another
          class is defined. The behavior matches as closely as possible the one
-         provided by <a href="@JDK@/java/lang/instrument/package-summary.html">
+         provided by <a href="@JDK@@JDKMODULE_JAVA_INSTRUMENT@/java/lang/instrument/package-summary.html">
          JDK instrument package</a>. To patch bytecode of other classes
          register your class in manifest and in its static <code>agentmain</code> method
-         add your own <a href="@JDK@/java/lang/instrument/ClassFileTransformer.html">ClassFileTransformer</a>
+         add your own <a href="@JDK@@JDKMODULE_JAVA_INSTRUMENT@/java/lang/instrument/ClassFileTransformer.html">ClassFileTransformer</a>
          which will then be consulted whenever new classes are loaded.
          </p>
          <pre>

@@ -124,7 +124,7 @@
               <a href="@TOP@/org/netbeans/api/scripting/Scripting.html">Scripting</a>
               class offers static <code>createManager()</code> method that
               should be used whenever one needs an instance of
-              <a href="@JDK@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
+              <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
               inside of NetBeans based application.
           </api>
           Many client oriented use-cases are covered in the
@@ -137,9 +137,9 @@
               and register it into global lookup via
               <a href="@org-openide-util-lookup@/org/openide/util/lookup/ServiceProvider.html">ServiceProvider</a>
               to dynamically discover and offer new
-              <a href="@JDK@/javax/script/ScriptEngine.html">ScriptEngine</a>s
+              <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngine.html">ScriptEngine</a>s
               to users of
-              <a href="@JDK@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
+              <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
               obtained via
               <a href="@TOP@/org/netbeans/api/scripting/Scripting.html">Scripting</a>
               factory methods.

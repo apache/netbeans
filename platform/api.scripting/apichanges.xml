@@ -43,7 +43,7 @@
               Use
               <a href="@TOP@/org/netbeans/api/scripting/Scripting.html">Scripting.newBuilder().build()</a>
               to obtain enhanced and secured version of 
-              <a href="@JDK@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>.
+              <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>.
           </description>
           <class package="org.netbeans.api.scripting" name="Scripting"/>
           <class package="org.netbeans.spi.scripting" name="EngineProvider"/>
@@ -61,7 +61,7 @@
               Use
               <a href="@TOP@/org/netbeans/api/scripting/Scripting.html">Scripting.createManager()</a>
               to obtain enhanced version of
-              <a href="@JDK@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
+              <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
               that can work well with <a href="https://graalvm.org">GraalVM</a>
               languages registered via
               <a href="@TOP@/org/netbeans/spi/scripting/EngineProvider.html">EngineProvider</a>

@@ -456,8 +456,8 @@ When special form of <code>setAttribute</code> is supported by the filesystem, t
 <api type="export" group="layer" category="private" name="raw-value">
 It is possible to prefix call to <a href="@TOP@/org/openide/filesystems/FileObject.html">FileObject</a>.<code>getAttribute</code>
 with <code>raw:</code> prefix to evaluate the attribute without instantiating it
-(e.g. get <a href="@JDK@/java/lang/reflect/Method.html">Method</a> or
-<a href="@JDK@/java/lang/Class.html">Class</a> values from
+(e.g. get <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/reflect/Method.html">Method</a> or
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Class.html">Class</a> values from
 <code>methodvalue</code> and <code>newvalue</code> attributes. This API
 is not intended for public use at present and can change in future.
 </api>

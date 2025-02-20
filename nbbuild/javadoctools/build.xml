@@ -22,6 +22,7 @@
 
 <!DOCTYPE someant [
   <!ENTITY properties SYSTEM "properties.xml">
+  <!ENTITY replacesjdk SYSTEM "replacesjdk.xml">
   <!ENTITY replaces SYSTEM "replaces.xml">
   <!ENTITY disallowed-links SYSTEM "disallowed-links.xml">
 ]>
@@ -232,7 +233,7 @@
 
         <replace dir="${netbeans.javadoc.dir}">
             <include name="*.html"/>
-            <replacefilter token="@JDK@" value="${javaapidocurl}"/>
+            &replacesjdk;
             &replaces;
             <replacefilter token="http://root/" value="."/>
             <replacefilter token="$${javadoc.web.root}" value="."/>

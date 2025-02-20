@@ -1,0 +1,5 @@
+javax.naming
+javax.naming.directory
+javax.naming.event
+javax.naming.ldap
+javax.naming.spi

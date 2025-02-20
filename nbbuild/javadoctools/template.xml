@@ -22,12 +22,15 @@
 
 <!DOCTYPE someant  [
   <!ENTITY links SYSTEM "links.xml">
+  <!ENTITY links8 SYSTEM "links8.xml">
+  <!ENTITY links11 SYSTEM "links11.xml">
   <!ENTITY properties SYSTEM "properties.xml">
+  <!ENTITY replacesjdk SYSTEM "replacesjdk.xml">
   <!ENTITY replaces SYSTEM "replaces.xml">
   <!ENTITY disallowed-links SYSTEM "disallowed-links.xml">
 ]>
 
-<project name="template" default="die" basedir="." xmlns:if="ant:if">
+<project name="template" default="die" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
 
     <import file="../default-properties.xml"/>
 
@@ -85,7 +88,12 @@ cause it to fail.
 
         <!-- Docs to link to: -->
         <property name="javadoc.web.root" value="http://root/"/>
-        <property name="javadoc.docs.jdk" value="https://docs.oracle.com/javase/8/docs/api"/>
+        <condition property="javadoc.docs.jdk" value="https://docs.oracle.com/en/java/javase/11/docs/api/">
+            <not>
+                <isset property="javaapidocurl"/>
+            </not>
+        </condition>
+        <property name="javadoc.docs.jdk" value="${javaapidocurl}"/>
         &properties;
         <!-- add more here as needed... -->
         <property name="javadoc.css.dir" location="."/>
@@ -120,7 +128,7 @@ cause it to fail.
         <mkdir dir="${javadoc.out.dir}"/>
 
         <condition property="javadoc.files.provided">
-        	<isset property="javadoc.files" />
+            <isset property="javadoc.files" />
         </condition>
 
         <!-- default value for javadoc-files -->
@@ -145,11 +153,11 @@ cause it to fail.
     <target name="javadoc-generate-references" depends="javadoc-init" unless="javadoc.reference.generated" >
         <!-- Add these files to the generated ones -->
         <concat append="true" destfile="properties.xml" ><![CDATA[<property name="javadoc.docs.${javadoc.name}" value="$${javadoc.web.root}/${javadoc.name}"/>]]>
-</concat>
+        </concat>
         <concat append="true" destfile="links.xml" ><![CDATA[<link href="$${javadoc.docs.${javadoc.name}}" offline="true" packagelistloc="${javadoc.out.dir}"/>]]>
-</concat>
+        </concat>
         <concat append="true" destfile="replaces.xml" ><![CDATA[<replacefilter token="@${javadoc.name}@" value="$${javadoc.docs.${javadoc.name}}"/>]]>
-</concat>
+        </concat>
 
         <replace
             token="${netbeans.javadoc.dir}"
@@ -166,7 +174,7 @@ cause it to fail.
 
         <property file="${export.interfaces}/properties/all.properties" />
         <arch xsl="exportOverview.xsl" answers="${javadoc.arch}" output="${javadoc.overview}" stylesheet="prose.css"
-            apichanges="${javadoc.apichanges}" project="${javadoc.project}"
+              apichanges="${javadoc.apichanges}" project="${javadoc.project}"
         >
             <!--
             <param name="changes-since-year" expression="${previous.release.year}"/>
@@ -236,6 +244,9 @@ cause it to fail.
         <condition property="javadoc23.or.later">
             <javaversion atleast="23"/>
         </condition>
+        <condition property="javadoc8.or.sooner">
+            <javaversion atmost="8"/>
+        </condition>
         <echo level="verbose">javadoc.up.to.date=${javadoc.up.to.date} javadoc.should.not.be.generated=${javadoc.should.not.be.generated} javadoc.packages=${javadoc.packages}</echo>
     </target>
 
@@ -292,9 +303,9 @@ cause it to fail.
     <condition property="apidoc.check" value="true" else="false">
         <isset property="apidocfullcheck"/>
         <!-- CI parameter -->
-        <!-- fail on error and warning as error means no javadoc content and missing page on bits.netbeans.org -->        
+        <!-- fail on error and warning as error means no javadoc content and missing page on bits.netbeans.org -->
     </condition>
-    
+
     <target name="javadoc-exec-packages" depends="javadoc-init,javadoc-generate-references,javadoc-generate-overview,javadoc-exec-condition,javadoc-check-timestamps,javadoc-make-plain-title,javadoc-make-hyperlinked-title,javadoc-exec-condition,-javadoc-set-footer" unless="javadoc.exec.packages">
         <!-- -->
         <javadoc source="${javac.sourcerelease}" failonerror="${apidoc.check}" failonwarning="false" author="false" destdir="${javadoc.out.dir}" packagenames="${javadoc.packages}" stylesheetfile="${javadoc.css.main}" windowtitle="${javadoc.title}" overview="${javadoc.overview}" splitindex="true" use="true" version="false" useexternalfile="true" encoding="UTF-8">
@@ -317,7 +328,11 @@ cause it to fail.
             <group packages="${javadoc.packages}">
                 <title>${javadoc.hyperlinked.title}</title>
             </group>
-            <link href="${javadoc.docs.jdk}" offline="true" packagelistloc="."/>
+            <!-- jdk 8 backward -->
+            &links8;
+            <!-- jdk modular apidoc -->
+            &links11;
+            <!-- other links -->
             &links;
             <doctitle>${javadoc.title}&lt;br/&gt;${javadoc.stability.label}</doctitle>
             <header>${javadoc.header}</header>
@@ -325,13 +340,13 @@ cause it to fail.
             <!-- Avoid timestamp comments in _all_ html generated files, to reduce unnecessary git commits -->
             <arg value="-notimestamp" />
             <!-- codebase has many occurrences of '///' which were never meant to appear in javadoc
-                 this disables JDK 23+ "line doc comments" for now  -->
+            this disables JDK 23+ "line doc comments" for now  -->
             <arg value="--disable-line-doc-comments" if:true="${javadoc23.or.later}" />
             <arg value="-Xdoclint:all" />
             <arg value="-Xdoclint:-missing" />
         </javadoc>
     </target>
-    
+
     <target name="javadoc-exec-files" depends="javadoc-init,javadoc-generate-references,javadoc-generate-overview,javadoc-exec-condition,javadoc-check-timestamps,javadoc-make-plain-title,javadoc-make-hyperlinked-title" if="javadoc.files.provided,-javadoc-set-footer" unless="javadoc.up.to.date">
         <javadoc source="${javac.sourcerelease}" author="false" destdir="${javadoc.out.dir}" packagenames="${javadoc.packages}" stylesheetfile="${javadoc.css.main}" windowtitle="${javadoc.title}" overview="${javadoc.overview}" splitindex="true" use="true" version="false" useexternalfile="true" encoding="UTF-8">
             <fileset dir="${javadoc.docfiles}"/>
@@ -346,13 +361,17 @@ cause it to fail.
             <group packages="${javadoc.packages}">
                 <title>${javadoc.hyperlinked.title}</title>
             </group>
-            <link href="${javadoc.docs.jdk}" offline="true" packagelistloc="."/>
+            <!-- jdk 8 backward -->
+            &links8;
+            <!-- jdk modular apidoc -->
+            &links11;
+            <!-- other links -->
             &links;
             <doctitle>${javadoc.title}&lt;br/&gt;${javadoc.stability.label}</doctitle>
             <header>${javadoc.header}</header>
             <bottom>${javadoc.footer}</bottom>
             <!-- codebase has many occurrences of '///' which were never meant to appear in javadoc
-                 this disables JDK 23+ "line doc comments" for now  -->
+            this disables JDK 23+ "line doc comments" for now  -->
             <arg value="--disable-line-doc-comments" if:true="${javadoc23.or.later}" />
             <arg value="-Xdoclint:all" />
             <arg value="-Xdoclint:-missing" />
@@ -395,11 +414,11 @@ cause it to fail.
         <!-- Warn about incorrect question version, but do not make build fail: -->
         <property name="arch.warn" value="true"/>
         <arch answers="${javadoc.arch}"
-            output="${javadoc.out.dir}/architecture-summary.html"
-            stylesheet="prose.css"
-            overviewlink="overview-summary.html"
-            footer="@FOOTER@"
-            project="${javadoc.project}"
+              output="${javadoc.out.dir}/architecture-summary.html"
+              stylesheet="prose.css"
+              overviewlink="overview-summary.html"
+              footer="@FOOTER@"
+              project="${javadoc.project}"
         />
     </target>
 
@@ -430,7 +449,7 @@ cause it to fail.
     <target name="javadoc-stage-replace-apichanges" depends="javadoc-stage-main,javadoc-generate-references,javadoc-stage-alternative,javadoc-stage-apichanges,javadoc-stage-arch,javadoc-stage-export-interfaces" unless="javadoc.up.to.date" if="export.apichanges" >
         <replace dir="${export.apichanges}" >
             <include name="${javadoc.name}"/>
-            <replacefilter token="@JDK@" value="${javadoc.docs.jdk}"/>
+            &replacesjdk;
             <replacefilter token="@FOOTER@" value="${javadoc.footer}"/>
             <replacefilter token="@TOP@/" value="@TOP@" />
             <replacefilter token="@TOP@" value="${javadoc.name}/" />
@@ -440,7 +459,7 @@ cause it to fail.
     <target name="javadoc-stage-replace-interfaces" depends="javadoc-stage-main,javadoc-generate-references,javadoc-stage-alternative,javadoc-stage-apichanges,javadoc-stage-arch,javadoc-stage-export-interfaces" unless="javadoc.up.to.date" if="export.interfaces" >
         <replace dir="${export.interfaces}" >
             <include name="${javadoc.name}"/>
-            <replacefilter token="@JDK@" value="${javadoc.docs.jdk}"/>
+            &replacesjdk;
             <replacefilter token="@FOOTER@" value="${javadoc.footer}"/>
             <replacefilter token="@TOP@/" value="@TOP@" />
             <replacefilter token="@TOP@" value="${javadoc.name}/" />
@@ -451,7 +470,7 @@ cause it to fail.
     <target name="javadoc-stage-replace" depends="javadoc-stage-main,javadoc-generate-references,javadoc-stage-alternative,javadoc-stage-apichanges,javadoc-stage-arch,javadoc-stage-export-interfaces,javadoc-stage-replace-interfaces,javadoc-stage-replace-apichanges" unless="javadoc.up.to.date">
         <replace dir="${javadoc.out.dir}">
             <include name="**/*.html"/>
-            <replacefilter token="@JDK@" value="${javadoc.docs.jdk}"/>
+            &replacesjdk;
             &replaces;
             <replacefilter token="@FOOTER@" value="${javadoc.footer}"/>
         </replace>

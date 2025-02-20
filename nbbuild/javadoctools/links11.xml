@@ -1,0 +1,44 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+   this file lists all currently known modules that produce
+   javadoc. If there is new javadoc being build for certain
+   module, the nbbuild/javadoctools/template.xml adds new
+   entry at the end of this file, it is then on the author
+   to decide whether such change shall be commited to the repository
+   or not
+-->
+<!-- links for jdk11 and new modular system -->
+<!-- if we grep unreferencedpackage in apidoc we need to triage package to relevant list -->
+<link href="${javadoc.docs.jdk}unreferencedpackage/" offline="true" packagelistloc="jdk-module/unreferenced/" unless:true="${javadoc8.or.sooner}"/>
+<link href="${javadoc.docs.jdk}java.base/" offline="true" packagelistloc="jdk-module/java.base/" unless:true="${javadoc8.or.sooner}"/>
+<link href="${javadoc.docs.jdk}java.compiler/" offline="true" packagelistloc="jdk-module/java.compiler/" unless:true="${javadoc8.or.sooner}"/>
+<link href="${javadoc.docs.jdk}java.datatransfer/" offline="true" packagelistloc="jdk-module/java.datatransfer/" unless:true="${javadoc8.or.sooner}"/>
+<link href="${javadoc.docs.jdk}java.desktop/" offline="true" packagelistloc="jdk-module/java.desktop/" unless:true="${javadoc8.or.sooner}"/>
+<link href="${javadoc.docs.jdk}java.logging/" offline="true" packagelistloc="jdk-module/java.logging/" unless:true="${javadoc8.or.sooner}"/>
+<link href="${javadoc.docs.jdk}java.naming/" offline="true" packagelistloc="jdk-module/java.naming/" unless:true="${javadoc8.or.sooner}"/>
+<link href="${javadoc.docs.jdk}java.prefs/" offline="true" packagelistloc="jdk-module/java.prefs/" unless:true="${javadoc8.or.sooner}"/>
+<link href="${javadoc.docs.jdk}java.scripting/" offline="true" packagelistloc="jdk-module/java.scripting/" unless:true="${javadoc8.or.sooner}"/>
+<link href="${javadoc.docs.jdk}java.sql/" offline="true" packagelistloc="jdk-module/java.sql/" unless:true="${javadoc8.or.sooner}"/>
+<link href="${javadoc.docs.jdk}java.xml/" offline="true" packagelistloc="jdk-module/java.xml/" unless:true="${javadoc8.or.sooner}"/>
+<!-- former tree api is in jdk.compiler module-->
+<link href="${javadoc.docs.jdk}jdk.compiler" offline="true" packagelistloc="./tree-api" unless:true="${javadoc8.or.sooner}"/>

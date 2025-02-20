@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.41.0
+#Version 2.44.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -12,8 +12,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -22,6 +24,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -30,6 +33,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -65,6 +69,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface java.util.EventListener
 
@@ -196,7 +203,7 @@ meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
 meth public abstract void parse(org.netbeans.modules.parsing.api.Snapshot,org.netbeans.modules.parsing.api.Task,org.netbeans.modules.parsing.spi.SourceModificationEvent) throws org.netbeans.modules.parsing.spi.ParseException
 meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void cancel()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void cancel(org.netbeans.modules.parsing.spi.Parser$CancelReason,org.netbeans.modules.parsing.spi.SourceModificationEvent)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
@@ -488,9 +495,13 @@ fld public final static int NO_FLAGS = 0
 fld public final static java.lang.String ABSTRACT_MODIFIER = "abstract"
 fld public final static java.lang.String FINAL_MODIFIER = "final"
 fld public final static java.lang.String READONLY_MODIFIER = "readonly"
+fld public final static java.lang.String STATIC_MODIFIER = "static"
 fld public final static java.lang.String VISIBILITY_PRIVATE = "private"
+fld public final static java.lang.String VISIBILITY_PRIVATE_SET = "private(set)"
 fld public final static java.lang.String VISIBILITY_PROTECTED = "protected"
+fld public final static java.lang.String VISIBILITY_PROTECTED_SET = "protected(set)"
 fld public final static java.lang.String VISIBILITY_PUBLIC = "public"
+fld public final static java.lang.String VISIBILITY_PUBLIC_SET = "public(set)"
 fld public final static java.lang.String VISIBILITY_VAR = "var"
 meth public !varargs static org.netbeans.modules.php.editor.api.PhpModifiers fromBitMask(int[])
 meth public boolean equals(java.lang.Object)
@@ -498,8 +509,11 @@ meth public boolean isAbstract()
 meth public boolean isFinal()
 meth public boolean isImplicitPublic()
 meth public boolean isPrivate()
+meth public boolean isPrivateSet()
 meth public boolean isProtected()
+meth public boolean isProtectedSet()
 meth public boolean isPublic()
+meth public boolean isPublicSet()
 meth public boolean isReadonly()
 meth public boolean isStatic()
 meth public int hashCode()
@@ -510,8 +524,11 @@ meth public org.netbeans.modules.php.editor.api.PhpModifiers setAbstract()
 meth public org.netbeans.modules.php.editor.api.PhpModifiers setFinal()
 meth public org.netbeans.modules.php.editor.api.PhpModifiers setImplicitPublic()
 meth public org.netbeans.modules.php.editor.api.PhpModifiers setPrivate()
+meth public org.netbeans.modules.php.editor.api.PhpModifiers setPrivateSet()
 meth public org.netbeans.modules.php.editor.api.PhpModifiers setProtected()
+meth public org.netbeans.modules.php.editor.api.PhpModifiers setProtectedSet()
 meth public org.netbeans.modules.php.editor.api.PhpModifiers setPublic()
+meth public org.netbeans.modules.php.editor.api.PhpModifiers setPublicSet()
 meth public org.netbeans.modules.php.editor.api.PhpModifiers setReadonly()
 meth public org.netbeans.modules.php.editor.api.PhpModifiers setStatic()
 meth public static org.netbeans.modules.php.editor.api.PhpModifiers noModifiers()
@@ -1225,8 +1242,11 @@ fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_PAA
 fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_PARENT
 fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_PRINT
 fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_PRIVATE
+fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_PRIVATE_SET
 fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_PROTECTED
+fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_PROTECTED_SET
 fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_PUBLIC
+fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_PUBLIC_SET
 fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_READONLY
 fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_REQUIRE
 fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_REQUIRE_ONCE
@@ -1745,8 +1765,11 @@ fld protected final static java.lang.Integer ABSTRACT
 fld protected final static java.lang.Integer FINAL
 fld protected final static java.lang.Integer IMPLICIT_PUBLIC
 fld protected final static java.lang.Integer PRIVATE
+fld protected final static java.lang.Integer PRIVATE_SET
 fld protected final static java.lang.Integer PROTECTED
+fld protected final static java.lang.Integer PROTECTED_SET
 fld protected final static java.lang.Integer PUBLIC
+fld protected final static java.lang.Integer PUBLIC_SET
 fld protected final static java.lang.Integer READONLY
 fld protected final static java.lang.Integer STATIC
 fld protected final static short[][] _action_table
@@ -1970,8 +1993,11 @@ fld public final static int T_POW_EQUAL = 161
 fld public final static int T_PRECENT = 124
 fld public final static int T_PRINT = 89
 fld public final static int T_PRIVATE = 147
+fld public final static int T_PRIVATE_SET = 174
 fld public final static int T_PROTECTED = 148
+fld public final static int T_PROTECTED_SET = 173
 fld public final static int T_PUBLIC = 149
+fld public final static int T_PUBLIC_SET = 172
 fld public final static int T_QUATE = 154
 fld public final static int T_QUESTION_MARK = 102
 fld public final static int T_READONLY = 166
@@ -2084,6 +2110,12 @@ meth public java.lang.String getTableData()
 supr java.lang.Object
 
 CLSS public org.netbeans.modules.php.editor.parser.EncodedActionTable20
+cons protected init()
+fld protected final java.lang.StringBuilder sb
+meth public java.lang.String getTableData()
+supr java.lang.Object
+
+CLSS public org.netbeans.modules.php.editor.parser.EncodedActionTable21
 cons protected init()
 fld protected final java.lang.StringBuilder sb
 meth public java.lang.String getTableData()
@@ -2279,7 +2311,7 @@ meth public java.util.List<? extends org.netbeans.modules.csl.api.Error> getDiag
 meth public org.netbeans.modules.csl.api.OffsetRange getErrorRange()
 meth public org.netbeans.modules.php.editor.model.Model getModel()
 meth public org.netbeans.modules.php.editor.model.Model getModel(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.modules.php.editor.model.Model getModel(org.netbeans.modules.php.editor.model.Model$Type)
 meth public org.netbeans.modules.php.editor.parser.astnodes.Program getProgram()
 meth public void setErrors(java.util.List<org.netbeans.modules.csl.api.Error>)
@@ -2538,17 +2570,24 @@ fld public final static int ABSTRACT = 1024
 fld public final static int FINAL = 16
 fld public final static int IMPLICIT_PUBLIC = 32
 fld public final static int PRIVATE = 2
+fld public final static int PRIVATE_SET = 256
 fld public final static int PROTECTED = 4
+fld public final static int PROTECTED_SET = 512
 fld public final static int PUBLIC = 1
+fld public final static int PUBLIC_SET = 128
 fld public final static int READONLY = 64
 fld public final static int STATIC = 8
 meth public static boolean isAbstract(int)
 meth public static boolean isFinal(int)
 meth public static boolean isImplicitPublic(int)
 meth public static boolean isPrivate(int)
+meth public static boolean isPrivateSet(int)
 meth public static boolean isProtected(int)
+meth public static boolean isProtectedSet(int)
 meth public static boolean isPublic(int)
+meth public static boolean isPublicSet(int)
 meth public static boolean isReadonly(int)
+meth public static boolean isSetVisibilityModifier(int)
 meth public static boolean isStatic(int)
 meth public static boolean isVisibilityModifier(int)
 meth public static java.lang.String toString(int)
@@ -2657,6 +2696,11 @@ meth public static org.netbeans.modules.php.editor.parser.astnodes.ClassInstance
 meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
 supr org.netbeans.modules.php.editor.parser.astnodes.Expression
 hfds attributes,body,classCounter,className,classStartOffset,ctorParams,fileName,interfaces,superClass
+
+CLSS public org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable
+cons public init(org.netbeans.modules.php.editor.parser.astnodes.Expression)
+meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
+supr org.netbeans.modules.php.editor.parser.astnodes.Variable
 
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.ClassName
 cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.Expression)
@@ -3634,7 +3678,7 @@ meth public java.lang.String toString()
 meth public java.util.List<org.netbeans.modules.php.editor.parser.astnodes.Attribute> getAttributes()
 meth public java.util.List<org.netbeans.modules.php.editor.parser.astnodes.Expression> getInterfaces()
 meth public java.util.List<org.netbeans.modules.php.editor.parser.astnodes.Expression> getInterfaes()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.modules.php.editor.parser.astnodes.Block getBody()
 meth public org.netbeans.modules.php.editor.parser.astnodes.Identifier getName()
 supr org.netbeans.modules.php.editor.parser.astnodes.Statement
@@ -3767,6 +3811,7 @@ meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.CatchClause)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation)
+meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassName)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.CloneExpression)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.Comment)
@@ -3909,6 +3954,7 @@ meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.CastExpre
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.CatchClause)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassName)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.CloneExpression)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.Comment)
@@ -4014,6 +4060,7 @@ meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.CastExpre
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.CatchClause)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassName)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.CloneExpression)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.Comment)

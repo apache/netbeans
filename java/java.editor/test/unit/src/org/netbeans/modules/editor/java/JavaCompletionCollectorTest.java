@@ -19,7 +19,9 @@
 package org.netbeans.modules.editor.java;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import javax.swing.text.Document;
@@ -32,6 +34,7 @@ import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.Completion.Context;
+import org.netbeans.api.lsp.Completion.TextFormat;
 import org.netbeans.api.lsp.Completion.TriggerKind;
 import org.netbeans.api.lsp.TextEdit;
 import org.netbeans.junit.NbTestCase;
@@ -192,6 +195,108 @@ public class JavaCompletionCollectorTest extends NbTestCase {
                              }
                          });
         assertTrue(found.get());
+    }
+
+    public void testNewWithTypeParameters() throws Exception {
+        Set<String> found = new HashSet<>();
+
+        runJavaCollector(List.of(new FileDescription("test/Test.java",
+                                                     """
+                                                     package test;
+                                                     import java.util.*;
+                                                     public class Test {
+                                                         public void test() {
+                                                             Map<Object, Object> m = new HashMap<>|
+                                                         }
+                                                     }
+                                                     """)),
+                         completions -> {
+                             for (Completion completion : completions) {
+                                 if ("HashMap".equals(completion.getLabel())) {
+                                     if ("()".equals(completion.getLabelDetail())) {
+                                         assertNull(completion.getTextEdit());
+                                         assertNull(completion.getAdditionalTextEdits());
+                                         assertEquals("()", completion.getInsertText());
+                                         found.add("()");
+                                     } else if (completion.getLabelDetail().contains("float")) {
+                                         assertNull(completion.getTextEdit());
+                                         assertNull(completion.getAdditionalTextEdits());
+                                         assertEquals(TextFormat.Snippet, completion.getInsertTextFormat());
+                                         String insert = completion.getInsertText();
+                                         assertNotNull(insert);
+                                         insert = insert.replaceFirst(":[^<>}]+\\}", ":<param1>\\}");
+                                         insert = insert.replaceFirst(":[^<>}]+\\}", ":<param2>\\}");
+                                         assertEquals("(${1:<param1>}, ${2:<param2>})$0", insert);
+                                         found.add("(int, float)");
+                                     }
+                                 }
+                             }
+                         });
+        assertEquals(Set.of("()", "(int, float)"), found);
+    }
+
+    public void testNewWithoutTypeParameters() throws Exception {
+        Set<String> found = new HashSet<>();
+
+        runJavaCollector(List.of(new FileDescription("test/Test.java",
+                                                     """
+                                                     package test;
+                                                     import java.util.*;
+                                                     public class Test {
+                                                         public void test() {
+                                                             Map<Object, Object> m = new HashMap|
+                                                         }
+                                                     }
+                                                     """)),
+                         completions -> {
+                             for (Completion completion : completions) {
+                                 if ("HashMap".equals(completion.getLabel())) {
+                                     if ("()".equals(completion.getLabelDetail())) {
+                                         assertNull(completion.getTextEdit());
+                                         assertNull(completion.getAdditionalTextEdits());
+                                         assertEquals("HashMap()", completion.getInsertText());
+                                         found.add("()");
+                                     } else if (completion.getLabelDetail().contains("float")) {
+                                         assertNull(completion.getTextEdit());
+                                         assertNull(completion.getAdditionalTextEdits());
+                                         assertEquals(TextFormat.Snippet, completion.getInsertTextFormat());
+                                         String insert = completion.getInsertText();
+                                         assertNotNull(insert);
+                                         insert = insert.replaceFirst(":[^<>}]+\\}", ":<param1>\\}");
+                                         insert = insert.replaceFirst(":[^<>}]+\\}", ":<param2>\\}");
+                                         assertEquals("HashMap(${1:<param1>}, ${2:<param2>})$0", insert);
+                                         found.add("(int, float)");
+                                     }
+                                 }
+                             }
+                         });
+        assertEquals(Set.of("()", "(int, float)"), found);
+    }
+
+    public void testAfterDot() throws Exception {
+        Set<String> found = new HashSet<>();
+
+        runJavaCollector(List.of(new FileDescription("test/Test.java",
+                                                     """
+                                                     package test;
+                                                     import java.util.*;
+                                                     public class Test {
+                                                         public static Map<Object, Object> test() {
+                                                             Map<Object, Object> m = Test.|
+                                                         }
+                                                     }
+                                                     """)),
+                         completions -> {
+                             for (Completion completion : completions) {
+                                 if ("test".equals(completion.getLabel())) {
+                                     assertNull(completion.getTextEdit());
+                                     assertNull(completion.getAdditionalTextEdits());
+                                     assertEquals("test()", completion.getInsertText());
+                                     found.add(completion.getLabelDetail());
+                                 }
+                             }
+                         });
+        assertEquals(Set.of("()"), found);
     }
 
     private void runJavaCollector(List<FileDescription> files, Validator<List<Completion>> validator) throws Exception {

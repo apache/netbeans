@@ -1448,7 +1448,7 @@
 		"@types/vscode-webview": "^1.57.1",
 		"@types/xml2js": "^0.4.14",
 		"@vscode/codicons": "0.0.29",
-		"esbuild": "^0.16.17",
+		"esbuild": "^0.25.0",
 		"glob": "^7.1.6",
 		"mocha": "^9.1.2",
 		"ps-node": "^0.1.6",

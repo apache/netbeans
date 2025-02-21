@@ -55,7 +55,7 @@ import java.util.logging.StreamHandler;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.netbeans.TopSecurityManager;
+import org.netbeans.NbExit;
 import org.netbeans.core.startup.logging.NbLogging;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
@@ -429,7 +429,7 @@ public final class TopLogging {
     }
     static void exit(int exit) {
         flush(false);
-        TopSecurityManager.exit(exit);
+        NbExit.exit(exit);
     }
 
     static void exit(int exit, Throwable t) {

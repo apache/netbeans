@@ -25,31 +25,49 @@
     <target name="build-init" description="Regenerate blade ANTLRv4 parser" depends="projectized.build-init" extensionOf="-pre-compile">
         <echo message="Building antlr parser" />
         <property name="v10.outdir" location="${src.dir}/org/netbeans/modules/php/blade/syntax/antlr4/v10"/>
-        <property name="formatter.outdir" location="${src.dir}/org/netbeans/modules/php/blade/syntax/antlr4/formatter"/>
+        
         <path id="antlr4.tool">
             <fileset dir="../../ide/libs.antlr4.runtime/external" includes="*.jar"/>
             <fileset dir="../../ide/libs.antlr3.runtime/external" includes="antlr-runtime-*.jar"/>
         </path>
+        
+        <!--coloring-->
+        <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="${v10.outdir}">
+            <arg value="-o"/>
+            <arg value="${v10.outdir}"/>
+            <arg value="BladeAntlrColoringLexer.g4"/>
+        </java>
+        
+        <!--ide parser-->
         <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="${v10.outdir}">
             <arg value="-o"/>
             <arg value="${v10.outdir}"/>
             <arg value="BladeAntlrLexer.g4"/>
             <arg value="BladeAntlrParser.g4"/>
         </java>
-        <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="${v10.outdir}">
-            <arg value="-o"/>
-            <arg value="${v10.outdir}"/>
-            <arg value="BladeAntlrColoringLexer.g4"/>
-        </java>
 
+        <!--formatter-->
+        <property name="formatter.outdir" location="${src.dir}/org/netbeans/modules/php/blade/syntax/antlr4/formatter"/>
         <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="${formatter.outdir}">
             <arg value="-o"/>
             <arg value="${formatter.outdir}"/>
             <arg value="BladeAntlrFormatterLexer.g4"/>
             <arg value="BladeAntlrFormatterParser.g4"/>
         </java>
+        
+        <!--php-->
+        <property name="php.outdir" location="${src.dir}/org/netbeans/modules/php/blade/syntax/antlr4/php"/>
+        <java classname="org.antlr.v4.Tool" fork="true" dir="${php.outdir}">
+            <arg value="-o"/>
+            <arg value="${php.outdir}"/>
+            <arg value="BladePhpAntlrLexer.g4"/>
+            <arg value="BladePhpAntlrParser.g4"/>
+        </java>
+        
         <delete dir="${v10.outdir}" includes="*.tokens"/>
         <delete dir="${v10.outdir}" includes="*.interp"/>
+        <delete dir="${php.outdir}" includes="*.tokens"/>
+        <delete dir="${php.outdir}" includes="*.interp"/>
         <delete dir="${formatter.outdir}" includes="*.tokens"/>
         <delete dir="${formatter.outdir}" includes="*.interp"/>
     </target>

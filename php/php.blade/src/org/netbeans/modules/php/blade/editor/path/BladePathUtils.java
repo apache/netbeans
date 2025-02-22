@@ -129,7 +129,7 @@ public final class BladePathUtils {
             return list;
         }
 
-        HashSet<FileObject> viewRoots = getDefaultRoots(project);
+        List<FileObject> viewRoots = getDefaultRootsList(project);
         viewRoots.addAll(getCustomViewsRoots(project, contextFile));
 
         if (viewRoots.isEmpty()) {
@@ -137,58 +137,52 @@ public final class BladePathUtils {
         }
 
         String unixPath = prefixViewPath.replace(StringUtils.DOT, StringUtils.FORWARD_SLASH);
-        int relativeSlash;
 
-        //fix issues with lastIndexOf search
-        relativeSlash = unixPath.lastIndexOf(StringUtils.FORWARD_SLASH);
+        int lastSlash = unixPath.lastIndexOf(StringUtils.FORWARD_SLASH);
 
-        HashSet<FileObject> filteredViewRoots = new HashSet<>();
+        return filterFilesFromRootFolder(viewRoots.toArray(new FileObject[0]), unixPath, lastSlash);
+    }
 
-        Map<String, FileObject> relativeFilePathMap = new HashMap<>();
+    public static List<FileObject> filterFilesFromRootFolder(FileObject[] viewRoots, String unixPath, int lastSlash) {
 
-        if (relativeSlash > 0) {
+        List<FileObject> list = new ArrayList<>();
+
+        if (lastSlash > 0) {
             //filter only relative folders
+            return filterFromRelativeSlash(viewRoots, unixPath, lastSlash);
+        } else {
             for (FileObject rootFolder : viewRoots) {
-                FileObject relativeViewRoot = rootFolder.getFileObject(unixPath.substring(0, relativeSlash));
-
-                if (relativeViewRoot != null && relativeViewRoot.isValid()) {
-                    relativeFilePathMap.put(unixPath, relativeViewRoot);
-                }
-            }
-        } else {
-            //include all root folders
-            filteredViewRoots = viewRoots;
-        }
-
-        String relativePrefixToCompare;
-
-        if (relativeSlash > 0) {
-            //extract the path name prefix
-            relativePrefixToCompare = unixPath.substring(relativeSlash + 1, unixPath.length());
-        } else {
-            //root reference
-            relativePrefixToCompare = unixPath;
-        }
-
-        if (unixPath.endsWith(StringUtils.FORWARD_SLASH)) {
-            //add children
-            for (FileObject rootFolder : filteredViewRoots) {
-                list.addAll(Arrays.asList(rootFolder.getChildren()));
-            }
-            for (Map.Entry<String, FileObject> entry : relativeFilePathMap.entrySet()) {
-                list.addAll(Arrays.asList(entry.getValue().getChildren()));
-            }
-        } else {
-            //filter by filename in relative context
-            for (FileObject rootFolder : filteredViewRoots) {
                 for (FileObject file : rootFolder.getChildren()) {
                     String filePath = file.getPath().replace(rootFolder.getPath() + StringUtils.FORWARD_SLASH, ""); //NOI18N
-                    if (filePath.startsWith(relativePrefixToCompare)) {
+                    if (filePath.startsWith(unixPath)) {
                         list.add(file);
                     }
                 }
             }
 
+        }
+
+        return list;
+    }
+
+    public static List<FileObject> filterFromRelativeSlash(FileObject[] viewRoots, String unixPath, int lastSlash) {
+        Map<String, FileObject> relativeFilePathMap = new HashMap<>();
+        List<FileObject> list = new ArrayList<>();
+        boolean folderEnd = unixPath.endsWith(StringUtils.FORWARD_SLASH);
+        for (FileObject rootFolder : viewRoots) {
+            FileObject relativeViewRoot = rootFolder.getFileObject(unixPath.substring(0, lastSlash));
+
+            if (relativeViewRoot != null && relativeViewRoot.isValid()) {
+                relativeFilePathMap.put(unixPath, relativeViewRoot);
+            }
+        }
+
+        if (folderEnd) {
+            for (Map.Entry<String, FileObject> entry : relativeFilePathMap.entrySet()) {
+                list.addAll(Arrays.asList(entry.getValue().getChildren()));
+            }
+        } else {
+            String relativePrefixToCompare = unixPath.substring(lastSlash + 1, unixPath.length());
             for (Map.Entry<String, FileObject> entry : relativeFilePathMap.entrySet()) {
                 for (FileObject file : entry.getValue().getChildren()) {
                     if (file.getName().startsWith(relativePrefixToCompare)) {
@@ -198,8 +192,6 @@ public final class BladePathUtils {
             }
         }
 
-        //empty list
-        viewRoots.clear();
         return list;
     }
 
@@ -327,6 +319,17 @@ public final class BladePathUtils {
         }
 
         return defaultList;
+    }
+
+    public static List<FileObject> getDefaultRootsList(Project project) {
+        ArrayList<FileObject> list = new ArrayList<>();
+        FileObject defaultViewsRoot = project.getProjectDirectory().getFileObject(LARAVEL_VIEW_PATH);
+
+        if (defaultViewsRoot != null && defaultViewsRoot.isValid()) {
+            list.add(defaultViewsRoot);
+        }
+
+        return list;
     }
 
     public static String toBladeToProjectFilePath(String path) {

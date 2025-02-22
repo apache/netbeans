@@ -32,7 +32,6 @@ import org.netbeans.modules.php.blade.editor.ResourceUtilities;
 import org.netbeans.modules.php.blade.syntax.BladeDirectivesUtils;
 import org.netbeans.modules.php.blade.syntax.annotation.Directive;
 import org.netbeans.modules.php.blade.syntax.annotation.Tag;
-
 import org.openide.filesystems.FileObject;
 import org.openide.util.ImageUtilities;
 
@@ -143,8 +142,12 @@ public class BladeCompletionProposal implements CompletionProposal {
     public boolean isSmart() {
         return true;
     }
-    
-    public Directive getDirective(){
+
+    public String getPreviewValue() {
+        return previewValue;
+    }
+
+    public Directive getDirective() {
         return directive;
     }
 
@@ -184,6 +187,27 @@ public class BladeCompletionProposal implements CompletionProposal {
         public int getSortPrioOverride() {
             return -50;//priority
         }
+
+        @Override
+        public String getCustomInsertTemplate() {
+            String insertText = getElement().getName();
+            return insertText;
+        }
+
+        @Override
+        public String getRhsHtml(HtmlFormatter formatter) {
+            String info = getElement().getName();
+
+            if (info.startsWith(EditorStringUtils.NAMESPACE_SEPARATOR)){
+                info = info.substring(1);
+            }
+            int slashPos = info.indexOf(EditorStringUtils.NAMESPACE_SEPARATOR);
+            if (slashPos > -1){
+                return info.substring(0, slashPos);
+            } else {
+                return info;
+            }
+        }
     }
 
     public static class DirectiveItem extends BladeCompletionProposal {
@@ -197,10 +221,12 @@ public class BladeCompletionProposal implements CompletionProposal {
     public static class ClassItem extends PhpElementItem {
 
         private String namespace = null;
-        
-        public ClassItem(ClassElement element, int anchorOffset, String previewValue) {
+        private final boolean autoCompleteNamespace;
+
+        public ClassItem(ClassElement element, int anchorOffset, String previewValue, boolean autoCompleteNamespace) {
             super(element, anchorOffset, previewValue);
             this.namespace = element.getNamespace();
+            this.autoCompleteNamespace = autoCompleteNamespace;
         }
 
         @Override
@@ -223,10 +249,12 @@ public class BladeCompletionProposal implements CompletionProposal {
 
         @Override
         public String getCustomInsertTemplate() {
-            if (namespace != null && namespace.length() > 0) {
+            if (autoCompleteNamespace == true && namespace != null && namespace.length() > 0) {
                 return EditorStringUtils.NAMESPACE_SEPARATOR + namespace + EditorStringUtils.NAMESPACE_SEPARATOR + getElement().getName(); // NOI18N
             }
-            return getElement().getName();
+
+            String insertText = getElement().getName();
+            return insertText;
         }
     }
 
@@ -325,7 +353,7 @@ public class BladeCompletionProposal implements CompletionProposal {
 
         @Override
         public String getLhsHtml(HtmlFormatter formatter) {
-            return tag.openTag() + " " + tag.closeTag();
+            return tag.openTag() + " " + tag.closeTag(); // NOI18N
         }
 
         @Override
@@ -336,6 +364,61 @@ public class BladeCompletionProposal implements CompletionProposal {
         @Override
         public int getSortPrioOverride() {
             return 0;
+        }
+    }
+
+    public static class LayoutIdentifierProposal extends BladeCompletionProposal {
+
+        public LayoutIdentifierProposal(ElementHandle element, int anchorOffset, String previewValue) {
+            super(element, anchorOffset, previewValue);
+        }
+
+        @Override
+        public ImageIcon getIcon() {
+            String path = ResourceUtilities.LAYOUT_IDENTIFIER;
+            return ImageUtilities.loadImageIcon(path, false);
+        }
+    }
+
+    public static class ViewPathProposal extends BladeCompletionProposal {
+
+        private final boolean isFolder;
+
+        public ViewPathProposal(ElementHandle element, int anchorOffset, String previewValue, boolean isFolder) {
+            super(element, anchorOffset, previewValue);
+            this.isFolder = isFolder;
+        }
+
+        @Override
+        public ImageIcon getIcon() {
+            String path = ResourceUtilities.BLADE_VIEW;
+            if (isFolder) {
+                path = ResourceUtilities.FOLDER;
+            }
+            return ImageUtilities.loadImageIcon(path, false);
+        }
+    }
+
+    public static class FilePathProposal extends BladeCompletionProposal {
+
+        private final boolean isFolder;
+
+        public FilePathProposal(ElementHandle element, int anchorOffset, String previewValue, boolean isFolder) {
+            super(element, anchorOffset, previewValue);
+            this.isFolder = isFolder;
+        }
+
+        @Override
+        public ImageIcon getIcon() {
+            String path = ResourceUtilities.BLADE_VIEW;
+            if (isFolder) {
+                path = ResourceUtilities.FOLDER;
+            } else if (getPreviewValue().endsWith(".css")) { // NOI18N
+                path = ResourceUtilities.CSS_FILE;
+            } else if (getPreviewValue().endsWith(".js")) { // NOI18N
+                path = ResourceUtilities.JS_FILE;
+            }
+            return ImageUtilities.loadImageIcon(path, false);
         }
     }
 
@@ -401,10 +484,15 @@ public class BladeCompletionProposal implements CompletionProposal {
 
         @Override
         public String getCustomInsertTemplate() {
-            return switch (getName()) {
-                case BladeDirectivesUtils.DIRECTIVE_INCLUDE, BladeDirectivesUtils.DIRECTIVE_EXTENDS -> getName() + "('${path}')"; // NOI18N
-                default -> getName() + "($$${arg})"; // NOI18N
-            };
+            switch (getName()) {
+                case BladeDirectivesUtils.DIRECTIVE_INCLUDE:
+                case BladeDirectivesUtils.DIRECTIVE_EXTENDS: {
+                    return getName() + "('${path}')"; // NOI18N
+                }
+                default: {
+                    return getName() + "($$${arg})"; // NOI18N
+                }
+            }
         }
 
         @Override
@@ -444,13 +532,18 @@ public class BladeCompletionProposal implements CompletionProposal {
 
         @Override
         public String getCustomInsertTemplate() {
-            return switch (getName()) {
-                case BladeDirectivesUtils.DIRECTIVE_FOREACH -> // NOI18N
-                    getName() + "($$${array} as $$${item})\n    ${selection}${cursor}\n" + getDirective().endtag(); // NOI18N
-                case BladeDirectivesUtils.DIRECTIVE_SECTION, BladeDirectivesUtils.DIRECTIVE_SESSION -> // NOI18N
-                    getName() + "('${id}')\n    ${cursor}\n" + getDirective().endtag(); // NOI18N
-                default -> getName() + "($$${arg})\n    ${cursor}\n" + getDirective().endtag(); // NOI18N
-            };
+            switch (getName()) {
+                case BladeDirectivesUtils.DIRECTIVE_FOREACH: {
+                    return getName() + "($$${array} as $$${item})\n    ${selection}${cursor}\n" + getDirective().endtag(); // NOI18N
+                }
+                case BladeDirectivesUtils.DIRECTIVE_SECTION:
+                case BladeDirectivesUtils.DIRECTIVE_SESSION: {
+                    return getName() + "('${id}')\n    ${cursor}\n" + getDirective().endtag(); // NOI18N
+                }
+                default: {
+                    return getName() + "($$${arg})\n    ${cursor}\n" + getDirective().endtag(); // NOI18N
+                }
+            }
         }
 
     }

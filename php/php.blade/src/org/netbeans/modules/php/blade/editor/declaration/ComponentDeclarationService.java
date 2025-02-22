@@ -25,6 +25,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.php.blade.editor.BladeLanguage;
 import org.netbeans.modules.php.blade.editor.components.annotation.Namespace;
+import org.netbeans.modules.php.blade.editor.components.plugins.LivewireComponentResource;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexResult;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexUtils;
 import org.netbeans.modules.php.blade.project.ComponentsSupport;
@@ -60,7 +61,7 @@ public class ComponentDeclarationService {
     
     @CheckForNull
     public FileObject getComponentResourceFile(String componentId, String classQualifiedName, FileObject sourceFo) {
-        if (classQualifiedName.toLowerCase().contains(ComponentsSupport.LIVEWIRE_NAME)){
+        if (classQualifiedName.toLowerCase().contains(LivewireComponentResource.LIVEWIRE_NAME)){
             return getLivewireComponentResourceFile(componentId, sourceFo);
         }
         

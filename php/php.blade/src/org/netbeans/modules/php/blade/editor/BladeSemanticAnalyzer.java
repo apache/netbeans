@@ -30,7 +30,6 @@ import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.php.blade.editor.directives.CustomDirectives;
 import org.netbeans.modules.php.blade.editor.parser.BladeParserResult;
-import org.netbeans.modules.php.blade.editor.parser.BladeParserResult.Reference;
 import org.netbeans.modules.php.blade.project.ProjectUtils;
 import org.openide.filesystems.FileObject;
 
@@ -87,8 +86,10 @@ public class BladeSemanticAnalyzer extends SemanticAnalyzer<BladeParserResult> {
         FileObject fo = parserResult.getFileObject();
         Project project = ProjectUtils.getMainOwner(fo);
         CustomDirectives ct = CustomDirectives.getInstance(project);
-        for (Map.Entry<OffsetRange, Reference> entry : parserResult.customDirectivesReferences.entrySet()) {
-            if (entry.getValue().type == BladeParserResult.ReferenceType.POSSIBLE_DIRECTIVE && ct.customDirectiveConfigured(entry.getValue().identifier) ) {
+
+        //highlight custom directives which are not found in the project configuration
+        for (Map.Entry<OffsetRange, String> entry : parserResult.getBladeCustomDirectiveOccurences().getAll().entrySet()) {
+            if (ct.customDirectiveConfigured(entry.getValue()) ) {
                 highlights.put(entry.getKey(), CUSTOM_DIRECTIVE_SET);
                 continue;
             }

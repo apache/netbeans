@@ -38,8 +38,10 @@ import org.netbeans.modules.php.blade.editor.BladeLanguage;
 import org.netbeans.modules.php.blade.editor.parser.BladeParserResult;
 import org.netbeans.modules.php.blade.editor.parser.BladeParserResult.Reference;
 import org.netbeans.modules.php.blade.editor.parser.BladeParserResult.ReferenceType;
+import org.netbeans.modules.php.blade.editor.parser.BladeReferenceIdsCollection;
 import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
 import org.netbeans.modules.php.blade.project.ProjectUtils;
+import org.netbeans.modules.php.blade.syntax.StringUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -59,39 +61,41 @@ public class BladeIndexer extends EmbeddingIndexer {
     public static final String INCLUDE_PATH = "include"; //NOI18N
     public static final String BLADE_PATH = "path"; //NOI18N
     public static final String INFO_SEPARATOR = "#"; //NOI18N
+    public static final String RANGE_SEPARATOR = ";"; //NOI18N
 
     @Override
     protected void index(Indexable indxbl, Parser.Result result, Context context) {
         long startTime = System.currentTimeMillis();
-        LOGGER.log(Level.INFO, "Indexer requested {0}", context.getIndexFolder().getName());
+
         BladeParserResult parserResult;
-        if (result instanceof BladeParserResult) {
-            parserResult = (BladeParserResult) result;
-        } else {
+
+        if (!(result instanceof BladeParserResult)) {
             return;
         }
 
-        //we have errors
+        parserResult = (BladeParserResult) result;
+
         if (!parserResult.getDiagnostics().isEmpty()) {
             return;
         }
-        // LOGGER.log(Level.INFO, "indexing {0}", result.getSnapshot().getSource().getFileObject().getName());
+
         try {
             IndexingSupport support = IndexingSupport.getInstance(context);
-            // we need to remove old documents (document per object, not file)
+
             support.removeDocuments(indxbl);
             IndexDocument document = support.createDocument(indxbl);
 
-            if (!parserResult.getYieldReferences().isEmpty()) {
-                storeYieldReferences(parserResult.getYieldReferences(), document);
+            BladeReferenceIdsCollection referenceCollection = parserResult.getBladeReferenceIdsCollection();
+            if (!referenceCollection.getYieldIdOccurences().isEmpty()) {
+                storeYieldReferences(referenceCollection.getYieldIdOccurences(), document);
             }
 
-            if (!parserResult.getStackReferences().isEmpty()) {
-                storeStackReferences(parserResult.getStackReferences(), document);
+            if (!referenceCollection.getStackIdOccurences().isEmpty()) {
+                storeStackReferences(referenceCollection.getStackIdOccurences(), document);
             }
 
-            if (!parserResult.includeBladeOccurences.isEmpty()) {
-                storeIncludePathReferences(parserResult.includeBladeOccurences, document);
+            if (!referenceCollection.getIncludePathsOccurences().isEmpty()) {
+                storeIncludePathReferences(referenceCollection.getIncludePathsOccurences(), document);
             }
 
             storeFilePathAsBladePath(parserResult.getSnapshot().getSource().getFileObject(), document);
@@ -99,7 +103,11 @@ public class BladeIndexer extends EmbeddingIndexer {
             document.addPair(BLADE_INDEXED, Boolean.TRUE.toString(), true, true);
 
             support.addDocument(document);
-            LOGGER.log(Level.INFO, "Indexer finished {0}", System.currentTimeMillis() - startTime);
+            long time = System.currentTimeMillis() - startTime;
+
+            if (time > 2000) {
+                LOGGER.log(Level.INFO, "Indexer for " + context.getIndexFolder().getName() + " finished in {0} ms", System.currentTimeMillis() - startTime);
+            }
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, null, ex);
             Exceptions.printStackTrace(ex);
@@ -108,28 +116,28 @@ public class BladeIndexer extends EmbeddingIndexer {
         }
     }
 
-    private void storeYieldReferences(Map<String, Reference> yields, IndexDocument document) {
+    private void storeYieldReferences(Map<String, OffsetRange> yields, IndexDocument document) {
 
-        for (Map.Entry<String, Reference> entry : yields.entrySet()) {
+        for (Map.Entry<String, OffsetRange> entry : yields.entrySet()) {
             StringBuilder sb = new StringBuilder();
-            Reference ref = entry.getValue();
+            OffsetRange range = entry.getValue();
             //used for completion
             document.addPair(YIELD_ID, entry.getKey(), true, true);
-            sb.append(entry.getKey()).append(INFO_SEPARATOR).append(ref.defOffset.getStart()).append(";").append(ref.defOffset.getEnd()); //NOI18N
+            sb.append(entry.getKey()).append(INFO_SEPARATOR).append(range.getStart()).append(RANGE_SEPARATOR).append(range.getEnd());
             //used for declaration finder
             document.addPair(YIELD_REFERENCE, sb.toString(), true, true);
         }
     }
 
-    private void storeStackReferences(Map<String, Reference> stacks, IndexDocument document) {
+    private void storeStackReferences(Map<String, OffsetRange> stacks, IndexDocument document) {
 
-        for (Map.Entry<String, Reference> entry : stacks.entrySet()) {
+        for (Map.Entry<String, OffsetRange> entry : stacks.entrySet()) {
             StringBuilder sb = new StringBuilder();
-            Reference ref = entry.getValue();
+            OffsetRange range = entry.getValue();
             //used for completion
             document.addPair(STACK_ID, entry.getKey(), true, true);
-            //do we need end ??
-            sb.append(entry.getKey()).append(INFO_SEPARATOR).append(ref.defOffset.getStart()).append(";").append(ref.defOffset.getEnd()); //NOI18N
+
+            sb.append(entry.getKey()).append(INFO_SEPARATOR).append(range.getStart()).append(RANGE_SEPARATOR).append(range.getEnd());
             //used for declaration finder
             document.addPair(STACK_REFERENCE, sb.toString(), true, true);
         }
@@ -146,8 +154,8 @@ public class BladeIndexer extends EmbeddingIndexer {
         for (FileObject root : roots) {
             String rootPath = root.getPath();
             if (filePath.startsWith(rootPath)) {
-                String bladeFormatPath = BladePathUtils.toBladeViewPath(filePath.replace(rootPath, ""));
-                if (bladeFormatPath.startsWith(".")) {
+                String bladeFormatPath = BladePathUtils.toBladeViewPath(filePath.replace(rootPath, "")); //NOI18N
+                if (bladeFormatPath.startsWith(StringUtils.DOT)) {
                     bladeFormatPath = bladeFormatPath.substring(1, bladeFormatPath.length());
                 }
                 document.addPair(BLADE_PATH, bladeFormatPath, true, true);
@@ -163,7 +171,7 @@ public class BladeIndexer extends EmbeddingIndexer {
         }
 
         String name = mainElements[0];
-        String offsets[] = mainElements[1].split(";");
+        String offsets[] = mainElements[1].split(RANGE_SEPARATOR);
         int start = 0;
         int end = 1;
 
@@ -183,7 +191,7 @@ public class BladeIndexer extends EmbeddingIndexer {
         }
 
         String name = mainElements[0];
-        String offsets[] = mainElements[1].split(";");
+        String offsets[] = mainElements[1].split(RANGE_SEPARATOR);
         int start = 0;
         int end = 1;
 
@@ -203,7 +211,7 @@ public class BladeIndexer extends EmbeddingIndexer {
         }
 
         String name = mainElements[0];
-        String offsets[] = mainElements[1].split(";");
+        String offsets[] = mainElements[1].split(RANGE_SEPARATOR);
         int start = 0;
         int end = 1;
 
@@ -230,8 +238,8 @@ public class BladeIndexer extends EmbeddingIndexer {
 
             sb.append(entry.getKey()).append(INFO_SEPARATOR);
             for (OffsetRange range : entry.getValue()) {
-                sb.append(range.getStart()); //NOI18N
-                sb.append(";");//NOI18N
+                sb.append(range.getStart());
+                sb.append(RANGE_SEPARATOR);
             }
 
             document.addPair(INCLUDE_PATH, sb.toString(), true, true);
@@ -242,7 +250,7 @@ public class BladeIndexer extends EmbeddingIndexer {
     public static class Factory extends EmbeddingIndexerFactory {
 
         public static final String NAME = "blade"; //NOI18N
-        public static final int VERSION = 2;
+        public static final int VERSION = 3;
 
         @Override
         public EmbeddingIndexer createIndexer(Indexable indxbl, Snapshot snapshot) {

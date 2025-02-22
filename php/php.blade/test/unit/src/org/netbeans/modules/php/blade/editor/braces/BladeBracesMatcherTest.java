@@ -16,13 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.blade.editor;
+package org.netbeans.modules.php.blade.editor.braces;
 
 import java.util.Arrays;
 import java.util.Collections;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.editor.bracesmatching.api.BracesMatchingTestUtils;
+import org.netbeans.modules.php.blade.editor.BladeTestBase;
 import org.netbeans.spi.editor.bracesmatching.BracesMatcher;
 import org.netbeans.spi.editor.bracesmatching.BracesMatcherFactory;
 import org.netbeans.spi.editor.bracesmatching.MatcherContext;

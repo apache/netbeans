@@ -37,20 +37,23 @@ import org.openide.util.Lookup;
  * @author bogdan
  */
 public enum BladeTokenId implements TokenId {
-    BLADE_COMMENT_START("blade_comment"),
-    BLADE_COMMENT("blade_comment"),
-    BLADE_COMMENT_END("blade_comment"),
-    BLADE_DIRECTIVE("blade_directive"),
-    BLADE_ECHO_DELIMITOR("blade_echo_delimiters"),
-    BLADE_PAREN(""),
-    HTML("html"),
-    WS_D("html"),
-    BLADE_DIRECTIVE_UNKNOWN("at_string"),
-    PHP_BLADE_EXPRESSION("blade_php"),
-    PHP_BLADE_ECHO_EXPR("blade_php"),
-    PHP_BLADE_INLINE_CODE("blade_php"),
-    PHP_INLINE("php"),
-    OTHER("error");
+    BLADE_COMMENT_START("blade_comment"), // NOI18N
+    BLADE_COMMENT("blade_comment"), // NOI18N
+    BLADE_COMMENT_END("blade_comment"), // NOI18N
+    BLADE_DIRECTIVE("blade_directive"), // NOI18N
+    BLADE_CUSTOM_DIRECTIVE("blade_directive"), // NOI18N
+    BLADE_ECHO_DELIMITOR("blade_echo_delimiters"), // NOI18N
+    BLADE_TAG_ERROR("html"), // NOI18N
+    BLADE_PAREN("token"), // NOI18N
+    BLADE_COMPONENT_ATTRIBUTE("blade_comp_attribute"), // NOI18N
+    HTML("html"), // NOI18N
+    WS_D("html"), // NOI18N
+    BLADE_DIRECTIVE_UNKNOWN("at_string"), // NOI18N
+    PHP_BLADE_EXPRESSION("blade_php"), // NOI18N
+    PHP_BLADE_ECHO_EXPR("blade_php"), // NOI18N
+    PHP_BLADE_INLINE_CODE("blade_php"), // NOI18N
+    PHP_INLINE("php"), // NOI18N
+    OTHER("error"); // NOI18N
     private final String category;
 
     BladeTokenId(String category) {

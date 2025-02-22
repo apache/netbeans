@@ -38,112 +38,73 @@ import BladeCommonLexer;
  * specific language governing permissions and limitations
  * under the License.
  */
+     
+  package org.netbeans.modules.php.blade.syntax.antlr4.v10;
+}
 
-package org.netbeans.modules.php.blade.syntax.antlr4.v10;
+@lexer::members {
+    int rparenBalance = 0;
+    int sqparenBalance = 0;
+    int curlyparenBalance = 0;
+    int htmlCurlyParenBalance = 0;
 }
 
 options { 
     superClass = LexerAdaptor;
     caseInsensitive = true;
 }
- 
+
+channels {PHP_CODE}
+
 tokens {
-   PHP_EXPRESSION,
-   PHP_VARIABLE,
-   PHP_KEYWORD,
-   PHP_NEW,
-   PHP_IDENTIFIER,
-   PHP_NAMESPACE_PATH, 
-   PHP_STATIC_ACCESS,
-   PHP_CLASS_KEYWORD,
-   PHP_INSTANCE_ACCESS,
-   BLADE_PARAM_EXTRA,
-   BLADE_PARAM_LPAREN,
-   BLADE_PARAM_RPAREN,
-   BLADE_EXPR_LPAREN,
-   BLADE_EXPR_RPAREN,
-   BL_SQ_LPAREN,
-   BL_SQ_LRAREN,
-   BL_PARAM_STRING,
-   BL_PARAM_ASSIGN,
-   BL_COMMA,
-   BL_PARAM_COMMA,
-   PHP_EXPR_STRING,
-   ERROR
+    LPAREN,
+    RPAREN,
+    D_CUSTOM,
+    D_DIRECTIVE,
+    IDENTIFIABLE_STRING,
+    BLADE_CONTENT_CLOSE_TAG,
+    LSQUAREBRACKET,
+    RSQUAREBRACKET,
+    LCURLYBRACE,
+    RCURLYBRACE,
+    D_PHP,
+    COMMA,
+    ERROR
 }
- 
-channels { COMMENT, PHP_CODE }
-
-fragment CompomentIdentifier
-    : [a-z\u0080-\ufffe][a-z0-9-_.:\u0080-\ufffe]*;
-
-fragment CssSelector
-    : ('#' | '.')? [a-z\u0080-\ufffe][a-z0-9-_:\u0080-\ufffe]* | CssAttrSelector;
-
-fragment JsFunctionStart
-    : NameString '(' NameString* (',' (' ')* NameString)* (' ')* ')' (' ')* ('{' { this._input.LA(1) != '{'}?)?;
-
-fragment StringParam
-    : [\\'] CssSelector ((' ')* CssSelector)* [\\'] | '"' CssSelector ((' ')* CssSelector)* [\\'] '"';
-
-fragment CssAttrSelector 
-    : '[' FullIdentifier (EQ StringAttrValue)?  ']';
-
-fragment StringAttrValue
-    : '"' FullIdentifier '"' | [\\'] FullIdentifier [\\'];
-//RULES
-
 
 //conditionals
-D_IF : '@if'->pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
-D_ELSEIF : '@elseif'->pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
+D_IF : '@if' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_ELSEIF : '@elseif' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
 D_ELSE : '@else';
 D_ENDIF : '@endif';
-D_SWITCH : '@switch'->pushMode(LOOK_FOR_PHP_EXPRESSION);
-D_CASE : '@case'->pushMode(LOOK_FOR_PHP_EXPRESSION);
+
+D_UNLESS: '@unless' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_ENDUNLESS: '@endunless';
+
+
+D_ISSET: '@isset' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_ENDISSET: '@endisset';
+
+D_SWITCH : '@switch' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_CASE : '@case' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
 D_DEFAULT : '@default';
 D_ENDSWITCH : '@endswitch';
 
-D_EMPTY : '@empty'->pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
-D_ENDEMPTY : '@endempty';
+//layouts
+D_EXTENDS : '@extends' (' ')* {lookupMode(PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING);};
+D_INCLUDE : '@include' (' ')* {lookupMode(PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING);};
+D_INCLUDE_IF : '@includeIf' (' ')* {lookupMode(PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING);};
+D_INCLUDE_WHEN : '@includeWhen' (' ')* {this.identifierStringPos = 2; lookupMode(PHP_EXPR_WITH_CUSTOM_IDENTIFIABLE_STRING_POS);};
+D_INCLUDE_UNLESS : '@includeUnless' (' ')* {this.identifierStringPos = 2; lookupMode(PHP_EXPR_WITH_CUSTOM_IDENTIFIABLE_STRING_POS);};
+D_INCLUDE_FIRST : '@includeFirst' (' ')* {lookupMode(INCLUDE_FIRST_MODE);};
+D_EACH : '@each' (' ')* {lookupMode(PHP_EXPR_EACH);};
 
-D_COND_BLOCK_START : ('@unless' | '@isset')->pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
-D_COND_BLOCK_END : ('@endunless' | '@endisset');
-
-//loops
-D_FOREACH : '@foreach'->pushMode(FOREACH_LOOP_EXPRESSION);
-D_ENDFOREACH : '@endforeach';
-D_FOR : '@for'->pushMode(LOOK_FOR_PHP_EXPRESSION);
-D_ENDFOR : '@endfor';
-D_FORELSE : '@forelse'->pushMode(FOREACH_LOOP_EXPRESSION);
-D_ENDFORELSE : '@endforelse';
-D_WHILE : '@while'->pushMode(LOOK_FOR_PHP_EXPRESSION);
-D_ENDWHILE : '@endwhile';
-D_BREAK : '@break'->pushMode(LOOK_FOR_PHP_EXPRESSION);
-D_LOOP_ACTION : ('@continue')->pushMode(LOOK_FOR_PHP_EXPRESSION);
-
-//includes
-D_INCLUDE : '@include'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-D_INCLUDE_IF : '@includeIf'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-D_INCLUDE_WHEN : '@includeWhen'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-D_INCLUDE_FIRST : '@includeFirst'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-D_INCLUDE_UNLESS : '@includeUnless'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-D_EACH : '@each'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-
-//layout
-D_EXTENDS : '@extends'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-
-//from livewire (converts variable to javascript syntax)
-D_JS : '@js'->pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
-
-//safe json_encode
-D_JSON  : '@json'->pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
-
-D_SECTION : '@section'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-D_HAS_SECTION : '@hasSection'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-D_SECTION_MISSING : '@sectionMissing'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
+D_YIELD : '@yield' (' ')* {lookupMode(PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING);};
+D_SECTION : '@section' (' ')* {lookupMode(PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING);};
+D_HAS_SECTION : '@hasSection' (' ')* {lookupMode(PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING);};
+D_SECTION_MISSING : '@sectionMissing' (' ')* {lookupMode(PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING);};
 D_ENDSECTION : '@endsection';
-D_YIELD : '@yield'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
+
 D_PARENT : '@parent';
 D_SHOW : '@show';
 D_OVERWRITE : '@overwrite';
@@ -151,362 +112,333 @@ D_STOP : '@stop';
 D_APPEND : '@append';
 D_ONCE : '@once';
 D_ENDONCE : '@endonce';
-D_STACK : '@stack'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-D_PUSH : '@push'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
+
+D_STACK : '@stack' (' ')* {lookupMode(PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING);};
+D_PUSH : '@push' (' ')* {lookupMode(PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING);};
 D_ENDPUSH : '@endpush';
-D_PUSH_IF : '@pushIf'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
+D_PUSH_IF : '@pushIf' (' ')* {lookupMode(PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING);};
 D_ENDPUSH_IF : '@endPushIf';
-D_PUSH_ONCE : '@pushOnce'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
+D_PUSH_ONCE : '@pushOnce' (' ')* {lookupMode(PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING);};
 D_ENDPUSH_ONCE : '@endPushOnce';
-D_PREPEND : '@prepend'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
+D_PREPEND : '@prepend' (' ')* {lookupMode(PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING);};
 D_ENDPREPEND : '@endprepend';
-D_PROPS : '@props'->pushMode(LOOK_FOR_PHP_EXPRESSION);
 
-D_FRAGMENT : '@fragment'->pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
-D_ENDFRAGMENT : '@endfragment';
 
-//forms
-D_CSRF  : '@csrf';
-D_METHOD : '@method'->pushMode(LOOK_FOR_PHP_EXPRESSION);
-D_ERROR : '@error'->pushMode(LOOK_FOR_PHP_EXPRESSION);
-D_ENDERROR : '@enderror';
+//loops
+D_FOREACH : '@foreach' (' ')* {lookupMode(FOREACH_PHP_EXPR);};
+D_ENDFOREACH : '@endforeach';
 
-//env
-D_PRODUCTION : '@production';
-D_ENDPRODUCTION : '@endproduction';
-D_ENV : '@env'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-D_ENDENV : '@endenv';
+D_FOR : '@for' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_ENDFOR : '@endfor';
 
-//auth and roles
-D_AUTH_START : ('@auth' | '@guest')->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-D_AUTH_END : ('@endauth' | '@endguest');
+D_FORELSE : '@forelse' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_ENDFORELSE : '@endforelse';
 
-//lazy parser
-D_PERMISSION_START : '@can' ('not' | 'any')?->pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
-D_PERMISSION_ELSE : '@elsecan' ('not' | 'any')?->pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
-D_PERMISSION_END : '@endcan' ('not' |'any')?;
+D_WHILE : '@while' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_ENDWHILE : '@endwhile';
 
-//styles, attributes
-D_CLASS : '@class'->pushMode(LOOK_FOR_PHP_EXPRESSION);
-D_STYLE : '@style'->pushMode(LOOK_FOR_PHP_EXPRESSION);
-D_HTML_ATTR_EXPR : ('@checked' | '@disabled' | '@readonly' | '@required' | '@selected')->pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
-D_AWARE : '@aware'->pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
+D_BREAK : '@break' (' ')* {flexibleMode(INSIDE_PHP_EXPRESSION);};
+D_CONTINUE : '@continue' (' ')* {flexibleMode(INSIDE_PHP_EXPRESSION);};
 
-//misc
-D_BOOL : '@bool'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-D_WHEN : '@when'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-D_SESSION : '@session'->pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
-D_ENDSESSION : '@endsession';
+//context
 
-D_DD : ('@dd' | '@dump')->pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
-D_LANG : '@lang'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-
-//php injection
-D_USE : '@use'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-D_INJECT : '@inject'->pushMode(LOOK_FOR_BLADE_PARAMETERS);
-D_PHP_SHORT : '@php' (' ')? {this._input.LA(1) == '('}? ->type(D_PHP),pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
-D_PHP : '@php' {this._input.LA(1) == ' ' || this._input.LA(1) == '\r' || this._input.LA(1) == '\n'}?->pushMode(BLADE_INLINE_PHP);
-
+D_EMPTY : '@empty' (' ')* {flexibleMode(INSIDE_PHP_EXPRESSION);};
+D_ENDEMPTY: '@endempty';
 D_VERBATIM : '@verbatim' ->pushMode(VERBATIM_MODE);
 D_ENDVERBATIM : '@endverbatim';
 
-//known plugins
-D_LIVEWIRE : '@livewireStyles' | '@bukStyles' | '@livewireScripts' | '@bukScripts' | '@livewire';
-D_ASSET_BUNDLER : '@vite'->pushMode(LOOK_FOR_PHP_COMPOSED_EXPRESSION);
+D_SESSION : '@session' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_ENDSESSION : '@endsession';
 
-D_MISC : '@viteReactRefresh';
+//forms
+D_CSRF  : '@csrf';
+D_METHOD : '@method' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_ERROR : '@error' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_ENDERROR : '@enderror';
 
-//we will decide that a custom directive has expression to avoid email matching
-D_CUSTOM : ('@' NameString {this._input.LA(1) == '(' || 
-        (this._input.LA(1) == ' ' && this._input.LA(2) == '(')}? ) ->pushMode(LOOK_FOR_BLADE_PARAMETERS);
+//authentification
 
-D_UNKNOWN_ATTR_ENC : '@' NameString {this._input.LA(1) == '"'}?;
-D_UNKNOWN : '@' NameString {this._input.LA(1) != '"'}?;
+D_AUTH : '@auth' (' ')* {flexibleMode(INSIDE_PHP_EXPRESSION);};
+D_ENDAUTH : '@endauth';
 
-//display
-CONTENT_TAG_OPEN : '{{' ->pushMode(INSIDE_REGULAR_ECHO);
-RAW_TAG_OPEN : '{!!' ->pushMode(INSIDE_RAW_ECHO);
+D_GUEST : '@guest' (' ')* {flexibleMode(INSIDE_PHP_EXPRESSION);};
+D_ELSEGUEST : '@elseguest';
+D_ENDGUEST : '@endguest';
 
-AT : '@'->type(HTML);
-//for completion
-RAW_TAG_START : '{!'->type(HTML);
+D_ENV : '@env' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_ENDENV : '@endenv';
+
+D_PRODUCTION : '@production';
+D_ENDPRODUCTION : '@endproduction';
+
+//permission
+D_CAN : '@can' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_ENDCAN : '@endcan';
+
+
+D_CANNOT : '@cannot' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_CANANY : '@canany' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_ELSECAN : '@elsecan' ('not' | 'any')? (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_ENDCANNOT : '@endcannot';
+D_ENDCANANY : '@endcanany';
+
+//blocks
+
+D_FRAGMENT : '@fragment' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+D_ENDFRAGMENT: '@endfragment';
+
+D_PHP_INLINE : '@php' (' ')* {this._input.LA(1) == '('}? ->type(D_PHP),pushMode(INSIDE_PHP_EXPRESSION);
+
+D_PHP : '@php' [ \r\n] ->pushMode(BLADE_INLINE_PHP);
+
+//misc
+D_SIMPLE_DIRECTIVE : ('@dd' | '@dump' | '@json' | '@style' | '@class' 
+| '@checked'  | '@disabled' | '@selected' | '@required' | '@readonly' 
+| '@when' | '@bool') (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);};
+
+D_VITE : '@vite' (' ')* {lookupMode(MIXED_STRING_AND_ARRAY_IDENTIFIER);}; 
+D_VITE_REFRESH : '@viteReactRefresh';
+
+D_LANG : '@lang' {lookupMode(PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING);};
+
+D_INJECT : '@inject' (' ')* {this.identifierStringPos = 2; lookupMode(PHP_EXPR_WITH_CUSTOM_IDENTIFIABLE_STRING_POS);};
+D_USE : '@use' {lookupMode(PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING);};
+
+//spatie
+D_LIVEWIRE_ARG : '@livewire' (' ')* {lookupMode(INSIDE_PHP_EXPRESSION);}->type(D_SIMPLE_DIRECTIVE);
+D_LIVEWIRE : ('@livewireStyles' | '@bukStyles' | '@livewireScripts' | '@bukScripts' | '@click' ('.away')? '=')->type(D_DIRECTIVE);
+
+
+
+//extra
+
+BLADE_CONTENT_OPEN_TAG : '{{' {htmlCurlyParenBalance=0;};
+BLADE_TAG_ESCAPE : '@' ('{')+->skip;
+//avoid curly closing 
+
+BLADE_CONTENT_CLOSE_TAG : '}}' {this.consumeCloseTag(htmlCurlyParenBalance);} ;
+
+BLADE_RAW_OPEN_TAG : '{!!';
+BLADE_RAW_CLOSE_TAG : '!!}';
+
+D_CSS_AT : CssAtWithArg->skip;
+D_CSS_AT2 : CssAtWithArg (' ')* {this._input.LA(1) == '('}?->skip;
+D_CUSTOM : '@' Identifier (' ')* {this._input.LA(1) == '('}?;
+
+D_ENDCUSTOM : '@end' Identifier;
+D_CUSTOM_SIMPLE : '@' Identifier ->type(D_CUSTOM);
+
+AT : '@' ->skip;
+
+COMMA : ',' ->skip;
+
+//for simpler syntax on parser
+LPAREN : '('->skip;
+RPAREN : ')'->skip;
+
+LSQUAREBRACKET: '['->skip;
+RSQUAREBRACKET: ']'->skip;
+
+LCURLYBRACE: '{' {htmlCurlyParenBalance++;}->skip;
+RCURLYBRACE: '}' {htmlCurlyParenBalance--;}->skip;
 
 PHP_INLINE_START : ('<?php' | '<?=')->pushMode(INSIDE_PHP_INLINE);
 
+HTML_COMPONENT_OPEN_TAG : '<x-' (Identifier (('::' | '.') Identifier)?)?;
 
-
-HTML_COMPONENT_PREFIX : '<x-' (CompomentIdentifier |  CompomentIdentifier ('::' CompomentIdentifier)+)? {this.setComponentTagOpenStatus(true);};
-HTML_L_COMPONENT : '<x-' CompomentIdentifier {this._input.LA(1) == '>'}? ->type(HTML_COMPONENT_PREFIX);
-JS_SCRIPT : ('$'? '(' StringParam | FullIdentifier ')' ('.' NameString)? |  JsFunctionStart ('.' JsFunctionStart)*) ->skip;
-HTML_TAG_START : '<' FullIdentifier;
-HTML_CLOSE_TAG : ('</' FullIdentifier [\n\r ]* '>')+ ->skip;
-HTML_TAG_SELF_CLOSE : '/>' {this.setComponentTagOpenStatus(false);}->type(HTML);
-HTML_CLOSE_SYMBOL : '>' {this.setComponentTagOpenStatus(false);} ->type(HTML);
-STRING_PATH : ('"' HTML_PATH* '"' | [\\'] HTML_PATH [\\'])->skip;
-HTML_PATH : (' ')* FullIdentifier ('/' FullIdentifier)+ ('.' NameString)? ('?' NameString (EQ NameString)*)? ->skip;
-HTML_TEXT : (' ')* FullIdentifier ((' ')+ FullIdentifier)+ ->skip;
-
-
-HTML_IDENTIFIER : FullIdentifier {this.consumeHtmlIdentifier();};
-
-EQ : '=';
 WS : ((' ')+ | [\r\n]+)->skip;
+
 OTHER : . ->skip;
 
-/**
-* MODES
-*
-*/
 
-// {{  }}
-mode INSIDE_REGULAR_ECHO;
+//==========================================
+//MODES
 
-REGULAR_ECHO_PHP_VAR : PhpVariable->type(PHP_VARIABLE);
-REGULAR_ECHO_KEYWORD : PhpKeyword->type(PHP_KEYWORD);
-
-REGULAR_PHP_NAMESPACE_PATH : ('\\'? (NameString '\\')+)->type(PHP_NAMESPACE_PATH);
-REGULAR_ECHO_PHP_IDENTIFIER : NameString->type(PHP_IDENTIFIER);
-REGULAR_ECHO_STATIC_ACCESS : '::'->type(PHP_STATIC_ACCESS);
-CONTENT_TAG_CLOSE : ('}}')->popMode;
-REGULAR_ECHO_LPAREN : '(' ->type(BLADE_EXPR_LPAREN);
-REGULAR_ECHO_RPAREN : ')' ->type(BLADE_EXPR_RPAREN);
-REGULAR_ECHO_INSTANCE_ACCESS : '->'->type(PHP_INSTANCE_ACCESS);
-
-//not treated
-REGULAR_ECHO_EXPR_MORE : . ->skip;
-EXIT_REGULAR_ECHO_EOF : EOF->type(ERROR),popMode;
-
-// {!!  !!}
-mode INSIDE_RAW_ECHO;
-
-RAW_ECHO_PHP_VAR : PhpVariable->type(PHP_VARIABLE);
-RAW_ECHO_KEYWORD : PhpKeyword->type(PHP_KEYWORD);
-RAW_ECHO_PHP_NAMESPACE_PATH : ('\\'? (NameString '\\')+)->type(PHP_NAMESPACE_PATH);
-RAW_ECHO_PHP_IDENTIFIER : NameString->type(PHP_IDENTIFIER);
-RAW_ECHO_STATIC_ACCESS : '::'->type(PHP_STATIC_ACCESS);
-RAW_TAG_CLOSE : ('!!}')->popMode;
-RAW_ECHO_LPAREN : '(' ->type(BLADE_EXPR_LPAREN);
-RAW_ECHO_RPAREN : ')' ->type(BLADE_EXPR_RPAREN);
-RAW_ECHO_INSTANCE_ACCESS : '->'->type(PHP_INSTANCE_ACCESS);
-
-//NOT TREATED
-RAW_ECHO_EXPR_MORE : . ->skip;
-EXIT_RAW_ECHO_EOF : EOF->type(ERROR),popMode;
-
-mode LOOK_FOR_PHP_EXPRESSION;
-
-WS_EXPR_ESCAPE : [ ]+ {this._input.LA(1) == '@'}?->skip, popMode;
-WS_EXPR : [ ]+->skip;
-OPEN_EXPR_PAREN_MORE : '(' ->more,pushMode(INSIDE_PHP_EXPRESSION);
-
-L_OHTER_ESCAPE : . {this._input.LA(1) == '@'}?->type(HTML), popMode;
-L_OTHER : . ->type(HTML), popMode;
-
-//{{}}, @if, @foreach
 mode INSIDE_PHP_EXPRESSION;
 
-OPEN_EXPR_PAREN : {this.getRoundParenBalance() == 0}? '(' {this.increaseRoundParenBalance();} ->more;
-CLOSE_EXPR_PAREN : {this.getRoundParenBalance() == 1}? ')' 
-    {this.decreaseRoundParenBalance();}->type(PHP_EXPRESSION),mode(DEFAULT_MODE);
+START_E_LPAREN: '(' {rparenBalance == 0}? {rparenBalance++;}->type(LPAREN);
+E_LPAREN: '(' {rparenBalance++;}->skip;
+EXIT_E_RPAREN: ')' {rparenBalance == 1}? {rparenBalance--;}  ->type(RPAREN),mode(DEFAULT_MODE);
+E_RPAREN: ')' {rparenBalance--;} ->skip;
 
-LPAREN : {this.getRoundParenBalance() > 0}? '(' {this.increaseRoundParenBalance();}->more;
-RPAREN : {this.getRoundParenBalance() > 0}? ')' {this.decreaseRoundParenBalance();}->more;
+E_LSQUAREBRACKET: '[' {sqparenBalance++;} ->skip;
+E_RSQUAREBRACKET: ']' {sqparenBalance--;}->skip;
 
-//in case of lexer restart context
-EXIT_RPAREN : ')' {this.getRoundParenBalance() == 0}?->type(PHP_EXPRESSION),mode(DEFAULT_MODE);
+E_LCURLYBRACE: '{' {curlyparenBalance++;}->skip;
+E_RCURLYBRACE: '}' {curlyparenBalance--;}->skip;
 
-PHP_EXPRESSION_MORE : . ->more;
+E_ARG_COMMA : ',' {rparenBalance == 1 && sqparenBalance == 0 && sqparenBalance == 0}? ->type(COMMA);
 
-EXIT_EOF : EOF->type(ERROR),popMode;
+E_OTHER : . ->skip;
 
-//@if
-mode LOOK_FOR_PHP_COMPOSED_EXPRESSION;
+EXIT_E_EOF : EOF->type(ERROR),mode(DEFAULT_MODE);
 
-WS_COMPOSED_EXPR : [ ]+->skip;
-BLADE_EXPR_LPAREN : '(' {this.resetRoundParenBalance();} ->pushMode(INSIDE_PHP_COMPOSED_EXPRESSION);
+//==========================================
+mode PHP_EXPR_WITH_FIRST_IDENTIFIABLE_STRING;
 
-L_COMPOSED_EXPR_OTHER : . ->type(HTML), popMode;
+EI_IDENTIFIABLE_STRING : (' ')*  STRING_LITERAL (' ')* 
+   {this._input.LA(1) == ',' || this._input.LA(1) == ')'}? ->type(IDENTIFIABLE_STRING),mode(INSIDE_PHP_EXPRESSION);
 
-//{{}}, @if, @foreach
-mode INSIDE_PHP_COMPOSED_EXPRESSION;
+START_EI_LPAREN: '(' {rparenBalance == 0}? {rparenBalance++;}->type(LPAREN);
+EI_LPAREN: '(' {rparenBalance++;}->skip;
+EXIT_EI_RPAREN: ')' {rparenBalance == 1}? {rparenBalance--;}  ->type(RPAREN),mode(DEFAULT_MODE);
+EI_RPAREN: ')' {rparenBalance--;} ->skip,mode(INSIDE_PHP_EXPRESSION);
 
-EXPR_SQ_LPAREN : '[' {this.increaseSquareParenBalance();}->type(BL_SQ_LPAREN);
-EXPR_SQ_RPAREN : ']' {this.decreaseSquareParenBalance();}->type(BL_SQ_RPAREN);
+EI_OTHER : . ->skip, mode(INSIDE_PHP_EXPRESSION);
 
-EXPR_CURLY_LPAREN : '{' {this.increaseCurlyParenBalance();}->type(PHP_EXPRESSION);
-EXPR_CURLY_RPAREN : '}' {this.decreaseCurlyParenBalance();}->type(PHP_EXPRESSION);
+EXIT_EI_EOF : EOF->type(ERROR),mode(DEFAULT_MODE);
 
-EXPR_STRING : DOUBLE_QUOTED_STRING_FRAGMENT | SINGLE_QUOTED_STRING_FRAGMENT;
+//==========================================
+mode PHP_EXPR_WITH_CUSTOM_IDENTIFIABLE_STRING_POS;
 
-//EXPR_ASSIGN : '=>'->type(BL_PARAM_ASSIGN);
+START_ESPOS_LPAREN: '(' {rparenBalance == 0}? {rparenBalance++; this.argCounter=1;}->type(LPAREN);
+ESPOS_LPAREN: '(' {rparenBalance++;}->skip;
+EXIT_ESPOS_RPAREN: ')' {rparenBalance == 1}? {rparenBalance--;}  ->type(RPAREN),mode(DEFAULT_MODE);
+ESPOS_RPAREN: ')' {rparenBalance--;} ->skip;
 
-COMPOSED_EXPR_PHP_VAR : PhpVariable->type(PHP_VARIABLE);
-COMPOSED_PHP_KEYWORD : PhpKeyword->type(PHP_KEYWORD);
-COMPOSED_PHP_NAMESPACE_PATH : ('\\'? (NameString '\\')+)->type(PHP_NAMESPACE_PATH);
-COMPOSED_EXPR_PHP_IDENTIFIER : NameString->type(PHP_IDENTIFIER);
-COMPOSED_EXPR_STATIC_ACCESS : '::'->type(PHP_STATIC_ACCESS);
+ESPOS_LSQUAREBRACKET: '[' {sqparenBalance++;} ->skip;
+ESPOS_RSQUAREBRACKET: ']' {sqparenBalance--;}->skip;
 
-COMPOSED_EXPR_LPAREN : '(' {this.increaseRoundParenBalance();}->type(BLADE_EXPR_LPAREN);
-COMPOSED_EXPR_RPAREN : ')' {consumeExprRParen();};
+ESPOS_LCURLYBRACE: '{' {curlyparenBalance++;}->skip;
+ESPOS_RCURLYBRACE: '}' {curlyparenBalance--;}->skip;
 
-//not treated
-PHP_COMPOSED_EXPRESSION : . ->skip;
+ESPOS_ARG_COMMA : ',' {rparenBalance == 1 && sqparenBalance == 0 && curlyparenBalance == 0}? {this.argCounter++;} ->type(COMMA);
 
-EXIT_COMPOSED_EXPRESSION_EOF : EOF->type(ERROR),popMode;
+ESPOS_IDENTIFIABLE_STRING : (' ')*  STRING_LITERAL (' ')* 
+   {(this._input.LA(1) == ',' || this._input.LA(1) == ')') 
+    && this.argCounter == this.identifierStringPos }? { this.identifierStringPos = 0;  } ->type(IDENTIFIABLE_STRING);
 
-//@section, @include etc
-mode LOOK_FOR_BLADE_PARAMETERS;
+ESPOS_OTHER : . ->skip;
 
-WS_BL_PARAM : [ ]+->skip;
-OPEN_BL_PARAM_PAREN_MORE : '(' {this.resetRoundParenBalance();} ->type(BLADE_PARAM_LPAREN),pushMode(INSIDE_BLADE_PARAMETERS);
+EXIT_ESPOS_EOF : EOF->type(ERROR),mode(DEFAULT_MODE);
 
-L_BL_PARAM_OTHER : . ->type(HTML), popMode;
+//==========================================
+//@each
+mode PHP_EXPR_EACH;
 
-mode FOREACH_LOOP_EXPRESSION;
+START_EACH_LPAREN: '(' {rparenBalance == 0}? {rparenBalance++;this.argCounter=1;}->type(LPAREN);
+EACH_LPAREN: '(' {rparenBalance++;}->skip;
+EXIT_EACH_RPAREN: ')' {rparenBalance == 1}? {rparenBalance--;}  ->type(RPAREN),mode(DEFAULT_MODE);
+EACH_RPAREN: ')' {rparenBalance--;} ->skip;
 
-FOREACH_WS_EXPR : [ ]+->skip;
-FOREACH_LOOP_LPAREN : '(' {this.increaseRoundParenBalance();};
-FOREACH_LOOP_RPAREN : ')' {this.decreaseRoundParenBalance(); if (this.getRoundParenBalance() == 0){this.popMode();}};
+EACH_LSQUAREBRACKET: '[' {sqparenBalance++;} ->skip;
+EACH_RSQUAREBRACKET: ']' {sqparenBalance--;}->skip;
+
+EACH_LCURLYBRACE: '{' {curlyparenBalance++;}->skip;
+EACH_RCURLYBRACE: '}' {curlyparenBalance--;}->skip;
+
+EACH_ARG_COMMA : ',' {rparenBalance == 1 && sqparenBalance == 0 && sqparenBalance == 0}? {this.argCounter++;} ->type(COMMA);
+
+EACH_IDENTIFIABLE_STRING : (' ')*  STRING_LITERAL (' ')* 
+   {this.argCounter == 1 && this.identifierStringPos == 1 }? { this.identifierStringPos = 4;  } ->type(IDENTIFIABLE_STRING);
+
+EACH_LAST_IDENTIFIABLE_STRING : (' ')*  STRING_LITERAL (' ')* 
+   {this._input.LA(1) == ')' && this.argCounter == 4 && this.identifierStringPos == 4 }? { this.identifierStringPos = 0;  } ->type(IDENTIFIABLE_STRING);
+
+EACH_OTHER : . ->skip;
+
+EXIT_EACH_EOF : EOF->type(ERROR),mode(DEFAULT_MODE);
+
+//==========================================
+//@includeFirst
+mode INCLUDE_FIRST_MODE;
+
+START_INCF_LPAREN: '(' {rparenBalance == 0}? {rparenBalance++;this.argCounter=1;}->type(LPAREN);
+INCF_LPAREN: '(' {rparenBalance++;}->skip;
+EXIT_INCF_RPAREN: ')' {rparenBalance == 1}? {rparenBalance--;}  ->type(RPAREN),mode(DEFAULT_MODE);
+INCF_RPAREN: ')' {rparenBalance--;} ->skip;
+
+INCF_LSQUAREBRACKET: '[' {sqparenBalance++;} ->skip;
+INCF_RSQUAREBRACKET: ']' {sqparenBalance--;}->skip;
+
+INCF_LCURLYBRACE: '{' {curlyparenBalance++;}->skip;
+INCF_RCURLYBRACE: '}' {curlyparenBalance--;}->skip;
+
+INCF_ARG_COMMA : ',' {rparenBalance == 1 && sqparenBalance == 0 && curlyparenBalance == 0}? {this.argCounter++;} ->type(COMMA);
+
+INCF_IDENTIFIABLE_STRING : (' ')*  STRING_LITERAL (' ')*
+    {rparenBalance == 1 && sqparenBalance == 1 && this.argCounter == 1}? ->type(IDENTIFIABLE_STRING)
+    ;
+
+INCF_OTHER : . ->skip;
+
+EXIT_INCF_EOF : EOF->type(ERROR),mode(DEFAULT_MODE);
+
+//==========================================
+mode MIXED_STRING_AND_ARRAY_IDENTIFIER;
+
+START_MIXED_S_A_LPAREN: '(' {rparenBalance == 0}? {rparenBalance++;}->type(LPAREN);
+MIXED_S_A_LPAREN: '(' {rparenBalance++;}->skip;
+EXIT_MIXED_S_A_RPAREN: ')' {rparenBalance == 1}? {rparenBalance--;}  ->type(RPAREN),mode(DEFAULT_MODE);
+MIXED_S_A_RPAREN: ')' {rparenBalance--;} ->skip;
+
+MIXED_S_A_LSQUAREBRACKET: '[' {sqparenBalance++;} ->skip;
+MIXED_S_A_RSQUAREBRACKET: ']' {sqparenBalance--;}->skip;
+
+MIXED_S_A_LCURLYBRACE: '{' {curlyparenBalance++;}->skip;
+MIXED_S_A_RCURLYBRACE: '}' {curlyparenBalance--;}->skip;
+
+MIXED_S_A_ARG_COMMA : ',' {rparenBalance == 1 && sqparenBalance == 1 && curlyparenBalance == 0}? ->type(COMMA);
+
+MIXED_S_A_IDENTIFIABLE_STRING : (' ')*  STRING_LITERAL (' ')*
+    {rparenBalance == 1}? ->type(IDENTIFIABLE_STRING)
+    ;
+
+MIXED_S_A_OTHER : . ->skip;
+
+EXIT_MIXED_S_A_EOF : EOF->type(ERROR),mode(DEFAULT_MODE);
+
+//==========================================
+//@foreach expr
+mode FOREACH_PHP_EXPR;
+
+START_FOREACH_LPAREN: '(' {rparenBalance == 0}? {rparenBalance++;}->type(LPAREN);
+FOREACH_LPAREN: '(' {rparenBalance++;}->skip;
+EXIT_FOREACH_RPAREN: ')' {rparenBalance == 1}? {rparenBalance--;}  ->type(RPAREN),mode(DEFAULT_MODE);
+FOREACH_RPAREN: ')' {rparenBalance--;} ->skip;
+
+FOREACH_LSQUAREBRACKET: '[' {sqparenBalance++;} ->skip;
+FOREACH_RSQUAREBRACKET: ']' {sqparenBalance--;}->skip;
+
+FOREACH_LCURLYBRACE: '{' {curlyparenBalance++;}->skip;
+FOREACH_RCURLYBRACE: '}' {curlyparenBalance--;}->skip;
+
+FOREACH_VAR : '$' Identifier {rparenBalance == 1}?; //not in argument
 
 FOREACH_AS : 'as';
 
-FOREACH_PHP_VARIABLE : PhpVariable->type(PHP_VARIABLE);
+FOREACH_DOUBLE_ARROW : '=>' {rparenBalance == 1 && sqparenBalance == 0 && curlyparenBalance == 0}?;
 
-FOREACH_PARAM_ASSIGN : '=>';
+FOREACH_OTHER : . ->skip;
 
-LOOP_COMPOSED_PHP_KEYWORD : PhpKeyword->type(PHP_EXPRESSION);
+EXIT_FOREACH_EOF : EOF->type(ERROR),mode(DEFAULT_MODE);
 
-LOOP_NAME_STRING : (DOUBLE_QUOTED_STRING_FRAGMENT | SINGLE_QUOTED_STRING_FRAGMENT | NameString)->type(PHP_EXPRESSION);
-
-LOOP_STATIC_ACCESS : '::'->type(PHP_EXPRESSION);
-
-LOOP_PHP_EXPRESSION : . ->type(PHP_EXPRESSION);
-FOREACH_EOF : EOF->type(ERROR),popMode;
-//( )
-mode INSIDE_BLADE_PARAMETERS;
-
-BL_PARAM_LINE_COMMENT : LineComment->channel(COMMENT);
-
-BL_SQ_LPAREN : '[' {this.increaseSquareParenBalance();};
-BL_SQ_RPAREN : ']' {this.decreaseSquareParenBalance();};
-
-BL_CURLY_LPAREN : '{' {this.increaseCurlyParenBalance();}->type(BLADE_PARAM_EXTRA);
-BL_CURLY_RPAREN : '}' {this.decreaseCurlyParenBalance();}->type(BLADE_PARAM_EXTRA);
-
-BL_PARAM_LPAREN : '(' {this.increaseRoundParenBalance();}->type(BLADE_PARAM_EXTRA);
-BL_PARAM_RPAREN : ')' {consumeParamRParen();};
-
-BL_PARAM_STRING : DOUBLE_QUOTED_STRING_FRAGMENT | SINGLE_QUOTED_STRING_FRAGMENT;
-
-BL_PARAM_PHP_VARIABLE : PhpVariable->type(PHP_VARIABLE);
-
-BL_PARAM_ASSIGN : '=>';
-
-BL_PARAM_PHP_KEYWORD : PhpKeyword->type(PHP_KEYWORD);
-
-BL_PARAM_CONCAT_OPERATOR : '.';
-
-BL_COMMA_EL : ','  {this.consumeBladeParamComma();};
-
-BL_PARAM_WS : [ \t\r\n]+->skip;
-
-BL_NAME_STRING : NameString;
-
-BL_PARAM_MORE : . ->type(BLADE_PARAM_EXTRA);
-
-BL_PARAM_EXIT_EOF : EOF->type(ERROR),popMode;
-
+//==========================================
 //@php @endphp
 mode BLADE_INLINE_PHP;
 
-PHP_D_BLADE_COMMENT : ('//' ~[\n\r]+)->skip;
-PHP_D_BLADE_ML_COMMENT : '/*' .*? '*/' [\n\r]*->skip;
-
 D_ENDPHP : '@endphp'->popMode;
-PHP_D_UNKNOWN : '@'->type(HTML),popMode;
 
-//hack to merge all php inputs into one token
-PHP_D_EXPR_SQ_LPAREN : '[' ->type(PHP_EXPRESSION);
-PHP_D_EXPR_SQ_RPAREN : ']' ->type(PHP_EXPRESSION);
+BLADE_INLINE_PHP_OTHER : . ->skip;
 
-PHP_D_EXPR_CURLY_LPAREN : '{' ->type(PHP_EXPRESSION);
-PHP_D_EXPR_CURLY_RPAREN : '}' ->type(PHP_EXPRESSION);
+EXIT_BLADE_INLINE_PHP : EOF->type(ERROR),mode(DEFAULT_MODE);
 
-PHP_D_EXPR_STRING : (DOUBLE_QUOTED_STRING_FRAGMENT | SINGLE_QUOTED_STRING_FRAGMENT)->type(PHP_EXPR_STRING);
-
-//EXPR_ASSIGN : '=>'->type(BL_PARAM_ASSIGN);
-
-PHP_D_COMPOSED_EXPR_PHP_VAR : PhpVariable->type(PHP_VARIABLE);
-PHP_D_NEW : 'new' {this._input.LA(1) == ' '}? ->type(PHP_NEW);
-PHP_D_CLASS : 'class' ->type(PHP_CLASS_KEYWORD);
-
-PHP_D_COMPOSED_PHP_KEYWORD : PhpKeyword->type(PHP_KEYWORD);
-
-PHP_D_NAMESPACE_PATH : ('\\'? (NameString '\\')+)->type(PHP_NAMESPACE_PATH);
-
-PHP_D_COMPOSED_EXPR_PHP_CLASS_IDENTIFIER : '\\' NameString->type(PHP_IDENTIFIER);
-PHP_D_COMPOSED_EXPR_PHP_IDENTIFIER : NameString->type(PHP_IDENTIFIER);
-PHP_D_COMPOSED_EXPR_STATIC_ACCESS : '::'->type(PHP_STATIC_ACCESS);
-
-PHP_D_COMPOSED_EXPR_LPAREN : '('->type(BLADE_EXPR_LPAREN);
-PHP_D_COMPOSED_EXPR_RPAREN : ')' ->type(BLADE_EXPR_RPAREN);
-PHP_D_WS : ' ' ->skip;
-
-PHP_D_EXIT_COMPOSED_EXPRESSION_EOF : EOF->type(ERROR),popMode;
-
-//untreated
-PHP_D_PHP_COMPOSED_EXPRESSION : . ->skip;
-
-//php inline <?php ?>
-//might think to skip tokens which are not used ??
-mode INSIDE_PHP_INLINE;
-
-PHP_EXIT : '?>'->popMode;
-
-PHP_INLINE_COMMENT : ('//' ~[\n\r]+)->skip;
-PHP_INLINE_ML_COMMENT : ('/*' .*? '*/')->skip;
-//hack to merge all php inputs into one token
-PHP_EXPR_SQ_LPAREN : '[' ->type(PHP_EXPRESSION);
-PHP_EXPR_SQ_RPAREN : ']' ->type(PHP_EXPRESSION);
-
-PHP_EXPR_CURLY_LPAREN : '{' ->type(PHP_EXPRESSION);
-PHP_EXPR_CURLY_RPAREN : '}' ->type(PHP_EXPRESSION);
-
-PHP_EXPR_STRING : (DOUBLE_QUOTED_STRING_FRAGMENT | SINGLE_QUOTED_STRING_FRAGMENT)->type(PHP_EXPR_STRING);
-
-//EXPR_ASSIGN : '=>'->type(BL_PARAM_ASSIGN);
-
-PHP_COMPOSED_EXPR_PHP_VAR : PhpVariable->type(PHP_VARIABLE);
-PHP_COMPOSED_PHP_KEYWORD : PhpKeyword->type(PHP_KEYWORD);
-PHP_COMPOSED_EXPR_PHP_IDENTIFIER : NameString->type(PHP_IDENTIFIER);
-PHP_COMPOSED_EXPR_STATIC_ACCESS : '::'->type(PHP_STATIC_ACCESS);
-//need to implement alias access
-PHP_COMPOSED_EXPR_INSTANCE_ACCESS : '->'->type(PHP_INSTANCE_ACCESS);
-
-PHP_COMPOSED_EXPR_LPAREN : '('->type(BLADE_EXPR_LPAREN);
-PHP_COMPOSED_EXPR_RPAREN : ')' ->type(BLADE_EXPR_RPAREN);
-
-
-PHP_EXIT_COMPOSED_EXPRESSION_EOF : EOF->type(PHP_EXPRESSION),popMode;
-
-PHP_PHP_COMPOSED_EXPRESSION : . ->type(PHP_EXPRESSION);
-
+//==========================================
+//@verbatim
 mode VERBATIM_MODE;
 
 D_ENDVERBATIM_IN_MODE : '@endverbatim'->type(D_ENDVERBATIM), mode(DEFAULT_MODE);
 
-//hack to merge all php inputs into one token
-VERBATIM_HTML : . {
-        this._input.LA(1) == '@' &&
-        this._input.LA(2) == 'e' &&
-        this._input.LA(3) == 'n' &&
-        this._input.LA(4) == 'd' &&
-        this._input.LA(5) == 'v' &&
-        this._input.LA(6) == 'e' &&
-        this._input.LA(7) == 'r'
-      }? ->skip;
+VERBATIM_HTML : . ->skip;
 
 
 EXIT_VERBATIM_MOD_EOF : EOF->type(ERROR),mode(DEFAULT_MODE);
 
-VERBATIM_HTML_MORE : . ->more;
+//==========================================
+mode INSIDE_PHP_INLINE;
+
+PHP_INLINE_EXIT : '?>'->popMode;
+
+PHP_INLINE_OTHER : . ->skip;
+
+PHP_INLINE_EOF : EOF->mode(DEFAULT_MODE);

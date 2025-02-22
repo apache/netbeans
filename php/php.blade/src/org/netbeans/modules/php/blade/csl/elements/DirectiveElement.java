@@ -28,7 +28,7 @@ import org.openide.filesystems.FileObject;
 public class DirectiveElement extends NamedElement {
 
     public DirectiveElement(String name, FileObject file) {
-        super(name, file, ElementType.PATH);
+        super(name, file, ElementType.DIRECTIVE);
     }
 
     @Override

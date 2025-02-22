@@ -57,7 +57,7 @@ public class IndexManager {
         } else {
             //falback
             String projectDir = project.getProjectDirectory().getPath();
-            File viewPath = new File(projectDir + "/views");
+            File viewPath = new File(projectDir + "/views"); // NOI18N
             if (viewPath.exists()) {
                 FileObject fileObj = FileUtil.toFileObject(viewPath);
                 Enumeration<? extends FileObject> children = fileObj.getChildren(true);

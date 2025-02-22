@@ -22,13 +22,23 @@ package org.netbeans.modules.php.blade.syntax;
  *
  * @author bhaidu
  */
-public class BladeTagsUtils {
+public final class BladeTagsUtils {
 
+    public static final String CONTENT_TAG_OPEN = "{{"; //NOI18N
+    public static final String CONTENT_TAG_CLOSE = "}}"; //NOI18N
+    
+    public static final String RAW_TAG_OPEN = "{!!"; //NOI18N
+    public static final String RAW_TAG_CLOSE = "!!}"; //NOI18N
+    
+    private BladeTagsUtils(){
+        
+    }
+    
     public static String[] outputCloseTags() {
-        return new String[]{"}}", "!!}"}; //NOI18N
+        return new String[]{CONTENT_TAG_CLOSE, RAW_TAG_CLOSE}; 
     }
 
     public static String[] outputStartTags() {
-        return new String[]{"{{", "{!!"}; //NOI18N
+        return new String[]{CONTENT_TAG_OPEN, RAW_TAG_OPEN};
     }
 }

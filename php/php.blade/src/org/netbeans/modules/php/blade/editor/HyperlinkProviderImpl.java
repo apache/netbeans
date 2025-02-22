@@ -19,7 +19,9 @@
 package org.netbeans.modules.php.blade.editor;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.text.Document;
@@ -33,6 +35,7 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.project.Project;
 import org.netbeans.editor.BaseDocument;
+import static org.netbeans.lib.editor.hyperlink.spi.HyperlinkType.GO_TO_DECLARATION;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.blade.editor.lexer.PHPLexerUtils;
 import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
@@ -46,7 +49,7 @@ import org.openide.util.Exceptions;
 
 /**
  * Similar to a declaration finder
- * causes ordinal error
+ * 
  *
  * @author bhaidu
  */
@@ -58,7 +61,11 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
     private String tooltipText = ""; // NOI18N
     private FileObject goToFile;
     private int goToOffset = 0;
-    public static final String FILE_TITLE = "Blade Template File";
+    public static final int MIN_STRING_IDENTIIFER_LENGTH = 5;
+    public static final String FILE_TITLE = "Blade Template File"; // NOI18N
+    
+    String[] viewMethods = new String[]{"view", "render", "make"}; // NOI18N
+    Set<String> viewMethodSet = new HashSet<>(Arrays.asList(viewMethods));
 
     public enum DeclarationType {
         VIEW_PATH;
@@ -106,7 +113,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
         //2 char config are not that relevant
         //2 qoute char an 3 char minimum length text
-        if (focusedText.length() < 5 || !EditorStringUtils.isQuotedString(focusedText)) {
+        if (focusedText.length() < MIN_STRING_IDENTIIFER_LENGTH || !EditorStringUtils.isQuotedString(focusedText)) {
             return null;
         }
 
@@ -124,30 +131,25 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             if (prevTokenId != null && id.equals(PHPTokenId.PHP_STRING)) {
                 methodName = text;
                 //tooltip text
-                switch (methodName) {
-                    case "view", "make", "render" -> { // NOI18N
-                        FileObject currentFile = EditorUtils.getFileObject(doc);
+                if (viewMethodSet.contains(methodName)) {
+                    FileObject currentFile = EditorUtils.getFileObject(doc);
 
-                        if (currentFile == null) {
-                            return null;
-                        }
-                        List<FileObject> includedFiles = BladePathUtils.findFileObjectsForBladeViewPath(currentFile, identifiableText);
-                        String viewPath = BladePathUtils.toBladeToProjectFilePath(identifiableText);
-
-                        for (FileObject includedFile : includedFiles) {
-                            goToFile = includedFile;
-                            tooltipText = FILE_TITLE 
-                                    + " : <b>" + viewPath // NOI18N
-                                    + "</b><br><br><i style='margin-left:20px;'>" + identifiableText + "</i>"; // NOI18N
-                            goToOffset = 0;
-                            break;
-                        }
-
-                        return new int[]{startOffset, startOffset + currentToken.length()};
-                    }
-                    default -> {
+                    if (currentFile == null) {
                         return null;
                     }
+                    List<FileObject> includedFiles = BladePathUtils.findFileObjectsForBladeViewPath(currentFile, identifiableText);
+                    String viewPath = BladePathUtils.toBladeToProjectFilePath(identifiableText);
+
+                    for (FileObject includedFile : includedFiles) {
+                        goToFile = includedFile;
+                        tooltipText = FILE_TITLE 
+                                + " : <b>" + viewPath // NOI18N
+                                + "</b><br><br><i style='margin-left:20px;'>" + identifiableText + "</i>"; // NOI18N
+                        goToOffset = 0;
+                        break;
+                    }
+
+                    return new int[]{startOffset, startOffset + currentToken.length()};
                 }
             }
 
@@ -160,25 +162,12 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
     @Override
     public void performClickAction(Document doc, int offset, HyperlinkType type) {
-        switch (type) {
-            case GO_TO_DECLARATION -> {
-                switch (methodName) {
-                    case "view", "make", "render" -> // NOI18N
-                    {
-                        if (goToFile != null) {
-                            openDocument(goToFile, goToOffset);
-                        }
-                    }
-                    default -> {
-                        //no-op
-                    }
-                }
-            }
-            case ALT_HYPERLINK -> {
-                JTextComponent focused = EditorRegistry.focusedComponent();
-                if (focused != null && focused.getDocument() == doc) {
-                    focused.setCaretPosition(offset);
-                }
+        if (!type.equals(GO_TO_DECLARATION)) {
+            return;
+        }
+        if (viewMethodSet.contains(methodName)) {
+            if (goToFile != null) {
+                openDocument(goToFile, goToOffset);
             }
         }
     }

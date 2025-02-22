@@ -32,7 +32,9 @@ import org.netbeans.modules.csl.api.Rule;
 import org.netbeans.modules.csl.api.Rule.ErrorRule;
 import org.netbeans.modules.csl.api.RuleContext;
 import org.netbeans.modules.csl.api.HintsProvider;
+import org.netbeans.modules.php.blade.editor.BladeLanguage;
 import org.netbeans.modules.php.blade.editor.directives.CustomDirectives;
+import static org.netbeans.modules.php.blade.editor.hints.PhpDirectiveSyntaxErrorRule.PHP_SYNTAX_ERROR_HINT_ID;
 import org.netbeans.modules.php.blade.editor.parser.BladeParserResult;
 import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
 import org.netbeans.modules.php.blade.project.ProjectUtils;
@@ -71,16 +73,12 @@ public class BladeHintsProvider implements HintsProvider {
                     continue;
                 }
                 if (astRule instanceof UnknownDirective) {
-                    for (Map.Entry<OffsetRange, BladeParserResult.Reference> entry : parserResult.customDirectivesReferences.entrySet()) {
-                        if (entry.getValue().type == BladeParserResult.ReferenceType.POSSIBLE_DIRECTIVE) {
-                            continue;
-                        }
-
-                        if (ct.customDirectiveConfigured(entry.getValue().identifier)) {
+                    for (Map.Entry<OffsetRange, String> entry : parserResult.getBladeCustomDirectiveOccurences().getAll().entrySet()) {
+                        if (ct.customDirectiveConfigured(entry.getValue())) {
                             continue;
                         }
                         hints.add(new Hint(astRule,
-                                "Unknown directive. Try adding the provider class file using Project -> Properties -> Custom Directives",
+                                "Unknown directive. Try adding the provider class file using Project -> Properties -> Custom Directives", //NOI18N
                                 context.parserResult.getSnapshot().getSource().getFileObject(),
                                 entry.getKey(),
                                 Collections.emptyList(),
@@ -91,7 +89,7 @@ public class BladeHintsProvider implements HintsProvider {
         }
 
         //validate path config
-        for (Map.Entry<String, List<OffsetRange>> entry : parserResult.includeBladeOccurences.entrySet()) {
+        for (Map.Entry<String, List<OffsetRange>> entry : parserResult.getBladeReferenceIdsCollection().getIncludePathsOccurences().entrySet()) {
             FileObject realFile = BladePathUtils.findFileObjectForBladeViewPath(parserResult.getFileObject(),
                     entry.getKey());
             if (realFile != null) {
@@ -179,6 +177,17 @@ public class BladeHintsProvider implements HintsProvider {
     @Override
     public RuleContext createRuleContext() {
         return new BladeRuleContext();
+    }
+    
+    public static boolean phpSyntaxErrorsDisplayEnabled() {
+        HintsManager bladeHintsManager = HintsProvider.HintsManager.getManagerForMimeType(BladeLanguage.MIME_TYPE);
+        Map<?, List<? extends Rule.AstRule>> allHints = bladeHintsManager.getHints();
+        List<? extends Rule.AstRule> phpSyntaxHints = allHints.get(PHP_SYNTAX_ERROR_HINT_ID); //NOI18N
+        if (phpSyntaxHints == null || phpSyntaxHints.isEmpty()) {
+            return false;
+        }
+        Rule.AstRule rule = phpSyntaxHints.get(0);
+        return bladeHintsManager.isEnabled(rule);
     }
 
     private static final class BladeRule implements ErrorRule {

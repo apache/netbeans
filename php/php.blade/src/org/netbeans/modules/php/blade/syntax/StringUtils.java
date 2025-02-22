@@ -25,6 +25,7 @@ package org.netbeans.modules.php.blade.syntax;
 public final class StringUtils {
 
     public static final String DOT = "."; //NOI18N
+    public static final String ESCAPED_DOT = "\\."; //NOI18N
     public static final String FORWARD_SLASH = "/"; //NOI18N
 
     private StringUtils() {
@@ -52,16 +53,21 @@ public final class StringUtils {
     }
 
     public static String toKebabCase(String str) {
-        return str.replaceAll("([A-Z])", "-$1").toLowerCase().substring(1); // NOI18N
+        return str.replaceAll("([A-Z])", "-$1").toLowerCase().substring(1); //NOI18N
     }
 
     public static String kebabToCamel(String str) {
-        String[] words = str.toLowerCase().split("-"); // NOI18N
+        str = str.toLowerCase();
+        String[] words = str.split("-"); //NOI18N
         String camelCase = words[0];
         for (int i = 1; i < words.length; i++) {
             camelCase += words[i].substring(0, 1).toUpperCase() + words[i].substring(1);
         }
         return capitalize(camelCase);
+    }
+
+    public static boolean isWhitespace(String text) {
+        return text.replaceAll(" ", "").isEmpty(); //NOI18N
     }
 
     public static String replaceLinesAndTabs(String input) {

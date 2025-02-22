@@ -85,6 +85,7 @@ public class BladeCommentHandler extends CommentHandler.DefaultCommentHandler {
                         case BLADE_DIRECTIVE -> {
                             bounds[0] = ts.offset();
 
+                            //looking for directive arguments bounds
                             if (ts.moveNext() && ts.token().id() == BladeTokenId.PHP_BLADE_EXPRESSION) {
                                 bounds[1] =  ts.offset() + ts.token().length();
                             }

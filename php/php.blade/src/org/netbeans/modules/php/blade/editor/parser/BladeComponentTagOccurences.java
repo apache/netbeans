@@ -16,15 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.blade.editor.completion;
+package org.netbeans.modules.php.blade.editor.parser;
 
-import org.netbeans.modules.php.blade.syntax.DirectivesList;
-import org.netbeans.modules.php.blade.syntax.annotation.Directive;
+import java.util.Set;
+import java.util.TreeSet;
+import org.netbeans.modules.csl.api.OffsetRange;
 
-public final class DirectiveCompletionList {
+/**
+ *
+ * @author bogdan
+ */
+public class BladeComponentTagOccurences {
 
-    public Directive[] getDirectives() {
-        DirectivesList listClass = new DirectivesList();
-        return listClass.getDirectives();
+    private final Set<OffsetRange> bladeComponentTagOcurences = new TreeSet<>();
+
+    public void markPhpExpressionOccurence(OffsetRange range) {
+        bladeComponentTagOcurences.add(range);
+    }
+
+    public OffsetRange findOffsetBladeComponentTag(int offset) {
+        for (OffsetRange range : bladeComponentTagOcurences) {
+
+            if (offset < range.getStart()) {
+                //excedeed the offset range
+                break;
+            }
+
+            if (range.containsInclusive(offset)) {
+                return range;
+            }
+        }
+
+        return null;
     }
 }

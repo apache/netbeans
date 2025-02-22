@@ -21,6 +21,7 @@ package org.netbeans.modules.php.blade.editor.parser;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import javax.swing.text.StyledDocument;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import org.netbeans.modules.csl.spi.ParserResult;
@@ -30,6 +31,9 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.php.blade.editor.BladeTestBase;
+import org.openide.cookies.EditorCookie;
+import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
 
 /**
  *
@@ -46,7 +50,11 @@ public class ParserPerformanceTest extends BladeTestBase {
     }
 
     private void testFile(String filePath) throws Exception {
-        Source testSource = getTestSource(getTestFile(filePath));
+        FileObject fo = getTestFile(filePath);
+        DataObject dobj = DataObject.find(fo);
+        EditorCookie ed = dobj.getCookie(org.openide.cookies.EditorCookie.class);
+        StyledDocument test = ed.openDocument();
+        Source testSource = getTestSource(fo);
 
         Date start = new Date();
         ParserManager.parse(Collections.singleton(testSource), new UserTask() {

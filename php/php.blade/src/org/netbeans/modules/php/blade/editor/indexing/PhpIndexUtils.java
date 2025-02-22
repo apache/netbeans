@@ -43,15 +43,27 @@ import org.openide.util.Exceptions;
  *
  * @author bhaidu
  */
-public final class PhpIndexUtils {
+public class PhpIndexUtils {
 
     public final static String ESCAPED_NAMESPACE_SEPARATOR = "\\\\"; // NOI18N
     private final static QueryCache<String, Collection<PhpIndexResult>> cache = new QueryCache();
     private final static QueryCache<String, Collection<PhpIndexFunctionResult>> functionCache = new QueryCache();
+    private final static int SIGN_NAME_POS = 1;
+    private final static int SIGN_METHOD_OFFSET_POS = 2;
+    private final static int SIGN_METHOD_PARAMS_POS = 3;
+    private final static int SIGN_NAMESPACE_ROOT_POS = 2;
+    private final static int SIGN_CLASS_NAMESPACE_POS = 4;
+    private final static String PHP_INDEX_INFO_SEPARATOR = ";";
+    
+    private final static int MIN_NAMESPACE_LENGTH = 3;
 
-    public static final int MIN_NAMESPACE_PREFIX_LENGTH = 3;
     private static final Map<Integer, PhpIndexUtils> QUERY_SUPPORT_INSTANCES = new WeakHashMap<>();
 
+    public enum FieldAccessType {
+        STATIC,
+        DIRECT
+    }
+    
     private PhpIndexUtils() {
 
     }
@@ -82,8 +94,8 @@ public final class PhpIndexUtils {
                 String[] values = indexResult.getValues(PHPIndexer.FIELD_CLASS);
                 for (String value : values) {
                     Signature sig = Signature.get(value);
-                    String fullName = sig.string(1);
-                    String namespace = sig.string(4);
+                    String fullName = sig.string(SIGN_NAME_POS);
+                    String namespace = sig.string(SIGN_CLASS_NAMESPACE_POS);
 
                     if (fullName.length() > 0 && fullName.startsWith(prefix)) {
                         results.add(new PhpIndexResult(fullName, namespace,
@@ -102,11 +114,11 @@ public final class PhpIndexUtils {
         return results;
     }
 
-    public static Collection<PhpIndexResult> queryNamespaceClassesName(String prefix,
-            String namespace, FileObject fo) {
+    public static Collection<PhpIndexResult> queryNamespaceClassesName(FileObject fo, String prefix,
+            String namespace) {
         QuerySupport phpindex = QuerySupportFactory.get(fo);
         Collection<PhpIndexResult> results = new ArrayList<>();
-        String queryPrefix = prefix.toLowerCase() + ".*" + namespace.replace(NAMESPACE_SEPARATOR, ESCAPED_NAMESPACE_SEPARATOR) + ";.*"; // NOI18N
+        String queryPrefix = prefix.toLowerCase() + ".*" + namespace.replace(NAMESPACE_SEPARATOR, ESCAPED_NAMESPACE_SEPARATOR) + ";.*";// NOI18N
 
         try {
             Collection<? extends IndexResult> indexResults = phpindex.query(
@@ -116,12 +128,11 @@ public final class PhpIndexUtils {
                 FileObject indexFile = indexResult.getFile();
 
                 String[] values = indexResult.getValues(PHPIndexer.FIELD_CLASS);
-                //should use this approach on methods
-                //String[] fields = indexResult.getValues(PHPIndexer.FIELD_FIELD);
+
                 for (String value : values) {
                     Signature sig = Signature.get(value);
-                    String fullName = sig.string(1);
-                    String classNamespace = sig.string(4);
+                    String fullName = sig.string(SIGN_NAME_POS);
+                    String classNamespace = sig.string(SIGN_CLASS_NAMESPACE_POS);
                     if (fullName.length() > 0
                             && classNamespace.length() > 0
                             && classNamespace.startsWith(namespace)) {
@@ -135,7 +146,7 @@ public final class PhpIndexUtils {
         }
         return results;
     }
-
+    
     public static Collection<PhpIndexResult> queryExactNamespaceClasses(String identifier,
             String namespace, FileObject fo) {
         QuerySupport phpindex = QuerySupportFactory.get(fo);
@@ -143,23 +154,23 @@ public final class PhpIndexUtils {
 
         try {
             Collection<? extends IndexResult> indexResults = phpindex.query(
-                    PHPIndexer.FIELD_TOP_LEVEL, namespace.toLowerCase(), QuerySupport.Kind.EXACT,
+                        PHPIndexer.FIELD_TOP_LEVEL, namespace.toLowerCase(), QuerySupport.Kind.EXACT,
                     new String[]{
                         PHPIndexer.FIELD_NAMESPACE
                     });
             for (IndexResult indexResult : indexResults) {
                 FileObject indexFile = indexResult.getFile();
-
-                if (!indexFile.getName().equals(identifier)) {
+                
+                if (!indexFile.getName().equals(identifier)){
                     continue;
                 }
-
+                
                 String namespaceValue = indexResult.getValue(PHPIndexer.FIELD_NAMESPACE);
-
-                if (namespaceValue == null) {
+                
+                if (namespaceValue == null){
                     continue;
                 }
-
+                
                 results.add(new PhpIndexResult(namespace + NAMESPACE_SEPARATOR + identifier, indexFile, PhpIndexResult.Type.CLASS, new OffsetRange(0, 1)));
             }
         } catch (IOException ex) {
@@ -167,7 +178,7 @@ public final class PhpIndexUtils {
         }
         return results;
     }
-
+    
     public static Collection<PhpIndexResult> queryComponentClass(String identifier,
             String namespace, FileObject fo) {
         QuerySupport phpindex = QuerySupportFactory.get(fo);
@@ -175,18 +186,18 @@ public final class PhpIndexUtils {
 
         try {
             Collection<? extends IndexResult> indexResults = phpindex.query(
-                    PHPIndexer.FIELD_TOP_LEVEL, namespace.toLowerCase(), QuerySupport.Kind.PREFIX,
+                        PHPIndexer.FIELD_TOP_LEVEL, namespace.toLowerCase(), QuerySupport.Kind.PREFIX,
                     new String[]{
                         PHPIndexer.FIELD_NAMESPACE
                     });
             for (IndexResult indexResult : indexResults) {
                 String namespaceValue = indexResult.getValue(PHPIndexer.FIELD_NAMESPACE);
-                if (namespaceValue == null) {
+                if (namespaceValue == null){
                     continue;
                 }
                 Signature sig = Signature.get(namespaceValue);
-                String name = sig.string(1);
-                String domainName = sig.string(2);
+                String name = sig.string(SIGN_NAME_POS);
+                String domainName = sig.string(SIGN_NAMESPACE_ROOT_POS);
                 FileObject indexFile = indexResult.getFile();
                 if (indexFile.getName().equals(identifier)) {
                     results.add(new PhpIndexResult(domainName + NAMESPACE_SEPARATOR + name + NAMESPACE_SEPARATOR + indexFile.getName(),
@@ -199,7 +210,7 @@ public final class PhpIndexUtils {
         return results;
     }
 
-    public static Collection<PhpIndexResult> queryExactClass(FileObject fo, String identifier) {
+    public static Collection<PhpIndexResult> queryExactClass(String identifier, FileObject fo) {
         QuerySupport phpindex = QuerySupportFactory.get(fo);
         QueryCache<String, Collection<PhpIndexResult>> selfCache = getCache(fo, identifier);
         if (selfCache != null && selfCache.containsKey(identifier)) {
@@ -216,7 +227,7 @@ public final class PhpIndexUtils {
                 String[] values = indexResult.getValues(PHPIndexer.FIELD_CLASS);
                 for (String value : values) {
                     Signature sig = Signature.get(value);
-                    String name = sig.string(1);
+                    String name = sig.string(SIGN_NAME_POS);
                     if (name.length() > 0 && name.equals(identifier)) {
                         results.add(new PhpIndexResult(name, indexFile, PhpIndexResult.Type.CLASS, new OffsetRange(0, 1)));
                     }
@@ -244,11 +255,11 @@ public final class PhpIndexUtils {
                 String[] values = indexResult.getValues(PHPIndexer.FIELD_BASE);
                 for (String value : values) {
                     Signature sig = Signature.get(value);
-                    String name = sig.string(1);
+                    String name = sig.string(SIGN_NAME_POS);
 
                     if (name.length() > 0 && name.startsWith(prefix)) {
-                        Integer offset = sig.integer(2);
-                        String params = sig.string(3);
+                        Integer offset = sig.integer(SIGN_METHOD_OFFSET_POS);
+                        String params = sig.string(SIGN_METHOD_PARAMS_POS);
                         results.add(new PhpIndexFunctionResult(
                                 name, indexFile,
                                 PhpIndexResult.Type.FUNCTION,
@@ -285,8 +296,8 @@ public final class PhpIndexUtils {
                     String name = sig.string(1);
 
                     if (name.length() > 0 && name.equals(prefix)) {
-                        Integer offset = sig.integer(2);
-                        String params = sig.string(3);
+                        Integer offset = sig.integer(SIGN_METHOD_OFFSET_POS);
+                        String params = sig.string(SIGN_METHOD_PARAMS_POS);
                         results.add(new PhpIndexFunctionResult(name,
                                 indexFile, PhpIndexResult.Type.FUNCTION,
                                 new OffsetRange(offset, offset + name.length()),
@@ -305,13 +316,11 @@ public final class PhpIndexUtils {
         return results;
     }
 
-    //should query the class before?
     public static Collection<PhpIndexFunctionResult> queryExactClassMethods(FileObject fo,
             String method, String className, String queryNamespace) {
         QuerySupport phpindex = QuerySupportFactory.get(fo);
         Collection<PhpIndexFunctionResult> results = new ArrayList<>();
-        //for the moment a quick hack
-        //maybe send the classNamePath directly?
+
         String regexQuery = className.toLowerCase();
         try {
             Collection<? extends IndexResult> indexResults = phpindex.query(PHPIndexer.FIELD_CLASS, regexQuery,
@@ -326,32 +335,33 @@ public final class PhpIndexUtils {
 
                 for (String classValue : classValues) {
                     Signature sig = Signature.get(classValue);
-                    String name = sig.string(1);
-                    String namespace = sig.string(4);
-                    if (name.length() > 0 && name.equals(className)) {
-                        if (queryNamespace != null && !namespace.equals(queryNamespace)) {
+                    String name = sig.string(SIGN_NAME_POS);
+                    String namespace = sig.string(SIGN_CLASS_NAMESPACE_POS);
+                    if (name.length() > 0 && name.equals(className) 
+                            ) {
+                        if (queryNamespace != null && !namespace.equals(queryNamespace)){
                             continue;
                         }
                         classSignature = sig;
-
-                        if (namespace.length() > 0) {
+                        
+                        if (namespace.length() > 0){
                             classNamespace = namespace + NAMESPACE_SEPARATOR + className;
                         }
                     }
                 }
-
-                if (classSignature == null) {
+                
+                if (classSignature == null){
                     continue;
                 }
-
+                
                 String[] values = indexResult.getValues(PHPIndexer.FIELD_METHOD);
                 for (String value : values) {
                     Signature sig = Signature.get(value);
-                    String name = sig.string(1);
+                    String name = sig.string(SIGN_NAME_POS);
 
                     if (name.length() > 0 && name.equals(method)) {
-                        Integer offset = sig.integer(2);
-                        String params = sig.string(3);
+                        Integer offset = sig.integer(SIGN_METHOD_OFFSET_POS);
+                        String params = sig.string(SIGN_METHOD_PARAMS_POS);
                         results.add(new PhpIndexFunctionResult(name,
                                 indexFile, PhpIndexResult.Type.FUNCTION,
                                 new OffsetRange(offset, offset + name.length()),
@@ -366,9 +376,9 @@ public final class PhpIndexUtils {
         }
         return results;
     }
-
+    
     /**
-     *
+     * 
      *
      * @param fo
      * @param method
@@ -377,12 +387,14 @@ public final class PhpIndexUtils {
      * @return
      */
     public static Collection<PhpIndexFunctionResult> queryClassMethods(FileObject fo,
-            String method, String className, String queryNamespace) {
+            String method, String className, String queryNamespace, FieldAccessType accessType) {
         QuerySupport phpindex = QuerySupportFactory.get(fo);
         Collection<PhpIndexFunctionResult> results = new ArrayList<>();
-        String queryNamespacePath = queryNamespace;
-        if (queryNamespace != null && queryNamespace.length() > MIN_NAMESPACE_PREFIX_LENGTH) {
-            queryNamespacePath =  EditorStringUtils.trimNamespace(queryNamespace);
+
+        if (queryNamespace != null && queryNamespace.length() > MIN_NAMESPACE_LENGTH){
+            int startOffset = queryNamespace.startsWith(NAMESPACE_SEPARATOR) ? 1 : 0;
+            int endOffset = queryNamespace.endsWith(NAMESPACE_SEPARATOR) ? 1 : 0;
+             queryNamespace = queryNamespace.substring(startOffset, queryNamespace.length() - endOffset);
         }
         //should query the class befoe
         //for the moment a quick hack
@@ -400,34 +412,41 @@ public final class PhpIndexUtils {
 
                 for (String classValue : classValues) {
                     Signature sig = Signature.get(classValue);
-                    String name = sig.string(1);
+                    String name = sig.string(SIGN_NAME_POS);
                     if (name.length() > 0 && name.equals(className)) {
                         classSignature = sig;
-                        String namespace = sig.string(4);
-
-                        if (queryNamespacePath != null && !namespace.equals(queryNamespacePath)) {
+                        String namespace = sig.string(SIGN_CLASS_NAMESPACE_POS);
+                        
+                        if (queryNamespace != null && !namespace.equals(queryNamespace) ){
                             classSignature = null;
                             continue;
                         }
-
-                        if (namespace.length() > 0) {
-                            classNamespace = namespace + EditorStringUtils.NAMESPACE_SEPARATOR + className;
+                        
+                        if (namespace.length() > 0){
+                            classNamespace = namespace + NAMESPACE_SEPARATOR + className;
                         }
                     }
                 }
 
-                if (classSignature == null) {
+                if (classSignature == null){
                     continue;
                 }
 
                 String[] values = indexResult.getValues(PHPIndexer.FIELD_METHOD);
                 for (String value : values) {
                     Signature sig = Signature.get(value);
-                    String name = sig.string(1);
+                    String name = sig.string(SIGN_NAME_POS);
 
+                    Integer funcAccessType = sig.integer(5);
+                    //todo find where does the value 9 come from
+                    if (accessType.equals(FieldAccessType.STATIC) && funcAccessType != 9){
+                        //only public static methods
+                        continue;
+                    }
+                        
                     if (name.length() > 0 && name.startsWith(method)) {
-                        Integer offset = sig.integer(2);
-                        String params = sig.string(3);
+                        Integer offset = sig.integer(SIGN_METHOD_OFFSET_POS);
+                        String params = sig.string(SIGN_METHOD_PARAMS_POS);
                         results.add(new PhpIndexFunctionResult(name,
                                 indexFile, PhpIndexResult.Type.FUNCTION,
                                 new OffsetRange(offset, offset + name.length()),
@@ -456,10 +475,10 @@ public final class PhpIndexUtils {
                 String[] values = indexResult.getValues(PHPIndexer.FIELD_CONST);
                 for (String value : values) {
                     Signature sig = Signature.get(value);
-                    String name = sig.string(1);
+                    String name = sig.string(SIGN_NAME_POS);
 
                     if (name.length() > 0 && name.startsWith(prefix)) {
-                        Integer offset = sig.integer(2);
+                        Integer offset = sig.integer(SIGN_METHOD_OFFSET_POS);
                         results.add(new PhpIndexResult(name, indexFile, PhpIndexResult.Type.CONSTANT, new OffsetRange(offset, offset + name.length())));
                     }
                 }
@@ -469,7 +488,7 @@ public final class PhpIndexUtils {
         }
         return results;
     }
-
+    
     public static Collection<PhpIndexResult> queryNamespace(FileObject fo, String prefix) {
         QuerySupport phpindex = QuerySupportFactory.get(fo);
         Collection<PhpIndexResult> results = new ArrayList<>();
@@ -493,7 +512,7 @@ public final class PhpIndexUtils {
 
         try {
             Collection<? extends IndexResult> indexResults = phpindex.query(
-                    PHPIndexer.FIELD_TOP_LEVEL, queryPrefix + NAMESPACE_SEPARATOR, QuerySupport.Kind.PREFIX, new String[]{
+                    PHPIndexer.FIELD_TOP_LEVEL, queryPrefix, QuerySupport.Kind.PREFIX, new String[]{
                         PHPIndexer.FIELD_NAMESPACE, PHPIndexer.FIELD_TOP_LEVEL});
             for (IndexResult indexResult : indexResults) {
                 FileObject indexFile = indexResult.getFile();
@@ -506,8 +525,8 @@ public final class PhpIndexUtils {
                     }
                     Signature sig = Signature.get(firstValue);
 
-                    String name = sig.string(1);
-                    String namespace = sig.string(2);
+                    String name = sig.string(SIGN_NAME_POS);
+                    String namespace = sig.string(SIGN_NAMESPACE_ROOT_POS);
 
                     String fullNamespace = ""; // NOI18N
 
@@ -529,7 +548,7 @@ public final class PhpIndexUtils {
         }
         return results;
     }
-
+    
     public static Collection<PhpIndexResult> queryNamespaces(FileObject fo, String namespace,
             QuerySupport.Kind queryType) {
         QuerySupport phpindex = QuerySupportFactory.get(fo);
@@ -538,7 +557,7 @@ public final class PhpIndexUtils {
 
         try {
             Collection<? extends IndexResult> indexResults = phpindex.query(
-                    PHPIndexer.FIELD_TOP_LEVEL, queryPrefix, queryType,
+                        PHPIndexer.FIELD_TOP_LEVEL, queryPrefix, queryType,
                     new String[]{
                         PHPIndexer.FIELD_NAMESPACE,
                         PHPIndexer.FIELD_TOP_LEVEL
@@ -547,7 +566,7 @@ public final class PhpIndexUtils {
                 FileObject indexFile = indexResult.getFile();
                 String namespaceValue = indexResult.getValue(PHPIndexer.FIELD_NAMESPACE);
                 //no namespace found
-                if (namespaceValue == null) {
+                if (namespaceValue == null){
                     continue;
                 }
                 results.add(new PhpIndexResult(namespaceValue, indexFile, PhpIndexResult.Type.NAMESPACE, new OffsetRange(0, 1)));
@@ -559,12 +578,12 @@ public final class PhpIndexUtils {
     }
 
     /**
-     * a optimized hack solution assuming that the name of the class is the same
-     * with the file
-     *
+     * a optimized hack solution
+     * assuming that the name of the class is the same with the file
+     * 
      * @param fo
      * @param namespace
-     * @return
+     * @return 
      */
     public static Collection<PhpIndexResult> queryAllNamespaceClasses(FileObject fo, String namespace) {
         QuerySupport phpindex = QuerySupportFactory.get(fo);
@@ -573,7 +592,7 @@ public final class PhpIndexUtils {
 
         try {
             Collection<? extends IndexResult> indexResults = phpindex.query(
-                    PHPIndexer.FIELD_TOP_LEVEL, queryPrefix, QuerySupport.Kind.EXACT,
+                        PHPIndexer.FIELD_TOP_LEVEL, queryPrefix, QuerySupport.Kind.PREFIX,
                     new String[]{
                         PHPIndexer.FIELD_NAMESPACE,
                         PHPIndexer.FIELD_TOP_LEVEL
@@ -582,7 +601,7 @@ public final class PhpIndexUtils {
                 FileObject indexFile = indexResult.getFile();
                 String namespaceValue = indexResult.getValue(PHPIndexer.FIELD_NAMESPACE);
                 //no namespace found
-                if (namespaceValue == null) {
+                if (namespaceValue == null){
                     continue;
                 }
                 results.add(new PhpIndexResult(indexFile.getName(), indexFile, PhpIndexResult.Type.CLASS, new OffsetRange(0, 1)));
@@ -611,10 +630,10 @@ public final class PhpIndexUtils {
                 String[] values = indexResult.getValues(PHPIndexer.FIELD_CLASS_CONST);
                 for (String value : values) {
                     Signature sig = Signature.get(value);
-                    String name = sig.string(1);
+                    String name = sig.string(SIGN_NAME_POS);
 
                     if (name.length() > 0 && name.startsWith(prefix)) {
-                        Integer offset = sig.integer(2);
+                        Integer offset = sig.integer(SIGN_METHOD_OFFSET_POS);
                         results.add(new PhpIndexResult(name, indexFile, PhpIndexResult.Type.CONSTANT, new OffsetRange(offset, offset + name.length())));
                     }
                 }
@@ -624,16 +643,16 @@ public final class PhpIndexUtils {
         }
         return results;
     }
-
+    
     /**
      * @notused TO BE continued
-     *
+     * 
      * @param fo
      * @param prefix
      * @param ownerClass
-     * @return
+     * @return 
      */
-    public static Collection<PhpIndexResult> queryClassProperties(FileObject fo, String prefix, String ownerClass) {
+    public static Collection<PhpIndexResult> queryClassProperties(FileObject fo, String prefix, String ownerClass){
         QuerySupport phpindex = QuerySupportFactory.get(fo);
         Collection<PhpIndexResult> results = new ArrayList<>();
         String queryPrefix = prefix.toLowerCase();
@@ -645,16 +664,16 @@ public final class PhpIndexUtils {
                 //internal php index
 
                 String classOwnerName = indexResult.getValue(PHPIndexer.FIELD_CLASS);
-                if (classOwnerName == null || !classOwnerName.startsWith(ownerClass.toLowerCase() + ";")) {
+                if (classOwnerName == null || !classOwnerName.startsWith(ownerClass.toLowerCase() + PHP_INDEX_INFO_SEPARATOR)) {
                     continue;
                 }
                 String[] values = indexResult.getValues(PHPIndexer.FIELD_FIELD);
                 for (String value : values) {
                     Signature sig = Signature.get(value);
-                    String name = sig.string(1);
+                    String name = sig.string(SIGN_NAME_POS);
 
                     if (name.length() > 0 && name.equals(prefix)) {
-                        Integer offset = sig.integer(2);
+                        Integer offset = sig.integer(SIGN_METHOD_OFFSET_POS);
                         results.add(new PhpIndexResult(name, indexFile, PhpIndexResult.Type.CONSTANT, new OffsetRange(offset, offset + name.length())));
                     }
                 }
@@ -665,7 +684,7 @@ public final class PhpIndexUtils {
         return results;
     }
 
-    public static Collection<PhpIndexResult> queryExactClassConstants(FileObject fo, String prefix, String ownerClass) {
+    public static Collection<PhpIndexResult> queryExactClassConstants(String prefix, String ownerClass, FileObject fo) {
         QuerySupport phpindex = QuerySupportFactory.get(fo);
         Collection<PhpIndexResult> results = new ArrayList<>();
         String queryPrefix = prefix.toLowerCase();
@@ -677,16 +696,16 @@ public final class PhpIndexUtils {
                 //internal php index
 
                 String classOwnerName = indexResult.getValue(PHPIndexer.FIELD_CLASS);
-                if (!classOwnerName.startsWith(ownerClass.toLowerCase() + ";")) {
+                if (!classOwnerName.startsWith(ownerClass.toLowerCase() + PHP_INDEX_INFO_SEPARATOR)) {
                     continue;
                 }
                 String[] values = indexResult.getValues(PHPIndexer.FIELD_CLASS_CONST);
                 for (String value : values) {
                     Signature sig = Signature.get(value);
-                    String name = sig.string(1);
+                    String name = sig.string(SIGN_NAME_POS);
 
                     if (name.length() > 0 && name.equals(prefix)) {
-                        Integer offset = sig.integer(2);
+                        Integer offset = sig.integer(SIGN_METHOD_OFFSET_POS);
                         results.add(new PhpIndexResult(name, indexFile, PhpIndexResult.Type.CONSTANT, new OffsetRange(offset, offset + name.length())));
                     }
                 }
@@ -710,10 +729,10 @@ public final class PhpIndexUtils {
                 String[] values = indexResult.getValues(PHPIndexer.FIELD_CONST);
                 for (String value : values) {
                     Signature sig = Signature.get(value);
-                    String name = sig.string(1);
+                    String name = sig.string(SIGN_NAME_POS);
 
                     if (name.length() > 0 && name.equals(prefix)) {
-                        Integer offset = sig.integer(2);
+                        Integer offset = sig.integer(SIGN_METHOD_OFFSET_POS);
                         results.add(new PhpIndexResult(name, indexFile, PhpIndexResult.Type.FUNCTION, new OffsetRange(offset, offset + name.length())));
                     }
                 }
@@ -747,10 +766,10 @@ public final class PhpIndexUtils {
     }
 
     /**
+     * See more info on org.netbeans.modules.php.editor.model.impl.ParameterImpl for signature structure
      * 
-     *
      * @param sig
-     * @return
+     * @return 
      */
     static String parseOneParameter(String sig) {
         String retval = null;

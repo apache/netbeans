@@ -41,62 +41,46 @@ public class BladeLexer extends AbstractAntlrLexerBridge<BladeAntlrColoringLexer
 
     @Override
     protected Token<BladeTokenId> mapToken(org.antlr.v4.runtime.Token antlrToken) {
-        //debug text
-        //String text = antlrToken.getText();
-        int type = antlrToken.getType();
-        //System.out.println(text + " " + type);
-        switch (type) {
-            case BladeAntlrColoringLexer.BLADE_PAREN:
-                return token(BLADE_PAREN);
-            case BladeAntlrColoringLexer.BLADE_COMMENT_START:
-                return token(BLADE_COMMENT_START);
-            case BladeAntlrColoringLexer.BLADE_COMMENT:
-                return token(BLADE_COMMENT);
-            case BladeAntlrColoringLexer.BLADE_COMMENT_END:
-                return token(BLADE_COMMENT_END);
-            case BladeAntlrColoringLexer.HTML_TAG:
-            case BladeAntlrColoringLexer.HTML:
-                return token(HTML);
-            case BladeAntlrColoringLexer.PHP_INLINE:
-                return token(PHP_INLINE);
-            case BladeAntlrColoringLexer.PHP_EXPRESSION:
-                //System.out.println(antlrToken.getText());
-                return token(PHP_BLADE_EXPRESSION);
-            case BladeAntlrColoringLexer.BLADE_PHP_INLINE:
-                return token(PHP_BLADE_INLINE_CODE);
-            case BladeAntlrColoringLexer.DIRECTIVE:
-            case BladeAntlrColoringLexer.D_PHP:
-            case BladeAntlrColoringLexer.D_ENDPHP:
-            case BladeAntlrColoringLexer.D_CUSTOM:
-                return token(BLADE_DIRECTIVE);
-            case BladeAntlrColoringLexer.RAW_TAG:
-            case BladeAntlrColoringLexer.CONTENT_TAG:
-                return token(BLADE_ECHO_DELIMITOR);
-            case BladeAntlrColoringLexer.BLADE_PHP_ECHO_EXPR:
-                return token(PHP_BLADE_ECHO_EXPR);
-            case BladeAntlrColoringLexer.D_UNKNOWN:
-            case BladeAntlrColoringLexer.D_AT:
-                return token(BLADE_DIRECTIVE_UNKNOWN);
-            case BladeAntlrColoringLexer.ERROR:
-                return token(WS_D);
-            default:
-                return token(OTHER);
-        }
+
+        return switch (antlrToken.getType()) {
+            case BladeAntlrColoringLexer.HTML_TAG, BladeAntlrColoringLexer.HTML -> groupToken(HTML, BladeAntlrColoringLexer.HTML);
+            case BladeAntlrColoringLexer.COMPONENT_ATTR -> groupToken(BLADE_COMPONENT_ATTRIBUTE, BladeAntlrColoringLexer.COMPONENT_ATTR);
+            case BladeAntlrColoringLexer.DIRECTIVE, BladeAntlrColoringLexer.D_PHP, BladeAntlrColoringLexer.D_ENDPHP -> token(BLADE_DIRECTIVE);
+            case BladeAntlrColoringLexer.D_CUSTOM -> token(BLADE_CUSTOM_DIRECTIVE);
+            case BladeAntlrColoringLexer.RAW_TAG, BladeAntlrColoringLexer.CONTENT_TAG -> token(BLADE_ECHO_DELIMITOR);
+            case BladeAntlrColoringLexer.BLADE_PHP_ECHO_EXPR -> token(PHP_BLADE_ECHO_EXPR);
+            case BladeAntlrColoringLexer.D_UNKNOWN, BladeAntlrColoringLexer.D_AT -> groupToken(BLADE_DIRECTIVE_UNKNOWN, BladeAntlrColoringLexer.D_UNKNOWN);
+            case BladeAntlrColoringLexer.BLADE_PAREN -> token(BLADE_PAREN);
+            case BladeAntlrColoringLexer.BLADE_COMMENT_START -> token(BLADE_COMMENT_START);
+            case BladeAntlrColoringLexer.BLADE_COMMENT -> groupToken(BLADE_COMMENT, BladeAntlrColoringLexer.BLADE_COMMENT);
+            case BladeAntlrColoringLexer.BLADE_COMMENT_END -> token(BLADE_COMMENT_END);
+            case BladeAntlrColoringLexer.PHP_INLINE -> token(PHP_INLINE);
+            case BladeAntlrColoringLexer.PHP_EXPRESSION -> groupToken(PHP_BLADE_EXPRESSION, BladeAntlrColoringLexer.PHP_EXPRESSION);
+            case BladeAntlrColoringLexer.BLADE_PHP_INLINE -> groupToken(PHP_BLADE_INLINE_CODE, BladeAntlrColoringLexer.BLADE_PHP_INLINE);
+            case BladeAntlrColoringLexer.ERROR -> token(WS_D);
+            default -> token(OTHER);
+        };
     }
 
     private static class State extends AbstractAntlrLexerBridge.LexerState<BladeAntlrColoringLexer> {
 
-        final int currentRuleType;
+        final int rParenBalance;
+        final int compAttrQuoteBalance;
+        final boolean insideComponentTag;
 
         public State(BladeAntlrColoringLexer lexer) {
             super(lexer);
-            this.currentRuleType = lexer.getCurrentRuleType();
+            this.rParenBalance = lexer.rParenBalance;
+            this.compAttrQuoteBalance = lexer.compAttrQuoteBalance;
+            this.insideComponentTag = lexer.insideComponentTag;
         }
 
         @Override
         public void restore(BladeAntlrColoringLexer lexer) {
             super.restore(lexer);
-            lexer.setCurrentRuleType(currentRuleType);
+            lexer.rParenBalance = rParenBalance;
+            lexer.compAttrQuoteBalance = compAttrQuoteBalance;
+            lexer.insideComponentTag = insideComponentTag;
         }
 
     }

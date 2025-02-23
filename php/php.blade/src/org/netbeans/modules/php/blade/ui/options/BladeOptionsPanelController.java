@@ -33,7 +33,8 @@ import org.openide.util.Lookup;
 )
 public class BladeOptionsPanelController extends OptionsPanelController {
 
-    static final String ID = "Blade"; // NOI18N
+    public static final String ID = "Blade"; // NOI18N
+    public static final String CONTEXT_HELP_ID = "org.netbeans.modules.php.blade.editor.Options"; //NOI18N
     public static final String OPTIONS_SUBPATH = UiUtils.FRAMEWORKS_AND_TOOLS_SUB_PATH + "/" + ID; // NOI18N
 
     private BladeOptionsPanel panel;
@@ -66,7 +67,7 @@ public class BladeOptionsPanelController extends OptionsPanelController {
 
     @Override
     public HelpCtx getHelpCtx() {
-        return new HelpCtx("org.netbeans.modules.php.blade.editor.Options"); //NOI18N
+        return new HelpCtx(CONTEXT_HELP_ID); //NOI18N
     }
 
     @Override
@@ -89,9 +90,5 @@ public class BladeOptionsPanelController extends OptionsPanelController {
             panel = new BladeOptionsPanel();
         }
         return panel;
-    }
-
-    public static String getOptionsPath() {
-        return UiUtils.OPTIONS_PATH + "/" + OPTIONS_SUBPATH; // NOI18N
     }
 }

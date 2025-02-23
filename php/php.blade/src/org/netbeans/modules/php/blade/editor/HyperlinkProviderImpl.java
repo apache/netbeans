@@ -37,7 +37,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.editor.BaseDocument;
 import static org.netbeans.lib.editor.hyperlink.spi.HyperlinkType.GO_TO_DECLARATION;
 import org.netbeans.modules.php.api.util.FileUtils;
-import org.netbeans.modules.php.blade.editor.lexer.PHPLexerUtils;
+import org.netbeans.modules.php.blade.editor.lexer.BladeLexerUtils;
 import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
 import org.netbeans.modules.php.blade.project.BladeProjectProperties;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
@@ -56,16 +56,16 @@ import org.openide.util.Exceptions;
 @MimeRegistration(mimeType = FileUtils.PHP_MIME_TYPE, service = HyperlinkProviderExt.class)
 public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
-    private String methodName = ""; // NOI18N
+    private String methodName;
     private String identifiableText;
     private String tooltipText = ""; // NOI18N
     private FileObject goToFile;
     private int goToOffset = 0;
     public static final int MIN_STRING_IDENTIIFER_LENGTH = 5;
     public static final String FILE_TITLE = "Blade Template File"; // NOI18N
-    
-    String[] viewMethods = new String[]{"view", "render", "make"}; // NOI18N
-    Set<String> viewMethodSet = new HashSet<>(Arrays.asList(viewMethods));
+
+    private final String[] viewMethods = new String[]{"view", "render", "make"}; // NOI18N
+    private final Set<String> viewMethodSet = new HashSet<>(Arrays.asList(viewMethods));
 
     public enum DeclarationType {
         VIEW_PATH;
@@ -96,7 +96,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
         BaseDocument baseDoc = (BaseDocument) doc;
         int lineStart = LineDocumentUtils.getLineStart(baseDoc, offset);
-        TokenSequence<PHPTokenId> tokensq = PHPLexerUtils.getTokenSequence(doc, offset);
+        TokenSequence<PHPTokenId> tokensq = BladeLexerUtils.getLockedPhpTokenSequence(doc, offset);
 
         if (tokensq == null) {
             return null;
@@ -112,7 +112,6 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         String focusedText = currentToken.text().toString();
 
         //2 char config are not that relevant
-        //2 qoute char an 3 char minimum length text
         if (focusedText.length() < MIN_STRING_IDENTIIFER_LENGTH || !EditorStringUtils.isQuotedString(focusedText)) {
             return null;
         }
@@ -131,8 +130,9 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             if (prevTokenId != null && id.equals(PHPTokenId.PHP_STRING)) {
                 methodName = text;
                 //tooltip text
+
                 if (viewMethodSet.contains(methodName)) {
-                    FileObject currentFile = EditorUtils.getFileObject(doc);
+                    FileObject currentFile = FileSystemUtils.getFileObjectFromDoc(doc);
 
                     if (currentFile == null) {
                         return null;
@@ -142,8 +142,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
                     for (FileObject includedFile : includedFiles) {
                         goToFile = includedFile;
-                        tooltipText = FILE_TITLE 
-                                + " : <b>" + viewPath // NOI18N
+                        tooltipText = FILE_TITLE + " File : <b>" + viewPath // NOI18N
                                 + "</b><br><br><i style='margin-left:20px;'>" + identifiableText + "</i>"; // NOI18N
                         goToOffset = 0;
                         break;
@@ -151,6 +150,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
                     return new int[]{startOffset, startOffset + currentToken.length()};
                 }
+
             }
 
             if (id.equals(PHPTokenId.PHP_TOKEN) && text.equals("(")) { // NOI18N
@@ -171,6 +171,11 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             }
         }
     }
+    
+    @Override
+    public String getTooltipText(Document doc, int offset, HyperlinkType type) {
+        return "<html><body>" + tooltipText + "</body></html>"; // NOI18N
+    }
 
     private void openDocument(FileObject f, int offset) {
         try {
@@ -180,26 +185,23 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
-
     }
 
+    /**
+     * compatible relation with laravel framework plugin
+     * blade editor is not a Php Extension, so that's the reason for the implementation of HyperlinkProvider.
+     * 
+     * @param doc
+     * @return 
+     */
     private boolean nonLaravelDeclFinderEnabled(Document doc) {
-        Project projectOwner = EditorUtils.getProjectOwner(doc);
+        Project projectOwner = FileSystemUtils.getProjectOwner(doc);
         if (projectOwner == null) {
             return false;
         }
         BladeProjectProperties bladeProperties = BladeProjectProperties.getInstance(projectOwner);
 
-        if (bladeProperties == null){
-            return false;
-        }
-        
         return bladeProperties.getNonLaravelDeclFinderFlag();
-    }
-
-    @Override
-    public String getTooltipText(Document doc, int offset, HyperlinkType type) {
-        return "<html><body>" + tooltipText + "</body></html>"; // NOI18N
     }
 
 }

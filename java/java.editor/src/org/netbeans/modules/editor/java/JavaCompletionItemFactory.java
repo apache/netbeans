@@ -109,12 +109,17 @@ public final class JavaCompletionItemFactory implements JavaCompletionTask.TypeC
 
     @Override
     public JavaCompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
-        return JavaCompletionItem.createExecutableItem(info, elem, type, null, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, smartType, assignToVarOffset, memberRef, whiteList);
+        return createExecutableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef);
+    }
+
+    @Override
+    public JavaCompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef) {
+        return JavaCompletionItem.createExecutableItem(info, elem, type, null, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, afterConstructorTypeParams, smartType, assignToVarOffset, memberRef, whiteList);
     }
 
     @Override
     public JavaCompletionItem createTypeCastableExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
-        return JavaCompletionItem.createExecutableItem(info, elem, type, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, smartType, assignToVarOffset, memberRef, whiteList);
+        return JavaCompletionItem.createExecutableItem(info, elem, type, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef, whiteList);
     }
 
     @Override

@@ -50,6 +50,7 @@ import org.openide.nodes.NodeAcceptor;
 import org.openide.nodes.NodeOperation;
 import org.openide.util.HelpCtx;
 import org.openide.util.UserCancelException;
+import org.openide.util.ImageUtilities;
 import org.netbeans.modules.i18n.SelectorUtils;
 import org.openide.WizardDescriptor;
 
@@ -313,7 +314,7 @@ final class SourceWizardPanel extends JPanel {
                 } else {
                     label.setText(cp.getResourceName(dataObject.getPrimaryFile(), '.', false )); // NOI18N
                 }
-                label.setIcon(new ImageIcon(dataObject.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16)));
+                label.setIcon(ImageUtilities.image2Icon(dataObject.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16)));
             } else {
                 label.setText(""); // NOI18N
                 label.setIcon(null);

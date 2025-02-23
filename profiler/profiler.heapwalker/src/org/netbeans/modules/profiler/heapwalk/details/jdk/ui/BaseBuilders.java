@@ -33,6 +33,7 @@ import org.netbeans.modules.profiler.heapwalk.details.jdk.image.ImageBuilder;
 import org.netbeans.modules.profiler.heapwalk.details.jdk.ui.Utils.InstanceBuilder;
 import org.netbeans.modules.profiler.heapwalk.details.jdk.ui.Utils.PlaceholderIcon;
 import org.netbeans.modules.profiler.heapwalk.details.spi.DetailsUtils;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -219,7 +220,7 @@ final class BaseBuilders {
             if(image == null) {
                     return new PlaceholderIcon(width, height);
             }
-            return new ImageIcon(image);
+            return ImageUtilities.image2Icon(image);
         }
         
     }

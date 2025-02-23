@@ -33,7 +33,7 @@ class QueryTableHeaderRenderer extends DefaultTableCellRenderer {
 
     private final JLabel seenCell = new JLabel();
 
-    private static final Icon seenHeaderIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/bugtracking/commons/resources/seen-header.png")); // NOI18N
+    private static final Icon seenHeaderIcon = ImageUtilities.loadIcon("org/netbeans/modules/bugtracking/commons/resources/seen-header.png"); // NOI18N
     private final TableCellRenderer delegate;
     private final IssueTable issueTable;
     private boolean isSaved;

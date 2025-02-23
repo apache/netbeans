@@ -24,11 +24,11 @@ import java.awt.Font;
 import java.awt.Image;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import org.netbeans.modules.bugtracking.RepositoryImpl;
 import org.netbeans.modules.bugtracking.api.Repository;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
 /**
@@ -85,7 +85,7 @@ public class RepositoryComboRenderer extends DefaultListCellRenderer {
                 if(icon instanceof Icon) {
                     label.setIcon((Icon) icon);
                 } else if(icon instanceof Image) {
-                    label.setIcon(new ImageIcon(icon));
+                    label.setIcon(ImageUtilities.image2Icon(icon));
                 }
             } else {
                 Font font = label.getFont();

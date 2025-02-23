@@ -28,6 +28,7 @@ import org.openide.nodes.*;
 import org.openide.actions.*;
 import org.openide.explorer.*;
 import org.openide.explorer.view.*;
+import org.openide.util.ImageUtilities;
 
 /**
  * A component that displays non visual beans.
@@ -141,7 +142,7 @@ public class NonVisualTray extends JPanel implements ExplorerManager.Provider {
         public Component getListCellRendererComponent(JList list,
             Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Node node = Visualizer.findNode(value);
-            ImageIcon icon = new ImageIcon(node.getIcon(java.beans.BeanInfo.ICON_COLOR_32x32));
+            Icon icon = ImageUtilities.image2Icon(node.getIcon(java.beans.BeanInfo.ICON_COLOR_32x32));
             button.setIcon(icon);
             String text = node.getShortDescription();
             button.setText(text);

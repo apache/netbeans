@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.35
+#Version 9.36
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -854,9 +854,14 @@ meth public final static java.awt.Image assignToolTipToImage(java.awt.Image,java
 meth public final static java.awt.Image icon2Image(javax.swing.Icon)
 meth public final static java.awt.Image loadImage(java.lang.String)
 meth public final static java.awt.Image loadImage(java.lang.String,boolean)
+meth public final static java.awt.Image loadImage(java.net.URI)
 meth public final static java.awt.Image mergeImages(java.awt.Image,java.awt.Image,int,int)
 meth public final static java.lang.String getImageToolTip(java.awt.Image)
 meth public final static javax.swing.Icon image2Icon(java.awt.Image)
+meth public final static javax.swing.Icon loadIcon(java.lang.String)
+meth public final static javax.swing.Icon loadIcon(java.lang.String,boolean)
+meth public final static javax.swing.Icon mergeIcons(javax.swing.Icon,javax.swing.Icon,int,int)
+meth public final static javax.swing.ImageIcon icon2ImageIcon(javax.swing.Icon)
 meth public final static javax.swing.ImageIcon loadImageIcon(java.lang.String,boolean)
 meth public static java.awt.Image createDisabledImage(java.awt.Image)
 meth public static java.net.URL findImageBaseURL(java.awt.Image)

@@ -23,7 +23,6 @@ import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.awt.NotificationDisplayer.Category;
@@ -44,7 +43,7 @@ public class ChangelogWildflyPlugin {
             int version = Integer.parseInt(NbBundle.getMessage(ChangelogWildflyPlugin.class, VERSION_PREF));
             if (prefs.getInt(VERSION_PREF, 5) < version) {
                 NotificationDisplayer.getDefault().notify(NbBundle.getMessage(ChangelogWildflyPlugin.class, "MSG_CHANGES_TITLE"),
-                        new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javaee/wildfly/resources/wildfly.png")),
+                        ImageUtilities.loadImageIcon("org/netbeans/modules/javaee/wildfly/resources/wildfly.png", false),
                         new JLabel(NbBundle.getMessage(ChangelogWildflyPlugin.class, "MSG_CHANGES_SUMMARY")),
                         new JLabel(NbBundle.getMessage(ChangelogWildflyPlugin.class, "MSG_CHANGES_DESC")),
                         NotificationDisplayer.Priority.NORMAL, Category.INFO);

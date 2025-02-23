@@ -78,7 +78,7 @@ public class AngularJsCompletionItem implements CompletionProposal {
     @Override
     public ImageIcon getIcon() {
         if (angularIcon == null) {
-            angularIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/html/angular/resources/AngularJS_icon_16.png")); //NOI18N
+            angularIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/html/angular/resources/AngularJS_icon_16.png", false); //NOI18N
         }
         return angularIcon;
     }

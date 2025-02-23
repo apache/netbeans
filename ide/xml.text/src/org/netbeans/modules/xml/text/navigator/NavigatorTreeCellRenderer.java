@@ -19,9 +19,7 @@
 
 package org.netbeans.modules.xml.text.navigator;
 import java.awt.Component;
-import java.awt.Image;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -45,12 +43,12 @@ public class NavigatorTreeCellRenderer extends DefaultTreeCellRenderer {
     
     private static final String ERROR_16 = "org/netbeans/modules/xml/text/navigator/resources/badge_error.png";
     
-    private final Image ERROR_IMAGE = ImageUtilities.loadImage(ERROR_16, true);
+    private final Icon ERROR_ICON = ImageUtilities.loadIcon(ERROR_16, true);
    
-    private final Icon[] TAG_ICON = new Icon[]{getImageIcon(TAG_16, false), getImageIcon(TAG_16, true)};
-    private final Icon[] PI_ICON = new Icon[]{getImageIcon(PI_16, false), getImageIcon(PI_16, true)};
-    private final Icon[] DOCTYPE_ICON = new Icon[]{getImageIcon(DOCTYPE_16, false), getImageIcon(DOCTYPE_16, true)};
-    private final Icon[] CDATA_ICON = new Icon[]{getImageIcon(CDATA_16, false), getImageIcon(CDATA_16, true)};
+    private final Icon[] TAG_ICON = new Icon[]{getIcon(TAG_16, false), getIcon(TAG_16, true)};
+    private final Icon[] PI_ICON = new Icon[]{getIcon(PI_16, false), getIcon(PI_16, true)};
+    private final Icon[] DOCTYPE_ICON = new Icon[]{getIcon(DOCTYPE_16, false), getIcon(DOCTYPE_16, true)};
+    private final Icon[] CDATA_ICON = new Icon[]{getIcon(CDATA_16, false), getIcon(CDATA_16, true)};
      
     private HtmlRenderer.Renderer renderer;
     
@@ -91,12 +89,13 @@ public class NavigatorTreeCellRenderer extends DefaultTreeCellRenderer {
         renderer.setIcon(icons[containsError ? 1 : 0]);
     }
     
-    private ImageIcon getImageIcon(String name, boolean error){
-        ImageIcon icon = ImageUtilities.loadImageIcon(name, false);
-        if(error)
-            return new ImageIcon(ImageUtilities.mergeImages( icon.getImage(), ERROR_IMAGE, 15, 7 ));
-        else
+    private Icon getIcon(String name, boolean error){
+        Icon icon = ImageUtilities.loadIcon(name);
+        if (error) {
+            return ImageUtilities.mergeIcons(icon, ERROR_ICON, 15, 7);
+        } else {
             return icon;
+        }
     }
     
 }

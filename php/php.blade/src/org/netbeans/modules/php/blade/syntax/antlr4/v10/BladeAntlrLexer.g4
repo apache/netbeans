@@ -221,6 +221,8 @@ BLADE_CONTENT_CLOSE_TAG : '}}' {this.consumeCloseTag(htmlCurlyParenBalance);} ;
 BLADE_RAW_OPEN_TAG : '{!!';
 BLADE_RAW_CLOSE_TAG : '!!}';
 
+URI_PATH_PART : '/' '@' Identifier '/'->skip;
+
 D_CSS_AT : CssAtWithArg->skip;
 D_CSS_AT2 : CssAtWithArg (' ')* {this._input.LA(1) == '('}?->skip;
 D_CUSTOM : '@' Identifier (' ')* {this._input.LA(1) == '('}?;
@@ -408,6 +410,8 @@ FOREACH_VAR : '$' Identifier {rparenBalance == 1}?; //not in argument
 FOREACH_AS : 'as';
 
 FOREACH_DOUBLE_ARROW : '=>' {rparenBalance == 1 && sqparenBalance == 0 && curlyparenBalance == 0}?;
+
+FOREACH_DENTIFIER : Identifier ->skip;
 
 FOREACH_OTHER : . ->skip;
 

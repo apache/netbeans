@@ -1,3 +1,1 @@
-Token #0 HTML [<div>\n    ]
-Token #1 HTML [@@]
-Token #2 HTML [escapedDirective\n</div>\n]
+Token #0 HTML [<div>\n    @@escapedDirective\n</div>\n]

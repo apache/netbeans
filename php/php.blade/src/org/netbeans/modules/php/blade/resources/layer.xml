@@ -47,7 +47,12 @@
                     <folder name="Defaults">
                         <file name="org-netbeans-modules-php-blade-resources-preferences.xml" url="preferences.xml"/>
                     </folder>
-                </folder>    
+                </folder>
+                <folder name="BracesMatchers">
+                    <file name="org-netbeans-modules-php-blade-editor-braces-BladeBracesMatcher.Factory.instance">
+                        <attr name="position" intvalue="0"/>
+                    </file>
+                </folder>
             </folder>
         </folder>
     </folder>
@@ -96,6 +101,9 @@
                 <folder name="hints">
                     <folder name="directive">
                         <file name="org-netbeans-modules-php-blade-editor-hints-UnknownDirective.instance"/>
+                    </folder>
+                    <folder name="php_syntax">
+                        <file name="org-netbeans-modules-php-blade-editor-hints-PhpDirectiveSyntaxErrorRule.instance"/>
                     </folder>
                 </folder>
             </folder>

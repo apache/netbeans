@@ -1,6 +1,1 @@
-Token #0 HTML [<h1>Laravel</h1>\n \nHello, ]
-Token #1 HTML [@{{]
-Token #2 HTML [ name ]
-Token #3 HTML [}]
-Token #4 HTML [}]
-Token #5 HTML [.\n]
+Token #0 HTML [<h1>Laravel</h1>\n \nHello, @{{ name }}.\n]

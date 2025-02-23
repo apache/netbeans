@@ -19,17 +19,32 @@
 package org.netbeans.modules.php.blade.editor.typinghooks;
 
 import org.netbeans.modules.php.blade.editor.BladeTestBase;
+import static org.netbeans.modules.php.blade.editor.preferences.GeneralPreferencesUtils.ENABLE_AUTO_TAG_COMPLETION;
+import org.netbeans.modules.php.blade.editor.preferences.ModulePreferences;
 
 
 public abstract class BladeTypinghooksTestBase extends BladeTestBase {
-
+    private boolean autoTagCompletion = false;
     public BladeTypinghooksTestBase(String testName) {
         super(testName);
+    }
+    
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        autoTagCompletion = ModulePreferences.getPreferences().getBoolean(ENABLE_AUTO_TAG_COMPLETION, false);
+        ModulePreferences.setPrefBoolean(ENABLE_AUTO_TAG_COMPLETION, true);
     }
 
     @Override
     protected boolean runInEQ() {
         return true;
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        ModulePreferences.setPrefBoolean(ENABLE_AUTO_TAG_COMPLETION, autoTagCompletion);
     }
 
 }

@@ -134,6 +134,9 @@ public abstract class TreeView extends JScrollPane {
     /** Minimum height of this component. */
     private static final int MIN_TREEVIEW_HEIGHT = 400;
 
+    private static final int WAIT_CURSOR_DELAY = 500;
+    private static final RequestProcessor WAIT_CURSOR_RP = new RequestProcessor("TreeView WaitCursor");
+
     //
     // components
     //
@@ -962,17 +965,16 @@ public abstract class TreeView extends JScrollPane {
             return;
         }
 
-        showWaitCursor(true);
+        RequestProcessor.Task task = WAIT_CURSOR_RP.post(() -> showWaitCursor(true), WAIT_CURSOR_DELAY);
         // not sure whenter throughput 1 is OK...
-        ViewUtil.uiProcessor().post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    node.getChildren().getNodesCount(true);
-                } catch (Exception e) {
-                    // log a exception
-                    LOG.log(Level.WARNING, null, e);
-                } finally {
+        ViewUtil.uiProcessor().post(() -> {
+            try {
+                node.getChildren().getNodesCount(true);
+            } catch (Exception e) {
+                // log a exception
+                LOG.log(Level.WARNING, null, e);
+            } finally {
+                if (!task.cancel()) {
                     // show normal cursor above all
                     showWaitCursor(false);
                 }

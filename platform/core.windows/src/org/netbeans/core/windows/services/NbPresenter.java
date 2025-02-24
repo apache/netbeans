@@ -610,6 +610,16 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         return result;
     }
 
+    private boolean shouldUseMacButtonOrder() {
+        String testLooksAsMacProp = System.getProperty("xtest.looks_as_mac");
+        if (testLooksAsMacProp != null) {
+            // For NbPresenterTest.
+            return testLooksAsMacProp.equalsIgnoreCase("true");
+        } else {
+            return UIManager.getBoolean("OptionPane.isYesLast");
+        }
+    }
+
     protected final void initializeButtons() {
         // -----------------------------------------------------------------------------
         // If there were any buttons previously, remove them and removeActionListener from them
@@ -634,9 +644,9 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         currentPrimaryButtons = null;
         currentSecondaryButtons = null;
 
-        boolean isAqua = "Aqua".equals (UIManager.getLookAndFeel().getID()) || //NOI18N
-                        "true".equalsIgnoreCase (System.getProperty ("xtest.looks_as_mac"));
-        if (isAqua) {
+        final boolean useMacButtonOrder = shouldUseMacButtonOrder();
+
+        if (useMacButtonOrder) {
             //No mac dialogs with buttons on side
             currentAlign = DialogDescriptor.BOTTOM_ALIGN;
         }
@@ -646,7 +656,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         //      I hope that my change will not cause additional ones ;-)
         //    if (descriptor.getOptionType () == NotifyDescriptor.DEFAULT_OPTION) {
         if (primaryOptions != null) {
-            if (isAqua) {
+            if (useMacButtonOrder) {
                 Arrays.sort(primaryOptions, this);
             }
             currentPrimaryButtons = new Component [primaryOptions.length];
@@ -679,7 +689,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         } else { // predefined option types
             switch (descriptor.getOptionType()) {
                 case NotifyDescriptor.YES_NO_OPTION:
-                    if (isAqua) {
+                    if (useMacButtonOrder) {
                         currentPrimaryButtons = new Component[2];
                         currentPrimaryButtons[0] = stdNoButton;
                         currentPrimaryButtons[1] = stdYesButton;
@@ -691,7 +701,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                     break;
                 case NotifyDescriptor.YES_NO_CANCEL_OPTION:
                     currentPrimaryButtons = new Component[3];
-                    if (isAqua) {
+                    if (useMacButtonOrder) {
                         currentPrimaryButtons[0] = stdCancelButton;
                         currentPrimaryButtons[1] = stdNoButton;
                         currentPrimaryButtons[2] = stdYesButton;
@@ -703,7 +713,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                     break;
                 case NotifyDescriptor.OK_CANCEL_OPTION:
                 default:
-                    if (isAqua) {
+                    if (useMacButtonOrder) {
                         currentPrimaryButtons = new Component[2];
                         currentPrimaryButtons[0] = stdCancelButton;
                         currentPrimaryButtons[1] = stdOKButton;
@@ -757,7 +767,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
             } else {
                 if (currentPrimaryButtons == null) currentPrimaryButtons = new Component[] { };
                 Component[] cPB2 = new Component[currentPrimaryButtons.length + 1];
-                if (isAqua) { //NOI18N
+                if (useMacButtonOrder) { //NOI18N
                     //Mac default dlg button should be rightmost, not the help button
                     System.arraycopy(currentPrimaryButtons, 0, cPB2, 1, currentPrimaryButtons.length);
                     cPB2[0] = stdHelpButton;
@@ -1278,8 +1288,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
     private class ButtonListener implements ActionListener, ComponentListener, PropertyChangeListener {
         ButtonListener() {}
         public void actionPerformed(ActionEvent evt) {
-            boolean isAqua = "Aqua".equals (UIManager.getLookAndFeel().getID()) || //NOI18N
-                            "true".equalsIgnoreCase (System.getProperty ("xtest.looks_as_mac"));
+            boolean useMacButtonOrder = shouldUseMacButtonOrder();
 
             Object pressedOption = evt.getSource();
             // handle ESCAPE
@@ -1300,7 +1309,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                 }
 
                 Object[] options = descriptor.getOptions();
-                if (isAqua && options != null) {
+                if (useMacButtonOrder && options != null) {
                     Arrays.sort (options, NbPresenter.this);
                 }
 
@@ -1310,7 +1319,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                 options.length == (currentPrimaryButtons.length -
                     ((currentHelp != null) ? 1 : 0))
                 ) {
-                    int offset = currentHelp != null && isAqua ?
+                    int offset = currentHelp != null && useMacButtonOrder ?
                         -1 : 0;
                     for (int i = 0; i < currentPrimaryButtons.length; i++) {
                         if (evt.getSource() == currentPrimaryButtons[i]) {
@@ -1320,7 +1329,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                 }
 
                 options = descriptor.getAdditionalOptions();
-                if (isAqua && options != null) {
+                if (useMacButtonOrder && options != null) {
                     Arrays.sort (options, NbPresenter.this);
                 }
 

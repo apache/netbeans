@@ -32,11 +32,10 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.AWTEventListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
@@ -258,10 +257,13 @@ implements LookupListener, FlavorListener, AWTEventListener
         }
     }
 
-
-
     private void scheduleSetContents(final Transferable cnts, final ClipboardOwner ownr, int delay) {
-        setContentsTask = RP.post(new SetContents(cnts, ownr), delay);
+        SetContents setContentsRunnable = new SetContents(cnts, ownr);
+        if (setContentsRunnable.onEventDispatchThread && delay == 0) {
+            setContentsRunnable.run();
+        } else {
+            setContentsTask = RP.post(setContentsRunnable, delay);
+        }
     }
 
     @SuppressWarnings("NestedAssignment")
@@ -466,14 +468,18 @@ implements LookupListener, FlavorListener, AWTEventListener
     private final class SetContents implements Runnable {
         private final Transferable cnts;
         private final ClipboardOwner ownr;
+        public boolean onEventDispatchThread;
 
         SetContents(Transferable cnts, ClipboardOwner ownr) {
             this.cnts = cnts;
             this.ownr = ownr;
+            /* The JDK's Clipboard implementation on Windows may not be fully thread-safe. Try to
+            work around the issues discussed in https://github.com/apache/netbeans/discussions/7051
+            by always running setContents on the EDT on Windows. */
+            this.onEventDispatchThread = Utilities.isWindows();
         }
 
-        @Override
-        public void run() {
+        private void runImpl() {
             try {
                 systemClipboard.setContents(cnts, ownr);
             } catch (IllegalStateException e) {
@@ -489,6 +495,17 @@ implements LookupListener, FlavorListener, AWTEventListener
             if (log.isLoggable(Level.FINE)) {
                 log.log(Level.FINE, "systemClipboard updated:"); // NOI18N
                 logFlavors(cnts, Level.FINE, log.isLoggable(Level.FINEST));
+            }
+        }
+
+        @Override
+        public void run() {
+            if (onEventDispatchThread) {
+                SwingUtilities.invokeLater(() -> {
+                    runImpl();
+                });
+            } else {
+                runImpl();
             }
         }
     }

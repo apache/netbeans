@@ -348,6 +348,26 @@ public class DriverListUtilTest extends TestCase {
         propValues = buildPropValues(requiredProps);
         testUrlString(url, propValues, "jdbc:snowflake://" + HOST + "/");
     }
+
+    public void testBigQuery() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_HOST);
+        supportedProps.add(JdbcUrl.TOKEN_PORT);
+        supportedProps.add(JdbcUrl.TOKEN_INSTANCE);
+        supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
+        ArrayList<String> requiredProps = new ArrayList<>();
+        requiredProps.add(JdbcUrl.TOKEN_HOST);
+        requiredProps.add(JdbcUrl.TOKEN_PORT);
+        requiredProps.add(JdbcUrl.TOKEN_INSTANCE);
+        requiredProps.add(JdbcUrl.TOKEN_ADDITIONAL);
+        JdbcUrl url = checkUrl("Google BigQuery", null, "com.simba.googlebigquery.jdbc.Driver",
+                "jdbc:bigquery://https://<HOST>/bigquery/v2:<PORT>;ProjectId=<INSTANCE>;<ADDITIONAL>",
+                supportedProps, requiredProps);
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+        testUrlString(url, propValues, "jdbc:bigquery://https://" + HOST + "/bigquery/v2:" + PORT + ";ProjectId=" + INSTANCE + ";" + ADDITIONAL);
+        propValues = buildPropValues(requiredProps);
+        testUrlString(url, propValues, "jdbc:bigquery://https://" + HOST + "/bigquery/v2:" + PORT + ";ProjectId=" + INSTANCE + ";" + ADDITIONAL);
+    }
     
     enum DB2Types { DB2, IDS, CLOUDSCAPE };
     

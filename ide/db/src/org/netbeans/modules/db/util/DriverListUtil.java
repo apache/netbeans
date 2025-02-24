@@ -406,6 +406,15 @@ public class DriverListUtil {
         https://docs.snowflake.com/en/developer-guide/jdbc/jdbc-configure */
         url = add("Snowflake", null, "net.snowflake.client.jdbc.SnowflakeDriver", "jdbc:snowflake://<HOST>/[?<ADDITIONAL>]", true);
         url.setSampleUrl("jdbc:snowflake://my-account-id.snowflakecomputing.com/?warehouse=COMPUTE_WH");
+
+        // See https://cloud.google.com/bigquery/docs/reference/odbc-jdbc-drivers#jdbc_release_1621003
+        url = add("Google BigQuery", null, "com.simba.googlebigquery.jdbc.Driver",
+                "jdbc:bigquery://https://<HOST>/bigquery/v2:<PORT>;ProjectId=<INSTANCE>;<ADDITIONAL>", true);
+        /* None of the available authentication methods use a JDBC-level username/password prompt.
+        (Instead, an external browser may be opened to prompt for credentials when the user attempts
+        to connect.) */
+        url.setUsernamePasswordDisplayed(false);
+        url.setSampleUrl("jdbc:bigquery://https://www.googleapis.com/bigquery/v2:443;ProjectId=ProjectIdGoesHere;OAuthType=1;");
     }
 
     public static Set<String> getDrivers() {

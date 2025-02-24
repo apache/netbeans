@@ -45,6 +45,8 @@
             <arg value="BladeAntlrLexer.g4"/>
             <arg value="BladeAntlrParser.g4"/>
         </java>
+        <delete dir="${v10.outdir}" includes="*.tokens"/>
+        <delete dir="${v10.outdir}" includes="*.interp"/>
 
         <!--formatter-->
         <property name="formatter.outdir" location="${src.dir}/org/netbeans/modules/php/blade/syntax/antlr4/formatter"/>
@@ -54,6 +56,8 @@
             <arg value="BladeAntlrFormatterLexer.g4"/>
             <arg value="BladeAntlrFormatterParser.g4"/>
         </java>
+        <delete dir="${formatter.outdir}" includes="*.tokens"/>
+        <delete dir="${formatter.outdir}" includes="*.interp"/>
         
         <!--php-->
         <property name="php.outdir" location="${src.dir}/org/netbeans/modules/php/blade/syntax/antlr4/php"/>
@@ -63,12 +67,19 @@
             <arg value="BladePhpAntlrLexer.g4"/>
             <arg value="BladePhpAntlrParser.g4"/>
         </java>
-        
-        <delete dir="${v10.outdir}" includes="*.tokens"/>
-        <delete dir="${v10.outdir}" includes="*.interp"/>
         <delete dir="${php.outdir}" includes="*.tokens"/>
         <delete dir="${php.outdir}" includes="*.interp"/>
-        <delete dir="${formatter.outdir}" includes="*.tokens"/>
-        <delete dir="${formatter.outdir}" includes="*.interp"/>
+                
+        <!--html-->
+        <property name="html_components.outdir" location="${src.dir}/org/netbeans/modules/php/blade/syntax/antlr4/html_components"/>
+        <java classname="org.antlr.v4.Tool" fork="true" dir="${html_components.outdir}">
+            <arg value="-o"/>
+            <arg value="${html_components.outdir}"/>
+            <arg value="BladeHtmlAntlrLexer.g4"/>
+            <arg value="BladeHtmlAntlrParser.g4"/>
+        </java>
+        <delete dir="${html_components.outdir}" includes="*.tokens"/>
+        <delete dir="${html_components.outdir}" includes="*.interp"/>
+
     </target>
 </project>

@@ -48,7 +48,6 @@ import BladePhpCommonLexer;
 }
 
 options { 
-    superClass = LexerAdaptor;
     caseInsensitive = true;
 }
 

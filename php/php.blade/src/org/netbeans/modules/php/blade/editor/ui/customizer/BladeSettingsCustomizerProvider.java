@@ -45,20 +45,28 @@ public class BladeSettingsCustomizerProvider implements ProjectCustomizer.Compos
         subcategories.add(optionsCustomizer.createCategory(lkp));
         BladeDirectivesCustomizerProvider directiveCustomizer = new BladeDirectivesCustomizerProvider();
         subcategories.add(directiveCustomizer.createCategory(lkp));
+        BladeComponentsCustomizerProvider bladeComponentsCustomizer = new BladeComponentsCustomizerProvider();
+        subcategories.add(bladeComponentsCustomizer.createCategory(lkp));
         return ProjectCustomizer.Category.create(CUSTOMIZER_IDENT,
                 NbBundle.getMessage(BladeSettingsCustomizerProvider.class, "LBL_LaravelBlade"), null,
-                subcategories.toArray(new ProjectCustomizer.Category[0]));
+                subcategories.toArray(ProjectCustomizer.Category[]::new));
     }
 
     @Override
     public JComponent createComponent(ProjectCustomizer.Category category, Lookup context) {
         switch (category.getName()) {
-            case BladeOptionsCustomizerProvider.VIEWS_FOLDERS:
+            case BladeOptionsCustomizerProvider.VIEWS_FOLDERS -> {
                 BladeOptionsCustomizerProvider provider = new BladeOptionsCustomizerProvider();
                 return provider.createComponent(category, context);
-            case BladeDirectivesCustomizerProvider.BLADE_DIRECTIVES:
+            }
+            case BladeDirectivesCustomizerProvider.BLADE_DIRECTIVES -> {
                 BladeDirectivesCustomizerProvider directivesProvider = new BladeDirectivesCustomizerProvider();
                 return directivesProvider.createComponent(category, context);
+            }
+            case BladeComponentsCustomizerProvider.COMPONENTS_CUSTOMIZER -> {
+                BladeComponentsCustomizerProvider bladeComponentsCustomizer = new BladeComponentsCustomizerProvider();
+                return bladeComponentsCustomizer.createComponent(category, context);
+            }
         }
 
         return createGeneralSettingsComponent(category, context);

@@ -18,18 +18,15 @@
  */
 package org.netbeans.modules.php.blade.project;
 
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import javax.swing.DefaultListModel;
-import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.modules.php.blade.editor.ui.customizer.UiOptionsUtils;
+import org.netbeans.modules.php.blade.editor.ui.customizer.UIOptionsUtils;
 import org.openide.util.NbPreferences;
 
 /**
@@ -92,12 +89,12 @@ public final class BladeProjectProperties {
     }
 
     public void storeDirectiveCustomizerPaths() {
-        String includePath = UiOptionsUtils.encodeToStrings(directiveCustomizerPathList.elements());
+        String includePath = UIOptionsUtils.encodeToStrings(directiveCustomizerPathList.elements());
         getPreferences().put(DIRECTIVE_CUSTOMIZER_PATH_LIST, includePath);
     }
 
     public void storeViewsPaths() {
-        String includePath = UiOptionsUtils.encodeToStrings(viewsPathList.elements());
+        String includePath = UIOptionsUtils.encodeToStrings(viewsPathList.elements());
         getPreferences().put(VIEW_PATH_LIST, includePath);
     }
 
@@ -123,7 +120,7 @@ public final class BladeProjectProperties {
     }
 
     public void setViewsPathList(DefaultListModel<String> list) {
-        String includePath = UiOptionsUtils.encodeToStrings(list.elements());
+        String includePath = UIOptionsUtils.encodeToStrings(list.elements());
         getPreferences().put(VIEW_PATH_LIST, includePath);
     }
 
@@ -165,7 +162,7 @@ public final class BladeProjectProperties {
     }
     
     public void storeBladeComponentsFolder() {
-        String includePath = UiOptionsUtils.encodeToStrings(bladeComponentsClassFolderList.elements());
+        String includePath = UIOptionsUtils.encodeToStrings(bladeComponentsClassFolderList.elements());
         getPreferences().put(BLADE_COMPONENT_CLASS_FOLDER_LIST, includePath);
     }
     

@@ -48,7 +48,6 @@ lexer grammar BladeHtmlAntlrLexer;
 }
 
 options { 
-    superClass = LexerAdaptor;
     caseInsensitive = true;
 }
 

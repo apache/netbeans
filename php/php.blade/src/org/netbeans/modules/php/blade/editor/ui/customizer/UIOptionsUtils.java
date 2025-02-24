@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author bogdan
  */
-public class UiOptionsUtils {
+public class UIOptionsUtils {
 
     public static final String FILE_ITEM_SEPARATOR = "|"; // NOI18N
 

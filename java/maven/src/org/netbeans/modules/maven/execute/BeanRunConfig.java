@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.PlexusContainerException;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.project.Project;
@@ -55,6 +54,7 @@ public class BeanRunConfig implements RunConfig {
     private List<String> goals;
     private String executionName;
     private Map<String,String> properties;
+    private Map<String,String> options;
     private Map<String,Object> internalProperties;
     //for these delegate to default options for defaults.
     private boolean showDebug = MavenSettings.getDefault().isShowDebug();
@@ -397,6 +397,40 @@ public class BeanRunConfig implements RunConfig {
 
     public final void setReactorStyle(ReactorStyle style) {
         reactor = style;
+    }
+
+    @Override
+    public Map<? extends String, ? extends String> getOptions() {
+        if (options == null) {
+            return parent != null ? parent.getOptions(): Collections.<String,String>emptyMap();
+        }
+        return Collections.unmodifiableMap(new LinkedHashMap<String,String>(options));
+    }
+
+    @Override
+    public void setOption(String key, String value) {
+        if (options == null) {
+            options = new LinkedHashMap<String,String>();
+            if (parent != null) {
+                options.putAll(parent.getOptions());
+            }
+        }
+        if (value != null) {
+            options.put(key, value);
+        } else {
+            options.remove(key);
+        }
+    }
+
+    @Override
+    public void addOptions(Map<String, String> args) {
+         if (options == null) {
+            options = new LinkedHashMap<String,String>();
+            if (parent != null) {
+                options.putAll(parent.getOptions());
+            }
+        }
+        options.putAll(args);
     }
 }
 

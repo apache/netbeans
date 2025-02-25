@@ -91,8 +91,8 @@ public class RepositoryFormPanel extends JPanel {
 
         errorLabel = new JLabel();
         errorLabel.setForeground(ERROR_COLOR);
-        errorLabel.setIcon(new ImageIcon(ImageUtilities.loadImage(
-                "org/netbeans/modules/bugtracking/ui/resources/error.gif")));   //NOI18N
+        errorLabel.setIcon(ImageUtilities.loadImageIcon(
+                "org/netbeans/modules/bugtracking/ui/resources/error.gif", false));   //NOI18N
         errorText = new JTextArea();
         errorText.setForeground(ERROR_COLOR);
         errorText.setBackground(errorLabel.getBackground());

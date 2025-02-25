@@ -55,7 +55,7 @@ public class NexusRepositoryIndexerImplTest extends NexusTestBase {
         qf.setValue("stuff");
         qf.setOccur(QueryField.OCCUR_MUST);
         qf.setMatch(QueryField.MATCH_EXACT);
-        assertEquals("[test:plugin:0:test]", nrii.find(List.of(qf), List.of(info)).getResults().toString());
+        assertEquals("[test:plugin:0:test]", nrii.getGenericFindQuery().find(List.of(qf), List.of(info)).getResults().toString());
     }
 
     public void testLastUpdated() throws Exception { // #197670
@@ -65,7 +65,7 @@ public class NexusRepositoryIndexerImplTest extends NexusTestBase {
         install(empty, "test", "art", "0", "pom.lastUpdated");
         install(empty, "test", "art", "0", "jar.lastUpdated");
         nrii.indexRepo(info);
-        List<NBVersionInfo> versions = nrii.getVersions("test", "art", List.of(info)).getResults();
+        List<NBVersionInfo> versions = nrii.getBaseQueries().getVersions("test", "art", List.of(info)).getResults();
         assertEquals(1, versions.size());
         NBVersionInfo v = versions.get(0);
         assertEquals("test:art:0:test", v.toString());

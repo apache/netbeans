@@ -33,6 +33,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -52,7 +53,7 @@ public class FSCompletionItem implements CompletionProposal {
         this.element = new FSElementHandle(file);
         DataObject od = DataObject.find(file);
 
-        icon = new ImageIcon(od.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
+        icon = ImageUtilities.icon2ImageIcon(ImageUtilities.image2Icon(od.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16)));
 
         this.anchor = anchor;
         this.addExtension = addExtension;
@@ -155,7 +156,7 @@ public class FSCompletionItem implements CompletionProposal {
 
         public FSElementHandle(FileObject fo) {
             this.fo = fo;
-            this.representedFiles = new HashSet(1);
+            this.representedFiles = new HashSet<>(1);
             representedFiles.add(fo);
         }
 

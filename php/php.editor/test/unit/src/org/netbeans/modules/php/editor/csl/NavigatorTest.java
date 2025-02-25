@@ -159,4 +159,101 @@ public class NavigatorTest extends PhpNavigatorTestBase {
     public void testTypedClassConstants() throws Exception {
         performTest("structure/php83/typedClassConstants");
     }
+
+    // PHP 8.4
+    public void testNewWithoutParentheses() throws Exception {
+        performTest("structure/php84/newWithoutParentheses");
+    }
+
+    public void testDeprecatedAttributeFunctionsInGlobal() throws Exception {
+        performTest("structure/php84/deprecatedAttributeFunctionsInGlobal");
+    }
+
+    public void testDeprecatedAttributeFunctionsInNamespace01() throws Exception {
+        performTest("structure/php84/deprecatedAttributeFunctionsInNamespace01");
+    }
+
+    public void testDeprecatedAttributeFunctionsInNamespace02() throws Exception {
+        performTest("structure/php84/deprecatedAttributeFunctionsInNamespace02");
+    }
+
+    public void testDeprecatedAttributeFunctionsInNamespace03() throws Exception {
+        performTest("structure/php84/deprecatedAttributeFunctionsInNamespace03");
+    }
+
+    public void testDeprecatedAttributeFunctionsInNamespaceWithUse01() throws Exception {
+        performTest("structure/php84/deprecatedAttributeFunctionsInNamespaceWithUse01");
+    }
+
+    public void testDeprecatedAttributeFunctionsInNamespaceWithUse02() throws Exception {
+        performTest("structure/php84/deprecatedAttributeFunctionsInNamespaceWithUse02");
+    }
+
+    public void testDeprecatedAttributeFunctionsInNamespaceWithUse03() throws Exception {
+        performTest("structure/php84/deprecatedAttributeFunctionsInNamespaceWithUse03");
+    }
+
+    public void testDeprecatedAttributeMethodsInGlobal() throws Exception {
+        performTest("structure/php84/deprecatedAttributeMethodsInGlobal");
+    }
+
+    public void testDeprecatedAttributeMethodsInNamespace() throws Exception {
+        performTest("structure/php84/deprecatedAttributeMethodsInNamespace");
+    }
+
+    public void testDeprecatedAttributeMethodsInNamespaceWithUse() throws Exception {
+        performTest("structure/php84/deprecatedAttributeMethodsInNamespaceWithUse");
+    }
+
+    public void testDeprecatedAttributeEnumCaseInGlobal() throws Exception {
+        performTest("structure/php84/deprecatedAttributeEnumCaseInGlobal");
+    }
+
+    public void testDeprecatedAttributeEnumCaseInNamespace() throws Exception {
+        performTest("structure/php84/deprecatedAttributeEnumCaseInNamespace");
+    }
+
+    public void testDeprecatedAttributeEnumCaseInNamespaceWithUse() throws Exception {
+        performTest("structure/php84/deprecatedAttributeEnumCaseInNamespaceWithUse");
+    }
+
+    public void testDeprecatedAttributeTypeConstantInGlobal() throws Exception {
+        performTest("structure/php84/deprecatedAttributeTypeConstantInGlobal");
+    }
+
+    public void testDeprecatedAttributeTypeConstantInNamespace() throws Exception {
+        performTest("structure/php84/deprecatedAttributeTypeConstantInNamespace");
+    }
+
+    public void testDeprecatedAttributeTypeConstantInNamespaceWithUse() throws Exception {
+        performTest("structure/php84/deprecatedAttributeTypeConstantInNamespaceWithUse");
+    }
+
+    public void testAsymmetricVisibilityClass() throws Exception {
+        performTest("structure/php84/asymmetricVisibilityClass");
+    }
+
+    public void testAsymmetricVisibilityTrait() throws Exception {
+        performTest("structure/php84/asymmetricVisibilityTrait");
+    }
+
+    public void testAsymmetricVisibilityAnonClass() throws Exception {
+        performTest("structure/php84/asymmetricVisibilityAnonClass");
+    }
+
+    public void testAsymmetricVisibilityConstructorPropertyPromotion() throws Exception {
+        performTest("structure/php84/asymmetricVisibilityConstructorPropertyPromotion");
+    }
+
+    public void testFinalFieldsClass() throws Exception {
+        performTest("structure/php84/finalFieldsClass");
+    }
+
+    public void testFinalFieldsTrait() throws Exception {
+        performTest("structure/php84/finalFieldsTrait");
+    }
+
+    public void testFinalFieldsAnonClass() throws Exception {
+        performTest("structure/php84/finalFieldsAnonClass");
+    }
 }

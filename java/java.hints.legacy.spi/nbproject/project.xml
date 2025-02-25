@@ -127,7 +127,6 @@
             <friend-packages>
                 <friend>org.netbeans.modules.ant.hints</friend>
                 <friend>org.netbeans.modules.apisupport.ant</friend>
-                <friend>org.netbeans.modules.jakarta.web.beans</friend>
                 <friend>org.netbeans.modules.java.lsp.server</friend>
                 <friend>org.netbeans.modules.javadoc</friend>
                 <friend>org.netbeans.modules.javahints</friend>

@@ -1,0 +1,9 @@
+Code completion result for source line:
+new Example()?->|test::PUBLIC_TEST_CONST; // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicMethod()                  [PUBLIC]   Example
+METHOD     publicStaticMethod()            [STATIC]   Example
+METHOD     returnThis()                    [PUBLIC]   Example
+METHOD     test()                          [PUBLIC]   Example
+VARIABLE   Test test                       [PUBLIC]   Example
+VARIABLE   int publicField                 [PUBLIC]   Example

@@ -120,15 +120,13 @@ public final class ChangeLiveSupport {
                 continue;
             }
             String path = fo.getPath();
-            String serverPath;
-            try {
-                serverPath = sh.getServerPath(path);
-            } catch (ScriptsHandler.OutOfScope ex) {
+            String serverPath = sh.getServerPath(fo);
+            if(serverPath == null) {
                 continue;
             }
             CDTScript script = null;
             for (CDTScript s : scripts) {
-                if (serverPath.equals(s.getUrl().getPath())) {
+                if (serverPath.equals(s.getUrl())) {
                     script = s;
                     break;
                 }
@@ -158,7 +156,7 @@ public final class ChangeLiveSupport {
                         return null;
                     });
 
-            LOG.log(Level.FINE, "Running ChangeLive command for script {0}", script.getUrl().toASCIIString());
+            LOG.log(Level.FINE, "Running ChangeLive command for script {0}", script.getUrl());
         }
         phaser.arriveAndAwaitAdvance();
     }

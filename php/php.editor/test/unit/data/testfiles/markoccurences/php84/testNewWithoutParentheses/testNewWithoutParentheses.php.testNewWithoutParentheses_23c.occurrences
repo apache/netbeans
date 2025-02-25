@@ -1,0 +1,3 @@
+        $example = new Example()::|>MARK_OCCURRENCES:privateStaticMethod<|();
+        $example = new Example()->returnThis()::|>MARK_OCCURRENCES:privateStaticMethod<|();
+    private static function |>MARK_OCCURRENCES:priv^ateStaticMethod<|(): string {

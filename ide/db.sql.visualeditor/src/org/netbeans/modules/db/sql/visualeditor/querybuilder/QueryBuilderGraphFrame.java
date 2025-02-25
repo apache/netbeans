@@ -98,6 +98,7 @@ import org.netbeans.api.visual.anchor.AnchorShapeFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.SelectProvider;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Exceptions;
 
 /**
@@ -161,12 +162,6 @@ public class QueryBuilderGraphFrame extends JPanel
     private boolean                     _checkTableColumnValidity = false;
     
     private boolean                     _inputTableAddCriteria = false;
-    
-    java.net.URL url_primary_key =
-            getClass().getResource("/org/netbeans/modules/db/sql/visualeditor/resources/primaryKey.gif"); // NOI18N
-    java.net.URL url_foreign_key =
-            getClass().getResource("/org/netbeans/modules/db/sql/visualeditor/resources/foreignKey.gif"); // NOI18N
-    
     
     // Constructor
     
@@ -1052,12 +1047,13 @@ public class QueryBuilderGraphFrame extends JPanel
             // JLabel (String text, Icon image, SwingConstants.LEFT);
             // We used to use toUpperCase() during comparison, but drop that now that we are
             // canonicalizing table/column names.
-            if (primaryKeys.contains(columnName.trim()))
-                dbData[i][1] = new ImageIcon(url_primary_key);
-            else if (foreignKeyCols.contains(columnName.trim()))
-                dbData[i][1] = new ImageIcon(url_foreign_key);
-            else
+            if (primaryKeys.contains(columnName.trim())) {
+                dbData[i][1] = ImageUtilities.loadImageIcon("org/netbeans/modules/db/sql/visualeditor/resources/primaryKey.gif", false);
+            } else if (foreignKeyCols.contains(columnName.trim())) {
+                dbData[i][1] = ImageUtilities.loadImageIcon("org/netbeans/modules/db/sql/visualeditor/resources/foreignKey.gif", false);
+            } else {
                 dbData[i][1] = null;
+            }
             
             dbData[i][2] = columnName;
             _queryBuilderInputTable.addRow(tableSpec, columnName);

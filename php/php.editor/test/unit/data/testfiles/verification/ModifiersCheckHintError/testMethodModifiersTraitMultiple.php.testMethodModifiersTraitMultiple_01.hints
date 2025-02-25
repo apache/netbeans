@@ -1,0 +1,22 @@
+    final final function finalFinalTraitMethodError(): void {}
+                         --------------------------
+HINT:Multiple final modifiers are not allowed
+FIX:Remove modifier: final
+    public public function publicPublicTraitMethodError(): void {}
+                           ----------------------------
+HINT:Multiple public modifiers are not allowed
+FIX:Remove modifier: public
+    public private function publicPrivateTraitMethodError(): void {}
+                            -----------------------------
+HINT:Multiple access type modifiers are not allowed
+FIX:Remove modifier: public
+FIX:Remove modifier: private
+    public protected function publicProtectedTraitMethodError(): void {}
+                              -------------------------------
+HINT:Multiple access type modifiers are not allowed
+FIX:Remove modifier: public
+FIX:Remove modifier: protected
+    static static function staticStaticTraitMethodError(): void {}
+                           ----------------------------
+HINT:Multiple static modifiers are not allowed
+FIX:Remove modifier: static

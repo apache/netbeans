@@ -1,0 +1,3 @@
+    readonly final $readonlyFinal2; // error1
+                    --------------
+HINT:Readonly property "$readonlyFinal2" must have type

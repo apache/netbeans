@@ -326,13 +326,13 @@ public class CLIOptions extends CLIHandler {
         if (f.isFile ()) {
             Object[] arg = new Object[] {f};
             System.err.println (NbBundle.getMessage (CLIOptions.class, "CTL_CannotCreate_text", arg));
-            org.netbeans.TopSecurityManager.exit (6);
+            org.netbeans.NbExit.exit(6);
         }
         if (! f.exists ()) {
             if (! f.mkdirs ()) {
                 Object[] arg = new Object[] {f};
                 System.err.println (NbBundle.getMessage (CLIOptions.class, "CTL_CannotCreateSysDir_text", arg));
-                org.netbeans.TopSecurityManager.exit (7);
+                org.netbeans.NbExit.exit(7);
             }
         }
     }

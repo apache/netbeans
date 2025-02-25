@@ -129,7 +129,7 @@ final class ConnectionSpec implements Closeable {
                 }
             };
             listeningThread.start();
-            out.write((prefix + " listening at port " + localPort).getBytes());
+            out.write((prefix + " listening at port " + localPort + "\n").getBytes());
             out.flush();
         } else {
             // connect to TCP

@@ -87,6 +87,31 @@ public class BeansComponentTest extends NbTestCase {
         beansElement = elements.get(5);
         assertTrue( beansElement instanceof Alternatives );
     }
+
+    public void testBeansJakarta() throws Exception{
+        WebBeansModel model = Util.loadRegistryModel("beans_jakarta.xml");
+        model.sync();
+
+        Beans beans = model.getBeans();
+        List<BeansElement> elements = beans.getElements();
+
+        assertEquals(6, elements.size());
+
+        BeansElement beansElement = elements.get(0);
+        assertTrue( beansElement instanceof Interceptors );
+        beansElement = elements.get(1);
+        assertTrue( beansElement instanceof Interceptors );
+
+        beansElement = elements.get(2);
+        assertTrue( beansElement instanceof Decorators );
+        beansElement = elements.get(4);
+        assertTrue( beansElement instanceof Decorators );
+
+        beansElement = elements.get(3);
+        assertTrue( beansElement instanceof Alternatives );
+        beansElement = elements.get(5);
+        assertTrue( beansElement instanceof Alternatives );
+    }
     
     public void testInterceptors() throws Exception{
         WebBeansModel model = Util.loadRegistryModel("beans.xml");

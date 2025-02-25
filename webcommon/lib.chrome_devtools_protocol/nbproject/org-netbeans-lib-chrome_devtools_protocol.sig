@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.1
+#Version 2.0
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -64,6 +64,7 @@ meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
 
 CLSS public abstract org.netbeans.lib.chrome_devtools_protocol.CDTUtil
+meth public static java.lang.String toNodeUrl(java.lang.String)
 meth public static java.net.URI toNodeUrl(java.net.URI)
 supr java.lang.Object
 
@@ -165,9 +166,9 @@ meth public int hashCode()
 meth public java.lang.Boolean getCanBeRestarted()
 meth public java.lang.String getCallFrameId()
 meth public java.lang.String getFunctionName()
-meth public java.lang.String toString()
-meth public java.net.URI getUrl()
+meth public java.lang.String getUrl()
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public java.lang.String toString()
 meth public java.util.List<org.netbeans.lib.chrome_devtools_protocol.debugger.Scope> getScopeChain()
 meth public org.netbeans.lib.chrome_devtools_protocol.debugger.Location getFunctionLocation()
 meth public org.netbeans.lib.chrome_devtools_protocol.debugger.Location getLocation()
@@ -181,7 +182,7 @@ meth public void setLocation(org.netbeans.lib.chrome_devtools_protocol.debugger.
 meth public void setReturnValue(org.netbeans.lib.chrome_devtools_protocol.runtime.RemoteObject)
 meth public void setScopeChain(java.util.List<org.netbeans.lib.chrome_devtools_protocol.debugger.Scope>)
 meth public void setThisObject(org.netbeans.lib.chrome_devtools_protocol.runtime.RemoteObject)
-meth public void setUrl(java.net.URI)
+meth public void setUrl(java.lang.String)
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds callFrameId,canBeRestarted,functionLocation,functionName,location,returnValue,scopeChain,thisObject,url
@@ -458,9 +459,9 @@ meth public java.lang.String getEmbedderName()
 meth public java.lang.String getHash()
 meth public java.lang.String getScriptId()
 meth public java.lang.String getScriptLanguage()
+meth public java.lang.String getUrl()
 meth public java.lang.String toString()
 meth public java.net.URI getSourceMapURL()
-meth public java.net.URI getUrl()
 meth public org.netbeans.lib.chrome_devtools_protocol.runtime.StackTrace getStackTrace()
 meth public void setCodeOffset(java.lang.Integer)
 meth public void setEmbedderName(java.lang.String)
@@ -478,7 +479,7 @@ meth public void setSourceMapURL(java.net.URI)
 meth public void setStackTrace(org.netbeans.lib.chrome_devtools_protocol.runtime.StackTrace)
 meth public void setStartColumn(int)
 meth public void setStartLine(int)
-meth public void setUrl(java.net.URI)
+meth public void setUrl(java.lang.String)
 supr java.lang.Object
 hfds codeOffset,embedderName,endColumn,endLine,executionContextAuxData,executionContextId,hasSourceURL,hash,isModule,length,scriptId,scriptLanguage,sourceMapURL,stackTrace,startColumn,startLine,url
 
@@ -501,9 +502,9 @@ meth public java.lang.String getEmbedderName()
 meth public java.lang.String getHash()
 meth public java.lang.String getScriptId()
 meth public java.lang.String getScriptLanguage()
+meth public java.lang.String getUrl()
 meth public java.lang.String toString()
 meth public java.net.URI getSourceMapURL()
-meth public java.net.URI getUrl()
 meth public org.netbeans.lib.chrome_devtools_protocol.debugger.DebugSymbols getDebugSymbols()
 meth public org.netbeans.lib.chrome_devtools_protocol.runtime.StackTrace getStackTrace()
 meth public void setCodeOffset(java.lang.Integer)
@@ -524,7 +525,7 @@ meth public void setSourceMapURL(java.net.URI)
 meth public void setStackTrace(org.netbeans.lib.chrome_devtools_protocol.runtime.StackTrace)
 meth public void setStartColumn(int)
 meth public void setStartLine(int)
-meth public void setUrl(java.net.URI)
+meth public void setUrl(java.lang.String)
 supr java.lang.Object
 hfds codeOffset,debugSymbols,embedderName,endColumn,endLine,executionContextAuxData,executionContextId,hasSourceURL,hash,isLiveEdit,isModule,length,scriptId,scriptLanguage,sourceMapURL,stackTrace,startColumn,startLine,url
 
@@ -601,14 +602,14 @@ meth public int hashCode()
 meth public java.lang.Integer getColumnNumber()
 meth public java.lang.String getCondition()
 meth public java.lang.String getScriptHash()
+meth public java.lang.String getUrl()
 meth public java.lang.String getUrlRegex()
 meth public java.lang.String toString()
-meth public java.net.URI getUrl()
 meth public void setColumnNumber(java.lang.Integer)
 meth public void setCondition(java.lang.String)
 meth public void setLineNumber(int)
 meth public void setScriptHash(java.lang.String)
-meth public void setUrl(java.net.URI)
+meth public void setUrl(java.lang.String)
 meth public void setUrlRegex(java.lang.String)
 supr java.lang.Object
 hfds columnNumber,condition,lineNumber,scriptHash,url,urlRegex
@@ -857,13 +858,13 @@ meth public int getLineNumber()
 meth public int hashCode()
 meth public java.lang.String getFunctionName()
 meth public java.lang.String getScriptId()
+meth public java.lang.String getUrl()
 meth public java.lang.String toString()
-meth public java.net.URI getUrl()
 meth public void setColumnNumber(int)
 meth public void setFunctionName(java.lang.String)
 meth public void setLineNumber(int)
 meth public void setScriptId(java.lang.String)
-meth public void setUrl(java.net.URI)
+meth public void setUrl(java.lang.String)
 supr java.lang.Object
 hfds columnNumber,functionName,lineNumber,scriptId,url
 

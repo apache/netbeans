@@ -199,6 +199,12 @@ public class NbEventSpy implements EventSpy {
                             }
                         }
                     }
+                    MavenProject mp = ex.getProject();
+                    if (mp != null) {
+                        if (mp.getFile() != null) { //file is null in superpom
+                            mojo.put("prjFile", mp.getFile().getParentFile().getAbsolutePath());
+                        }
+                    }
                     root.put("mojo", mojo);    
                 }
                 if (ExecutionEvent.Type.MojoFailed.equals(ex.getType()) && ex.getException() != null) {

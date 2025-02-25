@@ -72,6 +72,8 @@ public interface Visitor {
     //public void endVisit(ClassDeclaration classDeclaration);
     public void visit(ClassInstanceCreation classInstanceCreation);
 
+    public void visit(ClassInstanceCreationVariable classInstanceCreationVariable);
+
     //public void endVisit(ClassInstanceCreation classInstanceCreation);
     public void visit(ClassName className);
 

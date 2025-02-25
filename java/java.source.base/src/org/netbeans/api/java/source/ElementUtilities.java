@@ -61,6 +61,8 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -489,7 +491,7 @@ public final class ElementUtilities {
         for (CompilationUnitTree unit : Collections.singletonList(info.getCompilationUnit())) {
             TreePath path = new TreePath(unit);
             Scope scope = trees.getScope(path);
-            while (scope instanceof JavacScope && !((JavacScope)scope).isStarImportScope()) {
+            while (scope instanceof JavacScope && ((JavacScope)scope).getScopeType() == ORDINARY_SCOPE_TYPE) {
                 for (Element local : scope.getLocalElements()) {
                     if (local.getKind().isClass() || local.getKind().isInterface()) {
                         if (acceptor.accept(local, null)) {
@@ -519,6 +521,21 @@ public final class ElementUtilities {
             }
         }
         return membersList;
+    }
+
+    private static final Object ORDINARY_SCOPE_TYPE;
+    private static final Logger LOG = Logger.getLogger(ElementUtilities.class.getName());
+
+    static {
+        Object ordinary = null;
+
+        try {
+            ordinary = Enum.valueOf((Class<Enum>) Class.forName("com.sun.tools.javac.api.JavacScope$ScopeType"), "ORDINARY");
+        } catch (ClassNotFoundException ex) {
+            LOG.log(Level.FINE, null, ex);
+        }
+
+        ORDINARY_SCOPE_TYPE = ordinary;
     }
 
     /**Filter {@link Element}s

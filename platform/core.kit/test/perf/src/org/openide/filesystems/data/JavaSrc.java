@@ -136,27 +136,6 @@ public final class JavaSrc {
             super(filter, Children.LEAF);
         }
 
-        /*
-        public Image getIcon (int type) {
-            if ((type == java.beans.BeanInfo.ICON_COLOR_16x16) ||
-                    (type == java.beans.BeanInfo.ICON_MONO_16x16)) {
-                if (itemIcon == null)
-                    itemIcon = Toolkit.getDefaultToolkit ().getImage (
-                                   getClass ().getResource ("/org/netbeans/core/resources/action.gif")); // NOI18N
-                return itemIcon;
-            } else {
-                if (itemIcon32 == null)
-                    itemIcon32 = Toolkit.getDefaultToolkit ().getImage (
-                                     getClass ().getResource ("/org/netbeans/core/resources/action32.gif")); // NOI18N
-                return itemIcon32;
-            }
-        }
-
-        public Image getOpenedIcon (int type) {
-            return getIcon (type);
-        }
-        */
-
         /** Actions.
         * @return array of actions for this node
         */

@@ -1,0 +1,2 @@
+$|>MARK_OCCURRENCES:variable<| = 1;
+static $example2 = $|>MARK_OCCURRENCES:varia^ble<|;

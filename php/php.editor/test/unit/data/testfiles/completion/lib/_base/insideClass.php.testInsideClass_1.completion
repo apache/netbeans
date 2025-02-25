@@ -3,3 +3,4 @@ priv|ate $fld = 0;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 KEYWORD    private                                    null
+KEYWORD    private(set)                               null

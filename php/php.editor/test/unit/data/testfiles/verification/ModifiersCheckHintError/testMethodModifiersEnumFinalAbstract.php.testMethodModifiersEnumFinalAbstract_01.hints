@@ -1,0 +1,16 @@
+    final abstract function finalAbstractEnumMethod(): void {} // method error enum
+                            -----------------------
+HINT:Enum cannot declare abstract methods
+FIX:Remove modifier: abstract
+    final abstract public function finalAbstractPublicEnumMethod(): void {} // method error enum
+                                   -----------------------------
+HINT:Enum cannot declare abstract methods
+FIX:Remove modifier: abstract
+    final abstract protected function finalAbstractProtectedEnumMethod(): void {} // method error enum
+                                      --------------------------------
+HINT:Enum cannot declare abstract methods
+FIX:Remove modifier: abstract
+    final abstract private function finalAbstractPrivateEnumMethod(): void {} // method error enum
+                                    ------------------------------
+HINT:Enum cannot declare abstract methods
+FIX:Remove modifier: abstract

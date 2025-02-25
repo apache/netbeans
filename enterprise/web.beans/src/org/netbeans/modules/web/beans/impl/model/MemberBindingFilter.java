@@ -39,8 +39,8 @@ import javax.lang.model.type.DeclaredType;
  */
 class MemberBindingFilter<T extends Element> extends Filter<T> {
     
-    private static final String NON_BINDING_MEMBER_ANNOTATION =
-                "javax.enterprise.util.Nonbinding";    // NOI18N
+    private static final String NON_BINDING_MEMBER_ANNOTATION = "javax.enterprise.util.Nonbinding";    // NOI18N
+    private static final String NON_BINDING_MEMBER_ANNOTATION_JAKARTA = "jakarta.enterprise.util.Nonbinding";    // NOI18N
     
     private MemberBindingFilter( Class<T> clazz ){
         myClass = clazz;
@@ -143,7 +143,8 @@ class MemberBindingFilter<T extends Element> extends Filter<T> {
                 continue;
             }
             Name name = annotation.getQualifiedName();
-            if ( NON_BINDING_MEMBER_ANNOTATION.contentEquals(name)){
+            if (NON_BINDING_MEMBER_ANNOTATION.contentEquals(name)
+                    || NON_BINDING_MEMBER_ANNOTATION_JAKARTA.contentEquals(name)) {
                 return false;
             }
         }

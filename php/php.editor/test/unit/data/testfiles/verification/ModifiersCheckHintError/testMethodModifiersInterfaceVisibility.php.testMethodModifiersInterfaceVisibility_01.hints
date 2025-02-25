@@ -1,0 +1,16 @@
+    private function privateMethodError(): void;
+                     ------------------
+HINT:Interface method "privateMethodError" can not be declared private
+FIX:Remove modifier: private
+    protected function protectedMethodError(): void;
+                       --------------------
+HINT:Interface method "protectedMethodError" can not be declared protected
+FIX:Remove modifier: protected
+    private static function privateStaticMethodError(): void;
+                            ------------------------
+HINT:Interface method "privateStaticMethodError" can not be declared private
+FIX:Remove modifier: private
+    protected static function protectedStaticMethodError(): void;
+                              --------------------------
+HINT:Interface method "protectedStaticMethodError" can not be declared protected
+FIX:Remove modifier: protected

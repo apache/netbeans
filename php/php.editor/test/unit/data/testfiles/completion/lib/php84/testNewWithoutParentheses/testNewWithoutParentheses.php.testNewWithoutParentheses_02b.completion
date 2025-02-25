@@ -1,0 +1,5 @@
+Code completion result for source line:
+echo new Test()::publicStaticTest|Method();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticTestMethod()        [STATIC]   Test
+VARIABLE   string $publicStaticTestField   [STATIC]   Test

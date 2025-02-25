@@ -149,8 +149,8 @@ When adding JavaDoc to code NetBeans assists by suggesting to insert preformatte
 ![JavaDoc Completion](images/javadoc.png)
 
 ## Source Code formatting
-Formatting source code is possible using also other styles than NetBeans. Eclipse, Google and Spring formatters can be used. For Eclipse formatter simply export settings from Eclipse IDE into standard file and then set `Netbeans > Format: Settings Path:` in VSCode Settings.
-![Source Code formatter](images/SourceCodeFormatter.png) 
+Formatting source code is possible using the NetBeans code style. For using non default formatter options, simply export desired settings from NetBeans IDE into standard file and then set `Netbeans > Format: Settings Path:` in VSCode Settings.
+
 ## Test Explorer
 NetBeans Language Server provides Test Explorer view which allows to run all tests in a project, examine the results, go to source code and  run particular test.
 ![Test Explorer](images/Test_explorer.png)

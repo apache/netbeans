@@ -81,6 +81,7 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
                     case ActionProvider.COMMAND_RUN_SINGLE:
                     case ActionProvider.COMMAND_DEBUG_SINGLE:
                     case ActionProvider.COMMAND_TEST:
+                    case ActionProvider.COMMAND_TEST_PARALLEL:
                     case ActionProvider.COMMAND_TEST_SINGLE:
                     case ActionProvider.COMMAND_DEBUG_STEP_INTO:
                         break;

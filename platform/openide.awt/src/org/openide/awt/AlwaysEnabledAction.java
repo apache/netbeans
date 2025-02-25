@@ -26,6 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
@@ -227,7 +228,11 @@ implements PropertyChangeListener, ContextAwareAction {
                 return (Icon) icon;
             }
             if (icon instanceof URL) {
-                icon = Toolkit.getDefaultToolkit().getImage((URL)icon);
+                try {
+                    icon = ImageUtilities.loadImage(((URL)icon).toURI());
+                } catch (URISyntaxException e) {
+                    LOG.log(Level.WARNING, "SMALL_ICON attribute had invalid URI", e);
+                }
             }
             if (icon instanceof Image) {
                 return ImageUtilities.image2Icon((Image)icon);

@@ -27,15 +27,15 @@
     <localizing-bundle>org/netbeans/modules/libs/groovy/Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.modules.libs.groovy/modules/ext/groovy-3.0.8.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.libs.groovy/modules/ext/groovy-ant-3.0.8.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.libs.groovy/modules/ext/groovy-3.0.23.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.libs.groovy/modules/ext/groovy-ant-3.0.23.jar!/</resource>
     </volume>
     <properties>
         <property>
             <name>maven-dependencies</name>
             <value>
-                org.codehaus.groovy:groovy:3.0.8:jar
-                org.codehaus.groovy:groovy-ant:3.0.8:jar
+                org.codehaus.groovy:groovy:3.0.23
+                org.codehaus.groovy:groovy-ant:3.0.23
             </value>
         </property>
     </properties>

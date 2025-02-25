@@ -1,0 +1,5 @@
+Code completion result for source line:
+}->publicMethod5()::publicStaticTe|stMethod5();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticTestMethod()        [STATIC]   Test
+VARIABLE   string $publicStaticTestField   [STATIC]   Test

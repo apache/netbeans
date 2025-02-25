@@ -18,8 +18,10 @@
  */
 package org.netbeans.modules.web.beans.model;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,6 +38,7 @@ import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelAction;
 import org.netbeans.modules.j2ee.metadata.model.support.TestUtilities;
 import org.netbeans.modules.web.beans.api.model.DependencyInjectionResult;
 import org.netbeans.modules.web.beans.api.model.WebBeansModel;
+import org.openide.filesystems.FileUtil;
 
 
 /**
@@ -45,7 +48,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class AlternativeTest extends CommonTestCase {
 
     public AlternativeTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
 
     public void testAlternativeDisabled() throws IOException{

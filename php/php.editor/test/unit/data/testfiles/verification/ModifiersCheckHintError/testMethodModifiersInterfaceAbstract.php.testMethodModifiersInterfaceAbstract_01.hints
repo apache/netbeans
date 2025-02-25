@@ -1,0 +1,16 @@
+    abstract function abstractImplicitPublicMethodError(): void;
+                      ---------------------------------
+HINT:Interface method "abstractImplicitPublicMethodError" can not be declared abstract
+FIX:Remove modifier: abstract
+    abstract static function abstractImplicitPublicStaticMethodError(): void;
+                             ---------------------------------------
+HINT:Interface method "abstractImplicitPublicStaticMethodError" can not be declared abstract
+FIX:Remove modifier: abstract
+    abstract public function abstractPublicMethodError(): void;
+                             -------------------------
+HINT:Interface method "abstractPublicMethodError" can not be declared abstract
+FIX:Remove modifier: abstract
+    abstract public static function abstractPublicStaticMethodError(): void;
+                                    -------------------------------
+HINT:Interface method "abstractPublicStaticMethodError" can not be declared abstract
+FIX:Remove modifier: abstract

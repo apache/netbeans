@@ -1,0 +1,4 @@
+Code completion result for source line:
+$example = new Example()->returnTh|is()->publicMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     returnThis()                    [PUBLIC]   Example

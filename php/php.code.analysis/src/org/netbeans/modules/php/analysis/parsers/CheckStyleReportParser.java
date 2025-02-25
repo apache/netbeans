@@ -165,6 +165,10 @@ public class CheckStyleReportParser extends DefaultHandler {
         currentResult.setLine(lineNumber);
         currentResult.setColumn(getInt(attributes, "column")); // NOI18N
         String message = attributes.getValue("message"); // NOI18N
+        String errorIdentifier = attributes.getValue("source"); // NOI18N
+        if (errorIdentifier != null) {
+            message = String.format("%s: %s", errorIdentifier, message); // NOI18N
+        }
         currentResult.setCategory(String.format("%s: %s", attributes.getValue("severity"), message)); // NOI18N
         // Message can contain types like "array<string>" and description is renderd as HTML so it has to be properly escaped.
         currentResult.setDescription(StringEscapeUtils.escapeHtml(message));

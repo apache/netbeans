@@ -69,6 +69,11 @@ public class NetbeansActionMapping implements java.io.Serializable {
     private Map<String,String> properties;
 
     /**
+     * Field options.
+     */
+    private Map<String,String> options;
+    
+    /**
      * Field activatedProfiles.
      */
     private java.util.List<String> activatedProfiles;
@@ -78,7 +83,7 @@ public class NetbeansActionMapping implements java.io.Serializable {
     private String preAction;
 
     private String reactor;
-
+    
       //-----------/
      //- Methods -/
     //-----------/
@@ -149,6 +154,17 @@ public class NetbeansActionMapping implements java.io.Serializable {
         getProperties().put( key, value );
     } //-- void addProperty(String, String) 
 
+    /**
+     * Method addOptions.
+     * 
+     * @param key
+     * @param value
+     */
+    public void addOption(String key, String value)
+    {
+        getOptions().put( key, value );
+    }
+    
     /**
      * Get the actionName field.
      * 
@@ -223,6 +239,16 @@ public class NetbeansActionMapping implements java.io.Serializable {
         
         return this.properties;
     }
+    
+    public Map<String,String> getOptions()
+    {
+        if ( this.options == null )
+        {
+            this.options = new LinkedHashMap<String,String>();
+        }
+        
+        return this.options;
+    }
 
     /**
      * Get the recursive field.
@@ -264,6 +290,16 @@ public class NetbeansActionMapping implements java.io.Serializable {
         getPackagings().remove( string );
     } //-- void removePackaging(String) 
 
+    /**
+     * Method removeOption.
+     * 
+     * @param string
+     */
+    public void removeOption(String string)
+    {
+        getOptions().remove( string );
+    }
+    
     /**
      * Set the actionName field.
      * 
@@ -318,6 +354,11 @@ public class NetbeansActionMapping implements java.io.Serializable {
     public void setProperties(Map<String,String> properties)
     {
         this.properties = properties;
+    }
+    
+    public void setOptions(Map<String,String> options)
+    {
+        this.options = options;
     }
 
     /**

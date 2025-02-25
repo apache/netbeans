@@ -20,7 +20,6 @@ package org.netbeans.modules.refactoring.php.ui.tree;
 
 import java.beans.BeanInfo;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.refactoring.spi.ui.TreeElement;
@@ -28,6 +27,7 @@ import org.netbeans.modules.refactoring.spi.ui.TreeElementFactory;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -55,7 +55,7 @@ public class FolderTreeElement implements TreeElement {
     public Icon getIcon() {
         Icon result = null;
         try {
-            result = new ImageIcon(DataObject.find(fileObject).getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
+            result = ImageUtilities.image2Icon(DataObject.find(fileObject).getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
         } catch (DataObjectNotFoundException ex) {
             //no-op
         }

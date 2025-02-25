@@ -38,6 +38,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.CastExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.CloneExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
@@ -261,6 +262,11 @@ public class DefaultVisitor implements Visitor {
         scan(node.getSuperClass());
         scan(node.getInterfaces());
         scan(node.getBody());
+    }
+
+    @Override
+    public void visit(ClassInstanceCreationVariable node) {
+        scan(node.getName());
     }
 
     @Override

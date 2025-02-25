@@ -18,12 +18,47 @@
  */
 package org.netbeans.modules.openide.text;
 
+import java.util.MissingResourceException;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
+import org.openide.util.UserQuestionException;
 
 public final class AskEditorQuestions {
+    public enum QuestionResult {
+        /**
+         * The implementation should ask the user. The default, if no
+         * value is present in the resource bundle.
+         */
+        ASK_USER,
+        
+        /**
+         * Assume yes, do not ask the user, proceed immediately.
+         */
+        YES,
+        
+        /**
+         * Assume no, do not ask the user, proceed immediately.
+         */
+        NO,
+    }
     private AskEditorQuestions() {
+    }
+    
+    public static QuestionResult askUserQuestion(UserQuestionException uqe) {
+        String key = "UserQuestionAnswer_" + uqe.getClass().getName();
+        try {
+            String ask = NbBundle.getMessage(AskEditorQuestions.class, key); // NOI18N
+            if ("yes".equals(ask)) {
+                return QuestionResult.YES;
+            }
+            if ("no".equals(ask)) {
+                return QuestionResult.NO;
+            }
+        } catch (MissingResourceException ex) {
+            // expected
+        }
+        return QuestionResult.ASK_USER;
     }
 
     public static boolean askReloadDocument(String localizedMessage) {

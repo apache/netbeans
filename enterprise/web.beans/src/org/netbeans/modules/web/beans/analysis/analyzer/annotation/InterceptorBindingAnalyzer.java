@@ -34,13 +34,16 @@ import org.netbeans.modules.web.beans.analysis.analyzer.ModelAnalyzer.Result;
 import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INTERCEPTOR_BINDING_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INTERCEPTOR_BINDING_FQN_JAKARTA;
+
 
 /**
  * @author ads
  *
  */
 public class InterceptorBindingAnalyzer implements AnnotationAnalyzer {
-    
+
     /* (non-Javadoc)
      * @see org.netbeans.modules.web.beans.analysis.analyzer.AnnotationModelAnalyzer.AnnotationAnalyzer#analyze(javax.lang.model.element.TypeElement, org.netbeans.modules.web.beans.api.model.WebBeansModel, java.util.List, org.netbeans.api.java.source.CompilationInfo, java.util.concurrent.atomic.AtomicBoolean)
      */
@@ -49,8 +52,7 @@ public class InterceptorBindingAnalyzer implements AnnotationAnalyzer {
             AtomicBoolean cancel ,
             Result result )
     {
-        if ( !AnnotationUtil.hasAnnotation(element, 
-                AnnotationUtil.INTERCEPTOR_BINDING_FQN , model.getCompilationController()))
+        if (!AnnotationUtil.hasAnnotation(element, model, INTERCEPTOR_BINDING_FQN_JAKARTA, INTERCEPTOR_BINDING_FQN))
         {
             return;
         }
@@ -61,7 +63,7 @@ public class InterceptorBindingAnalyzer implements AnnotationAnalyzer {
             return;
         }
         if (!analyzer.hasRuntimeRetention()) {
-            result.addError(element, model,   
+            result.addError(element, model,
                             NbBundle.getMessage(InterceptorBindingAnalyzer.class,
                                     INCORRECT_RUNTIME));
         }
@@ -69,7 +71,7 @@ public class InterceptorBindingAnalyzer implements AnnotationAnalyzer {
             return;
         }
         if (!analyzer.hasTarget()) {
-            result.addError(element, model,   
+            result.addError(element, model,
                             NbBundle.getMessage(InterceptorBindingAnalyzer.class,
                             "ERR_IncorrectInterceptorBindingTarget")); // NOI18N
         }
@@ -81,11 +83,11 @@ public class InterceptorBindingAnalyzer implements AnnotationAnalyzer {
             if ( cancel.get() ){
                 return;
             }
-            checkTransitiveInterceptorBindings( element, declaredTargetTypes, 
+            checkTransitiveInterceptorBindings( element, declaredTargetTypes,
                     model , result );
         }
     }
-    
+
     private void checkTransitiveInterceptorBindings( TypeElement element,
             Set<ElementType> declaredTargetTypes, WebBeansModel model,
             Result result )
@@ -108,7 +110,7 @@ public class InterceptorBindingAnalyzer implements AnnotationAnalyzer {
             if (bindingTargetTypes.size() == 1
                     && bindingTargetTypes.contains(ElementType.TYPE))
             {
-                result.addError(element, model ,  
+                result.addError(element, model ,
                                 NbBundle.getMessage(InterceptorBindingAnalyzer.class,
                                         "ERR_IncorrectTransitiveInterceptorBinding", // NOI18N
                                         ((TypeElement) binding).getQualifiedName().toString()));
@@ -118,7 +120,7 @@ public class InterceptorBindingAnalyzer implements AnnotationAnalyzer {
     }
 
     private static class InterceptorTargetAnalyzer extends CdiAnnotationAnalyzer {
-        
+
         InterceptorTargetAnalyzer( TypeElement element , WebBeansModel model ,
                 Result result)
         {
@@ -140,7 +142,7 @@ public class InterceptorBindingAnalyzer implements AnnotationAnalyzer {
         protected TargetVerifier getTargetVerifier() {
             return InterceptorBindingVerifier.getInstance();
         }
-        
+
     }
 
 }

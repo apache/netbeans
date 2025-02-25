@@ -1,0 +1,8 @@
+    final abstract readonly $finalAbstractReadonly1; // error1
+                             ----------------------
+HINT:Field "$finalAbstractReadonly1" cannot be declared abstract
+FIX:Remove modifier: abstract
+    final abstract readonly int $finalAbstractReadonly2; // error2
+                                 ----------------------
+HINT:Field "$finalAbstractReadonly2" cannot be declared abstract
+FIX:Remove modifier: abstract

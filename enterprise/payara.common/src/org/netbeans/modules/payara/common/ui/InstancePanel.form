@@ -57,7 +57,7 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="domainsFolderField" pref="0" max="32767" attributes="0"/>
-                          <Component id="installationLocationField" pref="0" max="32767" attributes="0"/>
+                          <Component id="installationLocationField" max="32767" attributes="0"/>
                           <Component id="hostRemoteField" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -67,7 +67,7 @@
                           <Component id="httpMonitor" alignment="0" max="32767" attributes="0"/>
                           <Component id="commetSupport" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="preserveSessions" max="32767" attributes="0"/>
                           <Component id="hotDeploy" alignment="0" max="32767" attributes="0"/>
@@ -76,6 +76,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="hostPathLabel" max="32767" attributes="0"/>
+                          <Component id="instanceTypeLabel" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="hostLocalLabel" linkSize="1" alignment="0" min="-2" pref="59" max="-2" attributes="0"/>
                               <Component id="domainLabel" linkSize="1" alignment="0" min="-2" pref="59" max="-2" attributes="0"/>
@@ -86,7 +87,7 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="hostLocalField" pref="201" max="32767" attributes="0"/>
+                              <Component id="hostLocalField" max="32767" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="localIpCB" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -94,27 +95,28 @@
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="domainField" alignment="0" pref="0" max="32767" attributes="0"/>
                                   <Component id="dasPortField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                  <Component id="userNameField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                  <Component id="hostPathField" alignment="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="userNameField" alignment="0" pref="93" max="32767" attributes="0"/>
+                                  <Component id="hostPathField" alignment="1" pref="0" max="32767" attributes="0"/>
+                                  <Component id="instanceTypeComboBox" alignment="1" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="httpPortLabel" linkSize="1" max="32767" attributes="0"/>
                                   <Component id="targetLabel" linkSize="1" max="32767" attributes="0"/>
                                   <Component id="passwordLabel" linkSize="1" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="containerPathLabel" pref="0" max="32767" attributes="0"/>
+                                  <Component id="containerPathLabel" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="httpPortField" pref="0" max="32767" attributes="0"/>
                                   <Component id="targetField" pref="0" max="32767" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="passwordField" pref="0" max="32767" attributes="0"/>
+                                      <Component id="passwordField" pref="92" max="32767" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="showPassword" min="-2" pref="27" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="containerPathField" pref="0" max="32767" attributes="0"/>
+                                  <Component id="containerPathField" pref="127" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -174,10 +176,15 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="instanceTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="instanceTypeComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="hostPathLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="hostPathField" alignment="3" max="32767" attributes="0"/>
+                  <Component id="hostPathField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="containerPathLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="containerPathField" alignment="3" max="32767" attributes="0"/>
+                  <Component id="containerPathField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -189,9 +196,9 @@
                   <Component id="httpMonitor" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="preserveSessions" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="jdbcDriverDeployment" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -445,13 +452,30 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showPasswordActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="hostPathLabel">
+    <Component class="javax.swing.JLabel" name="instanceTypeLabel">
       <Properties>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-          <ComponentRef name="domainField"/>
+          <ComponentRef name="dasPortField"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/payara/common/ui/Bundle.properties" key="InstancePanel.hostPathLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/netbeans/modules/payara/common/ui/Bundle.properties" key="InstancePanel.instanceTypeLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="containerPathField">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/payara/common/ui/Bundle.properties" key="InstancePanel.containerPathField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="containerPathLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="httpPortField"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/payara/common/ui/Bundle.properties" key="InstancePanel.containerPathLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -462,22 +486,29 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="containerPathLabel">
+    <Component class="javax.swing.JLabel" name="hostPathLabel">
       <Properties>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-          <ComponentRef name="domainField"/>
+          <ComponentRef name="dasPortField"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/payara/common/ui/Bundle.properties" key="InstancePanel.containerPathLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/netbeans/modules/payara/common/ui/Bundle.properties" key="InstancePanel.hostPathLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="containerPathField">
+    <Component class="javax.swing.JComboBox" name="instanceTypeComboBox">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/payara/common/ui/Bundle.properties" key="InstancePanel.containerPathField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(getInstanceTypes())" type="code"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="instanceTypeComboBoxActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="instanceTypeComboBoxActionPerformed(null);"/>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

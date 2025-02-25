@@ -848,6 +848,8 @@ public final class PhpProject implements Project {
             // autoconfigured?
             checkAutoconfigured();
 
+            ComputeTestMethodAnnotations.getInstance().register();
+
             // #187060 - exception in projectOpened => project IS NOT opened (so move it at the end of the hook)
             getCopySupport().projectOpened();
 
@@ -886,6 +888,8 @@ public final class PhpProject implements Project {
                 }
 
             } finally {
+                ComputeTestMethodAnnotations.getInstance().unregister();
+
                 // #187060 - exception in projectClosed => project IS closed (so do it in finally block)
                 getCopySupport().projectClosed();
                 // #192386

@@ -399,11 +399,20 @@ public final class Utils {
             case ASTPHP5Symbols.T_PRIVATE:
                 name = "T_PRIVATE"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_PRIVATE_SET:
+                name = "T_PRIVATE_SET"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_PROTECTED:
                 name = "T_PROTECTED"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_PROTECTED_SET:
+                name = "T_PROTECTED_SET"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_PUBLIC:
                 name = "T_PUBLIC"; //NOI18N
+                break;
+            case ASTPHP5Symbols.T_PUBLIC_SET:
+                name = "T_PUBLIC_SET"; //NOI18N
                 break;
             case ASTPHP5Symbols.T_QUATE:
                 name = "T_QUATE"; //NOI18N

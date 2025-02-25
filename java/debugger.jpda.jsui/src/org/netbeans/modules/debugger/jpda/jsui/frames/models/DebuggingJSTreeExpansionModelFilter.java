@@ -136,7 +136,7 @@ public class DebuggingJSTreeExpansionModelFilter implements TreeExpansionModelFi
     }
 
     private void currentStackFrameChanged(CallStackFrame csf) {
-        if (csf != null && csf.getClassName().startsWith(JSUtils.NASHORN_SCRIPT)) {
+        if (csf != null && (csf.getClassName().startsWith(JSUtils.NASHORN_SCRIPT_JDK) || csf.getClassName().startsWith(JSUtils.NASHORN_SCRIPT_EXT))) {
             JPDAThread thread = csf.getThread();
             suspendedNashornThread = new WeakReference<>(thread);
             try {

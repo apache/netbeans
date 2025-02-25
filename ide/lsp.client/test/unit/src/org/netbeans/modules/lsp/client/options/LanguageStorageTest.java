@@ -93,7 +93,7 @@ public class LanguageStorageTest extends NbTestCase {
         DataObject testDO = DataObject.find(testFO);
         assertEquals("org.openide.loaders.DefaultDataObject", testDO.getClass().getName());
 
-        LanguageStorage.store(Arrays.asList(new LanguageDescription("t", "txt", FileUtil.toFile(grammar).getAbsolutePath(), null, "txt", null)));
+        LanguageStorage.store(Arrays.asList(new LanguageDescription("t", "txt", FileUtil.toFile(grammar).getAbsolutePath(), null, "txt", null, false)));
         assertEquals("text/x-ext-t", FileUtil.getMIMEType(testFO));
 
         DataObject recognized = DataObject.find(testFO);
@@ -107,7 +107,7 @@ public class LanguageStorageTest extends NbTestCase {
         Language<?> l = MimeLookup.getLookup("text/x-ext-t").lookup(Language.class);
         assertNotNull(l);
 
-        LanguageStorage.store(Arrays.asList(new LanguageDescription("t", "txt", FileUtil.toFile(grammar).getAbsolutePath(), null, "txt", null)));
+        LanguageStorage.store(Arrays.asList(new LanguageDescription("t", "txt", FileUtil.toFile(grammar).getAbsolutePath(), null, "txt", null, false)));
 
         LanguageStorage.store(Collections.emptyList());
         

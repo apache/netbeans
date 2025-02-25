@@ -1,0 +1,5 @@
+Code completion result for source line:
+public pri|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    private(set)                               null

@@ -52,7 +52,7 @@ import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
 import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, MutliStepInputRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
-         ExecInHtmlPageRequest, SetTextEditorDecorationParams, ProjectActionParams, UpdateConfigurationRequest, QuickPickStep, InputBoxStep, SaveDocumentsRequest, SaveDocumentRequestParams
+         ExecInHtmlPageRequest, SetTextEditorDecorationParams, ProjectActionParams, UpdateConfigurationRequest, QuickPickStep, InputBoxStep, SaveDocumentsRequest, SaveDocumentRequestParams, OutputMessage, WriteOutputRequest, ShowOutputRequest, CloseOutputRequest, ResetOutputRequest 
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
@@ -70,11 +70,12 @@ import { shouldHideGuideFor } from './panels/guidesUtil';
 const API_VERSION : string = "1.0";
 export const COMMAND_PREFIX : string = "nbls";
 const DATABASE: string = 'Database';
-const listeners = new Map<string, string[]>();
+export const listeners = new Map<string, string[]>();
 export let client: Promise<NbLanguageClient>;
 export let clientRuntimeJDK : string | null = null;
 export const MINIMAL_JDK_VERSION = 17;
-
+export const TEST_PROGRESS_EVENT: string = "testProgress";
+const TEST_ADAPTER_CREATED_EVENT: string = "testAdapterCreated";
 let testAdapter: NbTestAdapter | undefined;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
@@ -375,6 +376,117 @@ function getValueAfterPrefix(input: string | undefined, prefix: string): string 
         }
     }
     return '';
+}
+
+class LineBufferingPseudoterminal implements vscode.Pseudoterminal {
+    private static instances = new Map<string, LineBufferingPseudoterminal>();
+
+    private writeEmitter = new vscode.EventEmitter<string>();
+    onDidWrite: vscode.Event<string> = this.writeEmitter.event;
+
+    private closeEmitter = new vscode.EventEmitter<void>();
+    onDidClose?: vscode.Event<void> = this.closeEmitter.event;
+
+    private buffer: string = ''; 
+    private isOpen = false;
+    private readonly name: string;
+    private terminal: vscode.Terminal | undefined;
+
+    private constructor(name: string) {
+        this.name = name;
+    }
+
+    open(): void {
+        this.isOpen = true;
+    }
+
+    close(): void {
+        this.isOpen = false;
+        this.closeEmitter.fire();
+    }
+
+    /**
+     * Accepts partial input strings and logs complete lines when they are formed.
+     * Also processes carriage returns (\r) to overwrite the current line.
+     * @param input The string input to the pseudoterminal.
+     */
+    public acceptInput(input: string): void {
+        if (!this.isOpen) {
+            return;
+        }
+
+        for (const char of input) {
+            if (char === '\n') {
+                // Process a newline: log the current buffer and reset it
+                this.logLine(this.buffer.trim());
+                this.buffer = '';
+            } else if (char === '\r') {
+                // Process a carriage return: log the current buffer on the same line
+                this.logInline(this.buffer.trim());
+                this.buffer = '';
+            } else {
+                // Append characters to the buffer
+                this.buffer += char;
+            }
+        }
+    }
+
+    private logLine(line: string): void {
+        console.log('[Gradle Debug]', line.toString());
+        this.writeEmitter.fire(`${line}\r\n`);
+    }
+
+    private logInline(line: string): void {
+        // Clear the current line and move the cursor to the start
+        this.writeEmitter.fire(`\x1b[2K\x1b[1G${line}`);
+    }
+
+    public flushBuffer(): void {
+        if (this.buffer.trim().length > 0) {
+            this.logLine(this.buffer.trim());
+            this.buffer = '';
+        }
+    }
+
+    public clear(): void {
+        this.writeEmitter.fire('\x1b[2J\x1b[3J\x1b[H'); // Clear screen and move cursor to top-left
+    }
+
+    public show(): void {
+        if (!this.terminal) {
+            this.terminal = vscode.window.createTerminal({
+                name: this.name,
+                pty: this,
+            });
+
+            // Listen for terminal close events
+            vscode.window.onDidCloseTerminal((closedTerminal) => {
+                if (closedTerminal === this.terminal) {
+                    this.terminal = undefined; // Clear the terminal reference
+                }
+            });
+        }
+        // Prevent 'stealing' of the focus when running tests in parallel 
+       if (!testAdapter?.testInParallelProfileExist()) {
+            this.terminal.show(true);
+       }
+    }
+
+    /**
+     * Gets an existing instance or creates a new one by the terminal name.
+     * The terminal is also created and managed internally.
+     * @param name The name of the pseudoterminal.
+     * @returns The instance of the pseudoterminal.
+     */
+    public static getInstance(name: string): LineBufferingPseudoterminal {
+        if (!this.instances.has(name)) {
+            const instance = new LineBufferingPseudoterminal(name);
+            this.instances.set(name, instance);
+        }
+        const instance = this.instances.get(name)!;
+        instance.show(); 
+        return instance;
+    }
 }
 
 export function activate(context: ExtensionContext): VSNetBeansAPI {    
@@ -781,7 +893,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         });
     }
 
-    const runDebug = async (noDebug: boolean, testRun: boolean, uri: any, methodName?: string, launchConfiguration?: string, project : boolean = false, ) => {
+    const runDebug = async (noDebug: boolean, testRun: boolean, uri: any, methodName?: string, nestedClass?: string, launchConfiguration?: string, project : boolean = false, testInParallel : boolean = false, projects: string[] | undefined = undefined) => {
     const docUri = contextUri(uri);
         if (docUri) {
             // attempt to find the active configuration in the vsode launch settings; undefined if no config is there.
@@ -792,6 +904,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             };
             if (methodName) {
                 debugConfig['methodName'] = methodName;
+            }
+            if (nestedClass) {
+                debugConfig['nestedClass'] = nestedClass;
             }
             if (launchConfiguration == '') {
                 if (debugConfig['launchConfiguration']) {
@@ -813,8 +928,13 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             const debugOptions : vscode.DebugSessionOptions = {
                 noDebug: noDebug,
             }
-            
-            
+            if (testInParallel) {
+                debugConfig['testInParallel'] = testInParallel;
+            }
+            if (projects?.length) {
+                debugConfig['projects'] = projects;
+            }
+
             const ret = await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions);
             return ret ? new Promise((resolve) => {
                 const listener = vscode.debug.onDidTerminateDebugSession(() => {
@@ -824,30 +944,38 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             }) : ret;
         }
     };
-    
-    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test', async (uri, methodName?, launchConfiguration?) => {
-        await runDebug(true, true, uri, methodName, launchConfiguration);
+
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test.parallel', async (projects?) => {        
+        testAdapter?.runTestsWithParallelProfile(projects);
     }));
-    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.debug.test', async (uri, methodName?, launchConfiguration?) => {
-        await runDebug(false, true, uri, methodName, launchConfiguration);
+
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test.parallel.createProfile', async (projects?) => {        
+        testAdapter?.registerRunInParallelProfile(projects);
     }));
-    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.single', async (uri, methodName?, launchConfiguration?) => {
-        await runDebug(true, false, uri, methodName, launchConfiguration);
+
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test', async (uri, methodName?, launchConfiguration?, nestedClass?, testInParallel?, projects?) => {
+        await runDebug(true, true, uri, methodName, nestedClass, launchConfiguration, false, testInParallel, projects);
     }));
-    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.debug.single', async (uri, methodName?, launchConfiguration?) => {
-        await runDebug(false, false, uri, methodName, launchConfiguration);
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.debug.test', async (uri, methodName?, launchConfiguration?, nestedClass?) => {
+        await runDebug(false, true, uri, methodName, nestedClass, launchConfiguration);
+    }));
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.single', async (uri, methodName?, launchConfiguration?, nestedClass?) => {
+        await runDebug(true, false, uri, methodName, nestedClass, launchConfiguration);
+    }));
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.debug.single', async (uri, methodName?, launchConfiguration?, nestedClass?) => {
+        await runDebug(false, false, uri, methodName, nestedClass, launchConfiguration);
     }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.project.run', async (node, launchConfiguration?) => {
-        return runDebug(true, false, contextUri(node)?.toString() || '',  undefined, launchConfiguration, true);
+        return runDebug(true, false, contextUri(node)?.toString() || '',  undefined, undefined, launchConfiguration, true);
     }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.project.debug', async (node, launchConfiguration?) => {
-        return runDebug(false, false, contextUri(node)?.toString() || '',  undefined, launchConfiguration, true);
+        return runDebug(false, false, contextUri(node)?.toString() || '',  undefined, undefined, launchConfiguration, true);
     }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.project.test', async (node, launchConfiguration?) => {
-        return runDebug(true, true, contextUri(node)?.toString() || '',  undefined, launchConfiguration, true);
+        return runDebug(true, true, contextUri(node)?.toString() || '',  undefined, undefined, launchConfiguration, true);
     }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.package.test', async (uri, launchConfiguration?) => {
-        await runDebug(true, true, uri, undefined, launchConfiguration);
+        await runDebug(true, true, uri, undefined, undefined, launchConfiguration);
     }));
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.open.stacktrace', async (uri, methodName, fileName, line) => {
         const location: string | undefined = uri ? await commands.executeCommand(COMMAND_PREFIX + '.resolve.stacktrace.location', uri, methodName, fileName) : undefined;
@@ -982,29 +1110,21 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
  */
 let maintenance : Promise<void> | null;
 
-/**
- * Pending activation flag. Will be cleared when the process produces some message or fails.
- */
-let activationPending : boolean = false;
-
 function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean, 
     clientResolve? : (x : NbLanguageClient) => void, clientReject? : (x : any) => void): void {
-    if (activationPending) {
-        // do not activate more than once in parallel.
-        handleLog(log, "Server activation requested repeatedly, ignoring...");
-        return;
-    }
     let oldClient = client;
     let setClient : [(c : NbLanguageClient) => void, (err : any) => void];
     client = new Promise<NbLanguageClient>((clientOK, clientErr) => {
         setClient = [
             function (c : NbLanguageClient) {
                 clientRuntimeJDK = specifiedJDK;
+                handleLog(log, "Launch: client OK");
                 clientOK(c);
                 if (clientResolve) {
                     clientResolve(c);
                 }
             }, function (err) {
+                handleLog(log, `Launch: client failed: ${err}`);
                 clientErr(err);
                 if (clientReject) {
                     clientReject(err);
@@ -1014,20 +1134,21 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
         //setClient = [ clientOK, clientErr ];
     });
     const a : Promise<void> | null = maintenance;
-
+    const clientPromise = client;
     commands.executeCommand('setContext', 'nbJavaLSReady', false);
     commands.executeCommand('setContext', 'dbAddConnectionPresent', true);
-    activationPending = true;
     // chain the restart after termination of the former process.
     if (a != null) {
         handleLog(log, "Server activation initiated while in maintenance mode, scheduling after maintenance");
         a.then(() => stopClient(oldClient)).then(() => killNbProcess(notifyKill, log)).then(() => {
-            doActivateWithJDK(specifiedJDK, context, log, notifyKill, setClient);
+            doActivateWithJDK(clientPromise, specifiedJDK, context, log, notifyKill, setClient);
         });
     } else {
         handleLog(log, "Initiating server activation");
-        stopClient(oldClient).then(() => killNbProcess(notifyKill, log)).then(() => {
-            doActivateWithJDK(specifiedJDK, context, log, notifyKill, setClient);
+        stopClient(oldClient).catch(e => null).then(() => {
+            return killNbProcess(notifyKill, log)
+        }).then(() => {
+            doActivateWithJDK(clientPromise, specifiedJDK, context, log, notifyKill, setClient);
         });
     }
 }
@@ -1209,9 +1330,13 @@ function getProjectJDKHome() : string {
     return workspace.getConfiguration('netbeans')?.get('project.jdkhome') as string;
 }
 
-function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean,
+function doActivateWithJDK(promise: Promise<NbLanguageClient>, specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean,
     setClient : [(c : NbLanguageClient) => void, (err : any) => void]
 ): void {
+    // Records if the server successfully started before close/error.
+    let started : boolean = false;
+    // Error reported by server started from this function execution.
+    let startupError : string = '';
     maintenance = null;
     let restartWithJDKLater : ((time: number, n: boolean) => void) = function restartLater(time: number, n : boolean) {
         handleLog(log, `Restart of Apache Language Server requested in ${(time / 1000)} s.`);
@@ -1297,9 +1422,6 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             }
             let stdOut : string | null = '';
             function logAndWaitForEnabled(text: string, isOut: boolean) {
-                if (p == nbProcess) {
-                    activationPending = false;
-                }
                 handleLogNoNL(log, text);
                 if (stdOut == null) {
                     return;
@@ -1335,8 +1457,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                         handleLog(log, "Cannot find org.netbeans.modules.java.lsp.server in the log!");
                     }
                     log.show(false);
-                    killNbProcess(false, log, p);
-                    reject("Apache NetBeans Language Server not enabled!");
+                    killNbProcess(false, log, p).catch(() => null).then(() => reject("Apache NetBeans Language Server not enabled!"));
                 } else {
                     handleLog(log, "LSP server " + p.pid + " terminated with " + code);
                     handleLog(log, "Exit code " + code);
@@ -1391,12 +1512,20 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         },
         errorHandler: {
             error : function(error: Error, _message: Message, count: number): ErrorHandlerResult {
-                return { action: ErrorAction.Continue, message: error.message };
+                startupError = error.message;
+                return { 
+                    action: started ? ErrorAction.Continue : ErrorAction.Shutdown, 
+                    message: error.message 
+                };
             },
             closed : function(): CloseHandlerResult {
                 handleLog(log, "Connection to Apache NetBeans Language Server closed.");
-                if (!activationPending) {
+                // restart only if the _current_ client has been closed AND the server at least booted.
+                if (started && client === promise) {
                     restartWithJDKLater(10000, false);
+                } else {
+                    // report a final failure upwards.
+                    setClient[1](startupError);
                 }
                 return { action: CloseAction.DoNotRestart };
             }
@@ -1412,8 +1541,20 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     );
     handleLog(log, 'Language Client: Starting');
     c.start().then(() => {
-        if (isJavaSupportEnabled()) {
+        started = true;
+        if (enableJava) {
+            if (testAdapter) {
+                // we need to create it again anyway, so it load()s the content.
+                testAdapter.dispose();
+            }
             testAdapter = new NbTestAdapter();
+            const testAdapterCreatedListeners = listeners.get(TEST_ADAPTER_CREATED_EVENT);
+            testAdapterCreatedListeners?.forEach(listener => {
+                commands.executeCommand(listener);
+            });
+    } else if (testAdapter) {
+            testAdapter.dispose();
+            testAdapter = undefined;
         }
         c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
         c.onRequest(HtmlPageRequest.type, showHtmlPage);
@@ -1497,6 +1638,10 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             return data;
         });
         c.onNotification(TestProgressNotification.type, param => {
+            const testProgressListeners = listeners.get(TEST_PROGRESS_EVENT);
+            testProgressListeners?.forEach(listener => {
+                commands.executeCommand(listener, param.suite);
+            })
             if (testAdapter) {
                 testAdapter.testProgress(param.suite);
             }
@@ -1507,6 +1652,22 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             let decorationType = vscode.window.createTextEditorDecorationType(param);
             decorations.set(decorationType.key, decorationType);
             return decorationType.key;
+        });
+        c.onRequest(WriteOutputRequest.type, param => {
+            const outputTerminal = LineBufferingPseudoterminal.getInstance(param.outputName)
+            outputTerminal.acceptInput(param.message);
+        });
+        c.onRequest(ShowOutputRequest.type, param => {
+            const outputTerminal = LineBufferingPseudoterminal.getInstance(param)
+            outputTerminal.show();
+        });
+        c.onRequest(CloseOutputRequest.type, param => {
+            const outputTerminal = LineBufferingPseudoterminal.getInstance(param)
+            outputTerminal.close();
+        });
+        c.onRequest(ResetOutputRequest.type, param => {
+            const outputTerminal = LineBufferingPseudoterminal.getInstance(param)
+            outputTerminal.clear();
         });
         c.onNotification(TextEditorDecorationSetNotification.type, param => {
             let decorationType = decorations.get(param.key);
@@ -1571,7 +1732,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }
         c.findTreeViewService().createView('cloud.assets', undefined, { canSelectMany : false, showCollapseAll: false , providerInitializer : (customizable) =>
             customizable.addItemDecorator(new CloudAssetsDecorator())});
-    }).catch(setClient[1]);
+    }).catch(err => setClient[1](err));
 
     class CloudAssetsDecorator implements TreeItemDecorator<Visualizer> {
         decorateChildren(element: Visualizer, children: Visualizer[]): Visualizer[] {
@@ -1664,21 +1825,26 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 
     async function createProjectView(ctx : ExtensionContext, client : NbLanguageClient) {
         const ts : TreeViewService = client.findTreeViewService();
-        let tv : vscode.TreeView<Visualizer> = await ts.createView('foundProjects', 'Projects', { canSelectMany : false });
+        let tv : vscode.TreeView<Visualizer>|undefined = await ts.createView('foundProjects', 'Projects', { canSelectMany : false });
+        if (!tv) {
+            return;
+        }
+
+        const view = tv;
 
         async function revealActiveEditor(ed? : vscode.TextEditor) {
             const uri = window.activeTextEditor?.document?.uri;
             if (!uri || uri.scheme.toLowerCase() !== 'file') {
                 return;
             }
-            if (!tv.visible) {
+            if (!view.visible) {
                 return;
             }
-            let vis : Visualizer | undefined = await ts.findPath(tv, uri.toString());
+            let vis : Visualizer | undefined = await ts.findPath(view, uri.toString());
             if (!vis) {
                 return;
             }
-            tv.reveal(vis, { select : true, focus : false, expand : false });
+            view.reveal(vis, { select : true, focus : false, expand : false });
         }
 
         ctx.subscriptions.push(window.onDidChangeActiveTextEditor(ed => {
@@ -1819,7 +1985,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     }
 }
 
-function stopClient(clientPromise: Promise<LanguageClient>): Thenable<void> {
+function stopClient(clientPromise: Promise<LanguageClient>): Promise<void> {
     if (testAdapter) {
         testAdapter.dispose();
         testAdapter = undefined;

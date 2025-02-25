@@ -597,4 +597,8 @@ public class Utils {
                     only.stream()
                         .anyMatch(o -> k.equals(o) || k.startsWith(o + "."));
     }
+
+    public static boolean wrappedBoolean2Boolean(Boolean b, boolean defaultValue) {
+        return b != null ? b : defaultValue;
+    }
 }

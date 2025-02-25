@@ -49,7 +49,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class EventTest extends CommonTestCase {
 
     public EventTest(String testName ){
-        super( testName);
+        super( testName, false);
     }
     
     public void testSimple () throws MetadataModelException, IOException,

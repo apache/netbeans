@@ -1,0 +1,8 @@
+    final static public(set) $finalStaticPublicSet1; // error1
+                              ---------------------
+HINT:Asymmetric visibility property "$finalStaticPublicSet1" must have type
+    final static public(set) string $finalStaticPublicSet2; // error2 fix1
+                                     ---------------------
+HINT:Static property may not have asymmetric visibility
+FIX:Remove modifier: static
+FIX:Remove modifier: public(set)

@@ -67,6 +67,9 @@ public class CompletionTestBaseBase extends NbTestCase {
         JavaCompletionTaskBasicTest.class.getClassLoader().setDefaultAssertionStatus(true);
         SourceUtilsTestUtil2.disableArtificalParameterNames();
         System.setProperty("org.netbeans.modules.java.source.parsing.JavacParser.no_parameter_names", "true");
+        // bump tresholds to avoid context dumps from "excessive indexing" warnings
+        System.setProperty("org.netbeans.modules.parsing.impl.indexing.LogContext$EventType.PATH.treshold", "100");
+        System.setProperty("org.netbeans.modules.parsing.impl.indexing.LogContext$EventType.MANAGER.treshold", "100");
     }
 
     static final int FINISH_OUTTIME = 5 * 60 * 1000;

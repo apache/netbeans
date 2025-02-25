@@ -121,6 +121,7 @@ public final class PredefinedSymbols {
     public static enum Attributes {
         ATTRIBUTE("Attribute"), // NOI18N
         ALLOW_DYNAMIC_PROPERTIES("AllowDynamicProperties"), // NOI18N
+        DEPRECATED("Deprecated"), // NOI18N
         OVERRIDE("Override"), // NOI18N
         RETURN_TYPE_WILL_CHANGE("ReturnTypeWillChange"), // NOI18N
         SENSITIVE_PARAMETER("SensitiveParameter"), // NOI18N

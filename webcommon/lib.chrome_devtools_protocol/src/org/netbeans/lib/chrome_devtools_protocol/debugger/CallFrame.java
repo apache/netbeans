@@ -19,7 +19,6 @@
 package org.netbeans.lib.chrome_devtools_protocol.debugger;
 
 import com.google.gson.annotations.SerializedName;
-import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 import org.netbeans.lib.chrome_devtools_protocol.runtime.RemoteObject;
@@ -32,7 +31,7 @@ public final class CallFrame {
     private String functionName;
     private Location functionLocation;
     private Location location;
-    private URI url;
+    private String url;
     private List<Scope> scopeChain;
     @SerializedName("this")
     private RemoteObject thisObject;
@@ -106,7 +105,7 @@ public final class CallFrame {
      * Debugger.scriptParsed event.
      */
     @Deprecated
-    public URI getUrl() {
+    public String getUrl() {
         return url;
     }
 
@@ -116,7 +115,7 @@ public final class CallFrame {
      * Debugger.scriptParsed event.
      */
     @Deprecated
-    public void setUrl(URI url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 

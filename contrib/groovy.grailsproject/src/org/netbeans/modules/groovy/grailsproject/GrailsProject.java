@@ -158,8 +158,7 @@ public final class GrailsProject implements Project {
 
         @Override
         public Icon getIcon() {
-            Image image = ImageUtilities.loadImage(GrailsConstants.GRAILS_ICON_16x16);
-            return image == null ? null : new ImageIcon(image);
+            return ImageUtilities.loadIcon(GrailsConstants.GRAILS_ICON_16x16);
         }
 
         @Override

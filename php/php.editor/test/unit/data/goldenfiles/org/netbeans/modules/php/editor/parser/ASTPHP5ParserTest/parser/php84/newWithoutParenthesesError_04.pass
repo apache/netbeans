@@ -1,0 +1,110 @@
+<testresult testFile='newWithoutParenthesesError_04.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='828'>
+            <text>Example</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='829' end='830'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='835' end='841'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='842' end='850'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='851' end='855'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='855' end='856'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='856' end='857'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='857' end='858'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='859' end='863'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='864' end='865'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='865' end='866'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='867' end='868'>
+            <text>}</text>
+        </token>
+        <token id='T_NEW' start='870' end='873'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='874' end='881'>
+            <text>Example</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='881' end='883'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='883' end='887'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='887' end='888'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='888' end='889'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='889' end='890'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='891' end='891'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='890'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='868' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='828' name='Example'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='829' end='868' isCurly='true'>
+                    <MethodDeclaration start='835' end='866' modifiers='public'>
+                        <FunctionDeclaration start='842' end='866' isReference='false'>
+                            <Identifier start='851' end='855' name='test'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='859' end='863' isCurrent='false' isGlobal='false'>
+                                <Identifier start='859' end='863' name='void'/>
+                            </NamespaceName>
+                            <Block start='864' end='866' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ASTError start='870' end='881'/>
+            <ExpressionStatement start='883' end='890'>
+                <FunctionInvocation start='883' end='889'>
+                    <FucntionName start='883' end='887'>
+                        <NamespaceName start='883' end='887' isCurrent='false' isGlobal='false'>
+                            <Identifier start='883' end='887' name='test'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

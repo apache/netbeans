@@ -588,4 +588,52 @@ public class OccurrencesFinderImplPHP83Test extends OccurrencesFinderImplTestBas
     public void testTypedClassConstants_23b() throws Exception {
         checkOccurrences(getTestPath(), "    case T^est;", true);
     }
+
+    public void testArbitraryStaticVariableInitializers_01a() throws Exception {
+        checkOccurrences(getTestPath(), "    public function run(int $par^am1) : void {", true);
+    }
+
+    public void testArbitraryStaticVariableInitializers_01b() throws Exception {
+        checkOccurrences(getTestPath(), "        static $example2 = $para^m1;", true);
+    }
+
+    public void testArbitraryStaticVariableInitializers_01c() throws Exception {
+        checkOccurrences(getTestPath(), "        static $example6 = new stdClass($para^m1);", true);
+    }
+
+    public void testArbitraryStaticVariableInitializers_01d() throws Exception {
+        checkOccurrences(getTestPath(), "        static $example9 = $para^m1 <= 100 ? run($param1 + 1) : \"Test $param1\";", true);
+    }
+
+    public void testArbitraryStaticVariableInitializers_01e() throws Exception {
+        checkOccurrences(getTestPath(), "        static $example9 = $param1 <= 100 ? run($p^aram1 + 1) : \"Test $param1\";", true);
+    }
+
+    public void testArbitraryStaticVariableInitializers_01f() throws Exception {
+        checkOccurrences(getTestPath(), "        static $example9 = $param1 <= 100 ? run($param1 + 1) : \"Test $para^m1\";", true);
+    }
+
+    public void testArbitraryStaticVariableInitializers_02a() throws Exception {
+        checkOccurrences(getTestPath(), "    private int $fie^ld = 1;", true);
+    }
+
+    public void testArbitraryStaticVariableInitializers_02b() throws Exception {
+        checkOccurrences(getTestPath(), "        static $example3 = $this->fiel^d;", true);
+    }
+
+    public void testArbitraryStaticVariableInitializers_03a() throws Exception {
+        checkOccurrences(getTestPath(), "    public function met^hod(): int {", true);
+    }
+
+    public void testArbitraryStaticVariableInitializers_03b() throws Exception {
+        checkOccurrences(getTestPath(), "        static $example4 = $this->meth^od();", true);
+    }
+
+    public void testArbitraryStaticVariableInitializers_04a() throws Exception {
+        checkOccurrences(getTestPath(), "$vari^able = 1;", true);
+    }
+
+    public void testArbitraryStaticVariableInitializers_04b() throws Exception {
+        checkOccurrences(getTestPath(), "static $example2 = $varia^ble;", true);
+    }
 }

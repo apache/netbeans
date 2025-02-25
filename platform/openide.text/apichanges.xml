@@ -25,6 +25,20 @@
 <apidef name="text">Text API</apidef>
 </apidefs>
 <changes>
+    <change id="DocumentOpenClose.ReloadAutomaticUserAnswers">
+        <api name="text"/>
+        <summary>DocumentFilter can block a reload, UserQuestionExceptions can be branded to true or false.</summary>
+        <version major="6" minor="96"/>
+        <date day="24" month="10" year="2024"/>
+        <author login="sdedic"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"
+                       semantic="compatible" deletion="no"
+                       modification="no"/>
+        <description>
+            The implementation handles <code>UserQuestionException</code> during reload, which means a DocumentFilter
+            may block document reload. Support for automatic UserQuestionException handling was added as branding API
+        </description>
+    </change>
     <change id="EditorCookie.Observable.PROP_RELOADING">
         <api name="text"/>
         <summary>Added EditorCookie.Observable.PROP_RELOADING and associated begin/end events</summary>

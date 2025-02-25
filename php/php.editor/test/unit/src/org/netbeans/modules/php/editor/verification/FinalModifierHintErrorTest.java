@@ -29,48 +29,7 @@ public class FinalModifierHintErrorTest extends PHPHintsTestBase {
         return TEST_DIRECTORY + "FinalModifierHintError/";
     }
 
-    public void testFinalPrivateConstants() throws Exception {
-        checkHints(new FinalModifierHintError(), "testFinalPrivateConstants.php");
-    }
-
-    public void testFinalPrivateConstantsWithAttributes() throws Exception {
-        checkHints(new FinalModifierHintError(), "testFinalPrivateConstantsWithAttributes.php");
-    }
-
     public void testOverridingFinalConstants() throws Exception {
         checkHints(new FinalModifierHintError(), "testOverridingFinalConstants.php");
-    }
-
-    // Fix
-    public void testFinalPrivateConstantsFix_01() throws Exception {
-        applyHint(new FinalModifierHintError(), "testFinalPrivateConstants.php", "fin^al private const PRIVATE_CONST = \"foo\";", "Remove \"final\"");
-    }
-
-    public void testFinalPrivateConstantsFix_02() throws Exception {
-        applyHint(new FinalModifierHintError(), "testFinalPrivateConstants.php", "private fin^al const PRIVATE_CONST2 = \"foo\";", "Remove \"final\"");
-    }
-
-    public void testFinalPrivateConstantsFix_03() throws Exception {
-        applyHint(new FinalModifierHintError(), "testFinalPrivateConstants.php", "fin^al private const PRIVATE_CONST3 = \"foo\", PRIVATE_CONST4 = \"foo\";", "Remove \"final\"");
-    }
-
-    public void testFinalPrivateConstantsFix_04() throws Exception {
-        applyHint(new FinalModifierHintError(), "testFinalPrivateConstants.php", "private fi^nal const PRIVATE_CONST5 = \"foo\", PRIVATE_CONST6 = \"foo\";", "Remove \"final\"");
-    }
-
-    public void testFinalPrivateConstantsWithAttributesFix_01() throws Exception {
-        applyHint(new FinalModifierHintError(), "testFinalPrivateConstantsWithAttributes.php", "fin^al private const PRIVATE_CONST = \"foo\";", "Remove \"final\"");
-    }
-
-    public void testFinalPrivateConstantsWithAttributesFix_02() throws Exception {
-        applyHint(new FinalModifierHintError(), "testFinalPrivateConstantsWithAttributes.php", "private fin^al const PRIVATE_CONST2 = \"foo\";", "Remove \"final\"");
-    }
-
-    public void testFinalPrivateConstantsWithAttributesFix_03() throws Exception {
-        applyHint(new FinalModifierHintError(), "testFinalPrivateConstantsWithAttributes.php", "fin^al private const PRIVATE_CONST3 = \"foo\", PRIVATE_CONST4 = \"foo\";", "Remove \"final\"");
-    }
-
-    public void testFinalPrivateConstantsWithAttributesFix_04() throws Exception {
-        applyHint(new FinalModifierHintError(), "testFinalPrivateConstantsWithAttributes.php", "private fi^nal const PRIVATE_CONST5 = \"foo\", PRIVATE_CONST6 = \"foo\";", "Remove \"final\"");
     }
 }

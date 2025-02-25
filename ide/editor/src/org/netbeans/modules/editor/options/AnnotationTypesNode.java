@@ -20,14 +20,12 @@
 package org.netbeans.modules.editor.options;
 
 import java.awt.Image;
-import java.awt.Toolkit;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.actions.SystemAction;
 import org.openide.actions.PropertiesAction;
 import org.openide.nodes.Children;
-import org.netbeans.modules.editor.options.AnnotationTypesFolder;
 import org.netbeans.editor.AnnotationType;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.BeanNode;
@@ -40,7 +38,10 @@ import org.netbeans.editor.AnnotationTypes;
 import java.lang.Boolean;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** Node representing the Annotation Types in Options window.
  *
@@ -48,7 +49,7 @@ import java.net.URL;
  * @since 07/2001
  */
 public class AnnotationTypesNode extends AbstractNode {
-
+    private static final Logger LOGGER = Logger.getLogger(AnnotationTypesNode.class.getName());
     private static final String HELP_ID = "editing.configuring.annotations"; // !!! NOI18N
     private static final String ICON_BASE = "org/netbeans/modules/editor/resources/annotationtypes"; // NOI18N
     
@@ -196,12 +197,11 @@ public class AnnotationTypesNode extends AbstractNode {
             }
             
             public Image getIcon(int type) {
-                // Utilities.loadImage does not handle URLs.
-                // Toolkit.getImage would work, but U.lI does nicer caching.
-                if (iconURL.getProtocol().equals("nbresloc")) { // NOI18N
-                    return ImageUtilities.loadImage(iconURL.getPath().substring(1));
-                } else {
-                    return Toolkit.getDefaultToolkit().getImage(iconURL);
+                try {
+                    return ImageUtilities.loadImage(iconURL.toURI());
+                } catch (URISyntaxException e) {
+                    LOGGER.log(Level.WARNING, "AnnotationType.getGlyph() returned invalid URI", e);
+                    return super.getIcon(type);
                 }
             }
             

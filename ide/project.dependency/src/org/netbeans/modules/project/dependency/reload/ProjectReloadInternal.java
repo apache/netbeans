@@ -317,7 +317,7 @@ public class ProjectReloadInternal {
                 loadedFiles.addAll(mods);
             }
             long time = data.getTimestamp();
-            if (time < timestamp) {
+            if (time > 0 && time < timestamp) {
                 timestamp = time;
             }
             if (!data.isValid()) {

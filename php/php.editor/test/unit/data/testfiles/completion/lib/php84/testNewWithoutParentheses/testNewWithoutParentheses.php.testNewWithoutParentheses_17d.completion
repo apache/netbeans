@@ -1,0 +1,4 @@
+Code completion result for source line:
+new Example()->test->publicTestMet|hod(); // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicTestMethod()              [PUBLIC]   Test

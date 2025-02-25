@@ -1,0 +1,4 @@
+Code completion result for source line:
+}->publicFie|ld2;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int publicField2                [PUBLIC]   {}

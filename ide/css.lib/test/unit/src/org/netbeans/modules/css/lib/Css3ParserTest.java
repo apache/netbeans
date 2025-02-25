@@ -29,10 +29,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.BadLocationException;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.TokenStream;
+import org.netbeans.junit.Log;
 import org.netbeans.modules.css.lib.api.*;
 import org.netbeans.modules.css.lib.nbparser.ProgressingTokenStream;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.openide.filesystems.FileObject;
+
+import static org.netbeans.modules.css.lib.TestUtil.dumpResult;
 
 /**
  *
@@ -1227,6 +1230,35 @@ public class Css3ParserTest extends CssTestBase {
 
         assertNotNull(node);
 
+        // Validate, that space between @rule name and opening brace is
+        // supported, but can be omitted
+        assertParses(
+            """
+            @-ms-viewport {
+                width:1024px;
+            }
+            """
+        );
+
+        assertParses(
+            """
+            @-ms-viewport{
+                width:1024px;
+            }
+            """
+        );
+
+        assertParses(
+            """
+            @dummy test {}
+            """
+        );
+
+        assertParses(
+            """
+            @dummy test{}
+            """
+        );
     }
 
     //Bug 211103 - Freezes on starting IDE at "Scanning project" for too long
@@ -1251,6 +1283,64 @@ public class Css3ParserTest extends CssTestBase {
 //
 //
 //    }
+
+    public void testKeyFramesShort()  throws ParseException, BadLocationException {
+        assertParses(
+            """
+            @-webkit-keyframes ozx-delay-anim {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
+        assertParses(
+            """
+            @keyframes ozx-delay-anim {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
+        assertParses(
+            """
+            @-webkit-keyframes ozx-delay-anim {
+                from {
+                    transform: rotate(0deg);
+                }
+                50% {
+                    transform: rotate(180deg);
+                }
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
+        assertParses(
+            """
+            @keyframes ozx-delay-anim {
+                from {
+                    transform: rotate(0deg);
+                }
+                50% {
+                    transform: rotate(180deg);
+                }
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
+    }
+
     public void testWebkitKeyFrames() {
         String code = "@-webkit-keyframes spin { 40% {  left: 150px;  } from { left: 2px } }";
         //             012345678901234567890123456789012345678901234567890123456789
@@ -1291,6 +1381,99 @@ public class Css3ParserTest extends CssTestBase {
         assertNotNull(NodeUtil.query(declarations, "declaration/propertyDeclaration/property"));
         assertNotNull(NodeUtil.query(declarations, "declaration/propertyDeclaration/propertyValue"));
 
+    }
+
+    public void testKeyFrames() {
+        String code = "@keyframes spin { 40% {  left: 150px;  } from { left: 2px } }";
+        //             012345678901234567890123456789012345678901234567890123456789
+        //             0         1         2         3         4         5
+        CssParserResult result = TestUtil.parse(code);
+
+        assertResultOK(result);
+
+//        TestUtil.dumpResult(result);
+        Node wkf = NodeUtil.query(result.getParseTree(),
+                "styleSheet/body/bodyItem/at_rule/vendorAtRule/webkitKeyframes");
+
+        assertNotNull(wkf);
+
+        Node atRuleName = NodeUtil.query(wkf, "atRuleId");
+        assertNotNull(atRuleName);
+        assertEquals("spin", atRuleName.image().toString());
+
+        //block1
+        Node block = NodeUtil.query(wkf, "webkitKeyframesBlock|0");
+        Node selectors = NodeUtil.query(block, "webkitKeyframeSelectors");
+        assertNotNull(selectors);
+        assertEquals("40%", selectors.image().toString());
+
+        Node declarations = NodeUtil.query(wkf, "webkitKeyframesBlock/declarations");
+        assertNotNull(declarations);
+        assertNotNull(NodeUtil.query(declarations, "declaration/propertyDeclaration/property"));
+        assertNotNull(NodeUtil.query(declarations, "declaration/propertyDeclaration/propertyValue"));
+
+        //block2
+        block = NodeUtil.query(wkf, "webkitKeyframesBlock|1");
+        selectors = NodeUtil.query(block, "webkitKeyframeSelectors");
+        assertNotNull(selectors);
+        assertEquals("from", selectors.image().toString());
+
+        declarations = NodeUtil.query(wkf, "webkitKeyframesBlock/declarations");
+        assertNotNull(declarations);
+        assertNotNull(NodeUtil.query(declarations, "declaration/propertyDeclaration/property"));
+        assertNotNull(NodeUtil.query(declarations, "declaration/propertyDeclaration/propertyValue"));
+
+    }
+
+    public void testKeyframesVendored() {
+        assertParses(
+            """
+            @keyframes ozx-delay-anim {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
+        assertParses(
+            """
+            @-webkit-keyframes ozx-delay-anim {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
+        assertParses(
+            """
+            @-moz-keyframes ozx-delay-anim {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
+        assertParses(
+            """
+            @-o-keyframes ozx-delay-anim {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            """, false
+        );
     }
 
     //http://en.wikipedia.org/wiki/CSS_filter#Star_hack
@@ -1680,11 +1863,81 @@ public class Css3ParserTest extends CssTestBase {
     public void testFlexibleAtRules() throws Exception {
         assertParses("@apply bg-white p-5 rounded-lg shadow;");
         assertParses("@tailwind base;");
-        assertParses("@layer components {\n"
-                + "  .card {\n"
-                + "    @apply bg-white p-5 rounded-lg shadow;\n"
-                + "  }\n"
-                + "}");
+
+        assertParses(
+            """
+            @layer components {
+              .card {
+                @apply bg-white p-5 rounded-lg shadow;
+              }
+            }
+            """);
+
+        assertParses(
+            """
+            @layer components{
+              .card {
+                @apply bg-white p-5 rounded-lg shadow;
+              }
+            }
+            """);
+
+        // This should not only parse, but also result in two independent
+        // at rules
+        CssParserResult result = TestUtil.parse(
+            """
+            @layer components {
+              .card {
+                @apply bg-white p-5 rounded-lg shadow;
+              }
+            } @tailwind {}
+            """);
+        assertResultOK(result);
+        //NodeUtil.dumpTree(result.getParseTree());
+        Node layerAtRule = NodeUtil.query(result.getParseTree(), "styleSheet/body/bodyItem|0/at_rule/layerAtRule");
+        Node tailWindRule = NodeUtil.query(result.getParseTree(), "styleSheet/body/bodyItem|1/at_rule/vendorAtRule/generic_at_rule");
+        assertNotNull(layerAtRule);
+        assertNotNull(tailWindRule);
+        assertTrue(layerAtRule.type() == NodeType.layerAtRule);
+        assertTrue(tailWindRule.type() == NodeType.generic_at_rule);
+
+        // Cut out from a real world example where a custom @-rule is followed
+        // by futher rules
+        result = TestUtil.parse(
+            """
+            @-ms-viewport{
+                width:device-width
+            }
+            .visible-lg,.visible-md,.visible-sm,.visible-xs{
+                display:none!important
+            }
+            @media (min-width:768px) and (max-width:991px){
+                .visible-sm{
+                    display:block!important
+                }
+                table.visible-sm{
+                    display:table!important
+                }
+                tr.visible-sm{
+                    display:table-row!important
+                }
+                td.visible-sm,th.visible-sm{
+                    display:table-cell!important
+                }
+            }
+            """
+        );
+
+         TestUtil.dumpResult(result);
+
+        // We should only get a warning fro the `device-width` value for the `width` property
+        assertTrue(result.getDiagnostics().size() == 1);
+        assertTrue(result.getDiagnostics().get(0).getDescription().contains("device-width"));
+
+        assertNotNull(NodeUtil.query(result.getParseTree(), "styleSheet/body/bodyItem|0/at_rule"));
+        assertNotNull(NodeUtil.query(result.getParseTree(), "styleSheet/body/bodyItem|1/rule"));
+        assertNotNull(NodeUtil.query(result.getParseTree(), "styleSheet/body/bodyItem|2/at_rule/media"));
+        assertNull(NodeUtil.query(result.getParseTree(), "styleSheet/body/bodyItem|3"));
     }
 
 }

@@ -1031,25 +1031,51 @@ public class PayaraInstance implements ServerInstanceImplementation,
     }
 
     /**
-     * Get information if this Payara server instance is running in docker container.
+     * Get information if this Payara server instance is running in docker
+     * container.
      * <p/>
-     * @return Value of <code>true</code> when this Payara server instance
-     *         is docker instance or <code>false</code> otherwise.
+     * @return Value of <code>true</code> when this Payara server instance is
+     * docker instance or <code>false</code> otherwise.
      */
     @Override
     public boolean isDocker() {
-        return Boolean.valueOf(properties.getOrDefault(PayaraModule.DOCKER_ATTR, "false"));
+        return Boolean.parseBoolean(properties.getOrDefault(PayaraModule.DOCKER_ATTR, "false"));
     }
-    
+
     /**
-     * Get information if this Payara server instance is running in wsl container.
+     * Sets the flag indicating if this Payara server instance is running in
+     * Docker container.
      * <p/>
-     * @return Value of <code>true</code> when this Payara server instance
-     *         is wsl instance or <code>false</code> otherwise.
+     * @param isDocker A boolean indicating if the instance is running in
+     * Docker.
+     */
+    public void setDocker(boolean isDocker) {
+        properties.put(PayaraModule.DOCKER_ATTR, Boolean.toString(isDocker));
+    }
+
+    /**
+     * Get information if this Payara server instance is running in wsl
+     * container.
+     * <p/>
+     * @return Value of <code>true</code> when this Payara server instance is
+     * wsl instance or <code>false</code> otherwise.
      */
     @Override
     public boolean isWSL() {
-        return Boolean.valueOf(properties.getOrDefault(PayaraModule.WSL_ATTR, "false"));
+        return Boolean.parseBoolean(properties.getOrDefault(PayaraModule.WSL_ATTR, "false"));
+    }
+
+    /**
+     * Sets the flag indicating if this Payara server instance is running in
+     * Windows Subsystem for Linux (WSL).
+     * <p/>
+     * @param isWSL A boolean indicating if the instance is running in WSL.
+     */
+    public void setWSL(boolean isWSL) {
+        properties.put(PayaraModule.WSL_ATTR, Boolean.toString(isWSL));
+        if (!isWSL) {
+            properties.put(PayaraModule.DOMAINS_FOLDER_ATTR, null);
+        }
     }
 
     /**
@@ -1097,7 +1123,13 @@ public class PayaraInstance implements ServerInstanceImplementation,
      */
     @Override
     public String getDomainsFolder() {
-        return properties.get(PayaraModule.DOMAINS_FOLDER_ATTR);
+        String domainsDir = properties.get(PayaraModule.DOMAINS_FOLDER_ATTR);
+        if(isDocker()) {
+            return null;
+        } else if(isWSL() && domainsDir == null) {
+            domainsDir = getPayaraRoot() + File.separator + "domains";
+        }
+        return domainsDir;
     }
 
     /**

@@ -1,0 +1,4 @@
+Code completion result for source line:
+static $example9 = $param1 <= 100 ? run($param1 + 1) : "Test $param|1";
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int $param1                     [PUBLIC]   testArbitraryStaticVariableInitializers.php

@@ -1,0 +1,3 @@
+    public function |>MARK_OCCURRENCES:publicTestMeth^od<|(): string {
+        $example = new Example()->test->|>MARK_OCCURRENCES:publicTestMethod<|();
+new Example()->test->|>MARK_OCCURRENCES:publicTestMethod<|(); // test

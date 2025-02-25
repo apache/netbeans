@@ -1,0 +1,18 @@
+Code completion result for source line:
+$parent->|finalPublicPrivateSetReadonly; // test: only public methods (parent class)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     test()                          [PUBLIC]   ParentClass
+VARIABLE   Bar publicPrivateSet            [PUBLIC]   ParentClass
+VARIABLE   Bar publicPrivateSetTrait       [PUBLIC]   TestTrait
+VARIABLE   Bar publicProtectedSet          [PUBLIC]   ParentClass
+VARIABLE   Bar publicProtectedSetTrait     [PUBLIC]   TestTrait
+VARIABLE   Bar|(ParentClass&Foo) finalPub  [PUBLIC]   ParentClass
+VARIABLE   Bar|(ParentClass&Foo) finalPub  [PUBLIC]   TestTrait
+VARIABLE   Bar|string iPublicProtectedSet  [PUBLIC]   ParentClass
+VARIABLE   Bar|string iPublicProtectedSet  [PUBLIC]   TestTrait
+VARIABLE   Bar|string iPublicProtectedSet  [PUBLIC]   ParentClass
+VARIABLE   Bar|string iPublicProtectedSet  [PUBLIC]   TestTrait
+VARIABLE   Foo iPublicPublicSet            [PUBLIC]   ParentClass
+VARIABLE   Foo iPublicPublicSetTrait       [PUBLIC]   TestTrait
+VARIABLE   string|Foo iPublicPrivateSet    [PUBLIC]   ParentClass
+VARIABLE   string|Foo iPublicPrivateSetTr  [PUBLIC]   TestTrait

@@ -1,0 +1,8 @@
+    final abstract string $finalAbstract = "final static"; // error1
+                           -------------
+HINT:Field "$finalAbstract" cannot be declared abstract
+FIX:Remove modifier: abstract
+    abstract final string $abstractFinal = "final static"; // error2
+                           -------------
+HINT:Field "$abstractFinal" cannot be declared abstract
+FIX:Remove modifier: abstract

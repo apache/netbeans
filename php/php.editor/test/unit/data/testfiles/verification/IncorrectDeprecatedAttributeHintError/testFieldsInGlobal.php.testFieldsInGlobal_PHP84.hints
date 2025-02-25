@@ -1,0 +1,6 @@
+    #[\Deprecated]
+      -----------
+HINT:Attribute "Deprecated" cannot target field.
+    #[Deprecated]
+      ----------
+HINT:Attribute "Deprecated" cannot target field.

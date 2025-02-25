@@ -1,0 +1,2492 @@
+<testresult testFile='finalFieldsAnonClass.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='820'>
+            <text>$anon</text>
+        </token>
+        <token id='T_EQUAL' start='821' end='822'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='823' end='826'>
+            <text>new</text>
+        </token>
+        <token id='T_CLASS' start='827' end='832'>
+            <text>class</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='832' end='833'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='833' end='834'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='835' end='836'>
+            <text>{</text>
+        </token>
+        <token id='T_FINAL' start='854' end='859'>
+            <text>final</text>
+        </token>
+        <token id='T_STRING' start='860' end='866'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='867' end='873'>
+            <text>$final</text>
+        </token>
+        <token id='T_EQUAL' start='874' end='875'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='876' end='883'>
+            <text>"final"</text>
+        </token>
+        <token id='T_SEMICOLON' start='883' end='884'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='911' end='916'>
+            <text>final</text>
+        </token>
+        <token id='T_STATIC' start='917' end='923'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='924' end='930'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='931' end='943'>
+            <text>$finalStatic</text>
+        </token>
+        <token id='T_EQUAL' start='944' end='945'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='946' end='960'>
+            <text>"final static"</text>
+        </token>
+        <token id='T_SEMICOLON' start='960' end='961'>
+            <text>;</text>
+        </token>
+        <token id='T_STATIC' start='966' end='972'>
+            <text>static</text>
+        </token>
+        <token id='T_FINAL' start='973' end='978'>
+            <text>final</text>
+        </token>
+        <token id='T_STRING' start='979' end='985'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='986' end='998'>
+            <text>$staticFinal</text>
+        </token>
+        <token id='T_EQUAL' start='999' end='1000'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1001' end='1015'>
+            <text>"final static"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1015' end='1016'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='1045' end='1050'>
+            <text>final</text>
+        </token>
+        <token id='T_ABSTRACT' start='1051' end='1059'>
+            <text>abstract</text>
+        </token>
+        <token id='T_STRING' start='1060' end='1066'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1067' end='1081'>
+            <text>$finalAbstract</text>
+        </token>
+        <token id='T_EQUAL' start='1082' end='1083'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1084' end='1098'>
+            <text>"final static"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1098' end='1099'>
+            <text>;</text>
+        </token>
+        <token id='T_ABSTRACT' start='1179' end='1187'>
+            <text>abstract</text>
+        </token>
+        <token id='T_FINAL' start='1188' end='1193'>
+            <text>final</text>
+        </token>
+        <token id='T_STRING' start='1194' end='1200'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1201' end='1215'>
+            <text>$abstractFinal</text>
+        </token>
+        <token id='T_EQUAL' start='1216' end='1217'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1218' end='1232'>
+            <text>"final static"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1232' end='1233'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='1271' end='1276'>
+            <text>final</text>
+        </token>
+        <token id='T_READONLY' start='1277' end='1285'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='1286' end='1292'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1293' end='1307'>
+            <text>$finalReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='1307' end='1308'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='1313' end='1321'>
+            <text>readonly</text>
+        </token>
+        <token id='T_FINAL' start='1322' end='1327'>
+            <text>final</text>
+        </token>
+        <token id='T_STRING' start='1328' end='1334'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1335' end='1349'>
+            <text>$readonlyFinal</text>
+        </token>
+        <token id='T_SEMICOLON' start='1349' end='1350'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='1355' end='1363'>
+            <text>readonly</text>
+        </token>
+        <token id='T_FINAL' start='1364' end='1369'>
+            <text>final</text>
+        </token>
+        <token id='T_VARIABLE' start='1370' end='1385'>
+            <text>$readonlyFinal2</text>
+        </token>
+        <token id='T_SEMICOLON' start='1385' end='1386'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='1426' end='1431'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='1432' end='1438'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='1439' end='1451'>
+            <text>$finalPublic</text>
+        </token>
+        <token id='T_EQUAL' start='1452' end='1453'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1454' end='1472'>
+            <text>"final visibility"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1472' end='1473'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='1478' end='1483'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='1484' end='1490'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1491' end='1497'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1498' end='1511'>
+            <text>$finalPublic2</text>
+        </token>
+        <token id='T_EQUAL' start='1512' end='1513'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1514' end='1532'>
+            <text>"final visibility"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1532' end='1533'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1538' end='1544'>
+            <text>public</text>
+        </token>
+        <token id='T_FINAL' start='1545' end='1550'>
+            <text>final</text>
+        </token>
+        <token id='T_STRING' start='1551' end='1557'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1558' end='1570'>
+            <text>$publicFinal</text>
+        </token>
+        <token id='T_EQUAL' start='1571' end='1572'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1573' end='1591'>
+            <text>"final visibility"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1591' end='1592'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='1597' end='1602'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE' start='1603' end='1610'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='1611' end='1617'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1618' end='1631'>
+            <text>$finalPrivate</text>
+        </token>
+        <token id='T_EQUAL' start='1632' end='1633'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1634' end='1652'>
+            <text>"final visibility"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1652' end='1653'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='1667' end='1674'>
+            <text>private</text>
+        </token>
+        <token id='T_FINAL' start='1675' end='1680'>
+            <text>final</text>
+        </token>
+        <token id='T_STRING' start='1681' end='1687'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1688' end='1701'>
+            <text>$privateFinal</text>
+        </token>
+        <token id='T_EQUAL' start='1702' end='1703'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1704' end='1722'>
+            <text>"final visibility"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1722' end='1723'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='1737' end='1742'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED' start='1743' end='1752'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='1753' end='1759'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1760' end='1775'>
+            <text>$finalProtected</text>
+        </token>
+        <token id='T_EQUAL' start='1776' end='1777'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1778' end='1796'>
+            <text>"final visibility"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1796' end='1797'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='1802' end='1811'>
+            <text>protected</text>
+        </token>
+        <token id='T_FINAL' start='1812' end='1817'>
+            <text>final</text>
+        </token>
+        <token id='T_STRING' start='1818' end='1824'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1825' end='1840'>
+            <text>$protectedFinal</text>
+        </token>
+        <token id='T_EQUAL' start='1841' end='1842'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1843' end='1861'>
+            <text>"final visibility"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1861' end='1862'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='1897' end='1902'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='1903' end='1914'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='1915' end='1921'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1922' end='1937'>
+            <text>$finalPublicSet</text>
+        </token>
+        <token id='T_EQUAL' start='1938' end='1939'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1940' end='1962'>
+            <text>"final set visibility"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1962' end='1963'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='1968' end='1979'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_FINAL' start='1980' end='1985'>
+            <text>final</text>
+        </token>
+        <token id='T_STRING' start='1986' end='1992'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1993' end='2009'>
+            <text>$finalPublicSet2</text>
+        </token>
+        <token id='T_EQUAL' start='2010' end='2011'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2012' end='2034'>
+            <text>"final set visibility"</text>
+        </token>
+        <token id='T_SEMICOLON' start='2034' end='2035'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='2040' end='2045'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='2046' end='2057'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_VARIABLE' start='2058' end='2074'>
+            <text>$finalPublicSet3</text>
+        </token>
+        <token id='T_EQUAL' start='2075' end='2076'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2077' end='2099'>
+            <text>"final set visibility"</text>
+        </token>
+        <token id='T_SEMICOLON' start='2099' end='2100'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='2218' end='2223'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='2224' end='2236'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='2237' end='2243'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2244' end='2260'>
+            <text>$finalPrivateSet</text>
+        </token>
+        <token id='T_EQUAL' start='2261' end='2262'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2263' end='2285'>
+            <text>"final set visibility"</text>
+        </token>
+        <token id='T_SEMICOLON' start='2285' end='2286'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='2291' end='2303'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_FINAL' start='2304' end='2309'>
+            <text>final</text>
+        </token>
+        <token id='T_STRING' start='2310' end='2316'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2317' end='2334'>
+            <text>$finalPrivateSet2</text>
+        </token>
+        <token id='T_EQUAL' start='2335' end='2336'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2337' end='2359'>
+            <text>"final set visibility"</text>
+        </token>
+        <token id='T_SEMICOLON' start='2359' end='2360'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='2365' end='2370'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='2371' end='2385'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='2386' end='2392'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2393' end='2411'>
+            <text>$finalProtectedSet</text>
+        </token>
+        <token id='T_EQUAL' start='2412' end='2413'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2414' end='2436'>
+            <text>"final set visibility"</text>
+        </token>
+        <token id='T_SEMICOLON' start='2436' end='2437'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='2442' end='2456'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_FINAL' start='2457' end='2462'>
+            <text>final</text>
+        </token>
+        <token id='T_STRING' start='2463' end='2469'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2470' end='2489'>
+            <text>$finalProtectedSet2</text>
+        </token>
+        <token id='T_EQUAL' start='2490' end='2491'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2492' end='2514'>
+            <text>"final set visibility"</text>
+        </token>
+        <token id='T_SEMICOLON' start='2514' end='2515'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='2552' end='2557'>
+            <text>final</text>
+        </token>
+        <token id='T_STATIC' start='2558' end='2564'>
+            <text>static</text>
+        </token>
+        <token id='T_READONLY' start='2565' end='2573'>
+            <text>readonly</text>
+        </token>
+        <token id='T_VARIABLE' start='2574' end='2595'>
+            <text>$finalStaticReadonly1</text>
+        </token>
+        <token id='T_SEMICOLON' start='2595' end='2596'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='2610' end='2615'>
+            <text>final</text>
+        </token>
+        <token id='T_STATIC' start='2616' end='2622'>
+            <text>static</text>
+        </token>
+        <token id='T_READONLY' start='2623' end='2631'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='2632' end='2638'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2639' end='2660'>
+            <text>$finalStaticReadonly2</text>
+        </token>
+        <token id='T_SEMICOLON' start='2660' end='2661'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='2707' end='2712'>
+            <text>final</text>
+        </token>
+        <token id='T_ABSTRACT' start='2713' end='2721'>
+            <text>abstract</text>
+        </token>
+        <token id='T_STATIC' start='2722' end='2728'>
+            <text>static</text>
+        </token>
+        <token id='T_VARIABLE' start='2729' end='2750'>
+            <text>$finalAbstractStatic1</text>
+        </token>
+        <token id='T_SEMICOLON' start='2750' end='2751'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='2765' end='2770'>
+            <text>final</text>
+        </token>
+        <token id='T_ABSTRACT' start='2771' end='2779'>
+            <text>abstract</text>
+        </token>
+        <token id='T_STATIC' start='2780' end='2786'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='2787' end='2790'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2791' end='2812'>
+            <text>$finalAbstractStatic2</text>
+        </token>
+        <token id='T_SEMICOLON' start='2812' end='2813'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='2861' end='2866'>
+            <text>final</text>
+        </token>
+        <token id='T_STATIC' start='2867' end='2873'>
+            <text>static</text>
+        </token>
+        <token id='T_PUBLIC' start='2874' end='2880'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='2881' end='2900'>
+            <text>$finalStaticPublic1</text>
+        </token>
+        <token id='T_SEMICOLON' start='2900' end='2901'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='2906' end='2911'>
+            <text>final</text>
+        </token>
+        <token id='T_STATIC' start='2912' end='2918'>
+            <text>static</text>
+        </token>
+        <token id='T_PUBLIC' start='2919' end='2925'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='2926' end='2932'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2933' end='2952'>
+            <text>$finalStaticPublic2</text>
+        </token>
+        <token id='T_SEMICOLON' start='2952' end='2953'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='2996' end='3001'>
+            <text>final</text>
+        </token>
+        <token id='T_STATIC' start='3002' end='3008'>
+            <text>static</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='3009' end='3020'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_VARIABLE' start='3021' end='3043'>
+            <text>$finalStaticPublicSet1</text>
+        </token>
+        <token id='T_SEMICOLON' start='3043' end='3044'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='3058' end='3063'>
+            <text>final</text>
+        </token>
+        <token id='T_STATIC' start='3064' end='3070'>
+            <text>static</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='3071' end='3082'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='3083' end='3089'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='3090' end='3112'>
+            <text>$finalStaticPublicSet2</text>
+        </token>
+        <token id='T_SEMICOLON' start='3112' end='3113'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='3163' end='3168'>
+            <text>final</text>
+        </token>
+        <token id='T_ABSTRACT' start='3169' end='3177'>
+            <text>abstract</text>
+        </token>
+        <token id='T_READONLY' start='3178' end='3186'>
+            <text>readonly</text>
+        </token>
+        <token id='T_VARIABLE' start='3187' end='3210'>
+            <text>$finalAbstractReadonly1</text>
+        </token>
+        <token id='T_SEMICOLON' start='3210' end='3211'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='3225' end='3230'>
+            <text>final</text>
+        </token>
+        <token id='T_ABSTRACT' start='3231' end='3239'>
+            <text>abstract</text>
+        </token>
+        <token id='T_READONLY' start='3240' end='3248'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='3249' end='3252'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3253' end='3276'>
+            <text>$finalAbstractReadonly2</text>
+        </token>
+        <token id='T_SEMICOLON' start='3276' end='3277'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='3333' end='3338'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='3339' end='3345'>
+            <text>public</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='3346' end='3357'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_VARIABLE' start='3358' end='3379'>
+            <text>$finalPublicPublicSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='3379' end='3380'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='3410' end='3415'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='3416' end='3422'>
+            <text>public</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='3423' end='3434'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='3435' end='3441'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='3441' end='3442'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='3442' end='3445'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3446' end='3468'>
+            <text>$finalPublicPublicSet1</text>
+        </token>
+        <token id='T_SEMICOLON' start='3468' end='3469'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='3474' end='3479'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='3480' end='3486'>
+            <text>public</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='3487' end='3498'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_VARIABLE' start='3499' end='3521'>
+            <text>$finalPublicPublicSet2</text>
+        </token>
+        <token id='T_SEMICOLON' start='3521' end='3522'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='3536' end='3541'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='3542' end='3548'>
+            <text>public</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='3549' end='3561'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='3562' end='3568'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='3568' end='3569'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='3569' end='3572'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3573' end='3596'>
+            <text>$finalPublicPrivateSet1</text>
+        </token>
+        <token id='T_SEMICOLON' start='3596' end='3597'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='3602' end='3607'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='3608' end='3614'>
+            <text>public</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='3615' end='3629'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='3630' end='3636'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='3636' end='3637'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='3637' end='3640'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3641' end='3666'>
+            <text>$finalPublicProtectedSet1</text>
+        </token>
+        <token id='T_SEMICOLON' start='3666' end='3667'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='3672' end='3677'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE' start='3678' end='3685'>
+            <text>private</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='3686' end='3697'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='3698' end='3704'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='3704' end='3705'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='3705' end='3708'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3709' end='3732'>
+            <text>$finalPrivatePublicSet1</text>
+        </token>
+        <token id='T_SEMICOLON' start='3732' end='3733'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='3807' end='3812'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE' start='3813' end='3820'>
+            <text>private</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='3821' end='3833'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='3834' end='3840'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='3840' end='3841'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='3841' end='3844'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3845' end='3869'>
+            <text>$finalPrivatePrivateSet1</text>
+        </token>
+        <token id='T_SEMICOLON' start='3869' end='3870'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='3884' end='3889'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE' start='3890' end='3897'>
+            <text>private</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='3898' end='3912'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='3913' end='3919'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='3919' end='3920'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='3920' end='3923'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3924' end='3950'>
+            <text>$finalPrivateProtectedSet1</text>
+        </token>
+        <token id='T_SEMICOLON' start='3950' end='3951'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='3965' end='3970'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED' start='3971' end='3980'>
+            <text>protected</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='3981' end='3992'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='3993' end='3999'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='3999' end='4000'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='4000' end='4003'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='4004' end='4029'>
+            <text>$finalProtectedPublicSet1</text>
+        </token>
+        <token id='T_SEMICOLON' start='4029' end='4030'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='4044' end='4049'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED' start='4050' end='4059'>
+            <text>protected</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='4060' end='4072'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='4073' end='4079'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='4079' end='4080'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='4080' end='4083'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='4084' end='4110'>
+            <text>$finalProtectedPrivateSet1</text>
+        </token>
+        <token id='T_EQUAL' start='4111' end='4112'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='4113' end='4119'>
+            <text>"test"</text>
+        </token>
+        <token id='T_SEMICOLON' start='4119' end='4120'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='4125' end='4130'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED' start='4131' end='4140'>
+            <text>protected</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='4141' end='4155'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='4156' end='4162'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='4162' end='4163'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='4163' end='4166'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='4167' end='4195'>
+            <text>$finalProtectedProtectedSet1</text>
+        </token>
+        <token id='T_SEMICOLON' start='4195' end='4196'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='4202' end='4207'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='4208' end='4219'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_PUBLIC' start='4220' end='4226'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='4227' end='4233'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='4233' end='4234'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='4234' end='4237'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='4238' end='4260'>
+            <text>$finalPublicSetPublic1</text>
+        </token>
+        <token id='T_SEMICOLON' start='4260' end='4261'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='4266' end='4271'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='4272' end='4283'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_PUBLIC' start='4284' end='4290'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='4291' end='4313'>
+            <text>$finalPublicSetPublic2</text>
+        </token>
+        <token id='T_SEMICOLON' start='4313' end='4314'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='4328' end='4333'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='4334' end='4345'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_PRIVATE' start='4346' end='4353'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='4354' end='4360'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='4360' end='4361'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='4361' end='4364'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='4365' end='4388'>
+            <text>$finalPublicSetPrivate1</text>
+        </token>
+        <token id='T_SEMICOLON' start='4388' end='4389'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='4403' end='4408'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='4409' end='4420'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_PROTECTED' start='4421' end='4430'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='4431' end='4437'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='4437' end='4438'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='4438' end='4441'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='4442' end='4467'>
+            <text>$finalPublicSetProtected1</text>
+        </token>
+        <token id='T_SEMICOLON' start='4467' end='4468'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='4482' end='4487'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='4488' end='4500'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_PUBLIC' start='4501' end='4507'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='4508' end='4514'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='4514' end='4515'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='4515' end='4518'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='4519' end='4542'>
+            <text>$finalPrivateSetPublic1</text>
+        </token>
+        <token id='T_SEMICOLON' start='4542' end='4543'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='4548' end='4553'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='4554' end='4566'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_PRIVATE' start='4567' end='4574'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='4575' end='4581'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='4581' end='4582'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='4582' end='4585'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='4586' end='4610'>
+            <text>$finalPrivateSetPrivate1</text>
+        </token>
+        <token id='T_SEMICOLON' start='4610' end='4611'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='4625' end='4630'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='4631' end='4643'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_PROTECTED' start='4644' end='4653'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='4654' end='4660'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='4660' end='4661'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='4661' end='4664'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='4665' end='4691'>
+            <text>$finalPrivateSetProtected1</text>
+        </token>
+        <token id='T_SEMICOLON' start='4691' end='4692'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='4697' end='4702'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='4703' end='4717'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_PUBLIC' start='4718' end='4724'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='4725' end='4731'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='4731' end='4732'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='4732' end='4735'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='4736' end='4761'>
+            <text>$finalProtectedSetPublic1</text>
+        </token>
+        <token id='T_SEMICOLON' start='4761' end='4762'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='4767' end='4772'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='4773' end='4787'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_PRIVATE' start='4788' end='4795'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='4796' end='4802'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='4802' end='4803'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='4803' end='4806'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='4807' end='4833'>
+            <text>$finalProtectedSetPrivate1</text>
+        </token>
+        <token id='T_SEMICOLON' start='4833' end='4834'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='4848' end='4853'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='4854' end='4868'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_PROTECTED' start='4869' end='4878'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='4879' end='4885'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='4885' end='4886'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='4886' end='4889'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='4890' end='4918'>
+            <text>$finalProtectedSetProtected1</text>
+        </token>
+        <token id='T_EQUAL' start='4919' end='4920'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='4921' end='4922'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='4922' end='4923'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='4979' end='4984'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='4985' end='4991'>
+            <text>public</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='4992' end='5003'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_READONLY' start='5004' end='5012'>
+            <text>readonly</text>
+        </token>
+        <token id='T_VARIABLE' start='5013' end='5047'>
+            <text>$finalPublicPublicSetReadonlyError</text>
+        </token>
+        <token id='T_SEMICOLON' start='5047' end='5048'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='5062' end='5067'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='5068' end='5074'>
+            <text>public</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='5075' end='5086'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_READONLY' start='5087' end='5095'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='5096' end='5102'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='5102' end='5103'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='5103' end='5106'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='5107' end='5136'>
+            <text>$finalPublicPublicSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='5136' end='5137'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='5142' end='5147'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='5148' end='5154'>
+            <text>public</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='5155' end='5169'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_READONLY' start='5170' end='5178'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='5179' end='5185'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='5185' end='5186'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='5186' end='5189'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='5190' end='5222'>
+            <text>$finalPublicProtectedSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='5222' end='5223'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='5228' end='5233'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='5234' end='5240'>
+            <text>public</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='5241' end='5253'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_READONLY' start='5254' end='5262'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='5263' end='5269'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='5269' end='5270'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='5270' end='5273'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='5274' end='5304'>
+            <text>$finalPublicPrivateSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='5304' end='5305'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='5310' end='5315'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED' start='5316' end='5325'>
+            <text>protected</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='5326' end='5337'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_READONLY' start='5338' end='5346'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='5347' end='5353'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='5353' end='5354'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='5354' end='5357'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='5358' end='5390'>
+            <text>$finalProtectedPublicSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='5390' end='5391'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='5405' end='5410'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED' start='5411' end='5420'>
+            <text>protected</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='5421' end='5435'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_READONLY' start='5436' end='5444'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='5445' end='5451'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='5451' end='5452'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='5452' end='5455'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='5456' end='5491'>
+            <text>$finalProtectedProtectedSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='5491' end='5492'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='5497' end='5502'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED' start='5503' end='5512'>
+            <text>protected</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='5513' end='5525'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_READONLY' start='5526' end='5534'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='5535' end='5541'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='5541' end='5542'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='5542' end='5545'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='5546' end='5579'>
+            <text>$finalProtectedPrivateSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='5579' end='5580'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='5585' end='5590'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE' start='5591' end='5598'>
+            <text>private</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='5599' end='5610'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_READONLY' start='5611' end='5619'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='5620' end='5626'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='5626' end='5627'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='5627' end='5630'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='5631' end='5661'>
+            <text>$finalPrivatePublicSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='5661' end='5662'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='5676' end='5681'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE' start='5682' end='5689'>
+            <text>private</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='5690' end='5704'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_READONLY' start='5705' end='5713'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='5714' end='5720'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='5720' end='5721'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='5721' end='5724'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='5725' end='5758'>
+            <text>$finalPrivateProtectedSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='5758' end='5759'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='5773' end='5778'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE' start='5779' end='5786'>
+            <text>private</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='5787' end='5799'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_READONLY' start='5800' end='5808'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='5809' end='5815'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='5815' end='5816'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='5816' end='5819'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='5820' end='5851'>
+            <text>$finalPrivatePrivateSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='5851' end='5852'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='5853' end='5854'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='5854' end='5855'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='5856' end='5856'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='5856'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='841' end='850' commentType='singleLine'/>
+            <Comment start='890' end='907' commentType='singleLine'/>
+            <Comment start='1022' end='1041' commentType='singleLine'/>
+            <Comment start='1100' end='1175' commentType='singleLine'/>
+            <Comment start='1234' end='1243' commentType='singleLine'/>
+            <Comment start='1248' end='1267' commentType='singleLine'/>
+            <Comment start='1387' end='1396' commentType='singleLine'/>
+            <Comment start='1401' end='1422' commentType='singleLine'/>
+            <Comment start='1654' end='1663' commentType='singleLine'/>
+            <Comment start='1724' end='1733' commentType='singleLine'/>
+            <Comment start='1868' end='1893' commentType='singleLine'/>
+            <Comment start='2101' end='2214' commentType='singleLine'/>
+            <Comment start='2521' end='2548' commentType='singleLine'/>
+            <Comment start='2597' end='2606' commentType='singleLine'/>
+            <Comment start='2662' end='2671' commentType='singleLine'/>
+            <Comment start='2676' end='2703' commentType='singleLine'/>
+            <Comment start='2752' end='2761' commentType='singleLine'/>
+            <Comment start='2814' end='2823' commentType='singleLine'/>
+            <Comment start='2828' end='2857' commentType='singleLine'/>
+            <Comment start='2959' end='2992' commentType='singleLine'/>
+            <Comment start='3045' end='3054' commentType='singleLine'/>
+            <Comment start='3114' end='3123' commentType='singleLine'/>
+            <Comment start='3130' end='3159' commentType='singleLine'/>
+            <Comment start='3212' end='3221' commentType='singleLine'/>
+            <Comment start='3278' end='3287' commentType='singleLine'/>
+            <Comment start='3292' end='3329' commentType='singleLine'/>
+            <Comment start='3381' end='3406' commentType='singleLine'/>
+            <Comment start='3523' end='3532' commentType='singleLine'/>
+            <Comment start='3734' end='3803' commentType='singleLine'/>
+            <Comment start='3871' end='3880' commentType='singleLine'/>
+            <Comment start='3952' end='3961' commentType='singleLine'/>
+            <Comment start='4031' end='4040' commentType='singleLine'/>
+            <Comment start='4315' end='4324' commentType='singleLine'/>
+            <Comment start='4390' end='4399' commentType='singleLine'/>
+            <Comment start='4469' end='4478' commentType='singleLine'/>
+            <Comment start='4612' end='4621' commentType='singleLine'/>
+            <Comment start='4835' end='4844' commentType='singleLine'/>
+            <Comment start='4929' end='4975' commentType='singleLine'/>
+            <Comment start='5049' end='5058' commentType='singleLine'/>
+            <Comment start='5392' end='5401' commentType='singleLine'/>
+            <Comment start='5663' end='5672' commentType='singleLine'/>
+            <Comment start='5760' end='5769' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='841' end='850' commentType='singleLine'/>
+            <Comment start='890' end='907' commentType='singleLine'/>
+            <Comment start='1022' end='1041' commentType='singleLine'/>
+            <Comment start='1100' end='1175' commentType='singleLine'/>
+            <Comment start='1234' end='1243' commentType='singleLine'/>
+            <Comment start='1248' end='1267' commentType='singleLine'/>
+            <Comment start='1387' end='1396' commentType='singleLine'/>
+            <Comment start='1401' end='1422' commentType='singleLine'/>
+            <Comment start='1654' end='1663' commentType='singleLine'/>
+            <Comment start='1724' end='1733' commentType='singleLine'/>
+            <Comment start='1868' end='1893' commentType='singleLine'/>
+            <Comment start='2101' end='2214' commentType='singleLine'/>
+            <Comment start='2521' end='2548' commentType='singleLine'/>
+            <Comment start='2597' end='2606' commentType='singleLine'/>
+            <Comment start='2662' end='2671' commentType='singleLine'/>
+            <Comment start='2676' end='2703' commentType='singleLine'/>
+            <Comment start='2752' end='2761' commentType='singleLine'/>
+            <Comment start='2814' end='2823' commentType='singleLine'/>
+            <Comment start='2828' end='2857' commentType='singleLine'/>
+            <Comment start='2959' end='2992' commentType='singleLine'/>
+            <Comment start='3045' end='3054' commentType='singleLine'/>
+            <Comment start='3114' end='3123' commentType='singleLine'/>
+            <Comment start='3130' end='3159' commentType='singleLine'/>
+            <Comment start='3212' end='3221' commentType='singleLine'/>
+            <Comment start='3278' end='3287' commentType='singleLine'/>
+            <Comment start='3292' end='3329' commentType='singleLine'/>
+            <Comment start='3381' end='3406' commentType='singleLine'/>
+            <Comment start='3523' end='3532' commentType='singleLine'/>
+            <Comment start='3734' end='3803' commentType='singleLine'/>
+            <Comment start='3871' end='3880' commentType='singleLine'/>
+            <Comment start='3952' end='3961' commentType='singleLine'/>
+            <Comment start='4031' end='4040' commentType='singleLine'/>
+            <Comment start='4315' end='4324' commentType='singleLine'/>
+            <Comment start='4390' end='4399' commentType='singleLine'/>
+            <Comment start='4469' end='4478' commentType='singleLine'/>
+            <Comment start='4612' end='4621' commentType='singleLine'/>
+            <Comment start='4835' end='4844' commentType='singleLine'/>
+            <Comment start='4929' end='4975' commentType='singleLine'/>
+            <Comment start='5049' end='5058' commentType='singleLine'/>
+            <Comment start='5392' end='5401' commentType='singleLine'/>
+            <Comment start='5663' end='5672' commentType='singleLine'/>
+            <Comment start='5760' end='5769' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='5855'>
+                <Assignment start='815' end='5854' operator='EQUAL'>
+                    <Variable start='815' end='820' isDollared='true'>
+                        <Identifier start='816' end='820' name='anon'/>
+                    </Variable>
+                    <ClassInstanceCreation start='823' end='5854' anonymous='true'>
+                        <Parameters>
+                        </Parameters>
+                        <Superclass>
+                        </Superclass>
+                        <Interfaces>
+                        </Interfaces>
+                        <Block start='835' end='5854' isCurly='true'>
+                            <FieldsDeclaration start='854' end='884' modifier='public final'>
+                                <FieldType>
+                                    <NamespaceName start='860' end='866' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='860' end='866' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='867' end='873' isDollared='true'>
+                                        <Identifier start='868' end='873' name='final'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='876' end='883' type='STRING' value='"final"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='911' end='961' modifier='public static final'>
+                                <FieldType>
+                                    <NamespaceName start='924' end='930' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='924' end='930' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='931' end='943' isDollared='true'>
+                                        <Identifier start='932' end='943' name='finalStatic'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='946' end='960' type='STRING' value='"final static"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='966' end='1016' modifier='public static final'>
+                                <FieldType>
+                                    <NamespaceName start='979' end='985' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='979' end='985' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='986' end='998' isDollared='true'>
+                                        <Identifier start='987' end='998' name='staticFinal'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='1001' end='1015' type='STRING' value='"final static"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='1045' end='1099' modifier='public abstract final'>
+                                <FieldType>
+                                    <NamespaceName start='1060' end='1066' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1060' end='1066' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='1067' end='1081' isDollared='true'>
+                                        <Identifier start='1068' end='1081' name='finalAbstract'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='1084' end='1098' type='STRING' value='"final static"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='1179' end='1233' modifier='public abstract final'>
+                                <FieldType>
+                                    <NamespaceName start='1194' end='1200' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1194' end='1200' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='1201' end='1215' isDollared='true'>
+                                        <Identifier start='1202' end='1215' name='abstractFinal'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='1218' end='1232' type='STRING' value='"final static"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='1271' end='1308' modifier='public readonly final'>
+                                <FieldType>
+                                    <NamespaceName start='1286' end='1292' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1286' end='1292' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='1293' end='1307' isDollared='true'>
+                                        <Identifier start='1294' end='1307' name='finalReadonly'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='1313' end='1350' modifier='public readonly final'>
+                                <FieldType>
+                                    <NamespaceName start='1328' end='1334' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1328' end='1334' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='1335' end='1349' isDollared='true'>
+                                        <Identifier start='1336' end='1349' name='readonlyFinal'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='1355' end='1386' modifier='public readonly final'>
+                                <FieldType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='1370' end='1385' isDollared='true'>
+                                        <Identifier start='1371' end='1385' name='readonlyFinal2'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='1426' end='1473' modifier='public final'>
+                                <FieldType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='1439' end='1451' isDollared='true'>
+                                        <Identifier start='1440' end='1451' name='finalPublic'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='1454' end='1472' type='STRING' value='"final visibility"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='1478' end='1533' modifier='public final'>
+                                <FieldType>
+                                    <NamespaceName start='1491' end='1497' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1491' end='1497' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='1498' end='1511' isDollared='true'>
+                                        <Identifier start='1499' end='1511' name='finalPublic2'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='1514' end='1532' type='STRING' value='"final visibility"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='1538' end='1592' modifier='public final'>
+                                <FieldType>
+                                    <NamespaceName start='1551' end='1557' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1551' end='1557' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='1558' end='1570' isDollared='true'>
+                                        <Identifier start='1559' end='1570' name='publicFinal'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='1573' end='1591' type='STRING' value='"final visibility"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='1597' end='1653' modifier='private final'>
+                                <FieldType>
+                                    <NamespaceName start='1611' end='1617' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1611' end='1617' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='1618' end='1631' isDollared='true'>
+                                        <Identifier start='1619' end='1631' name='finalPrivate'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='1634' end='1652' type='STRING' value='"final visibility"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='1667' end='1723' modifier='private final'>
+                                <FieldType>
+                                    <NamespaceName start='1681' end='1687' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1681' end='1687' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='1688' end='1701' isDollared='true'>
+                                        <Identifier start='1689' end='1701' name='privateFinal'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='1704' end='1722' type='STRING' value='"final visibility"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='1737' end='1797' modifier='protected final'>
+                                <FieldType>
+                                    <NamespaceName start='1753' end='1759' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1753' end='1759' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='1760' end='1775' isDollared='true'>
+                                        <Identifier start='1761' end='1775' name='finalProtected'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='1778' end='1796' type='STRING' value='"final visibility"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='1802' end='1862' modifier='protected final'>
+                                <FieldType>
+                                    <NamespaceName start='1818' end='1824' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1818' end='1824' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='1825' end='1840' isDollared='true'>
+                                        <Identifier start='1826' end='1840' name='protectedFinal'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='1843' end='1861' type='STRING' value='"final visibility"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='1897' end='1963' modifier='public public(set) final'>
+                                <FieldType>
+                                    <NamespaceName start='1915' end='1921' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1915' end='1921' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='1922' end='1937' isDollared='true'>
+                                        <Identifier start='1923' end='1937' name='finalPublicSet'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='1940' end='1962' type='STRING' value='"final set visibility"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='1968' end='2035' modifier='public public(set) final'>
+                                <FieldType>
+                                    <NamespaceName start='1986' end='1992' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1986' end='1992' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='1993' end='2009' isDollared='true'>
+                                        <Identifier start='1994' end='2009' name='finalPublicSet2'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='2012' end='2034' type='STRING' value='"final set visibility"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='2040' end='2100' modifier='public public(set) final'>
+                                <FieldType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='2058' end='2074' isDollared='true'>
+                                        <Identifier start='2059' end='2074' name='finalPublicSet3'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='2077' end='2099' type='STRING' value='"final set visibility"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='2218' end='2286' modifier='public private(set) final'>
+                                <FieldType>
+                                    <NamespaceName start='2237' end='2243' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='2237' end='2243' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='2244' end='2260' isDollared='true'>
+                                        <Identifier start='2245' end='2260' name='finalPrivateSet'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='2263' end='2285' type='STRING' value='"final set visibility"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='2291' end='2360' modifier='public private(set) final'>
+                                <FieldType>
+                                    <NamespaceName start='2310' end='2316' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='2310' end='2316' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='2317' end='2334' isDollared='true'>
+                                        <Identifier start='2318' end='2334' name='finalPrivateSet2'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='2337' end='2359' type='STRING' value='"final set visibility"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='2365' end='2437' modifier='public protected(set) final'>
+                                <FieldType>
+                                    <NamespaceName start='2386' end='2392' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='2386' end='2392' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='2393' end='2411' isDollared='true'>
+                                        <Identifier start='2394' end='2411' name='finalProtectedSet'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='2414' end='2436' type='STRING' value='"final set visibility"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='2442' end='2515' modifier='public protected(set) final'>
+                                <FieldType>
+                                    <NamespaceName start='2463' end='2469' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='2463' end='2469' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='2470' end='2489' isDollared='true'>
+                                        <Identifier start='2471' end='2489' name='finalProtectedSet2'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='2492' end='2514' type='STRING' value='"final set visibility"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='2552' end='2596' modifier='public readonly static final'>
+                                <FieldType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='2574' end='2595' isDollared='true'>
+                                        <Identifier start='2575' end='2595' name='finalStaticReadonly1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='2610' end='2661' modifier='public readonly static final'>
+                                <FieldType>
+                                    <NamespaceName start='2632' end='2638' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='2632' end='2638' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='2639' end='2660' isDollared='true'>
+                                        <Identifier start='2640' end='2660' name='finalStaticReadonly2'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='2707' end='2751' modifier='public abstract static final'>
+                                <FieldType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='2729' end='2750' isDollared='true'>
+                                        <Identifier start='2730' end='2750' name='finalAbstractStatic1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='2765' end='2813' modifier='public abstract static final'>
+                                <FieldType>
+                                    <NamespaceName start='2787' end='2790' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='2787' end='2790' name='int'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='2791' end='2812' isDollared='true'>
+                                        <Identifier start='2792' end='2812' name='finalAbstractStatic2'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='2861' end='2901' modifier='public static final'>
+                                <FieldType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='2881' end='2900' isDollared='true'>
+                                        <Identifier start='2882' end='2900' name='finalStaticPublic1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='2906' end='2953' modifier='public static final'>
+                                <FieldType>
+                                    <NamespaceName start='2926' end='2932' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='2926' end='2932' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='2933' end='2952' isDollared='true'>
+                                        <Identifier start='2934' end='2952' name='finalStaticPublic2'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='2996' end='3044' modifier='public public(set) static final'>
+                                <FieldType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='3021' end='3043' isDollared='true'>
+                                        <Identifier start='3022' end='3043' name='finalStaticPublicSet1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='3058' end='3113' modifier='public public(set) static final'>
+                                <FieldType>
+                                    <NamespaceName start='3083' end='3089' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='3083' end='3089' name='string'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='3090' end='3112' isDollared='true'>
+                                        <Identifier start='3091' end='3112' name='finalStaticPublicSet2'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='3163' end='3211' modifier='public readonly abstract final'>
+                                <FieldType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='3187' end='3210' isDollared='true'>
+                                        <Identifier start='3188' end='3210' name='finalAbstractReadonly1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='3225' end='3277' modifier='public readonly abstract final'>
+                                <FieldType>
+                                    <NamespaceName start='3249' end='3252' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='3249' end='3252' name='int'/>
+                                    </NamespaceName>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='3253' end='3276' isDollared='true'>
+                                        <Identifier start='3254' end='3276' name='finalAbstractReadonly2'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='3333' end='3380' modifier='public public(set) final'>
+                                <FieldType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='3358' end='3379' isDollared='true'>
+                                        <Identifier start='3359' end='3379' name='finalPublicPublicSet'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='3410' end='3469' modifier='public public(set) final'>
+                                <FieldType>
+                                    <UnionType start='3435' end='3445'>
+                                        <NamespaceName start='3435' end='3441' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='3435' end='3441' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='3442' end='3445' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='3442' end='3445' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='3446' end='3468' isDollared='true'>
+                                        <Identifier start='3447' end='3468' name='finalPublicPublicSet1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='3474' end='3522' modifier='public public(set) final'>
+                                <FieldType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='3499' end='3521' isDollared='true'>
+                                        <Identifier start='3500' end='3521' name='finalPublicPublicSet2'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='3536' end='3597' modifier='public private(set) final'>
+                                <FieldType>
+                                    <UnionType start='3562' end='3572'>
+                                        <NamespaceName start='3562' end='3568' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='3562' end='3568' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='3569' end='3572' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='3569' end='3572' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='3573' end='3596' isDollared='true'>
+                                        <Identifier start='3574' end='3596' name='finalPublicPrivateSet1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='3602' end='3667' modifier='public protected(set) final'>
+                                <FieldType>
+                                    <UnionType start='3630' end='3640'>
+                                        <NamespaceName start='3630' end='3636' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='3630' end='3636' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='3637' end='3640' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='3637' end='3640' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='3641' end='3666' isDollared='true'>
+                                        <Identifier start='3642' end='3666' name='finalPublicProtectedSet1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='3672' end='3733' modifier='private public(set) final'>
+                                <FieldType>
+                                    <UnionType start='3698' end='3708'>
+                                        <NamespaceName start='3698' end='3704' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='3698' end='3704' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='3705' end='3708' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='3705' end='3708' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='3709' end='3732' isDollared='true'>
+                                        <Identifier start='3710' end='3732' name='finalPrivatePublicSet1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='3807' end='3870' modifier='private private(set) final'>
+                                <FieldType>
+                                    <UnionType start='3834' end='3844'>
+                                        <NamespaceName start='3834' end='3840' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='3834' end='3840' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='3841' end='3844' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='3841' end='3844' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='3845' end='3869' isDollared='true'>
+                                        <Identifier start='3846' end='3869' name='finalPrivatePrivateSet1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='3884' end='3951' modifier='private protected(set) final'>
+                                <FieldType>
+                                    <UnionType start='3913' end='3923'>
+                                        <NamespaceName start='3913' end='3919' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='3913' end='3919' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='3920' end='3923' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='3920' end='3923' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='3924' end='3950' isDollared='true'>
+                                        <Identifier start='3925' end='3950' name='finalPrivateProtectedSet1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='3965' end='4030' modifier='protected public(set) final'>
+                                <FieldType>
+                                    <UnionType start='3993' end='4003'>
+                                        <NamespaceName start='3993' end='3999' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='3993' end='3999' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='4000' end='4003' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4000' end='4003' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='4004' end='4029' isDollared='true'>
+                                        <Identifier start='4005' end='4029' name='finalProtectedPublicSet1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='4044' end='4120' modifier='protected private(set) final'>
+                                <FieldType>
+                                    <UnionType start='4073' end='4083'>
+                                        <NamespaceName start='4073' end='4079' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4073' end='4079' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='4080' end='4083' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4080' end='4083' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='4084' end='4110' isDollared='true'>
+                                        <Identifier start='4085' end='4110' name='finalProtectedPrivateSet1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='4113' end='4119' type='STRING' value='"test"'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='4125' end='4196' modifier='protected protected(set) final'>
+                                <FieldType>
+                                    <UnionType start='4156' end='4166'>
+                                        <NamespaceName start='4156' end='4162' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4156' end='4162' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='4163' end='4166' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4163' end='4166' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='4167' end='4195' isDollared='true'>
+                                        <Identifier start='4168' end='4195' name='finalProtectedProtectedSet1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='4202' end='4261' modifier='public public(set) final'>
+                                <FieldType>
+                                    <UnionType start='4227' end='4237'>
+                                        <NamespaceName start='4227' end='4233' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4227' end='4233' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='4234' end='4237' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4234' end='4237' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='4238' end='4260' isDollared='true'>
+                                        <Identifier start='4239' end='4260' name='finalPublicSetPublic1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='4266' end='4314' modifier='public public(set) final'>
+                                <FieldType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='4291' end='4313' isDollared='true'>
+                                        <Identifier start='4292' end='4313' name='finalPublicSetPublic2'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='4328' end='4389' modifier='private public(set) final'>
+                                <FieldType>
+                                    <UnionType start='4354' end='4364'>
+                                        <NamespaceName start='4354' end='4360' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4354' end='4360' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='4361' end='4364' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4361' end='4364' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='4365' end='4388' isDollared='true'>
+                                        <Identifier start='4366' end='4388' name='finalPublicSetPrivate1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='4403' end='4468' modifier='protected public(set) final'>
+                                <FieldType>
+                                    <UnionType start='4431' end='4441'>
+                                        <NamespaceName start='4431' end='4437' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4431' end='4437' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='4438' end='4441' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4438' end='4441' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='4442' end='4467' isDollared='true'>
+                                        <Identifier start='4443' end='4467' name='finalPublicSetProtected1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='4482' end='4543' modifier='public private(set) final'>
+                                <FieldType>
+                                    <UnionType start='4508' end='4518'>
+                                        <NamespaceName start='4508' end='4514' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4508' end='4514' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='4515' end='4518' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4515' end='4518' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='4519' end='4542' isDollared='true'>
+                                        <Identifier start='4520' end='4542' name='finalPrivateSetPublic1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='4548' end='4611' modifier='private private(set) final'>
+                                <FieldType>
+                                    <UnionType start='4575' end='4585'>
+                                        <NamespaceName start='4575' end='4581' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4575' end='4581' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='4582' end='4585' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4582' end='4585' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='4586' end='4610' isDollared='true'>
+                                        <Identifier start='4587' end='4610' name='finalPrivateSetPrivate1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='4625' end='4692' modifier='protected private(set) final'>
+                                <FieldType>
+                                    <UnionType start='4654' end='4664'>
+                                        <NamespaceName start='4654' end='4660' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4654' end='4660' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='4661' end='4664' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4661' end='4664' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='4665' end='4691' isDollared='true'>
+                                        <Identifier start='4666' end='4691' name='finalPrivateSetProtected1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='4697' end='4762' modifier='public protected(set) final'>
+                                <FieldType>
+                                    <UnionType start='4725' end='4735'>
+                                        <NamespaceName start='4725' end='4731' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4725' end='4731' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='4732' end='4735' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4732' end='4735' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='4736' end='4761' isDollared='true'>
+                                        <Identifier start='4737' end='4761' name='finalProtectedSetPublic1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='4767' end='4834' modifier='private protected(set) final'>
+                                <FieldType>
+                                    <UnionType start='4796' end='4806'>
+                                        <NamespaceName start='4796' end='4802' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4796' end='4802' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='4803' end='4806' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4803' end='4806' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='4807' end='4833' isDollared='true'>
+                                        <Identifier start='4808' end='4833' name='finalProtectedSetPrivate1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='4848' end='4923' modifier='protected protected(set) final'>
+                                <FieldType>
+                                    <UnionType start='4879' end='4889'>
+                                        <NamespaceName start='4879' end='4885' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4879' end='4885' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='4886' end='4889' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='4886' end='4889' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='4890' end='4918' isDollared='true'>
+                                        <Identifier start='4891' end='4918' name='finalProtectedSetProtected1'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                    <Scalar start='4921' end='4922' type='INT' value='1'/>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='4979' end='5048' modifier='public public(set) readonly final'>
+                                <FieldType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='5013' end='5047' isDollared='true'>
+                                        <Identifier start='5014' end='5047' name='finalPublicPublicSetReadonlyError'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='5062' end='5137' modifier='public public(set) readonly final'>
+                                <FieldType>
+                                    <UnionType start='5096' end='5106'>
+                                        <NamespaceName start='5096' end='5102' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5096' end='5102' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='5103' end='5106' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5103' end='5106' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='5107' end='5136' isDollared='true'>
+                                        <Identifier start='5108' end='5136' name='finalPublicPublicSetReadonly'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='5142' end='5223' modifier='public protected(set) readonly final'>
+                                <FieldType>
+                                    <UnionType start='5179' end='5189'>
+                                        <NamespaceName start='5179' end='5185' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5179' end='5185' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='5186' end='5189' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5186' end='5189' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='5190' end='5222' isDollared='true'>
+                                        <Identifier start='5191' end='5222' name='finalPublicProtectedSetReadonly'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='5228' end='5305' modifier='public private(set) readonly final'>
+                                <FieldType>
+                                    <UnionType start='5263' end='5273'>
+                                        <NamespaceName start='5263' end='5269' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5263' end='5269' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='5270' end='5273' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5270' end='5273' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='5274' end='5304' isDollared='true'>
+                                        <Identifier start='5275' end='5304' name='finalPublicPrivateSetReadonly'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='5310' end='5391' modifier='protected public(set) readonly final'>
+                                <FieldType>
+                                    <UnionType start='5347' end='5357'>
+                                        <NamespaceName start='5347' end='5353' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5347' end='5353' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='5354' end='5357' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5354' end='5357' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='5358' end='5390' isDollared='true'>
+                                        <Identifier start='5359' end='5390' name='finalProtectedPublicSetReadonly'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='5405' end='5492' modifier='protected protected(set) readonly final'>
+                                <FieldType>
+                                    <UnionType start='5445' end='5455'>
+                                        <NamespaceName start='5445' end='5451' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5445' end='5451' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='5452' end='5455' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5452' end='5455' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='5456' end='5491' isDollared='true'>
+                                        <Identifier start='5457' end='5491' name='finalProtectedProtectedSetReadonly'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='5497' end='5580' modifier='protected private(set) readonly final'>
+                                <FieldType>
+                                    <UnionType start='5535' end='5545'>
+                                        <NamespaceName start='5535' end='5541' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5535' end='5541' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='5542' end='5545' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5542' end='5545' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='5546' end='5579' isDollared='true'>
+                                        <Identifier start='5547' end='5579' name='finalProtectedPrivateSetReadonly'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='5585' end='5662' modifier='private public(set) readonly final'>
+                                <FieldType>
+                                    <UnionType start='5620' end='5630'>
+                                        <NamespaceName start='5620' end='5626' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5620' end='5626' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='5627' end='5630' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5627' end='5630' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='5631' end='5661' isDollared='true'>
+                                        <Identifier start='5632' end='5661' name='finalPrivatePublicSetReadonly'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='5676' end='5759' modifier='private protected(set) readonly final'>
+                                <FieldType>
+                                    <UnionType start='5714' end='5724'>
+                                        <NamespaceName start='5714' end='5720' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5714' end='5720' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='5721' end='5724' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5721' end='5724' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='5725' end='5758' isDollared='true'>
+                                        <Identifier start='5726' end='5758' name='finalPrivateProtectedSetReadonly'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                            <FieldsDeclaration start='5773' end='5852' modifier='private private(set) readonly final'>
+                                <FieldType>
+                                    <UnionType start='5809' end='5819'>
+                                        <NamespaceName start='5809' end='5815' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5809' end='5815' name='string'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='5816' end='5819' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='5816' end='5819' name='int'/>
+                                        </NamespaceName>
+                                    </UnionType>
+                                </FieldType>
+                                <VariableNames>
+                                    <Variable start='5820' end='5851' isDollared='true'>
+                                        <Identifier start='5821' end='5851' name='finalPrivatePrivateSetReadonly'/>
+                                    </Variable>
+                                </VariableNames>
+                                <InitialValues>
+                                </InitialValues>
+                            </FieldsDeclaration>
+                        </Block>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,10 @@
+Code completion result for source line:
+$this->|iPublicPrivateSet; // test: all fields (promoted)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     test()                          [PRIVATE]  AsymmetricVisibilityPromoted
+VARIABLE   Bar publicProtectedSet          [PUBLIC]   AsymmetricVisibilityPromoted
+VARIABLE   Foo iPublicPublicSet            [PUBLIC]   AsymmetricVisibilityPromoted
+VARIABLE   int privatePrivateSet           [PRIVATE]  AsymmetricVisibilityPromoted
+VARIABLE   int protectedPrivateSet         [PROTECTE  AsymmetricVisibilityPromoted
+VARIABLE   string|int iPublicPrivateSet    [PUBLIC]   AsymmetricVisibilityPromoted
+VARIABLE   string|int iPublicProtectedSet  [PUBLIC]   AsymmetricVisibilityPromoted

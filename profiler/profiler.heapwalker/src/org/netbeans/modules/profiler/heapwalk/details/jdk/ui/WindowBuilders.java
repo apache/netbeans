@@ -25,7 +25,6 @@ import java.awt.Frame;
 import java.awt.Image;
 import java.beans.PropertyVetoException;
 import java.util.List;
-import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -42,6 +41,7 @@ import org.netbeans.modules.profiler.heapwalk.details.jdk.ui.ComponentBuilders.C
 import org.netbeans.modules.profiler.heapwalk.details.jdk.ui.ComponentBuilders.ContainerBuilder;
 import org.netbeans.modules.profiler.heapwalk.details.jdk.ui.ComponentBuilders.JComponentBuilder;
 import org.netbeans.modules.profiler.heapwalk.details.spi.DetailsUtils;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -184,7 +184,7 @@ final class WindowBuilders {
             } else {
                 JInternalFrame presenter = new JInternalFrame(instance.getTitle());
                 Image img = instance.getIconImage();
-                if (img != null) presenter.setFrameIcon(new ImageIcon(img));
+                if (img != null) presenter.setFrameIcon(ImageUtilities.image2Icon(img));
                 for (Component c : instance.getComponents()) presenter.add(c);
                 presenter.pack();
                 return presenter;
@@ -265,7 +265,7 @@ final class WindowBuilders {
                 JInternalFrame presenter = new JInternalFrame(instance.getTitle());
                 List<Image> images = instance.getIconImages();
                 Image img = images.isEmpty() ? null : images.get(0);
-                if (img != null) presenter.setFrameIcon(new ImageIcon(img));
+                if (img != null) presenter.setFrameIcon(ImageUtilities.image2Icon(img));
                 for (Component c : instance.getComponents()) presenter.add(c);
                 presenter.pack();
                 return presenter;

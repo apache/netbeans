@@ -50,14 +50,15 @@ import org.openide.util.Exceptions;
  */
 public class OccurrencesMarkProvider extends MarkProvider {
     
-    private static Map<Document, Reference<OccurrencesMarkProvider>> providers = new WeakHashMap<Document, Reference<OccurrencesMarkProvider>>();
+    private static final Map<Document, Reference<OccurrencesMarkProvider>> providers = new WeakHashMap<>();
     
     public static synchronized OccurrencesMarkProvider get(Document doc) {
         Reference<OccurrencesMarkProvider> ref = providers.get(doc);
         OccurrencesMarkProvider p = ref != null ? ref.get() : null;
         
         if (p == null) {
-            providers.put(doc, new WeakReference(p = new OccurrencesMarkProvider()));
+            p = new OccurrencesMarkProvider();
+            providers.put(doc, new WeakReference(p));
         }
         
         return p;
@@ -74,6 +75,7 @@ public class OccurrencesMarkProvider extends MarkProvider {
         joint = Collections.emptyList();
     }
     
+    @Override
     public synchronized List getMarks() {
         return joint;
     }
@@ -83,14 +85,16 @@ public class OccurrencesMarkProvider extends MarkProvider {
         List<Mark> nue;
         
         synchronized (this) {
-            semantic = new ArrayList<Mark>(s);
+            semantic = new ArrayList<>(s);
             
             old = joint;
             
-            nue = joint = new ArrayList<Mark>();
+            nue = new ArrayList<>();
             
-            joint.addAll(semantic);
-            joint.addAll(occurrences);
+            nue.addAll(semantic);
+            nue.addAll(occurrences);
+
+            joint = nue;
         }
         
         //#85919: fire outside the lock:
@@ -102,14 +106,16 @@ public class OccurrencesMarkProvider extends MarkProvider {
         List<Mark> nue;
         
         synchronized (this) {
-            occurrences = new ArrayList<Mark>(s);
+            occurrences = new ArrayList<>(s);
             
             old = joint;
             
-            nue = joint = new ArrayList<Mark>();
+            nue = new ArrayList<>();
             
-            joint.addAll(semantic);
-            joint.addAll(occurrences);
+            nue.addAll(semantic);
+            nue.addAll(occurrences);
+
+            joint = nue;
         }
         
         //#85919: fire outside the lock:
@@ -118,21 +124,19 @@ public class OccurrencesMarkProvider extends MarkProvider {
     
     //public static Collection<Mark> createMarks(final Document doc, final List<int[]> bag, final Color color, final String tooltip) {
     public static Collection<Mark> createMarks(final Document doc, final List<OffsetRange> bag, final Color color, final String tooltip) {
-        final List<Mark> result = new LinkedList<Mark>();
+        final List<Mark> result = new LinkedList<>();
         
-        doc.render(new Runnable() {
-            public void run() {
-                //for (int[] span : bag) {
-                for (OffsetRange span : bag) {
-                    try {
-                        //if (span[0] < doc.getLength()) {
-                        if (span.getStart() < doc.getLength()) {
-                            //result.add(new MarkImpl(doc, doc.createPosition(span[0]), color, tooltip));
-                            result.add(new MarkImpl(doc, doc.createPosition(span.getStart()), color, tooltip));
-                        }
-                    } catch (BadLocationException ex) {
-                        Exceptions.printStackTrace(ex);
+        doc.render(() -> {
+            //for (int[] span : bag) {
+            for (OffsetRange span : bag) {
+                try {
+                    //if (span[0] < doc.getLength()) {
+                    if (span.getStart() < doc.getLength()) {
+                        //result.add(new MarkImpl(doc, doc.createPosition(span[0]), color, tooltip));
+                        result.add(new MarkImpl(doc, doc.createPosition(span.getStart()), color, tooltip));
                     }
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
         });
@@ -140,45 +144,38 @@ public class OccurrencesMarkProvider extends MarkProvider {
         return result;
     }
     
-    private static final class MarkImpl implements Mark {
+    private static final record MarkImpl(Document doc, Position startOffset, Color color, String tooltip) implements Mark {
 
-        private Document doc;
-        private Position startOffset;
-        private Color color;
-        private String tooltip;
-
-        public MarkImpl(Document doc, Position startOffset, Color color, String tooltip) {
-            this.doc = doc;
-            this.startOffset = startOffset;
-            this.color = color;
-            this.tooltip = tooltip;
-        }
-
+        @Override
         public int getType() {
             return TYPE_ERROR_LIKE;
         }
 
+        @Override
         public Status getStatus() {
             return Status.STATUS_OK;
         }
 
+        @Override
         public int getPriority() {
             return PRIORITY_DEFAULT;
         }
 
+        @Override
         public Color getEnhancedColor() {
             return color;
         }
 
+        @Override
         public int[] getAssignedLines() {
             int line = NbDocument.findLineNumber((StyledDocument) doc, startOffset.getOffset());
             
             return new int[] {line, line};
         }
 
+        @Override
         public String getShortDescription() {
             return tooltip;
         }
-        
     }
 }

@@ -1,0 +1,10 @@
+[[838,839]-Syntax error
+ unexpected:	)
+ after:	)
+ expected:	->, ?->, {, ::, [, (] 838-839:Syntax error
+ unexpected:	)
+ after:	)
+ expected:	->, ?->, {, ::, [, (
+[[839,840]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	;] 839-840:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	;

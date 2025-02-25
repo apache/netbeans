@@ -100,7 +100,7 @@ public final class TransferFilesChooserVisual extends JPanel {
                 default:
                     throw new IllegalStateException("Unknown transfer type: " + transferType);
             }
-            warningLabel.setIcon(new ImageIcon(ImageUtilities.loadImage(INFO_ICON, false)));
+            warningLabel.setIcon(ImageUtilities.loadIcon(INFO_ICON));
             warningLabel.setText(NbBundle.getMessage(TransferFilesChooserVisual.class, msgKey));
         }
     }

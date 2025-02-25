@@ -1,0 +1,20 @@
+    abstract function abstractClassMethod(): void {} // method error class
+                      -------------------
+HINT:Abstract method "abstractClassMethod" cannot contain body
+FIX:Remove body of the method: abstractClassMethod
+    abstract public function abstractPublicClassMethod(): void {} // method error class
+                             -------------------------
+HINT:Abstract method "abstractPublicClassMethod" cannot contain body
+FIX:Remove body of the method: abstractPublicClassMethod
+    abstract protected function abstractProtectedClassMethod(): void {} // method error class
+                                ----------------------------
+HINT:Abstract method "abstractProtectedClassMethod" cannot contain body
+FIX:Remove body of the method: abstractProtectedClassMethod
+    abstract private function abstractPrivateClassMethod(): void {} // method error class
+                              --------------------------
+HINT:Abstract method "abstractPrivateClassMethod" cannot contain body
+FIX:Remove body of the method: abstractPrivateClassMethod
+    abstract private function abstractPrivateClassMethod2(): void; // method error class
+                              ---------------------------
+HINT:Abstract method "abstractPrivateClassMethod2" cannot be declared private
+FIX:Remove modifier: private

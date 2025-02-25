@@ -1,6 +1,0 @@
-Code completion result for source line:
-println new URL("http://google.com").getT|
-(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-------------------------------------
-METHOD     getText()                                  String
-METHOD     getText(String)                            String

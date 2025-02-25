@@ -1,0 +1,5 @@
+Code completion result for source line:
+protected(set) str|ing|int $protectedSet1 = 1, $protectedSet2 = 1; // prop
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    string                                     null

@@ -1,0 +1,22 @@
+Code completion result for source line:
+$this->|publicPrivateSet; // test: only public and protected (child class)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     test()                          [PUBLIC]   ChildClass
+VARIABLE   Bar publicPrivateSet            [PUBLIC]   ParentClass
+VARIABLE   Bar publicPrivateSetTrait       [PUBLIC]   TestTrait
+VARIABLE   Bar publicProtectedSet          [PUBLIC]   ParentClass
+VARIABLE   Bar publicProtectedSetTrait     [PUBLIC]   TestTrait
+VARIABLE   Bar|(ParentClass&Foo) finalPub  [PUBLIC]   ParentClass
+VARIABLE   Bar|(ParentClass&Foo) finalPub  [PUBLIC]   TestTrait
+VARIABLE   Bar|string iPublicProtectedSet  [PUBLIC]   ParentClass
+VARIABLE   Bar|string iPublicProtectedSet  [PUBLIC]   TestTrait
+VARIABLE   Bar|string iPublicProtectedSet  [PUBLIC]   ParentClass
+VARIABLE   Bar|string iPublicProtectedSet  [PUBLIC]   TestTrait
+VARIABLE   Foo iPublicPublicSet            [PUBLIC]   ParentClass
+VARIABLE   Foo iPublicPublicSetTrait       [PUBLIC]   TestTrait
+VARIABLE   int|Foo finalProtectedPrivateS  [PROTECTE  ParentClass
+VARIABLE   int|Foo finalProtectedPrivateS  [PROTECTE  TestTrait
+VARIABLE   int|Foo protectedPrivateSet     [PROTECTE  ParentClass
+VARIABLE   int|Foo protectedPrivateSetTra  [PROTECTE  TestTrait
+VARIABLE   string|Foo iPublicPrivateSet    [PUBLIC]   ParentClass
+VARIABLE   string|Foo iPublicPrivateSetTr  [PUBLIC]   TestTrait

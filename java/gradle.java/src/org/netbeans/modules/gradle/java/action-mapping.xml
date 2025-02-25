@@ -21,6 +21,9 @@
 -->
 <!DOCTYPE actions SYSTEM "action-mapping.dtd">
 <actions>
+    <action name="test.parallel">
+        <args>--parallel --rerun-tasks ${taskWithProjects}</args>
+    </action>
     <apply-for plugins="java">
         <action name="test.single">
             <args>"${cleanTestTaskName}" "${testTaskName}" --tests "${selectedClass}"</args>

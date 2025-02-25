@@ -1156,6 +1156,10 @@ public class CommonServerSupport
                             && !getInstance().getContainerPath().isEmpty()) {
                         Path relativePath = Paths.get(getInstance().getContainerPath()).relativize(Paths.get(path));
                         path = Paths.get(getInstance().getHostPath(), relativePath.toString()).toString();
+                    } else if (getInstance().isWSL()) {
+                        path = path.substring(5);  // Remove the "/mnt/" part
+                        path = path.substring(0, 1).toUpperCase() + ":" + path.substring(1);  // Capitalize the first letter (drive letter)
+                        path = path.replace("/", "\\");
                     } else {
                         path = (new File(path)).getAbsolutePath();
                     }

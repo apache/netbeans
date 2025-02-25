@@ -31,15 +31,18 @@ import javax.lang.model.element.TypeElement;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.AnnotationHandler;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.AnnotationModelHelper;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.STEREOTYPE_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.STEREOTYPE_FQN_JAKARTA;
+
 
 /**
  * @author ads
  *
  */
 class NamedStereotypeObjectProvider extends AbstractObjectProvider<NamedStereotype> {
-    
-    NamedStereotypeObjectProvider(AnnotationModelHelper helper){
-        super( StereotypeChecker.STEREOTYPE, helper );
+
+    NamedStereotypeObjectProvider(AnnotationModelHelper helper) {
+        super(List.of(STEREOTYPE_FQN, STEREOTYPE_FQN_JAKARTA), helper);
     }
 
     /* (non-Javadoc)
@@ -50,19 +53,20 @@ class NamedStereotypeObjectProvider extends AbstractObjectProvider<NamedStereoty
             throws InterruptedException
     {
         final List<NamedStereotype> result = new LinkedList<NamedStereotype>();
-        getHelper().getAnnotationScanner().findAnnotations(
-                getAnnotation(), 
-                EnumSet.of(ElementKind.ANNOTATION_TYPE), 
-                new AnnotationHandler() {
-                        @Override
-                        public void handleAnnotation(TypeElement type, 
-                                Element element, AnnotationMirror annotation) 
-                        {
-                            if ( hasNamed( type , getHelper() )) {
-                                result.add(createTypeElement(type));
-                            }
-                        }
-        });
+        for (String annotation : getAnnotation()) {
+            getHelper().getAnnotationScanner().findAnnotations(
+                    annotation,
+                    EnumSet.of(ElementKind.ANNOTATION_TYPE),
+                    new AnnotationHandler() {
+                @Override
+                public void handleAnnotation(TypeElement type,
+                        Element element, AnnotationMirror annotation) {
+                    if (hasNamed(type, getHelper())) {
+                        result.add(createTypeElement(type));
+                    }
+                }
+            });
+        }
         return result;
     }
 
@@ -71,12 +75,13 @@ class NamedStereotypeObjectProvider extends AbstractObjectProvider<NamedStereoty
      */
     @Override
     public List<NamedStereotype> createObjects( TypeElement type ) {
-        if (type.getKind() == ElementKind.ANNOTATION_TYPE &&
-                getHelper().hasAnnotation(type.getAnnotationMirrors(), 
-                getAnnotation())) 
-        {
-            if ( hasNamed(type, getHelper())){
-                return Collections.singletonList(createTypeElement(type));
+        for (String annotation : getAnnotation()) {
+            if (type.getKind() == ElementKind.ANNOTATION_TYPE
+                    && getHelper().hasAnnotation(type.getAnnotationMirrors(),
+                            annotation)) {
+                if (hasNamed(type, getHelper())) {
+                    return Collections.singletonList(createTypeElement(type));
+                }
             }
         }
         return Collections.emptyList();
@@ -91,8 +96,8 @@ class NamedStereotypeObjectProvider extends AbstractObjectProvider<NamedStereoty
     }
 
     static  boolean hasNamed( TypeElement type , AnnotationModelHelper helper ) {
-        if (AnnotationObjectProvider.hasAnnotation(type, 
-                FieldInjectionPointLogic.NAMED_QUALIFIER_ANNOTATION, helper))
+        if (AnnotationObjectProvider.hasAnnotation(type, FieldInjectionPointLogic.NAMED_QUALIFIER_ANNOTATION_JAKARTA, helper)
+                || AnnotationObjectProvider.hasAnnotation(type, FieldInjectionPointLogic.NAMED_QUALIFIER_ANNOTATION, helper))
         {
             return true; 
         }
@@ -101,8 +106,9 @@ class NamedStereotypeObjectProvider extends AbstractObjectProvider<NamedStereoty
         for (AnnotationMirror annotationMirror : stereotypes) {
             TypeElement annotation = (TypeElement)annotationMirror.
                 getAnnotationType().asElement();
-            if (annotation!= null && AnnotationObjectProvider.hasAnnotation(annotation, 
-                    FieldInjectionPointLogic.NAMED_QUALIFIER_ANNOTATION, helper))
+            if (annotation != null
+                    && (AnnotationObjectProvider.hasAnnotation(annotation, FieldInjectionPointLogic.NAMED_QUALIFIER_ANNOTATION_JAKARTA, helper)
+                    || AnnotationObjectProvider.hasAnnotation(annotation, FieldInjectionPointLogic.NAMED_QUALIFIER_ANNOTATION, helper)))
             {
                 return true; 
             }

@@ -1,0 +1,16 @@
+    private(set) function privateSetImplicitPublicMethodError(): void;
+                          -----------------------------------
+HINT:Interface method "privateSetImplicitPublicMethodError" can not be declared private(set)
+FIX:Remove modifier: private(set)
+    protected(set) static function protectedSetImplicitPublicStaticMethodError(): void;
+                                   -------------------------------------------
+HINT:Interface method "protectedSetImplicitPublicStaticMethodError" can not be declared protected(set)
+FIX:Remove modifier: protected(set)
+    public(set) public function publicSetPublicMethodError(): void;
+                                --------------------------
+HINT:Interface method "publicSetPublicMethodError" can not be declared public(set)
+FIX:Remove modifier: public(set)
+    private(set) public static function privateSetPublicStaticMethodError(): void;
+                                        ---------------------------------
+HINT:Interface method "privateSetPublicStaticMethodError" can not be declared private(set)
+FIX:Remove modifier: private(set)

@@ -61,11 +61,8 @@ import org.openide.util.NbBundle;
  */
 class EnableBeansFilter {
 
-    static final String DECORATOR = "javax.decorator.Decorator";            // NOI18N
-
-    static final String EXTENSION = "javax.enterprise.inject.spi.Extension";// NOI18N
-
-    static String SCOPE = "javax.inject.Scope";                             // NOI18N
+    private static final String EXTENSION = "javax.enterprise.inject.spi.Extension";// NOI18N
+    private static final String EXTENSION_JAKARTA = "jakarta.enterprise.inject.spi.Extension";// NOI18N
 
      private final HashSet<String> predefinedBeans;
      {
@@ -95,12 +92,38 @@ class EnableBeansFilter {
          predefinedBeans.add("javax.faces.annotation.ViewMap");//NOI18N
          predefinedBeans.add("javax.faces.context.ExternalContext");//NOI18N
          predefinedBeans.add("javax.faces.context.FacesContext");//NOI18N
+         predefinedBeans.add(EventInjectionPointLogic.EVENT_INTERFACE_JAKARTA);
+         predefinedBeans.add("jakarta.servlet.http.HttpServletRequest");//NOI18N
+         predefinedBeans.add("jakarta.servlet.http.HttpSession");//NOI18N
+         predefinedBeans.add("jakarta.servlet.ServletContext");//NOI18N
+         predefinedBeans.add("jakarta.jms.JMSContext");//NOI18N
+         predefinedBeans.add(AnnotationUtil.INJECTION_POINT_JAKARTA);//NOI18N
+         predefinedBeans.add("jakarta.enterprise.inject.spi.BeanManager");//NOI18N
+         predefinedBeans.add("jakarta.transaction.UserTransaction");//NOI18N
+         predefinedBeans.add("java.security.Principal");//NOI18N
+         predefinedBeans.add("jakarta.validation.ValidatorFactory");//NOI18N
+         predefinedBeans.add("jakarta.faces.application.Application");//NOI18N
+         predefinedBeans.add("jakarta.faces.annotation.ApplicationMap");//NOI18N
+         predefinedBeans.add("jakarta.faces.annotation.FlowMap");//NOI18N
+         predefinedBeans.add("jakarta.faces.annotation.HeaderMap");//NOI18N
+         predefinedBeans.add("jakarta.faces.annotation.HeaderValuesMap");//NOI18N
+         predefinedBeans.add("jakarta.faces.annotation.InitParameterMap");//NOI18N
+         predefinedBeans.add("jakarta.faces.annotation.ManagedProperty");//NOI18N
+         predefinedBeans.add("jakarta.faces.annotation.RequestCookieMap");//NOI18N
+         predefinedBeans.add("jakarta.faces.annotation.RequestMap");//NOI18N
+         predefinedBeans.add("jakarta.faces.annotation.RequestParameterMap");//NOI18N
+         predefinedBeans.add("jakarta.faces.annotation.RequestParameterValuesMap");//NOI18N
+         predefinedBeans.add("jakarta.faces.annotation.SessionMap");//NOI18N
+         predefinedBeans.add("jakarta.faces.annotation.ViewMap");//NOI18N
+         predefinedBeans.add("jakarta.faces.context.ExternalContext");//NOI18N
+         predefinedBeans.add("jakarta.faces.context.FacesContext");//NOI18N
     };
 
      private final HashMap<String, String> predefinedBeanAnnotationPairs;
      {
          predefinedBeanAnnotationPairs = new HashMap<>();
          predefinedBeanAnnotationPairs.put("javax.faces.flow.builder.FlowBuilder","javax.faces.flow.builder.FlowBuilderParameter");//NOI18N
+         predefinedBeanAnnotationPairs.put("jakarta.faces.flow.builder.FlowBuilder","jakarta.faces.flow.builder.FlowBuilderParameter");//NOI18N
      };
 
     EnableBeansFilter(ResultImpl result, WebBeansModelImplementation model ,
@@ -315,15 +338,19 @@ class EnableBeansFilter {
         List<? extends AnnotationMirror> allAnnotations = elements.
             getAllAnnotationMirrors(element);
 
-        if ( modifiers.contains( Modifier.ABSTRACT ) &&
-                !getHelper().hasAnnotation(allAnnotations, DECORATOR ) )
+        if ( modifiers.contains( Modifier.ABSTRACT ) 
+                && !getHelper().hasAnnotation(allAnnotations, AnnotationUtil.DECORATOR )
+                && !getHelper().hasAnnotation(allAnnotations, AnnotationUtil.DECORATOR_JAKARTA ))
         {
             /*
              * If class is abstract it should be Decorator.
              */
             return false;
         }
-        TypeElement extensionElement = elements.getTypeElement( EXTENSION );
+        TypeElement extensionElement = elements.getTypeElement(EXTENSION_JAKARTA);
+        if (extensionElement == null) {
+            extensionElement = elements.getTypeElement(EXTENSION);
+        }
         if ( extensionElement!= null ){
             TypeMirror extensionType = extensionElement.asType();
             /*
@@ -344,8 +371,8 @@ class EnableBeansFilter {
                 foundCtor = true;
                 break;
             }
-            if ( getHelper().hasAnnotation(allAnnotations,
-                    FieldInjectionPointLogic.INJECT_ANNOTATION))
+            if ( getHelper().hasAnnotation(allAnnotations, FieldInjectionPointLogic.INJECT_ANNOTATION)
+                    || getHelper().hasAnnotation(allAnnotations, FieldInjectionPointLogic.INJECT_ANNOTATION_JAKARTA))
             {
                 foundCtor = true;
                 break;
@@ -367,9 +394,9 @@ class EnableBeansFilter {
              * Client proxies are never required for a bean whose
              * scope is a pseudo-scope such as @Dependent.
              */
-            if ( scopeElement == null ||
-                    getHelper().hasAnnotation( elementsUtil.getAllAnnotationMirrors(
-                    scopeElement), SCOPE) )
+            if ( scopeElement == null
+                    || getHelper().hasAnnotation( elementsUtil.getAllAnnotationMirrors(scopeElement), AnnotationUtil.SCOPE_FQN)
+                    || getHelper().hasAnnotation( elementsUtil.getAllAnnotationMirrors(scopeElement), AnnotationUtil.SCOPE_FQN_JAKARTA))
             {
                 return;
             }

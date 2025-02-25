@@ -402,6 +402,20 @@ public class NetbeansBuildActionXpp3Reader {
                     netbeansActionMapping.addProperty( key, value );
                 }
             }
+            else if ( parser.getName().equals( "options" )  )
+            {
+                if ( parsed.contains( "options" ) )
+                {
+                    throw new XmlPullParserException( "Duplicated tag: '" + parser.getName() + "'", parser, null );
+                }
+                parsed.add( "options" );
+                while ( parser.nextTag() == XmlPullParser.START_TAG )
+                {
+                    String key = parser.getName();
+                    String value = parser.nextText().trim();
+                    netbeansActionMapping.addOption(key, value );
+                }
+            }
             else if ( parser.getName().equals( "activatedProfiles" )  )
             {
                 if ( parsed.contains( "activatedProfiles" ) )

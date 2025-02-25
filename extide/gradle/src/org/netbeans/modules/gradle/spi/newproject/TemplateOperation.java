@@ -59,11 +59,12 @@ import org.netbeans.modules.gradle.GradleProjectLoader;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.modules.gradle.api.NbGradleProject;
-import org.netbeans.modules.gradle.api.NbGradleProject.LoadOptions;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.modules.gradle.execute.EscapeProcessingOutputStream;
 import org.netbeans.modules.gradle.execute.GradlePlainEscapeProcessor;
+import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.modules.gradle.spi.GradleSettings;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
@@ -312,6 +313,8 @@ public final class TemplateOperation implements Runnable {
         @Override
         public Set<FileObject> execute() {
             GradleConnector gconn = GradleConnector.newConnector();
+            JavaRuntimeManager.JavaRuntime defaultRuntime = GradleExperimentalSettings.getDefault().getDefaultJavaRuntime();
+
             target.mkdirs();
             InputOutput io = IOProvider.getDefault().getIO(projectName + " (init)", true);
             try (ProjectConnection pconn = gconn.forProjectDirectory(target).connect()) {
@@ -359,7 +362,8 @@ public final class TemplateOperation implements Runnable {
                         OutputStream out = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, false));
                         OutputStream err = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, false))
                 ) {
-                    BuildLauncher gradleInit = pconn.newBuild().forTasks(args.toArray(new String[0]));
+                    BuildLauncher gradleInit = pconn.newBuild().forTasks(args.toArray(String[]::new));
+                    gradleInit.setJavaHome(defaultRuntime.getJavaHome());
                     if (GradleSettings.getDefault().isOffline()) {
                         gradleInit = gradleInit.withArguments("--offline");
                     }
@@ -370,7 +374,7 @@ public final class TemplateOperation implements Runnable {
                 } catch (IOException iox) {
                 }
             } catch (GradleConnectionException | IllegalStateException ex) {
-                Exceptions.printStackTrace(ex);
+                ex.printStackTrace(io.getErr());
             } finally {
                 if (io.getOut() != null) io.getOut().close();
                 if (io.getErr() != null) io.getErr().close();
@@ -444,6 +448,7 @@ public final class TemplateOperation implements Runnable {
                 FileUtil.createFolder(dir);
                 Thread.sleep(200);
             } catch (InterruptedException | IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
             return null;
         }
@@ -479,6 +484,7 @@ public final class TemplateOperation implements Runnable {
                     }
 
                 } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
             return Set.of();
@@ -542,6 +548,7 @@ public final class TemplateOperation implements Runnable {
                         return ret;
                     }
                 } catch (IOException | IllegalArgumentException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
             return null;
@@ -568,6 +575,7 @@ public final class TemplateOperation implements Runnable {
         @Override
         public Set<FileObject> execute() {
             GradleConnector gconn = GradleConnector.newConnector();
+            JavaRuntimeManager.JavaRuntime defaultRuntime = GradleExperimentalSettings.getDefault().getDefaultJavaRuntime();
             try (ProjectConnection pconn = gconn.forProjectDirectory(projectDir).connect()) {
                 List<String> args = new ArrayList<>();
                 args.add("wrapper"); //NOI18N
@@ -575,14 +583,16 @@ public final class TemplateOperation implements Runnable {
                     args.add("--gradle-version"); //NOI18N
                     args.add(version);
                 }
+                BuildLauncher init = pconn.newBuild()
+                        .setJavaHome(defaultRuntime.getJavaHome());
                 if (GradleSettings.getDefault().isOffline()) {
-                    pconn.newBuild().withArguments("--offline").forTasks(args.toArray(new String[0])).run(); //NOI18N
-                } else {
-                    pconn.newBuild().forTasks(args.toArray(new String[0])).run();
+                    init = init.withArguments("--offline");
                 }
+                init.forTasks(args.toArray(String[]::new)).run();
             } catch (GradleConnectionException | IllegalStateException ex) {
                 // Well for some reason we were  not able to load Gradle.
                 // Ignoring that for now
+                Exceptions.printStackTrace(ex);
             }
             gconn.disconnect();
             return null;
@@ -684,7 +694,7 @@ public final class TemplateOperation implements Runnable {
                     DataObject newData = o.createFromTemplate(targetFolder, targetName, tokens);
                     return important ? Set.of(newData.getPrimaryFile()) : null;
                 } catch (IOException ex) {
-
+                    Exceptions.printStackTrace(ex);
                 }
             }
             return null;

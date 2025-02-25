@@ -40,9 +40,15 @@ public class MultiLookupStrategy extends SingleResultLookupStrategy {
     public TypeMirror getType( WebBeansModelImplementation model, 
             DeclaredType parent, VariableElement element ) 
     {
-        return ParameterInjectionPointLogic.getParameterType( 
+        TypeMirror mirror = ParameterInjectionPointLogic.getParameterType(
                 model.getHelper().getCompilationController(), element , parent , 
-                FieldInjectionPointLogic.INSTANCE_INTERFACE);
+                FieldInjectionPointLogic.INSTANCE_INTERFACE_JAKARTA);
+        if (mirror == null) {
+            mirror = ParameterInjectionPointLogic.getParameterType(
+                    model.getHelper().getCompilationController(), element, parent,
+                    FieldInjectionPointLogic.INSTANCE_INTERFACE);
+        }
+        return mirror;
     }
 
     /* (non-Javadoc)
@@ -51,8 +57,13 @@ public class MultiLookupStrategy extends SingleResultLookupStrategy {
     @Override
     public TypeMirror getType( WebBeansModelImplementation model,
             TypeMirror typeMirror ) {
-        return ParameterInjectionPointLogic.getParameterType( 
-                typeMirror , FieldInjectionPointLogic.INSTANCE_INTERFACE );
+        TypeMirror mirror = ParameterInjectionPointLogic.getParameterType(
+                typeMirror, FieldInjectionPointLogic.INSTANCE_INTERFACE_JAKARTA);
+        if (mirror == null) {
+            mirror = ParameterInjectionPointLogic.getParameterType(
+                    typeMirror, FieldInjectionPointLogic.INSTANCE_INTERFACE);
+        }
+        return mirror;
     }
     
     @Override

@@ -856,6 +856,9 @@ public class ServerUtils {
     public static String getDomainPath(final PayaraServer server) {
         String domainName = server.getDomainName();
         String domainsFolder = server.getDomainsFolder();
+        if(domainsFolder == null) {
+            return null;
+        }
         boolean appendSeparator = domainsFolder.lastIndexOf(File.separator)
                 + OsUtils.FILE_SEPARATOR_LENGTH != domainsFolder.length();
         StringBuilder sb = new StringBuilder(domainsFolder.length()

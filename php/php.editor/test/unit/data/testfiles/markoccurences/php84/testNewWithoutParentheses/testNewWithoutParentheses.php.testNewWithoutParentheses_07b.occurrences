@@ -1,0 +1,4 @@
+    public const string |>MARK_OCCURRENCES:PUBLIC_CONST<| = "public const";
+        $example = new Example()::|>MARK_OCCURRENCES:PUBLIC_CON^ST<|;
+new Example()::|>MARK_OCCURRENCES:PUBLIC_CONST<|; // test
+new Example()->returnThis()::|>MARK_OCCURRENCES:PUBLIC_CONST<|; // test

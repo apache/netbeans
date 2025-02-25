@@ -71,7 +71,9 @@ import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
 import org.netbeans.modules.maven.options.MavenSettings;
 import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
+import org.openide.DialogDisplayer;
 import org.openide.LifecycleManager;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.HtmlBrowser;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.execution.ExecutionEngine;
@@ -428,6 +430,9 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         return true;
     }
 
+     @NbBundle.Messages({
+        "MSG_MissingValue=Option: {0} requires value to be present"
+    })
     private static List<String> createMavenExecutionCommand(RunConfig config, Constructor base) {
         List<String> toRet = new ArrayList<>(base.construct());
 
@@ -445,10 +450,29 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 LOGGER.log(Level.FINE, "Could not canonicalize " + basedir, x);
             }
         }
-
+    
         //#164234
         //if maven.bat file is in space containing path, we need to quote with simple quotes.
         String quote = "\"";
+        
+        for (Map.Entry<? extends String, ? extends String> entry : config.getOptions().entrySet()) {
+            String key = entry.getKey();
+            String value = quote2apos(entry.getValue());
+            if (MavenCommandLineOptions.optionRequiresValue(key)) {
+                if (value.isEmpty()) {
+                    DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_MissingValue(key), NotifyDescriptor.WARNING_MESSAGE));
+                    continue;
+                } else if (value.equals("${" + key + "}")) { //NOI18N
+                    continue;
+                }
+            }
+            toRet.add("--" + key);
+            if (value != null && !value.isBlank()) {
+                String s = (Utilities.isWindows() && value.contains(" ") ? quote + value + quote : value); 
+                toRet.add(value);
+            }
+        }
+
         // the command line parameters with space in them need to be quoted and escaped to arrive
         // correctly to the java runtime on windows
         for (Map.Entry<? extends String, ? extends String> entry : config.getProperties().entrySet()) {

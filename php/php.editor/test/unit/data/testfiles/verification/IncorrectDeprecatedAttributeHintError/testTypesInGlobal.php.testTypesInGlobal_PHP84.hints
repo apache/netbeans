@@ -1,0 +1,30 @@
+#[Deprecated]
+  ----------
+HINT:Attribute "Deprecated" cannot target type.
+#[Attr, Deprecated(since: "since", message: "message")]
+        ----------------------------------------------
+HINT:Attribute "Deprecated" cannot target type.
+#[Deprecated]
+  ----------
+HINT:Attribute "Deprecated" cannot target type.
+#[Deprecated]
+  ----------
+HINT:Attribute "Deprecated" cannot target type.
+$anon = new #[Deprecated] class() {
+              ----------
+HINT:Attribute "Deprecated" cannot target type.
+#[\Deprecated, \Attr]
+  -----------
+HINT:Attribute "Deprecated" cannot target type.
+#[\Deprecated]
+  -----------
+HINT:Attribute "Deprecated" cannot target type.
+#[\Deprecated]
+  -----------
+HINT:Attribute "Deprecated" cannot target type.
+#[\Deprecated]
+  -----------
+HINT:Attribute "Deprecated" cannot target type.
+$anon = new #[\Deprecated] class() {
+              -----------
+HINT:Attribute "Deprecated" cannot target type.

@@ -1,0 +1,10 @@
+    final static readonly $finalStaticReadonly1; // error1
+                           --------------------
+HINT:Static property "$finalStaticReadonly1" cannot be readonly
+FIX:Remove modifier: static
+FIX:Remove modifier: readonly
+    final static readonly string $finalStaticReadonly2; // error2
+                                  --------------------
+HINT:Static property "$finalStaticReadonly2" cannot be readonly
+FIX:Remove modifier: static
+FIX:Remove modifier: readonly

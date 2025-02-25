@@ -437,6 +437,15 @@ in methods
     <code>org/netbeans/modules/openide/text/Bundle.properties</code>
     to <code>yes</code> or <code>no</code> in a branding file in your application.
 </api>
+<api name="org.netbeans.modules.openide.text.UserQuestionAnswer" group="branding" type="export" category="devel">
+    Controls handling of UserQuestionExceptions thrown during document I/O by 
+    <a href="@TOP@/org/openide/text/CloneableEditorSupport.html">CloneableEditorSupport</a>
+    Specific classes can be branded to result in 
+    "yes" (reload without asking) or "no" (cancel the re/load operation). If unspecified or set to any other value, the
+    user will be asked the question (this is the default behaviour).
+    <p/>
+    The support is available from version 6.96
+</api>
 </answer>
 
 

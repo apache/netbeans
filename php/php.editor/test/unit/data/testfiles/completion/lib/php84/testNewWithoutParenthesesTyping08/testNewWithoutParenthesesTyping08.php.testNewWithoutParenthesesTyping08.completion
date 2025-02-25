@@ -1,0 +1,6 @@
+Code completion result for source line:
+$example = new Example()::public|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticMethod()            [STATIC]   Example
+VARIABLE   string $publicStaticField       [STATIC]   Example
+CONSTANT   PUBLIC_CONST "public const"     [PUBLIC]   Example

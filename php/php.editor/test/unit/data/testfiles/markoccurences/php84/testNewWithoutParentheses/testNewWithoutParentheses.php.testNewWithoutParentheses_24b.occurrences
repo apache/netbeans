@@ -1,0 +1,45 @@
+class |>MARK_OCCURRENCES:Example<| {
+        $example = new |>MARK_OCCURRENCES:Exam^ple<|()::IMPLICIT_PUBLIC_CONST;
+        $example = new |>MARK_OCCURRENCES:Example<|()::PUBLIC_CONST;
+        $example = new |>MARK_OCCURRENCES:Example<|()::PROTECTED_CONST;
+        $example = new |>MARK_OCCURRENCES:Example<|()::PRIVATE_CONST;
+        $example = new |>MARK_OCCURRENCES:Example<|()->publicField;
+        $example = new |>MARK_OCCURRENCES:Example<|()->protectedField;
+        $example = new |>MARK_OCCURRENCES:Example<|()->privateField;
+        $example = new |>MARK_OCCURRENCES:Example<|()::$publicStaticField;
+        $example = new |>MARK_OCCURRENCES:Example<|()::$protectedStaticField;
+        $example = new |>MARK_OCCURRENCES:Example<|()::$privateStaticField;
+        $example = new |>MARK_OCCURRENCES:Example<|()->publicMethod();
+        $example = new |>MARK_OCCURRENCES:Example<|()->protectedMethod();
+        $example = new |>MARK_OCCURRENCES:Example<|()->privateMethod();
+        $example = new |>MARK_OCCURRENCES:Example<|()::publicStaticMethod();
+        $example = new |>MARK_OCCURRENCES:Example<|()::protectedStaticMethod();
+        $example = new |>MARK_OCCURRENCES:Example<|()::privateStaticMethod();
+        $example = new |>MARK_OCCURRENCES:Example<|()->returnThis()?->privateField;
+        $example = new |>MARK_OCCURRENCES:Example<|()->returnThis()->publicMethod();
+        $example = new |>MARK_OCCURRENCES:Example<|()->returnThis()::$protectedStaticField;
+        $example = new |>MARK_OCCURRENCES:Example<|()?->returnThis()::PRIVATE_CONST;
+        $example = new |>MARK_OCCURRENCES:Example<|()->returnThis()::privateStaticMethod();
+        $example = new |>MARK_OCCURRENCES:Example<|()->test->publicTestField;
+        $example = new |>MARK_OCCURRENCES:Example<|()->test->publicTestMethod();
+        $example = new |>MARK_OCCURRENCES:Example<|()->test::PUBLIC_TEST_CONST;
+        $example = new |>MARK_OCCURRENCES:Example<|()->test::$publicStaticTestField;
+        $example = new |>MARK_OCCURRENCES:Example<|()->test::publicStaticTestMethod();
+new |>MARK_OCCURRENCES:Example<|()->publicField; // test
+new |>MARK_OCCURRENCES:Example<|()::$publicStaticField; // test
+new |>MARK_OCCURRENCES:Example<|()::IMPLICIT_PUBLIC_CONST; // test
+new |>MARK_OCCURRENCES:Example<|()::PUBLIC_CONST; // test
+new |>MARK_OCCURRENCES:Example<|()->publicMethod(); // test
+new |>MARK_OCCURRENCES:Example<|()::publicStaticMethod(); // test
+new |>MARK_OCCURRENCES:Example<|()->returnThis()->publicField; // test
+new |>MARK_OCCURRENCES:Example<|()->returnThis()::$publicStaticField; // test
+new |>MARK_OCCURRENCES:Example<|()->returnThis()::IMPLICIT_PUBLIC_CONST; // test
+new |>MARK_OCCURRENCES:Example<|()->returnThis()::PUBLIC_CONST; // test
+new |>MARK_OCCURRENCES:Example<|()->returnThis()->publicMethod(); // test
+new |>MARK_OCCURRENCES:Example<|()->returnThis()::publicStaticMethod(); // test
+new |>MARK_OCCURRENCES:Example<|()->test->publicTestField; // test
+new |>MARK_OCCURRENCES:Example<|()->test->publicTestMethod(); // test
+new |>MARK_OCCURRENCES:Example<|()->test::PUBLIC_TEST_CONST; // test
+new |>MARK_OCCURRENCES:Example<|()->test::$publicStaticTestField; // test
+new |>MARK_OCCURRENCES:Example<|()->test::publicStaticTestMethod(); // test
+echo new |>MARK_OCCURRENCES:Example<|()->test();

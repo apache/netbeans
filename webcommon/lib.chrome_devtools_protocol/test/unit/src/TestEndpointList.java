@@ -33,6 +33,8 @@ import org.netbeans.lib.chrome_devtools_protocol.RuntimeDomain;
 import org.netbeans.lib.chrome_devtools_protocol.debugger.CallFrame;
 import org.netbeans.lib.chrome_devtools_protocol.debugger.DisableRequest;
 import org.netbeans.lib.chrome_devtools_protocol.debugger.EnableRequest;
+import org.netbeans.lib.chrome_devtools_protocol.debugger.GetScriptSourceRequest;
+import org.netbeans.lib.chrome_devtools_protocol.debugger.SetBreakpointByUrlRequest;
 import org.netbeans.lib.chrome_devtools_protocol.json.Endpoint;
 
 import static org.netbeans.lib.chrome_devtools_protocol.CDTUtil.toNodeUrl;
@@ -47,42 +49,56 @@ public class TestEndpointList {
             h.setLevel(Level.ALL);
         }
         Logger.getLogger(ChromeDevToolsClient.class.getName()).setLevel(Level.FINE);
-        Endpoint[] eps = ChromeDevToolsClient.listEndpoints("127.0.0.1", 9292);
+        Endpoint[] eps = ChromeDevToolsClient.listEndpoints("192.168.101.202", 8888);
         try(ChromeDevToolsClient cdtc = new ChromeDevToolsClient(eps[0].getWebSocketDebuggerUrl())) {
         cdtc.connect();
         DebuggerDomain dbg = cdtc.getDebugger();
         RuntimeDomain rt = cdtc.getRuntime();
-//        dbg.onScriptParsed(sp -> {
-//            if (sp.getUrl().getPath().endsWith("/main.js")) {
-//                GetScriptSourceRequest req = new GetScriptSourceRequest();
-//                req.setScriptId(sp.getScriptId());
-//                dbg.getScriptSource(req).handle((res, thr) -> {
-//                    System.out.printf("############# %s\t%s%n", sp.getScriptId(), sp.getUrl());
-//                    if (thr != null) {
-//                        System.out.println("FAILED: " + thr.getMessage());
-//                    } else {
-//                        System.out.println(res.getScriptSource());
-//                    }
-//                    return null;
-//                });
-//            }
-//        });
-//        dbg.onPaused(p -> {
-//            System.out.printf("+ %s%n", p.getReason());
-//        });
-
-        List<CallFrame>[] callFrames = new List[1];
+        dbg.onScriptParsed(sp -> {
+            if (sp.getUrl().endsWith("/main.js")) {
+                GetScriptSourceRequest req = new GetScriptSourceRequest();
+                req.setScriptId(sp.getScriptId());
+                dbg.getScriptSource(req).handle((res, thr) -> {
+                    System.out.printf("############# %s\t%s%n", sp.getScriptId(), sp.getUrl());
+                    if (thr != null) {
+                        System.out.println("FAILED: " + thr.getMessage());
+                    } else {
+                        System.out.println(res.getScriptSource());
+                    }
+                    return null;
+                });
+            }
+        });
         dbg.onPaused(p -> {
-            callFrames[0] = p.getCallFrames();
+            System.out.printf("+ %s%n", p.getReason());
         });
 
-        File file = new File("/home/matthias/tmp/NodeJsApplication/main.js");
-        URI fileUri = toNodeUrl(file.toURI());
+//        List<CallFrame>[] callFrames = new List[1];
+//        dbg.onPaused(p -> {
+//            callFrames[0] = p.getCallFrames();
+//        });
+
+//        File file = new File("/home/matthias/tmp/NodeJsApplication/main.js");
+//        URI fileUri = toNodeUrl(file.toURI());
 
         CountDownLatch cdl = new CountDownLatch(1);
 
         CompletableFuture.completedStage(null)
                 .thenCompose((x) -> dbg.enable(new EnableRequest()))
+                .thenCompose((x) -> {
+                    SetBreakpointByUrlRequest sbbur = new SetBreakpointByUrlRequest();
+//                    sbbur.setUrl(URI.create("file:///C:/Temp/NodeJsApplication/main.js"));
+//                    sbbur.setUrl(URI.create("file:///C:/Temp/NodeJsApplication/main.js"));
+                    sbbur.setUrlRegex(".*main\\.js");
+                    sbbur.setLineNumber(1);
+                    return dbg.setBreakpointByUrl(sbbur);
+                })
+                .thenCompose((x) -> {
+                    SetBreakpointByUrlRequest sbbur = new SetBreakpointByUrlRequest();
+                    sbbur.setUrl("evalmachine.<anonymous>");
+                    sbbur.setLineNumber(0);
+                    return dbg.setBreakpointByUrl(sbbur);
+                })
 //                .thenCompose((er) -> {
 //                    SetBreakpointByUrlRequest bbur = new SetBreakpointByUrlRequest();
 //                    bbur.setUrl(fileUri);
@@ -92,9 +108,9 @@ public class TestEndpointList {
 //                })
                 .thenCompose((bbur) -> cdtc.getRuntime().runIfWaitingForDebugger())
                 .thenCompose((bbur) -> delay(5, TimeUnit.SECONDS))
-                .thenCompose((bbur) -> cdtc.getDebugger().resume(null))
-                .thenCompose((bbur) -> delay(5, TimeUnit.SECONDS))
-                .thenCompose((bbur) -> cdtc.getDebugger().disable(new DisableRequest()))
+//                .thenCompose((bbur) -> cdtc.getDebugger().resume(null))
+//                .thenCompose((bbur) -> delay(5, TimeUnit.SECONDS))
+//                .thenCompose((bbur) -> cdtc.getDebugger().disable(new DisableRequest()))
 //                .thenCompose((res) -> {
 //                    return cdtc.getDebugger().evaluateOnCallFrame(new EvaluateOnCallFrameRequest(callFrames[0].get(0).getCallFrameId(), "a"));
 //                })
@@ -125,12 +141,18 @@ public class TestEndpointList {
 //                .thenCompose((res) -> {
 //                    return CompletableFuture.completedFuture(null);
 //                })
-//                .thenCompose((bbur) -> {
-//                    return cdtc.getDebugger().resume(null);
-//                })
-//                .thenCompose((res) -> {
-//                    return delay(5, TimeUnit.SECONDS);
-//                })
+                .thenCompose((bbur) -> {
+                    return cdtc.getDebugger().resume(null);
+                })
+                .thenCompose((res) -> {
+                    return delay(5, TimeUnit.SECONDS);
+                })
+                .thenCompose((bbur) -> {
+                    return cdtc.getDebugger().resume(null);
+                })
+                .thenCompose((res) -> {
+                    return delay(20, TimeUnit.SECONDS);
+                })
 //                .thenCompose((bbur) -> {
 //                    return cdtc.getDebugger().resume(null);
 //                })

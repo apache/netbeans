@@ -306,7 +306,7 @@ public class DomPanel extends JPanel implements ExplorerManager.Provider {
             if (image == null) {
                 icon = lookup.lookup(Icon.class);
             } else {
-                icon = new ImageIcon(image);
+                icon = ImageUtilities.image2Icon(image);
             }
             if (icon == null) {
                 BrowserFamilyId id = lookup.lookup(BrowserFamilyId.class);
@@ -315,7 +315,7 @@ public class DomPanel extends JPanel implements ExplorerManager.Provider {
                         if (browser.hasNetBeansIntegration() && (id == browser.getBrowserFamily())) {
                             image = browser.getIconImage(true);
                             if (image != null) {
-                                icon = new ImageIcon(image);
+                                icon = ImageUtilities.image2Icon(image);
                                 break;
                             }
                         }

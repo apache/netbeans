@@ -121,7 +121,7 @@ public final class TomlStructureItem implements StructureItem, ElementHandle {
     @Override
     public ImageIcon getCustomIcon() {
         String iconBase = getIconBase();
-        return new ImageIcon(ImageUtilities.loadImage(iconBase));
+        return ImageUtilities.loadImageIcon(iconBase, false);
     }
 
     private String getIconBase() {

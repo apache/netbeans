@@ -138,6 +138,7 @@ public class TokenFormatter {
         public boolean spaceWithinAttributeBrackets;
         public boolean spaceWithinAttributeDeclParens;
         public boolean spaceWithinTypeCastParens;
+        public boolean spaceWithinOtherParens;
         public boolean spaceBeforeComma;
         public boolean spaceAfterComma;
         public boolean spaceBeforeSemi;
@@ -307,6 +308,7 @@ public class TokenFormatter {
             spaceWithinAttributeBrackets = codeStyle.spaceWithinAttributeBrackets();
             spaceWithinAttributeDeclParens = codeStyle.spaceWithinAttributeDeclParens();
             spaceWithinTypeCastParens = codeStyle.spaceWithinTypeCastParens();
+            spaceWithinOtherParens = codeStyle.spaceWithinOtherParens();
 
             spaceBeforeComma = codeStyle.spaceBeforeComma();
             spaceAfterComma = codeStyle.spaceAfterComma();
@@ -1616,6 +1618,9 @@ public class TokenFormatter {
                                     case WHITESPACE_WITHIN_DNF_TYPE_PARENS:
                                         // change here if we add the option for it
                                         countSpaces = 0;
+                                        break;
+                                    case WHITESPACE_WITHIN_OTHER_PARENS:
+                                        countSpaces = docOptions.spaceWithinOtherParens ? 1 : 0;
                                         break;
                                     case WHITESPACE_WITHIN_DYNAMIC_NAME_BRACES:
                                         // change here if we add the option for it

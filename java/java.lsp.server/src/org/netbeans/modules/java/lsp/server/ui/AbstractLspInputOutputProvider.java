@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.ui;
 
+import org.netbeans.modules.java.lsp.server.protocol.OutputMessage;
 import java.io.CharArrayReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +30,8 @@ import java.util.Set;
 import org.netbeans.api.io.Hyperlink;
 import org.netbeans.api.io.OutputColor;
 import org.netbeans.api.io.ShowOperation;
+import org.netbeans.modules.java.lsp.server.LspServerUtils;
+import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider.LspIO;
 import org.netbeans.spi.io.InputOutputProvider;
 import org.openide.util.Lookup;
@@ -82,14 +85,26 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
 
     @Override
     public final void resetIO(LspIO io) {
+        NbCodeLanguageClient client = io.getClient();
+        if (client != null) {
+            client.resetOutput(io.name);
+        }
     }
 
     @Override
     public final void showIO(LspIO io, Set<ShowOperation> operations) {
+        NbCodeLanguageClient client = io.getClient();
+        if (client != null) {
+            client.showOutput(io.name);
+        }
     }
 
     @Override
     public final void closeIO(LspIO io) {
+        NbCodeLanguageClient client = io.getClient();
+        if (client != null) {
+            client.closeOutput(io.name);
+        }
     }
 
     @Override
@@ -131,6 +146,7 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
     public static final class LspIO {
         private final String name;
         private final IOContext ctx;
+        private final NbCodeLanguageClient client;
         final Lookup lookup;
         final Reader in;
         final LspWriter out;
@@ -164,12 +180,21 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
                 };
             }
             this.in = in;
+            // In case of Run, Debug and Test use IOContext for output. IOContext will end up in the Debug Console
+            if (!(name.startsWith("Run") || name.startsWith("Debug") || name.startsWith("Test"))) { //NOI18N
+                client = LspServerUtils.findLspClient(Lookup.getDefault());
+                if (client != null) {
+                    client.resetOutput(name);
+                }
+            } else {
+                client = null;
+            }
         }
 
         boolean isClosed() {
             return out.closed && err.closed;
         }
-
+        
         private final class LspWriter extends Writer {
             private final boolean stdIO;
             volatile boolean closed;
@@ -181,10 +206,16 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
             @Override
             public void write(char[] cbuf, int off, int len) throws IOException {
                 String chunk = new String(cbuf, off, len);
-                if (stdIO) {
-                    ctx.stdOut(chunk);
+                if (client != null) {
+                    if (len > 0) {
+                        client.writeOutput(new OutputMessage(name, chunk, stdIO));
+                    }
                 } else {
-                    ctx.stdErr(chunk);
+                    if (stdIO) {
+                        ctx.stdOut(chunk);
+                    } else {
+                        ctx.stdErr(chunk);
+                    }
                 }
             }
 
@@ -197,6 +228,13 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
                 closed = true;
             }
         }
+        
+        protected NbCodeLanguageClient getClient() {
+            return client;
+        }
     }
-
+    
+//    private static boolean namedOutput(String name) {
+//        return !(name.startsWith("Run") || name.startsWith("Debug"));
+//    }
 }

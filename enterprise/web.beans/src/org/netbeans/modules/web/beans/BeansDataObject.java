@@ -28,9 +28,7 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
-import org.openide.windows.TopComponent;
 
 @Messages({
     "LBL_Beans_LOADER=Files of Beans"
@@ -38,7 +36,7 @@ import org.openide.windows.TopComponent;
 @MIMEResolver.NamespaceRegistration(
         displayName = "#LBL_Beans_LOADER",
         mimeType = "text/x-beans+xml",
-        elementNS = {"http://xmlns.jcp.org/xml/ns/javaee"},
+        elementNS = {"https://jakarta.ee/xml/ns/jakartaee", "http://xmlns.jcp.org/xml/ns/javaee"},
         position = 799
 )
 @DataObject.Registration(

@@ -164,23 +164,16 @@ public class ManagedBeanIterator implements TemplateWizard.Iterator {
         if (isAnnotate && (Utilities.isJavaEE6Plus(wizard) || (JSFUtils.isJSF20Plus(wm, true) && JSFUtils.isJavaEE5(wizard)))) {
             Map<String, Object> templateProperties = new HashMap<String, Object>();
             String targetName = Templates.getTargetName(wizard);
-            boolean isCdiEnabled = false;
             boolean jakartaJsfPackages;
             if(JSFUtils.isJakartaEE9Plus(wizard)) {
-                org.netbeans.modules.jakarta.web.beans.CdiUtil cdiUtil = project.getLookup().lookup(org.netbeans.modules.jakarta.web.beans.CdiUtil.class);
-                if(cdiUtil != null && cdiUtil.isCdiEnabled()){
-                    isCdiEnabled = true;
-                }
                 templateProperties.put("jakartaJsfPackages", true);
                 jakartaJsfPackages = true;
             } else {
-                org.netbeans.modules.web.beans.CdiUtil cdiUtil = project.getLookup().lookup(org.netbeans.modules.web.beans.CdiUtil.class);
-                if(cdiUtil != null && cdiUtil.isCdiEnabled()){
-                    isCdiEnabled = true;
-                }
                 templateProperties.put("jakartaJsfPackages", false);
                 jakartaJsfPackages = false;
             }
+            org.netbeans.modules.web.beans.CdiUtil cdiUtil = project.getLookup().lookup(org.netbeans.modules.web.beans.CdiUtil.class);
+            boolean isCdiEnabled = cdiUtil != null && cdiUtil.isCdiEnabled();
             if (isCdiEnabled) {
                 templateProperties.put("cdiEnabled", true);
                 templateProperties.put("classAnnotation", "@Named(value=\"" + beanName + "\")");   //NOI18N

@@ -223,4 +223,25 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     public CompletableFuture<Boolean> requestDocumentSave(SaveDocumentRequestParams documentUris) {
         return remote.requestDocumentSave(documentUris);
     }
+
+    @Override
+    public CompletableFuture<Void> writeOutput(OutputMessage lm) {
+        return remote.writeOutput(lm);
+    }
+
+    @Override
+    public CompletableFuture<Void> showOutput(String outputName) {
+        return remote.showOutput(outputName);
+    }
+
+    @Override
+    public CompletableFuture<Void> closeOutput(String outputName) {
+        return remote.closeOutput(outputName);
+    }
+    
+    @Override
+    public CompletableFuture<Void> resetOutput(String outputName) {
+        return remote.resetOutput(outputName);
+    }
+    
 }

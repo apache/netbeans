@@ -51,11 +51,6 @@ export abstract class GuidePanel {
                 localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, this.webviewsFolder))],
             }
         );
-        const iconPath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, "images", "Apache_NetBeans_Logo.png"));
-        this.panel.iconPath = {
-            light: iconPath,
-            dark: iconPath,
-        };
 
         this.disposables.push(
             this.panel.onDidDispose(

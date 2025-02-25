@@ -32,7 +32,6 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
 import org.netbeans.api.java.source.CompilationController;
 
 import org.netbeans.api.java.source.ElementHandle;
@@ -48,12 +47,15 @@ import org.netbeans.modules.web.beans.hints.EditorAnnotationsHelper;
 import org.netbeans.spi.editor.hints.Severity;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INTERCEPTOR;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INTERCEPTOR_JAKARTA;
+
 
 /**
  * @author ads
  *
  */
-public class InterceptedMethodAnalyzer extends AbstractInterceptedElementAnalyzer 
+public class InterceptedMethodAnalyzer extends AbstractInterceptedElementAnalyzer
     implements MethodAnalyzer
 {
 
@@ -76,7 +78,7 @@ public class InterceptedMethodAnalyzer extends AbstractInterceptedElementAnalyze
         }
         if (AnnotationUtil.isLifecycleCallback(element, model.getCompilationController() )) {
             if (hasInterceptorBindings) {
-                result.addNotification( Severity.WARNING, element, model,  
+                result.addNotification( Severity.WARNING, element, model,
                         NbBundle.getMessage(InterceptedMethodAnalyzer.class,
                             "WARN_CallbackInterceptorBinding")); // NOI18N
             }
@@ -88,7 +90,7 @@ public class InterceptedMethodAnalyzer extends AbstractInterceptedElementAnalyze
             List<TypeElement> interceptors = interceptorResult
                     .getResolvedInterceptors();
             AnnotationHelper helper = null;
-            if ( interceptors.size() >0 ){
+            if (!interceptors.isEmpty()) {
                 helper = new AnnotationHelper(model.getCompilationController());
             }
             for (TypeElement interceptor : interceptors) {
@@ -119,9 +121,9 @@ public class InterceptedMethodAnalyzer extends AbstractInterceptedElementAnalyze
         if (cancel.get()) {
             return;
         }
-                
+
         Set<Modifier> modifiers = element.getModifiers();
-        if ( modifiers.contains( Modifier.STATIC ) || 
+        if ( modifiers.contains( Modifier.STATIC ) ||
                 modifiers.contains( Modifier.PRIVATE))
         {
             return;
@@ -136,22 +138,21 @@ public class InterceptedMethodAnalyzer extends AbstractInterceptedElementAnalyze
         }
         if ( hasInterceptorBindings){
             if ( finalMethod ){
-                result.addError(element, model,  
+                result.addError(element, model,
                             NbBundle.getMessage(
                             InterceptedMethodAnalyzer.class,
                         "ERR_FinalInterceptedMethod")); // NOI18N
             }
-            if ( finalClass && !AnnotationUtil.hasAnnotation(parent, 
-                    AnnotationUtil.INTERCEPTOR, model.getCompilationController()))
+            if (finalClass && !AnnotationUtil.hasAnnotation(parent, model, INTERCEPTOR_JAKARTA, INTERCEPTOR))
             {
-                result.addError(element, model,   
+                result.addError(element, model,
                             NbBundle.getMessage(
                             InterceptedMethodAnalyzer.class,
                         "ERR_FinalInterceptedClass")); // NOI18N
             }
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.netbeans.modules.web.beans.analysis.analyzer.AbstractInterceptedElementAnalyzer#getInterceptorBindings(javax.lang.model.element.Element, org.netbeans.modules.web.beans.api.model.WebBeansModel)
      */

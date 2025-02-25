@@ -234,12 +234,9 @@ public final class OpenProjectList {
     }
 
     final Project unwrapProject(Project wrap) {
-        Project[] now = getOpenProjects();
-
         if (wrap instanceof LazyProject) {
-            LazyProject lp = (LazyProject)wrap;
-            for (Project p : now) {
-                if (lp.getProjectDirectory().equals(p.getProjectDirectory())) {
+            for (Project p : getOpenProjects()) {
+                if (wrap.getProjectDirectory().equals(p.getProjectDirectory())) {
                     return p;
                 }
             }
@@ -1236,7 +1233,7 @@ public final class OpenProjectList {
                 //a bit on magic here. We want to do the goup document persistence before notifyClosed in hope of the 
                 // ant projects saving their project data before being closed. (ant ptojects call saveProjct() in the openclose hook.
                 // the caller of this method calls saveAllProjectt() later. 
-                Group.onShutdown(new HashSet<Project>(INSTANCE.openProjects));
+                Group.onShutdown(new LinkedHashSet<>(INSTANCE.openProjects));
                 for (Project p : INSTANCE.openProjects) {                    
                     notifyClosed(p);                    
                 }
@@ -1379,6 +1376,7 @@ public final class OpenProjectList {
             public @Override Boolean run() {
             log(Level.FINER, "already opened: {0} ", openProjects);
             for (Project existing : openProjects) {
+                // TODO An old hack due to broken equals() contract; see https://bz.apache.org/netbeans/show_bug.cgi?id=156536
                 if (p.equals(existing) || existing.equals(p)) {
                     alreadyOpen.set(true);
                     return false;

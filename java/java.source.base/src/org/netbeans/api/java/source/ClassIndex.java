@@ -830,6 +830,8 @@ public final class ClassIndex {
                 if (ci != null) {
                     ci.addClassIndexImplListener(spiListener);
                     queries.add (ci);
+                } else {
+                    spiListener.attachClassIndexManagerListener();
                 }
             }
 	}

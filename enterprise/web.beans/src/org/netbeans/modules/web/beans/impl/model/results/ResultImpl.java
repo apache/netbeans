@@ -41,8 +41,8 @@ import org.netbeans.modules.web.beans.impl.model.WebBeansModelProviderImpl;
  */
 public class ResultImpl extends BaseResult implements DependencyInjectionResult.ResolutionResult {
     
-    private static final String ALTERNATIVE = 
-        "javax.enterprise.inject.Alternative";   // NOI18N
+    private static final String ALTERNATIVE = "javax.enterprise.inject.Alternative";   // NOI18N
+    private static final String ALTERNATIVE_JAKARTA = "jakarta.enterprise.inject.Alternative";   // NOI18N
     
     public ResultImpl( VariableElement var, TypeMirror elementType ,
             Set<TypeElement> declaredTypes, 
@@ -130,7 +130,7 @@ public class ResultImpl extends BaseResult implements DependencyInjectionResult.
     public boolean hasAlternative( Element element ){
         List<? extends AnnotationMirror> annotations = getController().
             getElements().getAllAnnotationMirrors(element);
-        return getHelper().hasAnnotation(annotations, ALTERNATIVE);
+        return getHelper().hasAnnotation(annotations, ALTERNATIVE) || getHelper().hasAnnotation(annotations, ALTERNATIVE_JAKARTA);
     }
     
     AnnotationModelHelper  getHelper(){

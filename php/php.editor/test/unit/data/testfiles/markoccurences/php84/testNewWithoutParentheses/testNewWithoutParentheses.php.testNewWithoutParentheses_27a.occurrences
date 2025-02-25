@@ -1,0 +1,2 @@
+    public static string $|>MARK_OCCURRENCES:publicS^taticField<| = 'public static field'; // anon3
+}::$|>MARK_OCCURRENCES:publicStaticField<|;

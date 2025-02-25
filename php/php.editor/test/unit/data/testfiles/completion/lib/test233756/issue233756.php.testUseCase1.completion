@@ -27,8 +27,14 @@ KEYWORD    const                                      null
 KEYWORD    final                                      null
 KEYWORD    function                                   null
 KEYWORD    private                                    null
+KEYWORD    private(set)                               null
 KEYWORD    protected                                  null
+KEYWORD    protected private(set)                     null
+KEYWORD    protected(set)                             null
 KEYWORD    public                                     null
+KEYWORD    public private(set)                        null
+KEYWORD    public protected(set)                      null
+KEYWORD    public(set)                                null
 KEYWORD    readonly                                   null
 KEYWORD    static                                     null
 KEYWORD    var                                        null

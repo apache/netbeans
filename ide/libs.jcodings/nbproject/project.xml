@@ -29,8 +29,8 @@
                 <subpackages>org.jcodings</subpackages>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jcodings-1.0.18.jar</runtime-relative-path>
-                <binary-origin>external/jcodings-1.0.18.jar</binary-origin>
+                <runtime-relative-path>ext/jcodings-1.0.58.jar</runtime-relative-path>
+                <binary-origin>external/jcodings-1.0.58.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

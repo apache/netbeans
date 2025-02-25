@@ -276,7 +276,7 @@ public class JavadocCompletionCollector implements CompletionCollector {
             }
             if (handle != null) {
                 builder.documentation(JavaCompletionCollector.getDocumentation(doc, offset, handle));
-                builder.additionalTextEdits(JavaCompletionCollector.addImport(doc, offset, handle));
+                builder.additionalTextEdits(JavaCompletionCollector.addImportAndInjectPackageIfNeeded(doc, offset, handle));
             }
             if (isDeprecated) {
                 builder.addTag(Completion.Tag.Deprecated);

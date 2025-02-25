@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,13 +59,14 @@ public class BindingsPanel extends CDIPanel {
     
     private static final long serialVersionUID = 1230555367053797509L;
 
-    static final String NON_BINDING_MEMBER_ANNOTATION =
-        "javax.enterprise.inject.NonBinding";                        // NOI18N
-
     static final String DEFAULT = "Default";                         // NOI18N
 
-    static final String DEFAULT_QUALIFIER_ANNOTATION = 
-        "javax.enterprise.inject."+DEFAULT;                          // NOI18N
+    static final String NON_BINDING_MEMBER_ANNOTATION = "javax.enterprise.inject.NonBinding"; // NOI18N
+    static final String NON_BINDING_MEMBER_ANNOTATION_JAKARTA = "jakarta.enterprise.inject.NonBinding"; // NOI18N
+
+    static final String DEFAULT_QUALIFIER_ANNOTATION = "javax.enterprise.inject."+DEFAULT;  // NOI18N
+    static final String DEFAULT_QUALIFIER_ANNOTATION_JAKARTA = "jakarta.enterprise.inject."+DEFAULT;  // NOI18N
+
 
     public BindingsPanel( final Object[] subject, MetadataModel<WebBeansModel> metaModel,
             WebBeansModel model, JavaHierarchyModel treeModel, Result result )
@@ -236,7 +238,11 @@ public class BindingsPanel extends CDIPanel {
         if ( model.hasImplicitDefaultQualifier(element)){
             fqnBuilder.append('@');
             builder.append('@');
-            fqnBuilder.append(DEFAULT_QUALIFIER_ANNOTATION);
+            if(jakartaNamespace) {
+                fqnBuilder.append(DEFAULT_QUALIFIER_ANNOTATION_JAKARTA);
+            } else {
+                fqnBuilder.append(DEFAULT_QUALIFIER_ANNOTATION);
+            }
             builder.append(DEFAULT);
             fqnBuilder.append(", ");           // NOI18N
             builder.append(", ");           // NOI18N
@@ -304,7 +310,11 @@ public class BindingsPanel extends CDIPanel {
             if ( model.hasImplicitDefaultQualifier(element)){
                 builder.append('@');
                 if (showFqns() ){
-                    builder.append(DEFAULT_QUALIFIER_ANNOTATION);
+                    if(jakartaNamespace) {
+                        builder.append(DEFAULT_QUALIFIER_ANNOTATION_JAKARTA);
+                    } else {
+                        builder.append(DEFAULT_QUALIFIER_ANNOTATION);
+                    }
                 }
                 else {
                     builder.append(DEFAULT);
@@ -386,7 +396,28 @@ public class BindingsPanel extends CDIPanel {
         if ( context == null ){
             return;
         }
-        
+
+        // Guess right namespace from subject
+        AtomicBoolean foundJakartaNamespace = new AtomicBoolean();
+        AtomicBoolean foundJavaxNamespace = new AtomicBoolean();
+        if (subject[0] instanceof ElementHandle) {
+            Element subjectElement = ((ElementHandle<?>) subject[0]).resolve(
+                    model.getCompilationController());
+            subjectElement.getAnnotationMirrors().forEach(annotationMirror -> {
+                Element annotationElement = annotationMirror.getAnnotationType().asElement();
+                if(annotationElement instanceof TypeElement) {
+                    String annotationName = ((TypeElement) annotationElement).getQualifiedName().toString();
+                    if(annotationName.startsWith("javax.inject") || annotationName.startsWith("javax.enterprise")) {
+                        foundJavaxNamespace.set(true);
+                    }
+                    if(annotationName.startsWith("jakarta.inject") || annotationName.startsWith("jakarta.enterprise")) {
+                        foundJakartaNamespace.set(true);
+                    }
+                }
+            });
+        }
+        jakartaNamespace = foundJakartaNamespace.get() || !foundJavaxNamespace.get();
+
         myShortElementName = new StringBuilder();
         myFqnElementName = new StringBuilder();
         setContextElement(context, model.getCompilationController());
@@ -413,9 +444,8 @@ public class BindingsPanel extends CDIPanel {
             for (AnnotationMirror annotationMirror : annotationMirrors) {
                 DeclaredType annotationType = annotationMirror.getAnnotationType();
                 Element element = annotationType.asElement();
-                if ( ( element instanceof TypeElement ) && 
-                        ((TypeElement)element).getQualifiedName().
-                        contentEquals(NON_BINDING_MEMBER_ANNOTATION))
+                if ((element instanceof TypeElement) && (((TypeElement) element).getQualifiedName().contentEquals(NON_BINDING_MEMBER_ANNOTATION)
+                        || ((TypeElement) element).getQualifiedName().contentEquals(NON_BINDING_MEMBER_ANNOTATION_JAKARTA)))
                 {
                     nonBinding = true;
                     break;
@@ -485,6 +515,8 @@ public class BindingsPanel extends CDIPanel {
     private String myFqnBindings;
     private String myShortBindings;
     
+    private boolean jakartaNamespace = true;
+
     private MetadataModel<WebBeansModel> myModel;
     
     private Result myResult;

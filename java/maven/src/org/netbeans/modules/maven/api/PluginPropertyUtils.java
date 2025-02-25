@@ -26,6 +26,8 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import org.apache.maven.artifact.Artifact;
@@ -39,6 +41,7 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.InputLocation;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
@@ -613,8 +616,10 @@ public class PluginPropertyUtils {
         
         private final String multiPropertyName;
         private final String filterType;
+        private final DependencyManagement dependencyManagement;
 
-        public DependencyListBuilder(String multiPropertyName, String filterType) {
+        public DependencyListBuilder(DependencyManagement dependencyManagement, String multiPropertyName, String filterType) {
+            this.dependencyManagement = dependencyManagement;
             this.multiPropertyName = multiPropertyName;
             this.filterType = filterType;
         }
@@ -667,6 +672,22 @@ public class PluginPropertyUtils {
                 if (s != null) {
                     item.setScope(s.getValue());
                     item.setLocation(PROP_SCOPE, (InputLocation)s.getInputLocation());
+                }
+                if (item.getVersion() == null && dependencyManagement != null && dependencyManagement.getDependencies() != null) {
+                    dependencyManagement
+                            .getDependencies()
+                            .stream()
+                            .filter(d -> {
+                                return Objects.equals(item.getGroupId(), d.getGroupId())
+                                        && Objects.equals(item.getArtifactId(), d.getArtifactId())
+                                        && Objects.equals(item.getClassifier(), d.getClassifier())
+                                        && Objects.equals(item.getType(), d.getType());
+                            })
+                            .findFirst()
+                            .ifPresent(d -> {
+                                item.setVersion(d.getVersion());
+                                item.setLocation(PROP_VERSION, d.getLocation(PROP_VERSION));
+                            });
                 }
                 coords.add(item);
             }
@@ -793,7 +814,7 @@ public class PluginPropertyUtils {
         }
         
         MavenProject mavenProject = projectImpl.getOriginalMavenProject();
-        DependencyListBuilder bld = new DependencyListBuilder(query.getPathProperty(), query.getArtifactType());
+        DependencyListBuilder bld = new DependencyListBuilder(mavenProject.getDependencyManagement(), query.getPathProperty(), query.getArtifactType());
         List<Dependency> coordinates = PluginPropertyUtils.getPluginPropertyBuildable(mavenProject, query.getPluginGroupId(), query.getPluginArtifactId(), query.getGoal(), bld);
         if (coordinates == null) {
             return null;
@@ -833,7 +854,7 @@ public class PluginPropertyUtils {
                     artifact = new DefaultArtifact(
                          coord.getGroupId(),
                          coord.getArtifactId(),
-                         "",
+                         (VersionRange) null,
                          coord.getScope() == null ? query.getDefaultScope() : coord.getScope(),
                          coord.getType(),
                          coord.getClassifier(),

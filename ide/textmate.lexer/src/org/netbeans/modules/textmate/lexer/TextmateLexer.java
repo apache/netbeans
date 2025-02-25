@@ -18,14 +18,15 @@
  */
 package org.netbeans.modules.textmate.lexer;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.tm4e.core.grammar.IGrammar;
+import org.eclipse.tm4e.core.grammar.IStateStack;
 import org.eclipse.tm4e.core.grammar.IToken;
 import org.eclipse.tm4e.core.grammar.ITokenizeLineResult;
-import org.eclipse.tm4e.core.grammar.StackElement;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerInput;
@@ -42,7 +43,7 @@ public class TextmateLexer implements Lexer<TextmateTokenId>{
     private int currentOffset;
     private List<IToken> lineTokens;
     private int currentIdx;
-    private StackElement state;
+    private IStateStack state;
     private boolean forceReadLine;
 
     public TextmateLexer(LexerInput li, Object state, TokenFactory<TextmateTokenId> factory, IGrammar grammar) {
@@ -58,7 +59,7 @@ public class TextmateLexer implements Lexer<TextmateTokenId>{
             this.state = istate.state;
             this.forceReadLine = true;
         } else {
-            this.state = (StackElement) state;
+            this.state = (IStateStack) state;
         }
     }
 
@@ -72,7 +73,7 @@ public class TextmateLexer implements Lexer<TextmateTokenId>{
                 if (li.readLength() != 0) {
                     lineLen = li.readText().length();
                     currentOffset = 0;
-                    ITokenizeLineResult tokenized = grammar.tokenizeLine(li.readText().toString(), state);
+                    ITokenizeLineResult<IToken[]> tokenized = grammar.tokenizeLine(li.readText().toString(), state, Duration.ofMinutes(1));
                     lineTokens = new ArrayList<>(Arrays.asList(tokenized.getTokens()));
                     currentIdx = 0;
                     state = tokenized.getRuleStack();
@@ -124,9 +125,9 @@ public class TextmateLexer implements Lexer<TextmateTokenId>{
         private int currentOffset;
         private List<IToken> lineTokens;
         private int currentIdx;
-        private StackElement state;
+        private IStateStack state;
 
-        public IntralineState(int lineLen, int currentOffset, List<IToken> lineTokens, int currentIdx, StackElement state) {
+        public IntralineState(int lineLen, int currentOffset, List<IToken> lineTokens, int currentIdx, IStateStack state) {
             this.lineLen = lineLen;
             this.currentOffset = currentOffset;
             this.lineTokens = lineTokens;

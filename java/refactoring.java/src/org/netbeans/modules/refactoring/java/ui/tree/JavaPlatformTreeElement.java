@@ -41,7 +41,7 @@ public class JavaPlatformTreeElement implements TreeElement {
     JavaPlatformTreeElement(JavaPlatform platform) {
         this.platform = platform;
 
-        icon = new ImageIcon(ImageUtilities.loadImage(PLATFORM_ICON));
+        icon = ImageUtilities.loadIcon(PLATFORM_ICON);
         displayName = platform.getDisplayName();
     }
 

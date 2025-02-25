@@ -42,22 +42,21 @@ public final class Icons {
     }
     
     public static Icon getCompletionIcon(CompletionItemKind completionKind) {
-        Image img = null;
+        Icon icon = null;
 
         if (completionKind != null) {
-            img = ImageUtilities.loadImage(ICON_BASE + completionKind.name().toLowerCase(Locale.US) + PNG_EXTENSION);
+            icon = ImageUtilities.loadIcon(ICON_BASE + completionKind.name().toLowerCase(Locale.US) + PNG_EXTENSION);
 
-            if (img == null) {
-                img = ImageUtilities.loadImage(ICON_BASE + completionKind.name().toLowerCase(Locale.US) + GIF_EXTENSION);
+            if (icon == null) {
+                icon = ImageUtilities.loadIcon(ICON_BASE + completionKind.name().toLowerCase(Locale.US) + GIF_EXTENSION);
             }
         }
         
-        if (img == null) {
-            img = ImageUtilities.loadImage(ICON_BASE + "variable" + GIF_EXTENSION);
+        if (icon == null) {
+            icon = ImageUtilities.loadIcon(ICON_BASE + "variable" + GIF_EXTENSION);
         }
         
-	return img == null ? null : new ImageIcon (img);
-        
+        return icon;
     }
     
     public static String getSymbolIconBase(Enum<?> symbolKind) {

@@ -94,7 +94,7 @@ final class NamespaceScopeImpl extends ScopeImpl implements NamespaceScope, Vari
             qualifiedReturnType = VariousUtils.qualifyTypeNames(VariousUtils.getReturnType(program, node), returnType.getStartOffset(), this);
         }
         FunctionScopeImpl retval = new FunctionScopeImpl(this, FunctionDeclarationInfo.create(program, node),
-                qualifiedReturnType, VariousUtils.isDeprecatedFromPHPDoc(program, node));
+                qualifiedReturnType, VariousUtils.isDeprecated(getFileScope(), program, node));
         return retval;
     }
 

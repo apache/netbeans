@@ -1,0 +1,20 @@
+|-DeprecatedTest1 [169, 211] : ESCAPED{DeprecatedTest1}
+|--test [196, 211] : ESCAPED{test}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-DeprecatedTest2 [223, 1616] : ESCAPED{DeprecatedTest2}
+|--Deprecated [245, 255] : ESCAPED{Deprecated}
+|--deprecated [281, 303] : DEPRECATED{ESCAPED{deprecated}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecated02 [346, 370] : DEPRECATED{ESCAPED{deprecated02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecated03 [422, 446] : DEPRECATED{ESCAPED{deprecated03}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecated04 [475, 499] : ESCAPED{deprecated04}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecatedWithPhpDoc01 [573, 607] : DEPRECATED{ESCAPED{deprecatedWithPhpDoc01}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecatedWithPhpDoc02 [675, 709] : DEPRECATED{ESCAPED{deprecatedWithPhpDoc02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecatedWithParam01 [772, 805] : DEPRECATED{ESCAPED{deprecatedWithParam01}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecatedWithParam02 [884, 917] : DEPRECATED{ESCAPED{deprecatedWithParam02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecatedFQN [943, 968] : DEPRECATED{ESCAPED{deprecatedFQN}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecatedFQN02 [1014, 1041] : DEPRECATED{ESCAPED{deprecatedFQN02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecatedFQN03 [1097, 1124] : DEPRECATED{ESCAPED{deprecatedFQN03}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecatedFQN04 [1155, 1182] : ESCAPED{deprecatedFQN04}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecatedFQNWithPhpDoc01 [1257, 1294] : DEPRECATED{ESCAPED{deprecatedFQNWithPhpDoc01}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecatedFQNWithPhpDoc02 [1363, 1400] : DEPRECATED{ESCAPED{deprecatedFQNWithPhpDoc02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecatedFQNWithParam01 [1464, 1500] : DEPRECATED{ESCAPED{deprecatedFQNWithParam01}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--deprecatedFQNWithParam02 [1580, 1616] : DEPRECATED{ESCAPED{deprecatedFQNWithParam02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>

@@ -27,7 +27,7 @@
   <!ENTITY disallowed-links SYSTEM "disallowed-links.xml">
 ]>
 
-<project name="template" default="die" basedir=".">
+<project name="template" default="die" basedir="." xmlns:if="ant:if">
 
     <import file="../default-properties.xml"/>
 
@@ -233,6 +233,9 @@ cause it to fail.
                 </not>
             </or>
         </condition>
+        <condition property="javadoc23.or.later">
+            <javaversion atleast="23"/>
+        </condition>
         <echo level="verbose">javadoc.up.to.date=${javadoc.up.to.date} javadoc.should.not.be.generated=${javadoc.should.not.be.generated} javadoc.packages=${javadoc.packages}</echo>
     </target>
 
@@ -323,7 +326,7 @@ cause it to fail.
             <arg value="-notimestamp" />
             <!-- codebase has many occurrences of '///' which were never meant to appear in javadoc
                  this disables JDK 23+ "line doc comments" for now  -->
-            <arg value="--disable-line-doc-comments" />
+            <arg value="--disable-line-doc-comments" if:true="${javadoc23.or.later}" />
             <arg value="-Xdoclint:all" />
             <arg value="-Xdoclint:-missing" />
         </javadoc>
@@ -348,6 +351,9 @@ cause it to fail.
             <doctitle>${javadoc.title}&lt;br/&gt;${javadoc.stability.label}</doctitle>
             <header>${javadoc.header}</header>
             <bottom>${javadoc.footer}</bottom>
+            <!-- codebase has many occurrences of '///' which were never meant to appear in javadoc
+                 this disables JDK 23+ "line doc comments" for now  -->
+            <arg value="--disable-line-doc-comments" if:true="${javadoc23.or.later}" />
             <arg value="-Xdoclint:all" />
             <arg value="-Xdoclint:-missing" />
         </javadoc>

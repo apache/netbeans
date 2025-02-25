@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="32" height="32" version="1.1" viewBox="0 0 32 32">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #fff;
+      }
+
+      .st1 {
+        fill: #e44e46;
+      }
+
+      .st2 {
+        opacity: .33;
+      }
+    </style>
+  </defs>
+  <g>
+    <polygon class="st1" points="22.213 1 9.787 1 1 9.787 1 22.213 9.787 31 22.213 31 31 22.213 31 9.787 22.213 1"/>
+    <g class="st2">
+      <path d="M21.799,2l8.201,8.201v11.598l-8.201,8.201h-11.598L2,21.799v-11.598L10.201,2h11.598M22.213,1h-12.426L1,9.787v12.426l8.787,8.787h12.426l8.787-8.787v-12.426L22.213,1h0Z"/>
+    </g>
+  </g>
+  <path class="st0" d="M18.312,23.322c0,.63-.228,1.167-.683,1.612s-.998.667-1.628.667-1.173-.222-1.628-.667-.683-.982-.683-1.612.228-1.173.683-1.628.998-.683,1.628-.683,1.173.228,1.628.683.683.998.683,1.628Z"/>
+  <path class="st0" d="M19.024,7.738c0,.422-.26,1.841-.78,4.257-.52,2.415-.977,4.751-1.37,7.006h-1.843c-.346-2.255-.776-4.59-1.288-7.006s-.768-3.834-.768-4.257c0-.481.284-.887.851-1.216s1.292-.494,2.173-.494,1.606.163,2.173.488.85.733.85,1.223Z"/>
+</svg>

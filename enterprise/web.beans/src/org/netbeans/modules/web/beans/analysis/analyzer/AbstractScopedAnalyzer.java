@@ -90,7 +90,11 @@ public abstract class AbstractScopedAnalyzer  {
     
     protected boolean isPassivatingScope( TypeElement scope, WebBeansModel model ) {
         AnnotationMirror normalScope = AnnotationUtil.getAnnotationMirror(
-                scope, model.getCompilationController(), AnnotationUtil.NORMAL_SCOPE_FQN);
+                scope, model.getCompilationController(), AnnotationUtil.NORMAL_SCOPE_FQN_JAKARTA);
+        if (normalScope == null) {
+            normalScope = AnnotationUtil.getAnnotationMirror(
+                    scope, model.getCompilationController(), AnnotationUtil.NORMAL_SCOPE_FQN);
+        }
         if ( normalScope==null){
             return false;
         }

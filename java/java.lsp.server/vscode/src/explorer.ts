@@ -131,7 +131,10 @@ export class TreeViewService extends vscode.Disposable {
   public async createView(id : string, title? : string, options? : 
       Partial<vscode.TreeViewOptions<any> & { 
           providerInitializer : (provider : CustomizableTreeDataProvider<Visualizer>) => void }
-      >) : Promise<vscode.TreeView<Visualizer>> {
+      >) : Promise<vscode.TreeView<Visualizer> | undefined> {
+    if (!this.client.isRunning()) {
+      return undefined;
+    }
     let tv : ViewInfo | undefined  = this.trees.get(id);
     if (tv) {
       return tv.treeView;
@@ -175,6 +178,9 @@ export class TreeViewService extends vscode.Disposable {
 }
 
   public addNodeChangeListener(node : Visualizer, listener : TreeNodeListener, ...types : NodeChangeType[]) : vscode.Disposable {
+    if (!this.client.isRunning()) {
+      return new vscode.Disposable(() => {});
+    }
     const listenerKey = node.rootId  + ':' + (node.id || '');
     let a = this.listeners.get(listenerKey);
     if (a === undefined) {
@@ -241,6 +247,9 @@ export class TreeViewService extends vscode.Disposable {
    async fetchImageUri(nodeData : NodeInfoRequest.Data) : Promise<vscode.Uri | string | ThemeIcon | undefined> {
     let res : vscode.Uri | string | ThemeIcon | undefined = this.imageUri(nodeData);
 
+    if (!this.client.isRunning()) {
+      return undefined;
+    }
     if (res) {
       return res;
     }
@@ -464,6 +473,9 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
   }
 
   async findTreeItem(toSelect : any) : Promise<Visualizer | undefined> {
+    if (!this.client.isRunning()) {
+      return;
+    }
     let path : number[] = await this.client.sendRequest(NodeInfoRequest.findparams, { 
       selectData : toSelect,
       rootNodeId : Number(this.root.id)
@@ -664,6 +676,9 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
   delayedFire : Set<Visualizer> = new Set<Visualizer>();
 
   async fetchItem(parent : number, n : number) : Promise<Visualizer | undefined> {
+    if (!this.client.isRunning()) {
+      return;
+    }
     let d = await this.client.sendRequest(NodeInfoRequest.info, { nodeId : n });
     if (!d || d?.id < 0) {
       return undefined;
@@ -731,6 +746,9 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
     }
 
     return self.wrap((list) => self.queryVisualizer(e, list, () => {
+        if (!this.client.isRunning()) {
+          return Promise.resolve([]);
+        }
         return this.client.sendRequest(NodeInfoRequest.children, { nodeId : parent.data.id}).then(async (arr) => {
           return collectResults(list, arr, parent);
         });
@@ -894,7 +912,7 @@ export async function createViewProvider(c : NbLanguageClient, id : string) : Pr
  * @param viewTitle title for the new view, optional.
  * @returns promise of the tree view instance.
  */
-export async function createTreeView<T>(c: NbLanguageClient, viewId: string, viewTitle? : string, options? : Partial<vscode.TreeViewOptions<any>>) : Promise<vscode.TreeView<Visualizer>> {
+export async function createTreeView<T>(c: NbLanguageClient, viewId: string, viewTitle? : string, options? : Partial<vscode.TreeViewOptions<any>>) : Promise<vscode.TreeView<Visualizer>|undefined> {
   let ts = c.findTreeViewService();
   return ts.createView(viewId, viewTitle, options);
 }

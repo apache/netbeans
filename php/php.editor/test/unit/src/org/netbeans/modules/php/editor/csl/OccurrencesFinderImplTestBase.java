@@ -63,4 +63,11 @@ public abstract class OccurrencesFinderImplTestBase extends PHPNavTestBase {
         return name;
     }
 
+    protected void checkOccurrences(String caretLine) throws Exception {
+        checkOccurrences(caretLine, true);
+    }
+
+    protected void checkOccurrences(String caretLine, boolean symmetric) throws Exception {
+        checkOccurrences(getTestPath(), caretLine, symmetric);
+    }
 }

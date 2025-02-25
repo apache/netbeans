@@ -193,8 +193,7 @@ public class CompletionProviderImpl implements CompletionProvider {
                         }
                         String sortText = i.getSortText() != null ? i.getSortText() : i.getLabel();
                         CompletionItemKind kind = i.getKind();
-                        Icon ic = Icons.getCompletionIcon(kind);
-                        ImageIcon icon = new ImageIcon(ImageUtilities.icon2Image(ic));
+                        ImageIcon icon = ImageUtilities.icon2ImageIcon(Icons.getCompletionIcon(kind));
                         resultSet.addItem(new org.netbeans.spi.editor.completion.CompletionItem() {
                             @Override
                             public void defaultAction(JTextComponent jtc) {

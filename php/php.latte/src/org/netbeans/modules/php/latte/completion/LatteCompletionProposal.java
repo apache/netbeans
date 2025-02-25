@@ -102,7 +102,7 @@ public abstract class LatteCompletionProposal implements CompletionProposal {
     }
 
     abstract static class MacroCompletionProposal extends LatteCompletionProposal {
-        private static final ImageIcon MACRO_ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/php/latte/resources/macro_cc_icon.png")); //NOI18N
+        private static final ImageIcon MACRO_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/php/latte/resources/macro_cc_icon.png", false); //NOI18N
 
         public MacroCompletionProposal(LatteElement element, CompletionRequest request) {
             super(element, request);
@@ -159,7 +159,7 @@ public abstract class LatteCompletionProposal implements CompletionProposal {
     }
 
     static class HelperCompletionProposal extends LatteCompletionProposal {
-        private static final ImageIcon HELPER_ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/php/latte/resources/helper_cc_icon.png")); //NOI18N
+        private static final ImageIcon HELPER_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/php/latte/resources/helper_cc_icon.png", false); //NOI18N
 
         public HelperCompletionProposal(LatteElement element, CompletionRequest request) {
             super(element, request);
@@ -184,7 +184,7 @@ public abstract class LatteCompletionProposal implements CompletionProposal {
     }
 
     static class KeywordCompletionProposal extends LatteCompletionProposal {
-        private static final ImageIcon KEYWORD_ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/php/latte/resources/latte_cc_icon.png")); //NOI18N
+        private static final ImageIcon KEYWORD_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/php/latte/resources/latte_cc_icon.png", false); //NOI18N
         public KeywordCompletionProposal(LatteElement element, CompletionRequest request) {
             super(element, request);
         }
@@ -301,7 +301,7 @@ public abstract class LatteCompletionProposal implements CompletionProposal {
     }
 
     static class ControlCompletionProposal extends LatteCompletionProposal {
-        private static final ImageIcon CONTROL_ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/php/latte/resources/latte_cc_icon.png")); //NOI18N
+        private static final ImageIcon CONTROL_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/php/latte/resources/latte_cc_icon.png", false); //NOI18N
 
         public ControlCompletionProposal(LatteElement element, CompletionRequest request) {
             super(element, request);

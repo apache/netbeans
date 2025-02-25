@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->privatePriva|teSet; // test: all fields (parent class)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   string privatePrivateSeTraitt   [PRIVATE]  TestTrait
+VARIABLE   string privatePrivateSet        [PRIVATE]  ParentClass

@@ -1,0 +1,2 @@
+    public const string |>MARK_OCCURRENCES:PUBL^IC_CONSTANT<| = 'public constant'; // anon1
+}::|>MARK_OCCURRENCES:PUBLIC_CONSTANT<|;

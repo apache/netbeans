@@ -35,6 +35,20 @@
             <packaging>native-image</packaging>
         </properties>
     </action>
+    <action>
+        <actionName>test.single</actionName>
+        <packagings>
+            <packaging>*</packaging>
+        </packagings>
+        <goals>
+            <goal>io.micronaut.maven:micronaut-maven-plugin:start-testresources-service</goal>
+            <goal>process-test-classes</goal>
+            <goal>surefire:test</goal>
+        </goals>
+        <properties>
+            <test>${packageClassName}</test>
+        </properties>
+    </action>
     
     <profiles>
         <profile>
@@ -49,6 +63,7 @@
                     <goals>
                         <goal>mn:run</goal>
                     </goals>
+                    <reactor>am</reactor>
                     <properties>
                         <exec.vmArgs></exec.vmArgs>
                         <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
@@ -66,6 +81,7 @@
                     <goals>
                         <goal>mn:run</goal>
                     </goals>
+                    <reactor>am</reactor>
                     <properties>
                         <exec.vmArgs></exec.vmArgs>
                         <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>

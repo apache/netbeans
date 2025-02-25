@@ -83,6 +83,21 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="RunConfig-options">
+            <api name="general"/>
+            <summary>RunConfig provides access to Maven options</summary>
+            <version major="2" minor="167"/>
+            <date day="5" month="11" year="2024"/>
+            <author login="petrovic-d"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <p>
+                    RunConfig now provides access to Maven options / flags. Client can decide which
+                    options / flags will be passed to command line.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.maven.api.execute" name="RunConfig"/>
+        </change>
         <change id="pluginconfigpathparams-pathitem-name-null">
             <api name="general"/>
             <summary>Enable using PluginConfigPathParams with null valued pathItemName</summary>

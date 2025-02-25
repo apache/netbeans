@@ -330,6 +330,9 @@ public final class CodeUtils {
             return extractQualifiedName((UnionType) typeName);
         } else if (typeName instanceof IntersectionType) {
             return extractQualifiedName((IntersectionType) typeName);
+        } else if (typeName instanceof ClassInstanceCreation) {
+            // PHP 8.4 new without parentheses new A()->method();
+            return null;
         }
         assert false : typeName.getClass();
         return null;
@@ -897,5 +900,10 @@ public final class CodeUtils {
             }
         }
         return false;
+    }
+
+    public static boolean isTypeDeclaration(ASTNode node) {
+        return node instanceof TypeDeclaration
+                || ((node instanceof ClassInstanceCreation) && ((ClassInstanceCreation) node).isAnonymous());
     }
 }

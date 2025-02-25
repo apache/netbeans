@@ -27,10 +27,31 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrayDimension;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
+import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
+import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
+import org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.ConstantVariable;
+import org.netbeans.modules.php.editor.parser.astnodes.Expression;
+import org.netbeans.modules.php.editor.parser.astnodes.ExpressionArrayAccess;
+import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
+import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
+import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression;
+import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
+import org.netbeans.modules.php.editor.parser.astnodes.ParenthesisExpression;
+import org.netbeans.modules.php.editor.parser.astnodes.Quote;
+import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
+import org.netbeans.modules.php.editor.parser.astnodes.StaticStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation;
+import org.netbeans.modules.php.editor.parser.astnodes.VariableBase;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -103,6 +124,146 @@ public final class PHP83UnhandledError extends UnhandledErrorRule {
                 createError(node.getConstType());
             }
             super.visit(node);
+        }
+
+        @Override
+        public void visit(StaticStatement node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            // static $example = 1, $example2 = $variable;
+            for (Expression expression : node.getExpressions()) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                if (expression instanceof Assignment) {
+                    Assignment assignment = (Assignment) expression;
+                    Expression rightHandSide = assignment.getRightHandSide();
+                    if (!isStaticScalarValueExpression(rightHandSide)) {
+                        createError(node);
+                        break;
+                    }
+                }
+            }
+            super.visit(node);
+        }
+
+        private boolean isStaticScalarValueExpression(Expression expression) {
+            if (expression != null
+                    && !isStaticScalarValue(expression)
+                    && !isStaticOperation(expression)) {
+                return false;
+            }
+            if (isStaticOperation(expression)) {
+                if (expression instanceof InfixExpression) {
+                    InfixExpression infixExpression = (InfixExpression) expression;
+                    if (!isStaticScalarValueExpression(infixExpression.getLeft())
+                            || !isStaticScalarValueExpression(infixExpression.getRight())) {
+                        // e.g. $a + 1; example() * 3; "string" . $string;
+                        return false;
+                    }
+                } else if (expression instanceof UnaryOperation) {
+                    UnaryOperation unaryOperation = (UnaryOperation) expression;
+                    if (!isStaticScalarValueExpression(unaryOperation.getExpression())) {
+                        // e.g. !$variable;
+                        return false;
+                    }
+                } else if (expression instanceof ConditionalExpression) {
+                    ConditionalExpression conditionalExpression = (ConditionalExpression) expression;
+                    if (!isStaticScalarValueExpression(conditionalExpression.getIfTrue())
+                            || !isStaticScalarValueExpression(conditionalExpression.getIfFalse())
+                            || !isStaticScalarValueExpression(conditionalExpression.getCondition())) {
+                        // e.g. $a > 0 ? $a : -$a;
+                        return false;
+                    }
+                } else if (expression instanceof ArrayCreation) {
+                    ArrayCreation arrayCreation = (ArrayCreation) expression;
+                    List<ArrayElement> elements = arrayCreation.getElements();
+                    for (ArrayElement element : elements) {
+                        if (!isStaticScalarValueExpression(element.getKey())
+                                || !isStaticScalarValueExpression(element.getValue())) {
+                            // e.g. ["a" => $variable];
+                            return false;
+                        }
+                    }
+                } else if (expression instanceof ExpressionArrayAccess) {
+                    // e.g. CONSTANT[1]; "string"[2]; [1, 2, 3][0];
+                    // CONSTANT[1][2]; MyClass::CONSTANT[1]; \Foo\CONSTANT[0]; namespace\CONSTANT[0];
+                    ExpressionArrayAccess expressionArrayAccess = (ExpressionArrayAccess) expression;
+                    Expression expr = expressionArrayAccess.getExpression();
+                    ArrayDimension dimension = expressionArrayAccess.getDimension();
+                    if ((!(expr instanceof Identifier) && !isStaticScalarValueExpression(expr)) // C[1]
+                            || !isStaticScalarValueExpression(dimension.getIndex())) {
+                        return false;
+                    }
+                }
+            } else if (isNewExpression(expression)) {
+                ClassInstanceCreation classInstanceCreation = (ClassInstanceCreation) expression;
+                ClassName className = classInstanceCreation.getClassName();
+                if (Type.STATIC.equals(CodeUtils.extractClassName(className))
+                        || !isStaticScalarValueExpression(className.getName())
+                        || (className.getName() instanceof ParenthesisExpression)) {
+                    // e.g. new static; new (Example); new $variable;
+                    return false;
+                }
+                for (Expression param : classInstanceCreation.ctorParams()) {
+                    if (!isStaticScalarValueExpression(param)) {
+                        // e.g. new stdClass($variable);
+                        return false;
+                    }
+                }
+            } else if (expression instanceof FieldAccess) {
+                FieldAccess fieldAccess = (FieldAccess) expression;
+                VariableBase dispatcher = fieldAccess.getDispatcher();
+                // e.g.
+                // OK: C->name; E::Case1->name;
+                if (!(dispatcher instanceof ConstantVariable)
+                        && !(dispatcher instanceof StaticConstantAccess)) {
+                    // NG: $this->field;
+                    return false;
+                }
+            } else if (expression instanceof StaticConstantAccess) {
+                StaticConstantAccess staticConstantAccess = (StaticConstantAccess) expression;
+                Expression constant = staticConstantAccess.getConstant();
+                if (!(constant instanceof Identifier) && !isStaticScalarValueExpression(constant)) {
+                    // e.g. Example::CONSTANT[$index];
+                    return false;
+                }
+            } else if (expression instanceof Quote) {
+                Quote quote = (Quote) expression;
+                for (Expression expr : quote.getExpressions()) {
+                    if (!isStaticScalarValueExpression(expr)) {
+                        // e.g.
+                        // static $example = <<<EOD
+                        // something $variable
+                        // EOD;
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private boolean isStaticScalarValue(Expression expression) {
+            return expression instanceof Scalar
+                    || expression instanceof NamespaceName
+                    || expression instanceof StaticConstantAccess
+                    || expression instanceof FieldAccess
+                    || ((expression instanceof Quote) && ((Quote) expression).getQuoteType() == Quote.Type.HEREDOC)
+                    || isNewExpression(expression);
+        }
+
+        private boolean isNewExpression(Expression expression) {
+            return (expression instanceof ClassInstanceCreation)
+                    && !((ClassInstanceCreation) expression).isAnonymous();
+        }
+
+        private boolean isStaticOperation(Expression expression) {
+            return expression instanceof ExpressionArrayAccess
+                    || expression instanceof ArrayCreation
+                    || expression instanceof InfixExpression
+                    || expression instanceof UnaryOperation
+                    || expression instanceof ConditionalExpression;
         }
 
         private void createError(ASTNode node) {

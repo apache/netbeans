@@ -63,7 +63,8 @@ class DocumentSwitcherTable extends SwitcherTable {
 
     private final JButton btnClose;
     private final Controller controller;
-    private final ProjectColorTabDecorator decorator;
+    private final ProjectColorTabDecorator projectColorTabDecorator;
+    private final FolderNameTabDecorator folderNameDecorator;
     private final ItemBorder ITEM_BORDER = new ItemBorder();
     private final Border SEPARATOR_BORDER = BorderFactory.createEmptyBorder( 2, 2, 0, 5 );
 
@@ -72,9 +73,14 @@ class DocumentSwitcherTable extends SwitcherTable {
         this.controller = controller;
         btnClose = createCloseButton();
         if( Settings.getDefault().isSameProjectSameColor() ) {
-            decorator = new ProjectColorTabDecorator();
+            projectColorTabDecorator = new ProjectColorTabDecorator();
         } else {
-            decorator = null;
+            projectColorTabDecorator = null;
+        }
+        if( Settings.getDefault().isShowFolderName() ) {
+            folderNameDecorator = new FolderNameTabDecorator(this);
+        } else {
+            folderNameDecorator = null;
         }
         ToolTipManager.sharedInstance().registerComponent( this );
     }
@@ -103,6 +109,18 @@ class DocumentSwitcherTable extends SwitcherTable {
                 lbl.setIcon( null );
                 lbl.setText( item.getHtmlName() );
             } else {
+                if(null != folderNameDecorator && null != item) {
+                    TabData tab = item.getTabData();
+                    if (null != tab) {
+                        String decorated = folderNameDecorator.getText(tab);
+                        if (decorated != null) {
+                            if (item.isActive()) {
+                                decorated +=  " ←"; //NOI18N
+                            }
+                            lbl.setText(decorated);
+                        }
+                    }
+                }
                 lbl.setBorder( ITEM_BORDER );
             }
         }
@@ -115,10 +133,10 @@ class DocumentSwitcherTable extends SwitcherTable {
             res.setBackground( renComponent.getBackground() );
             return res;
         }
-        if( null != decorator && null != item && !selected ) {
+        if( null != projectColorTabDecorator && null != item && !selected ) {
             TabData tab = item.getTabData();
             if( null != tab ) {
-                ITEM_BORDER.color = decorator.getBackground( tab, selected);
+                ITEM_BORDER.color = projectColorTabDecorator.getBackground( tab, selected);
             }
         }
         return renComponent;

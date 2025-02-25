@@ -369,7 +369,35 @@ public class GotoDeclarationPHP83Test extends GotoDeclarationTestBase {
         checkDeclaration(getTestPath(), "    public const static A = EnumT^est::Test; // enum", "enum ^EnumTest {");
     }
 
-    public void testTypedClassConstants_01() throws Exception {
-//        checkDeclaration(getTestPath(), "", "");
+    public void testArbitraryStaticVariableInitializers_01a() throws Exception {
+        checkDeclaration(getTestPath(), "        static $example2 = $pa^ram1;", "    public function run(int $^param1) : void {");
+    }
+
+    public void testArbitraryStaticVariableInitializers_01b() throws Exception {
+        checkDeclaration(getTestPath(), "        static $example6 = new stdClass($para^m1);", "    public function run(int $^param1) : void {");
+    }
+
+    public void testArbitraryStaticVariableInitializers_01c() throws Exception {
+        checkDeclaration(getTestPath(), "        static $example9 = $par^am1 <= 100 ? run($param1 + 1) : \"Test $param1\";", "    public function run(int $^param1) : void {");
+    }
+
+    public void testArbitraryStaticVariableInitializers_01d() throws Exception {
+        checkDeclaration(getTestPath(), "        static $example9 = $param1 <= 100 ? run($param^1 + 1) : \"Test $param1\";", "    public function run(int $^param1) : void {");
+    }
+
+    public void testArbitraryStaticVariableInitializers_01e() throws Exception {
+        checkDeclaration(getTestPath(), "        static $example9 = $param1 <= 100 ? run($param1 + 1) : \"Test $par^am1\";", "    public function run(int $^param1) : void {");
+    }
+
+    public void testArbitraryStaticVariableInitializers_02a() throws Exception {
+        checkDeclaration(getTestPath(), "        static $example3 = $this->fie^ld;", "    private int $^field = 1;");
+    }
+
+    public void testArbitraryStaticVariableInitializers_03a() throws Exception {
+        checkDeclaration(getTestPath(), "        static $example4 = $this->meth^od();", "    public function ^method(): int {");
+    }
+
+    public void testArbitraryStaticVariableInitializers_04a() throws Exception {
+        checkDeclaration(getTestPath(), "static $example2 = $varia^ble;", "$^variable = 1;");
     }
 }

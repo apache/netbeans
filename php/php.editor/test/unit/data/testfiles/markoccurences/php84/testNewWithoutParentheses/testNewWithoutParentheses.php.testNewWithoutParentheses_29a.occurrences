@@ -1,0 +1,2 @@
+    public static function |>MARK_OCCURRENCES:publicStaticMetho^d<|(): void {} // anon5
+}::|>MARK_OCCURRENCES:publicStaticMethod<|();

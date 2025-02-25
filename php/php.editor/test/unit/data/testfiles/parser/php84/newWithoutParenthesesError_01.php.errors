@@ -1,0 +1,7 @@
+[[885,893]-Syntax error
+ unexpected:	identifier 'CONSTANT'
+ after:	::
+ expected:	variable, $] 885-893:Syntax error
+ unexpected:	identifier 'CONSTANT'
+ after:	::
+ expected:	variable, $

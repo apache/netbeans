@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.190.0
+#Version 0.192.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -989,6 +989,7 @@ meth public java.lang.Iterable<? extends javax.lang.model.element.Element> getLo
 meth public java.lang.Iterable<? extends javax.lang.model.element.Element> getLocalVars(com.sun.source.tree.Scope,org.netbeans.api.java.source.ElementUtilities$ElementAcceptor)
 meth public java.lang.Iterable<? extends javax.lang.model.element.Element> getMembers(javax.lang.model.type.TypeMirror,org.netbeans.api.java.source.ElementUtilities$ElementAcceptor)
 meth public java.lang.Iterable<? extends javax.lang.model.element.TypeElement> getGlobalTypes(org.netbeans.api.java.source.ElementUtilities$ElementAcceptor)
+meth public java.util.Collection<? extends javax.lang.model.element.Element> getLinkedRecordElements(javax.lang.model.element.Element)
 meth public java.util.List<? extends javax.lang.model.element.ExecutableElement> findOverridableMethods(javax.lang.model.element.TypeElement)
 meth public java.util.List<? extends javax.lang.model.element.ExecutableElement> findUnimplementedMethods(javax.lang.model.element.TypeElement)
 meth public java.util.List<? extends javax.lang.model.element.ExecutableElement> findUnimplementedMethods(javax.lang.model.element.TypeElement,boolean)
@@ -1005,7 +1006,7 @@ meth public javax.lang.model.element.TypeElement enclosingTypeElement(javax.lang
 meth public javax.lang.model.element.TypeElement outermostTypeElement(javax.lang.model.element.Element)
 meth public static java.lang.String getBinaryName(javax.lang.model.element.TypeElement)
 supr java.lang.Object
-hfds ALL_ACCEPTOR,NOT_OVERRIDABLE,ctx,delegate,info
+hfds ALL_ACCEPTOR,LOG,NOT_OVERRIDABLE,ORDINARY_SCOPE_TYPE,ctx,delegate,info
 hcls ElementNameVisitor
 
 CLSS public abstract interface static org.netbeans.api.java.source.ElementUtilities$ElementAcceptor
@@ -1239,6 +1240,7 @@ meth public static boolean isMainClass(java.lang.String,org.netbeans.api.java.so
 meth public static boolean isMainMethod(javax.lang.model.element.ExecutableElement)
 meth public static boolean isScanInProgress()
 meth public static java.lang.Object getDiagnosticParam(javax.tools.Diagnostic<?>,int)
+meth public static java.lang.String classNameFor(org.netbeans.api.java.source.ClasspathInfo,java.lang.String,org.netbeans.spi.project.NestedClass)
 meth public static java.lang.String findSourceFileName(javax.lang.model.element.Element)
 meth public static java.lang.String getModuleName(java.net.URL)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
@@ -1309,6 +1311,8 @@ meth public com.sun.source.doctree.CommentTree Comment(java.lang.String)
 meth public com.sun.source.doctree.DeprecatedTree Deprecated(java.util.List<? extends com.sun.source.doctree.DocTree>)
 meth public com.sun.source.doctree.DocCommentTree DocComment(java.util.List<? extends com.sun.source.doctree.DocTree>,java.util.List<? extends com.sun.source.doctree.DocTree>)
 meth public com.sun.source.doctree.DocCommentTree DocComment(java.util.List<? extends com.sun.source.doctree.DocTree>,java.util.List<? extends com.sun.source.doctree.DocTree>,java.util.List<? extends com.sun.source.doctree.DocTree>)
+meth public com.sun.source.doctree.DocCommentTree MarkdownDocComment(java.util.List<? extends com.sun.source.doctree.DocTree>,java.util.List<? extends com.sun.source.doctree.DocTree>)
+meth public com.sun.source.doctree.DocCommentTree MarkdownDocComment(java.util.List<? extends com.sun.source.doctree.DocTree>,java.util.List<? extends com.sun.source.doctree.DocTree>,java.util.List<? extends com.sun.source.doctree.DocTree>)
 meth public com.sun.source.doctree.DocRootTree DocRoot()
 meth public com.sun.source.doctree.EndElementTree EndElement(java.lang.CharSequence)
 meth public com.sun.source.doctree.EntityTree Entity(java.lang.CharSequence)
@@ -1319,6 +1323,7 @@ meth public com.sun.source.doctree.LinkTree LinkPlain(com.sun.source.doctree.Ref
 meth public com.sun.source.doctree.LiteralTree Code(com.sun.source.doctree.TextTree)
 meth public com.sun.source.doctree.LiteralTree DocLiteral(com.sun.source.doctree.TextTree)
 meth public com.sun.source.doctree.ParamTree Param(boolean,com.sun.source.doctree.IdentifierTree,java.util.List<? extends com.sun.source.doctree.DocTree>)
+meth public com.sun.source.doctree.RawTextTree RawText(java.lang.String)
 meth public com.sun.source.doctree.ReferenceTree Reference(com.sun.source.tree.ExpressionTree,java.lang.CharSequence,java.util.List<? extends com.sun.source.tree.Tree>)
  anno 1 org.netbeans.api.annotations.common.NullAllowed()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
@@ -1550,6 +1555,7 @@ meth public com.sun.source.tree.TypeParameterTree removeTypeParameterBound(com.s
 meth public com.sun.source.tree.UnaryTree Unary(com.sun.source.tree.Tree$Kind,com.sun.source.tree.ExpressionTree)
 meth public com.sun.source.tree.UnionTypeTree UnionType(java.util.List<? extends com.sun.source.tree.Tree>)
 meth public com.sun.source.tree.UsesTree Uses(com.sun.source.tree.ExpressionTree)
+meth public com.sun.source.tree.VariableTree RecordComponent(com.sun.source.tree.ModifiersTree,java.lang.CharSequence,com.sun.source.tree.Tree)
 meth public com.sun.source.tree.VariableTree Variable(com.sun.source.tree.ModifiersTree,java.lang.CharSequence,com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree)
 meth public com.sun.source.tree.VariableTree Variable(javax.lang.model.element.VariableElement,com.sun.source.tree.ExpressionTree)
 meth public com.sun.source.tree.WhileLoopTree WhileLoop(com.sun.source.tree.ExpressionTree,com.sun.source.tree.StatementTree)

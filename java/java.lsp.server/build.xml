@@ -31,7 +31,7 @@
         <configureproxy connectto="https://netbeans.osuosl.org/binaries/" hostProperty="proxyHost" portProperty="proxyPort"/>
         <setproxy proxyhost="${proxyHost}" proxyPort="${proxyPort}"/>
     </target>
-    <target name="build-lsp-server" depends="-set-use-jdk-javac,build,test-init,proxy-setup" description="Prepares NetBeans bits for vscode extensions">
+    <target name="build-lsp-server" depends="-set-use-jdk-javac,build,test-init,proxy-setup" description="Prepares NetBeans bits for VS Code extension">
         <ant dir="nbcode" target="build-zip" inheritall="false" inheritrefs="false" />
         <unzip src="nbcode/dist/nbcode.zip" dest="${lsp.build.dir}/../">
             <globmapper from="nbcode/nb/*" to="nbcode/nbcode/*"/>
@@ -45,10 +45,12 @@
         <chmod file="${lsp.build.dir}/platform/lib/nbexec" perm="u+x"/>
         <chmod file="${lsp.build.dir}/java/maven/bin/mvn" perm="u+x" />
 
-        <property name="3rdparty.modules" value=""/>
+        <!-- Code which adds 3rd party modules into VSNetBeans. Not needed any more, was just prolonging a build. Keeping here if needed in the future. -->
+
+        <!-- <property name="3rdparty.modules" value=""/>
         <autoupdate todir="${lsp.build.dir}/extra" updatecenter="https://netbeans.apache.org/nb/plugins/17/catalog.xml.gz">
             <modules includes="${3rdparty.modules}"/>
-        </autoupdate>
+        </autoupdate> -->
     </target>
     <target name="add-extra-modules" depends="build-lsp-server" if="extra.modules">
         <ant dir="../../nbbuild" target="build-nbms" inheritall="false" inheritrefs="false">

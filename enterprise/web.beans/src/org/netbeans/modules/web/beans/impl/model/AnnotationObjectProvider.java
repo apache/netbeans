@@ -63,15 +63,15 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.ObjectPro
  */
 public class AnnotationObjectProvider implements ObjectProvider<BindingQualifier> {
     
-    private static final String SPECILIZES_ANNOTATION = 
-        "javax.enterprise.inject.Specializes";       // NOI18N
+    private static final String SPECILIZES_ANNOTATION = "javax.enterprise.inject.Specializes"; // NOI18N
+    private static final String SPECILIZES_ANNOTATION_JAKARTA = "jakarta.enterprise.inject.Specializes"; // NOI18N
     
     static final Logger LOGGER = Logger.getLogger(
             AnnotationObjectProvider.class.getName());
 
-    AnnotationObjectProvider( AnnotationModelHelper helper , String annotation) {
+    AnnotationObjectProvider( AnnotationModelHelper helper , List<String> annotation) {
         myHelper = helper;
-        myAnnotationName = annotation;
+        myAnnotationNames = List.copyOf(annotation);
     }
 
     /* (non-Javadoc)
@@ -80,36 +80,35 @@ public class AnnotationObjectProvider implements ObjectProvider<BindingQualifier
     @Override
     public List<BindingQualifier> createInitialObjects() throws InterruptedException {
         final List<BindingQualifier> result = new LinkedList<BindingQualifier>();
-        final Set<TypeElement> set = new HashSet<TypeElement>(); 
-        getHelper().getAnnotationScanner().findAnnotations(getAnnotationName(), 
-                AnnotationScanner.TYPE_KINDS, 
-                new AnnotationHandler() {
-                    @Override
-                    public void handleAnnotation(TypeElement type, 
-                            Element element, AnnotationMirror annotation) 
-                    {
-                        if ( !set.contains( type )){
-                            result.add( new BindingQualifier( getHelper(), type , 
-                                getAnnotationName()));
-                        }
-                        set.add( type );
-                        if ( !getHelper().hasAnnotation( annotation.
-                                getAnnotationType().asElement().
-                                getAnnotationMirrors(), 
-                                Inherited.class.getCanonicalName()))
-                        {
-                            /*
+        final Set<TypeElement> set = new HashSet<TypeElement>();
+        for (String myAnnotationName : myAnnotationNames) {
+            getHelper().getAnnotationScanner().findAnnotations(myAnnotationName,
+                    AnnotationScanner.TYPE_KINDS,
+                    new AnnotationHandler() {
+                @Override
+                public void handleAnnotation(TypeElement type,
+                        Element element, AnnotationMirror annotation) {
+                    if (!set.contains(type)) {
+                        result.add(new BindingQualifier(getHelper(), type, myAnnotationName));
+                    }
+                    set.add(type);
+                    if (!getHelper().hasAnnotation(annotation.
+                            getAnnotationType().asElement().
+                            getAnnotationMirrors(),
+                            Inherited.class.getCanonicalName())) {
+                        /*
                              *  if annotation is inherited then method 
                              *  findAnnotations()
                              *  method will return types with this annotation.
                              *  Otherwise there could be implementors which 
                              *  specialize this type.
-                             */
-                            collectSpecializedImplementors( type , set, result );
-                        }
+                         */
+                        collectSpecializedImplementors(type, set, result, myAnnotationName);
                     }
+                }
 
-        } );
+            });
+        }
         return new ArrayList<BindingQualifier>( result );
     }
 
@@ -122,18 +121,18 @@ public class AnnotationObjectProvider implements ObjectProvider<BindingQualifier
         Map<String, ? extends AnnotationMirror> annotationsByType = 
             getHelper().getAnnotationsByType(getHelper().getCompilationController().
                 getElements().getAllAnnotationMirrors( type ));
-        AnnotationMirror annotationMirror = annotationsByType.get( 
-                getAnnotationName());
-        if (annotationMirror != null ) {
-            result.add( new BindingQualifier(getHelper(), type, getAnnotationName()));
-        }
-        if ( annotationMirror == null || !getHelper().hasAnnotation( annotationMirror.
-                getAnnotationType().asElement().
-                getAnnotationMirrors(), 
-                Inherited.class.getCanonicalName()))
-        {
-            if ( checkSuper( type , getAnnotationName() , getHelper())!= null ){
-                result.add( new BindingQualifier( getHelper(), type, getAnnotationName()) );
+        for (String myAnnotationName : myAnnotationNames) {
+            AnnotationMirror annotationMirror = annotationsByType.get(myAnnotationName);
+            if (annotationMirror != null) {
+                result.add(new BindingQualifier(getHelper(), type, myAnnotationName));
+            }
+            if (annotationMirror == null || !getHelper().hasAnnotation(annotationMirror.
+                    getAnnotationType().asElement().
+                    getAnnotationMirrors(),
+                    Inherited.class.getCanonicalName())) {
+                if (checkSuper(type, myAnnotationName, getHelper()) != null) {
+                    result.add(new BindingQualifier(getHelper(), type, myAnnotationName));
+                }
             }
         }
         return result;
@@ -197,8 +196,8 @@ public class AnnotationObjectProvider implements ObjectProvider<BindingQualifier
 
             @Override
             public boolean visit( TypeElement element ) {
-                if ( FieldInjectionPointLogic.DEFAULT_QUALIFIER_ANNOTATION.equals( 
-                        annotationName))
+                if (FieldInjectionPointLogic.DEFAULT_QUALIFIER_ANNOTATION.equals(annotationName)
+                        || FieldInjectionPointLogic.DEFAULT_QUALIFIER_ANNOTATION_JAKARTA.equals(annotationName))
                 {
                     if ( checkSpecializedDefault( element, helper )){
                         result[0] = element;
@@ -227,20 +226,25 @@ public class AnnotationObjectProvider implements ObjectProvider<BindingQualifier
      * In this case @Default is not "inherited" by child from parents. 
      */
     static boolean checkSpecializedDefault( Element element , AnnotationModelHelper helper){
-        return helper.hasAnnotation( helper.getCompilationController().
-                getElements().getAllAnnotationMirrors(element), 
-                WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION);
+        return helper.hasAnnotation(helper.getCompilationController().
+                getElements().getAllAnnotationMirrors(element),
+                WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION_JAKARTA)
+                || helper.hasAnnotation(helper.getCompilationController().
+                        getElements().getAllAnnotationMirrors(element),
+                        WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION);
     }
     
     static  boolean checkDefault( Element element , AnnotationModelHelper helper){
         Set<String> qualifierNames = getQualifiers(element, helper , false );
-        if ( qualifierNames.contains(
-                WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION))
+        if (qualifierNames.contains(WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION)
+                || qualifierNames.contains(WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION_JAKARTA))
         {
             return true;
         }
         qualifierNames.remove( ParameterInjectionPointLogic.NAMED_QUALIFIER_ANNOTATION);
         qualifierNames.remove( ParameterInjectionPointLogic.ANY_QUALIFIER_ANNOTATION);
+        qualifierNames.remove( ParameterInjectionPointLogic.NAMED_QUALIFIER_ANNOTATION_JAKARTA);
+        qualifierNames.remove( ParameterInjectionPointLogic.ANY_QUALIFIER_ANNOTATION_JAKARTA);
         if ( qualifierNames.size() == 0 ){
             return true;
         }
@@ -298,7 +302,8 @@ public class AnnotationObjectProvider implements ObjectProvider<BindingQualifier
     public static boolean hasSpecializes( Element element , 
             AnnotationModelHelper helper )
     {
-        return hasAnnotation(element , SPECILIZES_ANNOTATION , helper );
+        return hasAnnotation(element, SPECILIZES_ANNOTATION, helper)
+                || hasAnnotation(element, SPECILIZES_ANNOTATION_JAKARTA, helper);
     }
     
     static boolean hasAnnotation( Element element, String annotation, 
@@ -311,16 +316,12 @@ public class AnnotationObjectProvider implements ObjectProvider<BindingQualifier
                 annotation );
     }
     
-    private String getAnnotationName(){
-        return myAnnotationName;
-    }
-    
     private AnnotationModelHelper getHelper(){
         return myHelper;
     }
     
     private void collectSpecializedImplementors( TypeElement type, Set<TypeElement> set, 
-            List<BindingQualifier> bindings ) 
+            List<BindingQualifier> bindings, String annotationName)
     {
         Set<TypeElement> result = new HashSet<TypeElement>();
         Set<TypeElement> toProcess = new HashSet<TypeElement>();
@@ -342,7 +343,7 @@ public class AnnotationObjectProvider implements ObjectProvider<BindingQualifier
             if (!hasSpecializes(derivedElement, getHelper())) {
                 continue;
             }
-            handleSuper(type, derivedElement, bindings, set);
+            handleSuper(type, derivedElement, bindings, set, annotationName);
         }
     }
     
@@ -416,7 +417,8 @@ public class AnnotationObjectProvider implements ObjectProvider<BindingQualifier
     }
 
     private void handleSuper(TypeElement type ,TypeElement child, 
-            List<BindingQualifier> bindings, Set<TypeElement> set) 
+            List<BindingQualifier> bindings, Set<TypeElement> set,
+            String annotationName)
     {
         if ( !getHelper().getCompilationController().getTypes().isAssignable( 
                 child.asType(), type.asType()))
@@ -453,7 +455,7 @@ public class AnnotationObjectProvider implements ObjectProvider<BindingQualifier
                 if (!set.contains(superElement)) {
                     set.add(superElement);
                     bindings.add(new BindingQualifier(getHelper(), superElement,
-                            getAnnotationName()));
+                            annotationName));
                 }
             }
         }
@@ -469,6 +471,6 @@ public class AnnotationObjectProvider implements ObjectProvider<BindingQualifier
     }
     
     private AnnotationModelHelper myHelper;
-    private String myAnnotationName;
+    private List<String> myAnnotationNames;
 
 }

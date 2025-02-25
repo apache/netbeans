@@ -1,9 +1,0 @@
-Code completion result for source line:
-ja|
-(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-------------------------------------
-PACKAGE    java                                       null
-PACKAGE    javax                                      null
-CLASS      JarURLConnection                           null
-CLASS      JavadocAssertionTestBuilder                null
-CLASS      JavadocAssertionTestSuite                  null

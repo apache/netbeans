@@ -22,6 +22,8 @@ package org.netbeans.modules.javascript.cdtdebug.ui.models;
 import java.awt.datatransfer.Transferable;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import org.netbeans.lib.chrome_devtools_protocol.debugger.CallFrame;
 import org.netbeans.modules.javascript.cdtdebug.CDTDebugger;
@@ -189,7 +191,16 @@ public class DebuggingModel extends ViewModelSupport implements TreeModel, Exten
     static String getScriptName(ScriptsHandler scriptsHandler, CallFrame cf) {
         CDTScript script = scriptsHandler.getScript(cf.getLocation().getScriptId());
         if (script != null) {
-            String scriptName = script.getUrl().getPath();
+            String urlString = script.getUrl();
+            String scriptName = urlString;
+            try {
+                URI url = new URI(urlString);
+                if(url.getPath() != null) {
+                    scriptName = url.getPath();
+                }
+            } catch (URISyntaxException ex) {
+                return urlString;
+            }
             if (scriptName == null) {
                 return null;
             }

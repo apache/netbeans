@@ -21,6 +21,7 @@ METHOD     compareTo(Integer)              [PUBLIC]   int
 METHOD     compareTo(Number)                          int
 METHOD     compareUnsigned(int, int)       [STATIC,   int
 METHOD     decode(String)                  [STATIC,   Integer
+METHOD     describeConstable()             [PUBLIC]   Optional<Integer>
 METHOD     div(Character)                             Number
 METHOD     div(Number)                                Number
 METHOD     divideUnsigned(int, int)        [STATIC,   int
@@ -34,8 +35,8 @@ METHOD     every()                                    boolean
 METHOD     every(Closure)                             boolean
 METHOD     find()                                     Object
 METHOD     find(Closure)                              Object
-METHOD     findAll()                                  Collection
-METHOD     findAll(Closure)                           Collection
+METHOD     findAll()                                  List
+METHOD     findAll(Closure)                           List
 METHOD     findIndexOf(Closure)                       int
 METHOD     findIndexOf(int, Closure)                  int
 METHOD     findIndexValues(Closure)                   List
@@ -45,9 +46,8 @@ METHOD     findLastIndexOf(int, Closure)              int
 METHOD     findResult(Closure)                        Object
 METHOD     findResult(Object, Closure)                Object
 METHOD     floatValue()                    [PUBLIC]   float
-METHOD     formatUnsignedInt(int, int, ch  [STATIC]   int
 METHOD     getAt(String)                              Object
-METHOD     getChars(int, int, char[])      [STATIC]   void
+METHOD     getChars(int, int, byte[])      [STATIC]   int
 METHOD     getClass()                      [PUBLIC]   Class<?>
 METHOD     getInteger(String)              [STATIC,   Integer
 METHOD     getInteger(String, Integer)     [STATIC,   Integer
@@ -91,8 +91,10 @@ METHOD     numberAwareCompareTo(Comparabl             int
 METHOD     numberOfLeadingZeros(int)       [STATIC,   int
 METHOD     numberOfTrailingZeros(int)      [STATIC,   int
 METHOD     or(Number)                                 Number
+METHOD     parseInt(CharSequence, int, in  [STATIC,   int
 METHOD     parseInt(String)                [STATIC,   int
 METHOD     parseInt(String, int)           [STATIC,   int
+METHOD     parseUnsignedInt(CharSequence,  [STATIC,   int
 METHOD     parseUnsignedInt(String)        [STATIC,   int
 METHOD     parseUnsignedInt(String, int)   [STATIC,   int
 METHOD     plus(Character)                            Number
@@ -110,6 +112,7 @@ METHOD     println(Object)                            void
 METHOD     println(PrintWriter)                       void
 METHOD     putAt(String, Object)                      void
 METHOD     remainderUnsigned(int, int)     [STATIC,   int
+METHOD     resolveConstantDesc(Lookup)     [PUBLIC]   Integer
 METHOD     respondsTo(String)                         List
 METHOD     respondsTo(String, Object)                 List
 METHOD     reverse(int)                    [STATIC,   int

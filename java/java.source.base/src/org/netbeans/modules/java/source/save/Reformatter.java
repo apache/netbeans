@@ -947,7 +947,7 @@ public class Reformatter implements ReformatTask {
                     }
                     List<? extends Tree> perms = node.getPermitsClause();
                     if (perms != null && !perms.isEmpty()) {
-                        wrapToken(cs.wrapExtendsImplementsKeyword(), 1, EXTENDS); 
+                        wrapToken(cs.wrapExtendsImplementsKeyword(), 1, EXTENDS);
                         wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, perms);
                     }
                 } finally {
@@ -1352,6 +1352,7 @@ public class Reformatter implements ReformatTask {
                 if (!recParams.isEmpty()) {
                     spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
                     wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, recParams);
+                    spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true); // solves #7403
                 }
                 accept(RPAREN);
                 List<? extends Tree> impls = node.getImplementsClause();
@@ -1398,8 +1399,6 @@ public class Reformatter implements ReformatTask {
                                 isFirstMember = false;
                             }
                         }
-
-                        spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
                     }
                 } finally {
                     indent = oldIndent;
@@ -5425,7 +5424,7 @@ public class Reformatter implements ReformatTask {
         }
 
         /**
-         * 
+         *
          * @see <a href="https://docs.oracle.com/en/java/javase/22/docs/specs/javadoc/doc-comment-spec.html#Where%20Tags%20Can%20Be%20Used">for more info on inline tags check documentation here.</a>
          * @return returns true if has inline tag prefix like "{+@tagname"
          */

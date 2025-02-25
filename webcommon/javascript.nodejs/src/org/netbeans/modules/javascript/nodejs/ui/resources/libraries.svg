@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #a99f7f;
+      }
+
+      .st1 {
+        fill: #9099b8;
+      }
+
+      .st2 {
+        fill: #fff;
+      }
+
+      .st3 {
+        fill: #c6a6a6;
+      }
+
+      .st4 {
+        opacity: .33;
+      }
+    </style>
+  </defs>
+  <g>
+    <path class="st1" d="M14.5,11c0-.966.224-1.75.5-1.75v-.25H3l-2,2v4h12l2-2v-.25c-.276,0-.5-.784-.5-1.75Z"/>
+    <path class="st2" d="M14.5,11c0-.966.224-1.75.5-1.75v-.25l-2.5,2v3l.5,1,2-2v-.25c-.276,0-.5-.784-.5-1.75Z"/>
+    <path class="st4" d="M15,9.25v-.25H3l-2,2v4h12l2-2v-.25c-.276,0-.5-.784-.5-1.75s.224-1.75.5-1.75ZM12.586,14H2v-2.5h10.5v-.5H2.414l1-1h10.157c-.047.299-.071.633-.071,1,0,.741.098,1.348.284,1.802l-1.198,1.198Z"/>
+  </g>
+  <g>
+    <path class="st0" d="M15.5,7c0-.966.224-1.75.5-1.75v-.25H4l-2,2v4h12l2-2v-.25c-.276,0-.5-.784-.5-1.75Z"/>
+    <path class="st2" d="M15.5,7c0-.966.224-1.75.5-1.75v-.25l-2.5,2v3l.5,1,2-2v-.25c-.276,0-.5-.784-.5-1.75Z"/>
+    <path class="st4" d="M16,5.25v-.25H4l-2,2v4h12l2-2v-.25c-.276,0-.5-.784-.5-1.75s.224-1.75.5-1.75ZM13.586,10H3v-2.5h10.5v-.5H3.414l1-1h10.157c-.047.299-.071.633-.071,1,0,.741.098,1.348.284,1.802l-1.198,1.198Z"/>
+  </g>
+  <g>
+    <path class="st3" d="M13.5,3c0-.966.224-1.75.5-1.75v-.25H2L0,3v4h12l2-2v-.25c-.276,0-.5-.784-.5-1.75Z"/>
+    <path class="st2" d="M13.5,3c0-.966.224-1.75.5-1.75v-.25l-2.5,2v3l.5,1,2-2v-.25c-.276,0-.5-.784-.5-1.75Z"/>
+    <path class="st4" d="M14,1.25v-.25H2L0,3v4h12l2-2v-.25c-.276,0-.5-.784-.5-1.75s.224-1.75.5-1.75ZM11.586,6H1v-2.5h10.5v-.5H1.414l1-1h10.157c-.047.299-.071.633-.071,1,0,.741.098,1.348.284,1.802l-1.198,1.198Z"/>
+  </g>
+</svg>

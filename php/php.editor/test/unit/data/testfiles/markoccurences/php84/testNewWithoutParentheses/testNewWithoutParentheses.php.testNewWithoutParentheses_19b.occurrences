@@ -1,0 +1,2 @@
+        $example = new Example()->|>MARK_OCCURRENCES:protectedMethod<|();
+    protected function |>MARK_OCCURRENCES:protectedMet^hod<|(): string {

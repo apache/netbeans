@@ -3,3 +3,4 @@ privat|e $afterDocComment = 3;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 KEYWORD    private                                    null
+KEYWORD    private(set)                               null

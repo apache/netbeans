@@ -246,7 +246,7 @@ final class MainImpl extends Object {
             if (r == Integer.MIN_VALUE) {
                 r = 0;
             }
-            TopSecurityManager.exit(r);
+            NbExit.exit(r);
         }
     }
 

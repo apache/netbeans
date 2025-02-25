@@ -20,12 +20,15 @@ METHOD     startsWith(String, int)         [PUBLIC]   boolean
 METHOD     startsWithAny(CharSequence[])              boolean
 METHOD     startsWithIgnoreCase(CharSeque             boolean
 METHOD     stream()                                   Stream
-METHOD     stripIndent()                              String
+METHOD     strip()                         [PUBLIC]   String
+METHOD     stripIndent()                   [PUBLIC]   String
 METHOD     stripIndent(boolean)                       String
 METHOD     stripIndent(int)                           String
+METHOD     stripLeading()                  [PUBLIC]   String
 METHOD     stripMargin()                              String
 METHOD     stripMargin(CharSequence)                  String
 METHOD     stripMargin(char)                          String
+METHOD     stripTrailing()                 [PUBLIC]   String
 METHOD     subSequence(int, int)           [PUBLIC]   CharSequence
 METHOD     substring(int)                  [PUBLIC]   String
 METHOD     substring(int, int)             [PUBLIC]   String

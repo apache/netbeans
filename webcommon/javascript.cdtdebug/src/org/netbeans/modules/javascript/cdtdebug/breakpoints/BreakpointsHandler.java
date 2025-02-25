@@ -24,6 +24,7 @@ import java.beans.PropertyChangeListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -46,8 +47,10 @@ import org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint;
 import org.netbeans.modules.web.common.sourcemap.SourceMapsTranslator;
 import org.netbeans.modules.web.common.sourcemap.SourceMapsTranslator.Location;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Utilities;
 
 @NbBundle.Messages({
     "MSG_BRKP_Unresolved=Not resolved/inactive at current line.",
@@ -129,7 +132,12 @@ public class BreakpointsHandler implements CDTDebugger.Listener {
                         .map(req -> dbg.getConnection().getDebugger().setBreakpointByUrl(req))
                         .map(cs -> cs.toCompletableFuture())
                         .map(cs -> cs.join())
-                        .map(sbbur -> sbbur.getBreakpointId())
+                        .map(sbbur -> {
+                            if(! sbbur.getLocations().isEmpty()) {
+                                JSBreakpointStatus.setValid(lb, Bundle.MSG_BRKP_Resolved());
+                            }
+                            return sbbur.getBreakpointId();
+                        })
                         .collect(Collectors.toList())
                         .toArray(String[]::new);
                 submittedBreakpoints.put(lb, ids);
@@ -188,21 +196,21 @@ public class BreakpointsHandler implements CDTDebugger.Listener {
             columnNumber.add(0);
         } else {    // Future BP
             URL url = b.getURL();
-            if (scriptsHandler.containsRemoteFile(url)) {
-                serverPath.add(scriptsHandler.getServerPath(url));
-                lineNumber.add(b.getLineNumber() - 1);
-                columnNumber.add(0);
-            }
+            serverPath.add(b.getURL().toString());
+            lineNumber.add(b.getLineNumber() - 1);
+            columnNumber.add(0);
         }
         String condition = (b.isConditional()) ? b.getCondition() : null;
         List<SetBreakpointByUrlRequest> args = new ArrayList<>();
         for (int i = 0; i < serverPath.size(); i++) {
-            SetBreakpointByUrlRequest newBreakPoint = new SetBreakpointByUrlRequest();
-            try {
-                newBreakPoint.setUrl(new URI("file", "", serverPath.get(i), null, null));
-            } catch (URISyntaxException ex) {
-                throw new RuntimeException(ex);
+            if (serverPath.get(i) == null) {
+                continue;
             }
+            SetBreakpointByUrlRequest newBreakPoint = new SetBreakpointByUrlRequest();
+            // This will need rework, if the situation could arise, that target
+            // platform != local platform (then the path to URI transformation
+            // will fail)
+            newBreakPoint.setUrl(serverPath.get(i));
             newBreakPoint.setLineNumber(lineNumber.get(i));
             newBreakPoint.setColumnNumber(columnNumber.get(i));
             newBreakPoint.setCondition(condition);
@@ -210,6 +218,7 @@ public class BreakpointsHandler implements CDTDebugger.Listener {
         }
         return args;
     }
+
 
     @Override
     public void notifySuspended(boolean suspended) {

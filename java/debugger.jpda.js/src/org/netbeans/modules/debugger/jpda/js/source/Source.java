@@ -50,7 +50,8 @@ public final class Source {
     
     private static final Logger LOG = Logger.getLogger(Source.class.getName());
     
-    private static final String SOURCE_CLASS = "jdk.nashorn.internal.runtime.Source";   // NOI18N
+    private static final String SOURCE_CLASS_JDK = "jdk.nashorn.internal.runtime.Source";   // NOI18N
+    private static final String SOURCE_CLASS_EXT = "org.openjdk.nashorn.internal.runtime.Source";   // NOI18N
     private static final String SOURCE_FIELD = "source";    // NOI18N
     
     private static final String SOURCE_VAR_NAME = "name";   // NOI18N
@@ -227,7 +228,7 @@ public final class Source {
         for (Field sf : staticFields) {
             if (sf instanceof ObjectVariable &&
                 SOURCE_FIELD.equals(sf.getName()) &&
-                SOURCE_CLASS.equals(sf.getType())) {
+                (SOURCE_CLASS_JDK.equals(sf.getType()) || SOURCE_CLASS_EXT.equals(sf.getType()))) {
                 
                 return (ObjectVariable) sf;
             }

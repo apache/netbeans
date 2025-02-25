@@ -1,0 +1,5 @@
+Code completion result for source line:
+private protected(set) read|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    readonly                                   null

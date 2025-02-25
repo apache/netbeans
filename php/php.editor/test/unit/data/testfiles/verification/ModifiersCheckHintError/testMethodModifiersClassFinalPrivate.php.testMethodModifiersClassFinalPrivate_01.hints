@@ -1,0 +1,8 @@
+    final private function finalPrivateClassMethod(): void {}
+                           -----------------------
+HINT:Private methods cannot be final as they are never overridden by other classes
+FIX:Remove modifier: final
+    final private static function finalPrivateStaticClassMethod(): void {}
+                                  -----------------------------
+HINT:Private methods cannot be final as they are never overridden by other classes
+FIX:Remove modifier: final

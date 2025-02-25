@@ -270,7 +270,7 @@ public class MapActionUtility {
             scene.setSelectedObjects(set);
             scene.setFocusedObject(nextElement);
         } else {
-            scene.setSelectedObjects(new HashSet());
+            scene.setSelectedObjects(new HashSet<>());
             scene.setHoveredObject(null); //Not sure if I can do this yet.
         }
     }

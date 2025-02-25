@@ -46,7 +46,6 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.Annotatio
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.PersistentObjectManager;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.parser.AnnotationParser;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.parser.ParseResult;
-import org.netbeans.modules.web.beans.CdiUtil;
 import org.netbeans.modules.web.beans.api.model.BeanArchiveType;
 import org.netbeans.modules.web.beans.api.model.DependencyInjectionResult;
 import org.openide.util.NbBundle;
@@ -83,7 +82,10 @@ public class WebBeansModelProviderImpl extends DecoratorInterceptorLogic {
      */
     @Override
     public DependencyInjectionResult lookupInjectables(VariableElement element, DeclaredType parentType, AtomicBoolean cancel)  {
-        TypeMirror type = getParameterType(element, null, INSTANCE_INTERFACE);
+        TypeMirror type = getParameterType(element, null, INSTANCE_INTERFACE_JAKARTA);
+        if(type == null) {
+            type = getParameterType(element, null, INSTANCE_INTERFACE);
+        }
         if ( type != null ){
             return lookupInjectables(element, parentType , 
                     ResultLookupStrategy.MULTI_LOOKUP_STRATEGY, cancel);
@@ -107,7 +109,8 @@ public class WebBeansModelProviderImpl extends DecoratorInterceptorLogic {
             List<? extends AnnotationMirror> annotations = 
                 getModel().getHelper().getCompilationController().getElements().
                 getAllAnnotationMirrors(element);
-            return getModel().getHelper().hasAnnotation(annotations, INJECT_ANNOTATION);
+            return getModel().getHelper().hasAnnotation(annotations, INJECT_ANNOTATION_JAKARTA)
+                    || getModel().getHelper().hasAnnotation(annotations, INJECT_ANNOTATION);
         }
         else if ( parent instanceof ExecutableElement ){
             return isMethodParameterInjection(element,(ExecutableElement)parent);
@@ -117,7 +120,8 @@ public class WebBeansModelProviderImpl extends DecoratorInterceptorLogic {
 
     @Override
     public List<AnnotationMirror> getQualifiers(Element element, boolean all ) {
-        final boolean event = getParameterType(element, null, EVENT_INTERFACE) != null;
+        final boolean event = getParameterType(element, null, EVENT_INTERFACE) != null
+                || getParameterType(element, null, EVENT_INTERFACE_JAKARTA) != null;
         
         final LinkedHashSet<AnnotationMirror> result = new LinkedHashSet<AnnotationMirror>();
         final AnnotationObjectProvider.AnnotationHandleStrategy strategy = new 
@@ -172,12 +176,13 @@ public class WebBeansModelProviderImpl extends DecoratorInterceptorLogic {
      */
     @Override
     public boolean hasImplicitDefaultQualifier( Element element ) {
-        boolean event = getParameterType(element, null, EVENT_INTERFACE) != null;
+        boolean event = getParameterType(element, null, EVENT_INTERFACE) != null
+                || getParameterType(element, null, EVENT_INTERFACE_JAKARTA) != null;
         Set<String> qualifiers = AnnotationObjectProvider.getQualifiers(element,
                 getModel().getHelper(), event);
         if ( qualifiers.size() == 1 ){
             String qualifier = qualifiers.iterator().next();
-            return qualifier.equals( NAMED_QUALIFIER_ANNOTATION );
+            return qualifier.equals(NAMED_QUALIFIER_ANNOTATION) || qualifier.equals(NAMED_QUALIFIER_ANNOTATION_JAKARTA);
         }
         return qualifiers.size() == 0;
     }
@@ -196,9 +201,9 @@ public class WebBeansModelProviderImpl extends DecoratorInterceptorLogic {
                 getModel().getHelper().getHelper());
         for (AnnotationMirror annotationMirror : allStereotypes) {
             DeclaredType annotationType = annotationMirror.getAnnotationType();
-            TypeElement annotation = (TypeElement)annotationType.asElement();
-            if ( AnnotationObjectProvider.hasAnnotation(annotation, 
-                    NAMED_QUALIFIER_ANNOTATION, getModel().getHelper() ) )
+            TypeElement annotation = (TypeElement) annotationType.asElement();
+            if (AnnotationObjectProvider.hasAnnotation(annotation, NAMED_QUALIFIER_ANNOTATION_JAKARTA, getModel().getHelper())
+                    || AnnotationObjectProvider.hasAnnotation(annotation, NAMED_QUALIFIER_ANNOTATION, getModel().getHelper()))
             {
                 return getNamedName(element , null);
             }
@@ -338,13 +343,15 @@ public class WebBeansModelProviderImpl extends DecoratorInterceptorLogic {
         /*
          * Parameter with @Observes annotation is not plain injection point. 
          */
-        boolean hasObserves = AnnotationObjectProvider.hasAnnotation(element, 
-                OBSERVES_ANNOTATION, getModel().getHelper());
+        boolean hasObserves = AnnotationObjectProvider.hasAnnotation(element, OBSERVES_ANNOTATION, getModel().getHelper())
+                || AnnotationObjectProvider.hasAnnotation(element, OBSERVES_ANNOTATION_JAKARTA, getModel().getHelper());
         if ( !hasObserves && isObservesParameter(element, parent, annotations)){
             return true;
         }
-        return getModel().getHelper().hasAnnotation(annotations, INJECT_ANNOTATION)||
-            getModel().getHelper().hasAnnotation(annotations, PRODUCER_ANNOTATION);
+        return getModel().getHelper().hasAnnotation(annotations, INJECT_ANNOTATION)
+                || getModel().getHelper().hasAnnotation(annotations, PRODUCER_ANNOTATION)
+                || getModel().getHelper().hasAnnotation(annotations, INJECT_ANNOTATION_JAKARTA)
+                || getModel().getHelper().hasAnnotation(annotations, PRODUCER_ANNOTATION_JAKARTA);
     }
     
     private void setCachedResult( List<Element> list) {
@@ -411,20 +418,30 @@ public class WebBeansModelProviderImpl extends DecoratorInterceptorLogic {
                 return name;
             }
             TypeElement superElement = AnnotationObjectProvider.checkSuper(
-                    (TypeElement)element, NAMED_QUALIFIER_ANNOTATION, 
+                    (TypeElement)element, NAMED_QUALIFIER_ANNOTATION_JAKARTA,
                     getModel().getHelper());
+            if (superElement == null) {
+                superElement = AnnotationObjectProvider.checkSuper(
+                        (TypeElement) element, NAMED_QUALIFIER_ANNOTATION,
+                        getModel().getHelper());
+            }
             if ( superElement != null ){
                 return doGetName(element, superElement);
             }
         }
         else if ( element instanceof ExecutableElement ){
             String name = doGetName(element, element);
-            if ( name == null ){
-                Element specialized = MemberCheckerFilter.getSpecialized( 
-                        (ExecutableElement)element, getModel(), 
-                        NAMED_QUALIFIER_ANNOTATION);
-                if ( specialized!= null ){
-                    return doGetName(element , specialized);
+            if (name == null) {
+                Element specialized = MemberCheckerFilter.getSpecialized(
+                        (ExecutableElement) element, getModel(),
+                        NAMED_QUALIFIER_ANNOTATION_JAKARTA);
+                if (specialized == null) {
+                    specialized = MemberCheckerFilter.getSpecialized(
+                            (ExecutableElement) element, getModel(),
+                            NAMED_QUALIFIER_ANNOTATION);
+                }
+                if (specialized != null) {
+                    return doGetName(element, specialized);
                 }
             }
             else {
@@ -444,8 +461,8 @@ public class WebBeansModelProviderImpl extends DecoratorInterceptorLogic {
         for (AnnotationMirror annotationMirror : annotations) {
         DeclaredType type = annotationMirror.getAnnotationType();
         TypeElement annotationElement = (TypeElement)type.asElement();
-            if ( NAMED_QUALIFIER_ANNOTATION.contentEquals( 
-                    annotationElement.getQualifiedName()))
+            if (NAMED_QUALIFIER_ANNOTATION_JAKARTA.contentEquals(annotationElement.getQualifiedName())
+                    || NAMED_QUALIFIER_ANNOTATION.contentEquals(annotationElement.getQualifiedName()))
             {
                 return getNamedName( original , annotationMirror );
             }
@@ -546,8 +563,8 @@ public class WebBeansModelProviderImpl extends DecoratorInterceptorLogic {
         List<? extends VariableElement> parameters = method.getParameters();
         boolean observesFound = false;
         for (VariableElement variableElement : parameters) {
-            if (  AnnotationObjectProvider.hasAnnotation(variableElement, 
-                    OBSERVES_ANNOTATION, getModel().getHelper()))
+            if (AnnotationObjectProvider.hasAnnotation(variableElement, OBSERVES_ANNOTATION, getModel().getHelper())
+                    || AnnotationObjectProvider.hasAnnotation(variableElement, OBSERVES_ANNOTATION_JAKARTA, getModel().getHelper()))
             {
                 if ( observesFound ){
                     throw new org.netbeans.modules.web.beans.api.model.
@@ -584,8 +601,8 @@ public class WebBeansModelProviderImpl extends DecoratorInterceptorLogic {
         boolean disposeFound = false;
         boolean observesFound = false;
         for (VariableElement variableElement : parameters) {
-            if (  AnnotationObjectProvider.hasAnnotation(variableElement, 
-                    DISPOSES_ANNOTATION, getModel().getHelper()))
+            if (AnnotationObjectProvider.hasAnnotation(variableElement, DISPOSES_ANNOTATION, getModel().getHelper())
+                    || AnnotationObjectProvider.hasAnnotation(variableElement, DISPOSES_ANNOTATION_JAKARTA, getModel().getHelper()))
             {
                 if ( disposeFound ){
                     throw new org.netbeans.modules.web.beans.api.model. 
@@ -595,8 +612,8 @@ public class WebBeansModelProviderImpl extends DecoratorInterceptorLogic {
                 }
                 disposeFound = true;
             }
-            if (  AnnotationObjectProvider.hasAnnotation(variableElement, 
-                    OBSERVES_ANNOTATION, getModel().getHelper()))
+            if (AnnotationObjectProvider.hasAnnotation(variableElement, OBSERVES_ANNOTATION, getModel().getHelper())
+                    || AnnotationObjectProvider.hasAnnotation(variableElement, OBSERVES_ANNOTATION_JAKARTA, getModel().getHelper()))
             {
                 observesFound = true;
             }
@@ -623,15 +640,17 @@ public class WebBeansModelProviderImpl extends DecoratorInterceptorLogic {
     
     private String checkInjectProducers(List<? extends AnnotationMirror> annotations) 
     {
-        if (getModel().getHelper().hasAnnotation(annotations, 
-                INJECT_ANNOTATION))
-        {
+        if (getModel().getHelper().hasAnnotation(annotations, INJECT_ANNOTATION_JAKARTA)) {
+            return INJECT_ANNOTATION_JAKARTA;
+        }
+        if (getModel().getHelper().hasAnnotation(annotations, PRODUCER_ANNOTATION_JAKARTA)) {
+            return PRODUCER_ANNOTATION_JAKARTA;
+        }
+        if (getModel().getHelper().hasAnnotation(annotations, INJECT_ANNOTATION)) {
             return INJECT_ANNOTATION;
         }
-        if ( getModel().getHelper().hasAnnotation(annotations, 
-                        PRODUCER_ANNOTATION))
-        {
-            return PRODUCER_ANNOTATION; 
+        if (getModel().getHelper().hasAnnotation(annotations, PRODUCER_ANNOTATION)) {
+            return PRODUCER_ANNOTATION;
         }
         return null;
     }

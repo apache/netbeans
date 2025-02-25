@@ -52,6 +52,10 @@ public abstract class GotoDeclarationTestBase extends PHPNavTestBase {
         return getTestFolderPath() + "/" + getTestName() + ".php";
     }
 
+    protected void checkDeclaration(String caretLine, String declarationLine) throws Exception {
+        checkDeclaration(getTestPath(), caretLine, declarationLine);
+    }
+
     protected String getTestName() {
         String name = getName();
         int indexOf = name.indexOf("_");

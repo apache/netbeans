@@ -144,12 +144,11 @@ public final class CompletionUtilities {
      *  to be black for all parts of the rendered strings.
      */
     public static void renderHtml(ImageIcon icon, String leftHtmlText, String rightHtmlText,
-    Graphics g, Font defaultFont, Color defaultColor,
-    int width, int height, boolean selected) {
+            Graphics g, Font defaultFont, Color defaultColor,
+            int width, int height, boolean selected)
+    {
         if (icon != null) {
-            // The image of the ImageIcon should already be loaded
-            // so no ImageObserver should be necessary
-            g.drawImage(icon.getImage(), BEFORE_ICON_GAP, (height - icon.getIconHeight()) /2, null);
+            icon.paintIcon(null, g, BEFORE_ICON_GAP, (height - icon.getIconHeight())  /2);
         }
         int iconWidth = BEFORE_ICON_GAP + (icon != null ? icon.getIconWidth() : ICON_WIDTH) + AFTER_ICON_GAP;
         int rightTextX = width - AFTER_RIGHT_TEXT_GAP;

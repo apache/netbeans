@@ -42,8 +42,8 @@ import org.netbeans.modules.php.blade.editor.indexing.PhpIndexUtils;
 import org.netbeans.modules.php.blade.syntax.annotation.PhpKeyword;
 import org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpAntlrLexer;
 import org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpAntlrUtils;
-import org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpSnippetParser;
-import static org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpSnippetParser.PhpReferenceType.PHP_NAMESPACE;
+import org.netbeans.modules.php.blade.editor.parser.BladePhpSnippetParser;
+import static org.netbeans.modules.php.blade.editor.parser.BladePhpSnippetParser.PhpReferenceType.PHP_NAMESPACE;
 import org.netbeans.modules.php.blade.syntax.php.PhpKeywordList;
 import org.openide.filesystems.FileObject;
 

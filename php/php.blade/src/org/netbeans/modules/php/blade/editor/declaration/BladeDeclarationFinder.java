@@ -63,13 +63,13 @@ import static org.netbeans.modules.php.blade.project.ComponentsSupport.COMPONENT
 import org.netbeans.modules.php.blade.syntax.StringUtils;
 import static org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpAntlrParser.IDENTIFIER;
 import org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpAntlrUtils;
-import org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpSnippetParser.PhpReference;
+import org.netbeans.modules.php.blade.editor.parser.BladePhpSnippetParser.PhpReference;
 import org.openide.filesystems.FileObject;
 import static org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrLexer.*;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
-import static org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpSnippetParser.PhpReferenceType.PHP_FUNCTION;
-import org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrLexerUtils;
+import static org.netbeans.modules.php.blade.editor.parser.BladePhpSnippetParser.PhpReferenceType.PHP_FUNCTION;
+import org.netbeans.modules.php.blade.syntax.antlr4.utils.BladeAntlrLexerUtils;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.spi.project.ui.support.ProjectConvertors;
 

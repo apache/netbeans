@@ -39,7 +39,7 @@ import static org.netbeans.modules.php.blade.syntax.BladeDirectivesUtils.END_DIR
 import org.netbeans.modules.php.blade.syntax.BladeTagsUtils;
 import org.netbeans.modules.php.blade.syntax.antlr4.utils.BaseBladeAntlrUtils;
 import static org.netbeans.modules.php.blade.syntax.BladeTagsUtils.*;
-import org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrLexerUtils;
+import org.netbeans.modules.php.blade.syntax.antlr4.utils.BladeAntlrLexerUtils;
 import org.netbeans.spi.editor.bracesmatching.BracesMatcher;
 import org.netbeans.spi.editor.bracesmatching.BracesMatcherFactory;
 import org.netbeans.spi.editor.bracesmatching.MatcherContext;

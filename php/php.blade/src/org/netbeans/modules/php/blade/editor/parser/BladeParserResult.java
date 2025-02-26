@@ -44,7 +44,6 @@ import org.netbeans.modules.php.blade.editor.parser.listeners.PhpExpressionOccur
 import org.netbeans.modules.php.blade.editor.parser.listeners.ReferenceIdListener;
 import org.netbeans.modules.php.blade.editor.parser.listeners.ScopeListener;
 import org.netbeans.modules.php.blade.editor.parser.listeners.StructureListener;
-import org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpSnippetParser;
 import org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrLexer;
 import org.netbeans.modules.php.blade.syntax.antlr4.v10.BladeAntlrParser;
 import org.openide.filesystems.FileObject;

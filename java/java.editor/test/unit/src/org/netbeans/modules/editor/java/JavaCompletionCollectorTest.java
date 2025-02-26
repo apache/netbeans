@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.editor.java;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +48,8 @@ import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
 public class JavaCompletionCollectorTest extends NbTestCase {
+
+    private FileObject primaryTestFO;
 
     public JavaCompletionCollectorTest(String name) {
         super(name);
@@ -299,21 +302,62 @@ public class JavaCompletionCollectorTest extends NbTestCase {
         assertEquals(Set.of("()"), found);
     }
 
+    public void testAdditionalEditsGenerateConstructorAfterReparse() throws Exception {
+        AtomicBoolean found = new AtomicBoolean();
+        runJavaCollector(List.of(new FileDescription("test/Test.java",
+                                                     """
+                                                     package test;
+                                                     public class Test {
+                                                         private final int i;
+                                                         |
+                                                     }
+                                                     """)),
+                         completions -> {
+                             for (Completion completion : completions) {
+                                 if (completion.getLabel().equals("Test") &&
+                                     "(int i) - generate".equals(completion.getLabelDetail())) {
+                                     //force full reparse:
+                                     byte[] content = primaryTestFO.asBytes();
+                                     try (OutputStream out = primaryTestFO.getOutputStream()) {
+                                         out.write(content);
+                                     }
+                                     assertEquals(null,
+                                                  completion.getInsertText());
+                                     assertEquals("63-63:",
+                                                  textEdit2String(completion.getTextEdit()));
+                                     assertEquals("""
+                                                  59-59:
+                                                      public Test(int i) {
+                                                          this.i = i;
+                                                      }
+                                                  """.replace("\n", "\\n"),
+                                                  completion.getAdditionalTextEdits()
+                                                            .get()
+                                                            .stream()
+                                                            .map(JavaCompletionCollectorTest::textEdit2String)
+                                                            .collect(Collectors.joining(", ")));
+                                     found.set(true);
+                                 }
+                             }
+                         });
+        assertTrue(found.get());
+    }
+
     private void runJavaCollector(List<FileDescription> files, Validator<List<Completion>> validator) throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[]{"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[]{new MIMEResolverImpl(), new MIMEDataProvider()});
 
         FileObject scratch = SourceUtilsTestUtil.makeScratchDir(this);
         FileObject cache = scratch.createFolder("cache");
         FileObject src = scratch.createFolder("src");
-        FileObject mainFile = null;
+        primaryTestFO = null;
         int caretPosition = -1;
 
         for (FileDescription testFile : files) {
             FileObject testFO = FileUtil.createData(src, testFile.fileName);
             String code = testFile.code;
 
-            if (mainFile == null) {
-                mainFile = testFO;
+            if (primaryTestFO == null) {
+                primaryTestFO = testFO;
                 caretPosition = code.indexOf('|');
 
                 assertTrue(caretPosition >= 0);
@@ -324,16 +368,16 @@ public class JavaCompletionCollectorTest extends NbTestCase {
             TestUtilities.copyStringToFile(testFO, code);
         }
 
-        assertNotNull(mainFile);
+        assertNotNull(primaryTestFO);
 
         if (sourceLevel != null) {
-            SourceUtilsTestUtil.setSourceLevel(mainFile, sourceLevel);
+            SourceUtilsTestUtil.setSourceLevel(primaryTestFO, sourceLevel);
         }
 
         SourceUtilsTestUtil.prepareTest(src, FileUtil.createFolder(scratch, "test-build"), cache);
         SourceUtilsTestUtil.compileRecursively(src);
 
-        EditorCookie ec = mainFile.getLookup().lookup(EditorCookie.class);
+        EditorCookie ec = primaryTestFO.getLookup().lookup(EditorCookie.class);
         Document doc = ec.openDocument();
         JavaCompletionCollector collector = new JavaCompletionCollector();
         Context ctx = new Context(TriggerKind.Invoked, null);

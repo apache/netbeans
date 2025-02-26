@@ -39,6 +39,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
@@ -824,6 +825,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             }
             labelDetail.append(") - generate");
             sortParams.append(')');
+            ElementHandle<?> parentPath = ElementHandle.create(parent);
             return CompletionCollector.newBuilder(simpleName)
                     .kind(Completion.Kind.Constructor)
                     .labelDetail(labelDetail.toString())
@@ -834,7 +836,11 @@ public class JavaCompletionCollector implements CompletionCollector {
                         wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         TreePath tp = wc.getTreeUtilities().pathFor(substitutionOffset);
                         if (TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
-                            if (parent == wc.getTrees().getElement(tp)) {
+                            Element currentType = wc.getTrees().getElement(tp);
+                            ElementHandle<?> currentTypePath =
+                                    currentType != null ? ElementHandle.create(currentType)
+                                                        : null;
+                            if (Objects.equals(parentPath, currentTypePath)) {
                                 ArrayList<VariableElement> fieldElements = new ArrayList<>();
                                 for (VariableElement fieldElement : fields) {
                                     if (fieldElement != null && fieldElement.getKind().isField()) {

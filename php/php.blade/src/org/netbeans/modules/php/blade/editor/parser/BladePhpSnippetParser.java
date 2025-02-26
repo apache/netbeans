@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.blade.syntax.antlr4.php;
+package org.netbeans.modules.php.blade.editor.parser;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +48,9 @@ import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexUtils.FieldAccessType;
 import org.netbeans.modules.php.blade.editor.parser.BladeParserResult.BladeError;
 import org.netbeans.modules.php.blade.editor.parser.ParsingUtils;
+import org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpAntlrLexer;
+import org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpAntlrParser;
+import org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpAntlrParserBaseListener;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;

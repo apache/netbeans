@@ -28,8 +28,8 @@ import org.netbeans.modules.php.blade.csl.elements.NamedElement;
 import org.netbeans.modules.php.blade.csl.elements.PhpFunctionElement;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexFunctionResult;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexResult;
-import org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpSnippetParser;
-import static org.netbeans.modules.php.blade.syntax.antlr4.php.BladePhpSnippetParser.PhpReference;
+import org.netbeans.modules.php.blade.editor.parser.BladePhpSnippetParser;
+import static org.netbeans.modules.php.blade.editor.parser.BladePhpSnippetParser.PhpReference;
 import org.openide.filesystems.FileObject;
 
 /**

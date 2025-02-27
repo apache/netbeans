@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
@@ -49,6 +50,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.MessageParams;
@@ -352,6 +354,17 @@ public class Utils {
         int column = offset - NbDocument.findLineOffset(doc, line);
 
         return new Position(line, column);
+    }
+
+    public static int getOffset(FileObject file, Position pos) {
+        try {
+            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+            StyledDocument doc = ec.openDocument();
+
+            return getOffset(doc, pos);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     public static int getOffset(StyledDocument doc, Position pos) {

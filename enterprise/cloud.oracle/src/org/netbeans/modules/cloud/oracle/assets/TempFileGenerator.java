@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.cloud.oracle.assets;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -54,7 +53,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openide.modules.Places;
 
 /**
  *
@@ -65,6 +63,8 @@ public class TempFileGenerator {
     private static final Logger LOG = Logger.getLogger(TempFileGenerator.class.getName());
 
     private static final boolean POSIX = FileSystems.getDefault().supportedFileAttributeViews().contains("posix");  // NOI18N
+    private static final Path TEMP_DIR = Path.of(System.getProperty("java.io.tmpdir")); // NOI18N
+    private static final String TEMP_FOLDER_NAME_PREFIX = "nbls.tmp.files."; // NOI18N
     private static final EnumSet<PosixFilePermission> readWritePosix = EnumSet.of(OWNER_READ, OWNER_WRITE);
     private static final EnumSet<PosixFilePermission> readPosix = EnumSet.of(OWNER_READ);
 
@@ -89,14 +89,17 @@ public class TempFileGenerator {
                 SYNCHRONIZE
         );
     
+    private static Path TEMP_DIR_PATH;
     private final boolean readOnly;
     private final String filePrefix;
     private final String fileSufix;
-    private final String configPath;
 
-    public TempFileGenerator(String filePrefix, String fileSufix, String configPath, boolean readOnly) {
+    public TempFileGenerator(String filePrefix, String fileSufix) {
+        this(filePrefix, fileSufix, true);
+    }
+
+    public TempFileGenerator(String filePrefix, String fileSufix, boolean readOnly) {
         this.readOnly = readOnly;
-        this.configPath = configPath;
         this.filePrefix = filePrefix;
         this.fileSufix = fileSufix;
     }
@@ -130,18 +133,31 @@ public class TempFileGenerator {
     }
     
     private Path generateConfigFile() throws IOException {
-        Path dir = generateDirPath();
+        createTempDirectoryIfMissing();
         
-        if (!Files.isDirectory(dir, LinkOption.NOFOLLOW_LINKS)) {
-            Files.createDirectory(dir);
-        }
         if (POSIX) {
-            return createFilePosix(dir);       
+            return createFilePosix();       
         } 
         
-        Path temp = Files.createTempFile(dir, this.filePrefix, this.fileSufix);
+        Path temp = Files.createTempFile(TEMP_DIR_PATH, this.filePrefix, this.fileSufix);
         setFileOwnerAcl(temp, readWriteAcl);
         return temp;
+    }
+
+    private synchronized void createTempDirectoryIfMissing() throws IOException {
+        if (shouldCreateTempDirectory()) {
+            TEMP_DIR_PATH = createTempDirectory();
+        }
+    }
+
+    private boolean shouldCreateTempDirectory() {
+        return TEMP_DIR_PATH == null || !Files.isDirectory(TEMP_DIR_PATH, LinkOption.NOFOLLOW_LINKS);
+    }
+    
+    private static Path createTempDirectory() throws IOException {
+        Path newTempDir = Files.createTempDirectory(TEMP_DIR, TEMP_FOLDER_NAME_PREFIX);
+        newTempDir.toFile().deleteOnExit();
+        return newTempDir;
     }
     
     private void writeToFile(WriterConsumer c, Path filePath) throws IOException {
@@ -197,15 +213,9 @@ public class TempFileGenerator {
     }
     
     
-    private Path createFilePosix(Path dir) throws IOException {
+    private Path createFilePosix() throws IOException {
         FileAttribute<?> readWriteAttribs = PosixFilePermissions.asFileAttribute(readWritePosix);
-        return Files.createTempFile(dir,this.filePrefix, this.fileSufix, readWriteAttribs);
-    }
-    
-    private Path generateDirPath() {
-        File file = Places.getCacheSubdirectory(this.configPath);
-        file.deleteOnExit();
-        return file.toPath();
+        return Files.createTempFile(TEMP_DIR_PATH, this.filePrefix, this.fileSufix, readWriteAttribs);
     }
     
     private void deleteTempFile(Path temp) {

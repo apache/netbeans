@@ -140,7 +140,8 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
         initComponents();
         
         // Tree view of the elements
-        elementView = createBeanTreeView();        
+        elementView = createBeanTreeView();
+        elementView.setAutoWaitCursor(false);
         add(elementView, BorderLayout.CENTER);
                
         filters = new ClassMemberFilters( this );
@@ -302,7 +303,6 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
                 public void run() {
                     long startTime = System.currentTimeMillis();
                     elementView.setRootVisible(false);
-                    elementView.setAutoWaitCursor(false);
                     manager.setRootContext(new ElementNode( description, ClassMemberPanelUI.this, fileObject ) );
 
                     int expandDepth = -1;
@@ -328,7 +328,6 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
                             elementView.setScrollOnExpand( scrollOnExpand );
                         }
                     });
-                    elementView.setAutoWaitCursor(true);
                     long endTime = System.currentTimeMillis();
                     Logger.getLogger("TIMER").log(Level.FINE, "Navigator Initialization",
                             new Object[] {fileObject, endTime - startTime});

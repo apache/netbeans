@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE bindings PUBLIC "-//NetBeans//DTD Editor KeyBindings settings 1.1//EN" "http://www.netbeans.org/dtds/EditorKeyBindings-1_1.dtd">
+
+<!--
+    IMPORTANT:  This file modifies keybindings from VSCode-keybindings.xml to make them work on Mac OS.
+-->
+
+<bindings>
+    <!-- Things we add that replace standard keybindings -->
+    
+    <!-- Basic Navigation -->
+    <bind key="C-HOME" remove="true"/>
+    <bind actionName="caret-begin" key="M-UP"/>
+    
+    <bind key="C-END" remove="true"/>
+    <bind actionName="caret-end" key="M-DOWN"/>
+    
+    <!-- Word Navigation -->
+    <bind key="C-LEFT" remove="true"/>
+    <bind key="A-LEFT" actionName="caret-previous-word"/>
+    
+    <bind key="C-RIGHT" remove="true"/>
+    <bind key="A-RIGHT" actionName="caret-next-word"/>
+    
+    <!-- Word Deletion -->
+    <bind key="C-DELETE" remove="true"/>
+    <bind actionName="remove-word-next" key="A-DELETE"/>
+    
+    <bind key="C-BACK_SPACE" remove="true"/>
+    <bind actionName="remove-word-previous" key="A-BACK_SPACE"/>
+    
+    <!-- Selection -->
+    <bind key="CS-LEFT" remove="true"/>
+    <bind key="AS-LEFT" actionName="selection-previous-word"/>
+    
+    <bind key="CS-RIGHT" remove="true"/>
+    <bind key="AS-RIGHT" actionName="selection-next-word"/>
+    
+    <!-- Mac-specific bindings -->
+    <bind actionName="copy-to-clipboard" key="D-C"/>
+    <bind actionName="cut-to-clipboard" key="D-X"/>
+    <bind actionName="paste-from-clipboard" key="D-V"/>
+    <bind actionName="select-all" key="D-A"/>
+    
+    <!-- Find and Replace -->
+    <bind key="C-F" remove="true"/>
+    <bind actionName="find" key="D-F"/>
+    
+    <bind key="C-H" remove="true"/>
+    <bind actionName="replace" key="D-H"/>
+    
+    <bind key="F3" remove="true"/>
+    <bind key="D-G" actionName="find-next"/>
+    
+    <bind key="S-F3" remove="true"/>
+    <bind key="DS-G" actionName="find-previous"/>
+    
+    <!-- Line Operations -->
+    <bind actionName="move-selection-else-line-down" key="A-DOWN"/>
+    <bind actionName="move-selection-else-line-up" key="A-UP"/>
+    <bind actionName="copy-selection-else-line-down" key="SA-DOWN"/>
+    <bind actionName="copy-selection-else-line-up" key="SA-UP"/>
+    
+    <!-- Code Folding -->
+    <bind actionName="collapse-fold" key="MA-LEFT"/>
+    <bind actionName="expand-fold" key="MA-RIGHT"/>
+    <bind actionName="collapse-all-folds" key="D-K D-0"/>
+    <bind actionName="expand-all-folds" key="D-K D-J"/>
+    
+    <!-- Comments -->
+    <bind actionName="toggle-comment" key="D-SLASH"/>
+    <bind actionName="toggle-block-comment" key="SA-A"/>
+    
+    <!-- Multi-cursor -->
+    <bind actionName="select-next-parameter" key="D-D"/>
+    <bind actionName="selection-grow" key="CS-RIGHT"/>
+    <bind actionName="selection-shrink" key="CS-LEFT"/>
+    
+    <!-- Editor Management -->
+    <bind actionName="close" key="D-W"/>
+    <bind actionName="split-editor" key="D-BACK_SLASH"/>
+    
+    <!-- Rich Language Features -->
+    <bind actionName="completion-show" key="C-SPACE"/>
+    <bind actionName="completion-show" key="D-I"/>
+    <bind actionName="format" key="SA-F"/>
+    
+    <!-- Debug -->
+    <bind actionName="toggle-breakpoint" key="F9"/>
+    <bind actionName="debug" key="F5"/>
+    <bind actionName="debug-step-over" key="F10"/>
+    <bind actionName="debug-step-into" key="F11"/>
+    <bind actionName="debug-step-out" key="S-F11"/>
+    
+    <!-- Terminal -->
+    <bind actionName="terminal-show" key="C-BACK_QUOTE"/>
+    <bind actionName="terminal-new" key="CS-BACK_QUOTE"/>
+    
+    <!-- Settings and Command Palette -->
+    <bind actionName="show-command-palette" key="DS-P"/>
+    <bind actionName="preferences-show" key="D-COMMA"/>
+</bindings>
+

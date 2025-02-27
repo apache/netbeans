@@ -46,6 +46,11 @@ public class TestRootDescription {
             if (testRoot != null) {
                 return new TestRootDescription(testProperties, search, testRoot);
             }
+
+            if (search.getNameExt().equals("lib") && search.getFileObject("../jdk/TEST.ROOT") != null) {
+                return new TestRootDescription(null, search, null);
+            }
+
             search = search.getParent();
         }
 

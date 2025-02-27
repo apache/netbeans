@@ -21,6 +21,7 @@ package org.netbeans.modules.refactoring.java.test;
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
@@ -84,7 +86,38 @@ public class RefactoringTestBase extends NbTestCase {
         this.sourcelevel = sourcelevel;
     }
 
+    static boolean debug = false;
+//    static boolean skipIndexing = false;
+
+    /**
+     * Write given files to sourceRoot and fully re index.
+     *
+     * First the (file) children of sourceRoot are deleted. This method can take
+     * a substantial time of your patience, so use wisely. See the doc in
+     * {@link IndexManager#refreshIndexAndWait}
+     *
+     * @param sourceRoot sic
+     * @param files to save
+     * @throws Exception whenever
+     */
     protected static void writeFilesAndWaitForScan(FileObject sourceRoot, File... files) throws Exception {
+        writeFilesAndWaitForScan(true, sourceRoot, files);
+    }
+
+    /**
+     * Write given files to sourceRoot and possibly reindex.
+     *
+     * First the (file) children of sourceRoot are deleted. This method can take
+     * a substantial time of your patience, so use wisely. See the doc in
+     * {@link IndexManager#refreshIndexAndWait}
+     *
+     * @param fulleIndex fully reindex the type repo 
+     * @param sourceRoot sic
+     * @param files to save
+     * @throws Exception whenever
+     */
+    protected static void writeFilesAndWaitForScan(boolean fullIndex, FileObject sourceRoot, File... files) throws Exception {
+        long currentTimeMillis = System.currentTimeMillis();
         for (FileObject c : sourceRoot.getChildren()) {
             c.delete();
         }
@@ -93,10 +126,39 @@ public class RefactoringTestBase extends NbTestCase {
             FileObject fo = FileUtil.createData(sourceRoot, f.filename);
             TestUtilities.copyStringToFile(fo, f.content);
         }
-
-        IndexingManager.getDefault().refreshIndexAndWait(sourceRoot.toURL(), null, true);
+        
+        if (fullIndex) {
+            IndexingManager.getDefault().refreshIndexAndWait(sourceRoot.toURL(), null, true);
+            long currentTimeMillis1 = System.currentTimeMillis();
+            if (debug) {
+                System.err.println("writeFilesAndWaitForScan took " + (currentTimeMillis1 - currentTimeMillis) + " millis");
+            }
+        }
     }
 
+    /**
+     * Save file but do not reindex.
+     *
+     * Deletes the existing files under sourceRoot, then saves the given files.
+     *
+     * Makes tests run faster. In particular single tests.
+     *
+     * @param sourceRoot sic
+     * @param files to save
+     * @throws Exception whenever
+     */
+    protected static void writeFilesNoIndexing(FileObject sourceRoot, File... files) throws Exception {
+        writeFilesAndWaitForScan(false, sourceRoot, files);
+    }
+
+    /**
+     * Verify that the given file(names) are present in the sourceRoot and that
+     * the files in said sourceRoot are equal to the given files.
+     *
+     * @param sourceRoot to contain generated (refactored) files
+     * @param files expected files
+     * @throws Exception well why not?
+     */
     protected void verifyContent(FileObject sourceRoot, File... files) throws Exception {
         List<FileObject> todo = new LinkedList<FileObject>();
 
@@ -109,33 +171,30 @@ public class RefactoringTestBase extends NbTestCase {
         while (!todo.isEmpty()) {
             FileObject file = todo.remove(0);
 
-            if (file.isData()) {
+            if (file.isData()) { // normal file
                 content.put(FileUtil.getRelativePath(sourceRoot, file), copyFileToString(FileUtil.toFile(file)));
-            } else {
+            } else { // it is a folder
                 todo.addAll(Arrays.asList(file.getChildren()));
             }
         }
-
+        // only do full line compare for InnerOuterRecorTest to not break exsiting tests, which make different assumptions.
+        boolean fullLineCompare = this.getClass() == InnerOuterRecordTest.class;
+        Throwable exception = null;
         for (File f : files) {
+            // take the element from the map filled by sourceRootTraversal.
             String fileContent = content.remove(f.filename);
-
             assertNotNull(f);
             assertNotNull(f.content);
-            assertNotNull("Cannot find " + f.filename + " in map " + content, fileContent);
-            try {
-            assertEquals(getName() ,f.content.replaceAll("[ \t\r\n\n]+", " "), fileContent.replaceAll("[ \t\r\n\n]+", " "));
-            } catch (Throwable t) {
-                System.err.println("expected:");
-                System.err.println(f.content);
-                System.err.println("actual:");
-                System.err.println(fileContent);
-                throw t;
+            assertNotNull("Cannot find expected " + f.filename + " in map filled by sourceRoot " + content, fileContent);
+            if (fullLineCompare) {
+                assertLinesEqual2(f.filename, f.content, fileContent);
+            } else { // original tests.
+                assertLinesEqual1(f.content, fileContent);
             }
         }
-
-        assertTrue(content.toString(), content.isEmpty());
+        assertTrue("not all files processeed", content.isEmpty());
     }
-    
+
     /**
      * Returns a string which contains the contents of a file.
      *
@@ -366,10 +425,10 @@ public class RefactoringTestBase extends NbTestCase {
         src = FileUtil.createFolder(projectFolder, "src");
         test = FileUtil.createFolder(projectFolder, "test");
 
-            FileObject cache = FileUtil.createFolder(workdir, "cache");
+        FileObject cache = FileUtil.createFolder(workdir, "cache");
 
-            CacheFolder.setCacheFolder(cache);
-        }
+        CacheFolder.setCacheFolder(cache);
+    }
 
     @ServiceProvider(service=MimeDataProvider.class)
     public static final class MimeDataProviderImpl implements MimeDataProvider {
@@ -384,7 +443,7 @@ public class RefactoringTestBase extends NbTestCase {
 
             return null;
         }
-        
+
     }
 
     protected static boolean problemIsFatal(List<Problem> problems) {
@@ -411,10 +470,90 @@ public class RefactoringTestBase extends NbTestCase {
                 super.runTest();
                 return;
             } catch (Throwable t) {
-                if (exc == null) exc = t;
+                if (exc == null) {
+                    exc = t;
+                }
             }
         }
         throw exc;
     }
 
+    /**
+     * Prints a source by splitting on the line breaks and prefixing with name
+     * and line number.
+     *
+     * @param out the stream to print to
+     * @param name the name as prefix to each line
+     * @param source the source code to print to the out stream.
+     */
+    public static void printNumbered(final PrintStream out, final String name, String source) {
+        AtomicInteger c = new AtomicInteger(1);
+        source.trim().lines().forEach(l -> out.println("%s [%4d] %s".formatted(name, c.getAndIncrement(), l)));
+    }
+
+    /**
+     * Compare strings by replacing all multiples of whitrespace([ \t\n\r]) with
+     * a space.
+     *
+     * The test programmer chooses this to make it easier to write the input and
+     * the expected strings.
+     *
+     * @param expected to compare
+     * @param actual to compare
+     */
+    public void assertLinesEqual1(String expected, String actual) {
+        try {
+            assertEquals(getName(), expected.replaceAll("[ \t\r\n\n]+", " "), actual.replaceAll("[ \t\r\n\n]+", " "));
+        } catch (Throwable t) {
+            System.err.println("expected:");
+            System.err.println(expected);
+            System.err.println("actual:");
+            System.err.println(actual);
+            throw t;
+        }
+    }
+
+    /**
+     * Compare strings by splitting them into lines, remove empty lines, and trim white
+     * space.
+     *
+     * Only when any of the lines differ, all lines are printed with the unequal
+     * lines flagged.
+     *
+     * Before the lines are compared, they are trimmed and the white space is
+     * normalized by collapsing multiple white space characters into one. This
+     * should make the tests less brittle.
+     * 
+     * If any of the compared lines are unequal, this test fails and the 
+     * comparison result is shown on stderr in a simplified diff format.
+     *
+     * @param expected to compare
+     * @param actual to compare
+     */
+    public void assertLinesEqual2(String name, String expected, String actual) {
+        expected = expected.trim().replaceAll("([ \t\r\n])\\1+", "$1");
+        actual = actual.trim().replaceAll("([ \t\r\n])\\1+", "$1");
+        String[] linesExpected = expected.lines().filter(l-> !l.isEmpty()).toArray(String[]::new);
+        String[] linesActual = actual.lines().filter(l-> !l.isEmpty()).toArray(String[]::new);
+        int limit = Math.max(linesExpected.length, linesActual.length);
+        StringBuilder sb = new StringBuilder();
+        boolean equals = true;
+        for (int i = 0; i < limit; i++) {
+            String e = (i < linesExpected.length ? linesExpected[i] : "").trim();
+            String a = (i < linesActual.length ? linesActual[i] : "").trim();
+            // somehow my user is inserted, so avoid to test those lines.
+            if (e.contains("@author") && a.contains("@author")){
+                e=a="* @author goes here";
+            }
+            boolean same = e.equals(a);
+            String sep = same ? "   " : " | ";
+            equals &= same;
+            sb.append(String.format(name + " [%3d] %-80s%s%-80s%n", i, e, sep, a));
+        }
+        if (!equals) {
+            System.err.println("test " + getName() + " failed");
+            System.err.println(sb.toString());
+            fail("lines differ, see stderr for more details.");
+        }
+    }
 }

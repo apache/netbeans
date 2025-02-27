@@ -43,7 +43,7 @@ import org.openide.util.NbBundle;
 public class EntityWizardDescriptor implements WizardDescriptor.FinishablePanel, ChangeListener {
     
     private EntityWizardPanel p;
-    private List changeListeners = new ArrayList();
+    private List<javax.swing.event.ChangeListener> changeListeners = new ArrayList<>();
     private WizardDescriptor wizardDescriptor;
     private Project project;
     

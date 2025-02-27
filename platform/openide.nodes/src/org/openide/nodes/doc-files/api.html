@@ -121,7 +121,7 @@ key components that were missing from the
 
 <li>Full hierarchy support. The Java 2
 
-<a href="@JDK@/java/beans/beancontext/package-summary.html">Bean Context API</a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/beancontext/package-summary.html">Bean Context API</a>
 
 provides basic support for hierarchies of Beans in a tree structure,
 but not enough to handle the requirements of NetBeans, such as special
@@ -333,7 +333,7 @@ which represent individual settable properties of the node object,
 with a definition class and so on, very similar to JavaBean properties
 (and in fact extending
 
-<a href="@JDK@/java/beans/FeatureDescriptor.html">Bean features</a>).
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/FeatureDescriptor.html">Bean features</a>).
 
 <li><a href="../Node.PropertySet.html"><em>Property sets</em></a>,
 
@@ -372,7 +372,7 @@ effect.)
 <li>It has a name, frequently corresponding to a Bean property name,
 obtainable from
 
-<a href="@JDK@/java/beans/FeatureDescriptor.html#getName--"><code>FeatureDescriptor.getName()</code></a>.
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/FeatureDescriptor.html#getName--"><code>FeatureDescriptor.getName()</code></a>.
 
 It may also have a display name, similarly.
 
@@ -472,7 +472,7 @@ JavaBeans property editor for the appropriate type.
 <p>Note that the Nodes API, unlike JavaBeans, permits a specific
 instance of
 
-<a href="@JDK@/java/beans/PropertyEditor.html"><code>PropertyEditor</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyEditor.html"><code>PropertyEditor</code></a>
 
 to be associated with the node, not just its class - so if you override
 <code>getPropertyEditor()</code>, it is possible to select an editor
@@ -793,7 +793,7 @@ to create such a proxy.
 
 to create the filter if the node does not intrinsically support
 
-<a href="@JDK@/java/lang/Cloneable.html"><code>Cloneable</code></a>,
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Cloneable.html"><code>Cloneable</code></a>,
 
 or to really clone it if it does. Note that a properly-designed node
 does not actually store real data, but just provides an interface to
@@ -952,7 +952,7 @@ hides the data flavor and transferables contents:
 
 The copy action
 
-<a href="@JDK@/java/awt/datatransfer/Clipboard.html#setContents-java.awt.datatransfer.Transferable-java.awt.datatransfer.ClipboardOwner-">sets</a>
+<a href="@JDK@@JDKMODULE_JAVA_DATATRANSFER@/java/awt/datatransfer/Clipboard.html#setContents-java.awt.datatransfer.Transferable-java.awt.datatransfer.ClipboardOwner-">sets</a>
 
 that transferable to the clipboard.
 

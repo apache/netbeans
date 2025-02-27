@@ -964,15 +964,15 @@ window system configuration will not be part of project.-->
   <api name="org.netbeans.ui.actions.UI_ACTION_KEY_PRESS" category="friend" group="logger" type="export">
   There is a special support for notifying when an action is invoked by the
   <a href="@TOP@/org/openide/windows/TopComponent.html">TopComponent</a>'s
-  key event handling code. The support is using <a href="@JDK@/java/util/logging/Logger.html">
+  key event handling code. The support is using <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">
   Logger.getLogger("org.netbeans.ui.actions")
-  </a> and sents a <a href="@JDK@/java/util/logging/LogRecord.html">LogRecord</a>
+  </a> and sents a <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a>
   with message <code>UI_ACTION_KEY_PRESS</code>, 
-  <code>FINER</code> <a href="@JDK@/java/util/logging/LogRecord.html">level</a>
+  <code>FINER</code> <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">level</a>
   and paramerters:
   <ul>
-      <li>{<b>0</b>} instance of the <a href="@JDK@/javax/swing/KeyStroke.html">KeyStroke</a></li>
-      <li>{<b>1</b>} toString of the <a href="@JDK@/javax/swing/KeyStroke.html">KeyStroke</a></li>
+      <li>{<b>0</b>} instance of the <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/KeyStroke.html">KeyStroke</a></li>
+      <li>{<b>1</b>} toString of the <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/KeyStroke.html">KeyStroke</a></li>
       <li>{<b>2</b>} instance of the action</li>
       <li>{<b>3</b>} class of the action</li>
       <li>{<b>4</b>} display name of the action</li>

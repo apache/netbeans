@@ -148,7 +148,7 @@
         <a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html#process-java.lang.String...-">process</a>
         method. Example:
         <pre>
-public final class MyOption implements <a href="@JDK@/java/lang/Runnable.html">Runnable</a> {
+public final class MyOption implements <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Runnable.html">Runnable</a> {
   <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">@Arg</a>(longName="hello")
   public String name;
 

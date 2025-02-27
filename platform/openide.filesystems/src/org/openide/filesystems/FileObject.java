@@ -458,8 +458,8 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      *   <code>setAttribute</code> method. One can use 
      *   prefix <code>methodvalue:</code> or <code>newvalue:</code>
      *   to store references to 
-     *   <a href="@JDK@/java/lang/reflect/Method.html">Method</a> or
-     *   <a href="@JDK@/java/lang/Class.html">Class</a> respectively. 
+     *   <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/reflect/Method.html">Method</a> or
+     *   <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Class.html">Class</a> respectively. 
      *   The meaning is then similar to {@link XMLFileSystem} attributes
      *  <code>methodvalue</code> and <code>newvalue</code>.
      * </div>

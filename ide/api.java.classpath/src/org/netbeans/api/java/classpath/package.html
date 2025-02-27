@@ -125,7 +125,7 @@ more thoroughly using
 <div class="nonnormative">
 <pre>
 <a href="ClassPath.html"><font class="type">ClassPath</font></a> <font class="variable-name">cp</font> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><font class="function-name">getClassPath</font></a>(myClassObject, ClassPath.<a href="ClassPath.html#EXECUTE"><font class="constant">EXECUTE</font></a>);
-<a href="@JDK@/java/util/List.html"><font class="type">List</font></a> <font class="variable-name">entries</font> = cp.<a href="ClassPath.html#entries--"><font class="function-name">entries</font></a>();
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/List.html"><font class="type">List</font></a> <font class="variable-name">entries</font> = cp.<a href="ClassPath.html#entries--"><font class="function-name">entries</font></a>();
 <font class="keyword">for</font> (Iterator <font class="variable-name">it</font> = entries.iterator(); it.hasNext(); ) {
     <a href="ClassPath.Entry.html"><font class="type">ClassPath.Entry</font></a> <font class="variable-name">en</font> = (ClassPath.Entry)it.next();
     <font class="keyword">if</font> (!en.<a href="ClassPath.Entry.html#isValid--"><font class="function-name">isValid()</font></a>) {
@@ -190,9 +190,9 @@ dependencies, you may do:
 <pre>
 <a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><font class="type">FileObject</font></a> <font class="variable-name">f</font>; <font class="comment">// some interesting FileObject.</font>
 <a href="ClassPath.html"><font class="type">ClassPath</font></a> <font class="variable-name">cp</font> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><font class="function-name">getClassPath</font></a>(f, ClassPath.<a href="ClassPath.html#COMPILE"><font class="constant">COMPILE</font></a>);
-cp.<a href="ClassPath.html#addPropertyChangeListener-java.beans.PropertyChangeListener-"><font class="function-name">addPropertyChangeListener</font></a>(new <a href="@JDK@/java/beans/PropertyChangeListener.html"><font class="type">PropertyChangeListener</font></a>() {
-    <font class="keyword">public void</font> <font class="function-name">propertyChange</font>(<a href="@JDK@/java/beans/PropertyChangeEvent.html"><font class="type">PropertyChangeEvent</font></a> <font class="variable-name">evt</font>) {
-        <font class="keyword">if</font> (ClassPath.<a href="ClassPath.html#PROP_ROOTS"><font class="constant">PROP_ROOTS</font></a>.equals(evt.<a href="@JDK@/java/beans/PropertyChangeEvent.html#getPropertyName--"><font class="function-name">getPropertyName()</font></a>)) {
+cp.<a href="ClassPath.html#addPropertyChangeListener-java.beans.PropertyChangeListener-"><font class="function-name">addPropertyChangeListener</font></a>(new <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeListener.html"><font class="type">PropertyChangeListener</font></a>() {
+    <font class="keyword">public void</font> <font class="function-name">propertyChange</font>(<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeEvent.html"><font class="type">PropertyChangeEvent</font></a> <font class="variable-name">evt</font>) {
+        <font class="keyword">if</font> (ClassPath.<a href="ClassPath.html#PROP_ROOTS"><font class="constant">PROP_ROOTS</font></a>.equals(evt.<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeEvent.html#getPropertyName--"><font class="function-name">getPropertyName()</font></a>)) {
             <font class="comment">// Update your stuff, because classpath roots have changed.</font>
         }
     }

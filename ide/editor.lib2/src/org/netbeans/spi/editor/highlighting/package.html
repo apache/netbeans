@@ -143,7 +143,7 @@
   <p>
   The basics of the locking and events model of Swing documents is
   described in the javadoc of the
-  <a href="@JDK@/javax/swing/text/AbstractDocument.html">javax.swing.text.AbstractDocument</a>
+  <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/AbstractDocument.html">javax.swing.text.AbstractDocument</a>
   class. Netbeans documents use the same patterns and so does the Highlighting SPI,
   because of its tight relation to documents. The fundamentals of the Swing documents
   locking model are that any changes to a document are done under the
@@ -157,7 +157,7 @@
   starting offset, ending offset and a set of attributes. The offsets are usually passed
   in and out accross the SPI boundaries in form of <code>int</code>s and even though
   some implementations (e.g. <code>PositionsBag</code>) use
-  <code><a href="@JDK@/javax/swing/text/Position.html">Position</a></code>s
+  <code><a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Position.html">Position</a></code>s
   the esential rule is that any calls in and out from the SPI have to be made
   under the document's read lock. Let's have a look on a few examples demonstrating
   what this means.
@@ -192,7 +192,7 @@
   does is always done on the caller's thread. This means that the above described
   constraints hardly cause any limitation for practical use. The majority of
   things happening around a document are done from within
-  <code><a href="@JDK@/javax/swing/event/DocumentListener.html">DocumentListener</a></code>s,
+  <code><a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/event/DocumentListener.html">DocumentListener</a></code>s,
   which hold the document's read lock anyway.
   </p>
   

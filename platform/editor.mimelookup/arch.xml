@@ -681,11 +681,11 @@ No.
       <api name="org.openide.awt.ActionReference.completion" category="devel" group="systemproperty" type="import">
           The annotation processor for <a href="@TOP@/org/netbeans/api/editor/mimelookup/MimeRegistration.html">MimeRegistration</a>
           annotation reuses API defined by <a href="@org-openide-awt@/overview-summary.html">UI Utilities API</a>
-          and reads <a href="@JDK@/java/lang/System.html">System.getProperty("org.openide.awt.ActionReference.completion")</a>
+          and reads <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/System.html">System.getProperty("org.openide.awt.ActionReference.completion")</a>
           property. If it 
           is specified, then the processor
           tries to load such class, casts it to 
-          <a href="@JDK@/javax/annotation/processing/Processor.html">Processor</a>
+          <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/annotation/processing/Processor.html">Processor</a>
           and asks it for additional completion items for annotation's
           <code>mimeType</code> attribute. By default, when running inside NetBeans IDE,
           <code>apisupport.project</code> registers such class and provides

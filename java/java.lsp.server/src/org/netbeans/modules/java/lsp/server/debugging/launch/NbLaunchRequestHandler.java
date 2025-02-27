@@ -35,6 +35,7 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 
 import org.apache.commons.lang3.StringUtils;
@@ -206,15 +207,60 @@ public final class NbLaunchRequestHandler {
             filePath = projectFilePath;
         }
         boolean preferProjActions = true; // True when we prefer project actions to the current (main) file actions.
-        if (filePath == null || mainFilePath != null) {
-            // main overides the current file
-            preferProjActions = false;
-            filePath = mainFilePath;
-        }
         FileObject file = null;
         File nativeImageFile = null;
         if (!isNative) {
-            file = getFileObject(filePath);
+            if (filePath == null || mainFilePath != null) {
+                // main overides the current file
+                preferProjActions = false;
+
+                file = getFileObject(mainFilePath);
+
+                if (file == null) {
+                    LspServerState state = Lookup.getDefault().lookup(LspServerState.class);
+
+                    if (state != null) {
+                        for (FileObject workspaceFolder : state.getClientWorkspaceFolders()) {
+                            file = workspaceFolder.getFileObject(mainFilePath);
+
+                            if (file != null) {
+                                break;
+                            }
+                        }
+
+                        if (file == null) {
+                            return state.openedProjects().thenCompose(prjs -> {
+                                FileObject[] sourceRoots =
+                                    Arrays.stream(prjs)
+                                          .flatMap(p -> Arrays.stream(ProjectUtils.getSources(p).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)))
+                                          .map(sg -> sg.getRootFolder())
+                                          .toArray(s -> new FileObject[s]);
+
+                                ClasspathInfo cpInfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(sourceRoots));
+                                FileObject mainClassFile = SourceUtils.getFile(ElementHandle.createTypeElementHandle(ElementKind.CLASS, mainFilePath), cpInfo);
+                                if (mainClassFile == null) {
+                                    CompletableFuture<Void> currentResult = new CompletableFuture<>();
+                                    ErrorUtilities.completeExceptionally(currentResult,
+                                        "The main class specified as: \"" + mainFilePath + "\" cannot be found as neither an absolute path, a path relative to any workspace folder or a class name.",
+                                        ResponseErrorCode.ServerNotInitialized);
+                                    return currentResult;
+                                } else {
+                                    Map<String, Object> newLaunchArguments = new HashMap<>(launchArguments);
+                                    newLaunchArguments.put("mainClass", mainClassFile.toURI().toString());
+                                    return launch(newLaunchArguments, context);
+                                }
+                            });
+                        }
+                    } else {
+                        ErrorUtilities.completeExceptionally(resultFuture,
+                            "Failed to launch debuggee VM. Wrong context.",
+                            ResponseErrorCode.ServerNotInitialized);
+                        return resultFuture;
+                    }
+                }
+            } else {
+                file = getFileObject(filePath);
+            }
             if (file == null) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                         "Missing file: " + filePath,
@@ -265,7 +311,7 @@ public final class NbLaunchRequestHandler {
                 try {
                     URI uri = new URI(filePath);
                     ioFile = Utilities.toFile(uri);
-                } catch (URISyntaxException ex) {
+                } catch (URISyntaxException | IllegalArgumentException ex) {
                     // Not a valid file
                 }
             }

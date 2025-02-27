@@ -21,6 +21,7 @@ package org.netbeans.modules.php.editor.typinghooks;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimePath;
@@ -39,6 +40,7 @@ import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.spi.editor.typinghooks.TypedBreakInterceptor;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.php.editor.lexer.PHPDocCommentTokenId;
+import org.netbeans.modules.php.editor.lexer.utils.LexerUtils;
 import org.netbeans.modules.php.editor.options.OptionsUtils;
 
 /**
@@ -148,7 +150,7 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
             return;
         }
         if ((id == PHPTokenId.PHP_CURLY_CLOSE || LexUtilities.textEquals(token.text(), ']') || LexUtilities.textEquals(token.text(), ')'))) {
-            int indent = GsfUtilities.getLineIndent(doc, offset);
+            int indent = GsfUtilities.getLineIndent((Document) doc, offset);
             StringBuilder sb = new StringBuilder("\n");
             // the new line will not be added, if we are in middle of array declaration
             if ((LexUtilities.textEquals(token.text(), ')') || LexUtilities.textEquals(token.text(), ']')) && ts.movePrevious()) {
@@ -182,9 +184,11 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
                 }
                 sb.append(IndentUtils.createIndentString(doc, indent));
             } else {
-                LexUtilities.findPreviousToken(ts, Arrays.asList(PHPTokenId.PHP_CURLY_OPEN));
                 sb.append("\n"); // NOI18N
-                sb.append(IndentUtils.createIndentString(doc, GsfUtilities.getLineIndent(doc, ts.offset())));
+                int curlyOpenOffset = findCurlyOpenOffset(ts);
+                if (curlyOpenOffset > 0) {
+                    sb.append(IndentUtils.createIndentString(doc, GsfUtilities.getLineIndent((Document) doc, curlyOpenOffset)));
+                }
             }
             context.setText(sb.toString(), 0, sb.lastIndexOf("\n") != 0 ? sb.lastIndexOf("\n") : sb.toString().length());
             return;
@@ -260,7 +264,7 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
             }
             if (continueComment) {
                 // Line comments should continue
-                int indent = GsfUtilities.getLineIndent(doc, offset);
+                int indent = GsfUtilities.getLineIndent((Document) doc, offset);
                 StringBuilder sb = new StringBuilder("\n");
                 sb.append(IndentUtils.createIndentString(doc, indent));
                 String commentDelimiter = "//"; //NOI18N
@@ -291,7 +295,7 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
             final Object[] ret = beforeBreakInComments(doc, ts, offset, PHPTokenId.PHPDOC_COMMENT_START, PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END, context);
             boolean isEmptyComment = (Boolean) ret[1];
             if (isEmptyComment) {
-                final int indent = GsfUtilities.getLineIndent(doc, ts.offset());
+                final int indent = GsfUtilities.getLineIndent((Document) doc, ts.offset());
                 phpDocBodyGenerator = new PhpDocBodyGeneratorImpl((Integer) ret[0], indent);
             }
             return;
@@ -357,7 +361,7 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
         boolean foundQuestionMark = false;
         // at fist there should be find a bracket  '{' or column ':'
         Token<? extends PHPTokenId> bracketColumnToken = LexUtilities.findPrevious(ts,
-                Arrays.asList(PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,
+                List.of(PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,
                 PHPTokenId.PHPDOC_COMMENT_START, PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END,
                 PHPTokenId.PHP_LINE_COMMENT, PHPTokenId.WHITESPACE, PHPTokenId.PHP_CLOSETAG));
         if (bracketColumnToken != null
@@ -365,7 +369,8 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
                 || (bracketColumnToken.id() == PHPTokenId.PHP_TOKEN && TokenUtilities.textEquals(ts.token().text(), ":")))) { // NOI18N
             startOfContext[0] = ts.offset();
             // we are interested only in adding end for { or alternative syntax :
-            List<PHPTokenId> lookFor = Arrays.asList(PHPTokenId.PHP_CURLY_CLOSE, //PHPTokenId.PHP_SEMICOLON,
+            List<PHPTokenId> lookFor = List.of(PHPTokenId.PHP_CURLY_CLOSE, //PHPTokenId.PHP_SEMICOLON,
+                    PHPTokenId.PHP_CURLY_OPEN, // class C { public int $prop {
                     PHPTokenId.PHP_CLASS, PHPTokenId.PHP_FUNCTION, PHPTokenId.PHP_USE,
                     PHPTokenId.PHP_IF, PHPTokenId.PHP_ELSE, PHPTokenId.PHP_ELSEIF,
                     PHPTokenId.PHP_FOR, PHPTokenId.PHP_FOREACH, PHPTokenId.PHP_TRY,
@@ -373,6 +378,7 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
                     PHPTokenId.PHP_SWITCH, PHPTokenId.PHP_CASE, PHPTokenId.PHP_OPENTAG, PHPTokenId.PHP_DEFAULT,
                     PHPTokenId.PHP_MATCH
             );
+            ts.movePrevious(); // consume "{" or ":"
             Token<? extends PHPTokenId> keyToken = LexUtilities.findPreviousToken(ts, lookFor);
             while (keyToken.id() == PHPTokenId.PHP_TOKEN) {
                 if (TokenUtilities.textEquals(keyToken.text(), "?")) { // NOI18N
@@ -414,7 +420,9 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
                     }
                 }
             }
-            if (keyToken.id() != PHPTokenId.PHP_CURLY_CLOSE && keyToken.id() != PHPTokenId.PHP_SEMICOLON) {
+            if (keyToken.id() != PHPTokenId.PHP_CURLY_CLOSE
+                    && keyToken.id() != PHPTokenId.PHP_CURLY_OPEN
+                    && keyToken.id() != PHPTokenId.PHP_SEMICOLON) {
                 startOfContext[0] = ts.offset();
             }
         }
@@ -450,8 +458,7 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
                 if (token.id() == PHPTokenId.PHP_CURLY_CLOSE) {
                     curlyBalance--;
                     curlyProcessed = true;
-                } else if (token.id() == PHPTokenId.PHP_CURLY_OPEN
-                        || (token.id() == PHPTokenId.PHP_TOKEN && TokenUtilities.textEquals(token.text(), "${"))) { // NOI18N
+                } else if (LexerUtils.hasCurlyOpen(token)) {
                     curlyBalance++;
                     curlyProcessed = true;
                 } else if (token.id() == PHPTokenId.PHP_COMMENT_START || token.id() == PHPTokenId.PHPDOC_COMMENT_START) {
@@ -527,6 +534,29 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
             }
         }
         return concat;
+    }
+
+    private int findCurlyOpenOffset(TokenSequence<? extends PHPTokenId> ts) {
+        int originalOffset = ts.offset();
+        int balance = 0;
+        int curlyOpenOffset = -1;
+        while (ts.movePrevious()) {
+            Token<? extends PHPTokenId> token = ts.token();
+            if (token.id() == PHPTokenId.PHP_CURLY_CLOSE) {
+                balance++;
+            } else if (token.id() == PHPTokenId.PHP_CURLY_OPEN) {
+                if (balance == 0) {
+                    curlyOpenOffset = ts.offset();
+                    break;
+                }
+                balance--;
+            } else if (LexerUtils.isDollarCurlyOpen(token)) {
+                balance--;
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return curlyOpenOffset;
     }
 
     private static boolean concatCurrentStringToken(TokenSequence<? extends PHPTokenId> ts, int offset, int tokenOffsetOnCaret) {

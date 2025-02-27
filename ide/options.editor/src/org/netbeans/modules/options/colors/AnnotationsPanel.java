@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,8 +37,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -62,8 +59,8 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
     private ColorModel          colorModel;
     private boolean		listen = false;
     private String              currentScheme;
-    private Map<String, List<AttributeSet>> schemes = new HashMap<String, List<AttributeSet>>();
-    private Set<String> toBeSaved = new HashSet<String>();
+    private Map<String, List<AttributeSet>> schemes = new HashMap<>();
+    private Set<String> toBeSaved = new HashSet<>();
     private boolean             changed = false;
     
     
@@ -84,10 +81,9 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
         lCategories.getAccessibleContext ().setAccessibleDescription (loc ("AD_Categories"));
         lCategories.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
         lCategories.setVisibleRowCount (3);
-        lCategories.addListSelectionListener (new ListSelectionListener () {
-            public void valueChanged (ListSelectionEvent e) {
-                if (!listen) return;
-                refreshUI ();
+        lCategories.addListSelectionListener(evt -> {
+            if (listen) {
+                refreshUI();
             }
         });
 	lCategories.setCellRenderer (new CategoryRenderer ());
@@ -212,6 +208,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
     // End of variables declaration//GEN-END:variables
     
  
+    @Override
     public void actionPerformed (ActionEvent evt) {
         if (!listen) return;
         if (evt.getSource () == cbEffects) {
@@ -236,11 +233,12 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
         fireChanged();
     }
     
+    @Override
     public void update (ColorModel colorModel) {
         this.colorModel = colorModel;
         listen = false;
         currentScheme = colorModel.getCurrentProfile ();
-        lCategories.setListData (getAnnotations (currentScheme).toArray(new AttributeSet[]{}));
+        lCategories.setListData(getAnnotations(currentScheme).toArray(AttributeSet[]::new));
         if (lCategories.getModel ().getSize () > 0)
             lCategories.setSelectedIndex (0);
         refreshUI ();
@@ -248,54 +246,66 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
         changed = false;
     }
     
+    @Override
     public void cancel () {
-        toBeSaved = new HashSet<String>();
-        schemes = new HashMap<String, List<AttributeSet>>();
+        toBeSaved = new HashSet<>();
+        schemes = new HashMap<>();
         changed = false;
     }
     
+    @Override
     public void applyChanges() {
         if (colorModel == null) return;
-        for(String scheme : toBeSaved) {
+        boolean currentChanged = toBeSaved.remove(currentScheme);
+        for (String scheme : toBeSaved) {
             colorModel.setAnnotations(scheme, getAnnotations(scheme));
         }
-        toBeSaved = new HashSet<String>();
-        schemes = new HashMap<String, List<AttributeSet>>();
+        // TODO the editor seems to refresh to whatever is set last?
+        if (currentChanged) {
+            colorModel.setAnnotations(currentScheme, getAnnotations(currentScheme));
+        }
+        toBeSaved = new HashSet<>();
+        schemes = new HashMap<>();
         changed = false;
     }
     
+    @Override
     public boolean isChanged () {
         return changed;
     }
     
-    public void setCurrentProfile (String currentScheme) {
-        if (this.currentScheme.equals(currentScheme)) {
+    @Override
+    public void setCurrentProfile(String newCurrent) {
+        if (this.currentScheme.equals(newCurrent)) {
             return;
         }
-        String oldScheme = this.currentScheme;
-        this.currentScheme = currentScheme;
-        List<AttributeSet> v = getAnnotations(currentScheme);
-        if (v == null) {
-            // clone scheme
-            v = getAnnotations (oldScheme);
-            schemes.put (currentScheme, new ArrayList<AttributeSet>(v));
-            toBeSaved.add (currentScheme);
-            v = getAnnotations (currentScheme);
+        // clone current if scheme is new
+        if (!colorModel.getProfiles().contains(newCurrent)) {
+            List<AttributeSet> clone = new ArrayList<>();
+            for (AttributeSet set : getAnnotations(currentScheme)) {
+                clone.add(set.copyAttributes());
+            }
+            schemes.put(newCurrent, clone);
         }
-        toBeSaved.add(currentScheme);
-        lCategories.setListData (v.toArray(new AttributeSet[0]));
-        if (lCategories.getModel ().getSize () > 0)
-            lCategories.setSelectedIndex (0);
+        this.currentScheme = newCurrent;
+        List<AttributeSet> annotations = getAnnotations(newCurrent);
+        toBeSaved.add(newCurrent);
+        int selected = lCategories.getSelectedIndex();
+        lCategories.setListData(annotations.toArray(AttributeSet[]::new));
+        if (lCategories.getModel().getSize() > selected) {
+            lCategories.setSelectedIndex(selected);
+        }
         refreshUI ();
         fireChanged();
     }
     
+    @Override
     public void deleteProfile (String scheme) {
         if (colorModel.isCustomProfile (scheme)) {
             schemes.put(scheme,null);
         } else {
             schemes.put (scheme, getDefaults (scheme));
-            lCategories.setListData (getAnnotations(scheme).toArray(new AttributeSet[]{}));
+            lCategories.setListData(getAnnotations(scheme).toArray(AttributeSet[]::new));
             lCategories.repaint();
             lCategories.setSelectedIndex (0);   
             refreshUI ();
@@ -304,6 +314,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
         fireChanged();
     }
 
+    @Override
     public JComponent getComponent() {
         return this;
     }
@@ -314,17 +325,12 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
         return NbBundle.getMessage (SyntaxColoringPanel.class, key);
     }
     
-    private static void loc (Component c, String key) {
-        if (c instanceof AbstractButton)
-            Mnemonics.setLocalizedText (
-                (AbstractButton) c, 
-                loc (key)
-            );
-        else
-            Mnemonics.setLocalizedText (
-                (JLabel) c, 
-                loc (key)
-            );
+    private static void loc(Component c, String key) {
+        if (c instanceof AbstractButton button) {
+            Mnemonics.setLocalizedText(button, loc(key));
+        } else {
+            Mnemonics.setLocalizedText((JLabel) c,loc(key));
+        }
     }
 
     private void updateData () {
@@ -408,7 +414,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
     
     private Map<String, AttributeSet> toMap(Collection<AttributeSet> categories) {
         if (categories == null) return null;
-        Map<String, AttributeSet> result = new HashMap<String, AttributeSet>();
+        Map<String, AttributeSet> result = new HashMap<>();
         for(AttributeSet as : categories) {
             result.put((String) as.getAttribute(StyleConstants.NameAttribute), as);
         }
@@ -465,39 +471,27 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
     
     private AttributeSet getDefaultColoring() {
         Collection<AttributeSet> defaults = colorModel.getCategories(currentScheme, ColorModel.ALL_LANGUAGES);
-        
-        for(Iterator i = defaults.iterator(); i.hasNext(); ) {
-            AttributeSet as = (AttributeSet) i.next();
+        for (AttributeSet as : defaults) {
             String name = (String) as.getAttribute(StyleConstants.NameAttribute);
-            if (name != null && "default".equals(name)) { //NOI18N
+            if ("default".equals(name)) { //NOI18N
                 return as;
             }
         }
-        
         return null;
     }
     
     private List<AttributeSet> getAnnotations(String scheme) {
         if (!schemes.containsKey(scheme)) {
-            Collection<AttributeSet> c = colorModel.getAnnotations(currentScheme);
-            if (c == null) return null;
-            List<AttributeSet> l = new ArrayList<AttributeSet>(c);
-            l.sort(new CategoryComparator());
-            schemes.put(scheme, new ArrayList<AttributeSet>(l));
+            List<AttributeSet> annotations = new ArrayList<>(colorModel.getAnnotations(scheme));
+            annotations.sort(new CategoryComparator());
+            schemes.put(scheme, annotations);
         }
         return schemes.get(scheme);
     }
-    /** cache Map (String (profile name) > List (AttributeSet)). */
-    private Map<String, List<AttributeSet>> profileToDefaults = new HashMap<String, List<AttributeSet>>();
     
     private List<AttributeSet> getDefaults(String profile) {
-        if (!profileToDefaults.containsKey(profile)) {
-            Collection<AttributeSet> c = colorModel.getAnnotationsDefaults(profile);
-            List<AttributeSet> l = new ArrayList<AttributeSet>(c);
-            l.sort(new CategoryComparator());
-            profileToDefaults.put(profile, l);
-        }
-        List<AttributeSet> defaultprofile = profileToDefaults.get(profile);
-        return new ArrayList<AttributeSet>(defaultprofile);
+        List<AttributeSet> annotations = new ArrayList<>(colorModel.getAnnotationsDefaults(profile));
+        annotations.sort(new CategoryComparator());
+        return annotations;
     }
 }

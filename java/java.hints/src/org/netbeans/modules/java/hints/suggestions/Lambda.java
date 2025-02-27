@@ -402,6 +402,7 @@ public class Lambda {
                                               Collections.<TypeParameterTree>emptyList(),
                                               null,
                                               Collections.<Tree>emptyList(),
+                                              Collections.<Tree>emptyList(),
                                               Collections.singletonList(newMethod));
             ExpressionTree targetTypeTree;
             

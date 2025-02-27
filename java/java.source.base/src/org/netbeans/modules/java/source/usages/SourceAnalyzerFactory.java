@@ -718,6 +718,7 @@ public final class SourceAnalyzerFactory {
                     state = errorInDecl ? State.OTHER : State.IMPLEMENTS;
                     scan(node.getImplementsClause(), p);
                     state = State.OTHER;
+                    scan(node.getPermitsClause(), p);
                     scan(node.getMembers(), p);
                     activeClass.pop();
                 } finally {

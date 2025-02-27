@@ -531,27 +531,31 @@ public class RefactoringTestBase extends NbTestCase {
      * @param actual to compare
      */
     public void assertLinesEqual2(String name, String expected, String actual) {
-        expected = expected.trim().replaceAll("([ \t\r\n])\\1+", "$1");
-        actual = actual.trim().replaceAll("([ \t\r\n])\\1+", "$1");
+        expected = expected.trim().replaceAll("([\t\r\n])\\1+", "$1");
+        actual = actual.trim().replaceAll("([\t\r\n])\\1+", "$1");
         String[] linesExpected = expected.lines().filter(l-> !l.isEmpty()).toArray(String[]::new);
         String[] linesActual = actual.lines().filter(l-> !l.isEmpty()).toArray(String[]::new);
         int limit = Math.max(linesExpected.length, linesActual.length);
         StringBuilder sb = new StringBuilder();
         boolean equals = true;
         for (int i = 0; i < limit; i++) {
-            String e = (i < linesExpected.length ? linesExpected[i] : "").trim();
-            String a = (i < linesActual.length ? linesActual[i] : "").trim();
+            String oe = (i < linesExpected.length ? linesExpected[i] : "");
+            String oa = (i < linesActual.length ? linesActual[i] : "");
+            String e= oe.trim();
+            String a= oa.trim();
             // somehow my user is inserted, so avoid to test those lines.
             if (e.contains("@author") && a.contains("@author")){
                 e=a="* @author goes here";
+                oa=oe;
             }
             boolean same = e.equals(a);
             String sep = same ? "   " : " | ";
             equals &= same;
-            sb.append(String.format(name + " [%3d] %-80s%s%-80s%n", i, e, sep, a));
+            sb.append(String.format(name + " [%3d] %-80s%s%-80s%n", i, oe, sep, oa));
         }
         if (!equals) {
             System.err.println("test " + getName() + " failed");
+            System.err.print(String.format(name + "       %-80s%s%-80s%n",  "expected", " + ", "actual"));
             System.err.println(sb.toString());
             fail("lines differ, see stderr for more details.");
         }

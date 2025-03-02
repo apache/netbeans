@@ -21,39 +21,40 @@
 package org.netbeans.core.windows.view.ui;
 
 
-import org.netbeans.swing.tabcontrol.customtabs.Tabbed;
-import org.netbeans.core.windows.Constants;
-import org.netbeans.core.windows.actions.ActionUtils;
-import org.netbeans.core.windows.actions.MaximizeWindowAction;
-import org.netbeans.core.windows.view.ModeView;
-import org.netbeans.core.windows.WindowManagerImpl;
-import org.netbeans.core.windows.view.ui.slides.SlideOperation;
-import org.netbeans.swing.tabcontrol.TabbedContainer;
-import org.netbeans.swing.tabcontrol.event.TabActionEvent;
-import org.openide.windows.TopComponent;
-import org.openide.util.Utilities;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import java.awt.*;
+import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.AWTEventListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+
+import org.netbeans.core.windows.Constants;
 import org.netbeans.core.windows.ModeImpl;
 import org.netbeans.core.windows.Switches;
+import org.netbeans.core.windows.WindowManagerImpl;
+import org.netbeans.core.windows.actions.ActionUtils;
+import org.netbeans.core.windows.actions.MaximizeWindowAction;
+import org.netbeans.core.windows.view.ModeView;
 import org.netbeans.core.windows.view.ui.slides.SlideBar;
 import org.netbeans.core.windows.view.ui.slides.SlideBarActionEvent;
+import org.netbeans.core.windows.view.ui.slides.SlideOperation;
 import org.netbeans.core.windows.view.ui.slides.SlideOperationFactory;
+import org.netbeans.swing.tabcontrol.TabbedContainer;
+import org.netbeans.swing.tabcontrol.customtabs.Tabbed;
+import org.netbeans.swing.tabcontrol.event.TabActionEvent;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.Utilities;
+import org.openide.windows.TopComponent;
 
 
 /** Helper class which handles <code>Tabbed</code> component inside
@@ -62,6 +63,8 @@ import org.openide.util.Lookup;
  * @author  Peter Zavadsky
  */
 public final class TabbedHandler implements ChangeListener, ActionListener {
+    private static final Logger LOG
+            = Logger.getLogger(TabbedHandler.class.getName());
 
     /** Associated mode container. */
     private final ModeView modeView;
@@ -88,6 +91,9 @@ public final class TabbedHandler implements ChangeListener, ActionListener {
                     activationManager, AWTEvent.MOUSE_EVENT_MASK);
                 KeyboardFocusManager.getCurrentKeyboardFocusManager()
                     .addPropertyChangeListener("focusOwner", activationManager);
+                KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                    .addPropertyChangeListener("permanentFocusOwner", activationManager);
+                HookFileMenu();
             }
         }
         tabbed = tbd;
@@ -97,6 +103,28 @@ public final class TabbedHandler implements ChangeListener, ActionListener {
 
         // E.g. when switching tabs in mode.
         ((Container)tabbed.getComponent()).setFocusCycleRoot(true);
+    }
+
+    private static boolean fileMenuSelected;
+    private static JMenu fileMenu;
+    private static void HookFileMenu() {
+        if (fileMenu != null)
+            return;
+        JMenuBar mb = MainWindow.getInstance().getJMenuBar();
+        if (mb == null)
+            return;
+        fileMenu = mb.getMenu(0);
+        fileMenu.addMenuListener(new MenuListener() {
+            @Override public void menuSelected(MenuEvent e) {
+                LOG.log(Level.INFO, "MENU SELECTED");
+                fileMenuSelected = true; }
+            @Override public void menuDeselected(MenuEvent e) {
+                LOG.log(Level.INFO, "MENU DESELECTED");
+                fileMenuSelected = false; }
+            @Override public void menuCanceled(MenuEvent e) {
+                LOG.log(Level.INFO, "MENU CANCELED");
+                fileMenuSelected = false; }
+        });
     }
 
     
@@ -478,6 +506,13 @@ public final class TabbedHandler implements ChangeListener, ActionListener {
             }
         }
 
+private static int countFocus;
+private static String cid(Object o)
+{
+    if (o == null)
+        return "(null)";
+    return o.getClass().getSimpleName() + "@" + Integer.toHexString(System.identityHashCode(o));
+}
         /**
          * Keyboard focus change event handler. Handle situation where
          * active TopComponent was in a different window and window
@@ -488,16 +523,57 @@ public final class TabbedHandler implements ChangeListener, ActionListener {
          */
         @Override
         public void propertyChange(PropertyChangeEvent e) {
+            HookFileMenu();
+                
+            // use deferredActivation if LOG.FINE
+            if (fileMenuSelected && !LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.INFO, "    DODGE BULLET");
+                return;
+            }
+
+            if ("permanentFocusOwner".equals(e.getPropertyName())) {
+                LOG.log(Level.INFO, () -> String.format("PermanentFocusOwner: old %s, new %s",
+                                     cid(e.getOldValue()), cid(e.getNewValue())));
+                return;
+            }
             Frame mainWindowNB = WindowManagerImpl.getInstance().getMainWindow();
             Window activeWindowKB = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
             TopComponent currentTC = TopComponent.getRegistry().getActivated();
+            ++countFocus;
+            LOG.log(Level.INFO, () -> String.format(
+                    "PropChange: (%d) MainWin %s, KBFocusWin %s",
+                    countFocus, cid(mainWindowNB), cid(activeWindowKB)));
+            LOG.log(Level.INFO, () -> String.format("        currentTC %s:%s, TCWin %s",
+                    currentTC.getDisplayName(), cid(currentTC), cid(SwingUtilities.getRoot(currentTC))));
+            LOG.log(Level.INFO, () -> String.format("        old %s, new %s",
+                cid(e.getOldValue()), cid(e.getNewValue())));
             // Only do something if focus to the main window and
             // active TC is not in the main window. Note that focus changes
             // to detached windows handled in DefaultSeparateContainer.
+            //
+            // Defer possible activation with invokeLater(). This allows the focus
+            // manager to finish focus changes. Only activate if after settling
+            // the target is still focused.
             if(mainWindowNB == activeWindowKB
                     && mainWindowNB != SwingUtilities.getRoot(currentTC)) {
-                handleActivation(e.getNewValue());
+                LOG.log(Level.INFO, () -> String.format("    invoke handleActivation"));
+                if (LOG.isLoggable(Level.FINE))
+                    EventQueue.invokeLater(() -> deferActivation(e.getNewValue()));
+                else if (LOG.isLoggable(Level.CONFIG))
+                    handleActivation(e.getNewValue());
+                else
+                    LOG.log(Level.INFO, () -> "    SKIP ACTIVATION " + cid(e.getNewValue()));
             }
+        }
+
+        private void deferActivation(Object deferTarget) {
+            if (deferTarget == null)
+                return;
+            Component focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+            LOG.log(Level.INFO, () -> String.format("deferActivation: deferTarget %s, focused %s", cid(deferTarget), cid(focused)));
+            // If target is still focused, then try to activate it.
+            if (deferTarget == focused)
+                handleActivation(deferTarget);
         }
 
         //
@@ -519,6 +595,7 @@ public final class TabbedHandler implements ChangeListener, ActionListener {
          * imagine.
          */
         private void handleActivation(Object evtObject) {
+            LOG.log(Level.INFO, () -> String.format("handleActivation: evtObject %s", cid(evtObject)));
             if (!(evtObject instanceof Component)) {
                 return;
             }

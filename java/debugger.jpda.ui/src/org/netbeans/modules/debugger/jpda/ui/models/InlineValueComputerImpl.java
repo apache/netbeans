@@ -46,8 +46,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Document;
 import org.netbeans.api.debugger.DebuggerManagerAdapter;
@@ -55,6 +57,7 @@ import org.netbeans.api.debugger.LazyDebuggerManagerListener;
 import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.CallStackFrame;
 import org.netbeans.api.debugger.jpda.InvalidExpressionException;
+import org.netbeans.api.debugger.jpda.JPDAClassType;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
@@ -71,6 +74,9 @@ import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.api.lsp.InlineValue;
 import org.netbeans.api.lsp.Range;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
+import org.netbeans.modules.debugger.jpda.expr.formatters.Formatters;
+import org.netbeans.modules.debugger.jpda.expr.formatters.FormattersLoopControl;
+import org.netbeans.modules.debugger.jpda.expr.formatters.VariablesFormatter;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InvalidStackFrameExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ObjectCollectedExceptionWrapper;
@@ -123,14 +129,13 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
             if (frame != null && !frame.isObsolete() &&
                 frame.getThread().isSuspended() &&
                 JAVA_STRATUM.equals(frame.getDefaultStratum())) {
-                //TODO: more checks...
                 try {
                     String url = debugger.getEngineContext().getURL(frame, JAVA_STRATUM);
                     frameFile = url != null ? URLMapper.findFileObject(URI.create(url).toURL()) : null;
                     if (frameFile != null) {
                         frameLineNumber = frame.getLineNumber(JAVA_STRATUM);
                         EditorCookie ec = frameFile.getLookup().lookup(EditorCookie.class);
-                        frameDocument = ec.getDocument(); //TODO: might be null!!!
+                        frameDocument = ec != null ? ec.getDocument() : null;
                     }
                 } catch (InternalExceptionWrapper | InvalidStackFrameExceptionWrapper | ObjectCollectedExceptionWrapper | VMDisconnectedExceptionWrapper | MalformedURLException ex) {
                     Exceptions.printStackTrace(ex);
@@ -201,11 +206,7 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
                         if (value != null) {
                             String valueText;
                             if (value instanceof ObjectVariable ov) {
-                                try {
-                                    valueText = String.valueOf(ov.getToStringValue()).replace("\n", "\\n");
-                                } catch (InvalidExpressionException ex) {
-                                    valueText = value.getValue();
-                                }
+                                valueText = toValue(ov).replace("\n", "\\n");
                             } else {
                                 valueText = value.getValue();
                             }
@@ -225,6 +226,68 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
                 });
             }
         }
+    }
+
+    private String toValue(ObjectVariable variable) {
+        //mostly copied from the VariablesFormatterFilter.getValueAt:
+        FormattersLoopControl formattersLoop = new FormattersLoopControl();
+        String type = variable.getType ();
+        ObjectVariable ov = (ObjectVariable) variable;
+        JPDAClassType ct = ov.getClassType();
+        if (ct == null) {
+            return ov.getValue();
+        }
+        VariablesFormatter f = Formatters.getFormatterForType(ct, formattersLoop.getFormatters());
+        String[] formattersInLoopRef = new String[] { null };
+        if (f != null && formattersLoop.canUse(f, ct.getName(), formattersInLoopRef)) {
+            String code = f.getValueFormatCode();
+            if (code != null && code.length() > 0) {
+                try {
+                    java.lang.reflect.Method evaluateMethod = ov.getClass().getMethod("evaluate", String.class);
+                    evaluateMethod.setAccessible(true);
+                    Variable ret = (Variable) evaluateMethod.invoke(ov, code);
+                    if (ret == null) {
+                        return null;
+                    }
+                    return ret.getValue();
+                } catch (java.lang.reflect.InvocationTargetException itex) {
+                    Throwable t = itex.getTargetException();
+                    if (t instanceof InvalidExpressionException) {
+                        return ov.getValue();
+                    } else {
+                        Exceptions.printStackTrace(t);
+                    }
+                } catch (NoSuchMethodException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (SecurityException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (IllegalAccessException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (IllegalArgumentException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        } else if (formattersInLoopRef[0] != null) {
+            //ignore loops(?)
+        }
+        if (VariablesFormatterFilter.isToStringValueType(type)) {
+            try {
+                return "\""+ov.getToStringValue ()+"\"";
+            } catch (InvalidExpressionException ex) {
+                // Not a supported operation (e.g. J2ME, see #45543)
+                // Or missing context or any other reason
+                Logger.getLogger(VariablesFormatterFilter.class.getName()).fine("getToStringValue() "+ex.getLocalizedMessage());
+                if ( (ex.getTargetException () != null) &&
+                     (ex.getTargetException () instanceof
+                       UnsupportedOperationException)
+                ) {
+                    // PATCH for J2ME. see 45543
+                    return ov.getValue();
+                }
+                return ex.getLocalizedMessage ();
+            }
+        }
+        return ov.getValue();
     }
 
     private synchronized boolean setNewTask(TaskDescription newTask) {
@@ -335,23 +398,22 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
             public Void visitVariable(VariableTree node, Void p) {
                 int end = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), node);
                 if (end < donePos) {
-                    int[] span = info.getTreeUtilities().findNameSpan(node); //TODO: might return null
-                    int lineEnd = (int) (lm.getStartPosition(lm.getLineNumber(span[1]) + 1) - 1);
+                    int[] span = info.getTreeUtilities().findNameSpan(node);
 
-                    result.add(new InlineVariable(span[0], span[1], lineEnd, node.getName().toString()));
+                    if (span != null) {
+                        int lineEnd = (int) (lm.getStartPosition(lm.getLineNumber(span[1]) + 1) - 1);
+
+                        result.add(new InlineVariable(span[0], span[1], lineEnd, node.getName().toString()));
+                    }
                 }
                 return super.visitVariable(node, p);
             }
 
-            //TODO: visitIdent
-            //TODO: fields?
-
             @Override
             public Void visitIdentifier(IdentifierTree node, Void p) {
-                //XXX: check the element kind!
                 Element el = info.getTrees().getElement(getCurrentPath());
 
-                if (el != null && el.getKind().isVariable()) {
+                if (el != null && el.getKind().isVariable() && el.getKind() != ElementKind.ENUM_CONSTANT) {
                     int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), node);
                     int end = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), node);
 

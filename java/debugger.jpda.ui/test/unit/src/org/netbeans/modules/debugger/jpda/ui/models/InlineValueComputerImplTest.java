@@ -85,6 +85,22 @@ public class InlineValueComputerImplTest extends NbTestCase {
                                       """);
     }
 
+    public void testNoEnumConstants() throws Exception {
+        runCompileInlineVariablesTest("""
+                                      package test;
+                                      import static test.Test.E.*;
+                                      public class Test {
+                                          private void test(String /param/) {
+                                              E /e/ = A;
+                                              |E e2 = /e/;
+                                          }
+                                          public enum E {
+                                              A, B, C;
+                                          }
+                                      }
+                                      """);
+    }
+
     private void runCompileInlineVariablesTest(String codeResultAndPos) throws Exception {
         FileObject source = FileUtil.createData(srcDir, "Test.java");
         int pos = codeResultAndPos.replace("/", "").indexOf("|");

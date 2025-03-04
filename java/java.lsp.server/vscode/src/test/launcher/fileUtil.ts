@@ -18,44 +18,29 @@
  * under the License.
  */
 
+import * as fs from 'fs';
 import * as path from 'path';
-import * as Mocha from 'mocha';
-import * as glob from 'glob';
 
-export function run(): Promise<void> {
-	// Create the mocha test
-	const mocha = new Mocha({
-		ui: 'tdd',
-		color: true,
-		timeout: 60000
-	});
+import * as vscode from 'vscode';
 
-	const testsRoot = path.resolve(__dirname, '.');
+// Recursively copies all of the files from one directory to another
+// This is available out of the box with Node 16.x - fs.cpSync, but here we are using Node 13.x
+export function copyDirSync(src: string, dest: string) {
+    fs.mkdirSync(dest, { recursive: true });
+    const entries = fs.readdirSync(src, { withFileTypes: true });
 
-	return new Promise((c, e) => {
-		setTimeout(function() {
-			glob('./**.test.js', { cwd: testsRoot }, (err, files) => {
-				if (err) {
-					return e(err);
-				}
+    for (const entry of entries) {
+        const srcPath = path.join(src, entry.name);
+        const destPath = path.join(dest, entry.name);
 
-				// Add files to the test suite
-				files.forEach(f => mocha.addFile(path.resolve(testsRoot, f)));
+        if (entry.isDirectory()) {
+            copyDirSync(srcPath, destPath);
+        } else {
+            fs.copyFileSync(srcPath, destPath);
+        }
+    }
+}
 
-				try {
-					// Run the mocha test
-					mocha.run(failures => {
-						if (failures > 0) {
-							e(new Error(`${failures} tests failed.`));
-						} else {
-							c();
-						}
-					});
-				} catch (err) {
-					console.error(err);
-					e(err);
-				}
-			});
-		}, 3000);
-	});
+export function projectFileUri(folder: string, ...p: string[]) : string{
+    return vscode.Uri.file(path.join(folder, ...p)).toString();
 }

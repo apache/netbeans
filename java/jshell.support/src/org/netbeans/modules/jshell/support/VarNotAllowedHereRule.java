@@ -19,13 +19,10 @@
 package org.netbeans.modules.jshell.support;
 
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.parser.Tokens;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import javax.tools.Diagnostic;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -33,13 +30,12 @@ import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.modules.java.hints.friendapi.OverrideErrorMessage;
 
 /**
- * Suppresses error warning that a semicolon is missing from the input. JShell automatically
- * supplies a trailing semicolon, if necessary.
- * 
- * @author sdedic
+ * Suppresses error warning that var is not allowed here. The parsing of a
+ * `var x = ...` statement without a trailing semicolon leads to this warning,
+ * which is invalid.
  */
-public class SemicolonMissingRule implements OverrideErrorMessage {
-    private static final Set<String> CODES = new HashSet<>(Arrays.asList("compiler.err.expected"));
+public class VarNotAllowedHereRule implements OverrideErrorMessage {
+    private static final Set<String> CODES = new HashSet<>(Arrays.asList("compiler.err.restricted.type.not.allowed.here"));
     
     @Override
     public String createMessage(CompilationInfo info, Diagnostic d, int offset, TreePath treePath, Data data) {
@@ -50,37 +46,11 @@ public class SemicolonMissingRule implements OverrideErrorMessage {
             }
         }
         Object dp = SourceUtils.getDiagnosticParam(d, 0);
-        if (dp != Tokens.TokenKind.SEMI) {
+        if("var".equals(String.valueOf(dp))) {
+            return "";
+        } else {
             return null;
         }
-        
-        int off = offset;
-        final CharSequence seq = info.getSnapshot().getText();
-        while (off < seq.length() && Character.isWhitespace(seq.charAt(off))) {
-            off++;
-        }
-        final Document doc = info.getSnapshot().getSource().getDocument(false);
-        if (info.getSnapshot().getOriginalOffset(off) == -1  || info.getSnapshot().getOriginalOffset(off + 1) == -1) {
-            // suppress semicolon message for end-of-snippet location.
-            return ""; // NOI18N
-        }
-        final boolean[] match = new boolean[1];
-        if (doc != null) {
-            final int foff = off;
-            doc.render(new Runnable() {
-                public void run() {
-                    if (foff < doc.getLength()) {
-                    match[0] = true;
-                    } else try {
-                        if (seq.charAt(foff) != doc.getText(foff, 1).charAt(0)) {
-                    match[0] = true;
-                        }
-                    } catch (BadLocationException ex) {
-                    }
-                }
-            });
-        }
-        return match[0] ? "" : null; // NOI18N
     }
 
     @Override

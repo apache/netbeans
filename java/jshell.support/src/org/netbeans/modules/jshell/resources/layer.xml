@@ -123,6 +123,7 @@
                         <attr name="inherit.rules" boolvalue="true"/>
                         <file name="org-netbeans-modules-jshell-support-LocationSuppressRule.instance"/>
                         <file name="org-netbeans-modules-jshell-support-SemicolonMissingRule.instance"/>
+                        <file name="org-netbeans-modules-jshell-support-VarNotAllowedHereRule.instance"/>
                     </folder>
                 </folder>
             </folder>

@@ -80,7 +80,7 @@ public class RefactoringTestBase extends NbTestCase {
         super(name);
         sourcelevel = "1.6";
     }
-
+    
     public RefactoringTestBase(String name, String sourcelevel) {
         super(name);
         this.sourcelevel = sourcelevel;
@@ -177,8 +177,6 @@ public class RefactoringTestBase extends NbTestCase {
                 todo.addAll(Arrays.asList(file.getChildren()));
             }
         }
-        // only do full line compare for InnerOuterRecorTest to not break exsiting tests, which make different assumptions.
-        boolean fullLineCompare = this.getClass() == InnerOuterRecordTest.class;
         Throwable exception = null;
         for (File f : files) {
             // take the element from the map filled by sourceRootTraversal.
@@ -186,7 +184,7 @@ public class RefactoringTestBase extends NbTestCase {
             assertNotNull(f);
             assertNotNull(f.content);
             assertNotNull("Cannot find expected " + f.filename + " in map filled by sourceRoot " + content, fileContent);
-            if (fullLineCompare) {
+            if (sideBySideCompare) {
                 assertLinesEqual2(f.filename, f.content, fileContent);
             } else { // original tests.
                 assertLinesEqual1(f.content, fileContent);
@@ -194,6 +192,8 @@ public class RefactoringTestBase extends NbTestCase {
         }
         assertTrue("not all files processeed", content.isEmpty());
     }
+    
+    protected boolean sideBySideCompare=false;
 
     /**
      * Returns a string which contains the contents of a file.
@@ -459,7 +459,7 @@ public class RefactoringTestBase extends NbTestCase {
         return false;
     }
 
-    private static final int RETRIES = 3;
+    protected int RETRIES = 3;
 
     @Override
     protected void runTest() throws Throwable {
@@ -475,7 +475,9 @@ public class RefactoringTestBase extends NbTestCase {
                 }
             }
         }
-        throw exc;
+        if (exc != null) {
+            throw exc;
+        }
     }
 
     /**

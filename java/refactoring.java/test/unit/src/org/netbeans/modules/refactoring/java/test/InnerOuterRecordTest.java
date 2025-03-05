@@ -62,14 +62,14 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
             //OK, no RELEASE_16, skip test
             throw new RuntimeException("need at least Java 16 for record");
         }
+        sideBySideCompare = true;
     }
-
 
     public void test9ApacheNetbeans7044() throws Exception {
         // initial outer has record with meaningful canonical constructor.
         // note that Inner class should be in last member for assumptions in the test.
-        String source =
-                """
+        String source
+                = """
                 package t;
                 import java.time.LocalDate;
                 import java.util.Objects;
@@ -92,8 +92,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newOuter =
-                """
+        String newOuter
+                = """
                 package t;
                 import java.time.LocalDate;
                 import java.util.Objects;
@@ -104,8 +104,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newInner =
-                """
+        String newInner
+                = """
                 /*
                  * Refactoring License
                  */
@@ -134,8 +134,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
     public void test1BasicClassInClass() throws Exception {
         // initial outer has record with meaningful canonical constructor.
-        String source =
-            """
+        String source
+                = """
             package t;
             import java.time.LocalDate;
             import java.util.Objects;
@@ -161,8 +161,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 }
             }
             """;
-        String newOuter =
-                """
+        String newOuter
+                = """
                 package t;
                 import java.time.LocalDate;
                 import java.util.Objects;
@@ -173,8 +173,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newInner =
-                """
+        String newInner
+                = """
                 /*
                  * Refactoring License
                  */
@@ -205,8 +205,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     }
 
     public void test2BasicRecordInRecord() throws Exception {
-        String source =
-                """
+        String source
+                = """
                 package t;
                 import java.time.LocalDate;
                 record A(int id, String name, LocalDate dob) {
@@ -217,16 +217,16 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                    }
                 }
                 """;
-        String newOuter =
-                """
+        String newOuter
+                = """
                 package t;
                 import java.time.LocalDate;
                 record A(int id, String name, LocalDate dob) {
                     static F f;
                 }
                 """;
-        String newInner =
-                """
+        String newInner
+                = """
                 /*
                  * Refactoring License
                  */
@@ -250,8 +250,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
      * @throws Exception
      */
     public void test3OuterWithCompact() throws Exception {
-        String source =
-                """
+        String source
+                = """
                 package t;
                 import java.time.LocalDate;
                 /** Record with compact ctor. */
@@ -262,8 +262,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                      record F(int id, String name, LocalDate dob){}
                 }
                 """;
-        String newOuter =
-                """
+        String newOuter
+                = """
                 package t;
                 import java.time.LocalDate;
                 /** Record with compact ctor. */
@@ -273,8 +273,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newInner =
-                """
+        String newInner
+                = """
                 /*
                  * Refactoring License
                  */
@@ -291,8 +291,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     }
 
     public void test4InnerWithCompact() throws Exception {
-        String source =
-                """
+        String source
+                = """
                 package t;
                 import java.time.LocalDate;
                 record A(F f) {
@@ -308,8 +308,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newOuter =
-                """
+        String newOuter
+                = """
                 package t;
                 import java.time.LocalDate;
                 record A(F f) {
@@ -318,8 +318,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newInner =
-                """
+        String newInner
+                = """
                 /*
                  * Refactoring License
                  */
@@ -342,8 +342,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
 
     // outer may have effect
     public void test5ClassWithInnerRecord() throws Exception {
-        String source =
-                """
+        String source
+                = """
                 package t;
                 import java.time.LocalDate;
                 class A {
@@ -361,8 +361,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newOuter =
-                """
+        String newOuter
+                = """
                 package t;
                 import java.time.LocalDate;
                 class A {
@@ -373,8 +373,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newInner =
-                """
+        String newInner
+                = """
                 /*
                  * Refactoring License
                  */
@@ -396,8 +396,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     }
 
     public void test6InnerWithCompactAndMethodAndExtraCtor() throws Exception {
-        String source =
-                """
+        String source
+                = """
                 package t;
                 import java.time.LocalDate;
                 record A(F f) {
@@ -422,8 +422,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newOuter =
-                """
+        String newOuter
+                = """
                 package t;
                 import java.time.LocalDate;
                 record A(F f) {
@@ -435,8 +435,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newInner =
-                """
+        String newInner
+                = """
                 /*
                  * Refactoring License
                  */
@@ -464,8 +464,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     }
 
     public void test7Generic() throws Exception {
-        String source =
-                """
+        String source
+                = """
                 package t;
                 record A(F f) {
                     public A {
@@ -479,8 +479,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newOuter =
-                """
+        String newOuter
+                = """
                 package t;
                 record A(F f) {
                     public A {
@@ -488,8 +488,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     }
                 }
                 """;
-        String newInner =
-                """
+        String newInner
+                = """
                 /*
                  * Refactoring License
                  */
@@ -503,6 +503,91 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                         assert null != first;
                         assert null != second;
                     }
+                }
+                """;
+        innerOuterSetupAndTest(source, newOuter, newInner);
+    }
+
+    public void test8Varargs() throws Exception {
+        String source
+                = """
+                package t;
+                record A(F f) {
+                    public A {
+                        assert f != null;
+                    }
+                    record F<P>(P first, String... second) {
+                        public F {
+                            assert null != first;
+                            assert null != second;
+                        }
+                    }
+                }
+                """;
+        String newOuter
+                = """
+                package t;
+                record A(F f) {
+                    public A {
+                        assert f != null;
+                    }
+                }
+                """;
+        String newInner
+                = """
+                /*
+                 * Refactoring License
+                 */
+                package t;
+                /**
+                 *
+                 * @author junit
+                 */
+                record F<P>(P first, String... second) {
+                    public F {
+                        assert null != first;
+                        assert null != second;
+                    }
+                }
+                """;
+        innerOuterSetupAndTest(source, newOuter, newInner);
+    }
+
+    public void test8RecordImplements() throws Exception {
+//        debug = true;
+        String source
+                = """
+                package t;
+                import java.time.LocalDate;
+                record A(int id, String name, LocalDate dob) implements Cloneable {
+                   static F f;
+                   record F(int x, int y) implements Cloneable {
+                      /** I should be back. */
+                      static String code = "nix";
+                   }
+                }
+                """;
+        String newOuter
+                = """
+                package t;
+                import java.time.LocalDate;
+                record A(int id, String name, LocalDate dob) implements Cloneable {
+                    static F f;
+                }
+                """;
+        String newInner
+                = """
+                /*
+                 * Refactoring License
+                 */
+                package t;
+                /**
+                 *
+                 * @author hom
+                 */
+                record F(int x, int y) implements Cloneable {
+                    /** I should be back. */
+                    static String code = "nix";
                 }
                 """;
         innerOuterSetupAndTest(source, newOuter, newInner);
@@ -540,8 +625,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                     printMembers(members, m);
                 }
                 // selecting the last element assumes that the inner class is the last member in the outer class.
-                Tree lastInnerClass =
-                        outer.getMembers().get(outer.getMembers().size() - 1);
+                Tree lastInnerClass
+                        = outer.getMembers().get(outer.getMembers().size() - 1);
                 if (debug && lastInnerClass instanceof ClassTree lct) {
 //                    String n = "lastInnerClass " + lastInnerClass.getKind().toString();
 //                    printNumbered(System.err, n, lastInnerClass.toString());
@@ -549,8 +634,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                 }
                 TreePath tp = TreePath.getPath(cut, lastInnerClass);
                 try {
-                    r[0] =
-                            new InnerToOuterRefactoring(TreePathHandle.create(tp, parameter));
+                    r[0]
+                            = new InnerToOuterRefactoring(TreePathHandle.create(tp, parameter));
                 } catch (Throwable t) {
                     System.err.println("InnerOuter refatoring failed with exception " + t);
                     t.printStackTrace(System.out);

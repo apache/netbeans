@@ -927,7 +927,7 @@ final class TaskPanel extends javax.swing.JPanel {
             JLabel noSummaryLabel = new JLabel();
             noSummaryLabel.setText(Bundle.IssuePanel_noSummary());
             String icon = "org/netbeans/modules/localtasks/resources/error.gif"; //NOI18N
-            noSummaryLabel.setIcon(new ImageIcon(ImageUtilities.loadImage(icon)));
+            noSummaryLabel.setIcon(ImageUtilities.loadIcon(icon));
             messagePanel.add(noSummaryLabel);
         }
         if (noSummary) {

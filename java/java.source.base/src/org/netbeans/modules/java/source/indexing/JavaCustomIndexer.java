@@ -59,8 +59,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import javax.lang.model.SourceVersion;
 
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.LineMap;
+
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
@@ -68,8 +71,8 @@ import javax.management.MBeanServer;
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
-import org.netbeans.api.annotations.common.CheckForNull;
 
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -802,10 +805,10 @@ public class JavaCustomIndexer extends CustomIndexer {
         }
     }
 
-    public static void setErrors(Context context, CompileTuple active, DiagnosticListenerImpl errors) {
+    public static void setErrors(Context context, CompileTuple active, CompilationUnitTree cut, DiagnosticListenerImpl errors) {
         if (!active.virtual) {
             Iterable<Diagnostic<? extends JavaFileObject>> filteredErrorsList = Iterators.filter(errors.getDiagnostics(active.jfo), new FilterOutJDK7AndLaterWarnings());
-            ErrorsCache.setErrors(context.getRootURI(), active.indexable, filteredErrorsList, active.aptGenerated ? ERROR_CONVERTOR_NO_BADGE : ERROR_CONVERTOR);
+            ErrorsCache.setErrors(context.getRootURI(), active.indexable, filteredErrorsList, new ErrorConvertorImpl(active.aptGenerated ? ErrorKind.ERROR_NO_BADGE : ErrorKind.ERROR, cut.getLineMap()));
         }
     }
 
@@ -1298,13 +1301,15 @@ public class JavaCustomIndexer extends CustomIndexer {
         }
     }
 
-    private static final Convertor<Diagnostic<?>> ERROR_CONVERTOR = new ErrorConvertorImpl(ErrorKind.ERROR);
-    private static final Convertor<Diagnostic<?>> ERROR_CONVERTOR_NO_BADGE = new ErrorConvertorImpl(ErrorKind.ERROR_NO_BADGE);
+    private static final Convertor<Diagnostic<?>> ERROR_CONVERTOR = new ErrorConvertorImpl(ErrorKind.ERROR, null);
+    private static final Convertor<Diagnostic<?>> ERROR_CONVERTOR_NO_BADGE = new ErrorConvertorImpl(ErrorKind.ERROR_NO_BADGE, null);
     
     private static final class ErrorConvertorImpl implements Convertor<Diagnostic<?>> {
         private final ErrorKind errorKind;
-        public ErrorConvertorImpl(ErrorKind errorKind) {
+        private final LineMap lm;
+        public ErrorConvertorImpl(ErrorKind errorKind, LineMap lm) {
             this.errorKind = errorKind;
+            this.lm = lm;
         }
         @Override
         public ErrorKind getKind(Diagnostic<?> t) {
@@ -1313,6 +1318,22 @@ public class JavaCustomIndexer extends CustomIndexer {
         @Override
         public int getLineNumber(Diagnostic<?> t) {
             return (int) t.getLineNumber();
+        }
+        @Override
+        public ErrorsCache.Range getRange(Diagnostic<?> t) {
+            if (lm == null || t.getStartPosition() == (-1)) {
+                return new ErrorsCache.Range(new ErrorsCache.Position((int) t.getLineNumber(), (int) t.getColumnNumber()), null);
+            }
+            ErrorsCache.Position endPos;
+            if (t.getEndPosition() == (-1)) {
+                endPos = null;
+            } else {
+                endPos = new ErrorsCache.Position((int) lm.getLineNumber(t.getEndPosition()), (int) lm.getColumnNumber(t.getEndPosition()));
+            }
+            return new ErrorsCache.Range(
+                    new ErrorsCache.Position((int) lm.getLineNumber(t.getStartPosition()), (int) lm.getColumnNumber(t.getStartPosition())),
+                    endPos
+            );
         }
         @Override
         public String getMessage(Diagnostic<?> t) {

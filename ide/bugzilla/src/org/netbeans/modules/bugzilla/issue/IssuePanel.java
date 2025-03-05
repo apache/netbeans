@@ -123,7 +123,6 @@ import org.netbeans.modules.bugzilla.util.NbBugzillaConstants;
 import org.netbeans.modules.mylyn.util.NbDateRange;
 import org.netbeans.modules.spellchecker.api.Spellchecker;
 import org.netbeans.modules.team.ide.spi.IDEServices;
-import org.netbeans.modules.team.spi.TeamAccessorUtils;
 import org.openide.awt.HtmlBrowser;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node;
@@ -1480,25 +1479,25 @@ public class IssuePanel extends javax.swing.JPanel {
             JLabel noSummaryLabel = new JLabel();
             noSummaryLabel.setText(NbBundle.getMessage(IssuePanel.class, "IssuePanel.noSummary")); // NOI18N
             String icon = issue.isNew() ? "org/netbeans/modules/bugzilla/resources/info.png" : "org/netbeans/modules/bugzilla/resources/error.gif"; // NOI18N
-            noSummaryLabel.setIcon(new ImageIcon(ImageUtilities.loadImage(icon)));
+            noSummaryLabel.setIcon(ImageUtilities.loadImageIcon(icon, false));
             messagePanel.add(noSummaryLabel);
         }
         if (cyclicDependency) {
             JLabel cyclicDependencyLabel = new JLabel();
             cyclicDependencyLabel.setText(NbBundle.getMessage(IssuePanel.class, "IssuePanel.cyclicDependency")); // NOI18N
-            cyclicDependencyLabel.setIcon(new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/bugzilla/resources/error.gif"))); // NOI18N
+            cyclicDependencyLabel.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/bugzilla/resources/error.gif", false)); // NOI18N
             messagePanel.add(cyclicDependencyLabel);
         }
         if (invalidKeyword) {
             JLabel invalidKeywordLabel = new JLabel();
             invalidKeywordLabel.setText(NbBundle.getMessage(IssuePanel.class, "IssuePanel.invalidKeyword")); // NOI18N
-            invalidKeywordLabel.setIcon(new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/bugzilla/resources/error.gif"))); // NOI18N
+            invalidKeywordLabel.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/bugzilla/resources/error.gif", false)); // NOI18N
             messagePanel.add(invalidKeywordLabel);
         }
         if (noDuplicateId) {
             JLabel noDuplicateLabel = new JLabel();
             noDuplicateLabel.setText(NbBundle.getMessage(IssuePanel.class, "IssuePanel.noDuplicateId")); // NOI18N
-            noDuplicateLabel.setIcon(new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/bugzilla/resources/error.gif"))); // NOI18N
+            noDuplicateLabel.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/bugzilla/resources/error.gif", false)); // NOI18N
             messagePanel.add(noDuplicateLabel);
         }
         if (noSummary || cyclicDependency || invalidKeyword || noComponent || noVersion || noTargetMilestione || noDuplicateId || (noReproducibility && issue.isNew())) {
@@ -1530,7 +1529,7 @@ public class IssuePanel extends javax.swing.JPanel {
         JLabel messageLabel = new JLabel();
         messageLabel.setText(NbBundle.getMessage(IssuePanel.class, messageKey));
         String icon = issue.isNew() ? "org/netbeans/modules/bugzilla/resources/info.png" : "org/netbeans/modules/bugzilla/resources/error.gif"; // NOI18N
-        messageLabel.setIcon(new ImageIcon(ImageUtilities.loadImage(icon)));
+        messageLabel.setIcon(ImageUtilities.loadImageIcon(icon, false));
         messagePanel.add(messageLabel);
     }
 

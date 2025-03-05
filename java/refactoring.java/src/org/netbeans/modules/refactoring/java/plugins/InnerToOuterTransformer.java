@@ -552,9 +552,6 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
     }
 
     private ClassTree refactorInnerClass(ClassTree innerClass) {
-        if (innerClass.getKind() == Tree.Kind.RECORD) {
-            return refactorInnerRecord(innerClass);
-        }
         ClassTree newInnerClass = innerClass;
         String referenceName = refactoring.getReferenceName();
         GeneratorUtilities genUtils = GeneratorUtilities.get(workingCopy);
@@ -623,38 +620,6 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
             genUtils.copyComments(innerClass, newInnerClass, false);
         }
         return newInnerClass;
-    }
-
-    private ClassTree refactorInnerRecord(ClassTree innerRecord) {
-        refactoring.setInnerIsRecord(true);
-        ClassTree newInnerRecord = innerRecord;
-        List<? extends Tree> members = newInnerRecord.getMembers();
-        int insertAt=0;
-        for (Tree member : members) {
-            Tree.Kind kind = member.getKind();
-//            System.out.println("member = " + kind + "" + member);
-            
-            switch (kind) {
-               // The fields, except the static, should loose private final modifiers
-               // so that they appear without these modifiers in the record header
-                case VARIABLE:
-                    VariableTree vt = (VariableTree) member;
-                    ModifiersTree mt = vt.getModifiers();
-                    if (mt.getFlags().contains(Modifier.STATIC)) {
-                        continue;
-                    }
-                    Tree mtype = vt.getType();
-                    Name mName = vt.getName();
-                    ModifiersTree mods = make.Modifiers(EnumSet.noneOf(Modifier.class));
-                    VariableTree newMember = make.RecordComponent(mods, mName, mtype);
-                    newInnerRecord = make.removeClassMember(newInnerRecord, member);
-                    newInnerRecord = make.insertClassMember(newInnerRecord, insertAt, newMember);
-                    insertAt++;
-                    break;
-                default:
-            }
-        }
-        return newInnerRecord;
     }
 
     private boolean isThisInInner() {

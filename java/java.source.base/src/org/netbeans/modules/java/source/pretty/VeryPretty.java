@@ -659,6 +659,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     public String getClassHeader(ClassTree t, String s) {
+//        System.err.println("VP getClassHeader "+ t);
         JCClassDecl tree = (JCClassDecl) t;
         printAnnotations(tree.mods.annotations);
         s = replace(s, ANNOTATIONS);
@@ -862,6 +863,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitClassDef(JCClassDecl tree) {
+//        System.err.println("VP visitClassDef "+tree);
         JCClassDecl enclClassPrev = enclClass;
 	enclClass = tree;
 	toLeftMargin();
@@ -983,6 +985,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitMethodDef(JCMethodDecl tree) {
+//        System.err.println("VP visitMethodDef +" + tree);
         boolean methodIsConstructor = null==tree.getReturnType();
         boolean enclosingIsRecord= enclClass.getKind() == Kind.RECORD;
         boolean paramsIsComponents= paramsIsComponents(tree.getParameters());

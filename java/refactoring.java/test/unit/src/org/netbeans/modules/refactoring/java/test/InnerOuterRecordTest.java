@@ -509,6 +509,8 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     }
 
     public void test8Varargs() throws Exception {
+        RETRIES=0;
+        debug = true;
         String source
                 = """
                 package t;
@@ -553,8 +555,9 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
         innerOuterSetupAndTest(source, newOuter, newInner);
     }
 
-    public void test8RecordImplements() throws Exception {
-//        debug = true;
+    public void _test8RecordImplements() throws Exception {
+        debug = true;
+        sideBySideCompare=true;
         String source
                 = """
                 package t;

@@ -19,13 +19,15 @@
 
 package org.netbeans.modules.php.editor.indent;
 
+import java.util.Collection;
+import java.util.Set;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.lib.editor.util.ArrayUtilities;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
+import org.netbeans.modules.php.editor.lexer.utils.LexerUtils;
 
 /**
  * This class will be unnecessary when issue #192289 is fixed.
@@ -40,7 +42,24 @@ public final class IndentUtils {
     }
 
     private static final int MAX_CACHED_TAB_SIZE = 8; // Should mostly be <= 8
-
+    private static final Collection<PHPTokenId> BRACE_PLACEMENT_START_TOKENS = Set.of(
+            PHPTokenId.PHP_CLASS,
+            PHPTokenId.PHP_FUNCTION,
+            PHPTokenId.PHP_IF,
+            PHPTokenId.PHP_ELSE,
+            PHPTokenId.PHP_ELSEIF,
+            PHPTokenId.PHP_FOR,
+            PHPTokenId.PHP_FOREACH,
+            PHPTokenId.PHP_WHILE,
+            PHPTokenId.PHP_DO,
+            PHPTokenId.PHP_SWITCH,
+            PHPTokenId.PHP_PUBLIC,
+            PHPTokenId.PHP_PROTECTED,
+            PHPTokenId.PHP_PRIVATE,
+            PHPTokenId.PHP_PUBLIC_SET,
+            PHPTokenId.PHP_PROTECTED_SET,
+            PHPTokenId.PHP_PRIVATE_SET
+    );
     /**
      * Cached indentation string containing tabs.
      * <br/>
@@ -132,24 +151,13 @@ public final class IndentUtils {
             Token<? extends PHPTokenId> token = ts.token();
             while (token.id() != PHPTokenId.PHP_CURLY_OPEN
                     && token.id() != PHPTokenId.PHP_SEMICOLON
-                    && !(token.id() == PHPTokenId.PHP_TOKEN
-                    && (TokenUtilities.textEquals(token.text(), "(") // NOI18N
-                    || TokenUtilities.textEquals(token.text(), "["))) // NOI18N
+                    && !LexerUtils.isOpenParen(token)
+                    && !LexerUtils.isOpenBracket(token)
                     && ts.movePrevious()) {
                 token = ts.token();
             }
             if (token.id() == PHPTokenId.PHP_CURLY_OPEN) {
-                while (token.id() != PHPTokenId.PHP_CLASS
-                        && token.id() != PHPTokenId.PHP_FUNCTION
-                        && token.id() != PHPTokenId.PHP_IF
-                        && token.id() != PHPTokenId.PHP_ELSE
-                        && token.id() != PHPTokenId.PHP_ELSEIF
-                        && token.id() != PHPTokenId.PHP_FOR
-                        && token.id() != PHPTokenId.PHP_FOREACH
-                        && token.id() != PHPTokenId.PHP_WHILE
-                        && token.id() != PHPTokenId.PHP_DO
-                        && token.id() != PHPTokenId.PHP_SWITCH
-                        && ts.movePrevious()) {
+                while (!BRACE_PLACEMENT_START_TOKENS.contains(token.id()) && ts.movePrevious()) {
                     token = ts.token();
                 }
                 CodeStyle codeStyle = CodeStyle.get(doc);
@@ -166,6 +174,8 @@ public final class IndentUtils {
                     bracePlacement = codeStyle.getWhileBracePlacement();
                 } else if (token.id() == PHPTokenId.PHP_SWITCH) {
                     bracePlacement = codeStyle.getSwitchBracePlacement();
+                } else if (LexerUtils.isGetOrSetVisibilityToken(token)) {
+                    bracePlacement = codeStyle.getFieldDeclBracePlacement();
                 }
                 value = bracePlacement == CodeStyle.BracePlacement.NEW_LINE_INDENTED ? previousIndent + codeStyle.getIndentSize() : previousIndent;
             }

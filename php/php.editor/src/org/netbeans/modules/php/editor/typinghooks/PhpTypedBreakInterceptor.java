@@ -376,7 +376,9 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
                     PHPTokenId.PHP_FOR, PHPTokenId.PHP_FOREACH, PHPTokenId.PHP_TRY,
                     PHPTokenId.PHP_DO, PHPTokenId.PHP_WHILE, PHPTokenId.PHP_TOKEN,
                     PHPTokenId.PHP_SWITCH, PHPTokenId.PHP_CASE, PHPTokenId.PHP_OPENTAG, PHPTokenId.PHP_DEFAULT,
-                    PHPTokenId.PHP_MATCH
+                    PHPTokenId.PHP_MATCH,
+                    PHPTokenId.PHP_PUBLIC, PHPTokenId.PHP_PROTECTED, PHPTokenId.PHP_PRIVATE, // CCP
+                    PHPTokenId.PHP_PUBLIC_SET, PHPTokenId.PHP_PROTECTED_SET, PHPTokenId.PHP_PRIVATE_SET
             );
             ts.movePrevious(); // consume "{" or ":"
             Token<? extends PHPTokenId> keyToken = LexUtilities.findPreviousToken(ts, lookFor);

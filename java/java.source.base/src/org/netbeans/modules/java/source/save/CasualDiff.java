@@ -45,6 +45,7 @@ import com.sun.tools.javac.tree.DCTree.DCInheritDoc;
 import com.sun.tools.javac.tree.DCTree.DCLink;
 import com.sun.tools.javac.tree.DCTree.DCLiteral;
 import com.sun.tools.javac.tree.DCTree.DCParam;
+import com.sun.tools.javac.tree.DCTree.DCRawText;
 import com.sun.tools.javac.tree.DCTree.DCReference;
 import com.sun.tools.javac.tree.DCTree.DCReturn;
 import com.sun.tools.javac.tree.DCTree.DCSee;
@@ -4729,6 +4730,9 @@ public class CasualDiff {
             case TEXT:
                 localpointer = diffText(doc, (DCText)oldT, (DCText)newT, elementBounds);
                 break;
+            case MARKDOWN:
+                localpointer = diffRawText(doc, (DCRawText)oldT, (DCRawText)newT, elementBounds);
+                break;
             case AUTHOR:
                 localpointer = diffAuthor(doc, (DCAuthor)oldT, (DCAuthor)newT, elementBounds);
                 break;
@@ -4950,6 +4954,18 @@ public class CasualDiff {
         }
         return elementBounds[1];
     }
+<<<<<<< HEAD
+=======
+    
+    private int diffRawText(DCDocComment doc, DCTree.DCRawText oldT, DCTree.DCRawText newT, int[] elementBounds) {
+        if(oldT.code.equals(newT.code)) {
+            copyTo(elementBounds[0], elementBounds[1]);
+        } else {
+            printer.print(newT.code);
+        }
+        return elementBounds[1];
+    }
+>>>>>>> origin/master
 
     private int diffAuthor(DCDocComment doc, DCAuthor oldT, DCAuthor newT, int[] elementBounds) {
         int localpointer = oldT.name.isEmpty()? elementBounds[1] : getOldPos(oldT.name.get(0), doc);

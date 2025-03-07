@@ -103,15 +103,15 @@
             <description>
                 <p>
                     <a href="@TOP@/org/openide/filesystems/annotations/LayerGeneratingProcessor.html"><code>LayerGeneratingProcessor</code></a> subclasses declare some
-                    <a href="@JDK@/javax/lang/model/SourceVersion.html"><code>SourceVersion</code></a> support,
+                    <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/lang/model/SourceVersion.html"><code>SourceVersion</code></a> support,
                     but as new JDKs are released, the declaration becomes obsolete and produces spurious warnings. The processors
                     are typically not affected by newer Java language features.
                 </p>
                 <p>
                     This change changes the default behaviour if NO 
-                    <a href="@JDK@/javax/annotation/processing/SupportedSourceVersion.html"><code>@SupportedSourceVersion</code></a>
+                    <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/annotation/processing/SupportedSourceVersion.html"><code>@SupportedSourceVersion</code></a>
                     annotation is present on subclass. From 8.40, the Processor will report 
-                    <a href="@JDK@/javax/lang/model/SourceVersion.html#latest--"><code>@SourceVersion.latest()</code></a>.
+                    <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/lang/model/SourceVersion.html#latest--"><code>@SourceVersion.latest()</code></a>.
                 </p>
             </description>
             <class name="LayerGeneratingProcessor" package="org.openide.filesystems.annotations"/>
@@ -603,13 +603,13 @@
                     <a href="@TOP@/org/openide/filesystems/FileObject.html#setAttribute-java.lang.String-java.lang.Object-">
                     setAttribute    
                     </a>
-                    with type of <a href="@JDK@/java/lang/reflect/Method.html">Method</a>.
+                    with type of <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/reflect/Method.html">Method</a>.
                     When the attribute is queried (without the prefix), the
                     method is called as is common in
                     <a href="@TOP@/org/openide/filesystems/XMLFileSystem.html">XMLFileSystem</a>
                     attributes. You can also use <code>newvalue:</code> prefix
                     for attribute of type 
-                    <a href="@JDK@/java/lang/Class.html">Class</a>.
+                    <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Class.html">Class</a>.
                 </p>
             </description>
             <class package="org.openide.filesystems" name="FileUtil"/>
@@ -1270,7 +1270,7 @@
             <description>
                 <p>
                     <a href="@TOP@/org/openide/filesystems/XMLFileSystem.html">XMLFileSystem</a>'s 
-                    methodvalue now supports also <a href="@JDK@/java/util/Map.html">Map</a>
+                    methodvalue now supports also <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/Map.html">Map</a>
                     attribute, so one can write factory methods that are completely 
                     independent on filesystems by creating methods like
                     <code>static Object methodName(Map attrs)</code> or

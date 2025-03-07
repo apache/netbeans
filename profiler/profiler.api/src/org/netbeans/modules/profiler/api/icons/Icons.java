@@ -23,6 +23,7 @@ import java.util.Collection;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import org.netbeans.modules.profiler.spi.IconsProvider;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 
 /**
@@ -50,8 +51,11 @@ public final class Icons {
      */
     public static ImageIcon getImageIcon(String key) {
         Image image = getImage(key);
-        if (image == null) return null;
-        else return new ImageIcon(image);
+        if (image == null) {
+            return null;
+        } else {
+            return ImageUtilities.icon2ImageIcon(ImageUtilities.image2Icon(image));
+        }
     }
     
     /**

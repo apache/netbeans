@@ -102,7 +102,7 @@ smoothly by the NetBeans window manager implementation.
 As a rule, modules should not create their own top-level windows
 (e.g.
 
-<a href="@JDK@/java/awt/Window.html"><code>java.awt.Window</code></a>),
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/Window.html"><code>java.awt.Window</code></a>),
 
 since these would exist without the knowledge of NetBeans' window
 manager. This window manager is capable of manipulating application
@@ -175,17 +175,17 @@ To create a simple top component, it suffices to subclass
 
 This is a subclass of
 
-<a href="@JDK@/javax/swing/JComponent.html"><code>JComponent</code></a>,
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JComponent.html"><code>JComponent</code></a>,
 
 which means that it is possible to draw on it using a variety of
 mechanisms; typically, it is treated as a container, and its layout
 may be
 
-<a href="@JDK@/java/awt/Container.html#setLayout-java.awt.LayoutManager-">set</a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/Container.html#setLayout-java.awt.LayoutManager-">set</a>
 
 and components
 
-<a href="@JDK@/java/awt/Container.html#add-java.awt.Component-java.lang.Object-">added</a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/awt/Container.html#add-java.awt.Component-java.lang.Object-">added</a>
 
 to it. 
 
@@ -290,7 +290,7 @@ Just by subclassing
 you can create a component which is capable of <em>cloning</em>
 itself, like the Editor does with the popup action "Clone View". If
 
-<a href="@JDK@/java/lang/Object.html#clone--"><code>Object.clone()</code></a>
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Object.html#clone--"><code>Object.clone()</code></a>
 
 takes care of all of your instance state satisfactorily, then you
 need do little more; otherwise, you can override

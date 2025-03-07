@@ -62,15 +62,15 @@
         <description>
             <p>
                 Typically <code>AbstractServiceProviderProcessor</code> subclasses declare some 
-                <a href="@JDK@/javax/lang/model/SourceVersion.html"><code>SourceVersion</code></a> support,
+                <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/lang/model/SourceVersion.html"><code>SourceVersion</code></a> support,
                 but as new JDKs are released, the declaration becomes obsolete and produces spurious warnings. The processors
                 are typically not affected by newer Java language features.
             </p>
             <p>
                 This change changes the default behaviour if NO 
-                <a href="@JDK@/javax/annotation/processing/SupportedSourceVersion.html"><code>@SupportedSourceVersion</code></a>
+                <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/annotation/processing/SupportedSourceVersion.html"><code>@SupportedSourceVersion</code></a>
                 annotation is present on subclass. From 8.40, the Processor will report 
-                <a href="@JDK@/javax/lang/model/SourceVersion.html#latest--"><code>@SourceVersion.latest()</code></a>.
+                <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/lang/model/SourceVersion.html#latest--"><code>@SourceVersion.latest()</code></a>.
             </p>
         </description>
         <class name="LayerGeneratingProcessor" package="org.openide.filesystems.annotations" link="no" /> <!-- external -->
@@ -149,7 +149,7 @@
             <code>allInstances</code> or <code>allClasses</code> and relied
             on side effect of such call. In case you want to trigger the 
             computation call some method on the returned
-            <a href="@JDK@/java/util/Collection.html">Collection</a> 
+            <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/Collection.html">Collection</a> 
             (other than <code>iterator()</code>) like <code>size()</code>
             or <code>isEmpty</code>.
             </p>
@@ -162,7 +162,7 @@
                 waiting for or creating all of them:
             </p>
            <pre>
-for (<a href="@JDK@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFactory</a> first : <a href="@TOP@/org/openide/util/Lookup.html#getDefault--">Lookup.getDefault()</a>.lookupAll(<a href="@JDK@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFactory</a>.class)) {
+for (<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFactory</a> first : <a href="@TOP@/org/openide/util/Lookup.html#getDefault--">Lookup.getDefault()</a>.lookupAll(<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFactory</a>.class)) {
     return first;
 }
            </pre>
@@ -266,7 +266,7 @@ for (<a href="@JDK@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFacto
             <p>
                 All modification methods in <code>AbstractLookup</code> and <code>ProxyLookup</code>
                 were extended to accept an 
-                <a href="@JDK@/java/util/concurrent/Executor.html">Executor</a>.
+                <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/concurrent/Executor.html">Executor</a>.
                 If not null, it is used to dispatch events to listeners sometime
                 "later". Also the <code>AbstractLookup.Content</code> 
                 and <code>InstanceContent</code> constructors

@@ -78,11 +78,11 @@ class with its static methods that provide its instance for the given input sour
 <p>
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenHierarchy.html">TokenHierarchy</a>
     can be created for immutable input sources (
-<a href="@JDK@/java/lang/CharSequence.html">CharSequence</a>
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/CharSequence.html">CharSequence</a>
     or
-<a href="@JDK@/java/io/Reader.html">java.io.Reader</a>
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/io/Reader.html">java.io.Reader</a>
     ) or for mutable input sources (typically 
-<a href="@JDK@/javax/swing/text/Document.html">javax.swing.text.Document</a>
+<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Document.html">javax.swing.text.Document</a>
     ).
     <br/>
     For mutable input source the lexer framework updates the tokens in the token hierarchy automatically
@@ -102,7 +102,7 @@ class with its static methods that provide its instance for the given input sour
     (returned by
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Token.html#id--">Token.id()</a>
     ) and a text (aka token body) represented as
-<a href="@JDK@/java/lang/CharSequence.html">CharSequence</a>
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/CharSequence.html">CharSequence</a>
     (returned by
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Token.html#text--">Token.text()</a>
     ).
@@ -169,7 +169,7 @@ class with its static methods that provide its instance for the given input sour
     Token is identified by its id represented by
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenId.html">TokenId</a>
     interface. Token ids for a language are typically implemented as java enums (extensions of
-<a href="@JDK@/java/lang/Enum.html">Enum</a>
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Enum.html">Enum</a>
     ) but it's not mandatory.
     <br/>
     All token ids for the given language are described by

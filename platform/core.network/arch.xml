@@ -110,7 +110,7 @@
   <api name="org.netbeans.core.network.proxy.pac.impl.ALLOWED_PAC_ENGINES" type="export" category="stable" group="branding">
       To further secure execution of downloaded scripts, it is possible
       to restrict the set of allowed 
-      <a href="@JDK@/javax/script/ScriptEngine.html">ScriptEngine</a>s
+      <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngine.html">ScriptEngine</a>s
       to evaluate the PAC scripts.
       Provide a branding of bundle
       <code>org.netbeans.core.network.proxy.pac.impl.Bundle</code>
@@ -207,7 +207,7 @@
           is part of the main startup path of a NetBeans application. For this
           reason the constructor better be fast. Defer as much work as possible to 
           later.
-            <api name="java.net.ProxySelector" category="standard" group="java" type="import" url="@JDK@/java/net/ProxySelector.html" />
+            <api name="java.net.ProxySelector" category="standard" group="java" type="import" url="@JDK@@JDKMODULE_JAVA_BASE@/java/net/ProxySelector.html" />
       </usecase>
       <usecase name="Custom PAC Evaluator" id="custom-pac-evaluator">
           You can plug in your own PAC evaluator if you are unhappy with

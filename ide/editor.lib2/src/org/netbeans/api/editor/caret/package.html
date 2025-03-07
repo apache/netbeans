@@ -71,7 +71,7 @@
   <p>
   The basics of the locking and events model of Swing documents is
   described in the javadoc of the
-  <a href="@JDK@/javax/swing/text/AbstractDocument.html">javax.swing.text.AbstractDocument</a>
+  <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/AbstractDocument.html">javax.swing.text.AbstractDocument</a>
   class. Netbeans documents use the same patterns and so does the Caret API,
   because of its tight relation to documents. The fundamentals of the Swing documents
   locking model are that any changes to a document are done under the
@@ -111,7 +111,7 @@
   
   <h3><a name="movement-origins">Reason of Caret Movement</a></h3>
   <p>
-      It may be desirable (especially for <a href="@JDK@/javax/swing/text/NavigationListener.html">NavigationListeners</a>, but possibly for 
+      It may be desirable (especially for <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/NavigationListener.html">NavigationListeners</a>, but possibly for 
       <a href="EditorCaretListener.html">EditorCaretListeners</a> too) to determine
   what was the reason leading to caret movement. The caller of Caret API which intends to position the caret
   may provide an optional <a href="MoveCaretsOrigin.html">MoveCaretsOrigin</a> instance to Caret API methods to indicate
@@ -129,10 +129,10 @@
   <h3><a name="navigation-filters">Navigation Filters</a></h3>
   <p>
   The Caret API implements and extends the concept of swing 
-  <a href="@JDK@/javax/swing/text/NavigationFilter.html">NavigationFilters</a>. The Filter
+  <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/NavigationFilter.html">NavigationFilters</a>. The Filter
   gets notified on <code>CaretInfo</code> movement; so if more Carets are present, 
   a <code>NavigationFilter</code> will see all their moves. Navigation Filters are
-  called with a special instance of <a href="@JDK@/javax/swing/text/NavigationFilter.FilterBypass.html">
+  called with a special instance of <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/NavigationFilter.FilterBypass.html">
   FilterBypass</a> extending <a href="../../../spi/editor/caret/NavigationFilterBypass.html">
     NavigationFilterBypass</a>. The Filter <b>can downcast the FilterBypass to access extended information</b>
   about the current caret's movement:
@@ -191,7 +191,7 @@
         </code>
       </pre>
   </div>
-  Swing NavigationFilters, specified by <a href="@JDK@/javax/swing/text/JTextComponent#setNavigationFilter(javax.swing.text.NavigationFilter)">TextComponent.setNavigationFilter()</a>
+  Swing NavigationFilters, specified by <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/JTextComponent#setNavigationFilter(javax.swing.text.NavigationFilter)">TextComponent.setNavigationFilter()</a>
   are called for all caret movements.
   <p>
   Abstract boilerplate for <code>NavigationFilters</code> is created, 

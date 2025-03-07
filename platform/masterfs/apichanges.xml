@@ -84,12 +84,12 @@
             <compatibility addition="yes" binary="compatible" source="incompatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
             <description>
                Changing the <code>fileLocked</code> method to 
-                throw <a href="@JDK@/java/io/IOException.html">IOException</a> is 
+                throw <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/io/IOException.html">IOException</a> is 
                 source incompatible, but
                 binary compatible. As masterfs friends are always compiled at the same time as
                 masterfs, and even if they will not, they will link (as the change is binary
                 compatible), we modified the method signature to throw 
-                <a href="@JDK@/java/io/IOException.html">IOException</a>
+                <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/io/IOException.html">IOException</a>
             </description>
             <class package="org.netbeans.modules.masterfs.providers" name="ProvidedExtensions"/>
             <issue number="208657"/>

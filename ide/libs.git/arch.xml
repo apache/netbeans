@@ -876,7 +876,7 @@
 -->
  <answer id="perf-mem">
   <p>
-   Repository metadata is cached as long as someone holds a reference to the repository root folder (<a href="@JDK@/java/io/File.html">java.io.File</a>).
+   Repository metadata is cached as long as someone holds a reference to the repository root folder (<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/io/File.html">java.io.File</a>).
    The underlying JGit library caches:
   </p>
   <ul>

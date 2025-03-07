@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.xml.schema.completion;
 
-import javax.swing.ImageIcon;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.xml.lexer.XMLTokenId;
@@ -31,6 +30,7 @@ import org.netbeans.modules.xml.schema.completion.CompletionPaintComponent.Eleme
 import org.netbeans.modules.xml.schema.completion.util.CompletionContextImpl;
 import org.netbeans.modules.xml.schema.completion.util.CompletionUtil;
 import org.netbeans.modules.xml.schema.model.Attribute.Use;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -51,8 +51,7 @@ public class ElementResultItem extends CompletionResultItem {
         TokenSequence tokenSequence) {
         super(element, context, tokenSequence);
         itemText = element.getName();
-        icon = new ImageIcon(CompletionResultItem.class.getResource(
-            ICON_LOCATION + ICON_ELEMENT));
+        icon = ImageUtilities.loadIcon(ICON_LOCATION + ICON_ELEMENT);
     }
     
     /**
@@ -62,8 +61,7 @@ public class ElementResultItem extends CompletionResultItem {
     public ElementResultItem(AbstractElement element, String prefix, CompletionContextImpl context) {
         super(element, context);        
         itemText = prefix + ":" + element.getName();
-        icon = new ImageIcon(CompletionResultItem.class.
-                getResource(ICON_LOCATION + ICON_ELEMENT));
+        icon = ImageUtilities.loadIcon(ICON_LOCATION + ICON_ELEMENT);
     }
 
     @Override

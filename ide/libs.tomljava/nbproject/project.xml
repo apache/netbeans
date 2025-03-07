@@ -40,8 +40,8 @@
                 <package>net.vieiro.toml.antlr4</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/toml-java-13.4.1.jar</runtime-relative-path>
-                <binary-origin>external/toml-java-13.4.1.jar</binary-origin>
+                <runtime-relative-path>ext/toml-java-13.4.2.jar</runtime-relative-path>
+                <binary-origin>external/toml-java-13.4.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

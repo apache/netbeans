@@ -57,7 +57,7 @@ import javax.swing.border.*;
 
 * <TABLE>
 * <caption>properties of SplittedPanel</caption>
-* <TR><TH WIDTH=15%>Property<TH WIDTH=15%>Property Type<TH>Description
+* <TR><TH style="width:15%" >Property<TH style="width:15%" >Property Type<TH>Description
 * <TR><TD> SplitType            <TD> int       <TD> The type of the splitting - HORIZONTAL, VERTICAL or NONE
 * <TR><TD> SplitPosition        <TD> int       <TD> The position of the split point - either absolute position or number of percents
 *                                                   according to the "Absolute" property settings, could be one of FIRST_PREFERRED or

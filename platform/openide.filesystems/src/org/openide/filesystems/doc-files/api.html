@@ -49,7 +49,7 @@ especially for
 <li><a href="#create-delete-rename">Creating, deleting, and renaming files and folders</a>
 <li><a href="#read-write">Reading and writing files</a>
 <li><a href="#events">Listening on file events</a>
-<li><a href="#mime">MIME Type Resolution Process</a>
+<li><a href="#mimerp">MIME Type Resolution Process</a>
 </ul>
 
 <li><a href="#special">Special Filesystems</a>
@@ -71,7 +71,7 @@ actual files on disk; this API can be used to represent any hierarchical
 storage of file-like data.
 
 
-<h2><a name="not-for">What This API is Not For</a></h2>
+<h2 id="not-for">What This API is Not For</h2>
 
 This API pertains only to manipulating files on disk (or whatever
 storage mechanism a filesystem may use), and makes no reference to
@@ -93,7 +93,7 @@ which typically represent the parsed content of a file and provide
 objects to programmatically access that content via 
 <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getCookie-java.lang.Class-">DataObject.getCookie()</a>.
 
-<h2><a name="basic-usage">Common Tasks</a></h2>
+<h2 id="basic-usage">Common Tasks</h2>
 
 Basic operations using the Filesystems API should be familiar,
 as they are similar to any file-access system.  <code>FileObjects</code>
@@ -108,7 +108,7 @@ section gives examples of the more common tasks associated with using
 filesystems.
 
 
-<h3><a name="finding">Finding files and folders</a></h3>
+<h3 id="finding">Finding files and folders</h3>
 
 Normally, you will be looking for a file or folder by name, and will want to get the
 
@@ -141,7 +141,7 @@ URL url = <a href="../FileObject.html#getURL--">file.getURL()</a>;
 HtmlBrowser.URLDisplayer.getDefault().<a href="@org-openide-awt@/org/openide/awt/HtmlBrowser.URLDisplayer.html#showURL-java.net.URL-">showURL</a>(url);
 </pre>
 
-<h3><a name="create-delete-rename">Creating, deleting, and renaming files and folders</a></h3>
+<h3 id="create-delete-rename">Creating, deleting, and renaming files and folders</h3>
 
 This example creates a subfolder and then a new file within that
 subfolder:
@@ -209,7 +209,7 @@ facilities for
 
 <a href="@org-openide-util@/org/openide/util/Mutex.html">read-many/write-one locks</a>.
 
-<h3><a name="read-write">Reading and writing files</a></h3>
+<h3 id="read-write">Reading and writing files</h3>
 
 Reading and writing the contents of a data file is straightforward:
 
@@ -242,7 +242,7 @@ try {
 }
 </pre>
 
-<h3><a name="events">Listening on file events</a></h3>
+<h3 id="events">Listening on file events</h3>
 
 If you need to keep track of what is being done to a file by other
 components, you can monitor it using normal Java events:
@@ -275,7 +275,7 @@ someFolder.addFileChangeListener(new FileChangeAdapter() {
 });
 </pre>
 
-<h3><a name="mime">Determining MIME Content Type</a></h3>
+<h3 id="mimerp">Determining MIME Content Type</h3>
 
 <p><code>FileObject.getMIMEType()</code> reports a basic MIME type for a file, which can used to classify it for
 editing and other purposes.</p>
@@ -289,7 +289,7 @@ sharing results among multiple declared resolvers.
 See the <a href="HOWTO-MIME.html">declarative MIME resolvers how-to</a> for more information about this.
 
 
-<h2><a name="special">Special Filesystems</a></h2>
+<h2 id="special">Special Filesystems</h2>
 
 <p>Each file object resides on a <code>FileSystem</code> which handles a large tree of files. Normally you need
 not be aware of this, since the "Master Filesystem" module automatically handles creation of whatever
@@ -305,7 +305,7 @@ information.
 
 <div class="nonnormative">
 
-<h2><a name="diagram_fileobject">UML class diagram of <code>FileObject</code></a></h2>
+<h2 id="diagram_fileobject">UML class diagram of <code>FileObject</code></h2>
 
 <img src="fileobject.gif" alt="FileObject UML">
 

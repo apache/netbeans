@@ -58,7 +58,7 @@
     </api>
     </p>
     
-    <p>
+
     <api type="export" name="TaskListXMLLayer" group="layer" category="official" >
         <p>Task List framework defines the following folders in XML layer:
         <br/>
@@ -85,9 +85,9 @@
             </samp>
         </p>
     </api>
-    </p>
+
     
-    <p>
+
     <api type="export" name="TaskGroups" group="layer" category="official" >
         <p><a href="@TOP@/org/netbeans/spi/tasklist/Task.html">Task</a>s are organized into groups according 
         to their importance (error/warning/todo etc). The task group is specified when the Task is created.
@@ -100,7 +100,7 @@
         
     </p> <p>Additional task groups can be specified in xml layers, see above.</p>
     </api>
-  </p>
+
  </answer>
 
 

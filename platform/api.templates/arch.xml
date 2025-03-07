@@ -91,7 +91,7 @@
                 processing
             </a> 
             do some advanced changes to it using either 
-            <a name="scripting">scripting or templating</a> languages.
+            <a id="scripting">scripting or templating</a> languages.
         </p>
         <p>
             This traditionally used to be a bit complicated task (hacking into DataObject implementation), however since 
@@ -202,7 +202,7 @@
         </p>
     </usecase>
     <usecase id="js-wizard" name="Use HTML and JavaScript">
-        <a name="html-and-js"></a>
+        <a id="html-and-js"></a>
         <p>
             There is a way to create a portable wizard (e.g. one that can
             be executed inside of NetBeans as well as in a browser). The 
@@ -333,7 +333,7 @@ I feel ${wizard.msg}.
     </usecase>
     
     <usecase id="java-html" name="Use HTML and Java">
-        <a name="html-and-java"></a>
+        <a id="html-and-java"></a>
         <p>
             Some people would rather use Java instead of Java script while
             getting the portability of the <em>HTML</em>. There is a simple
@@ -382,7 +382,7 @@ I feel ${wizard.msg}.
 </p>
     </usecase>
     <usecase id="target-chooser" name="Selecting target location with HTML UI">
-        <a name="targetchooser"></a>
+        <a id="targetchooser"></a>
         <p>
         It is very common that the HTML file creation wizards (either 
         controled by <a href="#html-and-js">JavaScript</a> or by
@@ -401,7 +401,7 @@ I feel ${wizard.msg}.
         UI for choosing target directory as well as name for the newly created
         file.
 </p>
-<a name="javaTargetChooser"></a>
+<a id="javaTargetChooser"></a>
 <p>
         In case one prefers more Java-like chooser, it is possible to use
         <code>'targetChooser:java'</code> as name of the step. Then all 
@@ -413,7 +413,7 @@ I feel ${wizard.msg}.
 </p>
     </usecase>    
     <usecase id="maven-wizard" name="UI for Maven Archetypes">
-        <a name="html-and-maven"></a>
+        <a id="html-and-maven"></a>
         <p>
             There is a way to create a portable wizard (with logic either
             in <a href="#html-and-js">JavaScript</a> or in 

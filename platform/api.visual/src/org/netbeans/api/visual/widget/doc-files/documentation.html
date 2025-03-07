@@ -58,7 +58,7 @@ code {
 
 <h1>Visual Library 2.0 - Documentation</h1>
 
-<h2><a name="Index">Index</a></h2>
+<h2 id="Index">Index</h2>
 
 <ul>
 <li><a href="#Index">Index</a>
@@ -225,7 +225,7 @@ code {
 <li><a href="#Notes">Notes</a>
 </ul>
 
-<h2><a name="Abstract">Abstract</a></h2>
+<h2 id="Abstract">Abstract</h2>
 <p>This is a documentation for the <strong>Visual Library 2.0 API</strong>. The library is a successor of the Graph Library 1.0. Its provides general-purpose (not graph-oriented only) visualization.
 
 <p>
@@ -233,17 +233,17 @@ code {
 <strong>git:</strong> https://github.com/apache/netbeans/tree/master/platform/api.visual<br>
 <strong>Issues:</strong> https://github.com/apache/netbeans/issues
 
-<h2><a name="Installation">Installation</a></h2>
+<h2 id="Installation">Installation</h2>
 
 <p>
 To install the library, just set a dependency on <strong>org.netbeans.api.visual</strong> module. The source code of Visual Library API is located at <strong>graph/lib</strong> directory in the NetBeans CVS repository.
 
-<h2><a name="Introduction">Introduction</a></h2>
+<h2 id="Introduction">Introduction</h2>
 
 <p>
 The programming style is similar to Swing. You are building and modifying a tree of visual elements that are called <code>Widget</code>s. The root of the tree is represented by a <code>Scene</code> class which holds all visual data of the scene. Since neither Widget nor Scene is an AWT/Swing component you have to call <code>Scene.createView</code> method for creating a Swing component which renders the scene. The created JComponent could be used anywhere.
 
-<h3><a name="ExampleFirstScene">Example: First Scene</a></h3>
+<h3 id="ExampleFirstScene">Example: First Scene</h3>
 
 <p>
 Following code creates an empty scene, creates a JComponent view of the scene and embeds it into a dialog with scrollable view.
@@ -260,29 +260,28 @@ dia.setVisible (true);
 dia.dispose ();
 </pre>
 
-<h2><a name="Widget">Widget</a></h2>
+<h2 id="Widget">Widget</h2>
 
 <p>
 Widget is a primitive visual element - similar to what JComponent is for Swing. It holds information about its location, boundary, preferred location/boundary, preferred/minimal/maximal sizes, layout, border, foreground, background, font, cursor, tooltip , accessible context, ...
-
+</p>
 <p>
 Widget placement is defined by:
+</p>
 <ul>
-<li>its location point that is specified relatively to its parent widget location and
-<li>its boundary rectangle that is specified relatively to the widget location.
+    <li>its location point that is specified relatively to its parent widget location and</li>
+    <li>its boundary rectangle that is specified relatively to the widget location.</li>
 </ul>
+<p>
 Note that the boundary is specified as a rectangle (and not as Swing-like Dimension). This allows to have baseline ability by the definition.
-
+</p>
 <p>
 A widget placement is resolved by a layout associated to its parent widget. The placement is usually based on a preferred location and boundary. The preferred boundary can be set or calculated from the widget needs. Then it can be processed by preferred/minimum/maximum size. See <a href="#Layout">Layout</a> section for details.
 
-<p>
-
-<h3><a name="WidgetMethods">Widget Methods</a></h3>
-
-<p>
+<h3 id="WidgetMethods">Widget Methods</h3>
 
 <table class="framed">
+    <caption>Widget Methods</caption>
 <tr><th>Method<th>Description
 <tr>
 <td>getScene
@@ -412,9 +411,7 @@ A widget placement is resolved by a layout associated to its parent widget. The 
 <td>Called to get a cursor of a specified local location of the widget.
 </table>
 
-<p>
-
-<h3><a name="LabelWidget">LabelWidget</a></h3>
+<h3 id="LabelWidget">LabelWidget</h3>
 
 <p>
 The <code>LabelWidget</code> represents a single line text. You can manipulate with the text using <code>getLabel</code> and <code>setLabel</code> methods or using a constructor parameter. The widget is not-opaque by default and uses foreground, background and font properties for rendering. The text could be aligned to the left (by default), right or center within the widget. The widget origin is a point on the left side of the baseline of the text.
@@ -425,7 +422,7 @@ Since version 2.1 the LabelWidget allows rendering vertical labels. It can be se
 <p>
 Since version 2.7 the LabelWidget allows to use glyph-vector for rendering. This allows accurate text rendering independently on a scene zoom-factor (no more clipped text while zooming onto a scene).
 
-<h3><a name="ImageWidget">ImageWidget</a></h3>
+<h3 id="ImageWidget">ImageWidget</h3>
 
 <p>
 The <code>ImageWidget</code> represents an image. You can manipulate with the image using <code>getImage</code> and <code>setImage</code> methods or using a constructor parameter. The widget is not-opaque by default. The widget origin is top-left corner of the image.
@@ -433,7 +430,7 @@ The <code>ImageWidget</code> represents an image. You can manipulate with the im
 <p>
 The <code>ImageWidget</code> supports animated images. For proper work, do not load images using <code>Utilities.loadImage</code> because the method is producing static images. Instead use standard <code>Toolkit.createImage</code> method for loading.
 
-<h3><a name="WidgetDependency">Widget Dependency</a></h3>
+<h3 id="WidgetDependency">Widget Dependency</h3>
 
 <p>
 Sometimes you want to listen on a widget move or resize changes. The listener is defined by <code>Widget.Dependency</code> interface. Listener could be (un)registered using <code>Widget.addDependency</code> and <code>Widget.removeDependency</code> methods.
@@ -454,7 +451,7 @@ Therefore no bounds of any widget is valid at the time of the method call. The v
 </ul>
 If you want to listen on scene boundary changes, the easiest way is to add scene-listener using <code>Scene.addSceneListener</code> method and put your code into <code>SceneListener.sceneValidated</code> method implementation.
 
-<h3><a name="ExampleIconNodeWidget">Example: Icon Node Widget</a></h3>
+<h3 id="ExampleIconNodeWidget">Example: Icon Node Widget</h3>
 
 <p>
 Following code creates the iconNode instance that has an image with a label.
@@ -474,7 +471,7 @@ iconNode.addChild (new LabelWidget (scene, "My Label"));
 scene.addChild (iconNode);
 </pre>
 
-<h2><a name="Border">Border</a></h2>
+<h2 id="Border">Border</h2>
 
 Each widget have a border. By default it has EmptyBorder. The border could be set using <code>Widget.setBorder</code> method. The border is always painted after the clearing the widget background and before the <code>Widget.paintWidget</code> and <code>Widget.paintChildren</code> methods. Therefore the border could be used for painting complex widget backgrounds. The border can be usually created using <code>BorderFactory.create*Border</code> methods. Single instance of border class could be shared and assigned to more widgets.
 
@@ -491,19 +488,16 @@ There are following borders available:
 <li><b>CompositeBorder</b> - renders a border that is composed with specified borders.
 </ul>
 
-<h2><a name="Scene">Scene</a></h2>
+<h2 id="Scene">Scene</h2>
 
 This widget represents a root node of the tree hierarchy of widgets. It controls the whole scene, its views, repainting and tree validation. It is extended by <code>ObjectScene</code>, <code>GraphScene</code>, <code>GraphPinScene</code> class which adds additional functionally for object-oriented and graph-oriented modeling.
 
 <code>Scene</code> class is derived from <code>Widget</code> class and contains additional methods.
 
-<p>
-
-<h3><a name="SceneMethods">Scene Methods</a></h3>
-
-<p>
+<h3 id="SceneMethods">Scene Methods</h3>
 
 <table class="framed">
+    <caption>Scene Methods</caption>
 <tr><th>Method<th>Description</tr>
 <tr>
 <td>createView
@@ -570,16 +564,13 @@ This widget represents a root node of the tree hierarchy of widgets. It controls
 <td>Creates a widget-specific hover action. See <a href="#HoverAction">HoverAction</a> section.
 </table>
 
-<p>
-
-<h3><a name="SceneListener">SceneListener</a></h3>
+<h3 id="SceneListener">SceneListener</h3>
 
 <p>
 This listener allows you to receive following events:
 
-<p>
-
 <table class="framed">
+    <caption>SceneListener</caption>
 <tr><th>Method<th>Description</tr>
 <tr>
 <td>sceneRepaint
@@ -595,7 +586,7 @@ This listener allows you to receive following events:
 <p>
 This listener could be (un)registered using <code>Scene.addSceneListener</code> and <code>Scene.removeSceneListener</code> methods. Usually it is used by animators, scene layouts, Swing bindings and satellite views.
 
-<h2><a name="CoordinationSystem">Coordination System</a></h2>
+<h2 id="CoordinationSystem">Coordination System</h2>
 
 There are 3 coordination systems used in the library:
 
@@ -626,7 +617,7 @@ Point Scene.convertSceneToView (Scene scene, Point sceneSystemPoint) {
 }
 </pre>
 
-<h2><a name="Layout">Layout</a></h2>
+<h2 id="Layout">Layout</h2>
 
 <p>
 Each widget has a layout assigned (<code>AbsoluteLayout</code> by default). <code>Layout</code> interface cares about placement of children widgets of the widget where the layout is assigned. For details how layout is involved in the validation process, see <a href="#ValidationProcess">Validation Process</a> section. Almost all layouts implementations can be reused by more widgets at the same time.
@@ -637,7 +628,7 @@ Widget also keeps constraints assigned to children widgets. Layout can obtain a 
 <p>
 Widget could be invisible too. In that case, the layout assigned to its parent widget must act like the invisible widget is not there. It means it must resolve location and bounds to value which does not affect the parent widget boundary. If it is not possible, then the location and the boundary of invisible child must be resolved as [0,0] and [0,0,0,0].
 
-<h3><a name="AbsoluteLayout">AbsoluteLayout</a></h3>
+<h3 id="AbsoluteLayout">AbsoluteLayout</h3>
 
 <p>
 Created by: <code>LayoutFactory.createAbsoluteLayout</code>
@@ -650,7 +641,7 @@ Placement algorithm:
 <li>It takes value of <code>childWidget.getPreferredBounds</code> and uses it as the evaluated childWidget boundary. If <code>null</code>, then it uses <code>[0,0,0,0]</code> rectangle instead.
 </ul>
 
-<h3><a name="FlowLayout">FlowLayout</a></h3>
+<h3 id="FlowLayout">FlowLayout</h3>
 
 <p>
 Created by: <code>LayoutFactory.createVerticalFlowLayout</code>, <code>LayoutFactory.createHorizontalFlowLayout</code>
@@ -661,7 +652,7 @@ This layout places children serially in vertical or horizontal line - one widget
 <p>
 The layout allows to work with Number-class constraints. The Number constraint has to be a positive number assigned to a child widget. Then it represents a ratio in with the remaining space (height for VerticalFlowLayout and width for HorizontalFlowLayout) is split and assigned to a particular widget. See <code>test.layout.WeightFlowLayoutTest</code> for example.
 
-<h3><a name="CardLayout">CardLayout</a></h3>
+<h3 id="CardLayout">CardLayout</h3>
 
 <p>
 Created by: <code>LayoutFactory.createCardLayout</code>
@@ -672,7 +663,7 @@ This layout has a single childWidget as active one. The active widget will be ev
 <p>
 For switching active child widget, use <code>LayoutFactory.setActiveCard (widget, newActiveChildWidget)</code> method.
 
-<h3><a name="OverlayLayout">OverlayLayout</a></h3>
+<h3 id="OverlayLayout">OverlayLayout</h3>
 
 <p>
 Created by: <code>LayoutFactory.createOverlayLayout</code>
@@ -680,7 +671,7 @@ Created by: <code>LayoutFactory.createOverlayLayout</code>
 <p>
 It finds the "minimal-encapsulation" (ME) boundary which contains all the children boundaries. Then it sets boundary of each child as the calculated ME one. The widget boundary is set to ME boundary too. During justification, the boundary of each child is sets to the boundary of the widget. Children are placed one over another - the last child is painted on top and receives events as the first child.
 
-<h2><a name="ValidationProcess">Validation Process</a></h2>
+<h2 id="ValidationProcess">Validation Process</h2>
 
 <p>
 When any widget is added/removed in the tree hierarchy of a scene or a widget is changed the way that affects its placement or boundary, then the widget (and the scene too) has to be validated again.
@@ -700,12 +691,12 @@ The process is done in following steps:
 <p>
 The process is described in details in next sub-sections.
 
-<h3><a name="Revalidation">Revalidation</a></h3>
+<h3 id="Revalidation">Revalidation</h3>
 
 <p>
 Each Widget has two flags: <code>requiresFullValidation</code> (marks modified widget) and <code>requiresPartValidation</code> (used for back-tracing the tree from the root/scene widget down to all modified widgets). When a widget is asked to be scheduled for revalidation using <code>Widget.revalidate</code> method, then the widget is marked with requiresFullValidation and requiresPartValidation. All widgets upto the scene are marked as a requiresPartValidation. Now the scene can trace-down all modified widgets without storing their references. Each widget with requiresPartValidation flag also fires an event on its Widget.Dependency listeners because they could be affected by a change of some child widget.
 
-<h3><a name="SceneValidation">Scene Validation</a></h3>
+<h3 id="SceneValidation">Scene Validation</h3>
 
 <p>
 When <code>Scene.validate</code> method is invoked, then it repeatedly validates scene until there is no modification - means <code>Scene.isValidated</code> returns <code>true</code>.
@@ -722,7 +713,7 @@ In some cases you would like to extend boundary of some widgets e.g. when a widg
 <p>
 This 2-pass validation process allows to have similar layout support as Swing has.
 
-<h3><a name="Repainting">Repainting</a></h3>
+<h3 id="Repainting">Repainting</h3>
 
 <p>
 When a widget is scheduled for repaint, then its current (before reevaluation) boundary in the view coordination system is scheduled for repaint and the widget itself is added into the list of widgets scheduled for repaint.
@@ -730,7 +721,7 @@ When a widget is scheduled for repaint, then its current (before reevaluation) b
 <p>
 After the scene is validated completely, then all widgets in repaint-list are scheduled for repaint too. It takes their current (newly evaluated) view coordination system boundaries.
 
-<h3><a name="SceneLayout">SceneLayout</a></h3>
+<h3 id="SceneLayout">SceneLayout</h3>
 
 <p>
 Layout (assigned to a widget) defines placement of its children widgets. But in some cases you would like to do a single-time layout based on different layout algorithm (it could be even high-level layout of graph-oriented data).
@@ -744,7 +735,7 @@ Therefore <code>SceneLayout</code> class has been introduced. When the SceneLayo
 <p>
 There is a <code>LayoutFactory.createDevolveWidgetLayout</code> method that creates a SceneLayout with <code>performLayout</code> method implementation which temporarily sets the desired layout and invokes the specified layout at the end of scene validation process. This allows you use a <code>LayerWidget</code> with default AbsoluteLayout, so the widgets inside will be able to freely move using <code>MoveAction</code> and from time to time (e.g. started by user action) the layer widget will be layout using the specified temporary layout to organize the layer.
 
-<h2><a name="WidgetAction">WidgetAction</a></h2>
+<h2 id="WidgetAction">WidgetAction</h2>
 
 <p>
 The widgets are visual elements that just know where they are on the scene and how to draw themself. By default they do not know how to behave. For defining the behavior there are <code>WidgetAction</code>.
@@ -758,12 +749,12 @@ Factory methods usually requires some parameters. There are two kinds of paramet
 <p>
 Usually single instance of a particular action could be reused and assigned to more Widgets at the same time.
 
-<h3><a name="Assignment">Assignment</a></h3>
+<h3 id="Assignment">Assignment</h3>
 
 <p>
 Actions could be grouped into <strong>chain</strong>s. The chain is an action that distributes the user-events to appropriate actions that are stored inside. Each Widget has its own chain that can be acquired by calling <code>Widget.getActions</code> method. Chain allows to manage and query the list of its actions using <code>addAction</code>, <code>removeAction</code>, <code>getActions</code> methods.
 
-<h3><a name="ActionTools">Action Tools</a></h3>
+<h3 id="ActionTools">Action Tools</h3>
 
 <p>
 Sometimes you would like to have a scene which will behave differently based on a <code>scene state</code>. E.g. you have a toolbar with modes: "Select" (when active then user can only select object), "Connect" (when active then user can only create connection between objects), "Move" (when active then user can only move objects in a scene), ...
@@ -771,7 +762,7 @@ Sometimes you would like to have a scene which will behave differently based on 
 <p>
 For this purpose there are <strong>action tools</strong>. A scene has a single active action tool specified. It is <code>null</code> by default and could be changed by <code>Scene.setActiveTool</code> method. The active tool specified as a <code>String</code> used for the tool identification. Each widget has <code>Widget.createActions (String tool)</code> method for creating an action chain for the specified tool. When a chain is created for particular tool, then you can use <code>Widget.getActions (String tool)</code> for faster access to the chain.
 
-<h3><a name="AWTEventProcessing">AWT Event Processing</a></h3>
+<h3 id="AWTEventProcessing">AWT Event Processing</h3>
 
 <p>
 Each mouse/keyboard/drag'n'drop/focus event that comes from the AWT has to be processed. The processing it done by walking through the tree hierarchy of widgets. For mouse events, the widget boundaries and <code>Widget.isHitAt</code> methods are used for checking before dispatching the event. The AWT-event is converted into the library-specific event (which is very similar to AWT event. The library-specific event has <code>event.getPoint</code> method which location in local coordination system of the widget where an appropriate action is attached to. For each valid widget, all default actions (from <code>Widget.getActions ()</code>) are processed. The processing continues until an event is consumed by an action.
@@ -800,9 +791,7 @@ It is important to have correct order of actions assigned to a widget because so
 <p>
 Actions usually require various parameters including for their creation e.g. <code>LayerWidget</code>. See <a href="#LayerWidget">LayerWidget</a> section for details.
 
-<p>
-
-<h3><a name="ActionState">Action State</a></h3>
+<h3 id="ActionState">Action State</h3>
 
 <p>
 The action is processing library-specific events and returns the event status at the end. Based on the status the library decides whether the event is consumed, locked, ... There are following statuses:
@@ -814,7 +803,7 @@ The action is processing library-specific events and returns the event status at
 <li><code>WidgetAction.State.createLocked (Widget, WidgetAction)</code> - The event is processed and consumed by the action. The next AWT event has to be processed by the specified <code>WidgetAction</code> and it has to take the specified <code>Widget</code> as a parameter. Only when the next AWT event is not consumed by the specified action, then the whole-tree event-processing (described in <a href="#AWTEventProcessing">AWT Event Processing</a> section) is invoked. This is used for locking event-processing by a specific action during processing multiple-events user-actions like moving (MoveAction), starting new connection (ConnectAction), ...
 </ul>
 
-<h3><a name="EventProcessingTypes">Event Processing Types</a></h3>
+<h3 id="EventProcessingTypes">Event Processing Types</h3>
 
 <p>
 All Swing events are processed by all widgets by default. Key-events has to processed differently because they do not contain a "location" information. Therefore all widgets would have to process those events.
@@ -838,7 +827,7 @@ The focused widget is set by <code>Scene.setFocusedWidget</code> method. This me
 <li>You are using <code>CycleFocusAction</code> in your <code>ObjectScene</code>.
 </ul>
 
-<h3><a name="ActionMapAction">ActionMapAction</a></h3>
+<h3 id="ActionMapAction">ActionMapAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createActionMapAction ()</code>, <code>ActionFactory.createActionMapAction (InputMap, ActionMap)</code>
@@ -846,7 +835,7 @@ Created by: <code>ActionFactory.createActionMapAction ()</code>, <code>ActionFac
 <p>
 The action handles key events and popup menu creation. The keys and actions are obtained from specified InputMap and ActionMap parameters. The method without parameters uses the InputMap and ActionMap assigned to a JComponent view of a scene.
 
-<h3><a name="AcceptAction">AcceptAction</a></h3>
+<h3 id="AcceptAction">AcceptAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createAcceptAction (AcceptProvider)</code>
@@ -854,7 +843,7 @@ Created by: <code>ActionFactory.createAcceptAction (AcceptProvider)</code>
 <p>
 The action allows to handle D'n'D drop operation. <code>AcceptProvider.isAcceptable</code> method is called for resolving whether the drop can happen and <code>AcceptProvider.accept</code> is called for handling the drop operation.
 
-<h3><a name="AddRemoveControlPointAction">AddRemoveControlPointAction</a></h3>
+<h3 id="AddRemoveControlPointAction">AddRemoveControlPointAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createAddRemoveControlPointAction</code>
@@ -862,7 +851,7 @@ Created by: <code>ActionFactory.createAddRemoveControlPointAction</code>
 <p>
 The action allows user to add a control point by double-clicking on path or remove control point by double-clicking on it. The action has <code>routingPolicy</code> which is automatically set to <code>ConnectionWidget</code> to prevent discarding of user changes by router assigned to the connection widget. For fixing moving-anchor problem use <code>FreeRectangularAnchor</code>.
 
-<h3><a name="AlignWithMoveAction">AlignWithMoveAction</a></h3>
+<h3 id="AlignWithMoveAction">AlignWithMoveAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createAlignWithMoveAction (AlignWithMoveDecorator, AlignWithWidgetCollector)</code>
@@ -873,7 +862,7 @@ The action is similar to MoveAction but it allows snapping feature similar to <s
 <p>
 The outerBounds boolean parameter allows to specify whether client area or bounds of widgets is going to be checked.
 
-<h3><a name="AlignWithResizeAction">AlignWithResizeAction</a></h3>
+<h3 id="AlignWithResizeAction">AlignWithResizeAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createAlignWithResizeAction (AlignWithMoveDecorator, AlignWithWidgetCollector)</code>
@@ -884,7 +873,7 @@ The action is similar to <code>ResizeAction</code> but it allows snapping featur
 <p>
 The outerBounds boolean parameter allows to specify whether client area or bounds of widgets is going to be checked.
 
-<h3><a name="CycleFocusAction">CycleFocusAction</a></h3>
+<h3 id="CycleFocusAction">CycleFocusAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createCycleFocusAction(CycleFocusProvider)</code>
@@ -896,7 +885,7 @@ The action is usually assigned to the scene widget and allows cycling focus usin
 If the action is created using <code>ActionFactory.createCycleObjectSceneFocusAction</code> method then using "Tab" key a focused object is cycling through all objects on an object scene. It is using the <code>ObjectScene.getIdentityCode</code> method for resolving the order of objects on a scene. For details, see <a href="#ObjectIdentityCode">Object Identity Code</a> section.
 
 
-<h3><a name="ConnectAction">ConnectAction</a></h3>
+<h3 id="ConnectAction">ConnectAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createConnectAction (ConnectDecorator, ConnectProvider)</code>
@@ -904,7 +893,7 @@ Created by: <code>ActionFactory.createConnectAction (ConnectDecorator, ConnectPr
 <p>
 The action should be assigned to the widget from which a connection should be created. The <code>ConnectDecorator</code> supplies the graphics for the guiding connection line. The <code>ConnectProvider</code> handles a connection creation and the connection source and target checking.
 
-<h3><a name="EditAction">EditAction</a></h3>
+<h3 id="EditAction">EditAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createEditAction (EditProvider)</code>
@@ -912,7 +901,7 @@ Created by: <code>ActionFactory.createEditAction (EditProvider)</code>
 <p>
 The action allows to handle double-clicking on assigned widget. <code>EditProvider</code> handles the edit.
 
-<h3><a name="HoverAction">HoverAction</a></h3>
+<h3 id="HoverAction">HoverAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createHoverAction (HoverProvider)</code> or <code>ActionFactory.createHoverAction (TwoStatedHoverProvider)</code>
@@ -931,7 +920,7 @@ There is a <code>Scene.createWidgetHoverAction</code> method which creates a wid
 There is also <code>ObjectScene.createObjectHoverAction</code> method which creates an object-specific hover action. The hovering is based actual hovered object (not a hovered widget) in the ObjectScene instance. It means the mouse cursor is changed against widget that are representing objects in <code>ObjectScene</code>. The actual hovered object is held by <code>ObjectScene</code> instance. See <a href="#ObjectScene">ObjectScene</a> section.
 
 
-<h4><a name="HoverActionVsObjectSceneHoverAction">HoverAction vs. ObjectSceneHoverAction</a></h4>
+<h4 id="HoverActionVsObjectSceneHoverAction">HoverAction vs. ObjectSceneHoverAction</h4>
 
 A regular <code>HoverAction</code> (with your own implementation of <code>HoverProvider</code> or <code>TwoStatedHoverProvider</code> interfaces) and <code>ObjectHoverAction</code> can be used exclusively only.
 
@@ -952,7 +941,7 @@ How to use <code>ObjectSceneHoverAction</code>:
 <li>Note that you should not assign it to a scene - it is done automatically. If a mouse-cursor is over a widget which <code>ObjectHoverAction</code> assigned, then the <code>ObjectScene.hoveredObjectM</code> property is changed to an object which belongs to the widget and all widgets registered for the object are called using <code>Widget.notifyStateChanged</code> method where the new <code>ObjectState</code> is passed as an argument. Each widget itself is defining how it will change its apperance based on the provided <code>ObjectState</code>.
 </ul>
 
-<h3><a name="InplaceEditorAction">InplaceEditorAction</a></h3>
+<h3 id="InplaceEditorAction">InplaceEditorAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createInplaceEditorAction (InplaceEditorProvider)</code>
@@ -966,7 +955,7 @@ Using <code>ActionFactory.getInplaceEditorController</code> method you can obtai
 <p>
 The action also allows to specify an expansion directions using <code>InplaceEditorProvider.getExpansionDirections</code> method. Everytime an editor component is changed, it should call <code>InplaceEditorProvider.EditorController.notifyEditorComponentBoundsChanged</code> method to invoke recalculation of editor placement based on the initial bounds and expansion directions. Expansion direction of for built-in text-field based in-place editor there is an additional <code>ActionFactory.createTextFieldInplaceEditorAction (TextFieldInplaceEditor,EnumSet&lt;InplaceEditorProvider.ExpansionDirection&gt;)</code> factory method created. In this case the initial bounds of the editor component are resolved as the bounds of the related widget.
 
-<h3><a name="MoveAction">MoveAction</a></h3>
+<h3 id="MoveAction">MoveAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createMoveAction (MoveStrategy, MoveProvider)</code>
@@ -974,7 +963,7 @@ Created by: <code>ActionFactory.createMoveAction (MoveStrategy, MoveProvider)</c
 <p>
 When the action is assigned to a widget, it allows to drag/move the widget. The movement is done by calling <code>Widget.setPreferredLocation</code>. It usually requires to have <strong>AbsoluteLayout</strong> to be set on the parent widget. <code>MoveStrategy</code> allows processing of the new suggested location and therefore supplying snap-to-grid or lock axis movement strategy. The <code>MoveProvider</code> interface allows to define behavior of movement e.g. you can move another widget than the widget that has the MoveAction assigned. There are built-in strategies and providers in <code>ActionFactory</code> too. For more details, see <a href="#Strategies">Strategies</a> section.
 
-<h3><a name="MoveControlPointAction">MoveControlPointAction</a></h3>
+<h3 id="MoveControlPointAction">MoveControlPointAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createMoveControlPointAction (MoveControlPointProvider)</code>
@@ -982,7 +971,7 @@ Created by: <code>ActionFactory.createMoveControlPointAction (MoveControlPointPr
 <p>
 The action allows to move control points of a ConnectionWidget. There are built-in providers in <code>ActionFactory</code> too.
 
-<h3><a name="PanAction">PanAction</a></h3>
+<h3 id="PanAction">PanAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createPanAction ()</code>, <code>ActionFactory.createWheelPanAction ()</code>
@@ -993,7 +982,7 @@ The action allows to scroll the view using mouse movement while mouse-middle-but
 <p>
 The <code>WheelPanAction</code> allows to scroll ascene view using mouse-wheel. Then no key modifier is pressed, then the view is scrolled vertically. If shift key is held, then the view is scrolled horizontally.
 
-<h3><a name="PopupMenuAction">PopupMenuAction</a></h3>
+<h3 id="PopupMenuAction">PopupMenuAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createPopupMenuAction (PopupMenuProvider)</code>
@@ -1001,7 +990,7 @@ Created by: <code>ActionFactory.createPopupMenuAction (PopupMenuProvider)</code>
 <p>
 The action allows to invoke popup-menu that is supplied by the provider.
 
-<h3><a name="RectangularSelectAction">RectangularSelectAction</a></h3>
+<h3 id="RectangularSelectAction">RectangularSelectAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createRectangularSelectAction (ObjectScene, LayerWidget)</code>
@@ -1009,7 +998,7 @@ Created by: <code>ActionFactory.createRectangularSelectAction (ObjectScene, Laye
 <p>
 The action allows to handle object-selection using a rectangle that is created by dragging the widget where the action is supplied. This action is usually assigned to an <code>ObjectScene</code> or <code>LayerWidget</code>. See <a href="#ObjectScene">ObjectScene</a> section.
 
-<h3><a name="ReconnectAction">ReconnectAction</a></h3>
+<h3 id="ReconnectAction">ReconnectAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createReconnectAction (ReconnectDecorator, ReconnectProvider)</code>
@@ -1017,7 +1006,7 @@ Created by: <code>ActionFactory.createReconnectAction (ReconnectDecorator, Recon
 <p>
 The action should be assigned to the <code>ConnectionWidget</code> and allows reconnecting its source and target. <code>ReconnectDecorator</code> supplies the graphics of temporary reconnecting line. <code>ReconnectProvider</code> handles the reconnection and the connection source and target checking.
 
-<h3><a name="ResizeAction">ResizeAction</a></h3>
+<h3 id="ResizeAction">ResizeAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createResizeAction (ResizeStrategy, ResizeControlPointResolver, ResizeProvider)</code>
@@ -1028,7 +1017,7 @@ It is similar to MoveAction but used <code>Widget.setPreferredBounds</code>. Als
 <p>
 <code>ResizeControlPointResolver</code> allows customization of control points for resize action - resolves what kind of resizing is available at particular location of related widget.
 
-<h3><a name="SelectAction">SelectAction</a></h3>
+<h3 id="SelectAction">SelectAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createSelectAction (SelectProvider)</code>
@@ -1036,7 +1025,7 @@ Created by: <code>ActionFactory.createSelectAction (SelectProvider)</code>
 <p>
 The action allows to handle the single-click. It is similar to EditAction. It also allowed to condition the selection and allows using "aimed" object state.
 
-<h3><a name="ZoomAction">ZoomAction</a></h3>
+<h3 id="ZoomAction">ZoomAction</h3>
 
 <p>
 Created by: <code>ActionFactory.createZoomAction (zoomFactorMultiplier, animated)</code>, <code>ActionFactory.createCenteredZoomAction (zoomFactorMultiplier)</code>, <code>ActionFactory.createMouseCenteredZoomAction (zoomFactorMultiplier)</code>
@@ -1047,7 +1036,7 @@ The action allows to zoom the view using scrolling mouse-middle-button. The acti
 <p>
 While the <code>CenteredZoomAction</code> is zooming, a view is still centered to the center of the view. While the <code>MouseCenteredZoomAction</code> is zooming, a view is still centered to mouse cursor.
 
-<h3><a name="ExampleUsingActions">Example: Using Actions</a></h3>
+<h3 id="ExampleUsingActions">Example: Using Actions</h3>
 
 <p>
 Following example allows zooming and panning and allows to have a <code>IconNodeWidget</code> moving and widget-specific hovering.
@@ -1070,7 +1059,7 @@ iconNode.getActions ().addAction (scene.createWidgetHoverAction ());
 iconNode.getActions ().addAction (ActionFactory.createMoveAction ()); 
 </pre>
 
-<h3><a name="OrderOfActions">Order of Actions</a></h3>
+<h3 id="OrderOfActions">Order of Actions</h3>
 
 <p>
 The actions are created with a specific invocation for users. For example: The MoveAction is invoked by pressing mouse button on a widget. Then the action consumes all the events until the mouse button is released. Therefore you have to be aware of the order of the actions that you are assigning to the widget.
@@ -1107,7 +1096,7 @@ actions.addAction (myObjectScene.createObjectHoverAction ());
 <p>
 If you would like to use the connect action together with move action, you have to use the extended connect action. It is because the connect action is invoked exactly the same way as the move action and therefore the invocation is clashing. This means that the action, which is added first, locks the event processing to itself and the second action will not be invoked at any time. This could be prevented by making two different invocation. This is defined by the extended connect action. The extended connect action is invoked only if the <strong>Ctrl</strong> key is pressed while you are pressing the mouse button and then dragging the mouse. Now these two action invocations are clashing and you can use them both. Also in this case the order of the actions does not matter.
 
-<h3><a name="ActionCreation">Action Creation</a></h3>
+<h3 id="ActionCreation">Action Creation</h3>
 
 <p>
 There are various methods where instances of actions can be created. Usually it done by a method in the <code>ActionFactory</code> class. These actions are generic.
@@ -1121,7 +1110,7 @@ The <code>ObjectScene</code> class has a few methods for creating object-specifi
 <p>
 In the future, methods that are defined on a scene and object scene could be moved to the <code>ActionFactory</code> class too.
 
-<h3><a name="Strategies">Strategies</a></h3>
+<h3 id="Strategies">Strategies</h3>
 
 <p>
 Sometimes you want to restrict the widget movement or resizing. For that purpose there is a <code>MoveStrategy</code> or <code>ResizeStrategy</code> interfaces which implementations could be passed as an argument to <code>ActionFactory.createMoveAction</code> and <code>ActionFactory.createResizeAction</code> methods.
@@ -1145,7 +1134,7 @@ public final class PositiveCoordinatesOnlyMoveStrategy implements MoveStrategy {
 }
 </pre>
 
-<h2><a name="ConnectionWidget">ConnectionWidget</a></h2>
+<h2 id="ConnectionWidget">ConnectionWidget</h2>
 
 <p>
 This widget represents a connection/path between source and target point. The source and target point is defined by <code>Anchor</code>. The path is defined by <strong>control points</strong> which are resolved by assigned <code>Router</code>. By default it is <code>DirectRouter</code> which routes the path as a straight line between the source and target point. The source and target points are not specified directly but by using anchors.
@@ -1169,7 +1158,7 @@ There is a <code>controlPointsCursor</code> property which defines a mouse curso
 <p>
 There is a <code>controlPointCutDistance</code> property. If set to positive number (by default 0), then the connection path is cut at each control point to make smoother corners. The smooth corners are not used during calculation whether a mouse-cursor hits the path.
 
-<h3><a name="Router">Router</a></h3>
+<h3 id="Router">Router</h3>
 
 <p>
 <code>Router</code> cares about creating paths. There are following built-in implementations:
@@ -1181,7 +1170,7 @@ There is a <code>controlPointCutDistance</code> property. If set to positive num
 <li><code>RouterFactory.createFreeRouter</code> is similar to <code>DirectRouter</code> but it modifies only the first and last point of the route. The "middle" control points stay the same. This effect is used by <code>AddRemoveControlPointAction</code> to maintain the control points created by user. From now this router is no longer useful, since it can be replaced by more flexible way: use any router that you like and set "Update-end-points-only" routing policy to the ConnectionWidget.
 </ul>
 
-<h3><a name="ConnectionWidgetLayout">ConnectionWidgetLayout</a></h3>
+<h3 id="ConnectionWidgetLayout">ConnectionWidgetLayout</h3>
 
 <p>
 <code>ConnectionWidget</code> allows developer to attach children widgets too. Those children could be attached relatively to the path using constraints. The constraint could be set using <code>ConnectionWidget.setConstraint</code> method for each child widget. If a child widget has non-null preferred location then this preferred location will be added to the relative location.
@@ -1189,7 +1178,7 @@ There is a <code>controlPointCutDistance</code> property. If set to positive num
 <p>
 See <code>test.connectionlabels.ConnectionLabelsTest</code> for details.
 
-<h3><a name="RoutingPolicy">Routing Policy</a></h3>
+<h3 id="RoutingPolicy">Routing Policy</h3>
 
 Since version 2.9, the ConnectionWidget class has additional <code>routingPolicy</code> property. It ease management of control points changed by users. There are 4 values:
 <ol>
@@ -1203,14 +1192,14 @@ These routing policy are very useful when you are using modifying control points
 <ul>
 <li>You can specify <code>routingPolicy</code> value to factory method of <code>AddRemoveControlPointAction</code> and <code>MoveControlPointAction</code>. If not null, then the value is automatically set to a ConnectionWidget which control points are modified by the action. Usually <code>UPDATE_END_POINT_ONLY</code> is used.
 <li>Some graph-oriented layout algorithms are resolving not only location of nodes on a scene but also routes path of edges. Then you can use <code>UPDATE_END_POINT_ONLY</code> or <code>DISABLE_ROUTING_UNTIL_END_POINT_IS_MOVED</code> to prevent discard of paths routed by the graph-oriented layout.
-
+</ul>
 For usages, see <code>test.routing.ActionsWithRoutingPolicyTest</code> and <code>test.routing.RoutingPolicyTest</code> examples.
 
-<h3><a name="ConnectionWidgetMethods">ConnectionWidget Methods</a></h3>
+<h3 id="ConnectionWidgetMethods">ConnectionWidget Methods</h3>
 
-<p>
 
 <table class="framed">
+    <caption>ConnectionWidget Methods</caption>
 <tr><th>Method<th>Description
 <tr>
 <td>getStroke<br>setStroke
@@ -1292,44 +1281,42 @@ For usages, see <code>test.routing.ActionsWithRoutingPolicyTest</code> and <code
 <td>Checks whether the specified location hits (is part of) of a control point of the widget. The checked area is specified by the control-point radius. If hit, then it returns the control point index.
 </table>
 
-<p>
-
-<h2><a name="Anchor">Anchor</a></h2>
+<h2 id="Anchor">Anchor</h2>
 
 <p>
 Anchors are resolving the proper location of the point that they represent. Usually <code>Anchor</code> is attached to a <code>Widget</code> and listens on its placement changes using <code>Widget.Dependency</code> interface. If the widget is changed, then the anchor notifies (using <code>Anchor.Entry.revalidateEntry</code> method) all connection widgets that are using the anchor. Then all affect connection widgets schedule routing their paths. Anchor has possibility to use a widget reference or reference point of the opposite anchor that is assigned to the same connection widget. Anchor (set as the source anchor) has the target anchor as its opposite anchor and vice versa.
 
-<h3><a name="FixedAnchor">FixedAnchor</a></h3>
+<h3 id="FixedAnchor">FixedAnchor</h3>
 
 <p>
 <code>AnchorFactory.createFixedAnchor (Point)</code> method creates an anchor with fixed location that is not changed.
 
-<h3><a name="CenterAnchor">CenterAnchor</a></h3>
+<h3 id="CenterAnchor">CenterAnchor</h3>
 
 <p>
 <code>AnchorFactory.createCenterAnchor (Widget)</code> method creates an anchor which follows the center of the widget.
 
-<h3><a name="RectangularAnchor">RectangularAnchor</a></h3>
+<h3 id="RectangularAnchor">RectangularAnchor</h3>
 
 <p>
 <code>AnchorFactory.createRectangularAnchor (Widget)</code> method creates an anchor which resolves the point as a point on the widget boundary that the closest a widget of opposite anchor (assigned to the connection widget).
 
-<h3><a name="CircularAnchor">CircularAnchor</a></h3>
+<h3 id="CircularAnchor">CircularAnchor</h3>
 
 <p>
 <code>AnchorFactory.createCircularAnchor (Widget, int radius)</code> method creates an anchor which resolves the point as a point on a circle with radius around the widget center that the closest a widget of opposite anchor (assigned to the connection widget).
 
-<h3><a name="DirectionalAnchor">DirectionalAnchor</a></h3>
+<h3 id="DirectionalAnchor">DirectionalAnchor</h3>
 
 <p>
 <code>AnchorFactory.createDirectionalAnchor (Widget, DirectionalAnchorKind directions)</code> method creates an anchor which resolves the point as a point at the north-south-west-east center of side of the widget boundary that the closest a widget of opposite anchor (assigned to the connection widget).
 
-<h3><a name="ProxyAnchor">ProxyAnchor</a></h3>
+<h3 id="ProxyAnchor">ProxyAnchor</h3>
 
 <p>
 <code>AnchorFactory.createProxyAnchor (StateModel, Anchor...)</code> method creates an anchor that contains an array of anchor and forwards the point resolving to the single active anchor. The active anchor is defined by the index stored in the <code>StateModel</code> class. This is used in <strong>VMD</strong> plug-in for handling pin-anchors - there the pin could be hidden in a node and then the anchor placement resolving has to be forward from the pin to the anchor assigned to the node.
 
-<h3><a name="AnchorDependency">Anchor Dependency</a></h3>
+<h3 id="AnchorDependency">Anchor Dependency</h3>
 
 <p>
 Anchor is dependent on the related widget which is specified using a constructor parameter. The anchor automatically listen on the widget whether it is not changed. If the widget changes then anchor notifies all registered <code>Anchor.Entry</code> interface implementation (usually <code>ConnectionWidget.getSourceAnchorEntry</code> or <code>ConnectionWidget.getTargetAnchorEntry</code>). These entries are notifying connection widgets to schedule routing of their paths because the location of the anchor could be changed.
@@ -1340,7 +1327,7 @@ Each time the connection widget sets its new source or target anchor. It also re
 <p>
 This anchor dependency approach allows to have a <code>ProxyAnchor</code> that delegates the computation to one of its anchors. This mechanism is used for <strong>Minimize</strong> ability in <strong>VMD</strong> plug-in. See <a href="#MinimizeAbility">Minimize Ability</a> section for details.
 
-<h3><a name="ExampleConnectionWidgetWithAnchors">Example: ConnectionWidget with Anchors</a></h3>
+<h3 id="ExampleConnectionWidgetWithAnchors">Example: ConnectionWidget with Anchors</h3>
 
 <p>
 The following code shows how to create a connection widget with 2 anchors - source anchor is <code>RectangularAnchor</code> bound to the <code>w1</code> widget and target anchor is <code>FixedAnchor</code> with a fixed location at scene origin <code>[0,0]</code>. A shape of target anchor will be filled-triangle.
@@ -1352,7 +1339,7 @@ c.setTargetAnchor (AnchorFactory.createFixedAnchor (new Point (0, 0)));
 c.setTargetAnchorShape (AnchorShape.TRIANGLE_FILLED);
 </pre>
 
-<h3><a name="LoopEdge">Loop Edge</a></h3>
+<h3 id="LoopEdge">Loop Edge</h3>
 
 <p>
 The loop connection is a connection where the source and the target has the same anchor/widget. The visualization of such connection should be a small loop attached to the widget. For making this you have to have:
@@ -1364,12 +1351,12 @@ The loop connection is a connection where the source and the target has the same
 <p>
 The only built-in anchor implementation that is creating an anchor that generates different locations for source and target is <code>VMDNodeAnchor</code> class. You have to create a new instance for each Widget where the anchor has to be assigned. The best is to use it with <code>OrthogonalSearchRouter</code> that will create a small orthogonal "loop" path.
 
-<h3><a name="ParallelEdges">Parallel Edges</a></h3>
+<h3 id="ParallelEdges">Parallel Edges</h3>
 
 <p>
 The structures used in the library supports parallel edges. Be aware of anchor used for source and target of connection widget. Almost all implementations are calculating the same location for the same widget where the anchor is attached too. The only built-in implementation that could be used for this visualization is <code>VMDNodeAnchor</code>.
 
-<h2><a name="LayerWidget">LayerWidget</a></h2>
+<h2 id="LayerWidget">LayerWidget</h2>
 
 <p>
 This widget represents a glass-pane - similarly to <code>JGlassPane</code> from Swing. It is transparent by default. Usually a set of <code>LayerWidget</code>s are used in a widget that does not have any layout assigned. Then all layers are placed one over another which could be used for various optimalizations.
@@ -1387,7 +1374,7 @@ Usually following scene layers are used:
 <li><strong>interactionLayer</strong> for temporary foreground interaction widgets created by decorators of interactive actions like ConnectAction or AlignWithMoveAction, ...
 </ul>
 
-<h3><a name="ExampleLayers">Example: Layers</a></h3>
+<h3 id="ExampleLayers">Example: Layers</h3>
 
 <p>
 Following code creates a scene with two layers: <strong>mainLayer</strong> for objects, <strong>connectionLayer</strong> for connections. This is usual implementation when there are <code>ConnectionWidget</code>s used in a scene. Because during validation the mainLayer is calculated completely first and then the connectionLayer is calculated completely. This allow the mentioned 1-pass calculation. If connection widgets would be in single mainLayer together with the main objects, then it can happen that <code>w1</code> and <code>w2</code> are calculated after <code>c</code> and therefore <code>c</code> would have to be calculated again. This means that at the end the connection widgets could be calculated <strong>twice</strong>. With the 2 layers approach it is always <strong>once</strong>.
@@ -1410,7 +1397,7 @@ c.setTargetAnchor (AnchorFactory.createRectangularAnchor (w2));
 connectionLayer.addChild (c);
 </pre>
 
-<h2><a name="ObjectScene">ObjectScene</a></h2>
+<h2 id="ObjectScene">ObjectScene</h2>
 
 The tree of widgets is usually not enough for modeling. You would like to work with objects, control selection of objects, ... Everything is based on objects in a model. Scene on the other hand works with Widgets. Therefore there is an <code>ObjectScene</code> class. It manages the mapping between objects and widgets and allows object-oriented access to the scene including selection, highlighting (something like secondary selection), hovering, ... Each object can be mapped to multiple widgets.
 
@@ -1431,7 +1418,7 @@ scene.isObject (m2); // return true
 scene.addObject (m2); // ERROR - already added
 </pre>
 
-<h3><a name="ObjectState">ObjectState</a></h3>
+<h3 id="ObjectState">ObjectState</h3>
 
 <p>
 Each widget at scene has its state (defined with <code>ObjectState</code> class). A state represents whether a widget has: selected, highlighted, widgetHovered, objectHovered, widgetFocused, objectFocused and aimed flags set. The default value is result of <code>ObjectScene.createNormal</code> method which does not have any flags raised.
@@ -1442,11 +1429,11 @@ The state is stored at each widget. You can manipulate with it using <code>Widge
 <p>
 <code>ObjectScene</code> class manages similar states for its objects. The state is changed automatically when the selection, highlighting or hovering is changed in ObjectScene using <code>ObjectScene.setSelectedObjects</code>, <code>ObjectScene.setHoveredObject</code>, ... methods. When the state of an object is changed then the state of its widget peer is changed according to the object-state-change too. You can obtain the state of an object using <code>ObjectScene.getObjectState</code> method. When the state of a widget is changed, it does not affect the state of particular object.
 
-<h3><a name="ObjectSceneMethods">ObjectScene Methods</a></h3>
+<h3 id="ObjectSceneMethods">ObjectScene Methods</h3>
 
-<p>
 
 <table class="framed">
+    <caption>ObjectScene Methods</caption>
 <tr><th>Method<th>Description
 <tr>
 <td>addObject (Object, Widget...)
@@ -1504,9 +1491,7 @@ The state is stored at each widget. You can manipulate with it using <code>Widge
 <td>This method is called to get identity code for a specified object. The identity code is used for resolving an order of objects since objects are not sorted in an object scene. The method is meant to be overridden to provide. Default implementation just returns a system identity hash code of each object. See <a href="#ObjectIdentityCode">Object Identity Code</a> section.
 </table>
 
-<p>
-
-<h3><a name="ObjectSceneListener">ObjectSceneListener</a></h3>
+<h3 id="ObjectSceneListener">ObjectSceneListener</h3>
 
 <p>
 The ObjectScene allows to listen on a changed done inside. There are following event types:
@@ -1526,7 +1511,7 @@ The listener could be (un)registered using <code>ObjectScene.add/removeObjectSce
 <p>
 ObjectSceneListener could be reused for more object scenes. There is a ObjectSceneEvent instance passed as the first parameter of every listener method. You can acquire ObjectScene instance by calling <code>ObjectSceneEvent.getObjectScene()</code> method.
 
-<h3><a name="ObjectIdentityCode">Object Identity Code</a></h3>
+<h3 id="ObjectIdentityCode">Object Identity Code</h3>
 
 <p>
 Objects in an object scene are not sorted - they are kept in an unsorted set. Therefore there is a <code>ObjectScene.getIdentityCode</code> method meant to be overridden, which defines an order of those objects. The order is defined the way that an identity code must exist for each object and it must be unique in an object scene. The identity code is represented by Comparable interface and therefore it can be used for sorting and comparing.
@@ -1534,7 +1519,7 @@ Objects in an object scene are not sorted - they are kept in an unsorted set. Th
 <p>
 The method is meant to be overridden to provider more accurate ordering identity code. Default implementation is returning an system identity hash-code of an object. If you are using Comparable-implementing classes for objects in an object scene, then they can represents/define identity code automatically and you can use directly as a return value of the <code>getIdentityCode</code> method.
 
-<h2><a name="GraphSupport">Graph Support</a></h2>
+<h2 id="GraphSupport">Graph Support</h2>
 
 <p>
 The library has support for graph-oriented modeling. There are two models supported:
@@ -1565,7 +1550,7 @@ graph2.addEdge ("pin1"); // ERROR - see next paragraph for explanation
 <p>
 Both classes are derived from <code>ObjectScene</code> and therefore inherits its functionality. Also the same rule for object identification (using <code>equals</code> method) is applied. All nodes, pins and edges are objects and therefore each of them has to have unique identification across all nodes, pins and edges.
 
-<h3><a name="GraphUIBinding">Graph UI Binding</a></h3>
+<h3 id="GraphUIBinding">Graph UI Binding</h3>
 
 <p>
 Both class are using the similar approach for binding objects with widgets. When a node or an edge is added using <code>GraphScene.addNode</code> or <code>GraphScene.addEdge</code> method, then appropriate <code>protected GraphScene.attachNodeWidget (Node)</code> or <code>protected GraphScene.attachEdgeWidget (Edge)</code> method is called. These methods are meant to be implemented by a developer to supply the graphics. These methods are responsible for:
@@ -1588,7 +1573,7 @@ Now the UI is managed and implemented in a developer's class which derives from 
 <p>
 The <code>GraphPinScene</code> is similar - it just contains methods related to pins.
 
-<h3><a name="ExampleGraphSceneUI">Example: GraphScene UI</a></h3>
+<h3 id="ExampleGraphSceneUI">Example: GraphScene UI</h3>
 
 <p>
 The following code shows how to create a <code>GraphScene</code> with a node (represented as a <code>String</code> in a model and as a <code>IconNodeWidget</code> in a scene) and a edge (represented as a <code>String</code> in a model and as a <code>ConnectionWidget</code> in a scene). Nodes and edges will react on selection and hovering - the UI behavior of object-state is defined in <code>IconNodeWidget</code> and <code>ConnectionWidget</code> directly in their <code>notifyStateChanged</code> methods.
@@ -1650,11 +1635,10 @@ public class MyGraphScene extends GraphScene&lt;String, String&gt; {
 }
 </pre>
 
-<h3><a name="GraphSceneMethods">GraphScene Methods</a></h3>
-
-<p>
+<h3 id="GraphSceneMethods">GraphScene Methods</h3>
 
 <table class="framed">
+    <caption>GraphScene Methods</caption>
 <tr><th>Method<th>Description
 <tr>
 <td>addNode (Node)<br>addEdge (Edge)
@@ -1697,13 +1681,10 @@ public class MyGraphScene extends GraphScene&lt;String, String&gt; {
 <td>Called at the end of <code>addNode</code> or <code>addEdge</code> methods - objects are registered already.
 </table>
 
-<p>
-
-<h3><a name="GraphPinSceneMethods">GraphPinScene Methods</a></h3>
-
-<p>
+<h3 id="GraphPinSceneMethods">GraphPinScene Methods</h3>
 
 <table class="framed">
+    <caption>GraphPinScene Methods</caption>
 <tr><th>Method<th>Description
 <tr>
 <td>addNode (Node)<br>addPin (Node, Pin)<br>addEdge (Edge)
@@ -1749,9 +1730,7 @@ public class MyGraphScene extends GraphScene&lt;String, String&gt; {
 <td>Called at the end of <code>addNode</code>, <code>addPin</code> or <code>addEdge</code> methods - objects are registered already.
 </table>
 
-<p>
-
-<h2><a name="UniversalGraph">Universal Graph</a></h2>
+<h2 id="UniversalGraph">Universal Graph</h2>
 
 <p>
 Part of the graph support is graph-oriented layout of nodes in a scene. Since the library contains two independent graph-oriented models, there is also a universal graph which unifies them and provides a read-only nodes-edges view on them. The universal graph is represented with <code>UniversalGraph</code> abstract class and contains methods: <code>getNodes</code>, <code>getEdges</code>, <code>findNodeEdges</code>, <code>getEdgeSource</code>, <code>getEdgeTarget</code>. These methods provides read-only access to the model.
@@ -1759,7 +1738,7 @@ Part of the graph support is graph-oriented layout of nodes in a scene. Since th
 <p>
 Even thought the UniversalGraph class is abstract, it does not have to be implemented by a developer. The library creates them automatically.
 
-<h2><a name="GraphLayout">Graph-oriented Layout</a></h2>
+<h2 id="GraphLayout">Graph-oriented Layout</h2>
 
 <p>
 All graph-oriented layout algorithms are implemented by classes based on <code>GraphLayout</code> class. The class contains <code>layoutGraph(GraphScene)</code> and <code>layoutGraph(GraphPinScene)</code> method for invoking the layout on a particular scene. These methods just converts the scene into an universal graph and calls <code>performGraphLayout(UniversalGraph)></code> method which should implement and perform a particular graph-oriented layout.
@@ -1789,12 +1768,12 @@ The graph layout has <code>animated</code> which specifies whether a new node lo
 <p>
 When implementing your own GraphLayout, you have to use <code>GraphLayout.setResolvedNodeLocation</code> method call for setting node location.
 
-<h3><a name="GraphLayoutListener">GraphLayoutListener</a></h3>
+<h3 id="GraphLayoutListener">GraphLayoutListener</h3>
 
 <p>
 The <code>GraphLayout</code> has possibility to attach a <code>GraphLayoutListener</code> which allows notification about: <code>graphLayoutStarted</code> (called when graph layout is started), <code>nodeLocationChanged</code> (called when a node location is changed, <code>graphLayoutFinished</code> (called when graph layout is finished).
 
-<h3><a name="TreeGraphLayout">TreeGraphLayout</a></h3>
+<h3 id="TreeGraphLayout">TreeGraphLayout</h3>
 
 <p>
 The algorithm organizes nodes in to a tree. Nodes that are not in the tree (defined by a root node and connecting edges) are resolved at [0,0] location.
@@ -1806,7 +1785,7 @@ For proper work, you have to specify a root node using <code>GraphLayoutSupport.
 <p>
 Using <code>GraphLayoutSupport.setTreeGraphLayoutProperties</code> method you can set all parameters of the tree graph layout that has been specified in the factory method.
 
-<h3><a name="GridGraphLayout">GridGraphLayout</a></h3>
+<h3 id="GridGraphLayout">GridGraphLayout</h3>
 
 <p>
 The algorithm organizes nodes in to a grid.
@@ -1817,7 +1796,7 @@ You can call <code>setChecker</code> method to enable checker style. If a parame
 <p>
 You can define horizontal and vertical gaps between nodes using the <code>setGaps</code> method.
 
-<h2><a name="ComponentWidget">ComponentWidget</a></h2>
+<h2 id="ComponentWidget">ComponentWidget</h2>
 
 <p>
 Widgets are not implemented as AWT/Swing components and the library will never have a full replacement for them. Therefore there is a possibility to integrate Swing components together with the scene. You have to create an instance of <code>ComponentWidget</code> class and pass your AWT/Swing <code>Component</code> there as a parameter. When the widget is added to the tree, then the component will be shown in the JComponent view. When the widget is removed from the tree, then the component will be removed from the JComponent view.
@@ -1825,7 +1804,7 @@ Widgets are not implemented as AWT/Swing components and the library will never h
 <p>
 The component widget resolves it bounds as <code>preferred-size-of-Component / zoomFactor</code>. The size of <code>Component</code> is still the same in JComponent view - independent on zoom factor. Bounds of a component widget depends on zoom factor.
 
-<h2><a name="ScrollableWidget">Scrollable Widget</a></h2>
+<h2 id="ScrollableWidget">Scrollable Widget</h2>
 
 <p>
 The library contains two implementation of scrollable widget:
@@ -1840,7 +1819,7 @@ In both implementations you can used <code>getView</code> and <code>setView</cod
 <p>
 By default the scrollable widget takes the bounds of the inner view widget. If you want to have it scrollable, you have to limit the bounds of the scroll widget using <code>Widget.setPreferredBounds</code>, <code>Widget.setMaximumSize</code> or <code>Widget.setPreferredSize</code> method.
 
-<h2><a name="InplaceEditor">In-place Editor</a></h2>
+<h2 id="InplaceEditor">In-place Editor</h2>
 
 <p>
 For using in-place editor ability, you have to have an <code>InplaceEditorProvider</code> interface implemented first. Then you can create an action using <code>ActionFactory.createInplaceEditorAction (InplaceEditorProvider)</code> method. Then you can add the action to a widget where the in-place editor should be available. When an user double-clicks on the widget, the action is invoked and the provider is asked for creating in-place-editor <code>Component</code>. The editor is invoked by pressing <b>Enter</b> key too.
@@ -1857,7 +1836,7 @@ The editor component boundary is resolved from the bounds of a widget where the 
 <p>
 Everytime a <code>InplaceEditorProvider.EditorController.notifyEditorComponentBoundsChanged</code> method is called, then the boundary is recalculated again.
 
-<h3><a name="ExampleInplaceEditor">Example: In-place Editor</a></h3>
+<h3 id="ExampleInplaceEditor">Example: In-place Editor</h3>
 
 <p>
 Following code creates an editable label widget:
@@ -1880,7 +1859,7 @@ label.getActions ().addAction (ActionFactory.createInplaceEditorAction (
 scene.addChild (label);
 </pre>
 
-<h2><a name="LevelOfDetails">Level of Details</a></h2>
+<h2 id="LevelOfDetails">Level of Details</h2>
 
 <p>
 The <code>LevelOfDetailsWidget</code> allows level-of-details feature based on 4 following parameters: <strong>hardMinimalZoom</strong>, <strong>softMinimalZoom</strong>, <strong>softMaximalZoom</strong>, <strong>hardMaximalZoom</strong>.
@@ -1889,6 +1868,7 @@ The <code>LevelOfDetailsWidget</code> allows level-of-details feature based on 4
 Following table describes whether children widgets of the <code>LevelOfDetailsWidget</code> are visible or not - based on the zoom factor of a scene:
 
 <table class="framed">
+    <caption>Visibility of children widgets of the LevelOfDetailsWidget </caption>
 <tr><th>zoom factor</th><td> hardMinimalZoom or less </td><td> between </td><td> softMinimalZoom to softMaximalZoom </td><td> between </td><td> hardMaximalZoom or more</td></tr>
 <tr><th>children are</th><td> <i>invisible</i> </td><td> partly visible </td><td> <b>visible</b> </td><td> partly visible </td><td> <i>invisible</i></td></tr>
 </table>
@@ -1896,7 +1876,7 @@ Following table describes whether children widgets of the <code>LevelOfDetailsWi
 <p>
 The partial visibility is done by alpha blending.
 
-<h2><a name="LookFeel">Look and Feel</a></h2>
+<h2 id="LookFeel">Look and Feel</h2>
 
 <p>
 The library contains a preliminary look&amp;feel support defined by <code>LookFeel</code> abstract class. Almost every method is dependent on <code>ObjectState</code> parameter. Usually the interface should be used in <code>Widget.notifyStateChanged</code> method implementation. The <code>Scene.getLookFeel</code> and <code>Scene.setLookFeel</code> methods allows manipulation with a look&amp;feel assigned to a scene. The default <code>LookFeel</code> implementation can be obtained using <code>LookFeel.createDefaultLookFeel</code> method.
@@ -1904,7 +1884,7 @@ The library contains a preliminary look&amp;feel support defined by <code>LookFe
 <p>
 There is also an InputBindings class which is assigned to a scene. It allows to manage action-related scene options e.g. <code>InputEvent</code> modifier of zoom actions used in the scene.
 
-<h2><a name="Animator">Animator</a></h2>
+<h2 id="Animator">Animator</h2>
 
 <p>
 The library supports various 500ms-long animations. The animations are available on <code>SceneAnimator</code> class acquired by <code>Scene.getSceneAnimator</code> method call.
@@ -1919,13 +1899,10 @@ Supported animations:
 <li>foregroundColor
 </ul>
 
-<p>
-
-<h3><a name="SceneAnimatorMethods">SceneAnimator Methods</a></h3>
-
-<p>
+<h3 id="SceneAnimatorMethods">SceneAnimator Methods</h3>
 
 <table class="framed">
+    <caption>SceneAnimator Methods</caption>
 <tr><th>Method<th>Description
 <tr>
 <td>getScene
@@ -1982,9 +1959,7 @@ Each animation is done by an <code>Animator</code> interface implementation. The
 to important events of an animator <strong>started</strong>, <strong>finished</strong>, <strong>reset</strong>, <strong>pre-tick</strong> and <strong>post-tick</strong> events using <code>AnimatorListener</code> interface.
 Instances of built-in animators can be obtained using getters of the <code>SceneAnimator</code> class.
 
-<p>
-
-<h3><a name="ExampleAnimator">Example: Animator</a></h3>
+<h3 id="ExampleAnimator">Example: Animator</h3>
 
 <p>
 Following code sets a widget to <code>[100,100]</code> without animation and smoothly moves the widget to <code>[300,300]</code>.
@@ -2004,12 +1979,12 @@ label.setPreferredLocation (new Point (100, 100));
 scene.getSceneAnimator ().animatePreferredLocation (label, new Point (300, 300));
 </pre>
 
-<h2><a name="CustomDevelopment">Custom Development</a></h2>
+<h2 id="CustomDevelopment">Custom Development</h2>
 
 <p>
 The library can be extended on various places.
 
-<h3><a name="CustomWidget">Custom Widget</a></h3>
+<h3 id="CustomWidget">Custom Widget</h3>
 
 <p>
 A custom widget can be created by extending <code>Widget</code> class. For proper work you have to implement at least:
@@ -2019,7 +1994,7 @@ A custom widget can be created by extending <code>Widget</code> class. For prope
 <li>optionally <code>notifyStateChanged</code> method for specifying widget-state related UI.
 </ul>
 
-<h3><a name="ExampleCircleWidget">Example: CircleWidget</a></h3>
+<h3 id="ExampleCircleWidget">Example: CircleWidget</h3>
 
 <p>
 Following example create a new custom widget that renders a circle:
@@ -2044,7 +2019,7 @@ public class CircleWidget extends Widget {
 <p>
 See that the <code>CircleWidget.paint</code> is not using <code>getLocation()</code> method since the graphics is automatically translated to a point where the [0,0] means the origin of the widget. Therefore the drawing area reserved for the widget is exactly the same as the one returned  from the <code>CircleWidget.calculateClientArea</code>.
 
-<h3><a name="CustomAction">Custom Action</a></h3>
+<h3 id="CustomAction">Custom Action</h3>
 
 <p>
 Custom action can be created by implementing <code>WidgetAction</code> interface. There is a <code>WidgetAction.Adapter</code> class similar to Swing adapters - all methods return <code>State.REJECTED</code> status.
@@ -2052,7 +2027,7 @@ Custom action can be created by implementing <code>WidgetAction</code> interface
 <p>
 There is a <code>WidgetAction.LockedAction</code> abstract class. There all methods return <code>State.createLocked (widget, this)</code> or <code>State.REJECTED</code> depending on the result of <code>isLocked</code> abstract method call. This is used by actions which requires to lock the event processing for themselves - e.g. MoveAction, ConnectAction, ...
 
-<h3><a name="CustomLayout">Custom Layout</a></h3>
+<h3 id="CustomLayout">Custom Layout</h3>
 
 <p>
 Custom layout can be created by implementing <code>Layout</code> interface.
@@ -2063,12 +2038,12 @@ The <code>layout (widget)</code> method should implement layout algorithm of chi
 <p>
 The <code>justify (widget)</code> method should implement justification of children of the widget. It has to justify location and boundary of the children based the specified Widget boundary. Now you can use theWidget.getBounds method because the widget is resolved already. Justification is invoked only when <code>requiresJustification</code> method returns <code>true</code>. This method is called after calling <code>layout</code> method.
 
-<h3><a name="CustomBorder">Custom Border</a></h3>
+<h3 id="CustomBorder">Custom Border</h3>
 
 <p>
 Custom border can be created by implementing <code>Border</code> interface. Border insets are added to the client-area of a widget where the border is assigned. <code>paint</code> method has to paint the borders within the specified boundary. If <code>isOpaque</code> returns <code>true</code> then the border is responsible for painting every single pixel of the area specified by insets. Also only widget client-area will be painted by background paint. If <code>isOpaque</code> returns false then whole widget boundary will be painted by background paint (if the widget is opaque also) first and then the border will be called for painting.
 
-<h3><a name="CustomAnchor">Custom Anchor</a></h3>
+<h3 id="CustomAnchor">Custom Anchor</h3>
 
 <p>
 Custom anchor can be created by implementing <code>Anchor</code> abstract class. <code>compute</code> method is responsible for computing the actual location of an anchor for the specified <code>ConnectionWidget</code>. For computation, you can use all widget properties (including getLocation and getBounds) and <code>Anchor.getOppositeSceneLocation</code> method. You have to return a <code>Result</code> object that specifies the computed anchor location and the supported directions for orthogonal routing.
@@ -2079,12 +2054,12 @@ For connection widget there are also <code>AnchorShape</code> and <code>PointSha
 <p>
 AnchorShape.getCutDistance method allows you to specify how far a line path of a connection should be cut. This is e.g. important for a hollow triangle shape. It requires that a line is not painted to the target point. It requires to paint it just to the edge to the triangle.
 
-<h3><a name="CustomAnimator">Custom Animator</a></h3>
+<h3 id="CustomAnimator">Custom Animator</h3>
 
 <p>
 Custom animator could be implemented by extending <code>Animator</code> class. For creating an instance you need a <code>SceneAnimator</code> instance which can be acquired by calling <code>Scene.getSceneAnimator</code> method. For starting an animation, you have to call <code>start</code> method. For checking whether the animation is still running, call <code>isRunning</code> method. The animation algorithm has to be implemented in <code>tick (double progress)</code> method. The <code>progress</code> parameter value is in &lt;0.0,1.0&gt; interval where 0.0 is start (time=0ms) and 1.0 is end (time=500ms).
 
-<h3><a name="CustomRouter">Custom Router</a></h3>
+<h3 id="CustomRouter">Custom Router</h3>
 
 <p>
 Custom router could be implemented by implementing <code>Router</code> interface. It has <code>routeConnection</code> method that is called for performing the routing. The routing could be done based on various information - usually based on:
@@ -2094,7 +2069,7 @@ Custom router could be implemented by implementing <code>Router</code> interface
 <li>optionally by location and bounds of widgets in scene e.g. in case of object collision detection.
 </ul>
 
-<h3><a name="CustomGraphLayout">Custom Graph-oriented Layout</a></h3>
+<h3 id="CustomGraphLayout">Custom Graph-oriented Layout</h3>
 
 <p>
 A custom graph-oriented could be implemented by extending <code>GraphLayout</code> abstract class. The particular algorithms should be implemented in the <code>performGraphLayout</code> method which is invoked from layoutGraph methods only. The <code>performGraphLayout</code> takes a single parameter of an universal graph on which the layout should be performed.
@@ -2112,19 +2087,18 @@ Point resolvedNodeLocation = ...;
 setResolvedNodeLocation (graph, node, resolvedNodeLocation); // performs the setting
 </pre>
 
-<p>
 
-<h2><a name="GeneralWidgets">General Widgets</a></h2>
+<h2 id="GeneralWidgets">General Widgets</h2>
 
 <p>
 All general-purpose widgets are located in api.widget.general package.
 
-<h3><a name="IconNodeWidget">IconNodeWidget</a></h3>
+<h3 id="IconNodeWidget">IconNodeWidget</h3>
 
 <p>
 The <code>IconNodeWidget</code> class represents an image with a label. It has a specific look defined in the notifyStateChanged method. You can specify the alignment (horizontal or vertical) of the image and the label. It is using a vertical/horizontal flow layout. You can set an image and a label using <code>setImage</code> and <code>setLabel</code> method. You can obtain the image and the label widgets using <code>getImageWidget</code> and <code>getLabelWidget</code> methods. This could be used for adding actions to the particular parts like InplaceEditor to the label.
 
-<h3><a name="ListWidget">ListWidget</a></h3>
+<h3 id="ListWidget">ListWidget</h3>
 
 <p>
 This is an experimental widget which is not included into the public API packages. If you want to use them you have to set up an implementation dependency on <strong>org.netbeans.api.visual</strong>. Implementation dependency means that you have available all classes in the library. The <code>ListWidget</code> is included in <code>org.netbeans.modules.visual.experimental.widget.general</code> package. Please, do not use implementation dependency. If you need to use it, then use it only for classes in <code>org.netbeans.modules.visual.experimental</code> package or below.
@@ -2132,7 +2106,7 @@ This is an experimental widget which is not included into the public API package
 <p>
 The <code>ListWidget</code> class represents a list and can hold multiple <code>ListItemWidget</code>s. This class is not stabilized yet and could be changed in the future.
 
-<h2><a name="VMDplugin">VMD plug-in</a></h2>
+<h2 id="VMDplugin">VMD plug-in</h2>
 
 <p>
 The VMD plug-in used by the Visual Mobile Designer in NetBeans Mobility Pack. The package contains complex UI implementation for visualization of graphs using <strong>node</strong>, <strong>pin</strong> and <strong>edge</strong> objects. The plug-in is placed in <strong>vmd</strong> package. The API of this package is <strong>not stable</strong> and could be changed in the future.
@@ -2152,7 +2126,7 @@ The <code>VMDGraphScene.layoutGraph</code> method layouts nodes on a scene using
 <p>
 The VMDColorScheme class defines a UI of VMD widgets. There are two implementations available using <code>VMDFactory.createOriginalColorScheme</code>, <code>VMDFactory.createNetBeans60ColorScheme</code> method calls. The color scheme can be used as a parameter in widget constructors.
 
-<h3><a name="MinimizeAbility">Minimize Ability</a></h3>
+<h3 id="MinimizeAbility">Minimize Ability</h3>
 
 <p>
 <strong>Question</strong>: Common problem of visualization is: What to do, when a scene become a little bit complicated because of many objects and connections between them?<br>
@@ -2175,7 +2149,7 @@ When an edge is attach to a pin and the node is going to be minimized, the pin i
 <p>
 The <code>createAnchorPin</code> creates a proxy anchor that is driven by a minimized state of the node and automatically switches/uses the node or the pin anchor as the active anchor.
 
-<h2><a name="PrintingAndExportingScene">Printing and Exporting Scene</a></h2>
+<h2 id="PrintingAndExportingScene">Printing and Exporting Scene</h2>
 
 <p>
 There is <code>Scene.paint (Graphics2D)</code> method that renders the scene into the specified <code>Graphics2D</code> instance. The instance could be taken from any device e.g. screen, printer, <code>BufferedImage</code>, PDF file writer, ...
@@ -2183,7 +2157,7 @@ There is <code>Scene.paint (Graphics2D)</code> method that renders the scene int
 <p>
 Be aware that it is completely different <code>Graphics2D</code> instance than the instance which is used for rendering the scene into the main view and which is used for calculating the scene (especially <code>FontMetrics</code>). Therefore fonts could be "broken", so they will not fit exactly as in the main view.
 
-<h3><a name="ExportToPNG">Export to PNG</a></h3>
+<h3 id="ExportToPNG">Export to PNG</h3>
 
 <p>
 Following code shows how to export the scene into PNG file.
@@ -2233,14 +2207,14 @@ try {
 }
 </pre>
 
-<h3><a name="ExportingWithoutOffscreenBuffer">Exporting without Offscreen Buffer</a></h3>
+<h3 id="ExportingWithoutOffscreenBuffer">Exporting without Offscreen Buffer</h3>
 
 <p>
 The previous code uses a <strong>BufferedImage</strong> for storing the image in the memory. When the scene is big, it could happen that the image does not fit into the memory. Therefore you have to use your <code>Graphics2D</code> instance and <code>Scene.paint (Graphics2D)</code> method for exporting the scene on-the-fly e.g. PDF writer, SVG file writer or meta graphics file writer.
 
-<h2><a name="Effects">Effects</a></h2>
+<h2 id="Effects">Effects</h2>
 
-<h3><a name="Convolution">Convolution</a></h3>
+<h3 id="Convolution">Convolution</h3>
 
 <p>
 The library contains <code>ConvolveWidget</code> which takes a <code>ConvolveOp</code> parameter and uses it for processing its children. Therefore you can create effects like <strong>blur</strong> or <strong>drop-shadow</strong>.
@@ -2251,7 +2225,7 @@ The <code>ConvolveWidget</code> is using <code>BufferedImage</code> as a off-scr
 <p>
 The widget automatically assigns an <code>EmptyBorder</code> with appropriate size based on the size of kernel on ConvolveOp parameter.
 
-<h3><a name="Antialiasing">Antialiasing</a></h3>
+<h3 id="Antialiasing">Antialiasing</h3>
 
 <p>
 There is no API for enabling antialiasing. Anyway it can be implemented by overriding <code>Scene.paintChildren</code> method. See following code.
@@ -2278,7 +2252,7 @@ class MyScene extends Scene {
 <p>
 The same could be done for any class derived from a Widget class too.
 
-<h2><a name="Serialization">Serialization</a></h2>
+<h2 id="Serialization">Serialization</h2>
 
 <p>
  By default there is not (de)serialization support because the library cannot know which data should be serialized. Especially when you are integrating the library with an external data-model.
@@ -2292,7 +2266,7 @@ On the other hand, when users are using <code>GraphScene</code> as the only/main
 <p>
 It is hard to create, reused or integrate universal description language for it. Instead, there is no support for serialization in the library and has to be done by developer.
 
-<h3><a name="ExampleNodesLocationSerialization">Example: Nodes Location Serialization</a></h3>
+<h3 id="ExampleNodesLocationSerialization">Example: Nodes Location Serialization</h3>
 
 <p>
 Following code is (de)serializing a scene. This is usually used when you have an external model and you are using GraphPinScene for holding visual data. The most of the visual data can be recreated from an external model. The only stored data are locations of nodes.
@@ -2395,11 +2369,10 @@ public class SceneDataSerializer {
 }
 </pre>
 
-<h2><a name="VisualLibraryVsSwing">Visual Library vs. Swing</a></h2>
-
-<p>
+<h2 id="VisualLibraryVsSwing">Visual Library vs. Swing</h2>
 
 <table class="framed">
+    <caption>Visual Library vs. Swing</caption>
 <tr><th colspan="2">Object / Feature / Method
 <tr><th>Swing<th>Visual Library
 <tr>
@@ -2413,9 +2386,7 @@ public class SceneDataSerializer {
 <td>WidgetAction
 </table>
 
-<p>
-
-<h2><a name="Notes">Notes</a></h2>
+<h2 id="Notes">Notes</h2>
 
 <p>
 For preventing deadlocks, use AWT-thread when manipulating with the library structures.

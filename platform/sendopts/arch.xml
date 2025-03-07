@@ -127,12 +127,11 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
    <usecase id="cli-just-parse" name="Just Parse the Command Line" >
        There needs to be a simple API for someone who has an array of strings 
        and wants to parse them. One does not need to search for providers,
        just ask the infrastructure to do the parse and get the result. 
-       <p></p>
+       <br/>
        The correct way to achieve this is to call 
         <code><a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html">CommandLine</a>.getDefault().process(args)</code>.
    </usecase>
@@ -173,13 +172,13 @@ public final class MyOption implements <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/
        Moreover the long form is optimized for abbrevations. If there are no 
        conflicts between multiple options, then one can only use double dash followed
        with a prefix of a long option.
-       <p></p>
+       <br/>
        When using the <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">declarative annotation style</a>
        one can always specify 
        <code><a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">@Arg</a>(longName="text", shortName='t')</code>.
        The <code>longName</code> attribute is required, but if there is supposed to be
        no long version of the argument, it can be set to empty string.
-       <p></p>
+       <br/>
        One can create an <a href="@TOP@org/netbeans/spi/sendopts/Option.html">Option</a>
        by calling any of its factory methods 
        (like 
@@ -192,7 +191,7 @@ public final class MyOption implements <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/
        a required one and those with optional one. Each one can be created
        by appropriate factory method in the 
        <a href="@TOP@org/netbeans/spi/sendopts/Option.html">Option</a> class.
-       <p></p>
+       <br/>
        When using the <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">declarative annotation style</a>
        one needs to annotate a field of type <code>boolean</code> to create
        an option without an argument.
@@ -389,7 +388,7 @@ public final class MyOption implements <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/
            Option.additionalArgument
        </a>
        </code> factory method.
-       <p></p>
+       <br/>
        When using the 
        <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">declarative annotation style</a>
        one may annotate a field of type <code>String[]</code> which then means
@@ -468,7 +467,7 @@ When the two options are registered and command line like
 <q>--tune 91.9 --stream radio1.mp3</q> is being processed, the 
 <code>PP</code>'s <code>process</code> method is going to get 
 called with values <q>91.9</q> and <q>radio1.mp3</q>.
-<p></p>
+<br/>
 This kind of grouping is not currently supported with the 
 <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">declarative annotation style</a>
 registration.
@@ -491,7 +490,6 @@ Option tune = OptionGroups.oneOf(freq, station);
 The option <code>tune</code> then signals that just one of the station or
 freq options can appear and that they both are replaceable.
    </usecase>
-  </p>
  </answer>
 
 

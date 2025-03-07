@@ -31,16 +31,16 @@ import org.netbeans.modules.htmlui.HTMLDialogBase;
 
 /** Generates method that opens an HTML based modal dialog. Sample of a typical
  * usage follows.
- * <h5>HTML Page <small>dialog.html</small></h5>
+ * <h2>HTML Page <small>dialog.html</small></h2>
  * <p>
- * {@snippet file="org/netbeans/api/htmlui/dialog.html" region="org.netbeans.api.htmlui.dialog.html"}
+ * {@snippet file="org/netbeans/api/htmlui/dialog.html"}
  * The <code>dialog.html</code> page defines two buttons as <em>hidden</em> - 
  * they are re-rendered by the embedding "chrome" (for example as Swing buttons),
  * but they can be enabled/disabled. For example the <code>ok</code> property
  * (defined in the Java model below) connects the state of the checkbox and
  * the <em>Good</em> button.
  * 
- * <h5>Java Source <small>AskQuestion.java</small></h5>
+ * <h3>Java Source <small>AskQuestion.java</small></h3>
  * {@snippet file="org/netbeans/api/htmlui/AskQuestion.java" region="ask"}
  * <p>
  * The method is generated into <code>AskPages</code> class (specified in the

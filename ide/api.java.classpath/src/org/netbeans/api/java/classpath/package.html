@@ -27,9 +27,9 @@ for a particular purpose.
 <p>Using the Classpath API you can look up the classpath used for a certain
 purpose (such as compilation or running) on a certain file.</p>
 
-<h1>
+<h2>
 Contents
-</h1>
+</h2>
 <ul>
 <li><a href="#overview">Overview</a>
 <li><a href="#obtaining-classpath">How to obtain a ClassPath</a>
@@ -39,9 +39,9 @@ Contents
 <li><a href="#filesystem-replacements">Replacements of FileSystems API methods</a>
 </ul>
 
-<h1>ClassPath API</h1>
+<h2>ClassPath API</h2>
 
-<h2><a name="overview">Overview</a></h2>
+<h3 id="overview">Overview</h3>
 
 <p>At runtime, there's often only a single Classpath available through the application
 classloader. The application is often developed against a set of APIs, with some
@@ -57,7 +57,7 @@ Since the IDE supports the whole development cycle, it needs to provide <i>diffe
 classpaths</i> for each of the purposes mentioned, and maybe for others, too. 
 See {@link java.lang.ClassLoader}.
 
-<h2><a name="obtaining-classpath">Obtaining ClassPath</a></h2>
+<h3 id="obtaining-classpath">Obtaining ClassPath</h3>
 
 <p>The ClassPath API uses concept similar to <a href="@org-openide-util@/org/openide/util/doc-files/api.html#service-lookup">
 Services</a> to categorize ClassPaths. Instead of the class, a string token
@@ -76,13 +76,13 @@ as in this example for getting compilation classpath:
 
 <div class="nonnormative">
 <pre>
-<font class="type"><a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html">FileObject</a></font> <font class="variable-name">f</font> = <font class="function-name">getSomeJavaSourceFile</font>();
-<font class="type"><a href="ClassPath.html">ClassPath</a></font> <font class="variable-name">cp</font> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><font class="function-name">getClassPath</font></a>(f, ClassPath.<a href="ClassPath.html#COMPILE"><font class="constant">COMPILE</font></a>);
-<font class="predefined">System.err.println</font>(cp);
+<span class="type"><a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html">FileObject</a></span> <span class="variable-name">f</span> = <span class="function-name">getSomeJavaSourceFile</span>();
+<span class="type"><a href="ClassPath.html">ClassPath</a></span> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><span class="function-name">getClassPath</span></a>(f, ClassPath.<a href="ClassPath.html#COMPILE"><span class="constant">COMPILE</span></a>);
+<span class="predefined">System.err.println</span>(cp);
 </pre>
 </div>
 
-<h2><a name="roots-definition">Roots and definition of the classpath</a></h2>
+<h3 id="roots-definition">Roots and definition of the classpath</h3>
 
 <p>The <i>classpath</i> is formed from one or more roots. <i>JRE</i> itself supports
 at least two types of of them: a root can be either a directory or <i>an archive</i>
@@ -110,10 +110,10 @@ to find out what folders are the roots:
 
 <div class="nonnormative">
 <pre>
-<a href="ClassPath.html"><font class="type">ClassPath</font></a> <font class="variable-name">cp</font> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><font class="function-name">getClassPath</font></a>(myClassFile, ClassPath.<a href="ClassPath.html#EXECUTE"><font class="constant">EXECUTE</font></a>);
-<a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html">FileObject</a>[] <font class="variable-name">roots</font> = cp.<a href="ClassPath.html#getRoots--"><font class="function-name">getRoots</font></a>();
-<font class="keyword">for</font> (<font class="keyword">int</font> <font class="variable-name">i</font> = <font class="constant">0</font>; i < roots.length; i++) {
-    System.err.print(roots[i] + <font class="constant">":"</font>);
+<a href="ClassPath.html"><span class="type">ClassPath</span></a> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><span class="function-name">getClassPath</span></a>(myClassFile, ClassPath.<a href="ClassPath.html#EXECUTE"><span class="constant">EXECUTE</span></a>);
+<a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html">FileObject</a>[] <span class="variable-name">roots</span> = cp.<a href="ClassPath.html#getRoots--"><span class="function-name">getRoots</span></a>();
+<span class="keyword">for</span> (<span class="keyword">int</span> <span class="variable-name">i</span> = <span class="constant">0</span>; i &lt; roots.length; i++) {
+    System.err.print(roots[i] + <span class="constant">":"</span>);
 }
 </pre>
 </div>
@@ -124,22 +124,22 @@ more thoroughly using
 
 <div class="nonnormative">
 <pre>
-<a href="ClassPath.html"><font class="type">ClassPath</font></a> <font class="variable-name">cp</font> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><font class="function-name">getClassPath</font></a>(myClassObject, ClassPath.<a href="ClassPath.html#EXECUTE"><font class="constant">EXECUTE</font></a>);
-<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/List.html"><font class="type">List</font></a> <font class="variable-name">entries</font> = cp.<a href="ClassPath.html#entries--"><font class="function-name">entries</font></a>();
-<font class="keyword">for</font> (Iterator <font class="variable-name">it</font> = entries.iterator(); it.hasNext(); ) {
-    <a href="ClassPath.Entry.html"><font class="type">ClassPath.Entry</font></a> <font class="variable-name">en</font> = (ClassPath.Entry)it.next();
-    <font class="keyword">if</font> (!en.<a href="ClassPath.Entry.html#isValid--"><font class="function-name">isValid()</font></a>) {
-        <font class="type">IOException</font> <font class="variable-name">x</font> = en.<a href="ClassPath.Entry.html#getError--"><font class="function-name">getError</font></a>();
-        <font class="comment">// Report the error somehow, perhaps using <a href="@org-openide-util-ui@/org/openide/ErrorManager.html"><code>org.openide.ErrorManager</code></a></font>.
-    } <font class="keyword">else</font> {
-        <a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><font class="type">FileObject</font></a> <font class="variable-name">root</font> = en.<a href="ClassPath.Entry.html#getRoot--"><font class="function-name">getRoot</font></a>();
-        <font class="comment">// Do something with the root folder</font>
+<a href="ClassPath.html"><span class="type">ClassPath</span></a> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><span class="function-name">getClassPath</span></a>(myClassObject, ClassPath.<a href="ClassPath.html#EXECUTE"><span class="constant">EXECUTE</span></a>);
+<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/List.html"><span class="type">List</span></a> <span class="variable-name">entries</span> = cp.<a href="ClassPath.html#entries--"><span class="function-name">entries</span></a>();
+<span class="keyword">for</span> (Iterator <span class="variable-name">it</span> = entries.iterator(); it.hasNext(); ) {
+    <a href="ClassPath.Entry.html"><span class="type">ClassPath.Entry</span></a> <span class="variable-name">en</span> = (ClassPath.Entry)it.next();
+    <span class="keyword">if</span> (!en.<a href="ClassPath.Entry.html#isValid--"><span class="function-name">isValid()</span></a>) {
+        <span class="type">IOException</span> <span class="variable-name">x</span> = en.<a href="ClassPath.Entry.html#getError--"><span class="function-name">getError</span></a>();
+        <span class="comment">// Report the error somehow, perhaps using <a href="@org-openide-util-ui@/org/openide/ErrorManager.html"><code>org.openide.ErrorManager</code></a></span>.
+    } <span class="keyword">else</span> {
+        <a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><span class="type">FileObject</span></a> <span class="variable-name">root</span> = en.<a href="ClassPath.Entry.html#getRoot--"><span class="function-name">getRoot</span></a>();
+        <span class="comment">// Do something with the root folder</span>
     }
 }
 </pre>
 </div>
 
-<h2><a name="resources-files">Resource Names and FileObjects</a></h2>
+<h3 id="resources-files">Resource Names and FileObjects</h3>
 
 <p>The <b>resource name</b> is essentially a 
 file name, relative to the root of classpath. If the classpath has more roots (it's
@@ -164,9 +164,9 @@ instance and ask it to compute the name for you:
 
 <div class="nonnormative">
 <pre>
-<a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><font class="type">FileObject</font></a> <font class="variable-name">f</font> = bundleDataObject.<a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getPrimaryFile--"><font class="function-name">getPrimaryFile</font></a>();
-<a href="ClassPath.html"><font class="type">ClassPath</font></a> <font class="variable-name">cp</font> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><font class="function-name">getClassPath</font></a>(theSourceDataObject.getPrimaryFile(), ClassPath.<a href="ClassPath.html#EXECUTE"><font class="constant">EXECUTE</font></a>);
-String <font class="variable-name">bundleResource</font> = cp.<a href="ClassPath.html#getResourceName-org.openide.filesystems.FileObject-"><font class="function-name">getResourceName</font></a>(f);
+<a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><span class="type">FileObject</span></a> <span class="variable-name">f</span> = bundleDataObject.<a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getPrimaryFile--"><span class="function-name">getPrimaryFile</span></a>();
+<a href="ClassPath.html"><span class="type">ClassPath</span></a> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><span class="function-name">getClassPath</span></a>(theSourceDataObject.getPrimaryFile(), ClassPath.<a href="ClassPath.html#EXECUTE"><span class="constant">EXECUTE</span></a>);
+String <span class="variable-name">bundleResource</span> = cp.<a href="ClassPath.html#getResourceName-org.openide.filesystems.FileObject-"><span class="function-name">getResourceName</span></a>(f);
 </pre>
 </div>
 
@@ -178,7 +178,7 @@ you have. Since there may be more resources of that name, the API supports
 or {@link org.netbeans.api.java.classpath.ClassPath#findAllResources} to get
 a collection of all resources matching the name.
 
-<h2><a name="change-listen">Listening to changes in ClassPath</a></h2>
+<h3 id="change-listen">Listening to changes in ClassPath</h3>
 
 <p>The <code>ClassPath</code> interface supports listening to either <i>root folder set changes</i>
 or <i>entry set changes</i>. Changes in root folder set can be observed by 
@@ -188,12 +188,12 @@ dependencies, you may do:
 
 <div class="nonnormative">
 <pre>
-<a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><font class="type">FileObject</font></a> <font class="variable-name">f</font>; <font class="comment">// some interesting FileObject.</font>
-<a href="ClassPath.html"><font class="type">ClassPath</font></a> <font class="variable-name">cp</font> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><font class="function-name">getClassPath</font></a>(f, ClassPath.<a href="ClassPath.html#COMPILE"><font class="constant">COMPILE</font></a>);
-cp.<a href="ClassPath.html#addPropertyChangeListener-java.beans.PropertyChangeListener-"><font class="function-name">addPropertyChangeListener</font></a>(new <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeListener.html"><font class="type">PropertyChangeListener</font></a>() {
-    <font class="keyword">public void</font> <font class="function-name">propertyChange</font>(<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeEvent.html"><font class="type">PropertyChangeEvent</font></a> <font class="variable-name">evt</font>) {
-        <font class="keyword">if</font> (ClassPath.<a href="ClassPath.html#PROP_ROOTS"><font class="constant">PROP_ROOTS</font></a>.equals(evt.<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeEvent.html#getPropertyName--"><font class="function-name">getPropertyName()</font></a>)) {
-            <font class="comment">// Update your stuff, because classpath roots have changed.</font>
+<a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><span class="type">FileObject</span></a> <span class="variable-name">f</span>; <span class="comment">// some interesting FileObject.</span>
+<a href="ClassPath.html"><span class="type">ClassPath</span></a> <span class="variable-name">cp</span> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><span class="function-name">getClassPath</span></a>(f, ClassPath.<a href="ClassPath.html#COMPILE"><span class="constant">COMPILE</span></a>);
+cp.<a href="ClassPath.html#addPropertyChangeListener-java.beans.PropertyChangeListener-"><span class="function-name">addPropertyChangeListener</span></a>(new <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeListener.html"><span class="type">PropertyChangeListener</span></a>() {
+    <span class="keyword">public void</span> <span class="function-name">propertyChange</span>(<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeEvent.html"><span class="type">PropertyChangeEvent</span></a> <span class="variable-name">evt</span>) {
+        <span class="keyword">if</span> (ClassPath.<a href="ClassPath.html#PROP_ROOTS"><span class="constant">PROP_ROOTS</span></a>.equals(evt.<a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeEvent.html#getPropertyName--"><span class="function-name">getPropertyName()</span></a>)) {
+            <span class="comment">// Update your stuff, because classpath roots have changed.</span>
         }
     }
 });
@@ -204,7 +204,7 @@ cp.<a href="ClassPath.html#addPropertyChangeListener-java.beans.PropertyChangeLi
 folder set</i> may change even though the <i>entry set</i> did not change,
 as a result of some entry becoming (in)valid.
 
-<h2><a name="filesystem-replacements">Replacements of FileSystems API methods</a></h2>
+<h3 id="filesystem-replacements">Replacements of FileSystems API methods</h3>
 
 <p>The <b>now-deprecated</b> way how to 
 obtain a resource name for a file object was to call 
@@ -225,15 +225,16 @@ available among open projects in the GUI, but this should be used only as a last
 resort if there is no other possible source of information about where a file
 might be located according to specific classpaths.
 The usage of the class
-{@link org.openide.filesystems.FileSystemCapability}
+{@code org.openide.filesystems.FileSystemCapability}
 is <b>deprecated</b>;
 you should use methods of
 {@link org.netbeans.api.java.classpath.ClassPath}
 instead of that.
 
-<table align=center border="1" summary='Summary of deprecated methods and their replacements'>
+<table border="1">
+    <caption>Summary of deprecated methods and their replacements</caption>
 <tr>
-<th align=center>Old method</th><th align=center>New method</th>
+<th style="align:center">Old method</th><th style="align:center">New method</th>
 </tr>
 <tbody>
 <tr>
@@ -241,15 +242,15 @@ instead of that.
 <td>{@link org.netbeans.api.java.classpath.ClassPath#getResourceName}</td>
 </tr>
 <tr>
-<td>{@link org.openide.filesystems.FileSystemCapability#findResource}</td>
+<td>{@code org.openide.filesystems.FileSystemCapability#findResource}</td>
 <td>{@link org.netbeans.api.java.classpath.ClassPath#findResource}</td>
 </tr>
 <tr>
-<td>{@link org.openide.filesystems.FileSystemCapability#findAllResources}</td>
+<td>{@code org.openide.filesystems.FileSystemCapability#findAllResources}</td>
 <td>{@link org.netbeans.api.java.classpath.ClassPath#findAllResources}</td>
 </tr>
 <tr>
-<td>{@link org.openide.filesystems.FileSystemCapability#fileSystems}</td>
+<td>{@code org.openide.filesystems.FileSystemCapability#fileSystems}</td>
 <td>{@link org.netbeans.api.java.classpath.ClassPath#getRoots}</td>
 </tr>
 <tr>

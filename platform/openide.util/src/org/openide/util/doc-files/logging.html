@@ -18,7 +18,7 @@
     under the License.
 
 -->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 
 <html>
     <head>
@@ -26,9 +26,7 @@
     </head>
     <body>
 
-    <center>
-        <h1>Logging in NetBeans</h1>
-    </center>
+    <h1>Logging in NetBeans</h1>
 
     <p>
     The logging system in NetBeans is based on the standard
@@ -94,7 +92,7 @@
     individually by using a command line property.
     </p>
     
-<h3>Turning Logging On and Off</h3>    
+<h2>Turning Logging On and Off</h2>    
     <p>
     As the logging system is completely JDK based, one can use the 
     traditional properties of 
@@ -113,11 +111,13 @@
 
     <p>
     It is possible to turn the logging dynamically when the application
-    is running. It is enough to just:<pre>
+    is running. It is enough to just:
+    </p>
+    <pre>
 System.setProperty("name.of.the.Logger.<b>level</b>", "100");
 LogManager.getLogManager().readConfiguration();
 </pre>
-    and logging state for the <q>name.of.the.Logger</q> is changed. The
+    <p>and logging state for the <q>name.of.the.Logger</q> is changed. The
     first line in the above code snippet changes the global properties and
     the second one asks the system to refresh the configuration of all
     loggers in the system.
@@ -135,10 +135,10 @@ LogManager.getLogManager().readConfiguration();
     and of course no NetBeans standard configuration properties work.
     </p>
 
-<h3>How to Write Logging Friendly Code</h3>
+<h2>How to Write Logging Friendly Code</h2>
 
 
-<h5>Handling Exceptions</h5>
+<h3>Handling Exceptions</h3>
 
 <p>
 To handle an exception and sent it to the log file (and possibly
@@ -197,7 +197,7 @@ is recommended in order to prevent deadlocks and
 starvations
 </p>
 
-<h5>Retain nested stacktraces / change exception type</h5>
+<h3>Retain nested stacktraces / change exception type</h3>
     
 <p>
     To rethrow an exception use standard JDK's 
@@ -222,7 +222,7 @@ try {
 }
 </pre>
 
-<h5>Logging a warning and debug messages</h5>
+<h3>Logging a warning and debug messages</h3>
 
 <p>
 Logging shall usually be done with a named loggers, as that allows
@@ -261,9 +261,7 @@ class Something {
 }
 </pre>
 
-<p>
-
-<h5>Annotate Exceptions</h5>
+<h3>Annotate Exceptions</h3>
 
 <p>
 There is an easy way how to annotate exceptions with localized and non-localized
@@ -282,7 +280,7 @@ one can use
 </p>
 
 
-<a name="structured"><h3>Using Structured Logging for Communication</h3></a>
+<h2 id="structured">Using Structured Logging for Communication</h2>
 
 <p>
 In spite of what one might think the JDK logging API is not just about 
@@ -324,7 +322,7 @@ public static void main(String[] args) {
     ResourceBundle rb = ResourceBundle.getBundle("your.package.Log");
 
     int sum = 0;
-    for (int i = 0; i < 10; i++) {        
+    for (int i = 0; i &lt; 10; i++) {        
         LogRecord r = new LogRecord(Level.INFO, "MSG_Add");
         r.setResourceBundle(rb);
         r.setParameters(new Object[] { sum, i });
@@ -433,8 +431,6 @@ consult the documentation that has been
 <a href="http://openide.netbeans.org/tutorial/reviews/opinions_35067.html">created during the development</a>
 and implementation of the logging functionality in NetBeans.
 -->
-
-</p>
   
   </body>
 </html>

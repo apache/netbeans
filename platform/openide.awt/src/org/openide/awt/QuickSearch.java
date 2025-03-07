@@ -891,7 +891,7 @@ public class QuickSearch {
         /**
          * Called to select a next occurrence of the search result.
          * The client should update the visual representation of the search results
-         * and then return.<p>
+         * and then return.
          * @param forward The direction of the next search result.
          *                <code>true</code> for forward direction,
          *                <code>false</code> for backward direction.

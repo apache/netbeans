@@ -74,7 +74,7 @@ An <b>API entry point</b> is
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenHierarchy.html">TokenHierarchy</a>
 class with its static methods that provide its instance for the given input source.
 
-<h3>Input Sources</h3>
+<h2>Input Sources</h2>
 <p>
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenHierarchy.html">TokenHierarchy</a>
     can be created for immutable input sources (
@@ -90,7 +90,7 @@ class with its static methods that provide its instance for the given input sour
     The tokens of the hierarchy always reflect the text of the input at the given time.
 </p>
 
-<h3>TokenSequence and Token</h3>
+<h2>TokenSequence and Token</h2>
 <p>
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenHierarchy.html#tokenSequence--">TokenHierarchy.tokenSequence()</a>
    allows to iterate over a list of
@@ -119,7 +119,7 @@ class with its static methods that provide its instance for the given input sour
     A typical token also carries offset of its occurrence in the input text.
 </p>
 
-<h3>Flyweight Tokens</h3>
+<h2>Flyweight Tokens</h2>
 <p>
     As there are many token occurrences where the token text is the same for all
     or many occurrences
@@ -164,7 +164,7 @@ class with its static methods that provide its instance for the given input sour
     with a valid offset and with the same properties as the original flyweight token.
 </p>
 
-<h3>TokenId and Language</h3>
+<h2>TokenId and Language</h2>
 <p>
     Token is identified by its id represented by
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenId.html">TokenId</a>
@@ -193,7 +193,7 @@ class with its static methods that provide its instance for the given input sour
     with an arbitrary sort of settings (e.g. syntax coloring information etc.).
 </p>
 
-<h3>LanguageHierarchy, Lexer, LexerInput and TokenFactory</h3>
+<h2>LanguageHierarchy, Lexer, LexerInput and TokenFactory</h2>
 <p>
     SPI providers wishing to provide a
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/Language.html">Language</a>
@@ -220,7 +220,7 @@ class with its static methods that provide its instance for the given input sour
 </p>
 
 
-<h3>Language Embedding</h3>
+<h2>Language Embedding</h2>
 <p>
     With language embedding the flat list of tokens becomes in fact a tree-like hierarchy
     represented by the
@@ -266,9 +266,9 @@ class with its static methods that provide its instance for the given input sour
 API Usecases
 </h1>
 
-<h3>
+<h2>
 Obtaining of token hierarchy for various inputs.
-</h3>
+</h2>
 The
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/TokenHierarchy.html">TokenHierarchy</a>
 is an entry point into Lexer API
@@ -291,9 +291,9 @@ Token hierarchy for swing documents must be operated under read/write document's
 </pre>
 
 
-<h3>
+<h2>
 Obtaining and iterating token sequence over particular swing document from the given offset.
-</h3>
+</h2>
 The tokens cover the whole document and it's possible to iterate either forward or backward.
 <br/>
 Each token can contain language embedding that can also be explored by the token sequence.
@@ -335,9 +335,9 @@ Typical clients:
     <li>Parser constructing a parse tree iterating through the tokens in forward direction.</li>
 </ul>
 
-<h3>
+<h2>
 Using language path of the token sequence
-</h3>
+</h2>
 For the given token sequence the client may check whether it's a top level
 token sequence in the token hierarchy or whether it's embedded at which level
 it's embedded and what are the parent languages.
@@ -356,9 +356,9 @@ skipped at the begining an end of the branch token).
 </pre>
 
 
-<h3>
+<h2>
 Extra information about the input
-</h3>
+</h2>
 The
 <a href="@org-netbeans-modules-lexer@/org/netbeans/api/lexer/InputAttributes.html">InputAttributes</a>
 class may carry extra information about the text input on which the token hierarchy
@@ -405,9 +405,9 @@ The client will then use the following code:
 </pre>
 
 
-<h3>
+<h2>
 Filtering out unnecessary tokens
-</h3>
+</h2>
 Filtering is only possible for immutable inputs (e.g. String or Reader).
 <pre>
     Set&lt;MyTokenId&gt; skipIds = EnumSet.of(MyTokenId.COMMENT, MyTokenId.WHITESPACE);
@@ -432,9 +432,9 @@ Typical clients:
 SPI Usecases
 </h1>
 
-<h3>
+<h2>
 Providing language description and lexer.
-</h3>
+</h2>
 
 Token ids should be defined as enums. For example
 <code>org.netbeans.lib.lexer.test.simple.SimpleTokenId</code> can be copied
@@ -677,9 +677,9 @@ public final class CalcLexer implements Lexer&lt;CalcTokenId&gt; {
 
 
 
-<h3>
+<h2>
 Providing language embedding.
-</h3>
+</h2>
 
 The embedding may be provided statically
 in the <code>LanguageHierarchy.embedding()</code>

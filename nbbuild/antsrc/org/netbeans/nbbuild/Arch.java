@@ -416,8 +416,8 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
                         para.appendChild(q.createTextNode("The default answer to this question is:"));
                         para.appendChild(q.createComment("If you do not want default answer to be generated you can use <defaultanswer generate='none' /> here"));
                         para.appendChild(q.createElement("br"));
-                        para.appendChild(res.getNode());
-                        n.appendChild(para);
+                        n.appendChild(para); // append default warning answer block
+                        n.appendChild(res.getNode()); // append answer not nested
                     }
                 }
             }

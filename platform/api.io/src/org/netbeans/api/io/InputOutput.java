@@ -69,7 +69,7 @@ public abstract class InputOutput implements Lookup.Provider {
      * </p>
      *
      * @param name A localised display name for the tab.
-     * @param newIO If <tt>true</tt>, a new <code>InputOutput</code> is
+     * @param newIO If <code>true</code>, a new <code>InputOutput</code> is
      * returned, else an existing <code>InputOutput</code> of the same name may
      * be returned.
      * @return An <code>InputOutput</code> instance for accessing the new tab.
@@ -90,7 +90,7 @@ public abstract class InputOutput implements Lookup.Provider {
      * </p>
      *
      * @param name A localised display name for the tab.
-     * @param newIO If <tt>true</tt>, a new <code>InputOutput</code> is
+     * @param newIO If <code>true</code>, a new <code>InputOutput</code> is
      * returned, else an existing <code>InputOutput</code> of the same name may
      * be returned.
      * @param lookup Lookup which may contain additional information for various

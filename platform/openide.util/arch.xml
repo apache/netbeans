@@ -69,14 +69,12 @@
   </p>
  </answer>
  <answer id="arch-usecases">
-  <p>
    Use-cases can be found in <a href="@org-openide-util-ui@/architecture-summary.html">org.openide.util.ui module</a> arch summary.
    <usecase id="CharSequences" name="Efficient char sequences">
        Efficiently store character sequences in memory with the
        help of <a href="@TOP@/org/openide/util/CharSequences.html">CharSequences</a>
        utility class.
    </usecase>
-  </p>
  </answer>
  <answer id="arch-what">
   <p>

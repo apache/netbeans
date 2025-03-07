@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.80
+#Version 2.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,6 +159,8 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
+meth public java.awt.peer.ComponentPeer getPeer()
+ anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -744,12 +746,7 @@ hfds RP,url
 CLSS public org.netbeans.modules.extbrowser.ExtWebBrowser
 cons public init()
 cons public init(org.netbeans.modules.extbrowser.PrivateBrowserFamilyId)
-fld protected final static int DEFAULT_ACTIVATE_TIMEOUT = 2000
-fld protected final static int DEFAULT_OPENURL_TIMEOUT = 3000
-fld protected int activateTimeout
-fld protected int openurlTimeout
 fld protected java.beans.PropertyChangeSupport pcs
-fld protected java.lang.String ddeServer
 fld protected java.lang.String name
 fld protected org.openide.execution.NbProcessDescriptor browserExecutable
 fld public final static java.lang.String CHROME = "CHROME"
@@ -758,9 +755,6 @@ fld public final static java.lang.String FIREFOX = "FIREFOX"
 fld public final static java.lang.String IEXPLORE = "IEXPLORE"
 fld public final static java.lang.String MOZILLA = "MOZILLA"
 fld public final static java.lang.String PROP_BROWSER_EXECUTABLE = "browserExecutable"
-fld public final static java.lang.String PROP_DDESERVER = "dDEServer"
-fld public final static java.lang.String PROP_DDE_ACTIVATE_TIMEOUT = "activateTimeout"
-fld public final static java.lang.String PROP_DDE_OPENURL_TIMEOUT = "openurlTimeout"
 fld public final static java.lang.String PROP_NAME = "name"
 fld public final static java.lang.String PROP_PRIVATE_BROWSER_FAMILY = "privateBrowserFamilyId"
 innr public static UnixBrowserFormat
@@ -768,9 +762,6 @@ intf java.beans.PropertyChangeListener
 intf java.io.Serializable
 intf org.openide.awt.HtmlBrowser$Factory
 meth protected org.openide.execution.NbProcessDescriptor defaultBrowserExecutable()
-meth public int getActivateTimeout()
-meth public int getOpenurlTimeout()
-meth public java.lang.String getDDEServer()
 meth public java.lang.String getName()
 meth public org.netbeans.modules.extbrowser.PrivateBrowserFamilyId getPrivateBrowserFamilyId()
 meth public org.openide.awt.HtmlBrowser$Impl createHtmlBrowserImpl()
@@ -779,11 +770,8 @@ meth public static java.util.logging.Logger getEM()
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void propertyChange(java.beans.PropertyChangeEvent)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
-meth public void setActivateTimeout(int)
 meth public void setBrowserExecutable(org.openide.execution.NbProcessDescriptor)
-meth public void setDDEServer(java.lang.String)
 meth public void setName(java.lang.String)
-meth public void setOpenurlTimeout(int)
 meth public void useBrowserExecutableDelegate(org.netbeans.modules.extbrowser.ExtWebBrowser)
 supr java.lang.Object
 hfds browserExecutableDelegate,err,family,serialVersionUID
@@ -878,8 +866,8 @@ meth public java.beans.PropertyDescriptor[] getPropertyDescriptors()
 supr java.beans.SimpleBeanInfo
 
 CLSS public org.netbeans.modules.extbrowser.NbBrowserException
-cons public init()
 cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
 supr java.lang.Exception
 hfds serialVersionUID
 
@@ -887,13 +875,9 @@ CLSS public org.netbeans.modules.extbrowser.NbDdeBrowserImpl
 cons public init(org.netbeans.modules.extbrowser.ExtWebBrowser)
 meth protected org.netbeans.modules.extbrowser.PrivateBrowserFamilyId detectPrivateBrowserFamilyId()
 meth protected void loadURLInBrowserInternal(java.net.URL)
-meth public int getActivateTimeout()
-meth public int getOpenUrlTimeout()
 meth public static java.lang.String getBrowserPath(java.lang.String) throws org.netbeans.modules.extbrowser.NbBrowserException
 meth public static java.lang.String getDefaultOpenCommand() throws org.netbeans.modules.extbrowser.NbBrowserException
 supr org.netbeans.modules.extbrowser.ExtBrowserImpl
-hfds EXTBROWSER_DLL,EXTBROWSER_DLL_64BIT,WWW_ACTIVATE,WWW_OPEN_URL,nativeRunnable,nativeThread
-hcls DisplayTask,URLDisplayer
 
 CLSS public final !enum org.netbeans.modules.extbrowser.PrivateBrowserFamilyId
 fld public final static org.netbeans.modules.extbrowser.PrivateBrowserFamilyId CHROME

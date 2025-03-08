@@ -32,10 +32,10 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.lang.model.element.Name;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.lang.model.element.Modifier;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.guards.DocumentGuards;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -1276,6 +1276,7 @@ public class Reformatter implements ReformatTask {
         }
 
         private Boolean scanRecord(ClassTree node, Void p) {
+            System.err.println("Reformatted scanRecord");
             boolean old = continuationIndent;
             int oldIndent = indent;
             try {
@@ -1336,18 +1337,7 @@ public class Reformatter implements ReformatTask {
                 spaces(cs.spaceBeforeMethodDeclParen() ? 1 : 0);
                 accept(LPAREN);
                 List<? extends Tree> members = node.getMembers();
-                List recParams = new ArrayList<Tree>();
-
-                for (Tree member : members) {
-                    if (member.getKind() == Tree.Kind.VARIABLE) {
-                        ModifiersTree modifiers = ((VariableTree) member).getModifiers();
-                        Set<Modifier> modifierSet = modifiers.getFlags();
-
-                        if (!modifierSet.contains(Modifier.STATIC)) {
-                            recParams.add(member);
-                        }
-                    }
-                }
+                List recParams = getRecordComponents(node);
 
                 if (!recParams.isEmpty()) {
                     spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
@@ -1412,6 +1402,21 @@ public class Reformatter implements ReformatTask {
                 continuationIndent = old;
             }
             return true;
+        }
+
+        // this should be merged with RecordUtils.canonicalComponents.
+        protected static List<Tree> getRecordComponents(ClassTree node) {
+            System.err.println("Reformatter get record components node = " + node);
+            Set<String> expectedNames = node.getMembers().stream()
+                    .filter(m-> RecordUtils.isNormalField(m) )
+                    .map(m-> ((VariableTree)m).getName().toString())
+                    .collect(Collectors.toSet());
+            
+            List<Tree> components= (List<Tree>)node.getMembers().stream()
+                    .filter(m-> RecordUtils.isConStructor(m))
+                    .filter(t -> RecordUtils.hasAllParameterNames((MethodTree)t,expectedNames))
+                    .map(c -> ((MethodTree)c).getParameters());
+            return components;
         }
 
         private void classLeftBracePlacement() {

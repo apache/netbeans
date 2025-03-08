@@ -18,11 +18,9 @@
  */
 package org.netbeans.modules.search.matcher;
 
-import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
-import java.nio.charset.UnmappableCharacterException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.search.provider.SearchListener;
@@ -111,7 +109,7 @@ public abstract class AbstractMatcher  {
      */
     protected final void handleDecodingError(SearchListener listener,
             FileObject file, CharsetDecoder decoder,
-            CharacterCodingException e) {
+            Throwable e) {
 
         String charsetName;
         try {

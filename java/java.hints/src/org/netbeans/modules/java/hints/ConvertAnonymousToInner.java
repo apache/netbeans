@@ -531,7 +531,7 @@ public class ConvertAnonymousToInner extends AbstractHint {
         
         String newClassName = generateName(copy, newClassToConvert, superTypeElement.getSimpleName().toString());
         
-        ClassTree clazz = make.Class(classModifiers, newClassName, Collections.<TypeParameterTree>emptyList(), superTypeElement.getKind().isClass() ? superTypeTree : null, superTypeElement.getKind().isClass() ? Collections.<Tree>emptyList() : Collections.<Tree>singletonList(superTypeTree), members);
+        ClassTree clazz = make.Class(classModifiers, newClassName, Collections.<TypeParameterTree>emptyList(), superTypeElement.getKind().isClass() ? superTypeTree : null, superTypeElement.getKind().isClass() ? Collections.<Tree>emptyList() : Collections.<Tree>singletonList(superTypeTree), Collections.emptyList(), members);
         
         copy.rewrite(target, make.addClassMember(target, copy.getTreeMaker().asReplacementOf(clazz, nct)));
 

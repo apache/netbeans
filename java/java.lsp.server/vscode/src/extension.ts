@@ -1041,6 +1041,14 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         }
     ));
 
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.cloud.openInBrowser',
+        async (node) => {
+            const portForward = getValueAfterPrefix(node.contextValue, 'portForward:');
+            const url = vscode.Uri.parse(portForward);
+            vscode.env.openExternal(url);
+        }
+    ));
+
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.cloud.imageUrl.copy',
         async (node) => {
             const imageUrl = getValueAfterPrefix(node.contextValue, 'imageUrl:');
@@ -1105,6 +1113,21 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         version : API_VERSION,
         apiVersion : API_VERSION
     });
+}
+
+let queryDocument: vscode.TextDocument | undefined;
+
+async function getRestDocument(): Promise<vscode.TextDocument> {
+    if (queryDocument) {
+        const allDocuments = vscode.workspace.textDocuments;
+        if (!allDocuments.includes(queryDocument)) {
+            queryDocument = undefined;
+        }
+    }
+    if (!queryDocument) {
+        queryDocument = await vscode.workspace.openTextDocument({ language: 'http' });
+    }
+    return queryDocument;
 }
 
 /**

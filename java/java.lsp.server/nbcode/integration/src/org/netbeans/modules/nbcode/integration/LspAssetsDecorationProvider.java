@@ -19,16 +19,18 @@
 package org.netbeans.modules.nbcode.integration;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 import org.netbeans.modules.cloud.oracle.adm.URLProvider;
 import org.netbeans.modules.cloud.oracle.assets.CloudAssets;
 import org.netbeans.modules.cloud.oracle.bucket.BucketItem;
-import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
+import org.netbeans.modules.cloud.oracle.assets.k8s.ClusterItem;
 import org.netbeans.modules.cloud.oracle.compute.ComputeInstanceItem;
 import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryItem;
 import org.netbeans.modules.cloud.oracle.developer.ContainerTagItem;
+import org.netbeans.modules.cloud.oracle.items.ContextValuesProvider;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.vault.SecretItem;
 import org.netbeans.modules.java.lsp.server.explorer.NodeLookupContextValues;
@@ -56,6 +58,7 @@ public class LspAssetsDecorationProvider implements TreeDataProvider.Factory {
     public static final String CTXVALUE_PREFIX_SECRET_LIFECYCLE_STATE = "lifecycleState:"; // NOI18N
     public static final String CTXVALUE_PREFIX_CLUSTER_NAMESPACE = "clusterNamespace:"; // NOI18N
     public static final String CTXVALUE_PREFIX_CONSOLE_URL = "consoleUrl:"; // NOI18N
+    public static final String CTXVALUE_PREFIX_PORT_FORWARD_URL = "portForward:"; // NOI18N
 
     @Override
     public synchronized TreeDataProvider createProvider(String treeId) {
@@ -73,63 +76,70 @@ public class LspAssetsDecorationProvider implements TreeDataProvider.Factory {
             boolean set = false;
 
             OCIItem item = n.getLookup().lookup(OCIItem.class);
-            if (item == null) {
-                return null;
-            }
-            if (item instanceof URLProvider) {
-                URL consoleURL = ((URLProvider) item).getURL();
-                if (consoleURL != null) {
-                    d.addContextValues(CTXVALUE_PREFIX_CONSOLE_URL + consoleURL.toExternalForm());
-                    set = true;
-                }
-            }
-            refName = CloudAssets.getDefault().getReferenceName(item);
-            if (refName != null) {
-                d.addContextValues(CTXVALUE_PREFIX_REFERENCE_NAME + refName);
-                set = true;
-            }
-            if (item instanceof ClusterItem) {
-                String namespace = ((ClusterItem) item).getNamespace();
-                if (namespace != null) {
-                    d.addContextValues(CTXVALUE_PREFIX_CLUSTER_NAMESPACE + namespace);
-                    set = true;
-                }
-            }
-            if (item instanceof ComputeInstanceItem) {
-                String publicIp = ((ComputeInstanceItem) item).getPublicIp();
-                if (publicIp != null) {
-                    d.addContextValues(CTXVALUE_PREFIX_PUBLIC_IP + publicIp);
-                    set = true;
-                }
-            }
-            if (item instanceof ContainerRepositoryItem) {
-                ContainerRepositoryItem repo = (ContainerRepositoryItem) item;
-                d.addContextValues(CTXVALUE_PREFIX_IMAGE_COUNT + repo.getImageCount());
-                d.addContextValues(CTXVALUE_PREFIX_REPOSITORY_PUBLIC + repo.getIsPublic());
-                set = true;
-            }
-            if (item instanceof ContainerTagItem) {
-                String imageUrl = ((ContainerTagItem) item).getUrl();
-                Optional<OCIItem> instance = CloudAssets.getDefault().getAssignedItems().stream().filter(i -> i.getClass().equals(ComputeInstanceItem.class)).findFirst();
-                if (instance.isPresent()) {
-                    d.addContextValues(CTXVALUE_PREFIX_PUBLIC_IP + ((ComputeInstanceItem) instance.get()).getPublicIp());
-                } else {
-                    ClusterItem cluster = CloudAssets.getDefault().getItem(ClusterItem.class);
-                    if (cluster != null) {
-                        d.addContextValues(CTXVALUE_PREFIX_CLUSTER_NAME + cluster.getName());
+            if (item != null) {
+                if (item instanceof URLProvider) {
+                    URL consoleURL = ((URLProvider) item).getURL();
+                    if (consoleURL != null) {
+                        d.addContextValues(CTXVALUE_PREFIX_CONSOLE_URL + consoleURL.toExternalForm());
+                        set = true;
                     }
                 }
-                d.addContextValues(CTXVALUE_PREFIX_IMAGE_URL + imageUrl);
-                set = true;
-            }
-            if (item instanceof BucketItem
-                    || item instanceof DatabaseItem) {
-                d.addContextValues(CTXVALUE_CAP_REFERENCE_NAME);
-                set = true;
-            }
+                refName = CloudAssets.getDefault().getReferenceName(item);
+                if (refName != null) {
+                    d.addContextValues(CTXVALUE_PREFIX_REFERENCE_NAME + refName);
+                    set = true;
+                }
+                if (item instanceof ClusterItem) {
+                    String namespace = ((ClusterItem) item).getNamespace();
+                    if (namespace != null) {
+                        d.addContextValues(CTXVALUE_PREFIX_CLUSTER_NAMESPACE + namespace);
+                        set = true;
+                    }
+                }
+                if (item instanceof ComputeInstanceItem) {
+                    String publicIp = ((ComputeInstanceItem) item).getPublicIp();
+                    if (publicIp != null) {
+                        d.addContextValues(CTXVALUE_PREFIX_PUBLIC_IP + publicIp);
+                        set = true;
+                    }
+                }
+                if (item instanceof ContainerRepositoryItem) {
+                    ContainerRepositoryItem repo = (ContainerRepositoryItem) item;
+                    d.addContextValues(CTXVALUE_PREFIX_IMAGE_COUNT + repo.getImageCount());
+                    d.addContextValues(CTXVALUE_PREFIX_REPOSITORY_PUBLIC + repo.getIsPublic());
+                    set = true;
+                }
+                if (item instanceof ContainerTagItem) {
+                    String imageUrl = ((ContainerTagItem) item).getUrl();
+                    Optional<OCIItem> instance = CloudAssets.getDefault().getAssignedItems().stream().filter(i -> i.getClass().equals(ComputeInstanceItem.class)).findFirst();
+                    if (instance.isPresent()) {
+                        d.addContextValues(CTXVALUE_PREFIX_PUBLIC_IP + ((ComputeInstanceItem) instance.get()).getPublicIp());
+                    } else {
+                        ClusterItem cluster = CloudAssets.getDefault().getItem(ClusterItem.class);
+                        if (cluster != null) {
+                            d.addContextValues(CTXVALUE_PREFIX_CLUSTER_NAME + cluster.getName());
+                        }
+                    }
+                    d.addContextValues(CTXVALUE_PREFIX_IMAGE_URL + imageUrl);
+                    set = true;
+                }
+                if (item instanceof BucketItem
+                        || item instanceof DatabaseItem) {
+                    d.addContextValues(CTXVALUE_CAP_REFERENCE_NAME);
+                    set = true;
+                }
 
-            if (item instanceof SecretItem) {
-                d.addContextValues(CTXVALUE_PREFIX_SECRET_LIFECYCLE_STATE + ((SecretItem) item).getLifecycleState());
+                if (item instanceof SecretItem) {
+                    d.addContextValues(CTXVALUE_PREFIX_SECRET_LIFECYCLE_STATE + ((SecretItem) item).getLifecycleState());
+                    set = true;
+                }
+            }
+            
+            ContextValuesProvider context = n.getLookup().lookup(ContextValuesProvider.class);
+            if (context != null) {
+                for (Map.Entry<String, String> entry : context.getContextValues().entrySet()) {
+                    d.addContextValues(entry.getKey() + ":" + entry.getValue());
+                }
                 set = true;
             }
             return set ? d : null;
@@ -146,8 +156,7 @@ public class LspAssetsDecorationProvider implements TreeDataProvider.Factory {
         }
 
         @Override
-        public void nodeReleased(Node n
-        ) {
+        public void nodeReleased(Node n) {
         }
 
     }

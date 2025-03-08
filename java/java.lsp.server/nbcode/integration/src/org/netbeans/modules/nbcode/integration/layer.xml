@@ -64,7 +64,9 @@
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.SetReferenceName" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.SetClusterNamespace" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.RunInClusterAction" stringvalue="Tools"/>
-                <attr name="action:org.netbeans.modules.cloud.oracle.adm.ShowInBrowserAction" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.PortForwardAction" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.ShowPodLogsAction" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.StopPortForwardAction" stringvalue="Tools"/>
             </file>
         </folder>
         <folder name="AutoupdateType">

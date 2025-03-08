@@ -21,8 +21,10 @@ package org.netbeans.modules.java.hints;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -31,6 +33,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
@@ -67,6 +70,16 @@ public final class MultipleLoggers {
             return null;
         }
 
+        // "sysLoggerTypeElement" may be null if pre Java9; so not a problem.
+        TypeElement sysLoggerTypeElement = ctx.getInfo().getElements().getTypeElement("java.lang.System.Logger"); // NOI18N
+        TypeMirror sysLoggerTypeElementAsType = null;
+        if (sysLoggerTypeElement != null) {
+            sysLoggerTypeElementAsType = sysLoggerTypeElement.asType();
+            if (sysLoggerTypeElementAsType == null || sysLoggerTypeElementAsType.getKind() != TypeKind.DECLARED) {
+                return null;
+            }
+        }
+
         List<VariableElement> loggerFields = new LinkedList<VariableElement>();
         List<VariableElement> fields = ElementFilter.fieldsIn(cls.getEnclosedElements());
         for(VariableElement f : fields) {
@@ -74,7 +87,8 @@ public final class MultipleLoggers {
                 continue;
             }
 
-            if (f.asType().equals(loggerTypeElementAsType)) {
+            if (f.asType().equals(loggerTypeElementAsType)
+                    || f.asType().equals(sysLoggerTypeElementAsType)) {
                 loggerFields.add(f);
             }
         }

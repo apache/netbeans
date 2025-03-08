@@ -21,13 +21,16 @@ package org.netbeans.modules.java.hints.errors;
 
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.prefs.Preferences;
+
 import javax.swing.JComponent;
+
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata;
 import org.netbeans.modules.java.hints.spi.AbstractHint;
@@ -48,7 +51,7 @@ public class ErrorFixesFakeHint extends AbstractHint {
         super(true, false, null);
         this.kind = kind;
     }
-    
+
     @Override
     public String getDescription() {
         return NbBundle.getMessage(ErrorFixesFakeHint.class, "DESC_ErrorFixesFakeHint" + kind.name());
@@ -87,6 +90,8 @@ public class ErrorFixesFakeHint extends AbstractHint {
                 setPrintStackTrace(node, isPrintStackTrace(node));
                 setUseExceptions(node, isUseExceptions(node));
                 setUseLogger(node, isUseLogger(node));
+                setUseSystemLogger(node, isUseSystemLogger(node));
+                setUseExistingLogger(node, isUseExistingLogger(node));
                 break;
             case CREATE_FINAL_FIELD_CTOR:
                 customizer = new FinalFieldsFromCtorCustomiser(node);
@@ -195,12 +200,32 @@ public class ErrorFixesFakeHint extends AbstractHint {
         p.putBoolean(SURROUND_USE_JAVA_LOGGER, v);
     }
     
+    public static boolean isUseSystemLogger(Preferences p) {
+        return p.getBoolean(SURROUND_USE_SYSTEM_LOGGER, true);
+    }
+
+    public static void setUseSystemLogger(Preferences p, boolean v)
+    {
+        p.putBoolean(SURROUND_USE_SYSTEM_LOGGER, v);
+    }
+    
+    public static boolean isUseExistingLogger(Preferences p) {
+        return p.getBoolean(SURROUND_USE_EXISTING_LOGGER, true);
+    }
+
+    public static void setUseExistingLogger(Preferences p, boolean v)
+    {
+        p.putBoolean(SURROUND_USE_EXISTING_LOGGER, v);
+    }
+    
     public static final String LOCAL_VARIABLES_INPLACE = "create-local-variables-in-place"; // NOI18N
     public static final String SURROUND_USE_EXCEPTIONS = "surround-try-catch-org-openide-util-Exceptions"; // NOI18N
     public static final String SURROUND_PRINT_STACK_TRACE = "surround-try-catch-printStackTrace"; // NOI18N
     public static final String SURROUND_RETHROW_AS_RUNTIME = "surround-try-catch-rethrow-runtime"; // NOI18N
     public static final String SURROUND_RETHROW = "surround-try-catch-rethrow"; // NOI18N
     public static final String SURROUND_USE_JAVA_LOGGER = "surround-try-catch-java-util-logging-Logger"; // NOI18N
+    public static final String SURROUND_USE_SYSTEM_LOGGER = "surround-try-catch-java-lang-System-Logger"; // NOI18N
+    public static final String SURROUND_USE_EXISTING_LOGGER = "surround-try-catch-use-existing-Logger"; // NOI18N
     public static final String FINAL_FIELDS_FROM_CTOR = "create-final-fields-from-ctor"; // NOI18N
     
     public static final String ORGANIZE_AFTER_IMPORT_CLASS = "organize-import-class"; // NOI18N

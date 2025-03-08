@@ -292,7 +292,7 @@
 						"properties": {
 							"mainClass": {
 								"type": "string",
-								"description": "Absolute path to the program main class.",
+								"markdownDescription": "Main class specification. Supported formats:\n - an absolute path\n - a path relative to any of the workspace folders\n - a fully qualified name of a class",
 								"default": "${file}"
 							},
 							"classPaths": {

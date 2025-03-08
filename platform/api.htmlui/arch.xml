@@ -61,7 +61,7 @@
    <a href="https://bits.netbeans.org/html+java/dev">HTML for Java</a> API.
   </p>
   <usecase id="window" name="Portable HTML based Window">
-      <a name="use-window"></a>
+      <a id="use-window"></a>
       Want to open a live HTML page as a 
       <a href="@org-openide-windows@/org/openide/windows/TopComponent.html">
         NetBeans window component</a>? Do you want
@@ -71,7 +71,7 @@
       annotation.
   </usecase>
   <usecase id="dialog" name="Portable HTML based Dialog">
-      <a name="use-dialog"></a>
+      <a id="use-dialog"></a>
       Want to open a modal dialog filled with an HTML page and block until user
       makes his choice? 
       Then have a look at

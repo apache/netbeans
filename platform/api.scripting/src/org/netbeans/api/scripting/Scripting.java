@@ -44,9 +44,9 @@ import org.openide.util.Lookup;
  * as well as specific discovery mechanisms to locate additional
  * implementations of {@link ScriptEngineFactory}. To execute a JavaScript
  * code use:
- * <p>
+ * 
  * {@snippet file="org/netbeans/api/scripting/ScriptingTutorialTest.java" region="testFourtyTwo"}
- * <p>
+ * 
  * Consult <a href="@org-netbeans-libs-graalsdk@/org/netbeans/libs/graalsdk/package-summary.html">scripting tutorial</a>
  * to learn more about advanced polyglot scripting topics.
  *

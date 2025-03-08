@@ -31,11 +31,11 @@ import java.util.List;
  * solely by using methods of {@link org.netbeans.spi.lexer.TokenFactory}.
  *
  * <p>
- * <b>Note:</b><font style="color:red">
+ * <b>Note:</b><span style="color:red">
  * Do not create custom extensions of this class - lexers may only return
  * implementations produced by <code>TokenFactory</code>.
  * Creation of any other token implementations will be refused.
- * </font>
+ * </span>
  * </p>
  *
  * <p>

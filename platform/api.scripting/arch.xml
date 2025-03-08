@@ -116,7 +116,6 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
       <usecase id="createScriptEngineManager" name="Create ScriptEngineManager">
           To create new instance script engine manager ready for the NetBeans
           execution environment use
@@ -163,7 +162,6 @@
             API.
           </p>
       </usecase>
-  </p>
  </answer>
 
 
@@ -653,8 +651,6 @@
             in the application are really enabled and the dependencies are
             satisfied.
         </api>
-  <p>
-  </p>
  </answer>
 
 

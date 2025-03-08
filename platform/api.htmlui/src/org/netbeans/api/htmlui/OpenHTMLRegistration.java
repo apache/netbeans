@@ -45,8 +45,8 @@ import org.netbeans.html.context.spi.Contexts.Id;
  * <code>&lt;input data-bind="textInput: text"&gt;&lt;/input&gt;</code> to reference 
  * properties defined by the {@link net.java.html.json.Model} annotation in the generated class
  * <code>UI</code>:
- * <p>
- * {@snippet file="org/netbeans/api/htmlui/dialog.html" region="org.netbeans.api.htmlui.dialog.html"}
+ *
+ * {@snippet file="org/netbeans/api/htmlui/dialog.html"}
  * 
  * <p>
  * In addition to the above, there is a special support for influencing {@link org.openide.util.Utilities#actionsGlobalContext() 
@@ -55,7 +55,7 @@ import org.netbeans.html.context.spi.Contexts.Id;
  * and put into it fully qualified names of classes you want to expose in the context. 
  * Those classes should be public and have public constructor that takes instance of the model
  * class returned from the annotated method (e.g. <code>UI</code> in the above example). The 
- * system will instantiate them appropriatelly and will make sure they are available in the action
+ * system will instantiate them appropriately and will make sure they are available in the action
  * context. If the interface also implements {@link Closeable}, its close method is invoked once
  * the instance is removed from the context to handle clean up.
  *

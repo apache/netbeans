@@ -168,14 +168,14 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     }
 
     /**
-     * Gets a textual represtentation of this <code>FileObject</code>.
+     * Gets a textual representation of this <code>FileObject</code>.
      * The precise format is not defined. In particular it is probably
      * <em>not</em> a resource path.
      * For that purpose use {@link #getPath} directly.
      * <p>Typically it is useful for debugging purposes. Example of correct usage:
      * <pre>
-     * <font class="type">FileObject</font> <font class="variable-name">fo</font> = getSomeFileObject();
-     * ErrorManager.getDefault().log(<font class="string">"Got a change from "</font> + fo);
+     * <span class="type">FileObject</span> <span class="variable-name">fo</span> = getSomeFileObject();
+     * ErrorManager.getDefault().log(<span class="string">"Got a change from "</span> + fo);
      * </pre>
      * @return some representation of this file object
      */
@@ -1131,7 +1131,6 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * </ul>
      * In either case, exit.
      * </ol>
-     * <p>
      *
      * @return <CODE>true</CODE> if file is read-only
      * @deprecated Please use the {@link #canWrite}.

@@ -114,7 +114,7 @@ public final class ColorModel {
     }
 
     private List<AttributeSet> processAnnotations(Map<String, AttributeSet> annos, boolean isdefault) {
-        List<AttributeSet> annotations = new ArrayList<AttributeSet>();
+        List<AttributeSet> annotations = new ArrayList<>();
         for(Iterator it = AnnotationTypes.getTypes().getAnnotationTypeNames(); it.hasNext(); ) {
             String name = (String) it.next ();
             
@@ -142,18 +142,23 @@ public final class ColorModel {
                 LOG.log(Level.WARNING, "AnnotationType.getGlyph() returned invalid URI", e);
             }
             
+            AttributeSet as = annos.get(name);
+            // don't set if profile value is null so that inherited values don't show up as fixed colors
             Color bgColor = annotationType.getHighlight();
-            if (annotationType.isUseHighlightColor() && bgColor != null) {
+            if (annotationType.isUseHighlightColor() && bgColor != null
+                    && (as == null || as.getAttribute(StyleConstants.Background) != null)) {
                 category.addAttribute(StyleConstants.Background, bgColor);
             }
             
             Color fgColor = annotationType.getForegroundColor();
-            if (!annotationType.isInheritForegroundColor() && fgColor != null) {
+            if (!annotationType.isInheritForegroundColor() && fgColor != null
+                    && (as == null || as.getAttribute(StyleConstants.Foreground) != null)) {
                 category.addAttribute(StyleConstants.Foreground, fgColor);
             }
 
             Color underColor = annotationType.getWaveUnderlineColor();
-            if (annotationType.isUseWaveUnderlineColor() && underColor != null) {
+            if (annotationType.isUseWaveUnderlineColor() && underColor != null
+                    && (as == null || as.getAttribute(EditorStyleConstants.WaveUnderlineColor) != null)) {
                 category.addAttribute(EditorStyleConstants.WaveUnderlineColor, underColor);
             }
             
@@ -164,9 +169,7 @@ public final class ColorModel {
                     category.removeAttribute(StyleConstants.Foreground);
                     category.removeAttribute(EditorStyleConstants.WaveUnderlineColor);
                 }
-                AttributeSet as = annos.get(name);
                 category.addAttributes(as);
-                
             }
 
             annotations.add(category);

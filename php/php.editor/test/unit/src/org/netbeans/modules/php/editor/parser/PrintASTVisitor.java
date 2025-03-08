@@ -19,6 +19,8 @@
 package org.netbeans.modules.php.editor.parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.netbeans.modules.php.editor.lexer.PHPLexerUtils;
 import org.netbeans.modules.php.editor.parser.astnodes.*;
@@ -38,15 +40,16 @@ public class PrintASTVisitor implements Visitor {
 
         private class GroupItem {
             private final String groupName;
-            private final List<ASTNode> group;
+            private final List<? extends ASTNode> group;
 
-            public GroupItem(String groupName, List<ASTNode> group) {
+            public GroupItem(String groupName, List<? extends ASTNode> group) {
                 this.groupName = groupName;
                 this.group = group;
             }
 
-            public List<ASTNode> getGroup() {
-                return group;
+            public List<? extends ASTNode> getGroup() {
+                // group may contain null
+                return Collections.unmodifiableList(group);
             }
 
             public String getGroupName() {
@@ -68,39 +71,38 @@ public class PrintASTVisitor implements Visitor {
             this.node = node;
             this.name = name;
             this.attributes = attributes;
-            this.childrenGroups = new ArrayList <GroupItem> ();
+            this.childrenGroups = new ArrayList<>();
         }
 
         public void addChildrenGroup(String groupName, ASTNode[] groupChildren) {
-            ArrayList<ASTNode> nodes = new ArrayList<ASTNode>();
-            for (int i = 0; i < groupChildren.length; i++) {
-               nodes.add(groupChildren[i]);
-            }
+            ArrayList<ASTNode> nodes = new ArrayList<>();
+            nodes.addAll(Arrays.asList(groupChildren));
             addChildrenGroup(groupName, nodes);
         }
 
-        public void addChildrenGroup(String groupName, List nodes) {
+        public void addChildrenGroup(String groupName, List<? extends ASTNode> nodes) {
             if (nodes != null) {
                 if (this.childrenGroups == null) {
-                    this.childrenGroups = new ArrayList<GroupItem>();
+                    this.childrenGroups = new ArrayList<>();
                 }
                 this.childrenGroups.add(new GroupItem(groupName, nodes));
             }
         }
 
-        public void addChildren(List nodes) {
-            if (nodes != null)
+        public void addChildren(List<? extends ASTNode> nodes) {
+            if (nodes != null) {
                 addChildrenGroup("", nodes);
+            }
         }
 
         public void addChild(ASTNode node) {
-            ArrayList<ASTNode> nodes = new ArrayList<ASTNode>();
+            ArrayList<ASTNode> nodes = new ArrayList<>();
             nodes.add(node);
             addChildrenGroup("", nodes);
         }
 
         public void addChild(String name, ASTNode node) {
-            ArrayList<ASTNode> nodes = new ArrayList<ASTNode>();
+            ArrayList<ASTNode> nodes = new ArrayList<>();
             nodes.add(node);
             addChildrenGroup(name, nodes);
         }
@@ -117,7 +119,7 @@ public class PrintASTVisitor implements Visitor {
                 }
                 buffer.append(" ").append(attrName).append("='").append(attrValue).append("'");
             }
-            if (childrenGroups.size() > 0) {
+            if (!childrenGroups.isEmpty()) {
                 buffer.append(">").append(NEW_LINE);
                 indent++;
                 for (GroupItem groupItem : childrenGroups) {
@@ -488,13 +490,16 @@ public class PrintASTVisitor implements Visitor {
     @Override
     public void visit(FieldsDeclaration node) {
         XMLPrintNode printNode = new XMLPrintNode(node, "FieldsDeclaration",
-                new String[]{"modifier", node.getModifierString() });
+                new String[]{"modifier", node.getModifierString()});
         if (node.isAttributed()) {
             printNode.addChildrenGroup("Attributes", node.getAttributes());
         }
         printNode.addChild("FieldType", node.getFieldType());
         printNode.addChildrenGroup("VariableNames", node.getVariableNames());
         printNode.addChildrenGroup("InitialValues", node.getInitialValues());
+        if (node.isHooked()) {
+            printNode.addChild(node.getFields().get(0).getPropertyHooks());
+        }
         printNode.print(this);
     }
 
@@ -523,17 +528,20 @@ public class PrintASTVisitor implements Visitor {
     @Override
     public void visit(FormalParameter node) {
         String modifier = node.getModifierString();
-        String[] attributes = new String[]{"isMandatory", (node.isMandatory() ? "true" : "false"), "isVariadic", (node.isVariadic() ? "true" : "false")};
+        String[] parameters = new String[]{"isMandatory", (node.isMandatory() ? "true" : "false"), "isVariadic", (node.isVariadic() ? "true" : "false")};
         if (modifier != null && !modifier.isEmpty()) {
-            attributes = new String[]{"modifier", node.getModifierString(), "isMandatory", (node.isMandatory() ? "true" : "false"), "isVariadic", (node.isVariadic() ? "true" : "false")};
+            parameters = new String[]{"modifier", node.getModifierString(), "isMandatory", (node.isMandatory() ? "true" : "false"), "isVariadic", (node.isVariadic() ? "true" : "false")};
         }
-        XMLPrintNode printNode = new XMLPrintNode(node, "FormalParameter", attributes);
+        XMLPrintNode printNode = new XMLPrintNode(node, "FormalParameter", parameters);
         if (node.isAttributed()) {
             printNode.addChildrenGroup("Attributes", node.getAttributes());
         }
         printNode.addChild("ParametrType", node.getParameterType());
         printNode.addChild("ParametrName", node.getParameterName());
         printNode.addChild("DefaultValue", node.getDefaultValue());
+        if (node.getPropertyHooks() != null) { // PHP 8.4 Property hoooks
+            printNode.addChild(node.getPropertyHooks());
+        }
         printNode.print(this);
     }
 
@@ -819,6 +827,19 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
+    public void visit(PropertyHookDeclaration node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "PropertyHookDeclaration",
+                new String[]{"modifier", node.getModifierString(), "isReference", (node.isReference() ? "true" : "false")});
+        if (node.isAttributed()) {
+            printNode.addChildrenGroup("Attributes", node.getAttributes());
+        }
+        printNode.addChild("Name", node.getName());
+        printNode.addChildrenGroup("FormalParameters", node.getFormalParameters());
+        printNode.addChild(node.getBody());
+        printNode.print(this);
+    }
+
+    @Override
     public void visit(Quote quote) {
         XMLPrintNode printNode = new XMLPrintNode(quote, "Quote", new String[]{"type", quote.getQuoteType().name()});
         printNode.addChildrenGroup("Expressions", quote.getExpressions());
@@ -855,9 +876,13 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(SingleFieldDeclaration node) {
-        XMLPrintNode printNode = new XMLPrintNode(node, "SingleFieldDeclaration");
-        printNode.addChild("Name",node.getName());
+        XMLPrintNode printNode = new XMLPrintNode(node, "SingleFieldDeclaration",
+                new String[]{"isHooked", (node.isHooked() ? "true" : "false")});
+        printNode.addChild("Name", node.getName());
         printNode.addChild("Value", node.getValue());
+        if (node.isHooked()) {
+            printNode.addChild(node.getPropertyHooks());
+        }
         printNode.print(this);
     }
 

@@ -37,12 +37,14 @@ import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
+import org.netbeans.modules.php.editor.model.FieldElement;
 import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
 import org.netbeans.modules.php.editor.model.GroupUseScope;
 import org.netbeans.modules.php.editor.model.MethodScope;
 import org.netbeans.modules.php.editor.model.Model;
 import org.netbeans.modules.php.editor.model.ModelElement;
+import org.netbeans.modules.php.editor.model.PropertyHookScope;
 import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.UseScope;
@@ -106,6 +108,16 @@ public final class FoldingScanner {
     @NbBundle.Messages("FT_Functions=Functions and methods")
     public static final FoldType TYPE_FUNCTION = FoldType.MEMBER.derive("function",
             Bundle.FT_Functions(),
+            FoldTemplate.DEFAULT_BLOCK);
+
+    @NbBundle.Messages("FT_HookedFields=Fields(Properties)")
+    public static final FoldType TYPE_HOOKED_FIELD = FoldType.MEMBER.derive("field", // NOI18N
+            Bundle.FT_HookedFields(),
+            FoldTemplate.DEFAULT_BLOCK);
+
+    @NbBundle.Messages("FT_PropertyHooks=Property hooks")
+    public static final FoldType TYPE_PROPERTY_HOOK = FoldType.MEMBER.derive("property hook", // NOI18N
+            Bundle.FT_PropertyHooks(),
             FoldTemplate.DEFAULT_BLOCK);
 
     @NbBundle.Messages("FT_Arrays=Arrays")
@@ -273,10 +285,10 @@ public final class FoldingScanner {
 
     private void processScopes(Map<String, List<OffsetRange>> folds, List<Scope> scopes) {
         processUseScopes(folds, scopes);
-        processTypeAndFunctionScopes(folds, scopes);
+        processTypeAndMemberScopes(folds, scopes);
     }
 
-    private void processTypeAndFunctionScopes(Map<String, List<OffsetRange>> folds, List<Scope> scopes) {
+    private void processTypeAndMemberScopes(Map<String, List<OffsetRange>> folds, List<Scope> scopes) {
         for (Scope scope : scopes) {
             OffsetRange offsetRange = scope.getBlockRange();
             if (offsetRange == null || offsetRange.getLength() <= 1) {
@@ -284,10 +296,14 @@ public final class FoldingScanner {
             }
             if (scope instanceof TypeScope) {
                 getRanges(folds, TYPE_CLASS).add(offsetRange);
-            } else {
-                if (scope instanceof FunctionScope || scope instanceof MethodScope) {
-                    getRanges(folds, TYPE_FUNCTION).add(offsetRange);
+            } else if (scope instanceof FunctionScope || scope instanceof MethodScope) {
+                getRanges(folds, TYPE_FUNCTION).add(offsetRange);
+            } else if (scope instanceof FieldElement.HookedFieldElement field) {
+                if (field.isHooked()) {
+                    getRanges(folds, TYPE_HOOKED_FIELD).add(offsetRange);
                 }
+            } else if (scope instanceof PropertyHookScope) {
+                getRanges(folds, TYPE_PROPERTY_HOOK).add(offsetRange);
             }
         }
     }

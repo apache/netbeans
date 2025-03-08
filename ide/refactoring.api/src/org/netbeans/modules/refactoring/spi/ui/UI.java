@@ -22,9 +22,7 @@ package org.netbeans.modules.refactoring.spi.ui;
 import java.awt.Component;
 import javax.swing.Action;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
-import org.netbeans.modules.refactoring.spi.ui.RefactoringUI;
 import org.netbeans.modules.refactoring.spi.impl.RefactoringPanel;
-import org.netbeans.modules.refactoring.spi.impl.RefactoringPanelContainer;
 import org.openide.windows.TopComponent;
 
 /**

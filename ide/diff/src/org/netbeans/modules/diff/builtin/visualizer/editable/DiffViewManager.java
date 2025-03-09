@@ -505,7 +505,7 @@ class DiffViewManager implements ChangeListener {
             if (checkFileEdge && rightOffet >= rightPane.getScrollPane().getVerticalScrollBar().getMaximum()) {
                 rightOffet = map.length - 1;
             }
-            if (rightOffet >= map.length) return;
+            if (rightOffet >= map.length || rightOffet < 0) return;
             leftPane.getScrollPane().getVerticalScrollBar().setValue(map[rightOffet]
                     - halfScreen);
         }

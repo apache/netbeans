@@ -80,6 +80,9 @@ import org.openide.windows.TopComponent;
 public class RefactoringPanel extends JPanel implements FiltersManagerImpl.FilterChangeListener {
     private static final RequestProcessor RP = new RequestProcessor(RefactoringPanel.class.getName(), 1, false, false);
 
+    private static final String PREF_KEY_SHOW_PREVIEW = "showPreview";
+    private static final String PREF_KEY_DIVIDER_LOCATION = "dividerLocation";
+
     // PRIVATE FIELDS
     /* tree contains elements which will be changed by refactoring action */
     private transient JTree tree = null;
@@ -101,18 +104,18 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
     private transient ParametersPanel parametersPanel = null;
     private transient JScrollPane scrollPane = null;
     private transient JPanel southPanel;
-    public JSplitPane splitPane;
+    private JSplitPane splitPane;
     private JPanel left;
+    private Component right;
     private Action callback = null;
 
     private static final int MAX_ROWS = 50;
     private static final int MIN_DIVIDER_LOCATION = 250;
-    /* last user modified divider position shared between all instances */
-    private static int dividerPosMemory = -1;
 
     private transient JToggleButton logicalViewButton = null;
     private transient JToggleButton physicalViewButton = null;
     private transient JToggleButton customViewButton = null;
+    private transient JToggleButton previewButton = null;
     private JButton stopButton;
 
     private transient ProgressListener progressListener;
@@ -174,11 +177,14 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         left.setLayout(new BorderLayout());
         setLayout(new BorderLayout());
         add(splitPane, BorderLayout.CENTER);
-        splitPane.setRightComponent(new JLabel(org.openide.util.NbBundle.getMessage(RefactoringPanel.class, "LBL_Preview_not_Available"), SwingConstants.CENTER));
+        right = new JLabel(org.openide.util.NbBundle.getMessage(RefactoringPanel.class, "LBL_Preview_not_Available"), SwingConstants.CENTER);
+        splitPane.setRightComponent(right);
         splitPane.setBorder(null);
         splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, evt -> {
-            if (evt.getNewValue() instanceof Integer pos && pos > MIN_DIVIDER_LOCATION) {
-                RefactoringPanel.dividerPosMemory = pos;
+            if (previewButton.isSelected() && splitPane.getRightComponent() != null) {
+                if (evt.getNewValue() instanceof Integer pos && pos > MIN_DIVIDER_LOCATION) {
+                    getPreferences().putInt(preferencesKeyForUI(PREF_KEY_DIVIDER_LOCATION), pos);
+                }
             }
         });
         // add panel with buttons
@@ -213,6 +219,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         toolbars = new JPanel(new BorderLayout());
         toolbars.add(toolbar, BorderLayout.WEST);
         left.add(toolbars, BorderLayout.WEST);
+        updatePreviewVisibility();
         validate();
         inited=true;
     }
@@ -343,8 +350,8 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         prevMatch.setBorderPainted(false);
         prevMatch.addActionListener(getButtonListener());
 
-                stopButton = new JButton(
-            ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/api/resources/stop.png", false));
+        stopButton = new JButton(
+                ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/api/resources/stop.png", false));
 
         stopButton.setMaximumSize(dim);
         stopButton.setMinimumSize(dim);
@@ -354,6 +361,18 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         );
         stopButton.setBorderPainted(false);
         stopButton.addActionListener(getButtonListener());
+
+        previewButton = new JToggleButton(
+                ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/api/resources/preview.png", false));
+        previewButton.setMaximumSize(dim);
+        previewButton.setMinimumSize(dim);
+        previewButton.setPreferredSize(dim);
+        previewButton.setToolTipText(
+                NbBundle.getMessage(RefactoringPanel.class, "HINT_showPreview") // NOI18N
+        );
+        previewButton.setBorderPainted(false);
+        previewButton.addActionListener(getButtonListener());
+        previewButton.setSelected(getPreferences().getBoolean(preferencesKeyForUI(PREF_KEY_SHOW_PREVIEW), true));
 
         // create toolbar
         JToolBar toolbar = new ToolbarWithOverflow(JToolBar.VERTICAL);
@@ -366,10 +385,19 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         toolbar.add(expandButton);
         toolbar.add(logicalViewButton);
         toolbar.add(physicalViewButton);
+        toolbar.add(previewButton);
         if (refactoringUI instanceof RefactoringCustomUI) {
             toolbar.add(customViewButton);
         }
         return toolbar;
+    }
+
+    private Preferences getPreferences() {
+        return NbPreferences.forModule(RefactoringPanel.class);
+    }
+
+    private String preferencesKeyForUI(String uiPreference) {
+        return RefactoringPanel.class.getName() + "_" + (isQuery ? "query" : "refactoring") + "." + uiPreference;
     }
 
     /**
@@ -457,6 +485,23 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         nextMatch.setEnabled(false);
         expandButton.setEnabled(false);
         refresh(false);
+    }
+
+    private void updatePreviewVisibility() {
+        getPreferences().putBoolean(preferencesKeyForUI(PREF_KEY_SHOW_PREVIEW), previewButton.isSelected());
+        if (previewButton.isSelected()) {
+            boolean initDivider = splitPane.getRightComponent() == null;
+            if (initDivider) {
+                splitPane.setRightComponent(right);
+                initDivider();
+            } else {
+                int oldLocation = splitPane.getDividerLocation();
+                splitPane.setRightComponent(right);
+                splitPane.setDividerLocation(oldLocation);
+            }
+        } else {
+            splitPane.setRightComponent(null);
+        }
     }
 
     private CheckNode createNode(TreeElement representedObject, Map<Object, CheckNode> nodes, CheckNode root) {
@@ -863,18 +908,17 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             tree.setSelectionRow(0);
             setRefactoringEnabled(true, true);
             if (parametersPanel != null && (Boolean) parametersPanel.getClientProperty(ParametersPanel.JUMP_TO_FIRST_OCCURENCE)) {
-                selectNextUsage();
+                selectNextUsage(false);
             }
         });
     }
 
     private void initDivider() {
-        if (splitPane.getDividerLocation() < MIN_DIVIDER_LOCATION) {
-            if (dividerPosMemory > MIN_DIVIDER_LOCATION) {
-                splitPane.setDividerLocation(dividerPosMemory);
-            } else {
-                splitPane.setDividerLocation(0.3);
-            }
+        int dividerLocation = getPreferences().getInt(preferencesKeyForUI(PREF_KEY_DIVIDER_LOCATION), MIN_DIVIDER_LOCATION);
+        if (dividerLocation > MIN_DIVIDER_LOCATION) {
+            splitPane.setDividerLocation(dividerLocation);
+        } else {
+            splitPane.setDividerLocation(0.3);
         }
     }
 
@@ -882,14 +926,14 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         if (showParametersPanel) {
             if (size < MAX_ROWS) {
                 expandAll();
-                selectNextUsage();
+                selectNextUsage(false);
             } else {
                 expandButton.setSelected(false);
             }
         } else {
             if (expandButton.isSelected()) {
                 expandAll();
-                selectNextUsage();
+                selectNextUsage(false);
             } else {
                 expandButton.setSelected(false);
             }
@@ -1030,28 +1074,41 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
         disableComponent(refreshButton);
         disableComponent(rerunButton);
         disableComponent(stopButton);
+        disableComponent(previewButton);
         disableComponent(tree);
     }
 
-    void selectNextUsage() {
-        CheckNodeListener.selectNextPrev(true, isQuery, tree);
+    /**
+     * @param enableSourceJump if true and preview is disabled, the
+     * next/previous actions shall jump to the corresponding code location,
+     * this should not happen when the initial tree is opened.
+     */
+    void selectNextUsage(boolean enableSourceJump) {
+        CheckNodeListener.selectNextPrev(true, enableSourceJump && !previewButton.isSelected(), tree);
     }
 
-    void selectPrevUsage() {
-        CheckNodeListener.selectNextPrev(false, isQuery, tree);
+    /**
+     * @param enableSourceJump if true and preview is disabled, the
+     * next/previous actions shall jump to the corresponding code location,
+     * this should not happen when the initial tree is opened.
+     */
+    void selectPrevUsage(boolean enableSourceJump) {
+        CheckNodeListener.selectNextPrev(false, enableSourceJump && !previewButton.isSelected(), tree);
     }
 
-    private int location;
-    public void storeDividerLocation() {
-        if (splitPane.getRightComponent()!=null) {
-            location = splitPane.getDividerLocation();
+    public boolean setPreviewComponent(Component component) {
+        if (component == null) {
+            if (right == null) {
+                return false;
+            }
         }
-    }
-
-    public void restoreDeviderLocation() {
-        if (splitPane.getRightComponent()!=null) {
-            splitPane.setDividerLocation(location);
+        if (component == null) {
+            right = new JLabel(org.openide.util.NbBundle.getMessage(RefactoringPanel.class, "LBL_Preview_not_Available"), SwingConstants.CENTER);
+        } else {
+            right = component;
         }
+        updatePreviewVisibility();
+        return true;
     }
 
     public boolean isQuery() {
@@ -1156,11 +1213,13 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             } else if (o == customViewButton) {
                 switchToCustomView();
             } else if (o == nextMatch) {
-                selectNextUsage();
+                selectNextUsage(true);
             } else if (o == prevMatch) {
-                selectPrevUsage();
+                selectPrevUsage(true);
             } else if (o == stopButton) {
                 stopSearch();
+            } else if (o == previewButton) {
+                updatePreviewVisibility();
             }
         }
 

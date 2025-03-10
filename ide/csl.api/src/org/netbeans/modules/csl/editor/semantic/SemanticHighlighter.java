@@ -135,6 +135,7 @@ public final class SemanticHighlighter extends IndexingAwareParserResultTask<Par
         }
     }
 
+    @SuppressWarnings("null")
     private void process(Language language, ParserResult result, Set<SequenceElement> newColoring) throws ParseException {
         if (cancel.isCancelled()) {
             return;
@@ -164,6 +165,12 @@ public final class SemanticHighlighter extends IndexingAwareParserResultTask<Par
         }
         Document doc = result.getSnapshot().getSource().getDocument(false);
         Map<OffsetRange,Set<ColoringAttributes>> highlights = task.getHighlights();
+
+        if(highlights == null) {
+            LOG.log(Level.INFO, "Broken SemanticAnalyser detected: {0}#getHighlights returned null", task.getClass().getName());
+            highlights = Collections.emptyMap();
+        }
+
         for (Map.Entry<OffsetRange, Set<ColoringAttributes>> entry : highlights.entrySet()) {
 
             OffsetRange range = entry.getKey();

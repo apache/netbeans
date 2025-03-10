@@ -43,7 +43,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultRowSorter;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -237,7 +237,7 @@ class DataViewUI extends JPanel {
         dataPanelScrollPane.setRowHeaderView(rowHeader);
         dataPanelScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, rowHeader.getTableHeader());
         
-        ImageIcon icon = ImageUtilities.loadImageIcon(IMG_PREFIX + "preferences-desktop.png", false);  // NOI18N
+        Icon icon = ImageUtilities.loadIcon(IMG_PREFIX + "preferences-desktop.png", false);  // NOI18N
         JButton cornerButton = new JButton() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -247,7 +247,7 @@ class DataViewUI extends JPanel {
                 g2d.setColor(getBackground());
                 g2d.fillRect(0, 0, getWidth(), getHeight());
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.drawImage(icon.getImage(), (getWidth() - iconSize) / 2, (getHeight() - iconSize) / 2, iconSize, iconSize, null);
+                icon.paintIcon(null, g2d, (getWidth() - iconSize) / 2, (getHeight() - iconSize) / 2);
             }
         };
         cornerButton.addActionListener(popupActionListener);

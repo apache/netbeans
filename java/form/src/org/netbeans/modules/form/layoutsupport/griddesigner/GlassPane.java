@@ -24,7 +24,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -42,6 +41,7 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -475,24 +475,24 @@ public class GlassPane extends JPanel implements GridActionPerformer {
             int w = rect.width/2+1;
             int h = rect.height/2+1;
             g.drawRect(x, y, rect.width+1, rect.height+1);
-            Image resizeHandle = GridDesigner.RESIZE_HANDLE;
-            int rw = resizeHandle.getWidth(null);
-            int rh = resizeHandle.getHeight(null);
-            g.drawImage(resizeHandle, x-rw, y-rh, null); // left-top
+            Icon resizeHandle = GridDesigner.RESIZE_HANDLE;
+            int rw = resizeHandle.getIconWidth();
+            int rh = resizeHandle.getIconHeight();
+            resizeHandle.paintIcon(null, g, x-rw, y-rh); // left-top
             x += w;
-            g.drawImage(resizeHandle, x-rw/2, y-rh, null); // top
+            resizeHandle.paintIcon(null, g, x-rw/2, y-rh); // top
             x += rect.width+2-w;
-            g.drawImage(resizeHandle, x, y-rh, null); // right-top
+            resizeHandle.paintIcon(null, g, x, y-rh); // right-top
             y += h;
-            g.drawImage(resizeHandle, x, y-rh/2, null); // right
+            resizeHandle.paintIcon(null, g, x, y-rh/2); // right
             y += rect.height+2-h;
-            g.drawImage(resizeHandle, x, y, null); // right-bottom
+            resizeHandle.paintIcon(null, g, x, y); // right-bottom
             x -= rect.width+2-w;
-            g.drawImage(resizeHandle, x-rw/2, y, null); // bottom
+            resizeHandle.paintIcon(null, g, x-rw/2, y); // bottom
             x -= w;
-            g.drawImage(resizeHandle, x-rw, y, null); // left-bottom
+            resizeHandle.paintIcon(null, g, x-rw, y); // left-bottom
             y -= rect.height+2-h;
-            g.drawImage(resizeHandle, x-rw, y-rh/2, null); // left
+            resizeHandle.paintIcon(null, g, x-rw, y-rh/2); // left
         }
         gClip.dispose();
     }
@@ -789,9 +789,9 @@ public class GlassPane extends JPanel implements GridActionPerformer {
         } else {
             int x = cursorLocation.x;
             int y = cursorLocation.y;
-            Image resizeHandle = GridDesigner.RESIZE_HANDLE;
-            int rw = resizeHandle.getWidth(null);
-            int rh = resizeHandle.getHeight(null);
+            Icon resizeHandle = GridDesigner.RESIZE_HANDLE;
+            int rw = resizeHandle.getIconWidth();
+            int rh = resizeHandle.getIconHeight();
             for (Component selComp : selection) {
                 Rectangle rect = fromComponentPane(selectionResizingBounds(selComp));
                 boolean w = (rect.x-rw<=x) && (x<=rect.x+rect.width+rw);

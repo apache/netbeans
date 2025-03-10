@@ -35,6 +35,7 @@ import java.awt.geom.GeneralPath;
 import java.util.*;
 import java.util.List;
 import org.openide.awt.GraphicsUtils;
+import org.openide.util.ImageUtilities;
 
 /**
  * Split pane divider with Diff decorations.
@@ -43,8 +44,8 @@ import org.openide.awt.GraphicsUtils;
  */
 class DiffSplitPaneDivider extends BasicSplitPaneDivider implements MouseMotionListener, MouseListener, Accessible {
     
-    private final Image insertAllImage = org.openide.util.Utilities.loadImage("org/netbeans/modules/diff/builtin/visualizer/editable/move_all.png"); // NOI18N
-    private final Image insertAllActiveImage = org.openide.util.Utilities.loadImage("org/netbeans/modules/diff/builtin/visualizer/editable/move_all_active.png"); // NOI18N
+    private final Icon insertAllIcon = ImageUtilities.loadIcon("org/netbeans/modules/diff/builtin/visualizer/editable/move_all.png"); // NOI18N
+    private final Icon insertAllActiveIcon = ImageUtilities.loadIcon("org/netbeans/modules/diff/builtin/visualizer/editable/move_all_active.png"); // NOI18N
     private final int actionIconsHeight;
     private final int actionIconsWidth;
     private final Point POINT_ZERO = new Point(0, 0);
@@ -64,8 +65,8 @@ class DiffSplitPaneDivider extends BasicSplitPaneDivider implements MouseMotionL
         this.master = master;
         fontColor = new JLabel().getForeground();
 
-        actionIconsHeight = insertAllImage.getHeight(this);
-        actionIconsWidth = insertAllImage.getWidth(this);
+        actionIconsHeight = insertAllIcon.getIconHeight();
+        actionIconsWidth = insertAllIcon.getIconWidth();
         
         setBorder(null);
         setLayout(new BorderLayout());
@@ -254,9 +255,9 @@ class DiffSplitPaneDivider extends BasicSplitPaneDivider implements MouseMotionL
             if (master.isActionsEnabled() && everythingEditable) {
                 hotSpot = new Rectangle((getWidth() - actionIconsWidth) /2, editorsOffset, actionIconsWidth, actionIconsHeight);
                 if (hotSpot.contains(lastMousePosition)) {
-                    g.drawImage(insertAllActiveImage, hotSpot.x, hotSpot.y, this);
+                    insertAllActiveIcon.paintIcon(null, g, hotSpot.x, hotSpot.y);
                 } else {
-                    g.drawImage(insertAllImage, hotSpot.x, hotSpot.y, this);
+                    insertAllIcon.paintIcon(null, g, hotSpot.x, hotSpot.y);
                 }
                 rollbackAction.initRect(hotSpot);
                 newActionIcons.add(rollbackAction);

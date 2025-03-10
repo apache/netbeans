@@ -97,7 +97,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
     private boolean draggingSuspended;
 
     private SelectionDragger selectionDragger;
-    private Image resizeHandle;
+    private Icon resizeHandle;
 
     private DropTarget dropTarget;
     private DropTargetListener dropListener;
@@ -356,32 +356,32 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
             g.drawRect(x, y, width, height);
             g.setStroke(oldStroke);
             if (inLayout) {
-                Image resizeHandle = resizeHandle();
-                int iconHeight = resizeHandle.getHeight(null);
-                int iconWidth = resizeHandle.getWidth(null);
+                Icon resizeHandle = resizeHandle();
+                int iconHeight = resizeHandle.getIconHeight();
+                int iconWidth = resizeHandle.getIconWidth();
                 if ((resizable & LayoutSupportManager.RESIZE_LEFT) != 0) {
-                    g.drawImage(resizeHandle, x-iconWidth+1, y+(height-iconHeight)/2, null);
+                    resizeHandle.paintIcon(null, g, x-iconWidth+1, y+(height-iconHeight)/2);
                     if ((resizable & LayoutSupportManager.RESIZE_UP) != 0) {
-                        g.drawImage(resizeHandle, x-iconWidth+1, y-iconHeight+1, null);
+                        resizeHandle.paintIcon(null, g, x-iconWidth+1, y-iconHeight+1);
                     }
                     if ((resizable & LayoutSupportManager.RESIZE_DOWN) != 0) {
-                        g.drawImage(resizeHandle, x-iconWidth+1, y+height, null);
+                        resizeHandle.paintIcon(null, g, x-iconWidth+1, y+height);
                     }
                 }
                 if ((resizable & LayoutSupportManager.RESIZE_RIGHT) != 0) {
-                    g.drawImage(resizeHandle, x+width, y+(height-iconHeight)/2, null);
+                    resizeHandle.paintIcon(null, g, x+width, y+(height-iconHeight)/2);
                     if ((resizable & LayoutSupportManager.RESIZE_UP) != 0) {
-                        g.drawImage(resizeHandle, x+width, y-iconHeight+1, null);
+                        resizeHandle.paintIcon(null, g, x+width, y-iconHeight+1);
                     }
                     if ((resizable & LayoutSupportManager.RESIZE_DOWN) != 0) {
-                        g.drawImage(resizeHandle, x+width, y+height, null);
+                        resizeHandle.paintIcon(null, g, x+width, y+height);
                     }
                 }
                 if ((resizable & LayoutSupportManager.RESIZE_UP) != 0) {
-                    g.drawImage(resizeHandle, x+(width-iconWidth)/2, y-iconHeight+1, null);
+                    resizeHandle.paintIcon(null, g, x+(width-iconWidth)/2, y-iconHeight+1);
                 }
                 if ((resizable & LayoutSupportManager.RESIZE_DOWN) != 0) {
-                    g.drawImage(resizeHandle, x+(width-iconWidth)/2, y+height, null);
+                    resizeHandle.paintIcon(null, g, x+(width-iconWidth)/2, y+height);
                 }
             }
         }
@@ -701,9 +701,9 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
         counts[start ? 0 : 1]++;
     }
     
-    private Image resizeHandle() {
+    private Icon resizeHandle() {
         if (resizeHandle == null) {
-            resizeHandle = ImageUtilities.loadImageIcon("org/netbeans/modules/form/resources/resize_handle.png", false).getImage(); // NOI18N
+            resizeHandle = ImageUtilities.loadIcon("org/netbeans/modules/form/resources/resize_handle.png", false); // NOI18N
         }
         return resizeHandle;
     }

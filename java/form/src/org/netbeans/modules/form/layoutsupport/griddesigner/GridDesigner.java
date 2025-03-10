@@ -25,9 +25,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -41,6 +38,7 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.GroupLayout;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -101,7 +99,7 @@ public class GridDesigner extends JPanel {
     /** Color of the selection. */
     public static final Color SELECTION_COLOR = FormLoaderSettings.getInstance().getSelectionBorderColor();
     /** Image of the resizing handle. */
-    public static final Image RESIZE_HANDLE = ImageUtilities.loadImageIcon("org/netbeans/modules/form/resources/resize_handle.png", false).getImage(); // NOI18N
+    public static final Icon RESIZE_HANDLE = ImageUtilities.loadIcon("org/netbeans/modules/form/resources/resize_handle.png", false); // NOI18N
     /** The "main" panel of the designer. */
     private JPanel innerPane;
     /** Glass pane of the designer. */

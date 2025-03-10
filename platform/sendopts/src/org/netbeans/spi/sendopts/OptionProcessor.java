@@ -73,7 +73,6 @@ public abstract class OptionProcessor {
      * See the factory methods that are part of the {@link Option}'s javadoc
      * or read the <a href="@TOP@/architecture-summary.html#answer-arch-usecases">
      * usecases</a> for the sendopts API.
-     * <p>
      * 
      * @return a set of options this processor is interested in, if during
      *   processing at least on of the options appears on command line

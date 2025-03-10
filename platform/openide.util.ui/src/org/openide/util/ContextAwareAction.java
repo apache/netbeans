@@ -36,7 +36,6 @@ import javax.swing.Action;
  * often taken from an activated node selection. The context action might be
  * enabled only if a certain "cookie" is present in that selection. When invoked,
  * the action need not search for an object to act on, since it can use the context.
- * <p>
  *
  * @author Jaroslav Tulach, Peter Zavadsky
  *

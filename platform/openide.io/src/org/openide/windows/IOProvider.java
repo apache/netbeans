@@ -99,7 +99,7 @@ public abstract class IOProvider {
      * getters on the returned instance.
      *
      * @param name A localised display name for the tab
-     * @param newIO if <tt>true</tt>, a new <code>InputOutput</code> is returned, else an existing <code>InputOutput</code> of the same name may be returned
+     * @param newIO if <code>true</code>, a new <code>InputOutput</code> is returned, else an existing <code>InputOutput</code> of the same name may be returned
      * @return an <code>InputOutput</code> instance for accessing the new tab
      * @see InputOutput
      */
@@ -152,7 +152,7 @@ public abstract class IOProvider {
      * Gets a named instance of {@link InputOutput}. Corresponding IO tab will be placed
      * in parent container corresponding to provided {@link IOContainer}.
      * @param name A localized display name for the tab
-     * @param newIO if <tt>true</tt>, a new <code>InputOutput</code> is returned, else an existing <code>InputOutput</code> of the same name may be returned
+     * @param newIO if <code>true</code>, a new <code>InputOutput</code> is returned, else an existing <code>InputOutput</code> of the same name may be returned
      * @param actions array of actions that are added to the toolbar, Can be empty array, but not null.
      *   The number of actions should not exceed 5 and each should have the <code>Action.SMALL_ICON</code> property defined.
      * @param ioContainer parent container accessor

@@ -232,9 +232,9 @@ public final class XMLUtil extends Object {
      * entity resolver. For example, consider a file such as this:</p>
      *
      * <pre>
-     * &lt;?<font class="keyword">xml</font> <font class="variable-name">version</font>=<font class="string">"1.0"</font> <font class="variable-name">encoding</font>=<font class="string">"UTF-8"</font>?&gt;
-     * &lt;!<font class="keyword">DOCTYPE</font> <font class="type">root</font> <font class="keyword">PUBLIC</font> <font class="string">"-//NetBeans//DTD Foo 1.0//EN"</font> <font class="string">"http://www.netbeans.org/dtds/foo-1_0.dtd"</font>&gt;
-     * &lt;<font class="function-name">root</font>/&gt;
+     * &lt;?<span class="keyword">xml</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span> <span class="variable-name">encoding</span>=<span class="string">"UTF-8"</span>?&gt;
+     * &lt;!<span class="keyword">DOCTYPE</span> <span class="type">root</span> <span class="keyword">PUBLIC</span> <span class="string">"-//NetBeans//DTD Foo 1.0//EN"</span> <span class="string">"http://www.netbeans.org/dtds/foo-1_0.dtd"</span>&gt;
+     * &lt;<span class="function-name">root</span>/&gt;
      * </pre>
      *
      * <p>If you parse this with a null entity resolver, or you use the
@@ -254,19 +254,19 @@ public final class XMLUtil extends Object {
      * in your layer use:</p>
      *
      * <pre>
-     * &lt;<font class="function-name">filesystem</font>&gt;
-     *   &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font class="string">"xml"</font>&gt;
-     *     &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font class="string">"entities"</font>&gt;
-     *       &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font class="string">"NetBeans"</font>&gt;
-     *         &lt;<font class="function-name">file</font> <font class="variable-name">name</font>=<font class="string">"DTD_Foo_1_0"</font>
-     *               <font class="variable-name">url</font>=<font class="string">"resources/foo-1_0.dtd"</font>&gt;
-     *           &lt;<font class="function-name">attr</font> <font class="variable-name">name</font>=<font class="string">"hint.originalPublicID"</font>
-     *                 <font class="variable-name">stringvalue</font>=<font class="string">"-//NetBeans//DTD Foo 1.0//EN"</font>/&gt;
-     *         &lt;/<font class="function-name">file</font>&gt;
-     *       &lt;/<font class="function-name">folder</font>&gt;
-     *     &lt;/<font class="function-name">folder</font>&gt;
-     *   &lt;/<font class="function-name">folder</font>&gt;
-     * &lt;/<font class="function-name">filesystem</font>&gt;
+     * &lt;<span class="function-name">filesystem</span>&gt;
+     *   &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"xml"</span>&gt;
+     *     &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"entities"</span>&gt;
+     *       &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"NetBeans"</span>&gt;
+     *         &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"DTD_Foo_1_0"</span>
+     *               <span class="variable-name">url</span>=<span class="string">"resources/foo-1_0.dtd"</span>&gt;
+     *           &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"hint.originalPublicID"</span>
+     *                 <span class="variable-name">stringvalue</span>=<span class="string">"-//NetBeans//DTD Foo 1.0//EN"</span>/&gt;
+     *         &lt;/<span class="function-name">file</span>&gt;
+     *       &lt;/<span class="function-name">folder</span>&gt;
+     *     &lt;/<span class="function-name">folder</span>&gt;
+     *   &lt;/<span class="function-name">folder</span>&gt;
+     * &lt;/<span class="function-name">filesystem</span>&gt;
      * </pre>
      *
      * <p>Now the default system entity catalog will resolve the public ID
@@ -291,12 +291,12 @@ public final class XMLUtil extends Object {
      * does not even bother to load the DTD at all:</p>
      *
      * <pre>
-     * <font class="keyword">public</font> <font class="type">InputSource</font> <font class="function-name">resolveEntity</font>(<font class="type">String</font> <font class="variable-name">pubid</font>, <font class="type">String</font> <font class="variable-name">sysid</font>)
-     *     <font class="keyword">throws</font> <font class="type">SAXException</font>, <font class="type">IOException</font> {
-     *   <font class="keyword">if</font> (pubid.equals(<font class="string">"-//NetBeans//DTD Foo 1.0//EN"</font>)) {
-     *     <font class="keyword">return</font> <font class="keyword">new</font> <font class="type">InputSource</font>(<font class="keyword">new</font> <font class="type">ByteArrayInputStream</font>(<font class="keyword">new</font> <font class="type">byte</font>[0]));
-     *   } <font class="keyword">else</font> {
-     *     <font class="keyword">return</font> EntityCatalog.getDefault().resolveEntity(pubid, sysid);
+     * <span class="keyword">public</span> <span class="type">InputSource</span> <span class="function-name">resolveEntity</span>(<span class="type">String</span> <span class="variable-name">pubid</span>, <span class="type">String</span> <span class="variable-name">sysid</span>)
+     *     <span class="keyword">throws</span> <span class="type">SAXException</span>, <span class="type">IOException</span> {
+     *   <span class="keyword">if</span> (pubid.equals(<span class="string">"-//NetBeans//DTD Foo 1.0//EN"</span>)) {
+     *     <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">InputSource</span>(<span class="keyword">new</span> <span class="type">ByteArrayInputStream</span>(<span class="keyword">new</span> <span class="type">byte</span>[0]));
+     *   } <span class="keyword">else</span> {
+     *     <span class="keyword">return</span> EntityCatalog.getDefault().resolveEntity(pubid, sysid);
      *   }
      * }
      * </pre></li>

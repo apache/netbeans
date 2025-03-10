@@ -440,7 +440,7 @@ for (<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/net/URLStreamHandlerFactory.html">
         <description>
           The content of <code>Lookup.getDefault()</code> can be specified
           by a standard JDK registration mechanism, using JARs'
-          <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Service%20Provider" shape="rect">
+          <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Service%20Provider">
             META-INF/services
           </a>
           directory. This is suitable for services that do not change,
@@ -457,7 +457,7 @@ for (<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/net/URLStreamHandlerFactory.html">
          <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
          <description>New utility class added. The class cannot be instantiated
            and contains following static methods:
-        <pre xml:space="preserve">
+        <pre>
 <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">Lookup</span> <span class="function-name">singleton</span>(<span class="type">Object</span> <span class="variable-name">objectToLookup</span>);
 <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">Lookup</span> <span class="function-name">fixed</span>(<span class="type">Object</span>[] <span class="variable-name">objectsToLookup</span>);
 <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">Lookup</span> <span class="function-name">fixed</span>(<span class="type">Object</span>[] <span class="variable-name">keys</span>, <span class="type">InstanceContent.Convertor</span> <span class="variable-name">convertor</span>);

@@ -448,6 +448,27 @@ public class UtilitiesTest extends NbTestCase {
                 false);
     }
 
+    public void testExitsAllBranchesYield() throws Exception {
+        performExitsTest(
+                """
+                package test;
+                public class Test {
+                    public int test(int param) {
+                        return switch (param) {
+                            default -> {
+                                i|f (param == 0) {
+                                    yield 0;
+                                } else {
+                                    yield 1;
+                                }
+                            }
+                        };
+                    }
+                }
+                """,
+                true);
+    }
+
     private void performExitsTest(String code, boolean expected) throws Exception {
         int caretPos = code.indexOf('|');
         code = code.replace("|", "");

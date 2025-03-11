@@ -27,7 +27,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,6 +46,9 @@ import org.netbeans.swing.tabcontrol.customtabs.Tabbed;
  * @author sa
  */
 class DragWindow extends JWindow {
+    /* Store buffers at 2x the logical resolution. Then scale them down by 50% when painting to the
+    JWindow. This ensures full-resolution painting on HiDPI and Retina screens. */
+    private static final int DPI_SCALE = 2;
 
     private boolean useFadeEffects = !Boolean.getBoolean( "winsys.dnd.nofadeeffects" );
 
@@ -83,8 +88,10 @@ class DragWindow extends JWindow {
         //button icons will be messed up
         Window parentWindow = SwingUtilities.getWindowAncestor(container.getComponent());
         Rectangle rect = SwingUtilities.convertRectangle(container.getComponent(), tabRectangle, parentWindow);
-        BufferedImage res = config.createCompatibleImage(tabRectangle.width, tabRectangle.height);
+        BufferedImage res = config.createCompatibleImage(
+                tabRectangle.width * DPI_SCALE, tabRectangle.height * DPI_SCALE);
         Graphics2D g = res.createGraphics();
+        g.scale(DPI_SCALE, DPI_SCALE);
         g.translate(-rect.x, -rect.y);
         g.setClip(rect);
         parentWindow.paint(g);
@@ -95,15 +102,17 @@ class DragWindow extends JWindow {
         GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment()
                     .getDefaultScreenDevice().getDefaultConfiguration();
 
-        BufferedImage res = config.createCompatibleImage(contentSize.width, contentSize.height);
+        BufferedImage res = config.createCompatibleImage(
+                contentSize.width * DPI_SCALE, contentSize.height * DPI_SCALE);
         Graphics2D g = res.createGraphics();
+        g.scale(DPI_SCALE, DPI_SCALE);
         //some components may be non-opaque so just black rectangle would be painted then
         g.setColor( Color.white );
         g.fillRect(0, 0, contentSize.width, contentSize.height);
         if( WinSysPrefs.HANDLER.getBoolean(WinSysPrefs.DND_SMALLWINDOWS, true) && c.getWidth() > 0 && c.getHeight() > 0 ) {
             double xScale = contentSize.getWidth() / c.getWidth();
             double yScale = contentSize.getHeight() / c.getHeight();
-            g.setTransform(AffineTransform.getScaleInstance(xScale, yScale) );
+            g.scale(xScale, yScale);
         }
         c.paint(g);
         return res;
@@ -121,25 +130,40 @@ class DragWindow extends JWindow {
         return res;
     }
 
+    private static void drawImageScaled(Graphics2D g2d, Image image, int x, int y) {
+        AffineTransform oldTransform = g2d.getTransform();
+        g2d.translate(x, y);
+        g2d.scale(1.0 / DPI_SCALE, 1.0 / DPI_SCALE);
+        g2d.drawImage(image, 0, 0, null);
+        g2d.setTransform(oldTransform);
+    }
+
     @Override
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
+        /* Set scaling hints in case we are drawing on a surface with a different HiDPI scaling than
+        exactly DPI_SCALE. */
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
         g2d.setColor(Color.white);
         g2d.fillRect(0,0,getWidth(),tabRectangle.height);
         g2d.setColor(Color.gray);
         g2d.drawRect(0, tabRectangle.height, getWidth()-1, getHeight()-tabRectangle.height-1);
         
-        if( WinSysPrefs.HANDLER.getBoolean(WinSysPrefs.DND_SMALLWINDOWS, true) )
-            g2d.drawImage(tabImage, 0, 0, null);
-        else
-            g2d.drawImage(tabImage, tabRectangle.x, tabRectangle.y, null);
+        if( WinSysPrefs.HANDLER.getBoolean(WinSysPrefs.DND_SMALLWINDOWS, true) ) {
+            drawImageScaled(g2d, tabImage, 0, 0);
+        } else {
+            drawImageScaled(g2d, tabImage, tabRectangle.x, tabRectangle.y);
+        }
         if( !useFadeEffects || null == imageBuffer ) {
             g2d.setColor( Color.black );
             g2d.fillRect(1, tabRectangle.height+1, getWidth()-2, getHeight()-tabRectangle.height-2);
             g2d.setComposite( AlphaComposite.getInstance(AlphaComposite.SRC_OVER, contentAlpha ));
-            g2d.drawImage( contentImage, 1, tabRectangle.height+1, null );
+            drawImageScaled(g2d, contentImage, 1, tabRectangle.height+1);
         } else if( null != imageBuffer ) {
-            g2d.drawImage( imageBuffer, 1, tabRectangle.height+1, null );
+            drawImageScaled(g2d, imageBuffer, 1, tabRectangle.height+1);
         }
         g2d.dispose();
     }

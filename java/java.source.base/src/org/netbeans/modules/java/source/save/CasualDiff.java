@@ -2184,6 +2184,15 @@ public class CasualDiff {
             int[] bodyBounds = getBounds(oldT.getBody());
             copyTo(localPointer, bodyBounds[0]);
             localPointer = diffTree(oldT.getBody(), newT.getBody(), bodyBounds);
+            if (oldT.getBody().getKind() != Kind.BLOCK) {
+                tokenSequence.move(localPointer);
+                moveToSrcRelevant(tokenSequence, Direction.FORWARD);
+                if (tokenSequence.token().id() == JavaTokenId.SEMICOLON && newT.getBody().getKind() == Kind.BLOCK) {
+                    localPointer = tokenSequence.offset() + tokenSequence.token().length();
+                }
+            } else if (newT.getBody().getKind() != Kind.BLOCK && newT.getBody().getKind() != Kind.THROW) {
+                printer.print(";");
+            }
             printer.undent(old);
         } else {
             PositionEstimator est = EstimatorFactory.statements(

@@ -20,6 +20,7 @@
 package org.netbeans.core.windows.view.dnd;
 
 import java.awt.AlphaComposite;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -33,8 +34,11 @@ import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import org.netbeans.core.windows.options.WinSysPrefs;
 import org.netbeans.swing.tabcontrol.customtabs.Tabbed;
 
@@ -62,6 +66,18 @@ class DragWindow extends JWindow {
 
         tabImage = createTabImage();
         contentImage = createContentImage( content, contentSize );
+        /* There's a brief flicker of the window's background color when the window first appears.
+        So set it to a LAF-appropriate background color to avoid it being noticable, e.g. to avoid
+        a bright flicker on a dark LAF. */
+        setBackground(UIManager.getColor("Panel.background"));
+
+        /* We used to override JWindow.paint to do our painting in this window, but at least on
+        MacOS, such painting was observed to not always be displayed during dragging of the window.
+        Adding a JPanel and overriding paint there instead works. */
+        PainterPanel panel = new PainterPanel();
+        JRootPane rootPane = getRootPane();
+        rootPane.setLayout(new BorderLayout());
+        rootPane.add(panel, BorderLayout.CENTER);
     }
 
     private BufferedImage createTabImage() {
@@ -91,7 +107,7 @@ class DragWindow extends JWindow {
         Graphics2D g = res.createGraphics();
         g.scale(DPI_SCALE, DPI_SCALE);
         //some components may be non-opaque so just black rectangle would be painted then
-        g.setColor( Color.white );
+        g.setColor( getBackground() );
         g.fillRect(0, 0, contentSize.width, contentSize.height);
         if( WinSysPrefs.HANDLER.getBoolean(WinSysPrefs.DND_SMALLWINDOWS, true) && c.getWidth() > 0 && c.getHeight() > 0 ) {
             double xScale = contentSize.getWidth() / c.getWidth();
@@ -110,33 +126,40 @@ class DragWindow extends JWindow {
         g2d.setTransform(oldTransform);
     }
 
-    @Override
-    public void paint(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g.create();
-        /* Set scaling hints in case we are drawing on a surface with a different HiDPI scaling than
-        exactly DPI_SCALE. */
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+    private class PainterPanel extends JPanel {
+        @Override
+        public void paint(Graphics g) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            /* Set scaling hints in case we are drawing on a surface with a different HiDPI scaling than
+            exactly DPI_SCALE. */
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-        g2d.setColor(Color.white);
-        g2d.fillRect(0,0,getWidth(),tabRectangle.height);
-        g2d.setColor(Color.gray);
-        g2d.drawRect(0, tabRectangle.height, getWidth()-1, getHeight()-tabRectangle.height-1);
+            /* Needed for the !WinSysPrefs.TRANSPARENCY_DRAGIMAGE case on Windows, to avoid leftover
+            graphics appearing next to the tab on Windows. In the transparent case, the part beyond
+            the tab will be masked out by DragAndDropFeedbackVisualizer. */
+            g2d.setColor(DragWindow.this.getBackground());
+            g2d.fillRect(0,0,getWidth(), tabRectangle.height);
 
-        if( WinSysPrefs.HANDLER.getBoolean(WinSysPrefs.DND_SMALLWINDOWS, true) ) {
-            drawImageScaled(g2d, tabImage, 0, 0);
-        } else {
-            drawImageScaled(g2d, tabImage, tabRectangle.x, tabRectangle.y);
+            if (!dropEnabled) {
+                g2d.setComposite( AlphaComposite.getInstance(AlphaComposite.SRC_OVER, NO_DROP_ALPHA));
+            }
+
+            g2d.setColor(Color.gray);
+            g2d.drawRect(0, tabRectangle.height, getWidth()-1, getHeight()-tabRectangle.height-1);
+
+            if( WinSysPrefs.HANDLER.getBoolean(WinSysPrefs.DND_SMALLWINDOWS, true) ) {
+                drawImageScaled(g2d, tabImage, 0, 0);
+            } else {
+                drawImageScaled(g2d, tabImage, tabRectangle.x, tabRectangle.y);
+            }
+
+            g2d.setColor( Color.black );
+            g2d.fillRect(1, tabRectangle.height+1, getWidth()-2, getHeight()-tabRectangle.height-2);
+            drawImageScaled(g2d, contentImage, 1, tabRectangle.height+1);
+            g2d.dispose();
         }
-
-        g2d.setColor( Color.black );
-        g2d.fillRect(1, tabRectangle.height+1, getWidth()-2, getHeight()-tabRectangle.height-2);
-        if (!dropEnabled) {
-            g2d.setComposite( AlphaComposite.getInstance(AlphaComposite.SRC_OVER, NO_DROP_ALPHA));
-        }
-        drawImageScaled(g2d, contentImage, 1, tabRectangle.height+1);
-        g2d.dispose();
     }
 
     public void setDropFeedback( boolean dropEnabled ) {

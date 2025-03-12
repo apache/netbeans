@@ -33,7 +33,7 @@ The NetBeans Debugger Core API definition. Debugger Core API interfaces
 allows to install differrent debugger inlementations to one IDE, and
 share some UI components among them.<br>
 <br>
-<h2><a name="Basic_debugger_model"></a>Basic debugger model<br>
+<h2 id="Basic_debugger_model">Basic debugger model<br>
 </h2>
 Debugger Core API represents debugger as some tree structure. {@link
 org.netbeans.api.debugger.DebuggerManager} represents root of this
@@ -67,7 +67,7 @@ org.netbeans.api.debugger.DebuggerManager#startDebugging(DebuggerInfo)}.
 The only method how to remove something is {@link
 org.netbeans.api.debugger.DebuggerEngine.Destructor}.<br>
 <br>
-<h2><a name="lookups"></a>Exension of basic model - lookups,
+<h2 id="lookups">Exension of basic model - lookups,
 Meta-inf/debugger<br>
 </h2>
 Basic debugger model is very simple, and it should be extended by some
@@ -107,7 +107,7 @@ Meta-inf/debugger folder. The way how to do it is described in <a
  href="../../spi/debugger/package-summary.html">Debugger
 SPI </a>documentation.<br>
 <br>
-<h2><a name="Debugger_Start_Process"></a>Debugger Start Process</h2>
+<h2 id="Debugger_Start_Process">Debugger Start Process</h2>
 The process which implements starting of debugger in Debugger Core
 module is very simple. There is one instance of {@link
 org.netbeans.api.debugger.DebuggerInfo} and {@link
@@ -135,7 +135,7 @@ new Sessions and new DebuggerEngines and registers them to the
 DebuggerManager.
 Thats all.<br>
 <br>
-<h2><a name="Debugger_Start_Process_-_advanced"></a>Debugger Start
+<h2 id="Debugger_Start_Process_-_advanced">Debugger Start
 Process - advanced version</h2>
 Debugger API supports two enhancements to the standard debugger start
 process:<br>
@@ -151,7 +151,7 @@ Session. <br>
 Second usecase is supported by interface {@link
 org.netbeans.spi.debugger.DelegatingDebuggerEngineProvider}.<br>
 <br>
-<h2><a name="Debugger_Actions"></a>Debugger Actions - how does it work</h2>
+<h2 id="Debugger_Actions">Debugger Actions - how does it work</h2>
 debuggercore-ui module installs some basic set of standard debugger
 actions to NetBeans toolbar and menu. Debugger actions
 (javax.swing.Action) are private. Each action is represented by some
@@ -159,7 +159,7 @@ constant in {@link
 org.netbeans.api.debugger.ActionsManager} (like {@link
 org.netbeans.api.debugger.ActionsManager#ACTION_STEP_INTO}). <br>
 ActionsManager manages list of registered {@link
-org.netbeans.spi.debugger.ActionProvider}s. It contains mapping between
+org.netbeans.spi.debugger.ActionsProvider}s. It contains mapping between
 action constant and ActionProvider registerred for this constant. For
 example:<br>
 <br>
@@ -217,8 +217,8 @@ org.netbeans.spi.debugger.ActionsProviderListener#actionStateChange(Object,boole
 for {@link org.netbeans.api.debugger.ActionsManager#ACTION_STEP_INTO}.</li>
   <li>{@link org.netbeans.api.debugger.DebuggerEngine} is listenning on
 all installed {@link org.netbeans.spi.debugger.ActionsProvider}s and
-fires all action state changes using {@link
-org.netbeans.api.debugger.DebuggerEngineListener#actionStateChanged(Object,boolean)}.</li>
+fires all action state changes using 
+{@code org.netbeans.api.debugger.DebuggerEngineListener#actionStateChanged(Object,boolean)}.</li>
   <li>StepIntoAction listens on {@link
 org.netbeans.api.debugger.DebuggerEngine}, and it updates its state
 when some actionStateChanged is fired.<br>
@@ -230,7 +230,7 @@ when some actionStateChanged is fired.<br>
  style="font-weight: bold;">ActionProvider</span><span
  style="font-weight: bold;">          DebuggerEngine.ActionsProviderListener                </span><span
  style="font-weight: bold;">StepIntoAction.DebuggerEngineListener</span><span
- style="font-weight: bold;"></span><br>                     (ActionsProvider)                            |                                           (javax.swing.Action)                 <span
+ style="font-weight: bold;">&nbsp;</span><br>                     (ActionsProvider)                            |                                           (javax.swing.Action)                 <span
  style="font-weight: bold;"><br></span>                            |                                     |                                                    |<br>   _  state of   -&gt;  fire action state                            |                                                    |<br>  |?|  action            change           --&gt;   <b>actionStateChange</b> (ACTION_STEP_INTO, enabled)                          |<br>   &macr;  should be             |                                     |                                                    |<br>      changed               |                         fire DebuggerEngineListener                                      |<br>                            |                            actionStateChanged                   --&gt;             <span
  style="font-weight: bold;">actionStateChanged</span><br>                            |                                     |                                             updates a state<br>                            |                                     |                                                of action<br>                            |&lt;--                                &lt;-|-                          <span
  style="font-weight: bold;">&lt;--</span>                      |<br></pre>

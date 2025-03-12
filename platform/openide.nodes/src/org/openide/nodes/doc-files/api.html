@@ -93,7 +93,7 @@ features.</p>
 
 <div class="nonnormative">
 
-<h2><a name="node-intro">What is a Node?</a></h2>
+<h2 id="node-intro">What is a Node?</h2>
 
 A node provides the visual representation and apparent behavior of
 most objects in NetBeans. It may be used to represent a data object
@@ -109,7 +109,7 @@ be stored in a data object, or in some other appropriate storage
 mechanism. Rather, they provide a presentation device for existing
 data.
 
-<h3><a name="javabean-intro">JavaBeans and nodes</a></h3>
+<h3 id="javabean-intro">JavaBeans and nodes</h3>
 
 A node is a sort of extension to the JavaBeans concept, adding some
 features that were necessary for the full functioning of explorer views. Some
@@ -151,7 +151,7 @@ implementations</a> are available which wrap around standard JavaBeans
 and present them as nodes, including handling any Bean Context
 available, introspected properties, and so on.
 
-<h3><a name="explorer">Nodes in the Explorer</a></h3>
+<h3 id="explorer">Nodes in the Explorer</h3>
 
 Using the
 
@@ -180,7 +180,7 @@ Environment subtree has immediate effect). These capabilities owe to
 the <a href="#event">rich event notification</a> supported by the
 Nodes API.
 
-<h3><a name="common-types">Common node types</a></h3>
+<h3 id="common-types">Common node types</h3>
 
 This is a partial list of common types of nodes, some more apparent
 than others, to give an idea of what is possible with the API:
@@ -238,7 +238,7 @@ and probably be easier to write as well.
 </div>
 
 
-<h2><a name="create">Creating Custom Nodes</a></h2>
+<h2 id="create">Creating Custom Nodes</h2>
 
 This section details the steps you must take to create various kinds
 of customized nodes. In simple cases, you need do very little, as
@@ -248,7 +248,7 @@ particular type (as is the case with e.g. the Active Processes list),
 some more work is necessary, but again much of it will involve
 subclassing existing supports.
 
-<h3><a name="create-genl">General Aspects</a></h3>
+<h3 id="create-genl">General Aspects</h3>
 
 All nodes must subclass the general
 
@@ -321,7 +321,7 @@ to set the base name for the icon image resources.
 
 </ul>
 
-<h3><a name="create-prop">Properties, sets, and sheets</a></h3>
+<h3 id="create-prop">Properties, sets, and sheets</h3>
 
 There are three levels of organization for node properties:
 
@@ -481,7 +481,7 @@ a completely different editor when it is bound to a SQL rowset), or to
 keep an initialized editor associated with a node that may have some
 UI state not kept in the node itself.
 
-<h3><a name="create-hier">Hierarchy nodes and their children</a></h3>
+<h3 id="create-hier">Hierarchy nodes and their children</h3>
 
 Creating a leaf node - a node with no children - is fairly
 straightforward, since the child list may simply be specified as
@@ -543,7 +543,7 @@ frequently - the provided support classes should handle the common
 cases. If it is necessary to subclass, the documentation for
 <code>Children</code> should suffice.
 
-<h3><a name="create-order">Indexing and reordering children</a></h3>
+<h3 id="create-order">Indexing and reordering children</h3>
 
 Many structural constraints on children are probably satisfied by the
 children class itself - i.e. using <code>Children.SortedArray</code>
@@ -576,7 +576,7 @@ implementation such as
 This implementation stores a list of children and makes it
 straightforward for the user to manipulate the order in several ways.
 
-<h3><a name="create-cookie-act">Cookie and action support</a></h3>
+<h3 id="create-cookie-act">Cookie and action support</h3>
 
 One important ability provided by the Nodes API is to associate
 cookies and actions with nodes. What cookies are and how to create
@@ -656,7 +656,7 @@ action presentation can override
 
 to define a particular UI for this presentation.
 
-<h3><a name="create-mod">Installing special nodes from modules</a></h3>
+<h3 id="create-mod">Installing special nodes from modules</h3>
 
 Frequently nodes will be created secondarily, especially as a result
 of being delegates to data objects (in which case their creation is
@@ -703,13 +703,13 @@ placed in the <samp>UI/Services/</samp> folder, again using
 <a href="@org-openide-util-ui@/org/openide/util/doc-files/api.html#settings">Services API</a>.
 
 
-<h2><a name="special">Special Node Usage</a></h2>
+<h2 id="special">Special Node Usage</h2>
 
 There are a few sorts of special operations and techniques which it
 may be useful to apply to nodes, either in the course of implementing
 a node or node hierarchy, or just using nodes from other code.
 
-<h3><a name="serial">Serialization and traversal</a></h3>
+<h3 id="serial">Serialization and traversal</h3>
 
 If you need to store (serialize) a node for any reason, this is
 generally impossible due to the welter of Java-level references
@@ -741,7 +741,7 @@ reconstructing your root from scratch, and return it from
 may also be used for general-purpose navigation along the hierarchy,
 should this be necessary.
 
-<h3><a name="javabean-bridge">JavaBean bridging</a></h3>
+<h3 id="javabean-bridge">JavaBean bridging</h3>
 
 It is possible to create a node which picks up its node behavior from
 an underlying JavaBean. That is, Bean introspection will be used to
@@ -763,7 +763,7 @@ file is found to be a JavaBean (serialized, or as a class) - this
 latter type of node behaves in most respects like any other data node,
 and just adds a couple of features like a Customize action.
 
-<h3><a name="delegate">Data object delegates</a></h3>
+<h3 id="delegate">Data object delegates</h3>
 
 Many nodes serve primarily to represent a data object, which would
 otherwise be invisible to the user. While such data nodes may be
@@ -775,7 +775,7 @@ and supports for creating these. Please refer to the
 
 for details.
 
-<h3><a name="filter">Filters and cloning</a></h3>
+<h3 id="filter">Filters and cloning</h3>
 
 Under some circumstances, it may be useful to create a node which does
 nothing except serve as a sort of symbolic link to another primary
@@ -804,7 +804,7 @@ as such behavior would be contrary to the UI goal of having a data
 node live in one place in the Repository according to the position of
 the data object and primary file object.
 
-<h3><a name="event">Event model</a></h3>
+<h3 id="event">Event model</h3>
 
 Every interesting aspect of nodes may be listened to using the Java
 Event Model, as is routine in the IDE:
@@ -845,7 +845,7 @@ is easier just to listen to the node holding them.
 
 </ul>
 
-<h3><a name="edit">Edit operations on nodes</a></h3>
+<h3 id="edit">Edit operations on nodes</h3>
 
 Nodes can support a variety of mechanisms for the basic edit
 operations.
@@ -1004,7 +1004,7 @@ public class Shortcuts extends AbstractNode {
       ls.add (new PasteType () {
         public Transferable paste () throws IOException {
           Node[] nue = new Node[ns.length];
-          for (int i = 0; i < nue.length; i++)
+          for (int i = 0; i &lt; nue.length; i++)
             nue[i] = ns[i].cloneNode ();
           getChildren ().add (nue);
           return null;
@@ -1152,28 +1152,28 @@ an existing one (several levels of inner classes would be required!).
 
 <div class="nonnormative">
 
-<h2><a name="diagrams">UML Diagrams</a></h2>
+<h2 id="diagrams">UML Diagrams</h2>
 
 First class diagram listed shows structure of the API in general, all other
 diagrams provides specialized view of specific section of the API.
 
-<h3><a name="diagram_nodes">General node structure class diagram</a></h3>
+<h3 id="diagram_nodes">General node structure class diagram</h3>
 
 <img src="nodes.gif" alt="general UML">
 
-<h3><a name="diagram_children">Node children class diagram</a></h3>
+<h3 id="diagram_children">Node children class diagram</h3>
 
 <img src="children.gif" alt="children UML">
 
-<h3><a name="diagram_events">Node events class diagram</a></h3>
+<h3 id="diagram_events">Node events class diagram</h3>
 
 <img src="events.gif" alt="events UML">
 
-<h3><a name="diagram_ordering">Node ordering class diagram</a></h3>
+<h3 id="diagram_ordering">Node ordering class diagram</h3>
 
 <img src="ordering.gif" alt="ordering UML">
 
-<h3><a name="diagram_properties">Node properties class diagram</a></h3>
+<h3 id="diagram_properties">Node properties class diagram</h3>
 
 <img src="properties.gif" alt="properties UML">
 

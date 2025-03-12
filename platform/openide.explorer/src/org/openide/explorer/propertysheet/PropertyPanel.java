@@ -949,7 +949,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
      * not valid states just if it implements the {@link ExPropertyEditor}
      * and changes state by the <code>setState</code> method of the {@link PropertyEnv}
      * environment.
-     * <P>
+     *
      * @return <code>PropertyEnv.STATE_VALID</code> if the editor is not the <code>ExPropertyEditor</code>
      *    one or other constant from <code>PropertyEnv.STATE_*</code> that was assigned to <code>PropertyEnv</code>
      * @since 2.20

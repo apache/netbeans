@@ -875,6 +875,7 @@ it belongs to <em>Window system module</em>.
 <answer id="resources-preferences">
     <api group="preferences" name="org.openide.actions.HeapView" type="export" category="private">
       <table>
+          <caption>resources preferences</caption>
           <tbody>
               <tr>
                   <th>key</th>

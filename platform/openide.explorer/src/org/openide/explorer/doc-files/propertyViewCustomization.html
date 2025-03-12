@@ -26,7 +26,7 @@
 </head>
   <body>
   <h1>Customizing how Properties are displayed</h1>
-<H2><A name="custom_property_editors"> Customizing property editors </a></H2>
+<h2 id="custom_property_editors"> Customizing property editors </h2>
 The core implementation provides a set of property editors for common types
 of properties. These editors implement the <EM> org.openide.explorer.propertysheet.ExPropertyEditor </EM>
 interface. It allows passing custom values to the property editor instances.
@@ -34,7 +34,7 @@ This can be useful for customizing the property editors appearance.
 <P>
 You may want to customize the property editor behavior in different situations:
 
-<H3><A name="new_bean"> When creating a new bean </a></H3>
+<h3 id="new_bean"> When creating a new bean </h3>
 The properties can be passed to BeanInfo. They are propagated through
 BeanNode to the property editor. For example if you have a java.io.File property
 in your bean you can use this in the BeanInfo:
@@ -50,7 +50,7 @@ properties[PROPERTY_testFile].setValue("files", Boolean.FALSE);
 // (the property editor will not allow selecting files)
 </PRE>
 
-<H3><A name="new_node"> When creating a new node </a></H3>
+<h3 id="new_node"> When creating a new node </h3>
 You can directly pass the custom parameters to the properties. One 
 example is when overriding method createSheet - you can use the property there.
 Or anywhere where you have access to the org.openide.nodes.Node.Property 
@@ -89,7 +89,7 @@ is an example from NetBeans sources, though this module is now obsolete.</p>
 <p class="nonnormative"><a href="http://www.netbeans.org/source/browse/~checkout~/core/src/org/netbeans/core/ui/MountIterator.java"><code>MountIterator</code></a>
 is an example from NetBeans sources.</p>
 -->
-<H3><A name="disabling_ok"> When do you want to disable/enable OK when displaying custom property editor </a></H3>
+<h3 id="disabling_ok"> When do you want to disable/enable OK when displaying custom property editor </h3>
 If you provide your own property editor implementation which supplies a GUI custom editor, that
 component will be displayed in a separate window with OK and Cancel buttons.
 Implement <a href="../propertysheet/ExPropertyEditor.html">ExPropertyEditor</a> on
@@ -100,7 +100,7 @@ that is passed to it.  To enable the OK button, call
 <code>env.setState(PropertyEnv.STATE_INVALID)</code>.
 
 
-<H3><A name="core_editors_custom_parameters"> Custom parameters in core editors </a></H3>
+<h3 id="core_editors_custom_parameters"> Custom parameters in core editors </h3>
 <p>
 Following table presents all property editors in core that can be
 used with the mechanism of passing named properties. If you pass a
@@ -108,7 +108,8 @@ property that is not supported in the editor (or if you pass wrong argument
 type) the custom parameter is ignored.
 </p>
 
-    <TABLE border="1" summary="custom parameter list">
+    <TABLE border="1">
+        <caption>custom parameter list</caption>
         <TR>
             <TH> Property type
             </TH>
@@ -270,7 +271,8 @@ implementation. They can be used with any property, they are not
 bound to one editor.
 </p>
 
-    <TABLE border="1" summary="general parameters">
+    <TABLE border="1">
+        <caption>general parameters</caption>
         <TR>
             <TH>
                 Affected part
@@ -395,7 +397,7 @@ bound to one editor.
         </TR>
     </TABLE>
 
-<h3><a name="other-prop-eds">Other available property editors</a></h3>
+<h3 id="other-prop-eds">Other available property editors</h3>
 
 NetBeans includes a number of
 

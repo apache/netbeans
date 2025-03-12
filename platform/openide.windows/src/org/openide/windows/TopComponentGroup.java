@@ -27,7 +27,7 @@ import java.util.Set;
  * The concept of window group explains <a href="https://netbeans.apache.org/projects/platform/core/windowsystem/changes#s23">API changes document</a>.
  *
  * <p>
- * <b><font color="red"><em>Importatnt note: Do not provide implementation of this interface unless you are window system provider!</em></font></b>
+ * <b><span style="color:red"><em>Important note: Do not provide implementation of this interface unless you are window system provider!</em></span></b>
  *
  * @author  Peter Zavadsky
  * @since 4.13

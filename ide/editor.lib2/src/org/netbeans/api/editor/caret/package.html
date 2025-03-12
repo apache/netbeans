@@ -30,7 +30,7 @@
   and to manipulate them.
   </p>
   
-  <h3>Key parts of the API</h3>
+  <h2>Key parts of the API</h2>
   
   <p>
   The whole API is organized around the
@@ -54,7 +54,7 @@
   <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/caret/CaretMoveHandler.html">CaretMoveHandler</a></code>
   to manipulate carets. The following code shows how all carets are moved to the
   end of the word they are currently on.
-  
+  </p>
   <pre><code>
     editorCaret.moveCarets((CaretMoveContext context) -> {
         for (CaretInfo ci : context.getOriginalCarets()) {
@@ -64,9 +64,9 @@
     });
   </code>
   </pre>
-  </p>
 
-  <h3>Locking and <code>Document</code> changes</h3>
+
+  <h2>Locking and <code>Document</code> changes</h2>
   
   <p>
   The basics of the locking and events model of Swing documents is
@@ -109,7 +109,7 @@
   concurrently.
   </p>
   
-  <h3><a name="movement-origins">Reason of Caret Movement</a></h3>
+  <h2 id="movement-origins">Reason of Caret Movement</h2>
   <p>
       It may be desirable (especially for <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/NavigationListener.html">NavigationListeners</a>, but possibly for 
       <a href="EditorCaretListener.html">EditorCaretListeners</a> too) to determine
@@ -126,7 +126,7 @@
   which position caret as a part of larger task (i.e. search, goto type, ...).
   </p>
   
-  <h3><a name="navigation-filters">Navigation Filters</a></h3>
+  <h2 id="navigation-filters">Navigation Filters</h2>
   <p>
   The Caret API implements and extends the concept of swing 
   <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/NavigationFilter.html">NavigationFilters</a>. The Filter
@@ -199,9 +199,9 @@
   which allows to chain individual filters. Implementors are encouraged to use it, or otherwise
   pass the control to previously registered <code>NavigationFilter</code> in case the movement
   event is not handled by the custom implementation.
-  <p/>
+  </p>
   
-  <h3><a name="compatibilty">Backwards compatibility</a></h3>
+  <h2 id="compatibilty">Backwards compatibility</h2>
   <p>
   As a technical limitation, <code>EditorCaret</code> has to implement <code>Caret</code>
   to be able to work with Swings Text API. The <code>Caret</code> interface is not
@@ -220,7 +220,7 @@
   and use its extended functionality.
   </p>
   
-  <h3><a name="usecases">Use cases</a></h3>
+  <h2 id="usecases">Use cases</h2>
   <p>
   Use cases are shown in javadoc documentation of particular methods.
   </p>

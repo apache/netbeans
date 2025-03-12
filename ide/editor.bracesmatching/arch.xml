@@ -65,14 +65,14 @@
   <code>org.netbeans.editor.ExtSyntaxSupport</code>.
   </p>
   
-  <h3>The infrastructure overview</h3>
+  <h2>The infrastructure overview</h2>
   
   <p>
   The following paragraphs give an overview of the infrastructure used for braces
   matching and explain the essential terminology and ideas behind it.
   </p>
   
-  <h4>Original and matching areas</h4>
+  <h3>Original and matching areas</h3>
   
   <p>
   The whole task of finding matching areas can be split in two parts. First we need
@@ -98,7 +98,7 @@
   cases, however, the matchers will only report none or one matching are as well.
   </p>
   
-  <h4>Caret Bias</h4>
+  <h3>Caret Bias</h3>
   
   <p>
   Normally when typing or moving a caret in the editor one of the characters is
@@ -149,7 +149,7 @@
   finding the areas.)
   </p>
   
-  <h4>Search direction</h4>
+  <h3>Search direction</h3>
   
   <p>
   In general when looking for the original area we not only want to look right
@@ -176,7 +176,7 @@
   </li>
   </ul>
   
-  <h4>Maximum lookahead</h4>
+  <h3>Maximum lookahead</h3>
   
   <p>
   The maximum distance, measured in characters from the position of a caret, that
@@ -196,7 +196,7 @@
   from searching through the important character (ie. the character right next to the caret).
   </p>
   
-  <h4><a name="controlling-parameters">Controlling the parameters</a></h4>
+  <h3 id="controlling-parameters">Controlling the parameters</h3>
   
   <p>
   There is no API for controlling caret bias, search direction and maximum lookaheads
@@ -234,7 +234,7 @@
   </ul>
   
   
-  <h3>Key parts of the SPI</h3>
+  <h2>Key parts of the SPI</h2>
   
   <p>Modules implementing the SPI are shielded from most of the complexity of
   the braces matching infrastructure as it was described earlier. Thier job is
@@ -272,7 +272,7 @@
   </p>
 
   
-  <h3>BracesMatcher registration</h3>
+  <h2>BracesMatcher registration</h2>
   
   <p>
   The registration of <code>BracesMatcher</code>s has to be done through an
@@ -305,7 +305,7 @@
   </p>
 
   
-  <h3>Languages embedding</h3>
+  <h2>Languages embedding</h2>
   
   <p>
   The registration mechanism described earlier and the general concept of MIME lookup
@@ -343,7 +343,7 @@
   any other languages that may potentially be embedded in the document.
   </p>
   
-  <h3>Threading</h3>
+  <h2>Threading</h2>
 
   <p>
   While finding the original brace is relatively simle task, because it's always
@@ -366,7 +366,7 @@
   </p>
 
   
-  <h3>Constraints and limitations</h3>
+  <h2>Constraints and limitations</h2>
   
   <p>
   The current design does not cover searching for areas in right-to-left documents. This
@@ -498,12 +498,12 @@
   
   <ul style="list-style-type : upper-alpha">
   <li>
-      <a name="search-scenario-A"><code>MBL = 0, MFL = 0, SD = ?, CB = F</code></a> : Check only the right hand side
+      <a id="search-scenario-A"><code>MBL = 0, MFL = 0, SD = ?, CB = F</code></a> : Check only the right hand side
       character of the caret. This is the default for Netbeans overwrite mode (ie. the
       block shaped caret).
   </li>
   <li>
-      <a name="search-scenario-B"><code>MBL = 1, MFL = 1, SD = ?, CB = B</code></a> : Check characters right next to
+      <a id="search-scenario-B"><code>MBL = 1, MFL = 1, SD = ?, CB = B</code></a> : Check characters right next to
       the caret on both its sides. This is the default for Netbeans normal mode (ie.
       the I-beam shaped caret).
   </li>

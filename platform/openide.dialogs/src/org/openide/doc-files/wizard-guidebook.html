@@ -19,7 +19,7 @@
 
 -->
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
@@ -36,10 +36,8 @@
     </style>
 </head>
 
-<h1>Wizard Descriptor API</h1>
-
 <body>
-
+<h1>Wizard Descriptor API</h1>
 Class <a href="../WizardDescriptor.html"><code>WizardDescriptor</code></a>
 
 allows developer to create wizard from supplied 
@@ -84,7 +82,7 @@ Use
 <code>WizardDescriptor.putProperty()</code></a> to set following initialization 
 properties.
 <ul>
-<li><tt>
+<li>
 Name <b> <code>"WizardPanel_autoWizardStyle"</code></b>, type <b> <code>Boolean</code></b>
 
 <br>
@@ -117,21 +115,16 @@ Default subtitle format is <code>"{0} wizard ({1})"</code> and name of default
 where <code>{0}</code> is number of current panel and <code>{1}</code> is size of iterator. 
 <br>
 
-</tt></li>
-<br><br>
+</li>
 
-<li><tt>
+<li>
 Name <b> <code>"WizardPanel_contentDisplayed"</code></b>, type <b> <code>Boolean</code></b>
 <br>
 Set to <code>Boolean.TRUE</code> to turn on displaying of steps pane 
 (content, behind which can be displayed image).
 Content will be constructed from not initialization property <code>"WizardPanel_contentData"</code>.
-
-</tt></li>
-
-<br><br>
-
-<li><tt>
+</li>
+<li>
 Name <b> <code>"WizardPanel_helpDisplayed"</code></b>, type <b> <code>Boolean</code></b>
 <br>
 Set to <code>Boolean.TRUE</code> to turn on displaying of help (html browser)
@@ -143,25 +136,22 @@ If also steps are displayed then put help and content panes into tabbed pane.
 <i>Note: If do you need a help on invoking the Help button then ensure
 a <code>WizardDescriptor.Panel</code> supply a non-default <code>HelpCtx</code>.</i>
 
-</tt></li>
-
-<br><br>
-
-<li><tt>
+</li>
+<li>
 Name <b> <code>"WizardPanel_contentNumbered"</code></b>, type <b> <code>Boolean</code></b>
 <br>
 Set to <code>Boolean.TRUE</code> to turn on numbering of steps (before every step
 is placed it's sequence number). 
 
-</tt></li>
+</li>
 
-<br><br>
 
-<li><tt>
+
+<li>
 Name <b> <code>"WizardPanel_leftDimension"</code></b>, type <b> <code>Dimension</code></b>
 <br>
 Set size of left pane (steps and help pane). 
-</tt></li>
+</li>
 </ul>
 
 That was initialization part. All <code>Boolean</code> properties are <code>Boolean.FALSE</code>
@@ -180,39 +170,28 @@ Follow properties which could be changed at wizard runtime.
 These properties could be changed dynamically.
 
 <ul>
-<li><tt>
+<li>
 Name <b> <code>"WizardPanel_contentData"</code></b>, type <b> <code>String[]</code></b>
 <br>
 Set step names which will be displayed in the content pane.
-
-<br><br>
-
-<li><tt>
+</li>
+<li>
 Name <b> <code>"WizardPanel_image"</code></b>, type <b> <code>java.awt.Image</code></b>
 
 <br>
 Set image displayed as background of content. 
-</tt></li>
-
-<br><br>
-
-<li><tt>
+</li>
+<li>
 Set subtitle (!!!) format with 
 <a href="../WizardDescriptor.html#setTitleFormat-java.text.MessageFormat-">
 <code>WizardDescriptor.setTitleFormat()</code></a>.
-</tt></li>
-
-<br><br>
-
-<li><tt>
+</li>
+<li>
 Set title of the wizard with 
-
 <a href="../NotifyDescriptor.html#setTitle-java.lang.String-">
 <code>WizardDescriptor.setTitle()</code></a>. 
-</tt></li>
-<br><br>
-
-<li><tt>
+</li>
+<li>
 Name <b><code>"WizardPanel_errorMessage"</code></b>, type <b> <code>String</code></b>
 <br>
 Set the localized message which is then shown at the bottom of the wizard panel.
@@ -220,7 +199,7 @@ This message should be set when panel becomes invalid and Next/Finish
 buttons are disabled. It helps user to understand what is wrong. The property
 must be set to null value to clear the message. This property is supported since
 NetBeans 3.5.
-</tt></li>
+</li>
 
 </ul>
 
@@ -228,38 +207,29 @@ In every
 panel set these client properties (<code>JComponent.putClientProperty()</code>): 
 
 <ul>
-<li><tt>
+<li>
 Name <b> <code>"WizardPanel_helpURL"</code></b>, type <b> <code>java.net.URL</code></b>
 <br>
 Help url which explains your pane. 
-</tt></li>
-
-<br><br>
-
-<li><tt>
+</li>
+<li>
 Name <b> <code>"WizardPanel_contentSelectedIndex"</code></b>, type <b> <code>java.lang.Integer</code></b>
 <br>
 Index of highlighted step in the content, the index is zero-based.
-</tt></li>
-
-<br><br>
-
-<li><tt>
+</li>
+<li>
 Name <b> <code>"WizardPanel_contentBackgroundColor"</code></b>, type <b> <code>java.awt.Color</code></b>
 <br>
 Color used as background of content pane. 
-</tt></li>
-
-<br><br>
-
-<li><tt>
+/li>
+<li>
 Set name of panel <code>JComponent.setName("First wizard panel")</code>, 
 used as first part of subtitle, second
 is 
 
 <a href="../WizardDescriptor.Iterator.html#name--">
 <code>WizardDescriptor.Panel.name()</code></a> when you use <code>"{0}{1}"</code> message format.
-</tt></li>
+</li>
 
 </ul>
 

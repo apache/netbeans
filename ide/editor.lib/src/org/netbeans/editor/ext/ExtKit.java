@@ -295,7 +295,7 @@ public class ExtKit extends BaseKit {
          * @param popupMenu popup menu to which this method should add
          *  the item corresponding to the action-name.
          * @param actionName name of the action to add. The real action
-         *  can be retrieved from the kit by calling <tt>getActionByName()</tt>.
+         *  can be retrieved from the kit by calling <code>getActionByName()</code>.
          */
         protected void addAction(JTextComponent target, JPopupMenu popupMenu,
         String actionName) {

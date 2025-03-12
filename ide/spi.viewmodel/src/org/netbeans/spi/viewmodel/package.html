@@ -1,4 +1,4 @@
-<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="Content-Type"
@@ -52,38 +52,46 @@ Following example shows how to use viewmodel API to create simple files
 view.<br>
 <h3>Step 1.</h3>
 In the first step we should create plain tree model (TreeModel).<br>
-<pre style="background-color: rgb(255, 255, 102);">public class TreeModelImpl implements TreeModel {<br><img
- src="doc-files/TreeModelExample1.JPG" title=""
- alt="Tree Model Example 1" style="width: 401px; height: 355px;"
- align="right"><br>    public Object getRoot () {<br>        return ROOT;<br>    }<br>    <br>    public Object[] getChildren (Object parent, int from, int to) {<br>        if (parent == ROOT)<br>            return File.listRoots ();<br>        return ((File) parent).listFiles ();<br>    }<br>    <br>    public boolean isLeaf (Object node) {<br>        if (node == ROOT)<br>            return false;<br>        return ((File) node).isFile ();<br>    }<br>}<br></pre>
+<img
+ src="doc-files/TreeModelExample1.JPG"
+ alt="Tree Model Example 1" style="width: 401px; height: 355px;float:right">
+<div>
+<pre style="background-color: rgb(255, 255, 102);">public class TreeModelImpl implements TreeModel {<br><br>    public Object getRoot () {<br>        return ROOT;<br>    }<br>    <br>    public Object[] getChildren (Object parent, int from, int to) {<br>        if (parent == ROOT)<br>            return File.listRoots ();<br>        return ((File) parent).listFiles ();<br>    }<br>    <br>    public boolean isLeaf (Object node) {<br>        if (node == ROOT)<br>            return false;<br>        return ((File) node).isFile ();<br>    }<br>}<br></pre>
 And create a TreeView for this model:
 <pre style="background-color: rgb(255, 255, 102);">    JComponent treeView = Models.createView (<br>        Models.createCompoundModel (<br>	    Arrays.asList (new Model[] {<br>                new TreeModelImpl (),      // TreeModel<br>                new ArrayList ()           // list of ColumnModel s<br>            })<br>        )<br>    );</pre>
+</div>
 <h3>Step 2.</h3>
 NodeModel implementation can define name, icon and tooltip for tree
 nodes produced by TreeModel.<br>
-<pre style="background-color: rgb(255, 255, 102);">public class NodeModelImpl implements NodeModel {<img
- src="doc-files/TreeModelExample2.JPG" title=""
- alt="Tree Model Example 2" style="width: 355px; height: 329px;"
- align="right"><br><br>    public String getDisplayName (Object node) {<br>        if (node == ROOT) return "Name";<br>        String name = ((File) node).getName ();<br>        if (name.length () &lt; 1) return ((File) node).getAbsolutePath ();<br>        return name;<br>    }<br>    <br>    public String getIconBase (Object node) {<br>        if (node == ROOT) return "folder";<br>        if (((File) node).isDirectory ()) return "folder";<br>        return "file";<br>    }<br>    <br>    public String getShortDescription (Object node) {<br>        if (node == ROOT) return "Name";<br>        return ((File) node).getAbsolutePath ();<br>    }<br>}</pre>
+<img
+ src="doc-files/TreeModelExample2.JPG"
+ alt="Tree Model Example 2" style="width: 355px; height: 329px;float:right"
+ >
+<div>
+<pre style="background-color: rgb(255, 255, 102);">public class NodeModelImpl implements NodeModel {<br><br>    public String getDisplayName (Object node) {<br>        if (node == ROOT) return "Name";<br>        String name = ((File) node).getName ();<br>        if (name.length () &lt; 1) return ((File) node).getAbsolutePath ();<br>        return name;<br>    }<br>    <br>    public String getIconBase (Object node) {<br>        if (node == ROOT) return "folder";<br>        if (((File) node).isDirectory ()) return "folder";<br>        return "file";<br>    }<br>    <br>    public String getShortDescription (Object node) {<br>        if (node == ROOT) return "Name";<br>        return ((File) node).getAbsolutePath ();<br>    }<br>}</pre>
+</div>
 <h3>Step 3.</h3>
 NodeActionsProvider defines set of Actions for each node, and default
-action..<br>
+action.
+<img
+ src="doc-files/TreeModelExample3.JPG"
+ alt="Tree Model Example 3" style="width: 642px; height: 438px;float:right">
+<div>
 <pre style="background-color: rgb(255, 255, 102);">public class NodeActionsProviderImpl implements NodeActionsProvider {<br><br>    public Action[] getActions (final Object node) {<br>        return new Action [] {<br>            new AbstractAction ("Open") {<br>                public void actionPerformed (ActionEvent e) {<br>                    performDefaultAction (node);<br>                }<br>            },<br>            new AbstractAction ("Delete") {<br>                public void actionPerformed (ActionEvent e) {<br>                    ((File) node).delete ();<br>                }<br>            }<br>        };<br>    }<br>    <br>    public void performDefaultAction (Object node) {<br>        try {<br>            JFrame f = new JFrame ("View");<br>            f.getContentPane ().add (new JEditorPane (((File) node).toURL ()));<br>            f.pack ();<br>            f.show ();<br>        } catch (Exception e) {<br>            e.printStackTrace();<br>        }<br>    }<br>}</pre>
 <br>
-<div style="text-align: center;"><img
- src="doc-files/TreeModelExample3.JPG" title=""
- alt="Tree Model Example 3" style="width: 642px; height: 438px;"><br>
 </div>
 <h3>Step 4.</h3>
 TableModel and ColumnModel adds support for additional columns to tree
 view.<br>
+<img
+ src="doc-files/TreeModelExample4.JPG"
+ alt="Tree Model Example 4" style="width: 384px; height: 278px;float:right"
+>
+<div>
 <pre style="background-color: rgb(255, 255, 102);">public class TableModelImpl implements TableModel {<br><br>    <br>    public Object getValueAt (Object node, String columnID) {<br>        try {<br>            if (node == ROOT) return null;<br>            if (columnID.equals ("sizeID")) {<br>                if (((File) node).isDirectory ()) return "&lt;dir&gt;";<br>                return "" + new FileInputStream ((File) node).getChannel ().size ();<br>            }<br>        } catch (Exception e) {<br>            e.printStackTrace ();<br>        }<br>        return "";<br>    }<br>    <br>    public boolean isReadOnly (Object node, String columnID) {<br>        return true;<br>    }<br>    <br>    public void setValueAt (Object node, String columnID, Object value) {<br>    }<br>}</pre>
 And initialization of columns looks like:<br>
-<pre style="background-color: rgb(255, 255, 102);">    ArrayList columns = new ArrayList ();<img
- src="doc-files/TreeModelExample4.JPG" title=""
- alt="Tree Model Example 4" style="width: 384px; height: 278px;"
- align="right"><br>    columns.add (new ColumnModel () {<br>        public String getID () { return "sizeID"; }<br>        public String getDisplayName () { return "size"; }<br>        public Class getType () { return String.class; }<br>    });<br>    JComponent treeTableView = Models.createView (<br>        Models.createCompoundModel (<br>            Arrays.asList (new Model[] {<br>                new TreeModelImpl (),           // TreeModel<br>                new NodeModelImpl (),           // NodeModel<br>                new TableModelImpl (),          // TableModel<br>                new NodeActionsProviderImpl (), // NodeActionsProvider<br>                columns                         // list of ColumnModel s<br>            })<br>        )<br>    );<br><br></pre>
-<br>
+<pre style="background-color: rgb(255, 255, 102);">    ArrayList columns = new ArrayList ();<br>    columns.add (new ColumnModel () {<br>        public String getID () { return "sizeID"; }<br>        public String getDisplayName () { return "size"; }<br>        public Class getType () { return String.class; }<br>    });<br>    JComponent treeTableView = Models.createView (<br>        Models.createCompoundModel (<br>            Arrays.asList (new Model[] {<br>                new TreeModelImpl (),           // TreeModel<br>                new NodeModelImpl (),           // NodeModel<br>                new TableModelImpl (),          // TableModel<br>                new NodeActionsProviderImpl (), // NodeActionsProvider<br>                columns                         // list of ColumnModel s<br>            })<br>        )<br>    );<br><br></pre>
+</div>
 <br>
 <br>
 <h3>How to use Filters</h3>

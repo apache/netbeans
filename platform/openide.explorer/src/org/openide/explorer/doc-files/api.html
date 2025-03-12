@@ -65,13 +65,13 @@ A set of standard Explorer Views is available in
 <ul>
     <li><a href="#customps">Customizing the Property Sheet</a></li>
     <li><a href="#customeds">Property Editors</a></li>
-    </ul></li>
-    </li>
+</ul>
+</li>
 </ul>
 
 <h1>Explorer API</h1>
 
-<h2><a name="overview">Overview of the Explorer</a></h2>
+<h2 id="overview">Overview of the Explorer</h2>
 
 Explorer views are UI components which render <em>nodes</em> - the most 
 prominent in NetBeans being the Project and Files tabs on the left side of
@@ -80,9 +80,8 @@ in trees, lists, combo boxes, menus, tree tables.  These components
 handle things like cut/copy/paste, drag and drop, displaying popup menus
 for nodes, which contain the actions the clicked node provides from
 <code>getActions()</code>.
-<p>
 
-<h3><a name="intro-node">The Explorer and Nodes</a></h3>
+<h3 id="intro-node">The Explorer and Nodes</h3>
 
 An Explorer view is solely a user-interface component: it has no particular 
 knowledge of <i>what</i> it is displaying.  Rather, it provides the 
@@ -97,12 +96,12 @@ be the <em>root</em> of the Explorer.
 <p>The API permits you to use the prebuilt views, and also to <a href="customExplorerViews.html">create
 your own</a> if you need to.
 
-<h2><a name="use-expl">Using the Explorer API</a></h2>
+<h2 id="use-expl">Using the Explorer API</h2>
 
 It is rather easy to use the Explorer API to just display an Explorer
 window of some type, browsing some set of nodes.
 
-<h3><a name="show-expl">Displaying a new Explorer window</a></h3>
+<h3 id="show-expl">Displaying a new Explorer window</h3>
 
 Probably the easiest way to show an Explorer window is just to call
 <a href="@org-openide-nodes@/org/openide/nodes/NodeOperation.html#explore-org.openide.nodes.Node-"><code>NodeOperation.explore(...)</code></a>.
@@ -193,7 +192,7 @@ might build, is probably to create an <code>ExplorerPanel</code> which
 adds some or all of them; the views will be automatically
 synchronized, which will be helpful in understanding how they behave.
 
-<h3><a name="show-prop">Displaying a Property Sheet</a></h3>
+<h3 id="show-prop">Displaying a Property Sheet</h3>
 
 Adding a <em>Property Sheet</em> (which just shows the properties of
 the selected node(s), and may allow editing of those properties) is
@@ -211,7 +210,7 @@ Explorer view and a Property Sheet to the same container will result
 in the Property Sheet being sensitive to the node selection in the
 regular view, which is usually the desired effect.
 
-<h3><a name="node-aspect">Aspects of Nodes affecting the Explorer</a></h3>
+<h3 id="node-aspect">Aspects of Nodes affecting the Explorer</h3>
 
 Particular Explorer views are of course free to display the node
 hierarchy any way they wish; however, there are a few common aspects
@@ -304,11 +303,11 @@ or
 
 </ul>
 
-<h2><a name="cust-expl">Customizing the Explorer</a></h2>
+<h2 id="cust-expl">Customizing the Explorer</h2>
 Though rarely necessary, the API allows you to create your own Explorer views,
 as described <a href="customExplorerViews.html">here</a>.
 
-<h2><a name="propsheet">The Property Sheet</a></h2>
+<h2 id="propsheet">The Property Sheet</h2>
 Older versions of NetBeans relied heavily on the Property Sheet as a primary
 element of the user interface.  However, this turned out not to be terribly
 user-friendly, and the Property Sheet is used considerably less today (it is
@@ -317,8 +316,8 @@ no longer even displayed by default on startup).
 Consider providing a custom UI where possible, rather than relying on the
 user having the Property Sheet visible to work with your module.
 
-<h3><a name="customps">Customizing the Property Sheet</a></h3>
-<P>
+<h3 id="customps">Customizing the Property Sheet</h3>
+
 <div class="nonnormative">
 The Property Sheet displays property sets in expandable
 categories inside a single tree, rather than using tabs as the old
@@ -326,25 +325,25 @@ Property Sheet did.  However, there are some cases where tabs are
 desirable.  A mechanism exists by which an instance of
 <code>Node.PropertySet</code> can specify that it should be displayed in
 a tab:  It must return an internationalized string from
-<code>PropertySet.getValue(&quot;tabName&quot)</code>.  If multiple
+<code>PropertySet.getValue(&quot;tabName&quot;)</code>.  If multiple
 property sets belonging to a single node specify the same tab name
 in this manner, all of them will be included on a tab with the specified
-name<sup><font size="-2">*</font></sup>.
-<p>
+name <em>*</em>.
+
 <blockquote>
-<sup><font size="-1">*</font></sup><font size="-1">
+    <em>*</em>
 Note that for this functionality to function properly, the
 NetBeans Window System must be installed.  Further information on how to
 work use this functionality in a stand-alone application can be found
 <a href="propertySheetReference.html#tabs">here</a>.
-</font></blockquote>
+</blockquote>
 </div>
 
 A number of system properties, UI manager keys and such also affect
 the way Property Sheets are displayed and behave.  A complete reference
 can be found <a href="propertySheetReference.html">here</a>.
 
-<h3><a name="customeds">Property Editors</a></h3>
+<h3 id="customeds">Property Editors</h3>
 The NetBeans core installs a variety of property editors for standard JDK
 classes and some NetBeans classes.  A number of these can have their behavior
 altered by passing &quot;hints&quot; from <code>Node.Property</code> or

@@ -29,12 +29,13 @@ github:
     wiki: false
     issues: true
     projects: true
+    discussions: true
   dependabot_alerts: false
   dependabot_updates: false
   enabled_merge_buttons:
-    squash:  false
-    merge:   true
-    rebase:  true
+    squash: false
+    merge: true
+    rebase: true
   protected_branches:
     # no force push to master
     master: {}

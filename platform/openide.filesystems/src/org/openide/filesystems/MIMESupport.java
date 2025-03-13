@@ -254,8 +254,8 @@ final class MIMESupport extends Object {
                         try {
                             // For now, just assume it has the right DTD. Could check this if desired.
                             declmimes.add(MIMEResolverImpl.forDescriptor(f)); // NOI18N
-                        } catch (IOException ex) {
-                            Exceptions.printStackTrace(ex);
+                        } catch (IOException | IllegalArgumentException ex) {
+                            ERR.log(Level.INFO, "Failed to parse declarative MIMEResolver: " + f, ex);
                         }
                     }
                 }

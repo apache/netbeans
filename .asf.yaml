@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# doc: https://cwiki.apache.org/confluence/display/INFRA/Git+-+.asf.yaml+features
+# doc: https://github.com/apache/infrastructure-asfyaml/blob/main/README.md
 
 github:
   description: "Apache NetBeans"
@@ -42,6 +42,8 @@ github:
       required_linear_history: false
 
   collaborators:
+    # Max 10 collaborators allowed
+    # https://github.com/apache/infrastructure-asfyaml/blob/main/README.md#assigning-the-github-triage-role-to-external-collaborators
     - petrovic-d
     - Achal1607
     - asbachb

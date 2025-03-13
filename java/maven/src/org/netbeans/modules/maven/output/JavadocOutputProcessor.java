@@ -80,17 +80,13 @@ public class JavadocOutputProcessor implements OutputProcessor {
     }
     
     private static class Listener implements OutputListener {
-        private String root;
+        private final String root;
         private Listener(String path) {
             root = path;
         }
-        @Override
-        public void outputLineSelected(OutputEvent arg0) {
-            
-        }
         
-       @Override
-       public void outputLineAction(OutputEvent arg0) {
+        @Override
+        public void outputLineAction(OutputEvent arg0) {
             File javadoc = FileUtil.normalizeFile(new File(root));
             FileUtil.refreshFor(javadoc);
             FileObject fo = FileUtil.toFileObject(javadoc);
@@ -101,10 +97,6 @@ public class JavadocOutputProcessor implements OutputProcessor {
                     HtmlBrowser.URLDisplayer.getDefault().showURL(link);
                 }
             }
-        }
-        
-        @Override
-        public void outputLineCleared(OutputEvent arg0) {
         }
     }
 }

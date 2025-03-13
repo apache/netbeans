@@ -143,7 +143,7 @@ public final class TerminalSupportImpl {
                 @SuppressWarnings("PackageVisibleField")
                 RequestProcessor.Task task = RP.create(delegate);
 
-                private final HyperlinkAdapter retryLink = new HyperlinkAdapter() {
+                private final OutputListener retryLink = new OutputListener() {
                     @Override
                     public void outputLineAction(OutputEvent ev) {
                         task.schedule(0);
@@ -411,21 +411,6 @@ public final class TerminalSupportImpl {
                     }
                 }
             }
-        }
-    }
-    
-    private static class HyperlinkAdapter implements OutputListener{
-
-        @Override
-        public void outputLineSelected(OutputEvent ev) {
-        }
-
-        @Override
-        public void outputLineAction(OutputEvent ev) {
-        }
-
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
         }
     }
 

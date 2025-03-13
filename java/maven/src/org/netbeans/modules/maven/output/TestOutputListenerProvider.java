@@ -183,12 +183,6 @@ public class TestOutputListenerProvider implements OutputProcessor {
             testname = test;
             outputDir = outDir;
         }
-        /** Called when a line is selected.
-         * @param ev the event describing the line
-         */
-        @Override
-        public void outputLineSelected(OutputEvent ev) {
-        }
         
         /** Called when some sort of action is performed on a line.
          * @param ev the event describing the line
@@ -250,13 +244,6 @@ public class TestOutputListenerProvider implements OutputProcessor {
                     StatusDisplayer.getDefault().setStatusText(MSG_CannotFollowLink2());
                 }
             }
-        }
-        
-        /** Called when a line is cleared from the buffer of known lines.
-         * @param ev the event describing the line
-         */
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
         }
         
         private void openLog(final FileObject fo, String title, final File testDir) {

@@ -38,7 +38,9 @@ github:
     rebase: false
   protected_branches:
     # no force push to master
-    master: {}
+    master:
+      required_linear_history: false
+
   collaborators:
     - petrovic-d
     - Achal1607
@@ -49,5 +51,5 @@ notifications:
     commits:      commits@netbeans.apache.org
     issues:       notifications@netbeans.apache.org
     pullrequests: notifications@netbeans.apache.org
-    discussions: notifications@netbeans.apache.org
+    discussions:  notifications@netbeans.apache.org
     jira_options: link label worklog

@@ -39,7 +39,7 @@ import javax.swing.KeyStroke;
  * module. If you are retrieving this class from <code>MimeLookup</code> you should
  * should probably use the Editor Code Templates API instead.
  * 
- * <p><font color="red">This class must NOT be extended by any API clients.</font>
+ * <p><span style="color:red">This class must NOT be extended by any API clients.</span>
  *
  * @author Martin Roskanin
  */

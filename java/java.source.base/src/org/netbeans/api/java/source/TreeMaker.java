@@ -1369,7 +1369,7 @@ public final class TreeMaker {
     ////////////////////////////////////////////////////////////////////////////
     // AnnotationTree
     /**
-     * Appends specified element <tt>attrValue</tt> to the end of attribute 
+     * Appends specified element <code>attrValue</code> to the end of attribute 
      * values list.
      *
      * @param   annotation  annotation tree containing attribute values list.
@@ -1381,7 +1381,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>attrValue</tt> at the specified 
+     * Inserts the specified element <code>attrValue</code> at the specified 
      * position in attribute values list.
      *
      * @param  annotation  annotation tree with attribute values list.
@@ -1426,7 +1426,7 @@ public final class TreeMaker {
     
     // BlockTree
     /**
-     * Appends specified element <tt>statement</tt> to the end of statements
+     * Appends specified element <code>statement</code> to the end of statements
      * list.
      *
      * @param   block      block tree containing statements list.
@@ -1438,7 +1438,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>statement</tt> at the specified 
+     * Inserts the specified element <code>statement</code> at the specified 
      * position in statements list.
      *
      * @param  block       block tree with statements list
@@ -1483,7 +1483,7 @@ public final class TreeMaker {
     
     // CaseTree
     /**
-     * Appends specified element <tt>statement</tt> to the end of statements
+     * Appends specified element <code>statement</code> to the end of statements
      * list.
      *
      * @param  kejs      case tree containing statements list.
@@ -1495,7 +1495,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>statement</tt> at the specified 
+     * Inserts the specified element <code>statement</code> at the specified 
      * position in statements list.
      *
      * @param  kejs      case tree containing statements list.
@@ -1540,7 +1540,7 @@ public final class TreeMaker {
 
     // ModuleTree
     /**
-     * Appends specified <tt>directive</tt> to the end of directives list.
+     * Appends specified <code>directive</code> to the end of directives list.
      * 
      * @param modle  module tree with directives list
      * @param directive  directive to be added to the list
@@ -1553,7 +1553,7 @@ public final class TreeMaker {
     
     
     /**
-     * Inserts the specified <tt>directive</tt> at the specified position
+     * Inserts the specified <code>directive</code> at the specified position
      * in directives list.
      *
      * @param  modle     module tree with directives list
@@ -1601,7 +1601,7 @@ public final class TreeMaker {
     
     // ClassTree
     /**
-     * Appends specified element <tt>member</tt> to the end of members
+     * Appends specified element <code>member</code> to the end of members
      * list. Consider you want to add such a method to the end of class:
      * <pre>
      *   public void newlyCreatedMethod(int a, float b) throws java.io.IOException {
@@ -1647,7 +1647,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>member</tt> at the specified 
+     * Inserts the specified element <code>member</code> at the specified 
      * position in members list.
      *
      * @param  clazz     class tree with members list
@@ -1691,7 +1691,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Appends specified element <tt>typeParameter</tt> to the end of type parameters
+     * Appends specified element <code>typeParameter</code> to the end of type parameters
      * list.
      *
      * @param   clazz    class tree containing type parameters list.
@@ -1703,7 +1703,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>member</tt> at the specified 
+     * Inserts the specified element <code>member</code> at the specified 
      * position in type parameters list.
      *
      * @param  clazz     class tree with type parameters list
@@ -1747,7 +1747,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Appends specified element <tt>implementsClause</tt> to the end of implements
+     * Appends specified element <code>implementsClause</code> to the end of implements
      * list.
      *
      * @param   clazz    class tree containing implements list.
@@ -1759,7 +1759,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>implementsClause</tt> at the specified 
+     * Inserts the specified element <code>implementsClause</code> at the specified 
      * position in implements list.
      *
      * @param  clazz     class tree with implements list
@@ -1804,7 +1804,7 @@ public final class TreeMaker {
         
     // CompilationUnitTree
     /**
-     * Appends specified element <tt>typeDeclaration</tt> to the end of type 
+     * Appends specified element <code>typeDeclaration</code> to the end of type 
      * declarations list.
      *
      * @param  compilationUnit compilation unit tree containing type declarations list.
@@ -1816,7 +1816,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>typeDeclaration</tt> at the specified 
+     * Inserts the specified element <code>typeDeclaration</code> at the specified 
      * position in type declarations list.
      *
      * @param  compilationUnit  compilation unit tree containing type declarations list.
@@ -1860,7 +1860,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Appends specified element <tt>importt</tt> to the end of imports list.
+     * Appends specified element <code>importt</code> to the end of imports list.
      *
      * @param  compilationUnit compilation unit tree containing imports list.
      * @param  importt element to be appended to list of imports.
@@ -1871,7 +1871,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>importt</tt> at the specified 
+     * Inserts the specified element <code>importt</code> at the specified 
      * position in imports list.
      *
      * @param  compilationUnit  compilation unit tree containing imports list.
@@ -1915,7 +1915,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Appends specified element <tt>annotation</tt> to the end of package annotations
+     * Appends specified element <code>annotation</code> to the end of package annotations
      * list.
      *
      * @param  cut  compilation unit tree containing package annotations list.
@@ -1928,7 +1928,7 @@ public final class TreeMaker {
     }
 
     /**
-     * Inserts the specified element <tt>annotation</tt> at the specified
+     * Inserts the specified element <code>annotation</code> at the specified
      * position in package annotations list.
      *
      * @param  cut  compilation unit tree containing package annotations list.
@@ -1978,7 +1978,7 @@ public final class TreeMaker {
     
     // ForLoopInitializer
     /**
-     * Appends specified element <tt>initializer</tt> to the end of initializers
+     * Appends specified element <code>initializer</code> to the end of initializers
      * list.
      *
      * @param  forLoop    for loop tree containing initializers list.
@@ -1990,7 +1990,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>initializer</tt> at the specified 
+     * Inserts the specified element <code>initializer</code> at the specified 
      * position in initializers list.
      *
      * @param  forLoop  for loop tree containing initializers list.
@@ -2035,7 +2035,7 @@ public final class TreeMaker {
     
     // ForLoopUpdate
     /**
-     * Appends specified element <tt>update</tt> to the end of updates
+     * Appends specified element <code>update</code> to the end of updates
      * list.
      *
      * @param  forLoop    for loop tree containing updates list.
@@ -2047,7 +2047,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>update</tt> at the specified 
+     * Inserts the specified element <code>update</code> at the specified 
      * position in updates list.
      *
      * @param  forLoop  for loop tree containing updates list.
@@ -2092,7 +2092,7 @@ public final class TreeMaker {
     
     // MethodInvocation
     /**
-     * Appends specified element <tt>argument</tt>.
+     * Appends specified element <code>argument</code>.
      *
      * @param  methodInvocation method invocation tree containing arguments list.
      * @param  argument     element to be appended to arguments list.
@@ -2103,7 +2103,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>argument</tt>.
+     * Inserts the specified element <code>argument</code>.
      *
      * @param  methodInvocation method invocation tree containing arguments list.
      * @param  index  index at which the specified elements is to be inserted.
@@ -2146,7 +2146,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Appends specified element <tt>type argument</tt> 
+     * Appends specified element <code>type argument</code> 
      * to the end of type arguments list.
      *
      * @param  methodInvocation method invocation tree containing arguments list.
@@ -2158,7 +2158,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>typeArgument</tt>
+     * Inserts the specified element <code>typeArgument</code>
      * at the specified position in type arguments list.
      *
      * @param  methodInvocation method invocation tree containing arguments list.
@@ -2203,7 +2203,7 @@ public final class TreeMaker {
     
     // Method
     /**
-     * Appends specified element <tt>parameter</tt>
+     * Appends specified element <code>parameter</code>
      * to the end of parameters list.
      *
      * @param  method        method tree containing parameters list.
@@ -2215,7 +2215,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>parameter</tt> 
+     * Inserts the specified element <code>parameter</code> 
      * at the specified position in parameters list.
      *
      * @param  method method tree containing parameters list.
@@ -2259,7 +2259,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Appends specified element <tt>typeParameter</tt>
+     * Appends specified element <code>typeParameter</code>
      * to the end of type parameters list.
      *
      * @param  method        method tree containing type parameters list.
@@ -2271,7 +2271,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>typeParameter</tt> 
+     * Inserts the specified element <code>typeParameter</code> 
      * at the specified position in type parameters list.
      *
      * @param  method method tree containing parameters list.
@@ -2315,7 +2315,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Appends specified element <tt>throwz</tt> to the end of throws
+     * Appends specified element <code>throwz</code> to the end of throws
      * list.
      *
      * @param  method     method tree containing throws list.
@@ -2327,7 +2327,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>throws</tt> at the specified 
+     * Inserts the specified element <code>throws</code> at the specified 
      * position in throws list.
      *
      * @param  method  method tree containing throws list.
@@ -2372,7 +2372,7 @@ public final class TreeMaker {
     
     // Modifiers
     /**
-     * Appends specified element <tt>annotation</tt> to the end of annotations
+     * Appends specified element <code>annotation</code> to the end of annotations
      * list.
      *
      * @param  modifiers   modifiers tree containing annotations list.
@@ -2384,7 +2384,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>annotation</tt> at the specified 
+     * Inserts the specified element <code>annotation</code> at the specified 
      * position in annotations list.
      *
      * @param  modifiers  modifiers tree containing annotations list.
@@ -2471,7 +2471,7 @@ public final class TreeMaker {
     
     // NewArray
     /**
-     * Appends specified element <tt>dimension</tt> to the end of dimensions
+     * Appends specified element <code>dimension</code> to the end of dimensions
      * list.
      *
      * @param  newArray   new array tree containing dimensions list.
@@ -2483,7 +2483,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>dimension</tt> at the specified 
+     * Inserts the specified element <code>dimension</code> at the specified 
      * position in dimensions list.
      *
      * @param  newArray   new array tree containing dimensions list.
@@ -2528,7 +2528,7 @@ public final class TreeMaker {
 
     // NewArrayTree
     /**
-     * Appends specified element <tt>initializer</tt> to the end of initializers
+     * Appends specified element <code>initializer</code> to the end of initializers
      * list.
      *
      * @param  newArray   new array tree containing initializers list.
@@ -2540,7 +2540,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>initializer</tt> at the specified 
+     * Inserts the specified element <code>initializer</code> at the specified 
      * position in initializers list.
      *
      * @param  newArray   new array tree containing initializers list.
@@ -2585,7 +2585,7 @@ public final class TreeMaker {
     
     // NewClass
     /**
-     * Appends specified element <tt>argument</tt> 
+     * Appends specified element <code>argument</code> 
      * to the end of arguments list.
      *
      * @param  newClass     new class tree containing arguments list.
@@ -2597,7 +2597,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>argument</tt> 
+     * Inserts the specified element <code>argument</code> 
      * at the specified position in type arguments list.
      *
      * @param  newClass   new class tree containing type arguments list.
@@ -2640,7 +2640,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Appends specified element <tt>typeArgument</tt> 
+     * Appends specified element <code>typeArgument</code> 
      * to the end of type arguments list.
      *
      * @param  newClass     new class tree containing arguments list.
@@ -2652,7 +2652,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>typeArgument</tt> 
+     * Inserts the specified element <code>typeArgument</code> 
      * at the specified position in type arguments list.
      *
      * @param  newClass   new class tree containing type arguments list.
@@ -2696,7 +2696,7 @@ public final class TreeMaker {
 
     // ParameterizedType
     /**
-     * Appends specified element <tt>argument</tt> to the end of type arguments
+     * Appends specified element <code>argument</code> to the end of type arguments
      * list.
      *
      * @param  parameterizedType   parameterized type tree containing type arguments list.
@@ -2708,7 +2708,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>argument</tt> at the specified 
+     * Inserts the specified element <code>argument</code> at the specified 
      * position in type arguments list.
      *
      * @param  parameterizedType   parameterized type tree containing type arguments list.
@@ -2753,7 +2753,7 @@ public final class TreeMaker {
 
     // Switch
     /**
-     * Appends specified element <tt>kejs</tt> to the end of cases
+     * Appends specified element <code>kejs</code> to the end of cases
      * list.
      *
      * @param   swic    switch tree containing cases list.
@@ -2765,7 +2765,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>kejs</tt> at the specified 
+     * Inserts the specified element <code>kejs</code> at the specified 
      * position in cases list.
      *
      * @param  swic   switch tree containing cases list.
@@ -2810,7 +2810,7 @@ public final class TreeMaker {
     
     // Try
     /**
-     * Appends specified element <tt>kec</tt> to the end of catches
+     * Appends specified element <code>kec</code> to the end of catches
      * list.
      *
      * @param   traj   try tree containing catches list.
@@ -2822,7 +2822,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>kec</tt> at the specified 
+     * Inserts the specified element <code>kec</code> at the specified 
      * position in catches list.
      *
      * @param  traj   try tree containing catches list.
@@ -2866,7 +2866,7 @@ public final class TreeMaker {
     }
             
     /**
-     * Appends specified element <tt>bound</tt> to the end of bounds
+     * Appends specified element <code>bound</code> to the end of bounds
      * list.
      *
      * @param   typeParameter     type parameter tree containing bounds list.
@@ -2878,7 +2878,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>bound</tt> at the specified 
+     * Inserts the specified element <code>bound</code> at the specified 
      * position in bounds list.
      *
      * @param  typeParameter   type parameter tree containing bounds list.
@@ -2922,14 +2922,14 @@ public final class TreeMaker {
     }
     
     /**
-     * Replaces the original <tt>node</tt>'s label with new one provided in
-     * <tt>aLabel</tt> argument. Throws <tt>IllegalArgumentException</tt> if
-     * <tt>node</tt>'s kind is invalid. Valid <tt>node</tt>'s kinds are:<br>
+     * Replaces the original <code>node</code>'s label with new one provided in
+     * <code>aLabel</code> argument. Throws <code>IllegalArgumentException</code> if
+     * <code>node</code>'s kind is invalid. Valid <code>node</code>'s kinds are:<br>
      * BREAK, CLASS, CONTINUE, IDENTIFIER, LABELED_STATEMENT,
      * MEMBER_SELECT, METHOD, TYPE_PARAMETER, VARIABLE, MEMBER_REFERENCE (since 0.112).<p>
      *
-     * Consider you want to change name of  method <tt>fooMet</tt> to
-     * <tt>fooMethod</tt>:
+     * Consider you want to change name of  method <code>fooMet</code> to
+     * <code>fooMethod</code>:
      *
      * <pre>
      *   public void fooMet() throws java.io.IOException {
@@ -2952,12 +2952,12 @@ public final class TreeMaker {
      * </pre>
      *
      * @param node    argument will be duplicated and its label replaced
-     *                with <tt>aLabel</tt>
-     * @param aLabel  represents new <tt>node</tt>'s name or other label
+     *                with <code>aLabel</code>
+     * @param aLabel  represents new <code>node</code>'s name or other label
      * @throws java.lang.IllegalArgumentException  if the user provides
-     *         illegal <tt>node</tt>'s kind, i.e. if the provided
-     *         <tt>node</tt> does not contain any name or <tt>String</tt>.
-     * @return  duplicated <tt>node</tt> with a new name
+     *         illegal <code>node</code>'s kind, i.e. if the provided
+     *         <code>node</code> does not contain any name or <code>String</code>.
+     * @return  duplicated <code>node</code> with a new name
      */
     public <N extends Tree> N setLabel(final N node, final CharSequence aLabel)
             throws IllegalArgumentException {
@@ -3390,11 +3390,11 @@ public final class TreeMaker {
     }
     
     /**
-     * Creates a new BlockTree for provided <tt>bodyText</tt>.
+     * Creates a new BlockTree for provided <code>bodyText</code>.
      * 
      * @param   method    figures out the scope for attribution.
      * @param   bodyText  text which will be used for method body creation.
-     * @return  a new tree for <tt>bodyText</tt>.
+     * @return  a new tree for <code>bodyText</code>.
      */
     public BlockTree createMethodBody(MethodTree method, String bodyText) {
         SourcePositions[] positions = new SourcePositions[1];
@@ -3409,11 +3409,11 @@ public final class TreeMaker {
     }
 
     /**
-     * Creates a new BlockTree for provided <tt>bodyText</tt>.
+     * Creates a new BlockTree for provided <code>bodyText</code>.
      * 
      * @param   lambda    figures out the scope for attribution.
      * @param   bodyText  text which will be used for lambda body creation.
-     * @return  a new tree for <tt>bodyText</tt>.
+     * @return  a new tree for <code>bodyText</code>.
      * @since 2.19
      */
     public BlockTree createLambdaBody(LambdaExpressionTree lambda, String bodyText) {
@@ -3429,11 +3429,11 @@ public final class TreeMaker {
     }
 
     /**
-     * Creates a new ExpressionTree for provided <tt>bodyText</tt>.
+     * Creates a new ExpressionTree for provided <code>bodyText</code>.
      * 
      * @param   lambda    figures out the scope for attribution.
      * @param   bodyText  text which will be used for lambda body creation.
-     * @return  a new tree for <tt>bodyText</tt>.
+     * @return  a new tree for <code>bodyText</code>.
      * @since 2.54
      */
     public ExpressionTree createLambdaExpression(LambdaExpressionTree lambda, String bodyText) {
@@ -3895,7 +3895,7 @@ public final class TreeMaker {
     }
 
     /**
-     * Appends specified element <tt>parameter</tt>
+     * Appends specified element <code>parameter</code>
      * to the end of parameters list.
      *
      * @param  method        lambda expression tree containing parameters list.
@@ -3908,7 +3908,7 @@ public final class TreeMaker {
     }
     
     /**
-     * Inserts the specified element <tt>parameter</tt> 
+     * Inserts the specified element <code>parameter</code> 
      * at the specified position in parameters list.
      *
      * @param  method lambda expression tree containing parameters list.

@@ -32,7 +32,7 @@ public interface TokenProcessor {
     * @param tokenID ID of the token found
     * @param tokenContextPath Context-path in which the token that was found.
     * @param tokenBufferOffset Offset of the token in the buffer. The buffer
-    *  is provided in the <tt>nextBuffer()</tt> method.
+    *  is provided in the <code>nextBuffer()</code> method.
     * @param tokenLength Length of the token found
     * @return true if the next token should be searched or false if the scan should
     *   be stopped completely.
@@ -57,18 +57,18 @@ public interface TokenProcessor {
     * @param offset offset in the buffer with the first character to be scanned.
     *   If doesn't reflect the possible preScan. If the preScan would be non-zero
     *   then the first buffer offset that contains the valid data is
-    *   <tt>offset - preScan</tt>.
+    *   <code>offset - preScan</code>.
     * @param len count of the characters that will be scanned. It doesn't reflect
     *   the ppossible reScan.
     * @param startPos starting position of the scanning in the document. It
-    *   logically corresponds to the <tt>offset</tt> because of the same
+    *   logically corresponds to the <code>offset</code> because of the same
     *   text data both in the buffer and in the document.
-    *   It again doesn't reflect the possible preScan and the <tt>startPos - preScan</tt>
+    *   It again doesn't reflect the possible preScan and the <code>startPos - preScan</code>
     *   gives the real start of the first token. If it's necessary to know
     *   the position of each token, it's a good idea to store the value
-    *   <tt>startPos - offset</tt> in an instance variable that could be called
-    *   <tt>bufferStartPos</tt>. The position of the token can be then computed
-    *   as <tt>bufferStartPos + tokenBufferOffset</tt>.
+    *   <code>startPos - offset</code> in an instance variable that could be called
+    *   <code>bufferStartPos</code>. The position of the token can be then computed
+    *   as <code>bufferStartPos + tokenBufferOffset</code>.
     * @param preScan preScan needed for the scanning.
     * @param lastBuffer whether this is the last buffer to scan in the document
     *   so there are no more characters in the document after this buffer.

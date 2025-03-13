@@ -284,13 +284,12 @@
         <xsl:param name="generate-export" />
         <xsl:param name="generate-import" />
         
-    
-        <a>
-            <xsl:attribute name="name" >
+        <xsl:element name="h3">
+            <xsl:attribute name="id" >
                 <xsl:text>group-</xsl:text><xsl:value-of select="$group" />
             </xsl:attribute>
-            <h5>Group of <xsl:value-of select="$group"/> interfaces</h5>
-        </a>
+            Group of <xsl:value-of select="$group"/> interfaces
+        </xsl:element>       
         
         <xsl:variable 
             name="all_interfaces" 
@@ -303,15 +302,20 @@
                           )
                   ]" 
         />
-        <table cellpadding="1" cellspacing="0" border="0" class="tablebg" width="100%"><tr><td>
-          <table border="0" cellpadding="3" cellspacing="1" width="100%">   
+        <!--<table class="tablebg"><tr><td>-->
+        <table class="tableapigroup">
+            <caption>
+                Group of <xsl:value-of select="$group"/> interfaces
+            </caption>
+            <thead>
             <tr class="tablersh">
-                <td align="CENTER" width="25%"><span class="titlectable">Interface Name</span></td>
-                <td align="CENTER" width="10%"><span class="titlectable">In/Out</span></td>
-                <td align="CENTER" width="10%"><span class="titlectable">Stability</span></td>
-                <td align="CENTER" ><span class="titlectable">Specified in What Document?</span></td>
+                <th><span class="titlectable">Interface Name</span></th>
+                <th><span class="titlectable">In/Out</span></th>
+                <th><span class="titlectable">Stability</span></th>
+                <th><span class="titlectable">Specified in What Document?</span></th>
             </tr>
-
+            </thead>
+            <tbody>
             <xsl:for-each select="$all_interfaces ">
                 <xsl:call-template name="api-group-name" >
                     <xsl:with-param name="name" select="@name" />
@@ -320,9 +324,9 @@
                     <xsl:with-param name="type" select="@type" />
                 </xsl:call-template>
             </xsl:for-each>
+            </tbody>
           </table>
-        </td></tr></table>
-        <p/>
+        <!--</td></tr></table>-->        
     </xsl:template>    
     
     <!-- the template to convert an instances of API into an HTML line in a table 
@@ -435,14 +439,11 @@
                         </xsl:otherwise>
                     </xsl:choose>
                     
-                </a>
-                <p/>
+                </a>                
             </xsl:if>
             
             <xsl:if test="$describe.node" >
-                <p/>
                 <xsl:apply-templates select="$describe.node" />
-                <p/>
             </xsl:if>
        </xsl:for-each>
     </xsl:template>

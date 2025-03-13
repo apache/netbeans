@@ -226,7 +226,7 @@ public class ScriptingTutorial extends NbTestCase {
     }
 
     public void callRFunctionFromJava() throws Exception {
-        // @start region="allowAllAccess
+        // @start region="allowAllAccess"
         // FastR currently needs access to native libraries:
         final ScriptEngineManager manager = Scripting.newBuilder().allowAllAccess(true).build();
         ScriptEngine rEngine = manager.getEngineByMimeType("application/x-r");

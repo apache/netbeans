@@ -95,12 +95,12 @@ public class ExtSyntaxSupport extends SyntaxSupport {
     * as they occur in the text and therefore the first token
     * can start at the slightly lower position than the requested one.
     * The chain itself can be extended automatically when
-    * reaching the first chain item and calling <tt>getPrevious()</tt>
+    * reaching the first chain item and calling <code>getPrevious()</code>
     * on it. Another chunk of the tokens will be parsed and
     * the head of the chain will be extended. However this happens
     * only in case there was no modification performed to the document
     * between the creation of the chain and this moment. Otherwise
-    * this call throws <tt>IllegalStateException</tt>.
+    * this call throws <code>IllegalStateException</code>.
     * 
     * @param startOffset starting position of the block
     * @param endOffset ending position of the block
@@ -233,7 +233,7 @@ public class ExtSyntaxSupport extends SyntaxSupport {
     /** Gets the token-id of the token at the given position.
     * @param offset position at which the token should be returned
     * @return token-id of the token at the requested position. If there's no more
-    *   tokens in the text, the <tt>Syntax.INVALID</tt> is returned.
+    *   tokens in the text, the <code>Syntax.INVALID</code> is returned.
     */
     public TokenID getTokenID(int offset) throws BadLocationException {
         FirstTokenTP fttp = new FirstTokenTP();

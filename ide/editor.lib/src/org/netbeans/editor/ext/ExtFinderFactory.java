@@ -35,7 +35,7 @@ import org.netbeans.editor.Utilities;
 public class ExtFinderFactory {
 
     /** Finder that collects the whole lines and calls
-    * the <tt>lineFound()</tt> method that can do a local find.
+    * the <code>lineFound()</code> method that can do a local find.
     * !!! Udelat to poradne i s vice bufferama
     */
     public abstract static class LineFwdFinder extends FinderFactory.AbstractFinder {
@@ -94,7 +94,7 @@ public class ExtFinderFactory {
         }
 
         /** Line was found and is present in the given buffer. The given
-        * buffer is either the original buffer passed to the <tt>find()</tt>
+        * buffer is either the original buffer passed to the <code>find()</code>
         * or constructed buffer if the line is at the border of the previous
         * and next buffer.
         * @return non-negative number means the target string was found and
@@ -108,7 +108,7 @@ public class ExtFinderFactory {
     }
 
     /** Finder that collects the whole lines and calls
-    * the <tt>lineFound()</tt> method that can do a local find.
+    * the <code>lineFound()</code> method that can do a local find.
     * !!! Udelat to poradne i s vice bufferama
     */
     public abstract static class LineBwdFinder extends FinderFactory.AbstractFinder {
@@ -174,7 +174,7 @@ public class ExtFinderFactory {
         }
 
         /** Line was found and is present in the given buffer. The given
-        * buffer is either the original buffer passed to the <tt>find()</tt>
+        * buffer is either the original buffer passed to the <code>find()</code>
         * or constructed buffer if the line is at the border of the previous
         * and next buffer.
         * @return non-negative number means the target string was found and
@@ -188,7 +188,7 @@ public class ExtFinderFactory {
     }
 
     /** Finder that collects the whole lines and calls
-    * the <tt>lineFound()</tt> method that can do a local find.
+    * the <code>lineFound()</code> method that can do a local find.
     * !!! Udelat to poradne i s vice bufferama
     */
     public abstract static class LineBlocksFinder extends FinderFactory.AbstractBlocksFinder {
@@ -247,7 +247,7 @@ public class ExtFinderFactory {
         }
 
         /** Line was found and is present in the given buffer. The given
-        * buffer is either the original buffer passed to the <tt>find()</tt>
+        * buffer is either the original buffer passed to the <code>find()</code>
         * or constructed buffer if the line is at the border of the previous
         * and next buffer.
         * @return non-negative number means the target string was found and

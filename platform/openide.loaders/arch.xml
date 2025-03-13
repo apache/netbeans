@@ -64,7 +64,7 @@
             processing
         </a>
         do some advanced changes to it using either 
-        <a name="loaders-script">scripting or templating</a> languages.
+        <a id="loaders-script">scripting or templating</a> languages.
         </p>
         
         <p>

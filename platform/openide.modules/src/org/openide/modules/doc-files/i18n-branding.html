@@ -55,7 +55,7 @@
   <dd><a href="#discussion">Discussion</a></dd>
 </dl>
 
-<h1><a name="overview">Overview and How to Test</a></h1>
+<h1 id="overview">Overview and How to Test</h1>
 
 <p>This document gives recommendations on how to organize I18N (localization)
 of modules in the IDE or platform.</p>
@@ -98,12 +98,12 @@ code which confuses
 locale-sensitive and -insensitive operations is likely to display
 errors in Turkish locale.</p>
 
-<h1><a name="features">I18N Features</a></h1>
+<h1 id="features">I18N Features</h1>
 
 <p>Most of this document describes specific I18N features in NetBeans and
 how they are intended to be used.</p>
 
-<h2><a name="bundles">Bundle messages</a></h2>
+<h2 id="bundles">Bundle messages</h2>
 
 <p>All message strings should be contained in a <samp>Bundle.properties</samp>
 file (containing default message strings - i.e. in US English).
@@ -171,7 +171,7 @@ finding I18N violations like this, and correcting them. There is a setting to us
 <code>NbBundle.getMessage</code> as the localization device, which is
 suited to module code.</p>
 
-<h3><a name="bundle-debug">Bundle debugging</a></h3>
+<h3 id="bundle-debug">Bundle debugging</h3>
 
 <p>It is possible to start the IDE with the special command-line option
 
@@ -209,7 +209,7 @@ name.</p>
 <p>Currently localized files (such as HTML pages which may be selected
 by locale, or JavaHelp helpsets) are not annotated in any way.</p>
 
-<h3><a name="bundle-recommendations">How to write good <samp>*.properties</samp> files</a></h3>
+<h3 id="bundle-recommendations">How to write good <samp>*.properties</samp> files</h3>
 
 <p>There are some rules for how to write good <samp>*.properties</samp> files for easy
 localization, starting with the most important.</p>
@@ -297,7 +297,7 @@ base locale value will be used; the localizers will notice the change of key nam
 when refreshing the localization and be able to confirm that they are using the
 correct new format.</p>
 
-<h2><a name="misc-i18nable">Other localized text (not in source code)</a></h2>
+<h2 id="misc-i18nable">Other localized text (not in source code)</h2>
 
 <p>There are files named <samp>README.html</samp> and <samp>LICENSE.txt</samp>
 and localized versions should exist in the same directories:
@@ -324,14 +324,14 @@ tags, for example:</p>
 
 <p>For textual files not used at runtime (such as licenses), please use UTF-8.</p>
 
-<h2><a name="templates">Templates</a></h2>
+<h2 id="templates">Templates</h2>
 
 <p>Templates can be localized too, if desired. Localized templates would have modified file contents (e.g. code
 comments in a different language). The simplest way to localize template content is to use the
 <code>nbresloc</code> URL protocol in the location of the content when specifying the template in the module's
 XML layer.</p>
 
-<h3><a name="template-descs">Template descriptions</a></h3>
+<h3 id="template-descs">Template descriptions</h3>
 
 <p>Most templates, especially frequently-used ones, should have template
 descriptions. These are small blocks of HTML to be displayed to a user
@@ -351,7 +351,7 @@ template's <em>contents</em> just to localize its description.) The URL used may
 runtime. When doing this, the naming scheme for localized template
 descriptions becomes a requirement rather than a convention.</p>
 
-<h2><a name="loc-file-names">Localized file names</a></h2>
+<h2 id="loc-file-names">Localized file names</h2>
 
 <p>The <em>system filesystem</em> is composed principally of files
 installed by XML layers in enabled modules, sometimes modified by
@@ -382,11 +382,13 @@ to use instead of the default icon for that file type.
 <p>Here then is an example of a module adding a menu with a bookmark,
 and a template:</p>
 
-<table class="tablebg" cellpadding="1" cellspacing="0" border="0" >
+<table class="tablebg" >
+<caption>Localizing Bundle and Icon Example</caption>
 <tr><td>
-<table border="0" cellpadding="3" cellspacing="1" width="100%">
+<table>
+<caption>Localizing Bundle and Icon Example</caption>
 <tr class="tablehbg">
-<td colspan="2" align="center"><span class="tablehfont">Localizing Bundle and Icon Example</span></td>
+<td colspan="2"><span class="tablehfont">Localizing Bundle and Icon Example</span></td>
 </tr>
 <tr class="tablecbg">
 <td style="text-align: middle"><span class="tablecfont">File Path in JAR</span></td>
@@ -429,7 +431,7 @@ and a template:</p>
 </td>
 </tr>
 <tr class="tablerbg">
-<td align="center"><samp>com/power/module/<br/>resources/home-page.url</samp></td>
+<td><samp>com/power/module/<br/>resources/home-page.url</samp></td>
 <td>
 <pre>
 http://www.power.com/powerbuilder/
@@ -437,7 +439,7 @@ http://www.power.com/powerbuilder/
 </td>
 </tr>
 <tr class="tablerbg">
-<td align="center"><samp>com/power/module/<br/>Bundle.properties</samp></td>
+<td><samp>com/power/module/<br/>Bundle.properties</samp></td>
 <td>
 <pre>
 # Mnemonic: Alt-W
@@ -450,13 +452,13 @@ Templates/Power/thing.pwr=Blank Power Builder Widget
 </td>
 </tr>
 <tr class="tablerbg">
-<td align="center"><samp>com/power/module/<br/>resources/power.gif</samp></td>
+<td><samp>com/power/module/<br/>resources/power.gif</samp></td>
 <td>
 <em>a 16x16 color GIF icon</em>
 </td>
 </tr>
 <tr class="tablerbg">
-<td align="center"><samp>com/power/module/<br/>resources/power.html</samp></td>
+<td><samp>com/power/module/<br/>resources/power.html</samp></td>
 <td>
 <pre>
 <span class="variable-name">&lt;html&gt;&lt;body&gt;</span>
@@ -467,7 +469,7 @@ Not really very exciting.
 </td>
 </tr>
 <tr class="tablerbg">
-<td align="center"><samp>com/power/module/<br/>resources/thing.pwr.template</samp></td>
+<td><samp>com/power/module/<br/>resources/thing.pwr.template</samp></td>
 <td>
 <em>contents of the template</em>
 </td>
@@ -476,7 +478,7 @@ Not really very exciting.
 </td></tr>
 </table>
 
-<h2><a name="layers">Localizing layers</a></h2>
+<h2 id="layers">Localizing layers</h2>
 
 <p>
  XML layers themselves can be localized in the expected way: <samp>layer_<i>LOCALE</i>.xml</samp> can contain
@@ -490,7 +492,7 @@ Not really very exciting.
  menu items in an application based on the NetBeans Platform.
 </p>
 
-<h2><a name="images">Images</a></h2>
+<h2 id="images">Images</h2>
 
 <p>Images which are localized should be saved as <samp>imageName_<i>LOCALE</i>.gif</samp> or
 <samp>imageName_<i>LOCALE</i>.png</samp>. As usual, the localized image should be stored alongside that in the
@@ -501,7 +503,7 @@ accesses a resource by path (searching all enabled modules) considering also loc
 automatic localization <em>will not</em> change the extension of the image file, so it is preferable to use PNG
 format consistently in place of GIF, and name the base resource with the <samp>.png</samp> extension.</p>
 
-<h2><a name="javahelp">Help documentation</a></h2>
+<h2 id="javahelp">Help documentation</h2>
 
 <p>Help documentation should be localized according to the JavaHelp
 specification.
@@ -532,7 +534,7 @@ files need to be branded or otherwise localized.</p>
 <p>Note that XML files used by JavaHelp can specify a file encoding if
 localized text is required in these files (helpset title, etc.).</p>
 
-<h2><a name="module-metainfo">Module names</a></h2>
+<h2 id="module-metainfo">Module names</h2>
 
 <p>
  Modules have several attributes which contain localizable text. They must be placed in a bundle file in the
@@ -553,7 +555,7 @@ OpenIDE-Module-Localizing-Bundle: org/foo/mymodule/Bundle.properties
  Also, the bundle debug mode (above) will display special annotations for localizable manifest-derived text.
 </p>
 
-<h1><a name="placement">Physical Placement of Localized Resources</a></h1>
+<h1 id="placement">Physical Placement of Localized Resources</h1>
 
 <p>In the simplest case, localized resources may simply be placed
 directly inside a module's JAR, distinguished only by their locale
@@ -631,7 +633,7 @@ the JAR as before. But seeing all localizable resources split off this
 way may be helpful to localizers, as it presents a compact summary of
 what is and is not localizable in the module.</p>
 
-<h1><a name="l10n-list">Lists of files to be localized</a></h1>
+<h1 id="l10n-list">Lists of files to be localized</h1>
 
 <p>In each module root directory there should be an
 <samp>l10n.list</samp> file. This file should be kept up to date by
@@ -674,7 +676,7 @@ ant -f nbbuild/build.xml display-l10n-list-matches
 <p>and enter a module name when prompted. If run inside NetBeans, you can also click on each match to open the
 file.</p>
 
-<h1><a name="branding">Branded Localization</a></h1>
+<h1 id="branding">Branded Localization</h1>
 
 <p>There is a special feature of <code>NbBundle</code> that permits
 people making distributions of the IDE to conveniently "brand" it,
@@ -779,7 +781,7 @@ clusters like <samp>platform</samp> and <samp>ide</samp>, and then
 <samp>/opt/product1/modules/locale/foo_brand.jar</samp> if you pass <samp>--branding&nbsp;brand</samp> and
 <samp>/opt/product1</samp> is a cluster included in the NetBeans-based product.</p>
 
-<h1><a name="discussion">Discussion</a></h1>
+<h1 id="discussion">Discussion</h1>
 
 <p>If you have comments or questions on this document, or wish to discuss
 localization in the IDE in general, please use the mailing list

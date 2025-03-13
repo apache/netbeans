@@ -37,11 +37,11 @@
           <title>Overview</title><!-- note this is ignored -->
          </head>
          <body>
-          <p>
-            <xsl:apply-templates select="api-answers/answer[@id='arch-overall']/node()" mode="description"/>
-          </p>
+          <h1>Overview of <xsl:value-of select="api-answers/@module" /><xsl:text> module</xsl:text></h1>
+          <xsl:apply-templates select="api-answers/answer[@id='arch-overall']/node()" mode="description"/>
+          
 
-          <h3>What is New (see <a href="apichanges.html">all changes</a>)?</h3>
+          <h2>What is New (see <a href="apichanges.html">all changes</a>)?</h2>
 
           <ul>
               <xsl:call-template name="api-changes" >
@@ -50,11 +50,11 @@
               </xsl:call-template>
           </ul>
           
-          <h3>Use Cases</h3>
+          <h2>Use Cases</h2>
           
-          <xsl:apply-templates select="//answer[@id='arch-usecases']" mode="description" />
+          <xsl:apply-templates select="//answer[@id='arch-usecases']/node()" mode="description" />
           
-          <h3>Exported Interfaces</h3>
+          <h2>Exported Interfaces</h2>
           
                 This table lists all of the module exported APIs 
                 with 
@@ -68,15 +68,15 @@
                     <xsl:with-param name="generate-import" select="'false'" />
                 </xsl:call-template>
         
-            <h3>Implementation Details</h3>
+            <h2>Implementation Details</h2>
 
             <xsl:if test="api-answers/answer[@id='arch-where']/node()" >
-                <h5>Where are the sources for the module?</h5>
+                <h3>Where are the sources for the module?</h3>
                 <xsl:apply-templates select="api-answers/answer[@id='arch-where']/node()" mode="description"/>
             </xsl:if>
             
             <xsl:if test="api-answers/answer[@id='deploy-dependencies']/node()" >
-                <h5>What do other modules need to do to declare a dependency on this one, in addition to or instead of a plain module dependency?</h5>
+                <h3>What do other modules need to do to declare a dependency on this one, in addition to or instead of a plain module dependency?</h3>
                 <xsl:apply-templates select="api-answers/answer[@id='deploy-dependencies']/node()" mode="description"/>
             </xsl:if>
 
@@ -147,9 +147,10 @@
     </xsl:template>
 
     <xsl:template match="usecase" mode="description" >
-        <h5><xsl:value-of select="@name" /></h5>
-        <xsl:apply-templates select="./node()" />
+        <h3><xsl:value-of select="@name" /></h3>
+        <xsl:apply-templates select="./node()" mode="description" />
     </xsl:template>
+    
     <xsl:template match="@*|node()" mode="description" >
        <xsl:copy  >
           <xsl:apply-templates select="@*|node()" mode="description" />
@@ -163,7 +164,13 @@
        </xsl:copy>
     </xsl:template>
 
-  
+    <!-- special html 5 rewrite -->
+    <xsl:template match="a/@shape" />
+    <xsl:template match="a/@shape" mode="description" />
+    <xsl:template match="pre/@space" />
+    <xsl:template match="pre/@space" mode="description"/>
+    
+    
     <!-- format the API table -->
     <xsl:template name="export-api">
         <xsl:param name="arch.target" />
@@ -266,9 +273,9 @@
             <a><xsl:attribute name="href">apichanges.html#<xsl:call-template name="change-id"/></xsl:attribute>
                 <xsl:apply-templates select="summary/node()"/>
             </a>
-            <p>
+            <!--<p> -->
                 <xsl:apply-templates select="description/node()" mode="description" />
-            </p>
+            <!-- </p> -->
         </li>
     </xsl:template>
     

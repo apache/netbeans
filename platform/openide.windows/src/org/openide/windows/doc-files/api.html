@@ -25,11 +25,11 @@
 </head>
 <body>
 
-<p></p><p>
+<br>
 <em>Note: See the <a href="https://netbeans.apache.org/projects/platform/core/windowsystem/changes">changes document</a>. Window system implementation
 changed is major version. Comparing to the older version it has changed its
 laout significantly, introduced group, and released support of workspaces</em>
-</p>
+<br>
 
 <p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
 
@@ -97,7 +97,7 @@ The Window System API provides fairly abstract support for creating
 windows or window-like container components that may be handled
 smoothly by the NetBeans window manager implementation.
 
-<h2><a name="overview">Overview of the Window System</a></h2>
+<h2 id="overview">Overview of the Window System</h2>
 
 As a rule, modules should not create their own top-level windows
 (e.g.
@@ -111,7 +111,7 @@ tabbed frames, and making the window configuration persistent across
 sessions. Well-behaved modules will use the API so as to integrate
 nicely into the feel of the rest of the application.
 
-<h3><a name="overview-top">Top components and docking</a></h3>
+<h3 id="overview-top">Top components and docking</h3>
 
 A <em>top component</em> is a Swing component (usually a panel or
 the like, though not necessarily); it might be <em>docked</em> (added into
@@ -138,7 +138,7 @@ be in the selected tab. This component serves as the base for a number
 of things in NetBeans; for example, the <em>current node
 selection</em> is controlled by the active component.
 
-<h3><a name="overview-clone">Cloning</a></h3>
+<h3 id="overview-clone">Cloning</h3>
 
 Some top components can be <em>cloned</em>, meaning that a new top
 component created which initially shares the same contents. Exactly
@@ -147,7 +147,7 @@ the same data will be referred to and the cloned component will
 simply be a new view on it. For example, Editor panes can be cloned
 with the effect that the same file will be open in each view.
 
-<h3><a name="overview-group">Groups</a></h3>
+<h3 id="overview-group">Groups</h3>
 
 NetBeans starts off with the groups "form", "debugger", etc.
 to group windows according to their expected
@@ -162,12 +162,12 @@ exits, including the positions of all modes, the arrangement of
 modes, and the components present in each mode; and grouos, their state; and
 then restore this configuration when next started.
 
-<h2><a name="create">Creating a Top Component</a></h2>
+<h2 id="create">Creating a Top Component</h2>
 
 Creating a custom top component, including assigning it to the
 proper docking mode, is not generally difficult.
 
-<h3><a name="create-top">Subclassing <code>TopComponent</code></a></h3>
+<h3 id="create-top">Subclassing <code>TopComponent</code></h3>
 
 To create a simple top component, it suffices to subclass
 
@@ -231,7 +231,7 @@ describes how to write these.
 
 </ul>
 
-<h3><a name="find-mode">Finding modes</a></h3>
+<h3 id="find-mode">Finding modes</h3>
 
 Finding <a href="#overview-top">modes</a> is straightforward.
 
@@ -251,25 +251,25 @@ a mode wouldn't achieve desired goal.
 For example:
 
 <pre>
-<font class="keyword">public</font> <font class="keyword">static</font> <font class="keyword">class</font> <font class="type">MyComponent</font> <font class="keyword">extends</font> <font class="type">TopComponent</font> {
-    <font class="keyword">public</font> <font class="type">MyComponent</font>(<font class="type">Object</font> <font class="variable-name">data</font>, <font class="type">Image</font> <font class="variable-name">icon</font>) {
-        setName(NbBundle.getMessage(This.<font class="keyword">class</font>, <font class="string">"LBL_widget_tree"</font>));
+<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="type">MyComponent</span> <span class="keyword">extends</span> <span class="type">TopComponent</span> {
+    <span class="keyword">public</span> <span class="type">MyComponent</span>(<span class="type">Object</span> <span class="variable-name">data</span>, <span class="type">Image</span> <span class="variable-name">icon</span>) {
+        setName(NbBundle.getMessage(This.<span class="keyword">class</span>, <span class="string">"LBL_widget_tree"</span>));
         setIcon(icon);
-        setLayout(<font class="keyword">new</font> <font class="type">BorderLayout</font>());
-        add(<font class="keyword">new</font> <font class="type">JTree</font>(createModel(data)), BorderLayout.CENTER);
+        setLayout(<span class="keyword">new</span> <span class="type">BorderLayout</span>());
+        add(<span class="keyword">new</span> <span class="type">JTree</span>(createModel(data)), BorderLayout.CENTER);
     }
-    <font class="keyword">public</font> <font class="type">Action</font>[] <font class="function-name">getActions</font>() {
-        <font class="type">List</font>[] <font class="variable-name">actions</font> = Arrays.asList(<font class="keyword">super</font>.getctions());
-        <font class="variable-name">actions</font>.add(<font class="keyword">new</font> WidgetReparseAction());
-        <font class="keyword">return</font> (<font class="type">Action</font>[])<font class="variable-name">actions</font>.toArray(<font class="keyword">new</font> <font class="type">Action</font>[0]);
+    <span class="keyword">public</span> <span class="type">Action</span>[] <span class="function-name">getActions</span>() {
+        <span class="type">List</span>[] <span class="variable-name">actions</span> = Arrays.asList(<span class="keyword">super</span>.getctions());
+        <span class="variable-name">actions</span>.add(<span class="keyword">new</span> WidgetReparseAction());
+        <span class="keyword">return</span> (<span class="type">Action</span>[])<span class="variable-name">actions</span>.toArray(<span class="keyword">new</span> <span class="type">Action</span>[0]);
     }
 }
 
 // ...
-<font class="type">TopComponent</font> <font class="variable-name">myComponent1</font> = <font class="keyword">new</font> <font class="type">MyComponent</font>(firstData, firstIcon);
-<font class="type">TopComponent</font> <font class="variable-name">myComponent2</font> = <font class="keyword">new</font> <font class="type">MyComponent</font>(secondData, secondIcon);
-<font class="type">Mode</font> <font class="variable-name">myMode</font> = WindowManager.getDefault().findMode(<font class="string">"myWidgetsMode"</font>);
-<font class="keyword">if</font> (myMode != <font class="constant">null</font>) {
+<span class="type">TopComponent</span> <span class="variable-name">myComponent1</span> = <span class="keyword">new</span> <span class="type">MyComponent</span>(firstData, firstIcon);
+<span class="type">TopComponent</span> <span class="variable-name">myComponent2</span> = <span class="keyword">new</span> <span class="type">MyComponent</span>(secondData, secondIcon);
+<span class="type">Mode</span> <span class="variable-name">myMode</span> = WindowManager.getDefault().findMode(<span class="string">"myWidgetsMode"</span>);
+<span class="keyword">if</span> (myMode != <span class="constant">null</span>) {
     myMode.dockInto(myComponent);
     myMode.dockInto(myComponent2);
 } else {
@@ -281,7 +281,7 @@ myComponent2.open();
 myComponent2.requestActive();
 </pre>
 
-<h3><a name="create-clone">Creating a cloneable component</a></h3>
+<h3 id="create-clone">Creating a cloneable component</h3>
 
 Just by subclassing
 
@@ -323,7 +323,7 @@ which would cause all visible clones to display a different part of
 the content of the data simultaneously, so the user could use the
 screen more effectively.
 
-<h3><a name="create-misc">Handling focus, and the node selection</a></h3>
+<h3 id="create-misc">Handling focus, and the node selection</h3>
 
 There are several more ways in which top components can interact
 with the desktop smoothly.
@@ -378,7 +378,7 @@ view, as you would expect. Also, any top component associated with
 a data object will automatically select that object's node
 delegate, which is usually the intuitive behavior as well.
 
-<h3><a name="create-ser">Special support for serialization</a></h3>
+<h3 id="create-ser">Special support for serialization</h3>
 
 If you are writing a top component with a complex configuration or
 other instance state not associated with a data object, you may
@@ -388,18 +388,18 @@ restart. This is not difficult to do; you just need to hook into
 the externalization methods of <code>TopComponent</code>:
 
 <pre>
-<font class="keyword">public</font> <font class="keyword">class</font> <font class="type">FlippableView</font> <font class="keyword">extends</font> <font class="type">TopComponent</font> {
-    <font class="keyword">public</font> <font class="keyword">static</font> <font class="type">int</font> <font class="variable-name">HORIZ_ORIENT</font> = 1;
-    <font class="keyword">public</font> <font class="keyword">static</font> <font class="type">int</font> <font class="variable-name">VERT_ORIENT</font> = 2;
-    <font class="keyword">private</font> <font class="type">int</font> <font class="variable-name">orient</font> = HORIZ_ORIENT;
-    <font class="keyword">public</font> <font class="type">int</font> <font class="function-name">getOrientation</font>() { <font class="comment">/* ... */</font> }
-    <font class="keyword">public</font> <font class="type">void</font> <font class="function-name">setOrientation</font>(<font class="type">int</font> <font class="variable-name">ornt</font>) { <font class="comment">/* ... */</font> }
-    <font class="keyword">public</font> <font class="type">void</font> <font class="function-name">writeExternal</font>(<font class="type">ObjectOutput</font> <font class="variable-name">oo</font>) <font class="keyword">throws</font> <font class="type">IOException</font> {
-        <font class="keyword">super</font>.writeExternal(oo);
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">FlippableView</span> <span class="keyword">extends</span> <span class="type">TopComponent</span> {
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable-name">HORIZ_ORIENT</span> = 1;
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable-name">VERT_ORIENT</span> = 2;
+    <span class="keyword">private</span> <span class="type">int</span> <span class="variable-name">orient</span> = HORIZ_ORIENT;
+    <span class="keyword">public</span> <span class="type">int</span> <span class="function-name">getOrientation</span>() { <span class="comment">/* ... */</span> }
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">setOrientation</span>(<span class="type">int</span> <span class="variable-name">ornt</span>) { <span class="comment">/* ... */</span> }
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">writeExternal</span>(<span class="type">ObjectOutput</span> <span class="variable-name">oo</span>) <span class="keyword">throws</span> <span class="type">IOException</span> {
+        <span class="keyword">super</span>.writeExternal(oo);
         oo.writeInt(getOrientation());
     }
-    <font class="keyword">public</font> <font class="type">void</font> <font class="function-name">readExternal</font>(<font class="type">ObjectInput</font> <font class="variable-name">oi</font>) <font class="keyword">throws</font> <font class="type">IOException</font>, <font class="type">ClassNotFoundException</font> {
-        <font class="keyword">super</font>.readExternal(oi);
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">readExternal</span>(<span class="type">ObjectInput</span> <span class="variable-name">oi</span>) <span class="keyword">throws</span> <span class="type">IOException</span>, <span class="type">ClassNotFoundException</span> {
+        <span class="keyword">super</span>.readExternal(oi);
         setOrientation(oi.readInt());
     }
 }
@@ -421,27 +421,27 @@ wrapping the data, which will protect the object streams from being
 corrupted just because of one component. For example:
 
 <pre>
-<font class="comment">// Possible that you may break serialization of this class accidentally:
-</font><font class="keyword">private</font> <font class="type">MySerObject</font> <font class="variable-name">state</font>;
-<font class="comment">// ...
-</font><font class="keyword">public</font> <font class="type">void</font> <font class="function-name">writeExternal</font>(<font class="type">ObjectOutput</font> <font class="variable-name">oo</font>) <font class="keyword">throws</font> <font class="type">IOException</font> {
-    <font class="keyword">super</font>.writeExternal(oo);
-    <font class="type">Object</font> <font class="variable-name">toWrite</font>;
-    <font class="keyword">try</font> {
-        toWrite = <font class="keyword">new</font> <font class="type">NbMarshalledObject</font>(state);
-    } <font class="keyword">catch</font> (<font class="type">Exception</font> <font class="variable-name">e</font>) {
+<span class="comment">// Possible that you may break serialization of this class accidentally:
+</span><span class="keyword">private</span> <span class="type">MySerObject</span> <span class="variable-name">state</span>;
+<span class="comment">// ...
+</span><span class="keyword">public</span> <span class="type">void</span> <span class="function-name">writeExternal</span>(<span class="type">ObjectOutput</span> <span class="variable-name">oo</span>) <span class="keyword">throws</span> <span class="type">IOException</span> {
+    <span class="keyword">super</span>.writeExternal(oo);
+    <span class="type">Object</span> <span class="variable-name">toWrite</span>;
+    <span class="keyword">try</span> {
+        toWrite = <span class="keyword">new</span> <span class="type">NbMarshalledObject</span>(state);
+    } <span class="keyword">catch</span> (<span class="type">Exception</span> <span class="variable-name">e</span>) {
         ErrorManager.getDefault().notify(ErrorManager.WARNING, e);
-        toWrite = <font class="constant">null</font>;
+        toWrite = <span class="constant">null</span>;
     }
     oo.writeObject(toWrite);
 }
-<font class="keyword">public</font> <font class="type">void</font> <font class="function-name">readExternal</font>(<font class="type">ObjectInput</font> <font class="variable-name">oi</font>) <font class="keyword">throws</font> <font class="type">IOException</font>, <font class="type">ClassNotFoundException</font> {
-    <font class="keyword">super</font>.readExternal(oi);
-    <font class="type">NbMarshalledObject</font> <font class="variable-name">read</font> =(<font class="type">NbMarshalledObject</font>)oi.readObject();
-    <font class="keyword">if</font> (read != <font class="constant">null</font>) {
-        <font class="keyword">try</font> {
-            state = (<font class="type">MySerObject</font>)read.get();
-        } <font class="keyword">catch</font> (<font class="type">Exception</font> <font class="variable-name">e</font>) {
+<span class="keyword">public</span> <span class="type">void</span> <span class="function-name">readExternal</span>(<span class="type">ObjectInput</span> <span class="variable-name">oi</span>) <span class="keyword">throws</span> <span class="type">IOException</span>, <span class="type">ClassNotFoundException</span> {
+    <span class="keyword">super</span>.readExternal(oi);
+    <span class="type">NbMarshalledObject</span> <span class="variable-name">read</span> =(<span class="type">NbMarshalledObject</span>)oi.readObject();
+    <span class="keyword">if</span> (read != <span class="constant">null</span>) {
+        <span class="keyword">try</span> {
+            state = (<span class="type">MySerObject</span>)read.get();
+        } <span class="keyword">catch</span> (<span class="type">Exception</span> <span class="variable-name">e</span>) {
             ErrorManager.getDefault().notify(ErrorManager.WARNING, e);
         }
     }
@@ -458,10 +458,10 @@ original exception from it to the <code>writeExternal</code> or
 system stream be treated as corrupt and discarded! Instead, use:
 
 <pre>
-<font class="keyword">try</font> {
-    <font class="comment">// new NbMarshalledObject(obj) or nbmo.get()
-</font>} <font class="keyword">catch</font> (<font class="type">Exception</font> <font class="variable-name">e</font>) {
-    <font class="keyword">throw</font> <font class="keyword">new</font> <font class="type">SafeException</font>(e);
+<span class="keyword">try</span> {
+    <span class="comment">// new NbMarshalledObject(obj) or nbmo.get()
+</span>} <span class="keyword">catch</span> (<span class="type">Exception</span> <span class="variable-name">e</span>) {
+    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">SafeException</span>(e);
 }
 </pre>
 
@@ -543,13 +543,13 @@ on default but to set persistence type explicitely as described above.</p>
 
 </div>
 
-<h2><a name="manip">Manipulating Existing Windows</a></h2>
+<h2 id="manip">Manipulating Existing Windows</h2>
 
 Most manipulation of existing windows should be kept to a minimum,
 of course, to avoid disrupting the user needlessly. Occasionally it
 makes sense to do a few things to top components externally.
 
-<h3><a name="find">Finding modes, top components and groups</a></h3>
+<h3 id="find">Finding modes, top components and groups</h3>
 
 A few method calls may be used to find modes, groups and top components:
 
@@ -595,7 +595,7 @@ You can also get all opened components with
 
 </ul>
 
-<h3><a name="manip-misc">Activating and closing</a></h3>
+<h3 id="manip-misc">Activating and closing</h3>
 
 Any top component may be activated just by calling
 
@@ -605,7 +605,7 @@ Any top component may be activated just by calling
 
 <a href="../TopComponent.html#close--"><code>TopComponent.close()</code></a>.
 
-<h3><a name="listen">Listening to window system events</a></h3>
+<h3 id="listen">Listening to window system events</h3>
 
 Most interesting aspects of the Window System may be listened to
 using the Java Event model. Most commonly, this is done to listen
@@ -640,13 +640,13 @@ to listen to.
 
 
 
-<h2><a name="xml">XML Persistence Format and Installation</a></h2>
+<h2 id="xml">XML Persistence Format and Installation</h2>
 
 
 
 <div class="nonnormative">
 
-<h3><a name="xml-overview">Overview</a></h3>
+<h3 id="xml-overview">Overview</h3>
 
 <P>The window system layout used by NetBeans is based on modes.</P>
 
@@ -716,7 +716,7 @@ is already supported by Netbeans' Open APIs.</P>
 <P>Example of simple window system content expressed as merge of
 modes layouts from different modules is shown on picture below:</P>
 
-<P ALIGN=CENTER><IMG SRC="layers-example.gif" alt="Modes in layering schema"></P>
+<IMG SRC="layers-example.gif" alt="Modes in layering schema" style="display:block;margin-left:auto;margin-right:auto;">
 <BR>
 <p>
 Note: The same applies for groups, but those are not dealing with laout, but
@@ -733,7 +733,7 @@ organized and granularized, as described in next paragraph.
 
 
 
-<h3><a name="xml-layout">Physical Layout and File Formats</a></h3>
+<h3 id="xml-layout">Physical Layout and File Formats</h3>
 
 <P>In first part of this chapter, overall structure of layout configuration is
  discussed. XML layers architecture uses directory-like structure for storing
@@ -905,28 +905,28 @@ They are always defined by a folder <samp>Windows/WindowManager/</samp> and data
 of global properties for win sys. Format of data file is simple:
 
 <pre>
-&lt;?<font class="keyword">xml</font> <font class="variable-name">version</font>=<font class="string">"1.0"</font> <font class="variable-name">encoding</font>=<font class="string">"UTF-8"</font>?&gt;
-&lt;!<font class="keyword">DOCTYPE</font> <font class="type">windowmanager</font> <font class="keyword">PUBLIC</font>
-          <font class="string">"-//NetBeans//DTD Window Manager Properties 2.0//EN"</font>
-          <font class="string">"<a href="http://www.netbeans.org/dtds/windowmanager-properties2_0.dtd">http://www.netbeans.org/dtds/windowmanager-properties2_0.dtd</a>"</font>&gt;
-&lt;<font class="function-name">windowmanager</font> <font class="variable-name">version</font>=<font class="string">"2.0"</font>&gt;
-    <font class="comment">&lt;!-- size and location of the main window --&gt;</font>
-    &lt;<font class="function-name">main-window</font>&gt;
-         &lt;<font class="function-name">joined-properties</font> <font
-class="variable-name">centered-vertically</font>=<font class="string">"true"</font> <font
-class="variable-name">centered-horizontally</font>=<font class="string">"true"</font>
-                            <font class="variable-name">relative-width</font>=<font class="string">"0.8"</font> <font
-class="variable-name">relative-height</font>=<font class="string">"0.8"</font>/&gt;
-    &lt;/<font class="function-name">main-window</font>&gt;
-    <font class="comment">&lt;!-- size of the screen last displayed on --&gt;</font>
-    &lt;<font class="function-name">screen</font> <font class="variable-name">width</font>=<font class="string">"1024"</font> <font class="variable-name">height</font>=<font class="string">"768"</font>/&gt;
-    <font class="comment">&lt;!-- reference to active mode --&gt;</font>
-    &lt;<font class="function-name">active-mode</font> <font class="variable-name">name</font>=<font class="string">"explorer"</font>/&gt;
-    <font class="comment">&lt;!-- reference to maximized mode --&gt;</font>
-    &lt;<font class="function-name">maximized-mode</font> <font class="variable-name">name</font>=<font class="string">"explorer"</font>/&gt;
-    <font class="comment">&lt;!-- reference to toolbar configuration --&gt;</font>
-    &lt;<font class="function-name">toolbar</font> <font class="variable-name">configuration</font>=<font class="string">"Standard"</font>/&gt;
-&lt;/<font class="function-name">windowmanager</font>&gt;
+&lt;?<span class="keyword">xml</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span> <span class="variable-name">encoding</span>=<span class="string">"UTF-8"</span>?&gt;
+&lt;!<span class="keyword">DOCTYPE</span> <span class="type">windowmanager</span> <span class="keyword">PUBLIC</span>
+          <span class="string">"-//NetBeans//DTD Window Manager Properties 2.0//EN"</span>
+          <span class="string">"<a href="http://www.netbeans.org/dtds/windowmanager-properties2_0.dtd">http://www.netbeans.org/dtds/windowmanager-properties2_0.dtd</a>"</span>&gt;
+&lt;<span class="function-name">windowmanager</span> <span class="variable-name">version</span>=<span class="string">"2.0"</span>&gt;
+    <span class="comment">&lt;!-- size and location of the main window --&gt;</span>
+    &lt;<span class="function-name">main-window</span>&gt;
+         &lt;<span class="function-name">joined-properties</span> <span
+class="variable-name">centered-vertically</span>=<span class="string">"true"</span> <span
+class="variable-name">centered-horizontally</span>=<span class="string">"true"</span>
+                            <span class="variable-name">relative-width</span>=<span class="string">"0.8"</span> <span
+class="variable-name">relative-height</span>=<span class="string">"0.8"</span>/&gt;
+    &lt;/<span class="function-name">main-window</span>&gt;
+    <span class="comment">&lt;!-- size of the screen last displayed on --&gt;</span>
+    &lt;<span class="function-name">screen</span> <span class="variable-name">width</span>=<span class="string">"1024"</span> <span class="variable-name">height</span>=<span class="string">"768"</span>/&gt;
+    <span class="comment">&lt;!-- reference to active mode --&gt;</span>
+    &lt;<span class="function-name">active-mode</span> <span class="variable-name">name</span>=<span class="string">"explorer"</span>/&gt;
+    <span class="comment">&lt;!-- reference to maximized mode --&gt;</span>
+    &lt;<span class="function-name">maximized-mode</span> <span class="variable-name">name</span>=<span class="string">"explorer"</span>/&gt;
+    <span class="comment">&lt;!-- reference to toolbar configuration --&gt;</span>
+    &lt;<span class="function-name">toolbar</span> <span class="variable-name">configuration</span>=<span class="string">"Standard"</span>/&gt;
+&lt;/<span class="function-name">windowmanager</span>&gt;
 </pre>
 
 Modules will typically never need to access these global properties, and 
@@ -1171,7 +1171,7 @@ have been.</p>
 
 
 
-<!--<h3><a name="xml-visual">Visual Display</a></h3>
+<!--<h3 id="xml-visual">Visual Display</h3>
 
 <H4>Defining layout for multiple interfaces of the system</H4>
 
@@ -1273,7 +1273,7 @@ honored.</p>
 
 
 <!-- XXX What's this for a strange thing? Is this supposed to be supported?? -->
-<!--<h3><a name="xml-programmatic">Programmatic Manipulation</a></h3>
+<!--<h3 id="xml-programmatic">Programmatic Manipulation</h3>
 
 <div class="nonnormative">
 
@@ -1324,19 +1324,19 @@ an <code>InstanceCookie</code> which will produce the correct
 you might for example retrieve a mode as follows:</p>
 
 <pre>
-<font class="type">FileSystem</font> <font class="variable-name">sfs</font> = Repository.getDefault().getDefaultFileSystem();
-<font class="comment">// Assume these two were known somehow:
-</font><font class="type">String</font> <font class="variable-name">wsName</font> = <font class="string">"Editing"</font>;
-<font class="type">String</font> <font class="variable-name">modeName</font> = <font class="string">"editor"</font>;
-<font class="type">FileObject</font> <font class="variable-name">modeFolder</font> = sfs.findResource(<font class="string">"Windows/WindowManager/"</font> + wsName + <font class="string">"/"</font> + modeName);
-<font class="comment">// deal with null result...
+<span class="type">FileSystem</span> <span class="variable-name">sfs</span> = Repository.getDefault().getDefaultFileSystem();
+<span class="comment">// Assume these two were known somehow:
+</span><span class="type">String</span> <span class="variable-name">wsName</span> = <span class="string">"Editing"</span>;
+<span class="type">String</span> <span class="variable-name">modeName</span> = <span class="string">"editor"</span>;
+<span class="type">FileObject</span> <span class="variable-name">modeFolder</span> = sfs.findResource(<span class="string">"Windows/WindowManager/"</span> + wsName + <span class="string">"/"</span> + modeName);
+<span class="comment">// deal with null result...
 // this would also work with the .wsmode file, but the folder is the primary file so:
-</font><font class="type">DataObject</font> <font class="variable-name">modeObj</font> = DataObject.find(modeFolder);
-<font class="type">InstanceCookie</font> <font class="variable-name">instance</font> = (<font class="type">InstanceCookie</font>)modeObj.getCookie(InstanceCookie.<font class="keyword">class</font>);
-<font class="comment">// instance could be null if .wsmode was missing...
-</font><font class="type">Mode</font> <font class="variable-name">m</font> = (<font class="type">Mode</font>)instance.instanceCreate();
-<font class="comment">// now use it as desired...
-</font></pre>
+</span><span class="type">DataObject</span> <span class="variable-name">modeObj</span> = DataObject.find(modeFolder);
+<span class="type">InstanceCookie</span> <span class="variable-name">instance</span> = (<span class="type">InstanceCookie</span>)modeObj.getCookie(InstanceCookie.<span class="keyword">class</span>);
+<span class="comment">// instance could be null if .wsmode was missing...
+</span><span class="type">Mode</span> <span class="variable-name">m</span> = (<span class="type">Mode</span>)instance.instanceCreate();
+<span class="comment">// now use it as desired...
+</span></pre>
 
 <H4>Writing from the Java-level API</H4>
 
@@ -1350,13 +1350,13 @@ receiving a property change event on the component.</p>
 <code>SaveCookie</code>:</p>
 
 <pre>
-<font class="type">DataObject</font> <font class="variable-name">modeObj</font> = <font class="comment">/* as above */</font>;
-<font class="type">SaveCookie</font> <font class="variable-name">save</font> = (<font class="type">SaveCookie</font>)modeObj.getCookie(SaveCookie.<font class="keyword">class</font>);
-<font class="keyword">if</font> (save != <font class="constant">null</font>) {
+<span class="type">DataObject</span> <span class="variable-name">modeObj</span> = <span class="comment">/* as above */</span>;
+<span class="type">SaveCookie</span> <span class="variable-name">save</span> = (<span class="type">SaveCookie</span>)modeObj.getCookie(SaveCookie.<span class="keyword">class</span>);
+<span class="keyword">if</span> (save != <span class="constant">null</span>) {
     save.save();
-} <font class="keyword">else</font> {
-    <font class="comment">// was already up-to-date on disk
-</font>}
+} <span class="keyword">else</span> {
+    <span class="comment">// was already up-to-date on disk
+</span>}
 </pre>
 
 <p>You could also use calls such as <code>DataObject.delete()</code>
@@ -1401,7 +1401,7 @@ modes using the Java-level API.</p>
 <div class="nonnormative">
 -->
 
-<h3><a name="xml-scenarios">Common Scenarios</a></h3>
+<h3 id="xml-scenarios">Common Scenarios</h3>
 
 <p>Following chapter summarizes procedures that module can do in order to use
 features of XML mode layout. Each procedure is detailed into steps which
@@ -1424,24 +1424,24 @@ Following section shows creation of new mode defined by module.
         components contained in mode yet:
 
 <pre>
-&lt;?<font class="keyword">xml</font> <font class="variable-name">version</font>=<font class="string">"1.0"</font> <font class="variable-name">encoding</font>=<font class="string">"UTF-8"</font>?&gt;
-&lt;!<font class="keyword">DOCTYPE</font> <font class="type">filesystem</font> <font class="keyword">PUBLIC</font>
-          <font class="string">"-//NetBeans//DTD Filesystem 1.0//EN"</font>
-          <font class="string">"http://www.netbeans.org/dtds/filesystem-1_0.dtd"</font>&gt;
-&lt;<font class="function-name">filesystem</font>&gt;
-    &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font
-class="string">"Windows2"</font>&gt;
-        &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font
-class="string">"Modes"</font>&gt;
-            <font class="comment">&lt;!-- configuration file is stored separately --&gt;</font>
-            &lt;<font class="function-name">file</font> <font class="variable-name">name</font>=<font
-class="string">"my_own_mode.wsmode"</font> <font class="variable-name">url</font>=<font
-class="string">"my_own_mode.wsmode"</font>/&gt;
-            &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font
-class="string">"my_own_mode"</font>/&gt;
-        &lt;/<font class="function-name">folder</font>&gt;
-    &lt;/<font class="function-name">folder</font>&gt;
-&lt;/<font class="function-name">filesystem</font>&gt;
+&lt;?<span class="keyword">xml</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span> <span class="variable-name">encoding</span>=<span class="string">"UTF-8"</span>?&gt;
+&lt;!<span class="keyword">DOCTYPE</span> <span class="type">filesystem</span> <span class="keyword">PUBLIC</span>
+          <span class="string">"-//NetBeans//DTD Filesystem 1.0//EN"</span>
+          <span class="string">"http://www.netbeans.org/dtds/filesystem-1_0.dtd"</span>&gt;
+&lt;<span class="function-name">filesystem</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span
+class="string">"Windows2"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span
+class="string">"Modes"</span>&gt;
+            <span class="comment">&lt;!-- configuration file is stored separately --&gt;</span>
+            &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span
+class="string">"my_own_mode.wsmode"</span> <span class="variable-name">url</span>=<span
+class="string">"my_own_mode.wsmode"</span>/&gt;
+            &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span
+class="string">"my_own_mode"</span>/&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">filesystem</span>&gt;
 </pre>
 
         <p>What example shows? Creates folder <b>Windows2/Modes/my_own_mode</b>
@@ -1461,24 +1461,24 @@ like this (ser or settings file shower.ser or shower.settings is expected in
 folder Windows/Components):
 
 <pre>
-&lt;?<font class="keyword">xml</font> <font class="variable-name">version</font>=<font class="string">"1.0"</font> <font class="variable-name">encoding</font>=<font class="string">"UTF-8"</font>?&gt;
-&lt;!<font class="keyword">DOCTYPE</font> <font class="type">filesystem</font> <font class="keyword">PUBLIC</font>
-          <font class="string">"-//NetBeans//DTD Filesystem 1.0//EN"</font>
-          <font class="string">"http://www.netbeans.org/dtds/filesystem-1_0.dtd"</font>&gt;
-&lt;<font class="function-name">filesystem</font>&gt;
-    &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font
-class="string">"Windows2"</font>&gt;
-        &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font
-class="string">"Modes"</font>&gt;
-            <font class="comment">&lt;!-- foreign mode, don't specify data file --&gt;</font>
-            &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font
-class="string">"bathroom"</font>&gt;
-                <font class="comment">&lt;!-- configuration file stored separately --&gt;</font>
-                &lt;<font class="function-name">file</font> <font class="variable-name">name</font>=<font class="string">"shower.wstcref"</font> <font class="variable-name">url</font>=<font class="string">"shower.wstcref"</font>&gt;
-            &lt;/<font class="function-name">folder</font>&gt;
-        &lt;/<font class="function-name">folder</font>&gt;
-    &lt;/<font class="function-name">folder</font>&gt;
-&lt;/<font class="function-name">filesystem</font>&gt;
+&lt;?<span class="keyword">xml</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span> <span class="variable-name">encoding</span>=<span class="string">"UTF-8"</span>?&gt;
+&lt;!<span class="keyword">DOCTYPE</span> <span class="type">filesystem</span> <span class="keyword">PUBLIC</span>
+          <span class="string">"-//NetBeans//DTD Filesystem 1.0//EN"</span>
+          <span class="string">"http://www.netbeans.org/dtds/filesystem-1_0.dtd"</span>&gt;
+&lt;<span class="function-name">filesystem</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span
+class="string">"Windows2"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span
+class="string">"Modes"</span>&gt;
+            <span class="comment">&lt;!-- foreign mode, don't specify data file --&gt;</span>
+            &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span
+class="string">"bathroom"</span>&gt;
+                <span class="comment">&lt;!-- configuration file stored separately --&gt;</span>
+                &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"shower.wstcref"</span> <span class="variable-name">url</span>=<span class="string">"shower.wstcref"</span>&gt;
+            &lt;/<span class="function-name">folder</span>&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">filesystem</span>&gt;
 </pre>
 
 There are several other notes that developer should be aware of:
@@ -1541,18 +1541,15 @@ Module A needs no changes, module B has to assure following:
 Similar procedures can be applied when module needs to override only one top
 component reference entry or hide whole workspace.
 
-</div>
-
-
 <div class="nonnormative">
 
-<h2><a name="diagrams">UML Diagrams</a></h2>
+<h2 id="diagrams">UML Diagrams</h2>
 
-<h3><a name="diagram_basic">Overall structure class diagram</a></h3>
+<h3 id="diagram_basic">Overall structure class diagram</h3>
 
 <img src="windows.gif" alt="general UML">
 
-<h3><a name="diagram_inputoutput">Input-Output class diagram</a></h3>
+<h3 id="diagram_inputoutput">Input-Output class diagram</h3>
 
 <img src="inputoutput.gif" alt="I/O UML">
 

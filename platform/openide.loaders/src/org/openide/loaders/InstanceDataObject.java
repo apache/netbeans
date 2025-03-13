@@ -50,14 +50,14 @@ import org.openide.util.lookup.*;
 * <p>Use {@link #create} and {@link #remove} to make the objects.
 * Better yet, use an XML filesystem to install them declaratively.
 * <p>
-* Instance data object by default recognizes all files with <tt>.instance</tt>
+* Instance data object by default recognizes all files with <code>.instance</code>
 * suffix. Such file can have associated optional file attributes:
 * <dl>
-* <!--  <dt><tt>instanceClass</tt> <dd><code>String</code> identifing class of created instance
+* <!--  <dt><code>instanceClass</tt> <dd><code>String</code> identifing class of created instance
 *   (otherwise class name is derived from file name). -->
-*   <dt><tt>instanceCreate</tt> <dd>instantionalized <code>Object</code> (e.g. created by
-*     <tt>methodvalue</tt> at XML filesystem)
-*   <dt><tt>instanceOf</tt> <dd><code>String</code> that is tokenized at ':', ',', ';' and
+*   <dt><code>instanceCreate</code> <dd>instantionalized <code>Object</code> (e.g. created by
+*     <code>methodvalue</code> at XML filesystem)
+*   <dt><code>instanceOf</code> <dd><code>String</code> that is tokenized at ':', ',', ';' and
 *   whitespace boundaries. Resulting tokens represent class names that created
 *   instance is <code>instanceof</code>. Utilizing it may improve performance.
 * </dl>

@@ -97,8 +97,8 @@ public class NbEditorUtilities {
         return null;
     }
 
-    /** This method is a composition of <tt>Utilities.getIdentifierBlock()</tt>
-    * and <tt>SyntaxSupport.getFunctionBlock()</tt>.
+    /** This method is a composition of <code>Utilities.getIdentifierBlock()</code>
+    * and <code>SyntaxSupport.getFunctionBlock()</code>.
     * @return null if there's no identifier at the given position.
     *   identifier block if there's identifier but it's not a function call.
     *   three member array for the case that there is an identifier followed

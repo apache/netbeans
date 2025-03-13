@@ -26,7 +26,7 @@
 Makes it possible to store settings in a custom human-readable storage format or
 reuse any existing format by using convertors.
 
-<h1>Contents</h1>
+<h2>Contents</h2>
 
 <ul>
 <li><a href="#intro">What are Convertors?</a></li>
@@ -45,10 +45,10 @@ reuse any existing format by using convertors.
 </ul>
 
 
-<h1>Settings API</h1>
+<h2>Settings API</h2>
 
 
-<h2><a name="intro">What are Convertors?</a></h2>
+<h3 id="intro">What are Convertors?</h3>
 
 Convertors are intended, as the name indicates, to convert objects
 from and to its persistent state. They are supposed to facilitate
@@ -57,9 +57,9 @@ and to allow to separate code related information like class names from data
 to prevent to later compatibility issues.
 
 
-<h2><a name="use">Make Own Convertor</a></h2>
+<h3 id="use">Make Own Convertor</h3>
 
-<h3><a name="use-create">Subclass Convertor</a></h3>
+<h4 id="use-create">Subclass Convertor</h4>
 
 <p>Creating a convertor means creating a new class which subclasses
 the abstract <a href="Convertor.html"><code>Convertor</code></a> class.</p>
@@ -77,7 +77,7 @@ E.g. you can incorporate the property change support in your setting object as
 the source of notifications. The <code>Convertor.registerSaver</code>
 will register own listener and filter fired events you want the framework to be notified.
 
-<h3><a name="use-own">Register Convertor</a></h3>
+<h4 id="use-own">Register Convertor</h4>
 If you have already written own convertor class it is necessary to register it.
 <p>
 Each <code>.settings</code> file containing values
@@ -131,7 +131,7 @@ has to contain following attributes
 </pre>
 
 
-<h3><a name="use-memory">Runtime Instances</a></h3>
+<h4 id="use-memory">Runtime Instances</h4>
 Now if you need to create new persistent instances of your setting object in the runtime you have to
 register its class with attribute <code>settings.providerPath</code> under
 <code>xml/memory</code> folder. The attribute has to contain path to the environment provider
@@ -192,7 +192,7 @@ attribute <code>settings.subclasses</code> with boolean value set to true like t
 <p> Please use the attribute <code>settings.subclasses</code> only in case
 you are sure your convertor can handle all subclasses!
 
-<h3><a name="use-composed">Composed Content</a></h3>
+<h4 id="use-composed">Composed Content</h4>
 In order to allow to reuse existing convertors and to put their output together
 into one XML document
 the settings module introduces a <a href="DOMConvertor.html"><code>DOMConvertor</code></a>
@@ -257,7 +257,7 @@ the output and also provides APIs describing the hierarchy of nested
 elements, arbitrary complex.
 </p>
 
-<h2><a name="find">Finding Settings</a></h2>
+<h3 id="find">Finding Settings</h3>
 To find out your setting you can use the <a href="@org-openide-util@/org/openide/util/doc-files/api.html#lookup">
 lookup system</a>. In such case you have to place your .settings file under
 <code>Services</code> folder. This is useful for settings shared among modules.
@@ -273,21 +273,21 @@ Otherwise you can place the file under own folder and use
 </pre>
 
 
-<h2><a name="version">Versioning Settings</a></h2>
+<h3 id="version">Versioning Settings</h3>
 
-<h3>Replacing the setting object class</h3>
+<h4>Replacing the setting object class</h4>
 Update the environment provider registration mainly file attributes
 <code>settings.instanceClass</code> and <code>settings.instanceOf</code>. If an old class
 is referenced inside the format use <code>META-INF/netbeans/translate.names</code> file.
 
-<h3>Replacing the setting format</h3>
+<h4>Replacing the setting format</h4>
 Register an entity for the newly introduced format.
 Register your setting class with proper file attribute <code>settings.providerPath</code>
 as was described in the <a href="#use-memory">section</a> about creating settings in the runtime.
 Do not remove the old registration! The framework will read the file via original
 convertor but changes will be stored via new one.
 
-<h2><a name="xmlprops">Properties Format</a></h2>
+<h3 id="xmlprops">Properties Format</h3>
 For some (and maybe many) modules it is sufficient to store its values as
 name, value string pairs. For them the Settings module provides a special
 convertor that handles content of java.util.Properties. The format definition

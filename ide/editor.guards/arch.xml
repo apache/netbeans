@@ -125,7 +125,6 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
    <usecase name="Add new section" id="AddingNewSection">
        In order to add a new section after the existing section, which seems to be most frequent, use:
        <pre>
@@ -198,7 +197,6 @@
         OpenIDE-Module-Requires: org.netbeans.api.editor.guards.Java
        </pre>
    </usecase>
-  </p>
  </answer>
 
 

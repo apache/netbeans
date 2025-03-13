@@ -121,7 +121,6 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
       <usecase id="createScriptEngineManager" name="Create ScriptEngineManager">
           To access <a href="https://graalvm.org">GraalVM</a> languages
           use
@@ -154,7 +153,6 @@
               wrapper isn't enough.
           </api>
       </usecase>
-  </p>
  </answer>
 
 

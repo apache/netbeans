@@ -62,8 +62,8 @@ public final class SimpleValueNames {
 
     /**
      * Shift-width says how many spaces should the formatter use
-     * to indent the more inner level of code. This setting is independent of <tt>TAB_SIZE</tt>
-     * and <tt>SPACES_PER_TAB</tt>.
+     * to indent the more inner level of code. This setting is independent of <code>TAB_SIZE</code>
+     * and <code>SPACES_PER_TAB</code>.
      * Values: java.lang.Integer instances
      */
     public static final String INDENT_SHIFT_WIDTH = "indent-shift-width"; // NOI18N

@@ -1076,7 +1076,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /** This method is called automatically before the document
     * insertion occurs and can be used to revoke the insertion before it occurs
-    * by throwing the <tt>BadLocationException</tt>.
+    * by throwing the <code>BadLocationException</code>.
     * @param offset position where the insertion will be done
     * @param text string to be inserted
     * @param a attributes of the inserted text
@@ -1087,7 +1087,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /** This method is called automatically before the document
     * removal occurs and can be used to revoke the removal before it occurs
-    * by throwing the <tt>BadLocationException</tt>.
+    * by throwing the <code>BadLocationException</code>.
     * @param offset position where the insertion will be done
     * @param len length of the removal
     */

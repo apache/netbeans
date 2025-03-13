@@ -276,7 +276,7 @@ public class Utilities {
 
     /** Get indentation on the current line. If this line is white then
     * go either up or down an return indentation of the first non-white row.
-    * The <tt>getRowFirstNonWhite()</tt> is used to find the indentation
+    * The <code>getRowFirstNonWhite()</code> is used to find the indentation
     * on particular line.
     * @param doc document to operate on
     * @param offset position in document anywhere on the line
@@ -1199,7 +1199,7 @@ public class Utilities {
 
     /** Helper method to obtain instance of editor kit from existing JTextComponent.
     * If the kit of the component is not an instance
-    * of the <tt>org.netbeans.editor.BaseKit</tt> the method returns null.
+    * of the <code>org.netbeans.editor.BaseKit</code> the method returns null.
     * The method doesn't require any document locking.
     * @param target JTextComponent for which the editor kit should be obtained
     * @return BaseKit instance or null
@@ -1238,7 +1238,7 @@ public class Utilities {
 
     /** Helper method to obtain instance of BaseDocument from JTextComponent.
     * If the document of the component is not an instance
-    * of the <tt>org.netbeans.editor.BaseDocument</tt> the method returns null.
+    * of the <code>org.netbeans.editor.BaseDocument</code> the method returns null.
     * The method doesn't require any document locking.
     * @param target JTextComponent for which the document should be obtained
     * @return BaseDocument instance or null
@@ -1249,8 +1249,8 @@ public class Utilities {
     }
 
     /** Get the syntax-support class that belongs to the document of the given
-    * component. Besides using directly this method, the <tt>SyntaxSupport</tt>
-    * can be obtained by calling <tt>doc.getSyntaxSupport()</tt>.
+    * component. Besides using directly this method, the <code>SyntaxSupport</code>
+    * can be obtained by calling <code>doc.getSyntaxSupport()</code>.
     * The method can return null in case the document is not
     * an instance of the BaseDocument.
     * The method doesn't require any document locking.

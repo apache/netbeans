@@ -21,7 +21,6 @@ package org.netbeans.modules.git.ui.branch;
 
 import java.awt.Dialog;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Map;
@@ -38,6 +37,7 @@ import org.openide.DialogDisplayer;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.netbeans.modules.git.GitModuleConfig;
+import org.netbeans.modules.versioning.util.DialogBoundsPreserver;
 
 /**
  *
@@ -86,16 +86,14 @@ public class CreateBranch implements DocumentListener {
                 new Object[] { okButton, DialogDescriptor.CANCEL_OPTION }, okButton, DialogDescriptor.DEFAULT_ALIGN,
                 new HelpCtx("org.netbeans.modules.git.ui.branch.CreateBranch"), null); //NOI18N
         validate();
-        revisionPicker.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange (PropertyChangeEvent evt) {
-                if (evt.getPropertyName() == RevisionDialogController.PROP_VALID) {
-                    setRevisionValid(Boolean.TRUE.equals(evt.getNewValue()));
-                }
+        revisionPicker.addPropertyChangeListener(evt -> {
+            if (evt.getPropertyName() == RevisionDialogController.PROP_VALID) {
+                setRevisionValid(Boolean.TRUE.equals(evt.getNewValue()));
             }
         });
         panel.branchNameField.getDocument().addDocumentListener(this);
         Dialog d = DialogDisplayer.getDefault().createDialog(dd);
+        DialogBoundsPreserver.preserveAndRestore(d, GitModuleConfig.getDefault().getPreferences(), this.getClass().getName());
         d.setVisible(true);
         return okButton == dd.getValue();
     }
@@ -174,7 +172,7 @@ public class CreateBranch implements DocumentListener {
     }
 
     private static Set<String> getLocalBranches (Map<String, GitBranch> existingBranches) {
-        Set<String> branchNames = new HashSet<String>();
+        Set<String> branchNames = new HashSet<>();
         for (Map.Entry<String, GitBranch> e : existingBranches.entrySet()) {
             GitBranch branch = e.getValue();
             if (!branch.isRemote() && !GitBranch.NO_BRANCH.equals(branch.getName())) {

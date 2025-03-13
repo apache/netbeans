@@ -35,7 +35,7 @@ github:
   enabled_merge_buttons:
     squash: false
     merge: true
-    rebase: true
+    rebase: false
   protected_branches:
     # no force push to master
     master: {}
@@ -49,4 +49,5 @@ notifications:
     commits:      commits@netbeans.apache.org
     issues:       notifications@netbeans.apache.org
     pullrequests: notifications@netbeans.apache.org
+    discussions: notifications@netbeans.apache.org
     jira_options: link label worklog

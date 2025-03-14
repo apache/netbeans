@@ -204,7 +204,7 @@ public final class PrintSettings extends ContextSystemOption {
 
     /** Setter for lineAscentCorrection property.
     * @param correction the correction
-    * @exception IllegalArgumentException if <tt>correction</tt> is less than 0.
+    * @exception IllegalArgumentException if <code>correction</code> is less than 0.
     */
     public void setLineAscentCorrection(float correction) {
         PrintPreferences.setLineAscentCorrection(correction);
@@ -261,14 +261,14 @@ public final class PrintSettings extends ContextSystemOption {
             return null;
         }
 
-        /* @return <tt>true</tt> */
+        /* @return <code>true</code> */
         @Override
         public boolean supportsCustomEditor() {
             return true;
         }
 
         /**
-        * @return <tt>null</tt> Shows pageDialog, however.
+        * @return <code>null</code> Shows pageDialog, however.
         */
         @Override
         public java.awt.Component getCustomEditor() {

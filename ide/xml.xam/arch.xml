@@ -132,7 +132,6 @@ models
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
    <usecase id="uc1" name="domain model developer">
        A domain model developer would determine the appropriate extension 
  package. A model outside of XML would extend org.netbeans.modules.xml.xam.AbstractModel,
@@ -151,7 +150,6 @@ into methods available to subclasses in the xam.dom and xdm.xam models. The
 project based catalog facility provides the ability to support versioned 
 catalog files which allow local access but URL based location attributes. 
    </usecase>
-  </p>
  </answer>
 
 

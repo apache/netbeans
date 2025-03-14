@@ -172,7 +172,7 @@ public interface TypeProvider {
     }
 
     /**
-     * Represents a collection of <tt>TypeDescriptor</tt>s that match
+     * Represents a collection of <code>TypeDescriptor</code>s that match
      * the given search criteria. Moreover, it can contain message
      * for the user, such as an incomplete search result.
      *

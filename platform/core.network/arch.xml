@@ -197,7 +197,6 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
       <usecase name="Custom ProxySelector" id="custom-proxyselector">
           You can provide your own ProxySelector instead of the one
           provided by this module. You do this by registering your 
@@ -238,8 +237,6 @@
             <api name="org.netbeans.core.network.proxy.pac.PacUtils" category="friend" group="java" type="export" url="@TOP@/org/netbeans/core/network/proxy/pac/PacUtils.html" />
             <api name="org.netbeans.core.network.proxy.pac.datetime.PacUtilsDateTime" category="friend" group="java" type="export" url="@TOP@/org/netbeans/core/network/proxy/pac/datetime/PacUtilsDateTime.html" />
       </usecase>
-  </p>
-
  </answer>
 
 

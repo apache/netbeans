@@ -62,7 +62,7 @@ import org.netbeans.modules.j2ee.deployment.plugins.spi.config.ModuleConfigurati
  * J2eeserver optain an instance of IncrementalDeployment from server integration plugin by
  * calling {@link OptionalDeploymentManagerFactory} to optain an instance of IncrementalDeployment
  * for each {@link javax.enterprise.deploy.spi.DeploymentManager} instance.
- * <P>
+ *
  * @author  George Finklang
  */
 public abstract class IncrementalDeployment {

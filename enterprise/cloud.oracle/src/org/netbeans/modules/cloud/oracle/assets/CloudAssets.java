@@ -56,7 +56,7 @@ import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import static org.netbeans.modules.cloud.oracle.NotificationUtils.showWarningMessage;
 import org.netbeans.modules.cloud.oracle.bucket.BucketItem;
-import org.netbeans.modules.cloud.oracle.compute.ClusterItem;
+import org.netbeans.modules.cloud.oracle.assets.k8s.ClusterItem;
 import org.netbeans.modules.cloud.oracle.compute.ComputeInstanceItem;
 import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.netbeans.modules.cloud.oracle.developer.ContainerRepositoryItem;

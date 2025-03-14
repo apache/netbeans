@@ -45,7 +45,7 @@ import org.openide.util.NbPreferences;
  * (like instances of the same server type for example) and retrievable
  * by calling {@link #getProperties(String)} respectively.
  * <p>
- * Typical use case:<p>
+ * Typical use case:
  * <pre>
  *     // we have some instance to persist
  *     InstancePropertiesManager manager = InstancePropertiesManager.getInstance();

@@ -36,7 +36,7 @@ import org.openide.util.actions.SystemAction;
 /**
  * Ancestor class for all non-blocking actions.<p>
  * This class re-implements all blocking calls from parent Action class to
- * non-blocking call.<p>
+ * non-blocking call.
  * @author <a href="mailto:adam.sotona@sun.com">Adam Sotona</a>
  * @see Action
  */

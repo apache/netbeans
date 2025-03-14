@@ -72,9 +72,9 @@ public interface VCSHistoryProvider {
      * <table>
      *   <caption>example of output for Mercurial</caption>
      *   <tr>
-     *     <th bgcolor="#CCCCFF"></th>
-     *     <th bgcolor="#CCCCFF">short</th>
-     *     <th bgcolor="#CCCCFF">long</th>
+     *     <th style="background-color:#CCCCFF"></th>
+     *     <th style="background-color:#CCCCFF">short</th>
+     *     <th style="background-color:#CCCCFF">long</th>
      *   </tr>
      *   <tr>
      *     <td>revision</td>

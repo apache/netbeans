@@ -33,7 +33,7 @@ import org.netbeans.modules.htmlui.HTMLDialogBase;
  * usage follows.
  * <h2>HTML Page <small>dialog.html</small></h2>
  * <p>
- * {@snippet file="org/netbeans/api/htmlui/dialog.html"}
+ * {@snippet file="org/netbeans/api/htmlui/dialog.html" region="dialog" }
  * The <code>dialog.html</code> page defines two buttons as <em>hidden</em> - 
  * they are re-rendered by the embedding "chrome" (for example as Swing buttons),
  * but they can be enabled/disabled. For example the <code>ok</code> property

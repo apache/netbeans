@@ -46,7 +46,7 @@ import static org.netbeans.lib.v8debug.connection.DebuggerConnection.*;
  * Create an instance of this class to listen for incoming debugger connections.
  * <p>
  * The typical usage is:
- * <pre><tt>
+ * <pre><code>
  *   final ServerConnection sn = new ServerConnection();
  *   final Map&lt;String, String&gt; properties = ... // See HeaderProperties.
  *   new Thread() {
@@ -66,7 +66,7 @@ import static org.netbeans.lib.v8debug.connection.DebuggerConnection.*;
  *   ...
  *   V8Event event = new V8Event(...);
  *   sn.send(event);
- * </tt></pre>
+ * </code></pre>
  * 
  * @author Martin Entlicher
  */

@@ -21,7 +21,7 @@ package org.netbeans.modules.j2ee.dd.api.web;
 /**
  * Generated interface for ErrorPage element.
  *
- *<p><b><font color="red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></font></b>
+ *<p><b><span style="color:red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></span></b>
  *</p>
  */
 public interface ErrorPage extends org.netbeans.modules.j2ee.dd.api.common.CommonDDBean {

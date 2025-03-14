@@ -36,7 +36,7 @@ import org.netbeans.modules.j2ee.dd.api.common.SecurityRole;
  * for deployment descriptor(web.xml) file.<br>
  * For getting the root (WebApp object) use the {@link DDProvider#getDDRoot} method.
  *
- *<p><b><font color="red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></font></b>
+ *<p><b><span style="color:red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></span></b>
  *</p>
  */
 public interface WebApp extends org.netbeans.modules.j2ee.dd.api.common.RootInterface {

@@ -235,6 +235,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                                     Collections.EMPTY_LIST)),
                             null,
                             Collections.EMPTY_LIST,
+                            Collections.EMPTY_LIST,
                             members);
 
                     workingCopy.rewrite(classTree, newClassTree);
@@ -481,6 +482,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                             abstractFacadeElement,
                             entityElement.asType())),
                         implementsClause,
+                        classTree.getPermitsClause(),
                         members);
 
                 wc.rewrite(classTree, newClassTree);
@@ -719,8 +721,9 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                 ClassTree modifiedClass = make.Class(modifiers, 
                         clazz.getSimpleName(), clazz.getTypeParameters(), 
                             clazz.getExtendsClause(), 
-                                Collections.<ExpressionTree>emptyList(), 
-                                    Collections.<Tree>emptyList());
+                            Collections.<ExpressionTree>emptyList(), 
+                            Collections.<ExpressionTree>emptyList(), 
+                            Collections.<Tree>emptyList());
                 workingCopy.rewrite(clazz, modifiedClass);
             }
         });

@@ -55,20 +55,6 @@
     </target>
 
     <target name="jar-probe" depends="probe-init">
-        <unjar src="${agentsrc.jshell.cp}" dest="build/agent/classes">
-            <patternset>
-                <include name="jdk/jshell/execution/**"/>
-                <exclude name="**/JDI*.class"/>
-                <exclude name="**/LocalExecutionControl.class"/>
-                <exclude name="**/StreamingExecutionControl.class"/>
-                <!--<exclude name="**/DemultiplexInput.class"/>-->
-            </patternset>
-            <patternset>
-                <include name="jdk/jshell/spi/ExecutionControl*.class"/>
-                <exclude name="jdk/jshell/spi/ExecutionControl*Generator.class"/>
-                <include name="jdk/jshell/spi/SPIResolutionException.class"/>
-            </patternset>
-        </unjar>
         <mkdir dir="${cluster}/modules/ext"/>
         <nb-ext-jar jarfile="${cluster}/modules/ext/nb-custom-jshell-probe.jar">
             <manifest>

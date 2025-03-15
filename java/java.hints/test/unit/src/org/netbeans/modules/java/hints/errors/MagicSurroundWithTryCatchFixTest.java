@@ -19,9 +19,11 @@
 package org.netbeans.modules.java.hints.errors;
 
 import com.sun.source.util.TreePath;
+
 import java.util.List;
 import java.util.Set;
 import java.util.prefs.Preferences;
+
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.errors.ErrorFixesFakeHint.FixKind;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
@@ -47,14 +49,69 @@ public class MagicSurroundWithTryCatchFixTest extends ErrorHintsTestBase {
                        "package test; public class Test {public void test() {try {}finally{System.out.println(\"\"); new java.io.FileInputStream(\"\");}}}",
                        150 - 43,
                        "FixImpl",
-                       "package test; import java.io.FileNotFoundException; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test() {try {}finally{try { System.out.println(\"\"); new java.io.FileInputStream(\"\"); } catch (FileNotFoundException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex); } }}}");
+                       "package test; import java.io.FileNotFoundException; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test() {try {}finally{try { System.out.println(\"\"); new java.io.FileInputStream(\"\"); } catch (FileNotFoundException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, \"\", ex); } }}}");
     }
 
     public void testLogStatementLogger() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void test() { System.out.println(\"\"); |new java.io.FileInputStream(\"\");}}",
                        "FixImpl",
-                       "package test; import java.io.FileNotFoundException; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test() { try { System.out.println(\"\"); new java.io.FileInputStream(\"\"); } catch (FileNotFoundException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex); } }}");
+                       "package test; import java.io.FileNotFoundException; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test() { try { System.out.println(\"\"); new java.io.FileInputStream(\"\"); } catch (FileNotFoundException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, \"\", ex); } }}");
+    }
+
+    // For pre Java 9 there is no System.Logger.
+    public void testLogStatementSystemLogger_Java8() throws Exception {
+        Preferences prefs = ErrorFixesFakeHint.getPreferences(null, FixKind.SURROUND_WITH_TRY_CATCH);
+        boolean orig = ErrorFixesFakeHint.isUseSystemLogger(prefs);
+
+        try {
+            ErrorFixesFakeHint.setUseSystemLogger(prefs, true);
+            performFixTest("test/Test.java",
+                       "package test; public class Test {public void test() { System.out.println(\"\"); |new java.io.FileInputStream(\"\");}}",
+                       "FixImpl",
+                       "package test; import java.io.FileNotFoundException; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test() { try { System.out.println(\"\"); new java.io.FileInputStream(\"\"); } catch (FileNotFoundException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, \"\", ex); } }}");
+        } finally {
+            ErrorFixesFakeHint.setUseSystemLogger(prefs, orig);
+        }
+    }
+
+    public void testLogStatementUseExistingLogger() throws Exception {
+            performFixTest("test/Test.java",
+                       "package test; import java.util.logging.Logger; public class Test {private static final Logger LOG; public void test() { System.out.println(\"\"); |new java.io.FileInputStream(\"\");}}",
+                       "FixImpl",
+                       "package test;import java.io.FileNotFoundException; import java.util.logging.Level; import java.util.logging.Logger; public class Test {private static final Logger LOG; public void test() { try { System.out.println(\"\"); new java.io.FileInputStream(\"\"); } catch (FileNotFoundException ex) { LOG.log(Level.SEVERE, \"\", ex); } }}");
+    }
+
+    public void testLogStatementSystemLogger() throws Exception {
+        sourceLevel = "9";
+        Preferences prefs = ErrorFixesFakeHint.getPreferences(null, FixKind.SURROUND_WITH_TRY_CATCH);
+        boolean orig = ErrorFixesFakeHint.isUseSystemLogger(prefs);
+
+        try {
+            ErrorFixesFakeHint.setUseSystemLogger(prefs, true);
+            performFixTest("test/Test.java",
+                       "package test; public class Test {public void test() { System.out.println(\"\"); |new java.io.FileInputStream(\"\");}}",
+                       "FixImpl",
+                       "package test; import java.io.FileNotFoundException; public class Test {public void test() { try { System.out.println(\"\"); new java.io.FileInputStream(\"\"); } catch (FileNotFoundException ex) { System.getLogger(Test.class.getName()).log(System.Logger.Level.ERROR, \"\", ex); } }}");
+        } finally {
+            ErrorFixesFakeHint.setUseSystemLogger(prefs, orig);
+        }
+    }
+
+    public void testLogStatementSystemLoggerUseExistingLogger() throws Exception {
+        sourceLevel = "9";
+        Preferences prefs = ErrorFixesFakeHint.getPreferences(null, FixKind.SURROUND_WITH_TRY_CATCH);
+        boolean orig = ErrorFixesFakeHint.isUseSystemLogger(prefs);
+
+        try {
+            ErrorFixesFakeHint.setUseSystemLogger(prefs, true);
+            performFixTest("test/Test.java",
+                       "package test; public class Test {private static final System.Logger LOG; public void test() { System.out.println(\"\"); |new java.io.FileInputStream(\"\");}}",
+                       "FixImpl",
+                       "package test; import java.io.FileNotFoundException; public class Test {private static final System.Logger LOG; public void test() { try { System.out.println(\"\"); new java.io.FileInputStream(\"\"); } catch (FileNotFoundException ex) { LOG.log(System.Logger.Level.ERROR, \"\", ex); } }}");
+        } finally {
+            ErrorFixesFakeHint.setUseSystemLogger(prefs, orig);
+        }
     }
 
     public void testLogStatementExceptions() throws Exception {
@@ -84,7 +141,7 @@ public class MagicSurroundWithTryCatchFixTest extends ErrorHintsTestBase {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void test(Exception ex) {System.out.println(\"\"); |x();} private void x() throws Exception {}}",
                        "FixImpl",
-                       "package test; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test(Exception ex) {try { System.out.println(\"\"); x(); } catch (Exception ex1) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex1); } } private void x() throws Exception {}}");
+                       "package test; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test(Exception ex) {try { System.out.println(\"\"); x(); } catch (Exception ex1) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, \"\", ex1); } } private void x() throws Exception {}}");
     }
 
     public void test117085b() throws Exception {
@@ -114,14 +171,14 @@ public class MagicSurroundWithTryCatchFixTest extends ErrorHintsTestBase {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void test(Exception ex, Exception ex1) {System.out.println(\"\"); |x();} private void x() throws Exception {}}",
                        "FixImpl",
-                       "package test; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test(Exception ex, Exception ex1) {try { System.out.println(\"\"); x(); } catch (Exception ex2) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex2); } } private void x() throws Exception {}}");
+                       "package test; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test(Exception ex, Exception ex1) {try { System.out.println(\"\"); x(); } catch (Exception ex2) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, \"\", ex2); } } private void x() throws Exception {}}");
     }
 
     public void test117085e() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void test(Exception ex) {while (true) {Exception ex1; if (1 != 1) {System.out.println(\"\"); |x();}}} private void x() throws Exception {}}",
                        "FixImpl",
-                       "package test; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test(Exception ex) {while (true) {Exception ex1; if (1 != 1) {try { System.out.println(\"\"); x(); } catch (Exception ex2) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex2); } }}} private void x() throws Exception {}}");
+                       "package test; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test(Exception ex) {while (true) {Exception ex1; if (1 != 1) {try { System.out.println(\"\"); x(); } catch (Exception ex2) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, \"\", ex2); } }}} private void x() throws Exception {}}");
     }
 
 //    public void test86483() throws Exception {
@@ -135,28 +192,28 @@ public class MagicSurroundWithTryCatchFixTest extends ErrorHintsTestBase {
         performFixTest("test/Test.java",
                        "package test; public class Test { {\n int h; thr|ow new Exception();} }",
                        "FixImpl",
-                       "package test; import java.util.logging.Level; import java.util.logging.Logger; public class Test { { try { int h; throw new Exception(); } catch (Exception ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex); } } }");
+                       "package test; import java.util.logging.Level; import java.util.logging.Logger; public class Test { { try { int h; throw new Exception(); } catch (Exception ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, \"\", ex); } } }");
     }
 
     public void testComments171262() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void test() {\n /*zbytek*/\nSystem.out.println(\"\"); /*obycej*/\n/*bystry*/\n|new java.io.FileInputStream(\"\"); /*bylina*/\n}}",
                        "FixImpl",
-                       "package test; import java.io.FileNotFoundException; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test() { try { /*zbytek*/ System.out.println(\"\"); /*obycej*/ /*bystry*/ new java.io.FileInputStream(\"\"); /*bylina*/ } catch (FileNotFoundException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex); } }}");
+                       "package test; import java.io.FileNotFoundException; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test() { try { /*zbytek*/ System.out.println(\"\"); /*obycej*/ /*bystry*/ new java.io.FileInputStream(\"\"); /*bylina*/ } catch (FileNotFoundException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, \"\", ex); } }}");
     }
 
     public void test204165a() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test { static {\n int h; thr|ow new Exception();} }",
                        "FixImpl",
-                       "package test; import java.util.logging.Level; import java.util.logging.Logger; public class Test { static { try { int h; throw new Exception(); } catch (Exception ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex); } } }");
+                       "package test; import java.util.logging.Level; import java.util.logging.Logger; public class Test { static { try { int h; throw new Exception(); } catch (Exception ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, \"\", ex); } } }");
     }
 
     public void test204165b() throws Exception {
         performFixTest("test/Test.java",
                        "package test; import java.io.*; public class Test { static {\n int h; BufferedReader br = new BufferedReader(n|ew FileReader(\"\"));\n } }",
                        "FixImpl",
-                       "package test; import java.io.*;import java.util.logging.Level; import java.util.logging.Logger; public class Test { static { BufferedReader br = null; try { int h; br = new BufferedReader(new FileReader(\"\")); } catch (FileNotFoundException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex); } finally { try { br.close(); } catch (IOException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex); } } } }");
+                       "package test; import java.io.*;import java.util.logging.Level; import java.util.logging.Logger; public class Test { static { BufferedReader br = null; try { int h; br = new BufferedReader(new FileReader(\"\")); } catch (FileNotFoundException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, \"\", ex); } finally { try { br.close(); } catch (IOException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, \"\", ex); } } } }");
     }
 
     public void test200382() throws Exception {
@@ -165,7 +222,7 @@ public class MagicSurroundWithTryCatchFixTest extends ErrorHintsTestBase {
         performFixTest("test/Test.java",
                        "package test; import java.io.*; import java.net.*; public class Test { public void getTestCase(URL url) { try { File tc = new File(url.toURI()); BufferedReader br = new BufferedReader(ne|w FileReader(tc)); } catch (URISyntaxException ex) { } } }",
                        "FixImpl",
-                       "package test; import java.io.*; import java.net.*;import java.util.logging.Level; import java.util.logging.Logger; public class Test { public void getTestCase(URL url) { BufferedReader br = null; try { File tc = new File(url.toURI()); br = new BufferedReader(new FileReader(tc)); } catch (URISyntaxException ex) { } catch (FileNotFoundException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex); } finally { try { br.close(); } catch (IOException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex); } } } }");
+                       "package test; import java.io.*; import java.net.*;import java.util.logging.Level; import java.util.logging.Logger; public class Test { public void getTestCase(URL url) { BufferedReader br = null; try { File tc = new File(url.toURI()); br = new BufferedReader(new FileReader(tc)); } catch (URISyntaxException ex) { } catch (FileNotFoundException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, \"\", ex); } finally { try { br.close(); } catch (IOException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, \"\", ex); } } } }");
         } finally {
             UncaughtException.allowMagicSurround = false;
         }

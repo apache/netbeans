@@ -1747,7 +1747,6 @@ public abstract class TreeView extends JScrollPane {
     private final class ExplorerTree extends JTree implements Autoscroll, QuickSearch.Callback {
         AutoscrollSupport support;
         private String maxPrefix;
-        int SEARCH_FIELD_SPACE = 3;
         private boolean firstPaint = true;
         /** The last search searchResults */
         private List<TreePath> searchResults = new ArrayList<TreePath>();
@@ -1755,6 +1754,17 @@ public abstract class TreeView extends JScrollPane {
         private int currentSelectionIndex;
         private String lastSearchText;
 
+        @Override
+        public Dimension getPreferredSize() {
+          Dimension ret = super.getPreferredSize();
+          if (isEntireRowClickable() && !isRootVisible()) {
+            /* Ensure there is some blank space after nodes, where the user can right-click to open
+            the context menu for the root node. */
+            return new Dimension(ret.width, ret.height + 30);
+          } else {
+            return ret;
+          }
+        }
 
         ExplorerTree(TreeModel model) {
             super(model);

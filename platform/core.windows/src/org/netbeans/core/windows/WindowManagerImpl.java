@@ -1357,14 +1357,28 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
                 central.switchMaximizedMode( null );
                 topComponentClose( tc );
             } else {
-                TopComponent recentTc = null;
+                ModeImpl activateMode = null;
+                TopComponent activateTC = null;
                 if( mode.getKind() == Constants.MODE_KIND_EDITOR && !inCloseAll ) {
                     //an editor document is being closed so let's find the most recent editor to select
-                    recentTc = central.getRecentTopComponent( mode, tc );
+                    activateTC = central.getRecentTopComponent( mode, tc );
+                    if (activateTC != null) {
+                        activateMode = mode;
+                    } else {
+                        /* The closed TopComponent may have been the last one in its mode. Find the
+                        most recent TopComponent in the "editor" mode instead, if present. */
+                        Mode editorMode = findMode("editor");
+                        if (editorMode instanceof ModeImpl && mode != editorMode) {
+                          activateMode = (ModeImpl) editorMode;
+                          activateTC = central.getRecentTopComponent( activateMode, tc );
+                        }
+                    }
                 }
                 mode.close(tc);
-                if( !tc.isOpened() && null != recentTc )
-                    mode.setSelectedTopComponent(recentTc);
+                if( !tc.isOpened() && null != activateTC && null != activateMode ) {
+                    activateTC.requestActive();
+                    activateMode.setSelectedTopComponent(activateTC);
+                }
             }
         }
     }

@@ -20,9 +20,11 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.stream.Stream;
+import org.apache.maven.search.api.Record;
 import org.apache.maven.search.api.SearchRequest;
 import org.apache.maven.search.backend.smo.SmoSearchBackend;
 import org.apache.maven.search.backend.smo.SmoSearchBackendFactory;
@@ -129,7 +131,19 @@ public class BinariesListUpdates {
     private static String queryLatestVersion(SmoSearchBackend backend, SearchRequest request) throws IOException, InterruptedException {
         requests.acquire();
         try {
-            return backend.search(request).getPage().stream()
+            List<Record> results;
+            try {
+                results = backend.search(request).getPage();
+            } catch (IOException ex) {
+                System.out.println("received exception: '" + ex.getMessage() + "', retry in 10s");
+                Thread.sleep(10_000);
+                try {
+                    results = backend.search(request).getPage();
+                } catch(IOException ignore) {
+                    throw ex;
+                }
+            }
+            return results.stream()
                     .map(r -> r.getValue(VERSION))
                     .filter(v -> !v.contains("alpha") && !v.contains("beta"))
                     .filter(v -> !v.contains("M") && !v.contains("m") && !v.contains("B") && !v.contains("b") && !v.contains("ea") && !v.contains("RC"))

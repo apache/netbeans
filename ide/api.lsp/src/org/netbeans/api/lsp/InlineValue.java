@@ -18,6 +18,11 @@
  */
 package org.netbeans.api.lsp;
 
+/**
+ * An expression whose value may be show inline while debugging.
+ *
+ * @since 1.33
+ */
 public final class InlineValue {
     private final Range range;
     private final String expression;
@@ -27,14 +32,26 @@ public final class InlineValue {
         this.expression = expression;
     }
 
+    /**
+     * {@return Range to which the inline value applies}
+     */
     public Range getRange() {
         return range;
     }
 
-    public java.lang.String getExpression() {
+    /**
+     * {@return The expression of that should be evaluated for the inline value.}
+     */
+    public String getExpression() {
         return expression;
     }
 
+    /**
+     * {@return a new instance of {@code InlineValue}, based on the provided information.}
+     *
+     * @param range range to which the inline value should apply
+     * @param expression expression that should be evaluted
+     */
     public static InlineValue createInlineVariable(Range range, String expression) {
         return new InlineValue(range, expression);
     }

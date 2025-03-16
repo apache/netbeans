@@ -16,9 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.debugger.jpda.ui.models;
+package org.netbeans.modules.debugger.jpda.ui.values;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -26,15 +25,15 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.debugger.jpda.ui.models.InlineValueComputerImpl.InlineVariable;
+import org.netbeans.modules.debugger.jpda.ui.values.ComputeInlineValues.InlineVariable;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
-public class InlineValueComputerImplTest extends NbTestCase {
+public class ComputeInlineValuesTest extends NbTestCase {
 
     private FileObject srcDir;
 
-    public InlineValueComputerImplTest(String name) {
+    public ComputeInlineValuesTest(String name) {
         super(name);
     }
 
@@ -101,6 +100,18 @@ public class InlineValueComputerImplTest extends NbTestCase {
                                       """);
     }
 
+    public void testDeclarationAndUseOnTheSameLine() throws Exception {
+        runCompileInlineVariablesTest("""
+                                      public class Test {
+                                          private void test(String /param/) {
+                                              int /i1/ = 0;
+                                              |for (int /j/ = 0; j < 10; j++) {
+                                              }
+                                          }
+                                      }
+                                      """);
+    }
+
     private void runCompileInlineVariablesTest(String codeResultAndPos) throws Exception {
         FileObject source = FileUtil.createData(srcDir, "Test.java");
         int pos = codeResultAndPos.replace("/", "").indexOf("|");
@@ -122,7 +133,7 @@ public class InlineValueComputerImplTest extends NbTestCase {
                 SourceUtilsTestUtil.getCompilationInfo(JavaSource.forFileObject(source),
                                                        JavaSource.Phase.RESOLVED);
         int stackLine = (int) info.getCompilationUnit().getLineMap().getLineNumber(pos);
-        Collection<InlineVariable> computedVariables = InlineValueComputerImpl.computeVariables(info, stackLine, 0, new AtomicBoolean());
+        Collection<InlineVariable> computedVariables = ComputeInlineValues.computeVariables(info, stackLine, 0, new AtomicBoolean());
 
         for (InlineVariable var : computedVariables) {
             String snippet = code.substring(var.start, var.end);

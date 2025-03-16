@@ -24,6 +24,17 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.lsp.InlineValue;
 import org.openide.filesystems.FileObject;
 
+/**
+ * Compute {@link InlineValue}s for the given file and offset.
+ */
 public interface InlineValuesProvider {
+
+    /**
+     * Compute {@linkplain InlineValue}s for the given file and location.
+     *
+     * @param file file for which the inline values should be computed
+     * @param currentExecutionPosition position for which the inline values should be computed
+     * @return the computed inline values
+     */
     public CompletableFuture<List<? extends InlineValue>> inlineValues(@NonNull FileObject file, int currentExecutionPosition);
 }

@@ -18,19 +18,8 @@
  */
 package org.netbeans.modules.debugger.jpda.ui.models;
 
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.LambdaExpressionTree;
-import com.sun.source.tree.LineMap;
-import com.sun.source.tree.Tree;
-import static com.sun.source.tree.Tree.Kind.BLOCK;
-import static com.sun.source.tree.Tree.Kind.LAMBDA_EXPRESSION;
-import static com.sun.source.tree.Tree.Kind.METHOD;
-import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreePath;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -41,15 +30,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Document;
 import org.netbeans.api.debugger.DebuggerManagerAdapter;
@@ -65,14 +52,9 @@ import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.JavaSource.Priority;
 import org.netbeans.api.java.source.JavaSourceTaskFactory;
-import org.netbeans.api.java.source.TreeUtilities;
-import org.netbeans.api.java.source.support.CancellableTreePathScanner;
-import org.netbeans.api.lsp.InlineValue;
-import org.netbeans.api.lsp.Range;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.expr.formatters.Formatters;
 import org.netbeans.modules.debugger.jpda.expr.formatters.FormattersLoopControl;
@@ -81,14 +63,16 @@ import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InvalidStackFrameExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ObjectCollectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
+import org.netbeans.modules.debugger.jpda.ui.values.ComputeInlineValues;
+import org.netbeans.modules.debugger.jpda.ui.values.ComputeInlineValues.InlineVariable;
 import org.netbeans.modules.parsing.spi.TaskIndexingMode;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.editor.highlighting.HighlightsLayer;
 import org.netbeans.spi.editor.highlighting.HighlightsLayerFactory;
+import org.netbeans.spi.editor.highlighting.HighlightsSequence;
 import org.netbeans.spi.editor.highlighting.ZOrder;
 import org.netbeans.spi.editor.highlighting.support.OffsetsBag;
-import org.netbeans.spi.lsp.InlineValuesProvider;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
@@ -102,7 +86,8 @@ import org.openide.util.lookup.ServiceProviders;
 @DebuggerServiceRegistration(path="netbeans-JPDASession/inlineValue", types=InlineValueComputer.class)
 public class InlineValueComputerImpl implements InlineValueComputer, PropertyChangeListener {
 
-    private static final RequestProcessor EVALUATOR = new RequestProcessor(InlineValueProviderImpl.class.getName(), 1, false, false);
+    private static final Logger LOG = Logger.getLogger(InlineValueComputerImpl.class.getName());
+    private static final RequestProcessor EVALUATOR = new RequestProcessor(InlineValueComputerImpl.class.getName(), 1, false, false);
     private static final String JAVA_STRATUM = "Java"; //XXX: this is probably already defined somewhere
     private final JPDADebuggerImpl debugger;
     private TaskDescription currentTask;
@@ -163,7 +148,6 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
                 AtomicReference<Collection<InlineVariable>> values = new AtomicReference<>();
 
                 EVALUATOR.post(() -> {
-                    OffsetsBag currentDocumentBag = getHighlightsBag(newTask.frameDocument);
                     OffsetsBag runningBag = new OffsetsBag(newTask.frameDocument);
 
                     Lookup.getDefault().lookup(ComputeInlineVariablesFactory.class).set(newTask.frameFile, newTask.frameLineNumber, variables -> {
@@ -199,8 +183,9 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
                             try {
                                 return debugger.evaluate(expr);
                             } catch (InvalidExpressionException ex) {
-                                Exceptions.printStackTrace(ex);
-                                return null; //TODO: avoid re-evaluation(!)
+                                //the variable may not exist
+                                LOG.log(Level.FINE, null, ex);
+                                return null;
                             }
                         });
                         if (value != null) {
@@ -217,10 +202,7 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
 
                             runningBag.addHighlight(v.lineEnd, v.lineEnd + 1, attrs);
 
-                            if (!newTask.isCancelled()) {
-                                //TODO: a slight race condition:
-                                currentDocumentBag.setHighlights(runningBag);
-                            }
+                            setHighlights(newTask, runningBag);
                         }
                     }
                 });
@@ -305,6 +287,12 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
         return false;
     }
 
+    private synchronized void setHighlights(TaskDescription task, OffsetsBag highlights) {
+        if (!task.isCancelled()) {
+            getHighlightsBag(currentTask.frameDocument).setHighlights(highlights);
+        }
+    }
+
     @DebuggerServiceRegistration(types=LazyDebuggerManagerListener.class)
     public static final class Init extends DebuggerManagerAdapter {
         @Override
@@ -353,7 +341,7 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
                         target = currentTarget;
                     }
 
-                    Collection<InlineVariable> variables = computeVariables(info, line, 1, cancel);
+                    Collection<InlineVariable> variables = ComputeInlineValues.computeVariables(info, line, 1, cancel);
 
                     target.accept(variables);
                 }
@@ -374,99 +362,6 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
                 reschedule(currentFile);
             }
         }
-    }
-
-    static Collection<InlineVariable> computeVariables(CompilationInfo info, int stackLine, int stackCol, AtomicBoolean cancel) {
-        Collection<InlineVariable> result = new ArrayList<>();
-        int donePos = (int) info.getCompilationUnit().getLineMap().getPosition(stackLine, stackCol);
-        int upcomingPos = (int) info.getCompilationUnit().getLineMap().getStartPosition(stackLine + 1);
-        TreePath relevantPoint = info.getTreeUtilities().pathFor(donePos);
-        OUTER: while (relevantPoint != null) {
-            Tree leaf = relevantPoint.getLeaf();
-            switch (leaf.getKind()) {
-                case METHOD: case LAMBDA_EXPRESSION: break OUTER;
-                case BLOCK:
-                    if (relevantPoint.getParentPath() != null && TreeUtilities.CLASS_TREE_KINDS.contains(relevantPoint.getParentPath().getLeaf().getKind())) {
-                        break OUTER;
-                    }
-            }
-            relevantPoint = relevantPoint.getParentPath();
-        }
-        LineMap lm = info.getCompilationUnit().getLineMap();
-        new CancellableTreePathScanner<Void, Void>(cancel) {
-            @Override
-            public Void visitVariable(VariableTree node, Void p) {
-                int end = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), node);
-                if (end < donePos) {
-                    int[] span = info.getTreeUtilities().findNameSpan(node);
-
-                    if (span != null) {
-                        int lineEnd = (int) (lm.getStartPosition(lm.getLineNumber(span[1]) + 1) - 1);
-
-                        result.add(new InlineVariable(span[0], span[1], lineEnd, node.getName().toString()));
-                    }
-                }
-                return super.visitVariable(node, p);
-            }
-
-            @Override
-            public Void visitIdentifier(IdentifierTree node, Void p) {
-                Element el = info.getTrees().getElement(getCurrentPath());
-
-                if (el != null && el.getKind().isVariable() && el.getKind() != ElementKind.ENUM_CONSTANT) {
-                    int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), node);
-                    int end = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), node);
-
-                    if (start != (-1) && end != (-1)) {
-                        int lineEnd = (int) (lm.getStartPosition(lm.getLineNumber(end) + 1) - 1);
-
-                        result.add(new InlineVariable(start, end, lineEnd, node.getName().toString()));
-                    }
-                }
-
-                return super.visitIdentifier(node, p);
-            }
-
-            @Override
-            public Void visitClass(ClassTree node, Void p) {
-                return null;
-            }
-
-            @Override
-            public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
-                return null;
-            }
-
-            @Override
-            public Void scan(Tree tree, Void p) {
-                if (tree != null) {
-                    int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
-
-                    if (start > upcomingPos) {
-                        return null;
-                    }
-                }
-                return super.scan(tree, p);
-            }
-
-        }.scan(relevantPoint, null);
-
-        return result;
-    }
-
-    public static final class InlineVariable {
-        public final int start;
-        public final int end;
-        public final int lineEnd;
-        public final String expression;
-
-        public InlineVariable(int start, int end, int lineEnd, String expression) {
-            this.start = start;
-            this.end = end;
-            this.lineEnd = lineEnd;
-            this.expression = expression;
-        }
-
     }
 
     private static final class TaskDescription {
@@ -546,48 +441,18 @@ public class InlineValueComputerImpl implements InlineValueComputer, PropertyCha
             @Override
             public HighlightsLayer[] createLayers(HighlightsLayerFactory.Context context) {
                 return new HighlightsLayer[] {
-                    HighlightsLayer.create(InlineValueProviderImpl.class.getName(), ZOrder.SYNTAX_RACK.forPosition(1400), false, getHighlightsBag(context.getDocument()))
+                    HighlightsLayer.create(InlineValueComputerImpl.class.getName(), ZOrder.SYNTAX_RACK.forPosition(1400), false, getHighlightsBag(context.getDocument()))
                 };
             }
         };
     }
 
     private static OffsetsBag getHighlightsBag(Document doc) {
-        OffsetsBag bag = (OffsetsBag) doc.getProperty(InlineValueProviderImpl.class);
+        OffsetsBag bag = (OffsetsBag) doc.getProperty(InlineValueComputerImpl.class);
         if (bag == null) {
-            doc.putProperty(InlineValueProviderImpl.class, bag = new OffsetsBag(doc, true));
+            doc.putProperty(InlineValueComputerImpl.class, bag = new OffsetsBag(doc, true));
         }
         return bag;
     }
 
-    @MimeRegistration(mimeType="text/x-java", service=InlineValuesProvider.class)
-    public static final class InlineValueProviderImpl implements InlineValuesProvider {
-
-        @Override
-        public CompletableFuture<List<? extends InlineValue>> inlineValues(FileObject file, int currentExecutionPosition) {
-            //TODO: proper cancellability
-            JavaSource js = JavaSource.forFileObject(file);
-            CompletableFuture<List<? extends InlineValue>> result = new CompletableFuture<>();
-            List<InlineValue> resultValues = new ArrayList<>();
-            if (js != null) {
-                try {
-                    js.runUserActionTask(cc -> {
-                        cc.toPhase(JavaSource.Phase.RESOLVED);
-                        int stackLine = (int) cc.getCompilationUnit().getLineMap().getLineNumber(currentExecutionPosition);
-                        int stackCol = (int) cc.getCompilationUnit().getLineMap().getColumnNumber(currentExecutionPosition);
-
-                        for (InlineVariable var : computeVariables(cc, stackLine, stackCol, new AtomicBoolean())) {
-                            resultValues.add(InlineValue.createInlineVariable(new Range(var.start, var.end), var.expression));
-                        }
-                    }, true);
-                } catch (IOException ex) {
-                    result.completeExceptionally(ex);
-                    return result;
-                }
-            }
-            result.complete(resultValues);
-            return result;
-        }
-
-    }
 }

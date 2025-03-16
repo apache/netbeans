@@ -29,6 +29,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -67,6 +69,8 @@ import org.openide.util.Exceptions;
  * @author lahvac
  */
 public class Utils {
+
+    private static final Logger LOG = Logger.getLogger(Utils.class.getName());
 
     public static String toURI(FileObject file) {
         return file.toURI().toString().replace("file:/", "file:///");
@@ -196,10 +200,21 @@ public class Utils {
             if (cmd.isLeft()) {
                 command = cmd.getLeft();
             } else {
-                if(cmd.getRight().getEdit() != null) {
-                    Utils.applyWorkspaceEdit(cmd.getRight().getEdit());
+                CodeAction action = cmd.getRight();
+
+                if (action.getEdit() == null) {
+                    //attempt to resolve:
+                    try {
+                        action = server.getTextDocumentService().resolveCodeAction(action).get();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        //ignore(?)
+                        LOG.log(Level.FINE, null, ex);
+                    }
                 }
-                command = cmd.getRight().getCommand();
+                if (action.getEdit() != null) {
+                    Utils.applyWorkspaceEdit(action.getEdit());
+                }
+                command = action.getCommand();
             }
             if (command != null) {
                 server.getWorkspaceService().executeCommand(new ExecuteCommandParams(command.getCommand(), command.getArguments())).get();

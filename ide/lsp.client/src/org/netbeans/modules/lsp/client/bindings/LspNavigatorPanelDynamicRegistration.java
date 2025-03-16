@@ -41,7 +41,7 @@ public final class LspNavigatorPanelDynamicRegistration implements NavigatorPane
             if (file != null) {
                 LSPBindings bindings = LSPBindings.getBindings(file);
                 if (bindings != null) {
-                    return Collections.singletonList(NavigatorPanelImpl.INSTANCE);
+                    return Collections.singletonList(new NavigatorPanelImpl(bindings));
                 } else {
                     String mime = file.getMIMEType();
                     for (StructureProvider sp : MimeLookup.getLookup(mime).lookupAll(StructureProvider.class)) {

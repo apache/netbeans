@@ -31,7 +31,7 @@ github:
     projects: true
     discussions: true
   dependabot_alerts: false
-  dependabot_updates: false
+  dependabot_updates: true
   enabled_merge_buttons:
     squash: false
     merge: true

@@ -1,0 +1,48 @@
+    abstract public $invalid01 { get; set; } // invalid1
+                     ---------
+HINT:Interface field "$invalid01" cannot be declared abstract
+FIX:Remove modifier: abstract
+    protected $invalid02 {get; set;} // invalid2
+               ---------
+HINT:Interface field "$invalid02" cannot be declared protected
+FIX:Change modifier: protected to public
+    private $invalid03 { // invalid3
+             ---------
+HINT:Interface field "$invalid03" cannot be declared private
+FIX:Change modifier: private to public
+        final get; // invalid4
+              ---
+HINT:Interface property hook "get" cannot be declared final
+FIX:Remove modifier: final
+    final public $invalid05 { // invalid5
+                  ---------
+HINT:Interface field "$invalid05" cannot be declared final
+FIX:Remove modifier: final
+        get {} // invalid6
+        ---
+HINT:Interface property hook "get" cannot contain body
+FIX:Remove body of the property hook: get
+        set {} // invalid7
+        ---
+HINT:Interface property hook "set" cannot contain body
+FIX:Remove body of the property hook: set
+        get {} // invalid8
+        ---
+HINT:Interface property hook "get" cannot contain body
+FIX:Remove body of the property hook: get
+        set {} // invalid9
+        ---
+HINT:Interface property hook "set" cannot contain body
+FIX:Remove body of the property hook: set
+    public private(set) int $invalid09 { // invalid10
+                             ---------
+HINT:Interface field "$invalid09" cannot be declared private(set)
+FIX:Remove modifier: private(set)
+    final public int $invalid10 { // invalid11
+                      ---------
+HINT:Interface field "$invalid10" cannot be declared final
+FIX:Remove modifier: final
+    public readonly int $invalid11 { // invalid12
+                         ---------
+HINT:Interface field "$invalid11" cannot be declared readonly
+FIX:Remove modifier: readonly

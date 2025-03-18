@@ -1347,6 +1347,36 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/php84/propertyHooks_01.php", options, false, true);
     }
 
+    public void testSelectedVisibilityHookedInterfaceProperty_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/selected/visibilityHookedInterfaceProperty_01.php", options);
+    }
+
+    public void testSelectedVisibilityHookedInterfaceProperty_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/selected/visibilityHookedInterfaceProperty_02.php", options);
+    }
+
+    public void testSelectedVisibilityHookedInterfaceProperty_03() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/selected/visibilityHookedInterfaceProperty_03.php", options);
+    }
+
+    public void testSelectedVisibilityMethodWithEmptyBody_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/selected/visibilityMethodWithEmptyBody_01.php", options);
+    }
+
+    public void testSelectedVisibilityMethodWithEmptyBody_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/selected/visibilityMethodWithEmptyBody_02.php", options);
+    }
+
+    public void testSelectedVisibilityMethodWithEmptyBody_03() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/selected/visibilityMethodWithEmptyBody_03.php", options);
+    }
+
     //PHP 8.5 pipe operator
     public void testPipeOperatorInlineExpression_01() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());

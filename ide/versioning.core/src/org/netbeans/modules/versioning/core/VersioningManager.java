@@ -51,7 +51,7 @@ import org.openide.util.*;
 import org.openide.util.Lookup.Result;
 
 /**
- * Top level versioning manager that mediates communitation between IDE and registered versioning systems.
+ * Top level versioning manager that mediates communication between IDE and registered versioning systems.
  * 
  * @author Maros Sandor
  */
@@ -102,12 +102,8 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
         synchronized(INIT_LOCK) {
             if(!initializing) {
                 initializing = true;
-                new RequestProcessor("Initialize VCS").post(new Runnable() {        // NOI18N
-                    @Override
-                    public void run() {                    
-                        getInstance(); // init manager                                                    
-                    }                    
-                });
+                // init manager
+                new RequestProcessor("Initialize VCS").post(VersioningManager::getInstance); // NOI18N
             }
         }
         return false;
@@ -124,13 +120,13 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
     /**
      * Holds all registered versioning systems.
      */
-    private final List<VCSSystemProvider.VersioningSystem> versioningSystems = new ArrayList<VCSSystemProvider.VersioningSystem>(5);
+    private final List<VCSSystemProvider.VersioningSystem> versioningSystems = new ArrayList<>(5);
 
     /**
      * What folder is versioned by what versioning system. 
      * TODO: use SoftHashMap if there is one available in APIs
      */
-    private final Map<VCSFileProxy, VCSSystemProvider.VersioningSystem> folderOwners = new HashMap<VCSFileProxy, VCSSystemProvider.VersioningSystem>(200);
+    private final Map<VCSFileProxy, VCSSystemProvider.VersioningSystem> folderOwners = new HashMap<>(200);
     
     /**
      * What file is versioned by what versioning system - keep it small
@@ -139,7 +135,7 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
      * 
      */
     private final Map<VCSFileProxy, VCSSystemProvider.VersioningSystem> fileOwners = new LinkedHashMap<VCSFileProxy, VCSSystemProvider.VersioningSystem>(50) {
-        private int MAX_SIZE = 50;
+        private final int MAX_SIZE = 50;
         @Override
         protected boolean removeEldestEntry(Entry<VCSFileProxy, VCSSystemProvider.VersioningSystem> eldest) {
             return size() > MAX_SIZE;
@@ -157,12 +153,12 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
      * What files or folders are managed by local history.
      * TODO: use SoftHashMap if there is one available in APIs
      */
-    private final Map<VCSFileProxy, Boolean> localHistoryFiles = new LinkedHashMap<VCSFileProxy, Boolean>(200);
+    private final Map<VCSFileProxy, Boolean> localHistoryFiles = new LinkedHashMap<>(200);
 
     /**
      * Holds methods intercepted by a specific vcs. See {@link #needsLocalHistory(methodName)}
      */
-    private Map<String, Set<String>> interceptedMethods = new HashMap<String, Set<String>>();
+    private final Map<String, Set<String>> interceptedMethods = new HashMap<>();
 
     private final VersioningSystem NULL_OWNER = new VersioningSystem() {
         @Override public boolean isLocalHistory() {  throw new IllegalStateException(); }
@@ -239,12 +235,7 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
 
         if (fireAsync) {
             // this happens only once, default RP is fine
-            RequestProcessor.getDefault().post(new Runnable() {
-                @Override
-                public void run () {
-                    versionedRootsChanged();
-                }
-            });
+            RequestProcessor.getDefault().post(this::versionedRootsChanged);
         } else {
             versionedRootsChanged();
         }
@@ -284,7 +275,7 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
 
     VersioningSystem[] getVersioningSystems() {
         synchronized(versioningSystems) {
-            return versioningSystems.toArray(new VersioningSystem[0]);
+            return versioningSystems.toArray(VersioningSystem[]::new);
         }
     }
 
@@ -296,14 +287,14 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
      */
     VersioningSystem[] getOwners(VCSContext ctx) {
         Set<VCSFileProxy> files = ctx.getRootFiles();
-        Set<VersioningSystem> owners = new HashSet<VersioningSystem>();
+        Set<VersioningSystem> owners = new HashSet<>();
         for (VCSFileProxy file : files) {
             VersioningSystem vs = getOwner(file);
             if (vs != null) {
                 owners.add(vs);
             }
         }
-        return (VersioningSystem[]) owners.toArray(new VersioningSystem[0]);
+        return (VersioningSystem[]) owners.toArray(VersioningSystem[]::new);
     }
 
     /**
@@ -346,7 +337,7 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
          * the owner from fileOwner or folderOwners directly before file.isFile call
          * otherwise the owner will be acquired after a file.isFile call
          */
-        VersioningSystem owner = null;
+        VersioningSystem owner;
         synchronized(fileOwners) {
             owner = fileOwners.get(file);
         }
@@ -565,6 +556,7 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
      * Versioning status or other parameter changed. 
      */
     @Override
+    @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
         if (EVENT_STATUS_CHANGED.equals(evt.getPropertyName())) {
             Set<VCSFileProxy> files = (Set<VCSFileProxy>) evt.getNewValue();
@@ -618,7 +610,7 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
                 }
                 Set<String> s = interceptedMethods.get(localHistory.getClass().getName());
                 if(s == null) {
-                    s = new HashSet<String>();
+                    s = new HashSet<>();
                     Method[] m = localHistory.getVCSInterceptor().getClass().getDeclaredMethods();
                     for (Method method : m) {
                         if((method.getModifiers() & Modifier.PUBLIC) != 0) {
@@ -638,7 +630,7 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
     }
 
     public static synchronized void statusListener(VCSAnnotationListener listener, boolean add) {
-        WeakSet<VCSAnnotationListener> newSet = new WeakSet<VCSAnnotationListener>(statusListeners);
+        WeakSet<VCSAnnotationListener> newSet = new WeakSet<>(statusListeners);
         if (add) {
             newSet.add(listener);
         } else {
@@ -651,7 +643,7 @@ public class VersioningManager implements PropertyChangeListener, ChangeListener
         VersioningAnnotationProvider.refreshAllAnnotations();
     }
 
-    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
     public void addPropertyChangeListener(PropertyChangeListener l) {
         propertyChangeSupport.addPropertyChangeListener(l);
     }

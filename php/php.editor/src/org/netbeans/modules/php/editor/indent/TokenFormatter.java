@@ -2923,7 +2923,16 @@ public class TokenFormatter {
                         && newText != null && newText.indexOf('\n') > -1) {
                     // will be formatted new line that the first one has to be special
                     previousNewIndentText = newText;
-                    previousOldIndentText = oldText;
+                    // e.g.
+                    // class C {
+                    //     public function example1(): void {} : in this case, oldText is an empty string("")
+                    //     public function example2(): void {}
+                    //     ^^^^^^^ format
+                    //
+                    //     public $hooked1 { get; set; } : in this case, oldText is " "
+                    //     public $hooked2 {}
+                    //     ^^^^^^^ format
+                    previousOldIndentText = oldText.indexOf('\n') > -1 ? oldText : newText;
                 }
                 if (newText != null && (!oldText.equals(newText)
                         || (startOffset > 0 && (startOffset - oldText.length()) == offset))) {

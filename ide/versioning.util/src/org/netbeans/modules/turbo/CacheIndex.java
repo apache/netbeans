@@ -21,7 +21,6 @@ package org.netbeans.modules.turbo;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -38,7 +37,7 @@ import java.util.logging.Logger;
 public abstract class CacheIndex {
 
     private static final Logger LOG = Logger.getLogger("org.netbeans.modules.turbo.CacheIndex");
-    private Map<File, Set<File>> index = new ConcurrentHashMap<File, Set<File>>();
+    private final Map<File, Set<File>> index = new ConcurrentHashMap<>();
 
     public CacheIndex() { }
 
@@ -68,7 +67,7 @@ public abstract class CacheIndex {
                 LOG.finer("   " + ret);
             }
 
-            return ret.toArray(new File[0]);
+            return ret.toArray(File[]::new);
         }
     }
 
@@ -77,9 +76,7 @@ public abstract class CacheIndex {
         
         List<Set<File>> values;
         synchronized(this) {
-            Collection<Set<File>> c = index.values();
-            values = new ArrayList<Set<File>>(c.size());
-            values.addAll(c);
+            values = new ArrayList<>(index.values());
         }
 
         Set<File> ret = new HashSet<>();
@@ -94,7 +91,7 @@ public abstract class CacheIndex {
             LOG.finer("   " + ret);
         }
 
-        return ret.toArray(new File[0]);
+        return ret.toArray(File[]::new);
     }
 
     public void add(File file) {
@@ -115,16 +112,10 @@ public abstract class CacheIndex {
             return;
         }
         synchronized(this) {
-            Set<File> set = index.get(parent);
-            if(set == null) {
+            index.computeIfAbsent(parent, k -> {
                 LOG.log(Level.FINER, "  add({0}) - creating new file entry", new Object[]{file});
-                set = Collections.synchronizedSet(new HashSet<File>());
-                set.add(file);
-                index.put(parent, set);
-            } else {
-                set.add(file);
-            }
-
+                return Collections.synchronizedSet(new HashSet<>());
+            }).add(file);
             ensureParents(parent);           
         }
     }
@@ -135,9 +126,9 @@ public abstract class CacheIndex {
             LOG.finer("   " + files);
         }
         if(files == null) {
-            files = new HashSet<File>(0);
+            files = new HashSet<>(0);
         }
-        Set<File> newSet = new HashSet<File>(files.size());
+        Set<File> newSet = new HashSet<>((int) Math.ceil(files.size() / 0.75));
 
         synchronized(this) {
             Set<File> oldSet = index.get(file);
@@ -154,7 +145,7 @@ public abstract class CacheIndex {
 
             LOG.log(Level.FINE, "  add({0}, Set<File>) - add entries", new Object[]{file});
             index.put(file, Collections.synchronizedSet(newSet));
-            if(newSet.size() > 0) {
+            if(!newSet.isEmpty()) {
                 ensureParents(file);
             } else  {
                 cleanUpParents(file);
@@ -183,7 +174,7 @@ public abstract class CacheIndex {
                         LOG.log(Level.FINE, "  ensureParents({0}) - parent {1} - not managed - done!", new Object[]{pFile, parent});
                         break;
                     }
-                    set = new HashSet<File>();
+                    set = new HashSet<>();
                     LOG.log(Level.FINE, "  ensureParents({0}) - parent {1} - creating parent node", new Object[]{pFile, parent});
                     index.put(parent, set);
                 }
@@ -199,7 +190,7 @@ public abstract class CacheIndex {
         LOG.log(Level.FINE, "  cleanUpParents({0})", new Object[]{pFile});
 
         Set<File> set = index.get(file);
-        if(set != null && set.size() > 0) {
+        if(set != null && !set.isEmpty()) {
             LOG.log(Level.FINE, "  cleanUpParents({0}) - children underneath. stop.", new Object[]{pFile});
             return;
         }

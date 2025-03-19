@@ -335,6 +335,9 @@ public final class UIUtilities {
                     case ENUM:
                         stringBuilder.append("enum "); // NOI18N
                         break;
+                    case RECORD:
+                        stringBuilder.append("record "); // NOI18N
+                        break;
                     case ANNOTATION_TYPE:
                         stringBuilder.append("@interface "); // NOI18N
                         break;

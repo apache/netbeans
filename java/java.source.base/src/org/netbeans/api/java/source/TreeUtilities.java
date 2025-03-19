@@ -125,7 +125,7 @@ public final class TreeUtilities {
      */
     @Deprecated
     public boolean isClass(ClassTree tree) {
-        return (((JCTree.JCModifiers)tree.getModifiers()).flags & (Flags.INTERFACE | Flags.ENUM | Flags.ANNOTATION)) == 0;
+        return (((JCTree.JCModifiers)tree.getModifiers()).flags & (Flags.INTERFACE | Flags.ENUM | Flags.RECORD | Flags.ANNOTATION)) == 0;
     }
     
     /**Checks whether the given tree represents an interface.

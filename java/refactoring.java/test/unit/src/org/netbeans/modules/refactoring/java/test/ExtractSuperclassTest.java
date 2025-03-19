@@ -81,7 +81,7 @@ public class ExtractSuperclassTest extends RefactoringTestBase {
                 + "    }\n"
                 + "}\n"));
     }
-    
+
     public void test231146() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("extract/ExtractBaseClass.java", "package extract;\n"
@@ -96,7 +96,7 @@ public class ExtractSuperclassTest extends RefactoringTestBase {
                 + "class ExtractSuperClass { }\n"));
         performExtractSuperclass(src.getFileObject("extract/ExtractBaseClass.java"), 1, -1, "ExtractSuperClass", Boolean.FALSE, new Problem(true, "ERR_ClassClash"));
     }
-    
+
     public void test252621() throws Exception { //#252621 - [Extract Superclass] Import for annotation is not added
         writeFilesAndWaitForScan(src,
                 new File("extract/ExtractBaseClass.java", "package extract;\n"
@@ -131,43 +131,59 @@ public class ExtractSuperclassTest extends RefactoringTestBase {
                 + "    }\n"
                 + "}\n"));
     }
-    
-    
-    public void test231639() throws Exception { //#231639 - StackOverflowError at com.sun.tools.javac.code.Type$WildcardType.getExtendsBound 
+
+
+    public void test231639() throws Exception { //#231639 - StackOverflowError at com.sun.tools.javac.code.Type$WildcardType.getExtendsBound
         writeFilesAndWaitForScan(src,
-                new File("extract/ExtractBaseClass.java", "package extract;\n"
-                + "\n"
-                + "import java.io.IOException;\n"
-                + "\n"
-                + "public class ExtractBaseClass<D extends Comparable<? super D>> {\n"
-                + "    public void method(D d) throws IOException {\n"
-                + "        System.out.println(\"Hello\");\n"
-                + "    }\n"
-                + "}"));
+            new File("extract/ExtractBaseClass.java",
+                """
+                package extract;
+
+                import java.io.IOException;
+
+                public class ExtractBaseClass<D extends Comparable<? super D>> {
+                    public void method(D d) throws IOException {
+                        System.out.println("Hello");
+                    }
+                }"""
+            )
+        );
         performExtractSuperclass(src.getFileObject("extract/ExtractBaseClass.java"), 1, -1, "ExtractSuperClass", Boolean.FALSE);
+        sideBySideCompare=true;
+        RETRIES=1;
         verifyContent(src,
-                new File("extract/ExtractBaseClass.java", "package extract;\n"
-                + "\n"
-                + "import java.io.IOException;\n"
-                + "\n"
-                + "public class ExtractBaseClass<D extends Comparable<? super D>> extends ExtractSuperClass<D> {\n"
-                + "    \n"
-                + "}"),
-                new File("extract/ExtractSuperClass.java", "/* * Refactoring License */ package extract;\n"
-                + "\n"
-                + "import java.io.IOException;\n"
-                + "\n"
-                + "/**\n"
-                + " *\n"
-                + " * @author junit\n"
-                + " */\n"
-                + "public class ExtractSuperClass<D extends Comparable<? super D>> {\n"
-                + "    public void method(D d) throws IOException {\n"
-                + "        System.out.println(\"Hello\");\n"
-                + "    }\n"
-                + "}\n"));
+                new File("extract/ExtractBaseClass.java",
+                    """
+                    package extract;
+
+                    import java.io.IOException;
+
+                    public class ExtractBaseClass<D extends Comparable<? super D>> extends ExtractSuperClass<D> {
+                    }"""),
+                new File("extract/ExtractSuperClass.java",
+                    """
+                    /*
+                     * Refactoring License
+                     */
+
+                    package extract;
+
+                    import java.io.IOException;
+
+                    /**
+                     *
+                     * @author junit
+                     */
+                    public class ExtractSuperClass<D extends Comparable<? super D>> {
+
+                        public void method(D d) throws IOException {
+                            System.out.println("Hello");
+                        }
+
+                    }
+                    """));
     }
-    
+
     public void test226518a() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("extract/ExtractBaseClass.java", "package extract;\n"
@@ -202,7 +218,7 @@ public class ExtractSuperclassTest extends RefactoringTestBase {
                 + "    }\n"
                 + "}\n"));
     }
-    
+
     public void test226518b() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("extract/ExtractBaseClass.java", "package extract;\n"
@@ -237,7 +253,7 @@ public class ExtractSuperclassTest extends RefactoringTestBase {
                 + "    }\n"
                 + "}\n"));
     }
-    
+
     public void test226518c() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("extract/ExtractBaseClass.java", "package extract;\n"
@@ -275,7 +291,7 @@ public class ExtractSuperclassTest extends RefactoringTestBase {
                 + "    }\n"
                 + "}\n"));
     }
-    
+
     public void test212624a() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("extract/ExtractBaseClass.java", "package extract;\n"
@@ -306,7 +322,7 @@ public class ExtractSuperclassTest extends RefactoringTestBase {
                 + "    protected String value;\n"
                 + "}\n"));
     }
-     
+
     public void test212624b() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("extract/ExtractBaseClass.java", "package extract;\n"
@@ -370,8 +386,8 @@ public class ExtractSuperclassTest extends RefactoringTestBase {
                 + "    } // Trailing comments\n"
                 + "}\n"));
     }
-    
-    public void test211894b() throws Exception {    
+
+    public void test211894b() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("extract/ExtractBaseClass.java", "package extract;\n"
                 + "\n"
@@ -412,17 +428,17 @@ public class ExtractSuperclassTest extends RefactoringTestBase {
             public void run(CompilationController info) throws Exception {
                 info.toPhase(JavaSource.Phase.RESOLVED);
                 CompilationUnitTree cut = info.getCompilationUnit();
-                
+
                 ClassTree classTree = (ClassTree) cut.getTypeDecls().get(0);
                 if(innerpos >= 0) {
                     classTree = (ClassTree) classTree.getMembers().get(innerpos);
                 }
                 final TreePath classPath = info.getTrees().getPath(cut, classTree);
                 TypeElement classEl = (TypeElement) info.getTrees().getElement(classPath);
-                
+
                 TypeMirror superclass = classEl.getSuperclass();
                 TypeElement superEl = (TypeElement) info.getTypes().asElement(superclass);
-                
+
                 MemberInfo[] members;
                 if(position < 0) {
                     List<? extends Tree> classMembers = classTree.getMembers();
@@ -449,7 +465,7 @@ public class ExtractSuperclassTest extends RefactoringTestBase {
                 r[0].setMembers(members);
             }
         }, true);
-        
+
         RefactoringSession rs = RefactoringSession.create("Session");
         List<Problem> problems = new LinkedList<Problem>();
 

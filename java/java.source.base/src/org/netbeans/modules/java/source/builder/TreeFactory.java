@@ -324,6 +324,15 @@ public class TreeFactory {
         return Class(flags, (com.sun.tools.javac.util.List<JCAnnotation>) modifiers.getAnnotations(), simpleName, Collections.<TypeParameterTree>emptyList(), null, implementsClauses, memberDecls);
     }
     
+    public ClassTree Record(ModifiersTree modifiers,
+             CharSequence simpleName,
+             List<? extends TypeParameterTree> typeParameters,
+             List<? extends Tree> implementsClauses,
+             List<? extends Tree> memberDecls) {
+        long flags = getBitFlags(modifiers.getFlags()) | Flags.RECORD;
+        return Class(flags, (com.sun.tools.javac.util.List<JCAnnotation>) modifiers.getAnnotations(), simpleName, typeParameters, null, implementsClauses, memberDecls);
+    }
+
     public CompilationUnitTree CompilationUnit(PackageTree packageDecl,
                                                List<? extends ImportTree> importDecls, 
                                                List<? extends Tree> typeDecls, 

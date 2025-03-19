@@ -164,7 +164,7 @@ public final class GeneratorUtilities {
      * @param sourceRoot a source root under which the new file is created
      * @param path a relative path to file separated by '/'
      * @param kind the kind of Element to use for the template, can be null or
-     * CLASS, INTERFACE, ANNOTATION_TYPE, ENUM, PACKAGE
+     * CLASS, INTERFACE, ANNOTATION_TYPE, ENUM, PACKAGE, RECORD
      * @return new CompilationUnitTree created from a template
      * @throws IOException when an exception occurs while creating the template
      * @since 0.101
@@ -632,7 +632,7 @@ public final class GeneratorUtilities {
             // ignore type
             Tree parent = getCurrentPath().getParentPath().getLeaf();
             Tree.Kind k = parent.getKind();
-            if (k == Tree.Kind.CLASS || k == Tree.Kind.INTERFACE || k == Tree.Kind.ENUM) {
+            if (k == Tree.Kind.CLASS || k == Tree.Kind.INTERFACE || k == Tree.Kind.ENUM || k == Tree.Kind.RECORD) {
                 member = node;
             }
             Object o = scan(node.getInitializer(), p);
@@ -643,7 +643,7 @@ public final class GeneratorUtilities {
         @Override public Object visitBlock(BlockTree node, Object p) { 
             Tree parent = getCurrentPath().getParentPath().getLeaf();
             Tree.Kind k = parent.getKind();
-            if (k == Tree.Kind.CLASS || k == Tree.Kind.INTERFACE || k == Tree.Kind.ENUM) {
+            if (k == Tree.Kind.CLASS || k == Tree.Kind.INTERFACE || k == Tree.Kind.ENUM || k == Tree.Kind.RECORD) {
                 member = node;
                 return super.visitBlock(node, p);
             }
@@ -1453,7 +1453,10 @@ public final class GeneratorUtilities {
                         break;
                     }
                    switch (p2.getLeaf().getKind()) {
-                       case CLASS: case INTERFACE: case ENUM: case RECORD:
+                       case CLASS:
+                       case INTERFACE:
+                       case ENUM:
+                       case RECORD:
                        case METHOD:
                        case BLOCK:
                        case VARIABLE:

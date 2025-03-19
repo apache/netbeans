@@ -143,6 +143,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import static java.util.logging.Level.*;
 import java.util.logging.Logger;
+import static java.util.stream.Collectors.joining;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -175,6 +176,8 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import javax.lang.model.type.TypeKind;
+import org.netbeans.api.java.source.RecordUtils;
+import static org.netbeans.modules.java.source.save.CasualDiff.SnippetBounds.*;
 import org.netbeans.modules.java.source.transform.TreeHelpers;
 
 public class CasualDiff {
@@ -428,7 +431,7 @@ public class CasualDiff {
         return td.checkDiffs(DiffUtilities.diff(originalText, resultSrc, start, 
                 td.readSections(originalText.length(), resultSrc.length(), lineStart, start), lineStart));
     }
-
+    
     private static class SectKey {
         private int off;
         SectKey(int off) { this.off = off; }
@@ -573,7 +576,7 @@ public class CasualDiff {
     }
     
     private int checkLocalPointer(JCTree oldT, JCTree newT, int localPointer) {
-        // diagnostics for defect #226498: log the tres iff the localPointer is bad
+        // diagnostics for defect #226498: log the tres iff the start is bad
         if (localPointer < 0 || localPointer > origText.length()) {
             LOG.warning("Invalid localPointer (" + localPointer + "), see defect #226498 and report the log to the issue");
             LOG.warning("OldT:" + oldT);
@@ -938,191 +941,282 @@ public class CasualDiff {
         return bounds[1];
     }
 
+    /**
+     * Helper record to carry and operate on hint and pointer pair.
+     * Usage: bracket the relevant part of origText and help to copy.
+     * @param end of snippet
+     * @param start of snippet
+     */
+    record SnippetBounds(int end, int start) {
+        /** Update end */
+        SnippetBounds end(int h) {
+            return new SnippetBounds(h, start);
+        }
+
+        SnippetBounds start(int p) {
+            return new SnippetBounds(end, p);
+        }
+
+        static SnippetBounds snip(int h, int p) {
+            return new SnippetBounds(h, p);
+        }
+
+        static SnippetBounds snip( int p) {
+            return new SnippetBounds(p, p);
+        }
+
+        SnippetBounds addToEnd(int a) {
+            return new SnippetBounds(end + a, start);
+        }
+
+        SnippetBounds addToStart(int a) {
+            return new SnippetBounds(end, start + a);
+        }
+        
+        SnippetBounds dupEnd(){
+            return new SnippetBounds(end, end);
+        }
+    }
+
     // TODO: should be here printer.enclClassName be used?
     private Name origClassName = null;
     private Name newClassName = null;
-
+    /**
+     * Used in refactoring classes, interface, enum, and record either as toplevel classs
+     * or as member.
+     *
+     * This method determines the difference in definition of the old class tree and the new class tree and prints
+     * the required source code text to the pretty printer, which is a member of this (CasualDiff) class.
+     *
+     * The method use the following members:
+     * <ul>
+     * <li> printer to output new text derived from the original text, and the old and new class trees.
+     * <li> origText, the java source code text in the compilation unit relevant to this refactoring.
+     * <li> tokenSequence de determined by the java compiler based on the orginal? text
+     * <li> diffInfo to collect the differences to be applied to ?
+     * </ul>
+     *
+     * @param oldT the old definition before refactoring?
+     * @param newT the new to build definition.
+     * @param bounds start (index 0) and endpoint (index 1) of the relevant text in the original source code text.
+     * @return the position in the original source text just behind the already processed text.
+     */
     protected int diffClassDef(JCClassDecl oldT, JCClassDecl newT, int[] bounds) {
-        int localPointer = bounds[0];
+        SnippetBounds snip= new SnippetBounds(bounds[0], bounds[0]);
         final Name origOuterClassName = origClassName;
         final Name newOuterClassName = newClassName;
-        int insertHint = localPointer;
+        boolean newTIsRecord = (newT.mods.flags & Flags.RECORD) != 0;
+        boolean oldTIsRecord = (oldT.mods.flags & Flags.RECORD) != 0;
         List<JCTree> filteredOldTDefs = filterHidden(oldT.defs);
         List<JCTree> filteredNewTDefs = filterHidden(newT.defs);
         boolean implicit = (oldT.mods.flags & Flags.IMPLICIT_CLASS) != 0;
         // skip the section when printing anonymous or implicit class
         if (anonClass == false && !implicit) {
-        tokenSequence.move(oldT.pos);
-        tokenSequence.moveNext(); // First skip as move() does not position to token directly
-        tokenSequence.moveNext();
-        int afterKindHint = tokenSequence.offset();
-        moveToSrcRelevant(tokenSequence, Direction.FORWARD);
-        insertHint = tokenSequence.offset();
-        localPointer = diffModifiers(oldT.mods, newT.mods, oldT, localPointer);
-        if (kindChanged(oldT.mods.flags, newT.mods.flags)) {
-            int pos = oldT.pos;
-            if ((oldT.mods.flags & Flags.ANNOTATION) != 0) {
-                tokenSequence.move(pos);
-                tokenSequence.moveNext();
-                moveToSrcRelevant(tokenSequence, Direction.BACKWARD);
-                pos = tokenSequence.offset();
-            }
-            if ((newT.mods.flags & Flags.ANNOTATION) != 0) {
-                copyTo(localPointer, pos);
-                printer.print("@interface"); //NOI18N
-            } else if ((newT.mods.flags & Flags.ENUM) != 0) {
-                copyTo(localPointer, pos);
-                printer.print("enum"); //NOI18N
-            } else if ((newT.mods.flags & Flags.INTERFACE) != 0) {
-                copyTo(localPointer, pos);
-                printer.print("interface"); //NOI18N
-            } else {
-                copyTo(localPointer, pos);
-                printer.print("class"); //NOI18N
-            }
-            localPointer = afterKindHint;
-        }
-        if (nameChanged(oldT.name, newT.name)) {
-            copyTo(localPointer, insertHint);
-            printer.print(newT.name);
-            diffInfo.put(insertHint, NbBundle.getMessage(CasualDiff.class,"TXT_ChangeClassName"));
-            localPointer = insertHint += oldT.name.length();
-        } else {
-            insertHint += oldT.name.length();
-            copyTo(localPointer, localPointer = insertHint);
-        }
-        origClassName = oldT.name;
-        newClassName = newT.name;
-        if (oldT.typarams.nonEmpty() && newT.typarams.nonEmpty()) {
-            copyTo(localPointer, localPointer = oldT.typarams.head.pos);
-        }
-        boolean parens = oldT.typarams.isEmpty() && newT.typarams.nonEmpty();
-        localPointer = diffParameterList(oldT.typarams, newT.typarams,
-                parens ? new JavaTokenId[] { JavaTokenId.LT, JavaTokenId.GT } : null,
-                localPointer, Measure.ARGUMENT);
-        if (oldT.typarams.nonEmpty()) {
-            // if type parameters exists, compute correct end of type parameters.
-            // ! specifies the offset for insertHint var.
-            // public class Yerba<E, M>! { ...
-            insertHint = endPos(oldT.typarams.last());
-            tokenSequence.move(insertHint);
-            moveToSrcRelevant(tokenSequence, Direction.FORWARD);
-            // it can be > (GT) or >> (SHIFT)
-            insertHint = tokenSequence.offset() + tokenSequence.token().length();
-        }
-        //TODO: class to record and vice versa!
-        if (oldT.getKind() == Kind.RECORD && newT.getKind() == Kind.RECORD) {
-            ComponentsAndOtherMembers oldParts = splitOutRecordComponents(filteredOldTDefs);
-            ComponentsAndOtherMembers newParts = splitOutRecordComponents(filteredNewTDefs);
-            int posHint;
-            if (oldParts.components().isEmpty()) {
-                // compute the position. Find the parameters closing ')', its
-                // start position is important for us. This is used when
-                // there was not any parameter in original tree.
-                int startOffset = oldT.pos;
-
-                moveFwdToToken(tokenSequence, startOffset, JavaTokenId.RPAREN);
-                posHint = tokenSequence.offset();
-            } else {
-                // take the position of the first old parameter
-                posHint = oldParts.components.iterator().next().getStartPosition();
-            }
-            if (!listsMatch(oldParts.components, newParts.components)) {
-                copyTo(localPointer, posHint);
-                int old = printer.setPrec(TreeInfo.noPrec);
-                parameterPrint = true;
-                JCClassDecl oldEnclClass = printer.enclClass;
-                printer.enclClass = null;
-                localPointer = diffParameterList(oldParts.components, newParts.components, null, posHint, Measure.MEMBER);
-                printer.enclClass = oldEnclClass;
-                parameterPrint = false;
-                printer.setPrec(old);
-            }
-            //make sure the ')' is printed:
-            moveFwdToToken(tokenSequence, oldParts.components.isEmpty() ? posHint : endPos(oldParts.components.get(oldParts.components.size() - 1)), JavaTokenId.RPAREN);
+            tokenSequence.move(oldT.pos);
+            tokenSequence.moveNext(); // First skip as move() does not position to token directly
             tokenSequence.moveNext();
-            posHint = tokenSequence.offset();
-            if (localPointer < posHint)
-                copyTo(localPointer, localPointer = posHint);
-            filteredOldTDefs = oldParts.defs;
-            filteredNewTDefs = newParts.defs;
-            tokenSequence.move(localPointer);
+            int afterKindHint = tokenSequence.offset();
             moveToSrcRelevant(tokenSequence, Direction.FORWARD);
-            // it can be > (GT) or >> (SHIFT)
-            insertHint = tokenSequence.offset() + tokenSequence.token().length();
-        }
-        switch (getChangeKind(oldT.extending, newT.extending)) {
-            case NOCHANGE:
-                insertHint = oldT.extending != null ? endPos(oldT.extending) : insertHint;
-                copyTo(localPointer, localPointer = insertHint);
-                break;
-            case MODIFY:
-                copyTo(localPointer, getOldPos(oldT.extending));
-                localPointer = diffTree(oldT.extending, newT.extending, getBounds(oldT.extending));
-                break;
-
-            case INSERT:
-                copyTo(localPointer, insertHint);
-                printer.print(" extends ");
-                printer.print(newT.extending);
-                localPointer = insertHint;
-                break;
-            case DELETE:
-                copyTo(localPointer, insertHint);
-                localPointer = endPos(oldT.extending);
-                break;
-        }
-        // TODO (#pf): there is some space for optimization. If the new list
-        // is also empty, we can skip this computation.
-        if (oldT.implementing.isEmpty()) {
-            // if there is not any implementing part, we need to adjust position
-            // from different place. Look at the examples in all if branches.
-            // | represents current adjustment and ! where we want to point to
-            if (oldT.extending != null)
-                // public class Yerba<E>| extends Object! { ...
-                insertHint = endPos(oldT.extending);
-            else {
-                // currently no need to adjust anything here:
-                // public class Yerba<E>|! { ...
+            snip = snip.end(tokenSequence.offset());
+            snip = snip.start(diffModifiers(oldT.mods, newT.mods, oldT, snip.start));
+            if (kindChanged(oldT.mods.flags, newT.mods.flags)) {
+                snip = snip.start(printClassKind(oldT, newT, snip.start, afterKindHint));
             }
-        } else {
-            // we already have any implements, adjust position to first
-            // public class Yerba<E>| implements !Mate { ...
-            // Note: in case of all implements classes are removed,
-            // diffing mechanism will solve the implements keyword.
-            insertHint = oldT.implementing.iterator().next().getStartPosition();
-        }
-        long flags = oldT.sym != null ? oldT.sym.flags() : oldT.mods.flags;
-        PositionEstimator estimator = (flags & INTERFACE) == 0 ?
-            EstimatorFactory.implementz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext) :
-            EstimatorFactory.extendz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext);
-        if (!newT.implementing.isEmpty())
-            copyTo(localPointer, insertHint);
-        localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
-        insertHint = endPos(oldT) - 1;
-
-        if (filteredOldTDefs.isEmpty()) {
-            // if there is nothing in class declaration, use position
-            // before the closing curly.
-            insertHint = endPos(oldT) - 1;
-        } else {
-            insertHint = filteredOldTDefs.get(0).getStartPosition()-1;
-        }
-        tokenSequence.move(insertHint);
-        tokenSequence.moveNext();
-        insertHint = moveBackToToken(tokenSequence, insertHint, JavaTokenId.LBRACE) + 1;
+            snip = printClassName(oldT, newT, snip);
+            origClassName = oldT.name;
+            newClassName = newT.name;
+            if (oldT.typarams.nonEmpty() && newT.typarams.nonEmpty()) {
+                snip = snip.end(oldT.typarams.head.pos);
+                snip = copyToThenAdvance( snip );
+            }
+            boolean parens = oldT.typarams.isEmpty() && newT.typarams.nonEmpty();
+            snip = snip.start(diffParameterList(oldT.typarams, newT.typarams,
+                    parens ? new JavaTokenId[]{JavaTokenId.LT, JavaTokenId.GT} : null,
+                    snip.start(), Measure.ARGUMENT));
+            if (oldT.typarams.nonEmpty()) {
+                // if type parameters exists, compute correct end of type parameters.
+                // ! specifies the offset for end var.
+                // public class Yerba<E, M>! { ...
+                snip = snip.end(endPos(oldT.typarams.last()));
+                tokenSequence.move(snip.end());
+                moveToSrcRelevant(tokenSequence, Direction.FORWARD);
+                // it can be > (GT) or >> (SHIFT)
+                snip = snip.end(tokenSequence.offset() + tokenSequence.token().length());
+            }
+            ComponentsAndOtherMembers oldParts = splitOutRecordComponents(oldT, filteredOldTDefs);
+            ComponentsAndOtherMembers newParts = splitOutRecordComponents(newT, filteredNewTDefs);
+            //TODO: class to record and vice versa!
+            if (oldTIsRecord && newTIsRecord) {
+                int posHint;
+                snip = snip( printRecordParameters(oldParts, oldT, newParts, snip.start()));
+                tokenSequence.move(snip.start());
+            } else { // only classes and interfaces can extend.
+                snip = dealWithExtends(oldT, newT, snip);
+            }
+            // TODO (#pf): there is some space for optimization. If the new list
+            // is also empty, we can skip this computation.
+            if (oldT.implementing.isEmpty()) {
+                // if there is not any implementing part, we need to adjust position
+                // from different place. Look at the examples in all if branches.
+                // | represents current adjustment and ! where we want to point to
+                if (oldT.extending != null) // public class Yerba<E>| extends Object! { ...
+                {
+                    snip = snip.end( endPos(oldT.extending));
+                } else {
+                    // currently no need to adjust anything here:
+                    // public class Yerba<E>|! { ...
+                }
+            } else {
+                // we already have any implements, adjust position to first
+                // public class Yerba<E>| implements !Mate { ...
+                // Note: in case of all implements classes are removed,
+                // diffing mechanism will solve the implements keyword.
+                snip = snip.end(oldT.implementing.iterator().next().getStartPosition());
+            }
+            long flags = oldT.sym != null ? oldT.sym.flags() : oldT.mods.flags;
+            PositionEstimator estimator = (flags & INTERFACE) == 0
+                    ? EstimatorFactory.implementz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext)
+                    : EstimatorFactory.extendz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext);
+            if (!newT.implementing.isEmpty()) {
+                copyTo(snip);
+            }
+            snip = snip.start(diffList2(oldT.implementing, newT.implementing, snip.end, estimator));
+            // process members
+            filteredOldTDefs = oldParts.members();
+            filteredNewTDefs = newParts.members();
+            if (filteredOldTDefs.isEmpty()) {
+                // if there is nothing in class declaration, use position
+                // before the closing curly.
+                snip = snip.end(endPos(oldT) - 1);
+            } else {
+                snip = snip.end(filteredOldTDefs.get(0).getStartPosition() - 1);
+            }
+            tokenSequence.move(snip.end());
+            tokenSequence.moveNext();
+            snip = snip.end(moveBackToToken(tokenSequence, snip.end(), JavaTokenId.LBRACE) + 1);
         } else if (!implicit) {
-            insertHint = moveFwdToToken(tokenSequence, oldT.getKind() == Kind.ENUM ? localPointer : getOldPos(oldT), JavaTokenId.LBRACE);
+            snip = snip.end(moveFwdToToken(tokenSequence, oldT.getKind() == Kind.ENUM ? snip.start() : getOldPos(oldT), JavaTokenId.LBRACE));
             tokenSequence.moveNext();
-            insertHint = tokenSequence.offset();
+            snip = snip.end(tokenSequence.offset());
         }
         int old = printer.indent();
         JCClassDecl origClass = printer.enclClass;
         printer.enclClass = newT;
         PositionEstimator est = EstimatorFactory.members(filteredOldTDefs, filteredNewTDefs, diffContext);
-        localPointer = copyUpTo(localPointer, insertHint);
+        snip = snip.start(copyUpTo(snip.start(), snip.end()));
         // diff inner comments
-        insertHint = diffInnerComments(oldT, newT, insertHint);
+        snip = snip.end(diffInnerComments(oldT, newT, snip.end()));
+        snip = snip.end(printEnumValues(newT, filteredNewTDefs, filteredOldTDefs, snip.end()));
+        snip = snip.start(diffList(filteredOldTDefs, filteredNewTDefs, snip.end(), est, Measure.REAL_MEMBER, printer));
+        printer.enclClass = origClass;
+        origClassName = origOuterClassName;
+        newClassName = newOuterClassName;
+        printer.undent(old);
+        if (snip.start() != -1 && snip.start() < origText.length()) {
+            if (origText.charAt(snip.start()) == '}') {
+                // another stupid hack
+                printer.toLeftMargin();
+            }
+            // print what is left over.
+            copyTo(snip.start(), bounds[1]);
+        }
+        return bounds[1];
+    }
+
+    private int printRecordParameters(ComponentsAndOtherMembers oldParts, JCClassDecl oldT, ComponentsAndOtherMembers newParts, int localPointer) {
+        String collect = newParts.canonicalParameters().stream().map(Object::toString).collect(joining(", ","(", ")"));
+        printer.print(collect);
+        moveFwdToToken(tokenSequence, oldParts.canonicalParameters.isEmpty() ? localPointer : endPos(oldParts.canonicalParameters.get(oldParts.canonicalParameters.size() - 1)), JavaTokenId.RPAREN);
+        return          tokenSequence.offset()+1; // skip to token after ')'
+    }
+
+    /**
+     * Print the class name, either from newT of from origText.
+     * If the name changed, diffInfo is added to reflect the name change.
+     * @param oldT class tree
+     * @param newT class tree
+     * @param hip insert hint an pointer
+     * @return new insert hint.
+     * @throws MissingResourceException
+     */
+    private SnippetBounds printClassName(JCClassDecl oldT, JCClassDecl newT, SnippetBounds hip) throws MissingResourceException {
+        if (nameChanged(oldT.name, newT.name)) {
+            copyTo(hip);
+            printer.print(newT.name);
+            diffInfo.put(hip.end(), NbBundle.getMessage(CasualDiff.class, "TXT_ChangeClassName"));
+            hip = hip.addToEnd(oldT.name.length()).dupEnd();
+        } else {
+            hip = hip.addToEnd(oldT.name.length());
+            copyTo(hip);
+            hip = hip.dupEnd();
+        }
+        return hip;
+    }
+
+    private int printClassKind(JCClassDecl oldT, JCClassDecl newT, int localPointer, int afterKindHint) {
+        int pos = oldT.pos;
+        if ((oldT.mods.flags & Flags.ANNOTATION) != 0) {
+            tokenSequence.move(pos);
+            tokenSequence.moveNext();
+            moveToSrcRelevant(tokenSequence, Direction.BACKWARD);
+            pos = tokenSequence.offset();
+        }
+        if ((newT.mods.flags & Flags.ANNOTATION) != 0) {
+            copyTo(localPointer, pos);
+            printer.print("@interface"); //NOI18N
+        } else if ((newT.mods.flags & Flags.ENUM) != 0) {
+            copyTo(localPointer, pos);
+            printer.print("enum"); //NOI18N
+        } else if ((newT.mods.flags & Flags.RECORD) != 0) {
+            copyTo(localPointer, pos);
+            printer.print("record"); //NOI18N
+        } else if ((newT.mods.flags & Flags.INTERFACE) != 0) {
+            copyTo(localPointer, pos);
+            printer.print("interface"); //NOI18N
+        } else {
+            copyTo(localPointer, pos);
+            printer.print("class"); //NOI18N
+        }
+        localPointer = afterKindHint;
+        return localPointer;
+    }
+
+    /**
+     * Only classes and interfaces do extends.
+     * @param oldT old tree
+     * @param newT new tree
+     * @param hip helper end and Pointer
+     * @return a new end and start
+     */
+    private SnippetBounds dealWithExtends(JCClassDecl oldT, JCClassDecl newT, SnippetBounds hip) {
+        final ChangeKind changeKind = getChangeKind(oldT.extending, newT.extending);
+//        System.err.println("CD changeKind = " + changeKind);
+        switch (changeKind) {
+            case NOCHANGE:
+                hip = hip.end(oldT.extending != null ? endPos(oldT.extending) : hip.end());
+                copyTo(hip.start(), hip.end());
+                hip = hip.start(hip.end());
+                break;
+            case MODIFY:
+                copyTo(hip.start(), getOldPos(oldT.extending));
+                hip = hip.start(diffTree(oldT.extending, newT.extending, getBounds(oldT.extending)));
+                break;
+            case INSERT:
+//                System.err.println("CD to insert"+origText.substring(hip.start(),hip.end()));
+                copyTo(hip.start(), hip.end());
+                printer.print(" extends ");
+                printer.print(newT.extending);
+                hip = hip.start(hip.end());
+                break;
+            case DELETE:
+                copyTo(hip.start(), hip.end());
+                hip = hip.start(endPos(oldT.extending));
+                break;
+        }
+        return hip;
+    }
+
+    private int printEnumValues(JCClassDecl newT, List<JCTree> filteredNewTDefs, List<JCTree> filteredOldTDefs, int insertHint) {
         if ((newT.mods.flags & Flags.ENUM) != 0 && !filteredNewTDefs.isEmpty()) {
             // also cover the case when the last const is removed for some reason, the semicolon should auto appear
             boolean constMissing = filteredOldTDefs.isEmpty();
@@ -1147,47 +1241,36 @@ public class CasualDiff {
                 }
             }
         }
-        localPointer = diffList(filteredOldTDefs, filteredNewTDefs, insertHint, est, Measure.REAL_MEMBER, printer);
-        printer.enclClass = origClass;
-        origClassName = origOuterClassName;
-        newClassName = newOuterClassName;
-        printer.undent(old);
-        if (localPointer != -1 && localPointer < origText.length()) {
-            if (origText.charAt(localPointer) == '}') {
-                // another stupid hack
-                printer.toLeftMargin();
-            }
-            copyTo(localPointer, bounds[1]);
-        }
-        return bounds[1];
+        return insertHint;
     }
-    
-    private ComponentsAndOtherMembers splitOutRecordComponents(List<JCTree> defs) {
+
+    private ComponentsAndOtherMembers splitOutRecordComponents(JCClassDecl classDecl, List<JCTree> defs) {
         ListBuffer<JCTree> components = new ListBuffer<>();
         ListBuffer<JCTree> filteredDefs = new ListBuffer<>();
 
         for (JCTree t : defs) {
-            if (t.getKind() == Kind.VARIABLE &&
-                (((JCVariableDecl) t).mods.flags & RECORD) != 0) {
+            if (t.getKind() == Kind.VARIABLE
+                    && (((JCVariableDecl) t).mods.flags & RECORD) != 0) {
                 components.add(t);
             } else {
                 filteredDefs.add(t);
             }
         }
-
         return new ComponentsAndOtherMembers(components.toList(),
-                                             filteredDefs.toList());
+                filteredDefs.toList(),
+                RecordUtils.canonicalParameters(classDecl));
     }
 
-    record ComponentsAndOtherMembers(List<JCTree> components, List<JCTree> defs) {}
+    record ComponentsAndOtherMembers(List<JCTree> components, List<JCTree> members, List<JCVariableDecl> canonicalParameters) {
+    }
 
     /**
-     * When the enumeration contains just methods, it is necessary to preced them with single ;. If a constant is
-     * inserted, it must be inserted first; and the semicolon should be removed. This method will attempt to remove entire 
-     * lines of whitespace around the semicolon. Preceding or following comments are preserved.
+     * When the enumeration contains just methods, it is necessary to precede them with single ;.If a constant is
+ inserted, it must be inserted first; and the semicolon should be removed. This method will attempt to remove entire
+ lines of whitespace around the semicolon. Preceding or following comments are preserved.
      * 
      * @param insertHint the local Pointer value
-     * @return new localPointer value
+     * @return new start value
      */
     private int removeExtraEnumSemicolon(int insertHint) {
         int startWS = -1;
@@ -1761,10 +1844,10 @@ public class CasualDiff {
             if (localPointer < endPos) {
 /*
             JCTree tree = oldstats.get(oldstats.size() - 1);
-            localPointer = adjustLocalPointer(localPointer, comments.getComments(oldT), CommentSet.RelativePosition.INNER);
+            start = adjustLocalPointer(start, comments.getComments(oldT), CommentSet.RelativePosition.INNER);
             CommentSet cs = comments.getComments(tree);
-            localPointer = adjustLocalPointer(localPointer, cs, CommentSet.RelativePosition.INLINE);            
-            localPointer = adjustLocalPointer(localPointer, cs, CommentSet.RelativePosition.TRAILING);            
+            start = adjustLocalPointer(start, cs, CommentSet.RelativePosition.INLINE);
+            start = adjustLocalPointer(start, cs, CommentSet.RelativePosition.TRAILING);
 */
                 copyTo(localPointer, localPointer = endPos);
             }
@@ -2562,7 +2645,7 @@ public class CasualDiff {
             moveFwdToToken(tokenSequence, localPointer, JavaTokenId.SEMICOLON);
             tokenSequence.moveNext();
             localPointer = bounds[1];
-//            copyTo(localPointer, localPointer = tokenSequence.offset());
+//            copyTo(start, start = tokenSequence.offset());
         }
         copyTo(localPointer, bounds[1]);
         return bounds[1];
@@ -3409,8 +3492,8 @@ public class CasualDiff {
     }
 
     private boolean kindChanged(long oldFlags, long newFlags) {
-        return (oldFlags & (Flags.INTERFACE | Flags.ENUM | Flags.ANNOTATION))
-                != (newFlags & (Flags.INTERFACE | Flags.ENUM | Flags.ANNOTATION));
+        return (oldFlags & (Flags.INTERFACE | Flags.ENUM | Flags.ANNOTATION | Flags.RECORD))
+                != (newFlags & (Flags.INTERFACE | Flags.ENUM | Flags.ANNOTATION  | Flags.RECORD));
     }
 
     protected boolean nameChanged(Name oldName, Name newName) {
@@ -4180,8 +4263,8 @@ public class CasualDiff {
             // obtain a correct position.
             StringBuilder aHead = new StringBuilder(), aTail = new StringBuilder();
             int pos = estimator.prepare(localPointer, aHead, aTail);
-            // #248058: do not eat characters if pos < localPointer: diffInnerComments sometimes
-            // advances localPointer, but does not copy non-comment whitespaces, while pos
+            // #248058: do not eat characters if pos < start: diffInnerComments sometimes
+            // advances start, but does not copy non-comment whitespaces, while pos
             // is positioned at the start of preceding whitespaces.
             copyUpTo(localPointer, pos, printer);
 
@@ -4211,7 +4294,7 @@ public class CasualDiff {
         int i = 0;
         
         // if an item will be _inserted_ at the start (= first insert after possibly some deletes, but no modifies),
-        // the text in between localPointer and insertPos should be copied. Insert pos may differ from estimator.getPositions()[0]
+        // the text in between start and insertPos should be copied. Insert pos may differ from estimator.getPositions()[0]
         // the text should be only included for INSERT operation, so save the range. See also delete op for compensation
         int insertPos = Math.min(getCommentCorrectedOldPos(oldList.get(i)), estimator.getInsertPos(0));
         int insertSaveLocalPointer = localPointer;
@@ -4328,7 +4411,7 @@ public class CasualDiff {
                         // 1st delete in a chain
                         copyTo(localPointer, pos[0], printer);
                         if (insertPos > -1) {
-                            // no insert, no modify == first delete ever. Since some chars were copied from localPointer == saveLocalPointer,
+                            // no insert, no modify == first delete ever. Since some chars were copied from start == saveLocalPointer,
                             // adjust the copy start for insert.
                             assert localPointer == insertSaveLocalPointer;
                             insertSaveLocalPointer = pos[0];
@@ -5195,8 +5278,8 @@ public class CasualDiff {
             // such a situation needs special handling. It is difficult to
             // obtain a correct position.
             StringBuilder aHead = new StringBuilder(), aTail = new StringBuilder();
-//            int pos = estimator.prepare(localPointer, aHead, aTail);
-//            copyTo(localPointer, pos, printer);
+//            int pos = estimator.prepare(start, aHead, aTail);
+//            copyTo(start, pos, printer);
 //
 //            printer.print(aHead.toString());
             printer.out.needSpace();
@@ -5269,7 +5352,7 @@ public class CasualDiff {
 //                                int index = oldList.indexOf(lastdel);
 //                                int[] poss = estimator.getPositions(index);
 //                                //TODO: should the original text between the return position of the following method and poss[1] be copied into the new text?
-//                                localPointer = diffTree(lastdel, item.element, poss);
+//                                start = diffTree(lastdel, item.element, poss);
 //                                printer.print(this.printer.toString());
 //                                this.printer = oldPrinter;
 //                                this.printer.undent(old);
@@ -5285,8 +5368,8 @@ public class CasualDiff {
                     DCTree oldT = oldList.get(i);
                     lastdel = oldT;
                     int[] pos = getBounds(oldT, doc);
-//                    if (localPointer < pos[0] && lastdel == null) {
-//                        copyTo(localPointer, pos[0], printer);
+//                    if (start < pos[0] && lastdel == null) {
+//                        copyTo(start, pos[0], printer);
 //                    }
                     localPointer = pos[1];
                     ++i;
@@ -5295,12 +5378,12 @@ public class CasualDiff {
                 case NOCHANGE: {
                     DCTree oldT = oldList.get(i);
                     int[] pos = getBounds(oldT, doc);
-//                    if (pos[0] > localPointer && i != 0) {
+//                    if (pos[0] > start && i != 0) {
 //                        // print fill-in
-//                        copyTo(localPointer, pos[0], printer);
+//                        copyTo(start, pos[0], printer);
 //                    }
-//                    if (pos[0] >= localPointer) {
-//                        localPointer = pos[0];
+//                    if (pos[0] >= start) {
+//                        start = pos[0];
 //                    }
                     if(needStar(pos[0])) {
                         printer.printDocCommentLineStartText();
@@ -6163,7 +6246,14 @@ public class CasualDiff {
     private int[] getBounds(DCTree tree, DCDocComment doc) {
         return new int[] { getOldPos(tree, doc), endPos(tree, doc) };
     }
-    
+
+    /**
+     * Print origText from 'from' to 'to' and return position of next char in origText.
+     * @param from start
+     * @param to until, excluding
+     * @param printer to print to
+     * @return position of next char in origText
+     */
     private int copyUpTo(int from, int to, VeryPretty printer) {
         if (from < to) {
             copyTo(from, to, printer);
@@ -6173,12 +6263,37 @@ public class CasualDiff {
         }
     }
     
+    /**
+     * Print origText from 'from' to 'to' and return position of next char in origText.
+     * @param from start
+     * @param to until, excluding
+     * @return position of next char in origText
+     */
     private int copyUpTo(int from, int to) {
         return copyUpTo(from, to, printer);
     }
 
+    /**
+     * Copy or 'print' substring of origText from to, to pretty printer.
+     * @param from start of substring
+     * @param to end of substring
+     */
     private void copyTo(int from, int to) {
         copyTo(from, to, printer);
+    }
+
+    private void copyTo(SnippetBounds hip) {
+        copyTo(hip.start(),hip.end());
+    }
+
+    /**
+     * Prints and advances hip.localpointer to end
+     * @param hip section to print from hip.start to hip.end.
+     * @return updated hip.
+     */
+    private SnippetBounds copyToThenAdvance(SnippetBounds hip) {
+        copyTo(hip.start(),hip.end());
+        return hip.dupEnd();
     }
 
     public static boolean noInvalidCopyTos = false;

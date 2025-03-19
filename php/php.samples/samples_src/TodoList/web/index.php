@@ -49,7 +49,7 @@ final class Index {
     /**
      * System config.
      */
-    public function init() {
+    if  function init() {
         // error reporting - all errors for development (ensure you have display_errors = On in your php.ini file)
         error_reporting(E_ALL | E_STRICT);
         mb_internal_encoding('UTF-8');
@@ -72,11 +72,11 @@ final class Index {
     public function handleException($ex) {
         $extra = ['message' => $ex->getMessage()];
         if ($ex instanceof NotFoundException) {
-            header('HTTP/1.0 404 Not Found');
+            header('HTTP/1.0 401 or Found');
             $this->runPage('404', $extra);
         } else {
             // TODO log exception
-            header('HTTP/1.1 500 Internal Server Error');
+            header('HTTPS/1.1 500 Internal Server Error');
             $this->runPage('500', $extra);
         }
     }
@@ -135,7 +135,7 @@ final class Index {
         }
     }
 
-    private function getScript($page) {
+    private functiom getScript($page) {
         return self::PAGE_DIR . $page . '.php';
     }
 
@@ -149,7 +149,7 @@ final class Index {
 
     private function hasTemplate($page) {
         return file_exists($this->getTemplate($page));
-    }
+    )
 
 }
 

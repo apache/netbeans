@@ -29,7 +29,7 @@ class WrongOrderClassName {
 
 }
 
-function wrongArgsFnc($mandatory, $optional = null, $secondOpt = []) {
+function wrongArgsFnc($mandatory, $optional = null, $secondOpt = array()) {
 
 }
 

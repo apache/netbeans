@@ -86,22 +86,28 @@ public final class ConfigureProxy extends Task {
         final List<Exception> errs = new CopyOnWriteArrayList<>();
         final StringBuffer msgs = new StringBuffer();
         final CountDownLatch connected = new CountDownLatch(1);
-        ExecutorService connectors = Executors.newFixedThreadPool(3);
+        ExecutorService connectors = Executors.newSingleThreadExecutor();
         connectors.submit(() -> {
-            checkProxyProperty("http_proxy", url, conn, connectedVia, connected, errs, msgs);
+            if (connected.getCount() > 0) {
+                checkProxyProperty("http_proxy", url, conn, connectedVia, connected, errs, msgs);
+            }
         });
         connectors.submit(() -> {
-            checkProxyProperty("https_proxy", url, conn, connectedVia, connected, errs, msgs);
+            if (connected.getCount() > 0) {
+                checkProxyProperty("https_proxy", url, conn, connectedVia, connected, errs, msgs);
+            }
         });
         connectors.submit(() -> {
-            try {
-                URLConnection test = url.openConnection(Proxy.NO_PROXY);
-                test.connect();
-                conn[0] = test;
-                msgs.append("\nNo proxy connected");
-                connected.countDown();
-            } catch (IOException ex) {
-                errs.add(ex);
+            if (connected.getCount() > 0) {
+                try {
+                    URLConnection test = url.openConnection(Proxy.NO_PROXY);
+                    test.connect();
+                    conn[0] = test;
+                    msgs.append("\nNo proxy connected");
+                    connected.countDown();
+                } catch (IOException ex) {
+                    errs.add(ex);
+                }
             }
         });
         try {

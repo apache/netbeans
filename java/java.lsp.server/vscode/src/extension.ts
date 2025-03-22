@@ -76,6 +76,7 @@ export let client: Promise<NbLanguageClient>;
 export let clientRuntimeJDK : string | null = null;
 export const MINIMAL_JDK_VERSION = 17;
 export const TEST_PROGRESS_EVENT: string = "testProgress";
+export let debugConsoleListeners: any[] = [];
 const TEST_ADAPTER_CREATED_EVENT: string = "testAdapterCreated";
 let testAdapter: NbTestAdapter | undefined;
 let nbProcess : ChildProcess | null = null;
@@ -785,6 +786,24 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             throw `Client ${c} doesn't support go to test`;
         }
     }));
+
+    const trackerFactory: vscode.DebugAdapterTrackerFactory = {
+        createDebugAdapterTracker(_session: vscode.DebugSession) {
+            return {
+                onDidSendMessage: (message) => {
+                    if (message.type === "event" && message.event === "output") {
+                        const output = message.body.output;
+                        debugConsoleListeners.forEach((listener) => {
+                            listener?.callback(output);
+                        });
+                    }
+                }
+            };
+        }
+    };
+
+    context.subscriptions.push(vscode.debug.registerDebugAdapterTrackerFactory("*", trackerFactory));
+
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.workspace.compile', () =>
         wrapCommandWithProgress(COMMAND_PREFIX + '.build.workspace', 'Compiling workspace...', log, true)
     ));
@@ -936,7 +955,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 debugConfig['projects'] = projects;
             }
 
-            const ret = await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions);
+            const ret = await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions);     
             return ret ? new Promise((resolve) => {
                 const listener = vscode.debug.onDidTerminateDebugSession(() => {
                     listener.dispose();

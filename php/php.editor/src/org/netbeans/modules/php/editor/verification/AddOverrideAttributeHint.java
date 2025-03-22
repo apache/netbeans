@@ -159,6 +159,10 @@ public class AddOverrideAttributeHint extends HintRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
+            if (CodeUtils.isConstructor(method)) {
+                // Override on constructor results in compile Error (checked in PHP 8.4)
+                return;
+            }
             Identifier methodName = method.getFunction().getFunctionName();
             AddOverrideFix fix = new AddOverrideFix(document, method, ts);
             hints.add(new Hint(AddOverrideAttributeHint.this,

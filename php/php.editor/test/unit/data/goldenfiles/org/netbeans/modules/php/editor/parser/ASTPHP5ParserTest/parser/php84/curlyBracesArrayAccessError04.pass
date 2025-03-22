@@ -1,0 +1,35 @@
+<testresult testFile='curlyBracesArrayAccessError04.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='158' end='164'>
+            <text>$array</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='164' end='165'>
+            <text>{</text>
+        </token>
+        <token id='T_LNUMBER' start='165' end='166'>
+            <text>0</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='166' end='167'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='167' end='168'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='169' end='169'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='169'>
+        <Comments>
+            <Comment start='6' end='158' commentType='singleLine'/>
+            <Comment start='6' end='158' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='158' end='164'/>
+            <Block start='164' end='167' isCurly='true'>
+                <ASTError start='165' end='166'/>
+            </Block>
+            <EmptyStatement start='167' end='168'/>
+        </Statements>
+    </Program>
+</testresult>

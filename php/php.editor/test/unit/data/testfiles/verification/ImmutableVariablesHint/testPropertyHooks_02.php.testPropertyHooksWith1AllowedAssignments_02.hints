@@ -1,0 +1,14 @@
+        set($value) {
+             -----
+HINT:You should use only:
+1 assignment(s) (2 used)
+to a variable:
+$value
+to avoid accidentally overwriting it and make your code easier to read.
+            $value = 1;
+             -----
+HINT:You should use only:
+1 assignment(s) (2 used)
+to a variable:
+$value
+to avoid accidentally overwriting it and make your code easier to read.

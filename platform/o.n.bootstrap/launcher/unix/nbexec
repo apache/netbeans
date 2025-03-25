@@ -192,7 +192,13 @@ fi
 # rename old heap dump to .old
 mv "${userdir}/var/log/heapdump.hprof" "${userdir}/var/log/heapdump.hprof.old" > /dev/null 2>&1
 
-jargs_without_clusters="$jargs"
+if [ -e "${plathome}/agent/org-netbeans-agent.jar" ]
+then
+    jargs_without_clusters="$jargs -javaagent:\"${plathome}/agent/org-netbeans-agent.jar\"";
+else
+    jargs_without_clusters="$jargs";
+fi
+
 jargs="-Dnetbeans.dirs=\"${clusters}\" $jargs_without_clusters"
 
 if [ -z "$cachedirspecified" ]; then

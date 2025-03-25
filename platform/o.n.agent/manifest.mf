@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.agent
+OpenIDE-Module-Localizing-Bundle: org/netbeans/agent/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+Premain-Class: org.netbeans.agent.NetBeansAgent
+
